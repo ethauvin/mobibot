@@ -20,11 +20,11 @@
 	</target>
 	<target name="compile" depends="init" description="Compiles sources">
 		<mkdir dir="${path.classes}" />
-		<javac sourcepathref="path.source" classpathref="path.class" destdir="${path.classes}" debug="off" deprecation="on">
+		<javac sourcepathref="path.source" classpathref="path.class" destdir="${path.classes}" debug="on" deprecation="on">
 			<src refid="path.source" />
 		</javac>
 	</target>
-	<target name="build" depends="compile" description="Rebuilds project" />
+	<target name="build" depends="clean,jar" description="Rebuilds project" />
 	<target name="jar" depends="compile" description="Builds the JAR">
 		<copy todir="${path.classes}">
 			<fileset dir="${path.src}" includes="*.properties" />

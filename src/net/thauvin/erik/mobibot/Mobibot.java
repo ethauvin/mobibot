@@ -47,12 +47,16 @@ import org.apache.commons.net.WhoisClient;
 
 import org.apache.log4j.Level;
 
-import org.jibble.pircbot.*;
+import org.jibble.pircbot.Colors;
+import org.jibble.pircbot.PircBot;
+import org.jibble.pircbot.User;
 
 import java.io.*;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+
+import java.nio.channels.FileChannel;
 
 import java.text.SimpleDateFormat;
 
@@ -78,11 +82,8 @@ public class Mobibot extends PircBot
 	/**
 	 * The info strings.
 	 */
-	private static final String[] INFO_STRS = 
-											  {
-												  "Mobibot v0.1.3b5 by Erik C. Thauvin (erik@thauvin.net)",
-												  "http://www.thauvin.net/mobitopia/mobibot/"
-											  };
+	private static final String[] INFO_STRS =
+		{ "Mobibot v0.1.3b12 by Erik C. Thauvin (erik@thauvin.net)", "http://www.thauvin.net/mobitopia/mobibot/" };
 
 	/**
 	 * Debug command line argument.
@@ -197,7 +198,7 @@ public class Mobibot extends PircBot
 	/**
 	 * The link match string.
 	 */
-	private static final String LINK_MATCH = "http://";
+	private static final String LINK_MATCH = "^[hH][tT][tT][pP](|[sS])://.*";
 
 	/**
 	 * The lookup command.
@@ -242,7 +243,8 @@ public class Mobibot extends PircBot
 	/**
 	 * The date/time format for the {@link #TIME_CMD time} command.
 	 */
-	private static final SimpleDateFormat TIME_SDF = new SimpleDateFormat("'The time is 'HH:mm' on 'EEE, d MMM yyyy' in '");
+	private static final SimpleDateFormat TIME_SDF =
+		new SimpleDateFormat("'The time is 'HH:mm' on 'EEE, d MMM yyyy' in '");
 
 	/**
 	 * The beats (Internet Time) keyword.
@@ -268,11 +270,6 @@ public class Mobibot extends PircBot
 	 * The view command.
 	 */
 	private static final String VIEW_CMD = "view";
-
-	/**
-	 * The view "all" keyword.
-	 */
-	private static final String VIEW_ALL_KEYWORD = "all";
 
 	/**
 	 * The weather command.
@@ -325,6 +322,7 @@ public class Mobibot extends PircBot
 		COUNTRIES_MAP.put("NZ", "Pacific/Auckland");
 		COUNTRIES_MAP.put("RU", "Europe/Moscow");
 		COUNTRIES_MAP.put("SE", "Europe/Stockholm");
+		COUNTRIES_MAP.put("SG", "Asia/Singapore");
 		COUNTRIES_MAP.put("SU", "Europe/Moscow");
 		COUNTRIES_MAP.put("TH", "Asia/Bangkok");
 		COUNTRIES_MAP.put("TW", "Asia/Taipei");
@@ -349,6 +347,11 @@ public class Mobibot extends PircBot
 	 * The whois host.
 	 */
 	private static final String WHOIS_HOST = "whois.arin.net";
+
+	/**
+	 * The number of milliseconds to delay between consecutive messages.
+	 */
+	private static final int MESSAGE_DELAY = 1000;
 
 	/**
 	 * The logger default level.
@@ -595,8 +598,9 @@ public class Mobibot extends PircBot
 
 				try
 				{
-					stdout = new PrintStream(new FileOutputStream(logsDir + channel.substring(1) + '.' + today() +
-																  ".log", true));
+					stdout =
+						new PrintStream(new FileOutputStream(logsDir + channel.substring(1) + '.' + today() + ".log",
+															 true));
 				}
 				catch (IOException e)
 				{
@@ -630,8 +634,8 @@ public class Mobibot extends PircBot
 			final String googleKey = p.getProperty("google", "");
 
 			// Create the bot
-			final Mobibot bot = new Mobibot(server, channel, line.getOptionValue(DATA_ARG.charAt(0), "./mobibot.ser"),
-											logsDir);
+			final Mobibot bot =
+				new Mobibot(server, channel, line.getOptionValue(DATA_ARG.charAt(0), "./mobibot.ser"), logsDir);
 
 			// Initialize the bot
 			bot.setVerbose(true);
@@ -639,6 +643,7 @@ public class Mobibot extends PircBot
 			bot.setName(nickname);
 			bot.setLogin(login);
 			bot.setVersion(weblogURL);
+			bot.setMessageDelay(MESSAGE_DELAY);
 
 			// Set the URLs
 			bot.setWeblogURL(weblogURL);
@@ -796,9 +801,7 @@ public class Mobibot extends PircBot
 		else if (lcTopic.endsWith(VIEW_CMD))
 		{
 			this.sendNotice(sender, "To list or search the current URL posts:");
-			this.sendNotice(sender,
-							DOUBLE_INDENT + bold(getNick() + ": " + VIEW_CMD) + " [<query or " + VIEW_ALL_KEYWORD +
-							">]");
+			this.sendNotice(sender, DOUBLE_INDENT + bold(getNick() + ": " + VIEW_CMD) + " [<start>] [<query>]");
 		}
 		else if (lcTopic.endsWith(_channel.substring(1).toLowerCase()))
 		{
@@ -944,6 +947,49 @@ public class Mobibot extends PircBot
 	}
 
 	/**
+	 * Copies a file
+	 *
+	 * @param in The source file.
+	 * @param out The destination file
+	 *
+	 * @throws IOException If the file could not be copied.
+	 */
+	public void copyFile(File in, File out)
+				  throws IOException
+	{
+		FileChannel inChannel;
+		FileChannel outChannel;
+
+		inChannel = new FileInputStream(in).getChannel();
+		outChannel = new FileOutputStream(out).getChannel();
+
+		try
+		{
+			inChannel.transferTo(0, inChannel.size(), outChannel);
+		}
+		finally
+		{
+			try
+			{
+				inChannel.close();
+			}
+			catch (IOException ignore)
+			{
+				; // Do nothing
+			}
+
+			try
+			{
+				outChannel.close();
+			}
+			catch (IOException ignore)
+			{
+				; // Do nothing
+			}
+		}
+	}
+
+	/**
 	 * This method is called whenever an ACTION is sent from a user.
 	 *
 	 * @param sender The nick of the person who sent the action.
@@ -1019,9 +1065,7 @@ public class Mobibot extends PircBot
 	{
 		_logger.debug(">>> " + sender + ": " + message);
 
-		final String lcMsg = message.toLowerCase();
-
-		if ((lcMsg.startsWith(LINK_MATCH)) && (lcMsg.length() > LINK_MATCH.length()))
+		if (message.matches(LINK_MATCH))
 		{
 			final String[] cmds = message.split(" ", 2);
 			final String cmd = cmds[0].trim();
@@ -1061,7 +1105,7 @@ public class Mobibot extends PircBot
 				this.sendNotice(sender, "Duplicate >> " + buildLink(dupIndex, entry));
 			}
 		}
-		else if (lcMsg.matches(getNick() + ":.*"))
+		else if (message.matches(getNickPattern() + ":.*"))
 		{
 			final String[] cmds = message.substring(message.indexOf(':') + 1).trim().split(" ", 2);
 			final String cmd = cmds[0].toLowerCase();
@@ -1079,15 +1123,14 @@ public class Mobibot extends PircBot
 			}
 			else if (cmd.equals(PING_CMD))
 			{
-				final String[] pings = 
-									   {
-										   "is barely alive.", "is trying to stay awake.", "has gone fishing.",
-										   "is somewhere over the rainbow.", "has fallen and can't get up.",
-										   "is running. You better go chase it.", "has just spontantiously combusted.",
-										   "is talking to itself... don't interrupt. That's rude.",
-										   "is bartending at an AA meeting.", "is hibernating.",
-										   "is saving energy: apathetic mode activated.", "is busy. Go away!"
-									   };
+				final String[] pings =
+					{
+						"is barely alive.", "is trying to stay awake.", "has gone fishing.",
+						"is somewhere over the rainbow.", "has fallen and can't get up.",
+						"is running. You better go chase it.", "has just spontantiously combusted.",
+						"is talking to itself... don't interrupt. That's rude.", "is bartending at an AA meeting.",
+						"is hibernating.", "is saving energy: apathetic mode activated.", "is busy. Go away!"
+					};
 
 				final Random r = new Random();
 
@@ -1251,7 +1294,7 @@ public class Mobibot extends PircBot
 						{
 							final String link = cmd.substring(1);
 
-							if ((link.length() > (LINK_MATCH.length())) && link.toLowerCase().startsWith(LINK_MATCH))
+							if (link.matches(LINK_MATCH))
 							{
 								entry.setLink(link);
 								this.sendNotice(_channel, buildLink(index, entry));
@@ -2075,6 +2118,15 @@ public class Mobibot extends PircBot
 				_logger.debug("Unable to close the data file stream.", e);
 			}
 		}
+
+		try
+		{
+			copyFile(new File(_data), new File(_data + ".bak"));
+		}
+		catch (IOException e)
+		{
+			_logger.warn("Unable to backup the data file.", e);
+		}
 	}
 
 	/**
@@ -2084,20 +2136,11 @@ public class Mobibot extends PircBot
 	 */
 	private static void sleep(int secs)
 	{
-		/*
 		try
 		{
 			Thread.sleep((long) (secs * 1000));
 		}
 		catch (InterruptedException ignore)
-		{
-			; // Do nothing
-		}
-		*/
-		
-		final long stop = System.currentTimeMillis() + ((long) secs * 1000);
-
-		while (System.currentTimeMillis() <= stop)
 		{
 			; // Do nothing
 		}
@@ -2227,8 +2270,9 @@ public class Mobibot extends PircBot
 			else
 			{
 				TIME_SDF.setTimeZone(TimeZone.getTimeZone(tz));
-				response = TIME_SDF.format(Calendar.getInstance().getTime()) +
-						   tz.substring(tz.indexOf('/') + 1).replace('_', ' ');
+				response =
+					TIME_SDF.format(Calendar.getInstance().getTime()) +
+					tz.substring(tz.indexOf('/') + 1).replace('_', ' ');
 			}
 		}
 		else
@@ -2262,6 +2306,34 @@ public class Mobibot extends PircBot
 	private static String today()
 	{
 		return ISO_SDF.format(Calendar.getInstance().getTime());
+	}
+
+	/**
+	 * Returns the bot's nickname regexp pattern.
+	 *
+	 * @return The nickname regexp pattern.
+	 */
+	private final String getNickPattern()
+	{
+		final StringBuffer buff = new StringBuffer(0);
+		final String nick = getNick();
+		char c;
+
+		for (int i = 0; i < nick.length(); i++)
+		{
+			c = nick.charAt(i);
+
+			if (Character.isLetter(c))
+			{
+				buff.append('[').append(String.valueOf(c).toLowerCase()).append(String.valueOf(c).toUpperCase()).append(']');
+			}
+			else
+			{
+				buff.append(c);
+			}
+		}
+
+		return buff.toString();
 	}
 
 	/**
@@ -2301,36 +2373,89 @@ public class Mobibot extends PircBot
 	 */
 	private void viewResponse(String sender, String args, boolean isPrivate)
 	{
-		final String lcArgs = args.toLowerCase();
+		String lcArgs = args.toLowerCase();
 
 		if (!_entries.isEmpty())
 		{
 			final int max = _entries.size();
 			int i = 0;
 
-			if (!(args.length() > 0) && (max > MAX_ENTRIES))
+			if (!(lcArgs.length() > 0) && (max > MAX_ENTRIES))
 			{
 				i = max - MAX_ENTRIES;
 			}
 
+			if (lcArgs.matches("^\\d+(| .*)"))
+			{
+				final String[] split = lcArgs.split(" ", 2);
+
+				try
+				{
+					i = Integer.parseInt(split[0]);
+
+					if (i > 0)
+					{
+						i--;
+					}
+
+					if (split.length == 2)
+					{
+						lcArgs = split[1].trim();
+					}
+					else
+					{
+						lcArgs = "";
+					}
+
+					if (i > max)
+					{
+						i = 0;
+					}
+				}
+				catch (NumberFormatException ignore)
+				{
+					; // Do nothing
+				}
+			}
+
 			EntryLink entry;
+			int sent = 0;
 
 			for (; i < max; i++)
 			{
 				entry = (EntryLink) _entries.get(i);
 
-				if ((args.length() > 0) && !(args.equals(VIEW_ALL_KEYWORD)))
+				if (lcArgs.length() > 0)
 				{
 					if ((entry.getLink().toLowerCase().indexOf(lcArgs) != -1) ||
 							(entry.getTitle().toLowerCase().indexOf(lcArgs) != -1) ||
 							(entry.getNick().toLowerCase().indexOf(lcArgs) != -1))
 					{
+						if (sent > MAX_ENTRIES)
+						{
+							send(sender,
+								 "To view more, try: " +
+								 bold(getNick() + ": " + VIEW_CMD + ' ' + (i + 1) + ' ' + lcArgs), isPrivate);
+
+							break;
+						}
+
 						send(sender, buildLink(i, entry, true), isPrivate);
+						sent++;
 					}
 				}
 				else
 				{
+					if (sent > MAX_ENTRIES)
+					{
+						send(sender, "To view more, try: " + bold(getNick() + ": " + VIEW_CMD + ' ' + (i + 1)),
+							 isPrivate);
+
+						break;
+					}
+
 					send(sender, buildLink(i, entry, true), isPrivate);
+					sent++;
 				}
 			}
 		}
