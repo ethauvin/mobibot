@@ -71,7 +71,7 @@
     <option name="PUT_FOCUS_INTO_COMMENT" value="false" />
     <option name="SHOW_CHECKIN_OPTIONS" value="true" />
     <option name="FORCE_NON_EMPTY_COMMENT" value="false" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fixed a problem with the MathEvaluator library where &quot;atan(), asin(), acos()&quot; never worked right." />
+    <option name="LAST_COMMIT_MESSAGE" value="Added action(channel, action) method.&#10;Added input validation to action/send methods." />
     <option name="SAVE_LAST_COMMIT_MESSAGE" value="true" />
     <option name="CHECKIN_DIALOG_SPLITTER_PROPORTION" value="0.8" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="false" />
@@ -115,7 +115,7 @@
     <first-group selected-file="file://$PROJECT_DIR$/src/net/thauvin/erik/mobibot/Mobibot.java">
       <entry file="file://$PROJECT_DIR$/src/net/thauvin/erik/mobibot/Mobibot.java" pinned="false">
         <provider selected="true" editor-type-id="text-editor">
-          <state line="753" column="86" selection-start="17557" selection-end="17557" vertical-scroll-proportion="20.65313">
+          <state line="1035" column="65" selection-start="26542" selection-end="26542" vertical-scroll-proportion="0.14382403">
             <folding>
               <element signature="imports" expanded="true" />
             </folding>
@@ -124,7 +124,7 @@
       </entry>
       <entry file="file://$PROJECT_DIR$/src/net/thauvin/erik/mobibot/Weather.java" pinned="false">
         <provider selected="true" editor-type-id="text-editor">
-          <state line="59" column="38" selection-start="2170" selection-end="2182" vertical-scroll-proportion="0.27580371">
+          <state line="59" column="38" selection-start="2170" selection-end="2182" vertical-scroll-proportion="0.3790186">
             <folding />
           </state>
         </provider>
@@ -148,17 +148,17 @@
     <expanded_node url="net" module="mobibot" type="package" />
     <expanded_node url="net.thauvin.erik" module="mobibot" type="package" />
     <expanded_node url="net.thauvin" module="mobibot" type="package" />
-    <expanded_node url="net.thauvin.erik.mobibot" module="mobibot" type="package" />
     <expanded_node url="" module="mobibot" type="module" />
+    <expanded_node url="net.thauvin.erik.mobibot" module="mobibot" type="package" />
   </component>
   <component name="ProjectPane">
-    <expanded_node url="" module="mobibot" type="module" />
-    <expanded_node url="file://$PROJECT_DIR$" module="mobibot" type="directory" />
-    <expanded_node url="file://$PROJECT_DIR$/website" module="mobibot" type="directory" />
     <expanded_node url="file://$PROJECT_DIR$/lib" module="mobibot" type="directory" />
+    <expanded_node url="file://$PROJECT_DIR$" module="mobibot" type="directory" />
+    <expanded_node url="" module="mobibot" type="module" />
+    <expanded_node url="file://$PROJECT_DIR$/website" module="mobibot" type="directory" />
   </component>
   <component name="ProjectView">
-    <navigator currentView="ProjectPane" splitterProportion="0.5">
+    <navigator currentView="PackagesPane" splitterProportion="0.5">
       <flattenPackages />
       <showMembers />
       <showModules />
@@ -198,8 +198,8 @@
     <property name="last_opened_file_path" value="C:\Documents and Settings\erik\My Documents\My Received Files\src\MathEvaluator" />
     <property name="cvs_file_history_flatOrder5" value="5" />
     <property name="cvs_file_history_flatWidth5" value="136" />
-    <property name="cvs_file_history_treeOrder2" value="2" />
     <property name="cvs_file_history_treeWidth3" value="136" />
+    <property name="cvs_file_history_treeOrder2" value="2" />
     <property name="cvs_file_history_treeWidth5" value="136" />
     <property name="cvs_file_history_flatOrder6" value="6" />
     <property name="cvs_file_history_flatWidth0" value="135" />
@@ -269,15 +269,6 @@
       <RunnerSettings RunnerId="Run" />
       <ConfigurationWrapper RunnerId="Run" />
     </configuration>
-    <configuration selected="false" default="false" name="Unnamed" type="Application" factoryName="Application">
-      <option name="MAIN_CLASS_NAME" value="net.thauvin.erik.mobibot.FeedTestReader" />
-      <option name="VM_PARAMETERS" value="" />
-      <option name="PROGRAM_PARAMETERS" value="http://www.thauvin.net/linkblog/xml.jsp" />
-      <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
-      <module name="mobibot" />
-      <RunnerSettings RunnerId="Run" />
-      <ConfigurationWrapper RunnerId="Run" />
-    </configuration>
   </component>
   <component name="SelectInManager">
     <target name="J2EE View" />
@@ -331,20 +322,20 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-4" y="-4" width="1032" height="776" extended-state="0" />
+    <frame x="-4" y="-4" width="1032" height="776" extended-state="6" />
     <editor active="false" />
     <layout>
       <window_info id="Properties File Structure" active="false" anchor="right" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.20918368" order="5" />
       <window_info id="CVS" active="false" anchor="bottom" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.33024693" order="8" />
       <window_info id="Regex" active="false" anchor="bottom" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.44135803" order="10" x="22" y="277" width="980" height="214" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.33024693" order="7" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="docked" type="docked" visible="true" weight="0.22244897" order="0" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.2622449" order="0" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.33024693" order="1" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.27959183" order="1" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.33024693" order="9" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="true" internal_type="docked" type="docked" visible="false" weight="0.39969134" order="6" />
       <window_info id="Dependency Viewer" active="false" anchor="bottom" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.33" order="8" />
-      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="docked" type="docked" visible="true" weight="0.1367347" order="1" />
+      <window_info id="Ant Build" active="true" anchor="right" auto_hide="false" internal_type="docked" type="docked" visible="true" weight="0.13061224" order="1" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="true" internal_type="docked" type="docked" visible="false" weight="0.39660493" order="2" x="22" y="277" width="980" height="213" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.25" order="2" />
       <window_info id="CVS File View" active="false" anchor="right" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.33" order="3" />
@@ -533,25 +524,25 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/net/thauvin/erik/mobibot/Weather.java">
+    <entry file="jar://$PROJECT_DIR$/lib/pircbot.jar!/org/jibble/pircbot/PircBot.class">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="59" column="38" selection-start="2170" selection-end="2182" vertical-scroll-proportion="0.27580371">
+        <state line="77" column="35" selection-start="2270" selection-end="2270" vertical-scroll-proportion="0.33333334">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/net/thauvin/erik/mobibot/Mobibot.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="753" column="86" selection-start="17557" selection-end="17557" vertical-scroll-proportion="20.65313">
+        <state line="1035" column="65" selection-start="26542" selection-end="26542" vertical-scroll-proportion="0.14382403">
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="jar://$PROJECT_DIR$/lib/pircbot.jar!/org/jibble/pircbot/PircBot.class">
+    <entry file="file://$PROJECT_DIR$/src/net/thauvin/erik/mobibot/Weather.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="77" column="35" selection-start="2270" selection-end="2270" vertical-scroll-proportion="0.33333334">
+        <state line="59" column="38" selection-start="2170" selection-end="2182" vertical-scroll-proportion="0.3790186">
           <folding />
         </state>
       </provider>

@@ -406,6 +406,11 @@ public class Mobibot extends PircBot
 	private final Vector _history = new Vector(0);
 
 	/**
+	 * The ignored nicks array.
+	 */
+	private final Vector _ignoredNicks = new Vector(0);
+
+	/**
 	 * The backlogs URL.
 	 */
 	private String _backlogsURL = "";
@@ -618,6 +623,7 @@ public class Mobibot extends PircBot
 			final String feedURL = p.getProperty("feed", "");
 			final String backlogsURL = ensureDir(p.getProperty("backlogs", weblogURL), true);
 			final String googleKey = p.getProperty("google", "");
+			final String ignoredNicks = p.getProperty("ignore", "");
 
 			// Create the bot
 			final Mobibot bot = new Mobibot(server, channel, logsDir);
@@ -637,6 +643,9 @@ public class Mobibot extends PircBot
 
 			// Set the Google key
 			bot.setGoogleKey(googleKey);
+
+			// Set the ignored nicks
+			bot.setIgnoredNicks(ignoredNicks);
 
 			// Save the entries
 			bot.saveEntries(true);
@@ -1024,7 +1033,7 @@ public class Mobibot extends PircBot
 			_logger.debug(">>> " + sender + ": " + message);
 		}
 
-		if (message.matches(LINK_MATCH))
+		if (message.matches(LINK_MATCH) && !isIgnoredNick(sender))
 		{
 			final String[] cmds = message.split(" ", 2);
 			final String cmd = cmds[0].trim();
@@ -1529,6 +1538,24 @@ public class Mobibot extends PircBot
 	}
 
 	/**
+	 * Sets the Ignored nicks.
+	 *
+	 * @param nicks The nicks to ignore
+	 */
+	private void setIgnoredNicks(String nicks)
+	{
+		if (isValidString(nicks))
+		{
+			final StringTokenizer st = new StringTokenizer(nicks, ",");
+
+			while (st.hasMoreTokens())
+			{
+				_ignoredNicks.add(st.nextToken().trim().toLowerCase());
+			}
+		}
+	}
+
+	/**
 	 * Set today's date.
 	 *
 	 * @param today Today's date.
@@ -1974,7 +2001,7 @@ public class Mobibot extends PircBot
 	 *
 	 * @param isDayBackup Set the true if the daily backup file should also be created.
 	 */
-	private synchronized void saveEntries(boolean isDayBackup)
+	private void saveEntries(boolean isDayBackup)
 	{
 		if (_logger.isDebugEnabled())
 		{
@@ -2307,6 +2334,23 @@ public class Mobibot extends PircBot
 	private static String today()
 	{
 		return ISO_SDF.format(Calendar.getInstance().getTime());
+	}
+
+	/**
+	 * Determines whether the specified nick should be ignored.
+	 *
+	 * @param nick The nick.
+	 *
+	 * @return <code>true</code> if the nick should be ignored, <code>false</code> otherwise.
+	 */
+	private boolean isIgnoredNick(String nick)
+	{
+		if (isValidString(nick))
+		{
+			return _ignoredNicks.contains(nick.toLowerCase());
+		}
+
+		return false;
 	}
 
 	/**
