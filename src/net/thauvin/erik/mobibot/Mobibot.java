@@ -80,8 +80,8 @@ public class Mobibot extends PircBot
 	 */
 	private static final String[] INFO_STRS = 
 											  {
-												  "Mobibot v0.1.3b4 by Erik C. Thauvin (erik@thauvin.net)",
-												  "<http://www.thauvin.net/mobitopia/mobibot/>"
+												  "Mobibot v0.1.3b5 by Erik C. Thauvin (erik@thauvin.net)",
+												  "http://www.thauvin.net/mobitopia/mobibot/"
 											  };
 
 	/**
@@ -208,6 +208,11 @@ public class Mobibot extends PircBot
 	 * The ping command.
 	 */
 	private static final String PING_CMD = "ping";
+
+	/**
+	 * The pong command.
+	 */
+	private static final String PONG_CMD = "pong";
 
 	/**
 	 * The recap command.
@@ -846,7 +851,7 @@ public class Mobibot extends PircBot
 		else if (lcTopic.endsWith(WEATHER_CMD))
 		{
 			this.sendNotice(sender, "To display weather information:");
-			this.sendNotice(sender, DOUBLE_INDENT + bold(getNick() + ": " + WEATHER_CMD) + " [<station id>]");
+			this.sendNotice(sender, DOUBLE_INDENT + bold(getNick() + ": " + WEATHER_CMD + " <station id>"));
 			this.sendNotice(sender,
 							"For a listing of the ICAO station IDs, please visit: <" + Weather.STATIONS_URL + '>');
 		}
@@ -1087,6 +1092,10 @@ public class Mobibot extends PircBot
 				final Random r = new Random();
 
 				this.sendAction(channel, pings[r.nextInt(pings.length)]);
+			}
+			else if (cmd.equals(PONG_CMD))
+			{
+				this.sendMessage(channel, PING_CMD);
 			}
 			else if (cmd.equals(RECAP_CMD))
 			{
@@ -1369,6 +1378,14 @@ public class Mobibot extends PircBot
 		{
 			helpResponse(sender, args);
 		}
+		else if (cmd.equals("kill"))
+		{
+			if (isOp(sender))
+			{
+				this.sendRawLine("QUIT : Poof!");
+				System.exit(0);
+			}
+		}
 		else if (cmd.equals(DIE_CMD))
 		{
 			if (isOp(sender))
@@ -1584,7 +1601,7 @@ public class Mobibot extends PircBot
 			buff.append("[+" + entry.getCommentsCount() + ']');
 		}
 
-		buff.append(' ' + entry.getTitle() + " <" + entry.getLink() + '>');
+		buff.append(' ' + entry.getTitle() + " ( " + entry.getLink() + " )");
 
 		return buff.toString();
 	}
@@ -2067,11 +2084,20 @@ public class Mobibot extends PircBot
 	 */
 	private static void sleep(int secs)
 	{
+		/*
 		try
 		{
 			Thread.sleep((long) (secs * 1000));
 		}
 		catch (InterruptedException ignore)
+		{
+			; // Do nothing
+		}
+		*/
+		
+		final long stop = System.currentTimeMillis() + ((long) secs * 1000);
+
+		while (System.currentTimeMillis() <= stop)
 		{
 			; // Do nothing
 		}
