@@ -72,22 +72,8 @@ public class EntryLink implements Serializable
 	private String _link = "";
 	private String _login = "";
 	private String _nick = "";
-	private String _title = "No Title";
+	private String _title = "";
 
-
-	/**
-	 * Creates a new entry.
-	 *
-	 * @param link The new entry's link.
-	 * @param nick The nickname of the author of the link.
-	 * @param login The login of the author of the link.
-	 */
-	public EntryLink(String link, String nick, String login)
-	{
-		_link = link;
-		_nick = nick;
-		_login = login;
-	}
 
 	/**
 	 * Creates a new entry.
