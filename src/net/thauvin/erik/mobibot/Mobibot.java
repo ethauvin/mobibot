@@ -163,6 +163,16 @@ public class Mobibot extends PircBot
 	private static final String CYCLE_CMD = "cycle";
 
 	/**
+	 * The ignore command.
+	 */
+	private static final String IGNORE_CMD = "ignore";
+
+	/**
+	 * The ignore <code>me</code> keyword.
+	 */
+	private static final String IGNORE_ME_KEYWORD = "me";
+
+	/**
 	 * The help command.
 	 */
 	private static final String HELP_CMD = "help";
@@ -887,6 +897,14 @@ public class Mobibot extends PircBot
 				send(sender, DOUBLE_INDENT + bold(getNick() + ": " + CURRENCY_CMD));
 			}
 		}
+		else if (lcTopic.startsWith(IGNORE_CMD))
+		{
+			send(sender, "To check your ignore status:");
+			send(sender, DOUBLE_INDENT + bold(getNick() + ": " + IGNORE_CMD));
+
+			send(sender, "To toggle your ignore status:");
+			send(sender, DOUBLE_INDENT + bold(getNick() + ": " + IGNORE_CMD + ' ' + IGNORE_ME_KEYWORD));
+		}
 		else
 		{
 			send(sender, bold("Type a URL on " + getChannel() + " to post it."));
@@ -895,12 +913,13 @@ public class Mobibot extends PircBot
 			send(sender, "The commands are:");
 			send(sender,
 				 DOUBLE_INDENT +
-				 bold(CALC_CMD + ' ' + CURRENCY_CMD + ' ' + DICE_CMD + ' ' + GOOGLE_CMD + ' ' + INFO_CMD + ' ' +
-					  getChannel().substring(1) + ' ' + LOOKUP_CMD));
+				 bold(CALC_CMD + ' ' + CURRENCY_CMD + ' ' + DICE_CMD + ' ' + GOOGLE_CMD + ' ' + IGNORE_CMD));
 			send(sender,
 				 DOUBLE_INDENT +
-				 bold(HELP_POSTING_KEYWORD + ' ' + RECAP_CMD + ' ' + SPELL_CMD + ' ' + STOCK_CMD + ' ' + TIME_CMD +
-					  ' ' + USERS_CMD + ' ' + VIEW_CMD));
+				 bold(INFO_CMD + ' ' + getChannel().substring(1) + ' ' + LOOKUP_CMD + ' ' + HELP_POSTING_KEYWORD + ' ' +
+					  RECAP_CMD));
+			send(sender,
+				 DOUBLE_INDENT + bold(SPELL_CMD + ' ' + STOCK_CMD + ' ' + TIME_CMD + ' ' + USERS_CMD + ' ' + VIEW_CMD));
 			send(sender, DOUBLE_INDENT + bold(WEATHER_CMD));
 
 			if (isOp(sender))
@@ -1202,6 +1221,71 @@ public class Mobibot extends PircBot
 			else if (cmd.startsWith(WEATHER_CMD))
 			{
 				weatherResponse(sender, args, false);
+			}
+			else if (cmd.startsWith(IGNORE_CMD))
+			{
+				if (!isOp(sender))
+				{
+					final String nick = sender.toLowerCase();
+					final boolean isMe = args.toLowerCase().startsWith(IGNORE_ME_KEYWORD);
+
+					if (_ignoredNicks.contains(nick))
+					{
+						if (isMe)
+						{
+							_ignoredNicks.remove(nick);
+
+							send(sender, "You are no longer ignored.");
+						}
+						else
+						{
+							send(sender, "You are currently ignored.");
+						}
+					}
+					else
+					{
+						if (isMe)
+						{
+							_ignoredNicks.add(nick);
+
+							send(sender, "You are now ignored.");
+						}
+						else
+						{
+							send(sender, "You are not currently ignored.");
+						}
+					}
+				}
+				else
+				{
+					if (args.length() > 0)
+					{
+						final String[] nicks = args.toLowerCase().split(" ");
+
+						String nick;
+
+						for (int i = 0; i < nicks.length; i++)
+						{
+							nick = nicks[i];
+
+							if (IGNORE_ME_KEYWORD.equals(nick))
+							{
+								nick = sender.toLowerCase();
+							}
+
+							if (_ignoredNicks.contains(nick))
+							{
+								_ignoredNicks.remove(nick);
+							}
+							else
+							{
+								_ignoredNicks.add(nick);
+							}
+						}
+					}
+
+					send(sender, "The following nicks are ignored: " + _ignoredNicks.toString());
+				}
 			}
 		}
 		else if (message.matches(LINK_CMD + "[0-9]+:.*"))

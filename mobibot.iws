@@ -115,16 +115,16 @@
     <first-group selected-file="file://$PROJECT_DIR$/src/net/thauvin/erik/mobibot/Mobibot.java">
       <entry file="file://$PROJECT_DIR$/src/net/thauvin/erik/mobibot/Mobibot.java" pinned="false">
         <provider selected="true" editor-type-id="text-editor">
-          <state line="1035" column="65" selection-start="26542" selection-end="26542" vertical-scroll-proportion="0.14382403">
+          <state line="1055" column="9" selection-start="27106" selection-end="27106" vertical-scroll-proportion="0.21319798">
             <folding>
               <element signature="imports" expanded="true" />
             </folding>
           </state>
         </provider>
       </entry>
-      <entry file="file://$PROJECT_DIR$/src/net/thauvin/erik/mobibot/Weather.java" pinned="false">
+      <entry file="file://$PROJECT_DIR$/logs/2004-11-03.xml" pinned="false">
         <provider selected="true" editor-type-id="text-editor">
-          <state line="59" column="38" selection-start="2170" selection-end="2182" vertical-scroll-proportion="0.3790186">
+          <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
             <folding />
           </state>
         </provider>
@@ -145,20 +145,21 @@
   <component name="J2EEProjectPane" />
   <component name="NamedScopeManager" />
   <component name="PackagesPane">
-    <expanded_node url="net" module="mobibot" type="package" />
     <expanded_node url="net.thauvin.erik" module="mobibot" type="package" />
-    <expanded_node url="net.thauvin" module="mobibot" type="package" />
-    <expanded_node url="" module="mobibot" type="module" />
     <expanded_node url="net.thauvin.erik.mobibot" module="mobibot" type="package" />
+    <expanded_node url="net.thauvin" module="mobibot" type="package" />
+    <expanded_node url="net" module="mobibot" type="package" />
+    <expanded_node url="" module="mobibot" type="module" />
   </component>
   <component name="ProjectPane">
+    <expanded_node url="" module="mobibot" type="module" />
+    <expanded_node url="file://$PROJECT_DIR$/logs" module="mobibot" type="directory" />
     <expanded_node url="file://$PROJECT_DIR$/lib" module="mobibot" type="directory" />
     <expanded_node url="file://$PROJECT_DIR$" module="mobibot" type="directory" />
-    <expanded_node url="" module="mobibot" type="module" />
     <expanded_node url="file://$PROJECT_DIR$/website" module="mobibot" type="directory" />
   </component>
   <component name="ProjectView">
-    <navigator currentView="PackagesPane" splitterProportion="0.5">
+    <navigator currentView="ProjectPane" splitterProportion="0.5">
       <flattenPackages />
       <showMembers />
       <showModules />
@@ -229,20 +230,6 @@
       <option name="HOST" value="localhost" />
       <option name="PORT" value="5005" />
     </configuration>
-    <configuration selected="false" default="true" type="WebLogic Instance" factoryName="Local">
-      <option name="WORKING_DIRECTORY" />
-      <option name="HOST" value="localhost" />
-      <option name="PORT" value="7001" />
-      <option name="LOCAL" value="true" />
-      <option name="OPEN_IN_BROWSER" value="true" />
-      <option name="OPEN_IN_BROWSER_URL" value="/" />
-      <option name="COMMON_VM_ARGUMENTS" value="" />
-      <option name="DOMAIN_PATH" value="" />
-      <option name="USER" value="weblogic" />
-      <option name="PASSWORD" value="weblogic" />
-      <option name="SERVER_NAME" value="myserver" />
-      <option name="DOMAIN_NAME" value="mydomain" />
-    </configuration>
     <configuration selected="false" default="true" type="Application" factoryName="Application">
       <option name="MAIN_CLASS_NAME" />
       <option name="VM_PARAMETERS" />
@@ -260,10 +247,24 @@
       <option name="POLICY_FILE" value="C:/IntelliJ-IDEA/bin/appletviewer.policy" />
       <option name="VM_PARAMETERS" />
     </configuration>
+    <configuration selected="false" default="true" type="WebLogic Instance" factoryName="Local">
+      <option name="WORKING_DIRECTORY" />
+      <option name="HOST" value="localhost" />
+      <option name="PORT" value="7001" />
+      <option name="LOCAL" value="true" />
+      <option name="OPEN_IN_BROWSER" value="true" />
+      <option name="OPEN_IN_BROWSER_URL" value="/" />
+      <option name="COMMON_VM_ARGUMENTS" value="" />
+      <option name="DOMAIN_PATH" value="" />
+      <option name="USER" value="weblogic" />
+      <option name="PASSWORD" value="weblogic" />
+      <option name="SERVER_NAME" value="myserver" />
+      <option name="DOMAIN_NAME" value="mydomain" />
+    </configuration>
     <configuration selected="true" default="false" name="Mobibot" type="Application" factoryName="Application">
       <option name="MAIN_CLASS_NAME" value="net.thauvin.erik.mobibot.Mobibot" />
       <option name="VM_PARAMETERS" value="" />
-      <option name="PROGRAM_PARAMETERS" value="-d -s mobibot2.ser" />
+      <option name="PROGRAM_PARAMETERS" value="-d" />
       <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
       <module name="mobibot" />
       <RunnerSettings RunnerId="Run" />
@@ -322,20 +323,20 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-4" y="-4" width="1032" height="776" extended-state="6" />
-    <editor active="false" />
+    <frame x="-4" y="-4" width="1032" height="776" extended-state="0" />
+    <editor active="true" />
     <layout>
       <window_info id="Properties File Structure" active="false" anchor="right" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.20918368" order="5" />
       <window_info id="CVS" active="false" anchor="bottom" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.33024693" order="8" />
       <window_info id="Regex" active="false" anchor="bottom" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.44135803" order="10" x="22" y="277" width="980" height="214" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.33024693" order="7" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.2622449" order="0" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="docked" type="docked" visible="true" weight="0.2622449" order="0" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.33024693" order="1" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.27959183" order="1" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.33024693" order="9" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="true" internal_type="docked" type="docked" visible="false" weight="0.39969134" order="6" />
       <window_info id="Dependency Viewer" active="false" anchor="bottom" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.33" order="8" />
-      <window_info id="Ant Build" active="true" anchor="right" auto_hide="false" internal_type="docked" type="docked" visible="true" weight="0.13061224" order="1" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="docked" type="docked" visible="true" weight="0.1244898" order="1" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="true" internal_type="docked" type="docked" visible="false" weight="0.39660493" order="2" x="22" y="277" width="980" height="213" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.25" order="2" />
       <window_info id="CVS File View" active="false" anchor="right" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.33" order="3" />
@@ -425,22 +426,6 @@
     </buildFile>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/.cvsignore">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="5" column="18" selection-start="74" selection-end="74" vertical-scroll-proportion="0.15178572">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/net/thauvin/erik/mobibot/StockQuote.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="45" column="20" selection-start="1862" selection-end="1862" vertical-scroll-proportion="0.28764805">
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/net/thauvin/erik/mobibot/FeedReader.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="101" column="51" selection-start="2966" selection-end="2966" vertical-scroll-proportion="0.8595601">
@@ -466,15 +451,6 @@
             <expanded path="path" />
             <expanded path="" />
           </NAVIGATION_TREE>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/net/thauvin/erik/mobibot/CurrencyConverter.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="180" column="0" selection-start="5069" selection-end="5069" vertical-scroll-proportion="0.9348659">
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -531,9 +507,9 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/net/thauvin/erik/mobibot/Mobibot.java">
+    <entry file="file://$PROJECT_DIR$/src/net/thauvin/erik/mobibot/StockQuote.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="1035" column="65" selection-start="26542" selection-end="26542" vertical-scroll-proportion="0.14382403">
+        <state line="53" column="13" selection-start="2029" selection-end="2029" vertical-scroll-proportion="0.33333334">
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -542,8 +518,33 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/net/thauvin/erik/mobibot/Weather.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="59" column="38" selection-start="2170" selection-end="2182" vertical-scroll-proportion="0.3790186">
+        <state line="54" column="13" selection-start="2059" selection-end="2059" vertical-scroll-proportion="0.33333334">
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/net/thauvin/erik/mobibot/CurrencyConverter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="63" column="13" selection-start="2150" selection-end="2150" vertical-scroll-proportion="-3.9424703">
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/logs/2004-11-03.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/net/thauvin/erik/mobibot/Mobibot.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="1055" column="9" selection-start="27106" selection-end="27106" vertical-scroll-proportion="0.21319798">
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
