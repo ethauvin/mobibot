@@ -149,7 +149,7 @@ public class FeedReader implements Runnable
 			{
 				item = (Item) it.next();
 				_bot.sendNotice(_sender, item.getTitle());
-				_bot.sendNotice(_sender, TAB_INDENT + '<' + item.getLink() + '>');
+				_bot.sendNotice(_sender, TAB_INDENT  + item.getLink());
 
 				i++;
 			}

@@ -155,8 +155,7 @@ public class GoogleSearch implements Runnable
 						_bot.sendNotice(_sender,
 										Mobibot.unescapeXml(GOOGLE_BEAN.getResultElementProperty(i, "title").replaceAll("<([bB]|/[bB])>",
 																														Colors.BOLD)));
-						_bot.sendNotice(_sender, TAB_INDENT + '<' + GOOGLE_BEAN.getResultElementProperty(i, "url") +
-										'>');
+						_bot.sendNotice(_sender, TAB_INDENT + GOOGLE_BEAN.getResultElementProperty(i, "url"));
 					}
 				}
 			}
