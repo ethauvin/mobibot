@@ -110,7 +110,7 @@ public class CurrencyConverter implements Runnable
 	{
 		_bot = bot;
 		_sender = sender;
-		_query = query;
+		_query = query.toLowerCase();
 
 		if (!s_date.equals(date))
 		{

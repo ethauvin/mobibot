@@ -125,7 +125,7 @@ public class GoogleSearch implements Runnable
 			{
 				final String r = GOOGLE_BEAN.getSpellingSuggestion(_query);
 
-				if ((r != null) && (r.length() > 0))
+				if (Mobibot.isValidString(r))
 				{
 					_bot.sendNotice(_sender, Mobibot.unescapeXml(r));
 				}
@@ -153,8 +153,8 @@ public class GoogleSearch implements Runnable
 					for (int i = 0; i < GOOGLE_BEAN.getResultElementsCount(); i++)
 					{
 						_bot.sendNotice(_sender,
-										GOOGLE_BEAN.getResultElementProperty(i, "title").replaceAll("<([bB]|/[bB])>",
-																									Colors.BOLD));
+										Mobibot.unescapeXml(GOOGLE_BEAN.getResultElementProperty(i, "title").replaceAll("<([bB]|/[bB])>",
+																														Colors.BOLD)));
 						_bot.sendNotice(_sender, TAB_INDENT + '<' + GOOGLE_BEAN.getResultElementProperty(i, "url") +
 										'>');
 					}

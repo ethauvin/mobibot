@@ -91,7 +91,7 @@ public class Weather implements Runnable
 	{
 		_bot = bot;
 		_sender = sender;
-		_station = station;
+		_station = station.toUpperCase();
 		_isPrivate = isPrivate;
 	}
 
