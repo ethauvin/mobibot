@@ -171,6 +171,12 @@ public class Weather implements Runnable
 
 				return;
 			}
+			else
+			{
+				_bot.send(_sender, "Invalid Station ID. Please try again.", _isPrivate);
+
+				return;
+			}
 		}
 
 		_bot.helpResponse(_sender, Mobibot.WEATHER_CMD);
