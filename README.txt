@@ -15,8 +15,8 @@ Some very basic instructions:
 	{ configure the properties }
 	vi *.properties
 	
-	{ debug }
-	java -jar mobibot.jar -debug
+	{ help }
+	java -jar mobibot.jar -h
 	
 	{ launch }
 	/usr/bin/nohup java -jar mobibot.jar &
