@@ -71,9 +71,18 @@ public class DeliciousPoster
 	 * @param entry    The entry to add.
 	 * @param extended The del.icio.us extended data.
 	 */
-	public final void addPost(EntryLink entry, String extended)
+	public final void addPost(final EntryLink entry, final String extended)
 	{
-		_delicious.addPost(entry.getLink(), entry.getTitle(), extended, _tags, entry.getDate());
+		final SwingWorker worker = new SwingWorker()
+		{
+			public Object construct()
+			{
+				return new Boolean(_delicious.addPost(entry.getLink(), entry.getTitle(), extended, _tags,
+													  entry.getDate()));
+			}
+		};
+
+		worker.start();
 	}
 
 	/**
@@ -81,8 +90,16 @@ public class DeliciousPoster
 	 *
 	 * @param entry The entry to delete.
 	 */
-	public final void deletePost(EntryLink entry)
+	public final void deletePost(final EntryLink entry)
 	{
-		_delicious.deletePost(entry.getLink());
+		final SwingWorker worker = new SwingWorker()
+		{
+			public Object construct()
+			{
+				return new Boolean(_delicious.deletePost(entry.getLink()));
+			}
+		};
+
+		worker.start();
 	}
 }

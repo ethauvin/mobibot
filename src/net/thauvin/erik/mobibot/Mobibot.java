@@ -1122,7 +1122,7 @@ public class Mobibot extends PircBot
 
 					if (_delicious != null)
 					{
-						_delicious.addPost(entry, postedBy(sender, channel));
+						_delicious.addPost(entry, postedBy(entry, channel));
 					}
 
 					saveEntries(isBackup);
@@ -1395,7 +1395,7 @@ public class Mobibot extends PircBot
 
 							if (_delicious != null)
 							{
-								_delicious.addPost(entry, postedBy(sender, channel));
+								_delicious.addPost(entry, postedBy(entry, channel));
 							}
 
 							send(getChannel(), buildLink(index, entry));
@@ -1421,7 +1421,7 @@ public class Mobibot extends PircBot
 
 								if (_delicious != null)
 								{
-									_delicious.addPost(entry, postedBy(sender, channel));
+									_delicious.addPost(entry, postedBy(entry, channel));
 								}
 
 								send(getChannel(), buildLink(index, entry));
@@ -2277,14 +2277,14 @@ public class Mobibot extends PircBot
 	/**
 	 * Returns he del.icio.us extended attribution line.
 	 *
-	 * @param  sender  The sender.
+	 * @param  entry  The entry.
 	 * @param  channel The channel
 	 *
 	 * @return The extended attribution line.
 	 */
-	private final String postedBy(String sender, String channel)
+	private String postedBy(EntryLink entry, String channel)
 	{
-		return "Posted by " + sender + " on " + channel + " (" + _ircServer + ')';
+		return "Posted by " + entry.getNick() + " on " + channel + " (" + _ircServer + ')';
 	}
 
 	/**
