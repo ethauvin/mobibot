@@ -1,0 +1,20 @@
+[Jar files]
+D:\projects\java\mobibot\build
+[Source dirs]
+D:\projects\java\mobibot\src
+[Aux classpath entries]
+D:\projects\java\mobibot\lib\commons-httpclient-2.0-final.jar
+D:\projects\java\mobibot\lib\commons-logging.jar
+D:\projects\java\mobibot\lib\commons-net-1.1.0.jar
+D:\projects\java\mobibot\lib\EXML.jar
+D:\projects\java\mobibot\lib\fetchrss.jar
+D:\projects\java\mobibot\lib\google.jar
+D:\projects\java\mobibot\lib\googleapi.jar
+D:\projects\java\mobibot\lib\jakarta-oro-2.0.7.jar
+D:\projects\java\mobibot\lib\jakarta-oro-2.0.8.jar
+D:\projects\java\mobibot\lib\jdom.jar
+D:\projects\java\mobibot\lib\jweather-0.2.3.jar
+D:\projects\java\mobibot\lib\log4j-1.2.8.jar
+D:\projects\java\mobibot\lib\MathEvaluator.jar
+D:\projects\java\mobibot\lib\pircbot.jar
+D:\projects\java\mobibot\lib\rsslibj.jar
