@@ -49,10 +49,7 @@ import java.net.URL;
 
 import java.text.NumberFormat;
 
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
 
 /**
@@ -75,6 +72,11 @@ public class CurrencyConverter implements Runnable
 	 * The exchange rates.
 	 */
 	private static final Map EXCHANGE_RATES = new TreeMap();
+
+	/**
+	 * The rates keyword.
+	 */
+	private static final String RATES_KEYWORD = "rates";
 
 	/**
 	 * The last exchange rates table publication date.
@@ -176,7 +178,7 @@ public class CurrencyConverter implements Runnable
 						{
 							final double amt = Double.parseDouble(cmds[0].replaceAll(",", ""));
 							final double from = Double.parseDouble((String) EXCHANGE_RATES.get(cmds[1].toUpperCase()));
-							double to = Double.parseDouble((String) EXCHANGE_RATES.get(cmds[3].toUpperCase()));
+							final double to = Double.parseDouble((String) EXCHANGE_RATES.get(cmds[3].toUpperCase()));
 
 							_bot.sendNotice(_bot.getChannel(),
 											NumberFormat.getCurrencyInstance(Locale.US).format(amt).substring(1) + ' ' +
@@ -191,6 +193,28 @@ public class CurrencyConverter implements Runnable
 						}
 					}
 				}
+			}
+			else if (_query.equals(RATES_KEYWORD))
+			{
+				_bot.sendNotice(_sender, "Last Update: " + s_date);
+
+				final Iterator it = EXCHANGE_RATES.keySet().iterator();
+				String rate;
+
+				final StringBuffer buff = new StringBuffer(0);
+
+				while (it.hasNext())
+				{
+					rate = (String) it.next();
+					if (buff.length() > 0)
+					{
+						buff.append(", ");
+					}
+					buff.append(rate).append(": ").append(EXCHANGE_RATES.get(rate));
+				}
+
+				_bot.sendNotice(_sender, buff.toString());
+
 			}
 			else
 			{
