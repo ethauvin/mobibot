@@ -41,6 +41,7 @@ import com.primalworld.math.MathEvaluator;
 import com.rsslibj.elements.Channel;
 import com.rsslibj.elements.Item;
 
+import org.apache.commons.cli.*;
 import org.apache.commons.logging.impl.Log4JLogger;
 import org.apache.commons.net.WhoisClient;
 
@@ -79,14 +80,24 @@ public class Mobibot extends PircBot
 	 */
 	private static final String[] INFO_STRS = 
 											  {
-												  "Mobibot v0.1.2 by Erik C. Thauvin (erik@thauvin.net)",
+												  "Mobibot v0.1.3b1 by Erik C. Thauvin (erik@thauvin.net)",
 												  "<http://www.thauvin.net/mobitopia/mobibot/>"
 											  };
 
 	/**
 	 * Debug command line argument.
 	 */
-	private static final String DEBUG_ARG = "-debug";
+	private static final String DEBUG_ARG = "debug";
+
+	/**
+	 * Help command line argument.
+	 */
+	private static final String HELP_ARG = "help";
+
+	/**
+	 * Properties command line argument.
+	 */
+	private static final String PROPS_ARG = "properties";
 
 	/**
 	 * The object serialization file where data is saved between launches.
@@ -479,150 +490,180 @@ public class Mobibot extends PircBot
 	 */
 	public static void main(String[] args)
 	{
-		FileInputStream fis = null;
-		final Properties p = new Properties();
+		// Setup the command line options
+		final Options options = new Options();
+		options.addOption(HELP_ARG.substring(0,1), HELP_ARG, false, "print this help message");
+		options.addOption(DEBUG_ARG.substring(0,1), DEBUG_ARG, false, "print debug & logging data directly to the console");
+		options.addOption(PROPS_ARG.substring(0,1), PROPS_ARG, true, "use alternate properties file");
+
+		// Parse the command line
+		final CommandLineParser parser = new PosixParser();
+		CommandLine line = null;
 
 		try
 		{
-			fis = new FileInputStream(new File("./mobibot.properties"));
-
-			// Load the properties files
-			p.load(fis);
+			line = parser.parse(options, args);
 		}
-		catch (FileNotFoundException e)
+		catch (ParseException e)
 		{
-			System.err.println("Unable to find properties file.");
+			System.err.println("CLI Parsing failed.  Reason: " + e.getMessage());
 			e.printStackTrace(System.err);
 			System.exit(1);
 		}
-		catch (IOException e)
-		{
-			System.err.println("Unable to open properties file.");
-			e.printStackTrace(System.err);
-			System.exit(1);
-		}
-		finally
-		{
-			if (fis != null)
-			{
-				try
-				{
-					fis.close();
-				}
-				catch (IOException ignore)
-				{
-					; // Do nothing
-				}
-			}
-		}
 
-		// Get the main properties
-		final String channel = p.getProperty("channel");
-		final String server = p.getProperty("server");
-		final String nickname = p.getProperty("nick", Mobibot.class.getName().toLowerCase());
-		final String logsDir = ensureDir(p.getProperty("logs", "."), false);
-
-		if ((args.length == 0) || !DEBUG_ARG.equals(args[0]))
+		if (line.hasOption(HELP_ARG.charAt(0)))
 		{
-			// Redirect the stdout and stderr
-			PrintStream stdout = null;
+			// Output the usage
+			new HelpFormatter().printHelp(Mobibot.class.getName(), options);
+		}
+		else
+		{
+			FileInputStream fis = null;
+			final Properties p = new Properties();
 
 			try
 			{
-				stdout = new PrintStream(new FileOutputStream(logsDir + channel.substring(1) + '.' + today() + ".log",
-															  true));
+				fis = new FileInputStream(new File(line.getOptionValue(PROPS_ARG.charAt(0), "./mobibot.properties")));
+
+				// Load the properties files
+				p.load(fis);
 			}
-			catch (IOException e)
+			catch (FileNotFoundException e)
 			{
-				System.err.println("Unable to open output (stdout) log file.");
+				System.err.println("Unable to find properties file.");
 				e.printStackTrace(System.err);
 				System.exit(1);
 			}
-
-			PrintStream stderr = null;
-
-			try
-			{
-				stderr = new PrintStream(new FileOutputStream(logsDir + nickname + ".err", true));
-			}
 			catch (IOException e)
 			{
-				System.err.println("Unable to open error (stderr) log file.");
+				System.err.println("Unable to open properties file.");
 				e.printStackTrace(System.err);
 				System.exit(1);
 			}
-
-			System.setOut(stdout);
-			System.setErr(stderr);
-		}
-
-		// Get the bot's properties
-		final String login = p.getProperty("login", nickname);
-		final String weblogURL = p.getProperty("weblog", "");
-		final String feedURL = p.getProperty("feed", "");
-		final String backlogsURL = ensureDir(p.getProperty("backlogs", weblogURL), true);
-		final String googleKey = p.getProperty("google", "");
-
-		// Create the bot
-		final Mobibot bot = new Mobibot(server, channel, weblogURL, feedURL, backlogsURL, logsDir);
-
-		// Initialize the bot
-		bot.setVerbose(true);
-		bot.setName(nickname);
-		bot.setLogin(login);
-		bot.setVersion(weblogURL);
-
-		// Set the Google key
-		bot.setGoogleKey(googleKey);
-
-		// Connect
-		try
-		{
-			bot.connect(server);
-		}
-		catch (Exception e)
-		{
-			int retries = 0;
-
-			while ((retries < MAX_RECONNECT) && !bot.isConnected())
+			finally
 			{
-				sleep(10);
-
-				if ((retries > 0) && (e instanceof NickAlreadyInUseException))
+				if (fis != null)
 				{
-					bot.setName(nickname + retries);
+					try
+					{
+						fis.close();
+					}
+					catch (IOException ignore)
+					{
+						; // Do nothing
+					}
 				}
+			}
 
-				retries++;
+			// Get the main properties
+			final String channel = p.getProperty("channel");
+			final String server = p.getProperty("server");
+			final String nickname = p.getProperty("nick", Mobibot.class.getName().toLowerCase());
+			final String logsDir = ensureDir(p.getProperty("logs", "."), false);
+
+			if (!line.hasOption(DEBUG_ARG.charAt(0)))
+			{
+				// Redirect the stdout and stderr
+				PrintStream stdout = null;
 
 				try
 				{
-					bot.connect(server);
+					stdout = new PrintStream(new FileOutputStream(logsDir + channel.substring(1) + '.' + today() +
+																  ".log", true));
 				}
-				catch (NickAlreadyInUseException ex)
+				catch (IOException e)
 				{
-					if (retries == MAX_RECONNECT)
+					System.err.println("Unable to open output (stdout) log file.");
+					e.printStackTrace(System.err);
+					System.exit(1);
+				}
+
+				PrintStream stderr = null;
+
+				try
+				{
+					stderr = new PrintStream(new FileOutputStream(logsDir + nickname + ".err", true));
+				}
+				catch (IOException e)
+				{
+					System.err.println("Unable to open error (stderr) log file.");
+					e.printStackTrace(System.err);
+					System.exit(1);
+				}
+
+				System.setOut(stdout);
+				System.setErr(stderr);
+			}
+
+			// Get the bot's properties
+			final String login = p.getProperty("login", nickname);
+			final String weblogURL = p.getProperty("weblog", "");
+			final String feedURL = p.getProperty("feed", "");
+			final String backlogsURL = ensureDir(p.getProperty("backlogs", weblogURL), true);
+			final String googleKey = p.getProperty("google", "");
+
+			// Create the bot
+			final Mobibot bot = new Mobibot(server, channel, weblogURL, feedURL, backlogsURL, logsDir);
+
+			// Initialize the bot
+			bot.setVerbose(true);
+			bot.setName(nickname);
+			bot.setLogin(login);
+			bot.setVersion(weblogURL);
+
+			// Set the Google key
+			bot.setGoogleKey(googleKey);
+
+			// Connect
+			try
+			{
+				bot.connect(server);
+			}
+			catch (Exception e)
+			{
+				int retries = 0;
+
+				while ((retries < MAX_RECONNECT) && !bot.isConnected())
+				{
+					sleep(10);
+
+					if ((retries > 0) && (e instanceof NickAlreadyInUseException))
 					{
-						System.err.println("Unable to connect to " + server + " after " + MAX_RECONNECT +
-										   " retries. Nickname already in use.");
-						e.printStackTrace(System.err);
-						System.exit(1);
+						bot.setName(nickname + retries);
 					}
-				}
-				catch (Exception ex)
-				{
-					if (retries == MAX_RECONNECT)
+
+					retries++;
+
+					try
 					{
-						System.err.println("Unable to connect to " + server + " after " + MAX_RECONNECT + " retries.");
-						e.printStackTrace(System.err);
-						System.exit(1);
+						bot.connect(server);
+					}
+					catch (NickAlreadyInUseException ex)
+					{
+						if (retries == MAX_RECONNECT)
+						{
+							System.err.println("Unable to connect to " + server + " after " + MAX_RECONNECT +
+											   " retries. Nickname already in use.");
+							e.printStackTrace(System.err);
+							System.exit(1);
+						}
+					}
+					catch (Exception ex)
+					{
+						if (retries == MAX_RECONNECT)
+						{
+							System.err.println("Unable to connect to " + server + " after " + MAX_RECONNECT +
+											   " retries.");
+							e.printStackTrace(System.err);
+							System.exit(1);
+						}
 					}
 				}
 			}
-		}
 
-		bot.setVersion(INFO_STRS[0]);
-		bot.joinChannel(channel);
+			bot.setVersion(INFO_STRS[0]);
+			bot.joinChannel(channel);
+		}
 	}
 
 	/**
@@ -872,7 +913,8 @@ public class Mobibot extends PircBot
 			this.sendNotice(sender,
 							DOUBLE_INDENT + Colors.BOLD + getNick() + ": " + WEATHER_CMD + Colors.BOLD +
 							" [<station id>]");
-			this.sendNotice(sender, "For a listing of the ICAO station IDs, please visit: <" + Weather.STATIONS_URL + '>');
+			this.sendNotice(sender,
+							"For a listing of the ICAO station IDs, please visit: <" + Weather.STATIONS_URL + '>');
 		}
 		else if (lcmd.endsWith(USERS_CMD))
 		{
@@ -973,6 +1015,8 @@ public class Mobibot extends PircBot
 	protected final void onDisconnect()
 	{
 		setVersion(_weblogURL);
+
+		sleep(5);
 
 		// Connect
 		try
@@ -2137,6 +2181,7 @@ public class Mobibot extends PircBot
 	{
 		return ISO_SDF.format(Calendar.getInstance().getTime());
 	}
+
 
 	/**
 	 * Responds with the users on a channel.
