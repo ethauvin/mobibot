@@ -256,7 +256,7 @@ public class Mobibot extends PircBot
 	/**
 	 * The weather command.
 	 */
-	private static final String WEATHER_CMD = "weather";
+	public static final String WEATHER_CMD = "weather";
 
 	/**
 	 * The HH:MM timestamp simple date format.
@@ -871,8 +871,8 @@ public class Mobibot extends PircBot
 			this.sendNotice(sender, "To display weather information:");
 			this.sendNotice(sender,
 							DOUBLE_INDENT + Colors.BOLD + getNick() + ": " + WEATHER_CMD + Colors.BOLD +
-							" [<ICAO station id>]");
-			this.sendNotice(sender, "See: <" + Weather.STATIONS_URL + '>');
+							" [<station id>]");
+			this.sendNotice(sender, "For a listing of the ICAO station IDs, please visit: <" + Weather.STATIONS_URL + '>');
 		}
 		else if (lcmd.endsWith(USERS_CMD))
 		{

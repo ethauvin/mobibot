@@ -173,8 +173,6 @@ public class Weather implements Runnable
 			}
 		}
 
-		_bot.send(_sender,
-				  "For a listing of the supported ICAO weather station IDs please visit: <" + STATIONS_URL + '>',
-				  _isPrivate);
+		_bot.helpResponse(_sender, Mobibot.WEATHER_CMD);
 	}
 }
