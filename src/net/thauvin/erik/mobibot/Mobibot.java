@@ -80,7 +80,7 @@ public class Mobibot extends PircBot
 	 */
 	private static final String[] INFO_STRS = 
 											  {
-												  "Mobibot v0.1.3b3 by Erik C. Thauvin (erik@thauvin.net)",
+												  "Mobibot v0.1.3b4 by Erik C. Thauvin (erik@thauvin.net)",
 												  "<http://www.thauvin.net/mobitopia/mobibot/>"
 											  };
 
@@ -630,6 +630,7 @@ public class Mobibot extends PircBot
 
 			// Initialize the bot
 			bot.setVerbose(true);
+			bot.setAutoNickChange(true);
 			bot.setName(nickname);
 			bot.setLogin(login);
 			bot.setVersion(weblogURL);
@@ -651,30 +652,13 @@ public class Mobibot extends PircBot
 			{
 				int retries = 0;
 
-				while ((retries < MAX_RECONNECT) && !bot.isConnected())
+				while ((retries++ < MAX_RECONNECT) && !bot.isConnected())
 				{
 					sleep(10);
-
-					if ((retries > 0) && (e instanceof NickAlreadyInUseException))
-					{
-						bot.setName(nickname + retries);
-					}
-
-					retries++;
 
 					try
 					{
 						bot.connect(server);
-					}
-					catch (NickAlreadyInUseException ex)
-					{
-						if (retries == MAX_RECONNECT)
-						{
-							System.err.println("Unable to connect to " + server + " after " + MAX_RECONNECT +
-											   " retries. Nickname already in use.");
-							e.printStackTrace(System.err);
-							System.exit(1);
-						}
 					}
 					catch (Exception ex)
 					{
@@ -992,29 +976,13 @@ public class Mobibot extends PircBot
 		{
 			int retries = 0;
 
-			while ((retries < MAX_RECONNECT) && !isConnected())
+			while ((retries++ < MAX_RECONNECT) && !isConnected())
 			{
 				sleep(10);
-
-				if ((retries > 0) && (e instanceof NickAlreadyInUseException))
-				{
-					setName(getNick() + retries);
-				}
-
-				retries++;
 
 				try
 				{
 					connect(_ircServer);
-				}
-				catch (NickAlreadyInUseException ex)
-				{
-					if (retries == MAX_RECONNECT)
-					{
-						_logger.debug("Unable to reconnect to " + _ircServer + " after " + MAX_RECONNECT +
-									  " retries. Nickname already in use.", e);
-						System.exit(1);
-					}
 				}
 				catch (Exception ex)
 				{
