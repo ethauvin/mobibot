@@ -726,6 +726,30 @@ public class Mobibot extends PircBot
 	}
 
 	/**
+	 * Sends an action to the current channel.
+	 *
+	 * @param action The action.
+	 */
+	public final void action(String action)
+	{
+		action(getChannel(), action);
+	}
+
+	/**
+	 * Sends an action to the channel.
+	 *
+	 * @param channel The channel.
+	 * @param action The action.
+	 */
+	public final void action(String channel, String action)
+	{
+		if (isValidString(channel) && isValidString(action))
+		{
+			this.sendAction(channel, action);
+		}
+	}
+
+	/**
 	 * Responds with the bot's help.
 	 *
 	 * @param sender The nick of the person who sent the private message.
@@ -807,7 +831,7 @@ public class Mobibot extends PircBot
 		{
 			send(sender, "To display weather information:");
 			send(sender, DOUBLE_INDENT + bold(getNick() + ": " + WEATHER_CMD + " <station id>"));
-			send(sender, "For a listing of the ICAO station IDs, please visit: <" + Weather.STATIONS_URL + '>');
+			send(sender, "For a listing of the ICAO station IDs, please visit: " + Weather.STATIONS_URL);
 		}
 		else if (lcTopic.endsWith(USERS_CMD))
 		{
@@ -898,23 +922,26 @@ public class Mobibot extends PircBot
 	 */
 	public final void send(String sender, String message, boolean isPrivate)
 	{
-		if (isPrivate)
+		if (isValidString(message) && isValidString(sender))
 		{
-			if (_logger.isDebugEnabled())
+			if (isPrivate)
 			{
-				_logger.debug("Sending message to " + sender + ": " + message);
-			}
+				if (_logger.isDebugEnabled())
+				{
+					_logger.debug("Sending message to " + sender + ": " + message);
+				}
 
-			this.sendMessage(sender, message);
-		}
-		else
-		{
-			if (_logger.isDebugEnabled())
+				this.sendMessage(sender, message);
+			}
+			else
 			{
-				_logger.debug("Sending notice to " + sender + ": " + message);
-			}
+				if (_logger.isDebugEnabled())
+				{
+					_logger.debug("Sending notice to " + sender + ": " + message);
+				}
 
-			this.sendNotice(sender, message);
+				this.sendNotice(sender, message);
+			}
 		}
 	}
 
@@ -1066,11 +1093,11 @@ public class Mobibot extends PircBot
 
 				final Random r = new Random();
 
-				this.sendAction(channel, pings[r.nextInt(pings.length)]);
+				action(channel, pings[r.nextInt(pings.length)]);
 			}
 			else if (cmd.equals(PONG_CMD))
 			{
-				this.sendMessage(channel, PING_CMD);
+				send(channel, PING_CMD, true);
 			}
 			else if (cmd.equals(RECAP_CMD))
 			{
@@ -1095,19 +1122,19 @@ public class Mobibot extends PircBot
 
 				i = r.nextInt(6) + 1;
 				y = r.nextInt(6) + 1;
-				this.sendAction(getChannel(), "rolled two dice: " + i + " and " + y + " for a total of " + (i + y));
+				action("rolled two dice: " + i + " and " + y + " for a total of " + (i + y));
 
 				if (total < (i + y))
 				{
-					this.sendAction(getChannel(), "wins.");
+					action("wins.");
 				}
 				else if (total > (i + y))
 				{
-					this.sendAction(getChannel(), "lost.");
+					action("lost.");
 				}
 				else
 				{
-					this.sendAction(getChannel(), "tied.");
+					action("tied.");
 				}
 			}
 			else if (cmd.equalsIgnoreCase(getChannel().substring(1)))
@@ -1146,6 +1173,7 @@ public class Mobibot extends PircBot
 
 					try
 					{
+						me.trace();
 						send(getChannel(), String.valueOf(me.getValue()));
 					}
 					catch (Exception e)
@@ -1394,16 +1422,16 @@ public class Mobibot extends PircBot
 			if (isOp(sender))
 			{
 				_history.add(0, args);
-				this.sendMessage(sender, _history.toString());
+				send(sender, _history.toString(), true);
 			}
 		}
 		else if (cmd.startsWith(ME_CMD))
 		{
 			if (isOp(sender))
 			{
-				if (cmds.length > 1)
+				if (args.length() > 1)
 				{
-					this.sendAction(getChannel(), args);
+					action(args);
 				}
 				else
 				{
@@ -1424,7 +1452,7 @@ public class Mobibot extends PircBot
 			{
 				if (cmds.length > 1)
 				{
-					this.sendMessage(getChannel(), args);
+					send(getChannel(), args, true);
 				}
 				else
 				{
@@ -1461,7 +1489,7 @@ public class Mobibot extends PircBot
 					_logger.getLogger().setLevel(Level.DEBUG);
 				}
 
-				this.sendMessage(sender, "Debug logging is " + (_logger.isDebugEnabled() ? "enabled." : "disabled."));
+				send(sender, "Debug logging is " + (_logger.isDebugEnabled() ? "enabled." : "disabled."), true);
 			}
 		}
 		else
@@ -2256,7 +2284,7 @@ public class Mobibot extends PircBot
 
 		if (isPrivate)
 		{
-			this.sendMessage(sender, response);
+			send(sender, response, isPrivate);
 		}
 		else
 		{
