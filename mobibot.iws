@@ -71,7 +71,7 @@
     <option name="PUT_FOCUS_INTO_COMMENT" value="false" />
     <option name="SHOW_CHECKIN_OPTIONS" value="true" />
     <option name="FORCE_NON_EMPTY_COMMENT" value="false" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added action(channel, action) method.&#10;Added input validation to action/send methods." />
+    <option name="LAST_COMMIT_MESSAGE" value="Added support for del.icio.us" />
     <option name="SAVE_LAST_COMMIT_MESSAGE" value="true" />
     <option name="CHECKIN_DIALOG_SPLITTER_PROPORTION" value="0.8" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="false" />
@@ -124,14 +124,14 @@
       </entry>
       <entry file="file://$PROJECT_DIR$/website/index.html" pinned="false">
         <provider selected="true" editor-type-id="text-editor">
-          <state line="23" column="23" selection-start="1571" selection-end="1571" vertical-scroll-proportion="0.4268559">
+          <state line="45" column="160" selection-start="2992" selection-end="2992" vertical-scroll-proportion="0.70305675">
             <folding />
           </state>
         </provider>
       </entry>
       <entry file="file://$PROJECT_DIR$/ChangeLog.txt" pinned="false">
         <provider selected="true" editor-type-id="text-editor">
-          <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+          <state line="19" column="51" selection-start="759" selection-end="759" vertical-scroll-proportion="0.3469388">
             <folding />
           </state>
         </provider>
@@ -145,7 +145,7 @@
       </entry>
       <entry file="file://$PROJECT_DIR$/src/net/thauvin/erik/mobibot/DeliciousPoster.java" pinned="false">
         <provider selected="true" editor-type-id="text-editor">
-          <state line="49" column="13" selection-start="1854" selection-end="1854" vertical-scroll-proportion="0.2556391">
+          <state line="49" column="13" selection-start="1911" selection-end="1911" vertical-scroll-proportion="0.2556391">
             <folding />
           </state>
         </provider>
@@ -210,9 +210,10 @@
     <expanded_node url="net.thauvin" module="mobibot" type="package" />
   </component>
   <component name="ProjectPane">
+    <expanded_node url="file://$PROJECT_DIR$/website" module="mobibot" type="directory" />
     <expanded_node url="file://$PROJECT_DIR$" module="mobibot" type="directory" />
-    <expanded_node url="file://$PROJECT_DIR$/lib" module="mobibot" type="directory" />
     <expanded_node url="" module="mobibot" type="module" />
+    <expanded_node url="file://$PROJECT_DIR$/licenses" module="mobibot" type="directory" />
   </component>
   <component name="ProjectView">
     <navigator currentView="ProjectPane" splitterProportion="0.5">
@@ -535,7 +536,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/net/thauvin/erik/mobibot/DeliciousPoster.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="49" column="13" selection-start="1854" selection-end="1854" vertical-scroll-proportion="0.2556391">
+        <state line="49" column="13" selection-start="1911" selection-end="1911" vertical-scroll-proportion="0.2556391">
           <folding />
         </state>
       </provider>
@@ -565,7 +566,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/website/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="23" column="23" selection-start="1571" selection-end="1571" vertical-scroll-proportion="0.4268559">
+        <state line="45" column="160" selection-start="2992" selection-end="2992" vertical-scroll-proportion="0.70305675">
           <folding />
         </state>
       </provider>
@@ -602,7 +603,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/ChangeLog.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+        <state line="19" column="51" selection-start="759" selection-end="759" vertical-scroll-proportion="0.3469388">
           <folding />
         </state>
       </provider>

@@ -1,91 +1,227 @@
-2004-02-26	erik
-	* mobibot.iws 1.3:
-	* src/net/thauvin/erik/mobibot/Mobibot.java 1.5:
-		Added random ping response.
+2005-03-05 13:40  erik
 
-2004-02-25	erik
-	* src/net/thauvin/erik/mobibot/CurrencyConverter.java 1.3:
-	* src/net/thauvin/erik/mobibot/GoogleSearch.java 1.2:
-	* src/net/thauvin/erik/mobibot/Mobibot.java 1.4:
-	* src/net/thauvin/erik/mobibot/Weather.java 1.3:
-		Added -serial command line argument.
-		Added ability to search the current URL posts.
-		Added ping command.
-		Added more efficient arguments parsing in the public and private commands.
-		Added ability for the originator to modify a post's URL.
-		Removed the various URL-based attributes from the constructor.
-		Fixed the nick command.
+	* lib/commons-codec-1.3.jar, lib/commons-httpclient-2.0.1.jar,
+	  lib/commons-httpclient-3.0-rc1.jar, lib/delicious-1.4.jar,
+	  properties/mobibot.properties, build.properties,
+	  buildnum.properties, mobibot.iml, mobibot.ipr, mobibot.iws,
+	  src/net/thauvin/erik/mobibot/DeliciousPoster.java,
+	  src/net/thauvin/erik/mobibot/EntryLink.java,
+	  src/net/thauvin/erik/mobibot/Mobibot.java,
+	  src/net/thauvin/erik/mobibot/ReleaseInfo.java,
+	  website/index.html: Added support for del.icio.us
 
-2004-02-24	erik
-	* src/net/thauvin/erik/mobibot/CurrencyConverter.java 1.2:
-		Added the ability to list the current rates.
+2004-11-16 07:46  erik
 
-	* website/index.html 1.3:
-		Added reference to Commons CLI.
+	* buildnum.properties, mobibot.iws,
+	  src/net/thauvin/erik/mobibot/Mobibot.java,
+	  src/net/thauvin/erik/mobibot/ReleaseInfo.java,
+	  website/index.html: Added the ability to ignore nicknames.
 
-	* README.txt 1.2:
-	* lib/commons-cli-1.0.jar 1.1:
-	* mobibot.iml 1.2:
-	* mobibot.iws 1.2:
-	* src/net/thauvin/erik/mobibot/Mobibot.java 1.3:
-		The properties file can now be specified from the command line.
+2004-10-30 13:37  erik
 
-2004-02-18	erik
-	* src/net/thauvin/erik/mobibot/Mobibot.java 1.2:
-	* src/net/thauvin/erik/mobibot/Weather.java 1.2:
-		The weather command help is now returned when a station id is 
-		not specified.
+	* buildnum.properties, mobibot.iws,
+	  src/net/thauvin/erik/mobibot/Mobibot.java,
+	  src/net/thauvin/erik/mobibot/ReleaseInfo.java,
+	  website/index.html: Added the ability to ignore links from
+	  specified nicknames.
 
-2004-02-17	erik
-	* .cvsignore 1.1.1.1:
-	* build.properties 1.1.1.1:
-	* build.xml 1.1.1.1:
-	* lib/EXML.jar 1.1.1.1:
-	* lib/MathEvaluator.jar 1.1.1.1:
-	* lib/commons-httpclient-2.0-final.jar 1.1.1.1:
-	* lib/commons-logging.jar 1.1.1.1:
-	* lib/commons-net-1.1.0.jar 1.1.1.1:
-	* lib/fetchrss.jar 1.1.1.1:
-	* lib/google.jar 1.1.1.1:
-	* lib/googleapi.jar 1.1.1.1:
-	* lib/jakarta-oro-2.0.8.jar 1.1.1.1:
-	* lib/jdom.jar 1.1.1.1:
-	* lib/jweather-0.2.3.jar 1.1.1.1:
-	* lib/log4j-1.2.8.jar 1.1.1.1:
-	* lib/pircbot.jar 1.1.1.1:
-	* lib/rsslibj.jar 1.1.1.1:
-	* licenses/Commons License.txt 1.1.1.1:
-	* licenses/EXML-license.txt 1.1.1.1:
-	* licenses/Google License.txt 1.1.1.1:
-	* licenses/GoogleTagLib License.txt 1.1.1.1:
-	* licenses/JDOM License.txt 1.1.1.1:
-	* licenses/JWeather License.txt 1.1.1.1:
-	* licenses/License.txt 1.1.1.1:
-	* licenses/Log4j License.txt 1.1.1.1:
-	* licenses/PircBot License.html 1.1.1.1:
-	* licenses/RSSJLib License.txt 1.1.1.1:
-	* licenses/fetchrss License.txt 1.1.1.1:
-	* mobibot.fb 1.1.1.1:
-	* mobibot.iml 1.1.1.1:
-	* mobibot.ipr 1.1.1.1:
-	* mobibot.iws 1.1.1.1:
-	* properties/log4j.properties 1.1.1.1:
-	* properties/mobibot.properties 1.1.1.1:
-	* src/net/thauvin/erik/mobibot/CurrencyConverter.java 1.1.1.1:
-	* src/net/thauvin/erik/mobibot/EntryComment.java 1.1.1.1:
-	* src/net/thauvin/erik/mobibot/EntryLink.java 1.1.1.1:
-	* src/net/thauvin/erik/mobibot/FeedReader.java 1.1.1.1:
-	* src/net/thauvin/erik/mobibot/GoogleSearch.java 1.1.1.1:
-	* src/net/thauvin/erik/mobibot/Mobibot.java 1.1.1.1:
-	* src/net/thauvin/erik/mobibot/StockQuote.java 1.1.1.1:
-	* src/net/thauvin/erik/mobibot/Weather.java 1.1.1.1:
-	* website/index.html 1.1.1.1:
-	* website/simple.css 1.1.1.1:
-		Initial import.
+2004-10-04 07:22  erik
 
-	* website/index.html 1.2:
-		Added wiki reference.
+	* build.properties, buildnum.properties, mobibot.iws,
+	  src/net/thauvin/erik/mobibot/Mobibot.java,
+	  src/net/thauvin/erik/mobibot/ReleaseInfo.java: Added
+	  action(channel, action) method.  Added input validation to
+	  action/send methods.
 
-	* README.txt 1.1:
-		Added (very) minimal instructions.
+2004-09-28 02:15  erik
+
+	* lib/MathEvaluator.jar: Fixed a problem with the MathEvaluator
+	  library where "atan(), asin(), acos()" never worked right.
+
+2004-09-27 18:36  erik
+
+	* .cvsignore, build.properties, build.xml, buildnum.properties,
+	  mobibot.iml, mobibot.ipr, mobibot.iws,
+	  ant/jreleaseinfo-1.2.0.jar, lib/EXML.jar, lib/fetchrss.jar,
+	  lib/jdom-1.0.jar, lib/jdom.jar, lib/pircbot.jar,
+	  lib/rome-0.4.jar, lib/rome-fetcher-0.4.jar, lib/rsslibj.jar,
+	  licenses/EXML-license.txt, licenses/ROME License.txt,
+	  licenses/RSSJLib License.txt, licenses/fetchrss License.txt,
+	  properties/fetcher.properties,
+	  src/net/thauvin/erik/mobibot/CurrencyConverter.java,
+	  src/net/thauvin/erik/mobibot/EntryLink.java,
+	  src/net/thauvin/erik/mobibot/FeedReader.java,
+	  src/net/thauvin/erik/mobibot/GoogleSearch.java,
+	  src/net/thauvin/erik/mobibot/Mobibot.java,
+	  src/net/thauvin/erik/mobibot/ReleaseInfo.java,
+	  src/net/thauvin/erik/mobibot/StockQuote.java,
+	  src/net/thauvin/erik/mobibot/Weather.java, website/index.html:
+	  Rome is now used to create and read the various feed.
+
+2004-08-03 01:07  erik
+
+	* lib/commons-httpclient-2.0-final.jar, build.xml, mobibot.iml,
+	  mobibot.ipr, mobibot.iws, lib/commons-httpclient-2.0.1.jar,
+	  src/net/thauvin/erik/mobibot/Mobibot.java: Commons HTTPClinet
+	  2.0.1 update.  Added automated backup for the data file.
+
+2004-07-07 07:10  erik
+
+	* lib/commons-logging.jar: Commons Logging 1.0.4 update.
+
+2004-07-07 07:10  erik
+
+	* lib/pircbot.jar: PircBot 1.4.0 update.
+
+2004-07-07 07:10  erik
+
+	* lib/: commons-net-1.2.0.jar, commons-net-1.2.2.jar: Commons Net
+	  1.2.2 update.
+
+2004-07-05 19:03  erik
+
+	* lib/: jweather-0.2.4.jar, jweather-0.2.5.jar: jweather 0.2.5
+	  upgrade
+
+2004-05-03 10:53  erik
+
+	* lib/: commons-net-1.1.0.jar, commons-net-1.2.0.jar,
+	  jweather-0.2.3.jar, jweather-0.2.4.jar: commons-net 1.1.0 and
+	  jweather 0.2.4
+
+2004-03-10 09:05  erik
+
+	* .cvsignore: Ignore all serial files.
+
+2004-03-10 09:04  erik
+
+	* src/net/thauvin/erik/mobibot/Mobibot.java: Removed angled
+	  brackets around URLs as it was breaking Trillian.  Added pong
+	  command.
+
+2004-03-10 09:03  erik
+
+	* src/net/thauvin/erik/mobibot/Weather.java: Added invalid station
+	  ID message.
+
+2004-03-10 09:03  erik
+
+	* src/net/thauvin/erik/mobibot/: FeedReader.java,
+	  GoogleSearch.java: Removed angled brackets around URLs as it was
+	  breaking Trillian.
+
+2004-03-02 05:53  erik
+
+	* mobibot.iws, src/net/thauvin/erik/mobibot/Mobibot.java: Now uses
+	  setAutoNickChange()
+
+2004-03-02 05:52  erik
+
+	* lib/pircbot.jar: PircBot 1.3.0
+
+2004-02-25 17:21  erik
+
+	* ChangeLog.txt: Initial import.
+
+2004-02-25 16:27  erik
+
+	* mobibot.iws, src/net/thauvin/erik/mobibot/Mobibot.java: Added
+	  random ping response.
+
+2004-02-25 04:12  erik
+
+	* src/net/thauvin/erik/mobibot/: CurrencyConverter.java,
+	  GoogleSearch.java, Mobibot.java, Weather.java: Added -serial
+	  command line argument.  Added ability to search the current URL
+	  posts.  Added ping command.  Added more efficient arguments
+	  parsing in the public and private commands.  Added ability for
+	  the originator to modify a post's URL.  Removed the various
+	  URL-based attributes from the constructor.  Fixed the nick
+	  command.
+
+2004-02-24 05:09  erik
+
+	* README.txt: The properties file can now be specified from the
+	  command line.
+
+2004-02-24 04:58  erik
+
+	* website/index.html: Added reference to Commons CLI.
+
+2004-02-24 04:56  erik
+
+	* mobibot.iml, mobibot.iws, lib/commons-cli-1.0.jar,
+	  src/net/thauvin/erik/mobibot/Mobibot.java: The properties file
+	  can now be specified from the command line.
+
+2004-02-24 04:55  erik
+
+	* src/net/thauvin/erik/mobibot/CurrencyConverter.java: Added the
+	  ability to list the current rates.
+
+2004-02-18 03:40  erik
+
+	* src/net/thauvin/erik/mobibot/: Mobibot.java, Weather.java: The
+	  weather command help is now returned when a station id is not
+	  specified.
+
+2004-02-17 06:10  erik
+
+	* README.txt: Added (very) minimal instructions.
+
+2004-02-17 03:22  erik
+
+	* website/index.html: Added wiki reference.
+
+2004-02-16 20:04  erik
+
+	* .cvsignore, build.properties, build.xml, mobibot.fb, mobibot.iml,
+	  mobibot.ipr, mobibot.iws, lib/EXML.jar,
+	  lib/commons-httpclient-2.0-final.jar, lib/commons-logging.jar,
+	  lib/commons-net-1.1.0.jar, lib/fetchrss.jar, lib/google.jar,
+	  lib/MathEvaluator.jar, lib/googleapi.jar,
+	  lib/jakarta-oro-2.0.8.jar, lib/jdom.jar, lib/jweather-0.2.3.jar,
+	  lib/log4j-1.2.8.jar, lib/pircbot.jar, lib/rsslibj.jar,
+	  licenses/Commons License.txt, licenses/EXML-license.txt,
+	  licenses/Google License.txt, licenses/GoogleTagLib License.txt,
+	  licenses/JDOM License.txt, licenses/JWeather License.txt,
+	  licenses/License.txt, licenses/Log4j License.txt,
+	  licenses/PircBot License.html, licenses/RSSJLib License.txt,
+	  licenses/fetchrss License.txt, properties/log4j.properties,
+	  properties/mobibot.properties,
+	  src/net/thauvin/erik/mobibot/CurrencyConverter.java,
+	  src/net/thauvin/erik/mobibot/EntryComment.java,
+	  src/net/thauvin/erik/mobibot/EntryLink.java,
+	  src/net/thauvin/erik/mobibot/FeedReader.java,
+	  src/net/thauvin/erik/mobibot/GoogleSearch.java,
+	  src/net/thauvin/erik/mobibot/Mobibot.java,
+	  src/net/thauvin/erik/mobibot/StockQuote.java,
+	  src/net/thauvin/erik/mobibot/Weather.java, website/index.html,
+	  website/simple.css: Initial import.
+
+2004-02-16 20:04  erik
+
+	* .cvsignore, build.properties, build.xml, mobibot.fb, mobibot.iml,
+	  mobibot.ipr, mobibot.iws, lib/EXML.jar,
+	  lib/commons-httpclient-2.0-final.jar, lib/commons-logging.jar,
+	  lib/commons-net-1.1.0.jar, lib/fetchrss.jar, lib/google.jar,
+	  lib/MathEvaluator.jar, lib/googleapi.jar,
+	  lib/jakarta-oro-2.0.8.jar, lib/jdom.jar, lib/jweather-0.2.3.jar,
+	  lib/log4j-1.2.8.jar, lib/pircbot.jar, lib/rsslibj.jar,
+	  licenses/Commons License.txt, licenses/EXML-license.txt,
+	  licenses/Google License.txt, licenses/GoogleTagLib License.txt,
+	  licenses/JDOM License.txt, licenses/JWeather License.txt,
+	  licenses/License.txt, licenses/Log4j License.txt,
+	  licenses/PircBot License.html, licenses/RSSJLib License.txt,
+	  licenses/fetchrss License.txt, properties/log4j.properties,
+	  properties/mobibot.properties,
+	  src/net/thauvin/erik/mobibot/CurrencyConverter.java,
+	  src/net/thauvin/erik/mobibot/EntryComment.java,
+	  src/net/thauvin/erik/mobibot/EntryLink.java,
+	  src/net/thauvin/erik/mobibot/FeedReader.java,
+	  src/net/thauvin/erik/mobibot/GoogleSearch.java,
+	  src/net/thauvin/erik/mobibot/Mobibot.java,
+	  src/net/thauvin/erik/mobibot/StockQuote.java,
+	  src/net/thauvin/erik/mobibot/Weather.java, website/index.html,
+	  website/simple.css: Initial revision
 
