@@ -80,7 +80,7 @@ public class Mobibot extends PircBot
 	 */
 	private static final String[] INFO_STRS = 
 											  {
-												  "Mobibot v0.1.3b2 by Erik C. Thauvin (erik@thauvin.net)",
+												  "Mobibot v0.1.3b3 by Erik C. Thauvin (erik@thauvin.net)",
 												  "<http://www.thauvin.net/mobitopia/mobibot/>"
 											  };
 
@@ -1106,7 +1106,19 @@ public class Mobibot extends PircBot
 			}
 			else if (cmd.equals(PING_CMD))
 			{
-				this.sendAction(channel, "is barely alive.");
+				final String[] pings = 
+									   {
+										   "is barely alive.", "is trying to stay awake.", "has gone fishing.",
+										   "is somewhere over the rainbow.", "has fallen and can't get up.",
+										   "is running. You better go chase it.", "has just spontantiously combusted.",
+										   "is talking to itself... don't interrupt. That's rude.",
+										   "is bartending at an AA meeting.", "is hibernating.",
+										   "is saving energy: apathetic mode activated.", "is busy. Go away!"
+									   };
+
+				final Random r = new Random();
+
+				this.sendAction(channel, pings[r.nextInt(pings.length)]);
 			}
 			else if (cmd.equals(RECAP_CMD))
 			{
