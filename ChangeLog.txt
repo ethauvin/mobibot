@@ -1,3 +1,18 @@
+2005-03-06 08:28  erik
+
+	* buildnum.properties, mobibot.iws,
+	  src/net/thauvin/erik/mobibot/DeliciousPoster.java,
+	  src/net/thauvin/erik/mobibot/Mobibot.java,
+	  src/net/thauvin/erik/mobibot/ReleaseInfo.java,
+	  src/net/thauvin/erik/mobibot/SwingWorker.java: Added threading
+	  while posting to del.icio.us.
+
+2005-03-05 13:52  erik
+
+	* ChangeLog.txt, mobibot.iws, licenses/delicious-java License.txt,
+	  website/index.html: Added delicious-java license.  Updated
+	  ChangeLog.
+
 2005-03-05 13:40  erik
 
 	* lib/commons-codec-1.3.jar, lib/commons-httpclient-2.0.1.jar,
