@@ -63,7 +63,7 @@ public class EntryLink implements Serializable
 	/**
 	 * The creation date.
 	 */
-	private final Date _date = Calendar.getInstance().getTime();
+	private Date _date = Calendar.getInstance().getTime();
 
 	/**
 	 * The comments.
@@ -73,6 +73,7 @@ public class EntryLink implements Serializable
 	private String _login = "";
 	private String _nick = "";
 	private String _title = "No Title";
+
 
 	/**
 	 * Creates a new entry.
@@ -86,6 +87,22 @@ public class EntryLink implements Serializable
 		_link = link;
 		_nick = nick;
 		_login = login;
+	}
+
+	/**
+	 * Creates a new entry.
+	 *
+	 * @param link The new entry's link.
+	 * @param title The new entry's title.
+	 * @param nick The nickname of the author of the link.
+	 * @param date The entry date.
+	 */
+	public EntryLink(String link, String title, String nick, Date date)
+	{
+		_link = link;
+		_title = title;
+		_nick = nick;
+		_date = date;
 	}
 
 	/**

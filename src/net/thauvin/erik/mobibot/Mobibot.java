@@ -38,8 +38,12 @@ package net.thauvin.erik.mobibot;
 
 import com.primalworld.math.MathEvaluator;
 
-import com.rsslibj.elements.Channel;
-import com.rsslibj.elements.Item;
+import com.sun.syndication.feed.synd.*;
+import com.sun.syndication.fetcher.impl.FeedFetcherCache;
+import com.sun.syndication.fetcher.impl.HashMapFeedInfoCache;
+import com.sun.syndication.io.FeedException;
+import com.sun.syndication.io.SyndFeedInput;
+import com.sun.syndication.io.SyndFeedOutput;
 
 import org.apache.commons.cli.*;
 import org.apache.commons.logging.impl.Log4JLogger;
@@ -83,7 +87,10 @@ public class Mobibot extends PircBot
 	 * The info strings.
 	 */
 	private static final String[] INFO_STRS =
-		{ "Mobibot v0.1.3b12 by Erik C. Thauvin (erik@thauvin.net)", "http://www.thauvin.net/mobitopia/mobibot/" };
+	{
+		"Mobibot v" + ReleaseInfo.getVersion() + '.' + ReleaseInfo.getBuildNumber() +
+		" by Erik C. Thauvin (erik@thauvin.net)", "http://www.thauvin.net/mobitopia/mobibot/"
+	};
 
 	/**
 	 * Debug command line argument.
@@ -99,11 +106,6 @@ public class Mobibot extends PircBot
 	 * Properties command line argument.
 	 */
 	private static final String PROPS_ARG = "properties";
-
-	/**
-	 * The command line agrument to specified the object serialization file where data is saved between launches.
-	 */
-	private static final String DATA_ARG = "serial";
 
 	/**
 	 * The maximum number of times the bot will try to reconnect, if disconnected.
@@ -354,14 +356,24 @@ public class Mobibot extends PircBot
 	private static final int MESSAGE_DELAY = 1000;
 
 	/**
+	 * The name of the file containing the current entries.
+	 */
+	private static final String CURRENT_XML = "current.xml";
+
+	/**
+	 * The name of the file containing the backlog entries.
+	 */
+	private static final String NAV_XML = "nav.xml";
+
+	/**
+	 * The feed info cache.
+	 */
+	private final FeedFetcherCache _feedInfoCache = HashMapFeedInfoCache.getInstance();
+
+	/**
 	 * The logger default level.
 	 */
 	private final Level _loggerLevel;
-
-	/**
-	 * The feed items.
-	 */
-	private final List _feedItems = new ArrayList(0);
 
 	/**
 	 * The logger.
@@ -372,11 +384,6 @@ public class Mobibot extends PircBot
 	 * The main channel.
 	 */
 	private final String _channel;
-
-	/**
-	 * The data file.
-	 */
-	private final String _data;
 
 	/**
 	 * The IRC server.
@@ -403,9 +410,6 @@ public class Mobibot extends PircBot
 	 */
 	private String _backlogsURL = "";
 
-	// The feed last modification date.
-	private String _feedLastMod = "";
-
 	/**
 	 * The feed URL.
 	 */
@@ -427,70 +431,53 @@ public class Mobibot extends PircBot
 	 *
 	 * @param server The server.
 	 * @param channel The channel.
-	 * @param data The serial data file.
 	 * @param logsDir The logs directory.
 	 */
-	public Mobibot(String server, String channel, String data, String logsDir)
+	public Mobibot(String server, String channel, String logsDir)
 	{
 		System.getProperties().setProperty("sun.net.client.defaultConnectTimeout", String.valueOf(CONNECT_TIMEOUT));
 		System.getProperties().setProperty("sun.net.client.defaultReadTimeout", String.valueOf(CONNECT_TIMEOUT));
 
 		_ircServer = server;
 		_channel = channel;
-		_data = data;
 		_logsDir = logsDir;
 
 		// Set the logger
 		_logger = new Log4JLogger(Mobibot.class.getPackage().getName());
 		_loggerLevel = _logger.getLogger().getLevel();
 
-		// Load the saved data, if any
-		final File ser = new File(_data);
-
-		if (ser.exists())
+		// Load the current entries, if any.
+		try
 		{
-			ObjectInputStream ois = null;
+			loadEntries(_logsDir + CURRENT_XML);
 
-			try
+			if (!today().equals(_today))
 			{
-				ois = new ObjectInputStream(new FileInputStream(ser));
+				_entries.clear();
+				_today = today();
+			}
+		}
+		catch (FileNotFoundException ignore)
+		{
+			; // Do nothing.
+		}
+		catch (FeedException e)
+		{
+			_logger.error("An error occured while parsing the '" + CURRENT_XML + "' file.", e);
+		}
 
-				_entries.addAll((Vector) ois.readObject());
-				_today = (String) ois.readObject();
-				_history.addAll((Vector) ois.readObject());
-
-				saveEntries(true);
-
-				if (!today().equals(_today))
-				{
-					_entries.clear();
-					_today = today();
-				}
-			}
-			catch (ClassNotFoundException e)
-			{
-				_logger.fatal("Unable to read objects in data file.", e);
-				System.exit(1);
-			}
-			catch (IOException e)
-			{
-				_logger.fatal("Unable to open data file.", e);
-				System.exit(1);
-			}
-			finally
-			{
-				if (ois != null)
-				{
-					try
-					{
-						ois.close();
-					}
-					catch (IOException ignore)
-					{
-						; // Do nothing
-					}
-				}
-			}
+		// Load the backlogs, if any.
+		try
+		{
+			loadBacklogs(_logsDir + NAV_XML);
+		}
+		catch (FileNotFoundException ignore)
+		{
+			; // Do nothing.
+		}
+		catch (FeedException e)
+		{
+			_logger.error("An error occured while parsing the '" + NAV_XML + "' file.", e);
 		}
 	}
 
@@ -524,7 +511,6 @@ public class Mobibot extends PircBot
 		options.addOption(DEBUG_ARG.substring(0, 1), DEBUG_ARG, false,
 						  "print debug & logging data directly to the console");
 		options.addOption(PROPS_ARG.substring(0, 1), PROPS_ARG, true, "use alternate properties file");
-		options.addOption(DATA_ARG.substring(0, 1), DATA_ARG, true, "use alternate serial data file");
 
 		// Parse the command line
 		final CommandLineParser parser = new PosixParser();
@@ -634,8 +620,7 @@ public class Mobibot extends PircBot
 			final String googleKey = p.getProperty("google", "");
 
 			// Create the bot
-			final Mobibot bot =
-				new Mobibot(server, channel, line.getOptionValue(DATA_ARG.charAt(0), "./mobibot.ser"), logsDir);
+			final Mobibot bot = new Mobibot(server, channel, logsDir);
 
 			// Initialize the bot
 			bot.setVerbose(true);
@@ -652,6 +637,9 @@ public class Mobibot extends PircBot
 
 			// Set the Google key
 			bot.setGoogleKey(googleKey);
+
+			// Save the entries
+			bot.saveEntries(true);
 
 			// Connect
 			try
@@ -718,49 +706,13 @@ public class Mobibot extends PircBot
 	}
 
 	/**
-	 * Sets the feed items.
+	 * Returns the {@link FeedFetcherCache feed info cache}.
 	 *
-	 * @param items The feed items.
+	 * @return The feed info cache.
 	 */
-	public final synchronized void setFeedItems(List items)
+	public final synchronized FeedFetcherCache getFeedInfoCache()
 	{
-		_feedItems.clear();
-		_feedItems.addAll(items);
-	}
-
-	/**
-	 * Returns the feed items.
-	 *
-	 * @return The feed items.
-	 */
-	public final synchronized List getFeedItems()
-	{
-		return _feedItems;
-	}
-
-	/**
-	 * Sets the feed last modification date.
-	 *
-	 * @param feedLastMod The last modification date.
-	 */
-	public final synchronized void setFeedLastMod(String feedLastMod)
-	{
-		_feedLastMod = feedLastMod;
-	}
-
-	/**
-	 * Returns the feed last modification date.
-	 *
-	 * @return The feed modification date, or empty.
-	 */
-	public final synchronized String getFeedLastMod()
-	{
-		if (_feedLastMod != null)
-		{
-			return _feedLastMod;
-		}
-
-		return "";
+		return _feedInfoCache;
 	}
 
 	/**
@@ -785,146 +737,156 @@ public class Mobibot extends PircBot
 
 		if (lcTopic.endsWith(HELP_POSTING_KEYWORD))
 		{
-			this.sendNotice(sender, bold("Post a URL, by saying it on a line on its own."));
-			this.sendNotice(sender, "I will reply with a label, for example: " + bold(LINK_CMD + '1'));
-			this.sendNotice(sender, "To add a title, use a its label and a pipe:");
-			this.sendNotice(sender, DOUBLE_INDENT + bold(LINK_CMD + "1:|This is the title"));
-			this.sendNotice(sender, "To add a comment: ");
-			this.sendNotice(sender, DOUBLE_INDENT + bold(LINK_CMD + "1:This is a comment"));
-			this.sendNotice(sender, "I will reply with a label, for example: " + bold(LINK_CMD + "1.1"));
-			this.sendNotice(sender, "To edit a comment, use its label: ");
-			this.sendNotice(sender, DOUBLE_INDENT + bold(LINK_CMD + "1.1:This is an edited comment"));
-			this.sendNotice(sender, "To delete a comment, use its label and a minus sign: ");
-			this.sendNotice(sender, DOUBLE_INDENT + bold(LINK_CMD + "1.1:-"));
-			this.sendNotice(sender, "You can also view a posting by saying its label.");
+			send(sender, bold("Post a URL, by saying it on a line on its own."));
+			send(sender, "I will reply with a label, for example: " + bold(LINK_CMD + '1'));
+			send(sender, "To add a title, use a its label and a pipe:");
+			send(sender, DOUBLE_INDENT + bold(LINK_CMD + "1:|This is the title"));
+			send(sender, "To add a comment: ");
+			send(sender, DOUBLE_INDENT + bold(LINK_CMD + "1:This is a comment"));
+			send(sender, "I will reply with a label, for example: " + bold(LINK_CMD + "1.1"));
+			send(sender, "To edit a comment, use its label: ");
+			send(sender, DOUBLE_INDENT + bold(LINK_CMD + "1.1:This is an edited comment"));
+			send(sender, "To delete a comment, use its label and a minus sign: ");
+			send(sender, DOUBLE_INDENT + bold(LINK_CMD + "1.1:-"));
+			send(sender, "You can also view a posting by saying its label.");
 		}
 		else if (lcTopic.endsWith(VIEW_CMD))
 		{
-			this.sendNotice(sender, "To list or search the current URL posts:");
-			this.sendNotice(sender, DOUBLE_INDENT + bold(getNick() + ": " + VIEW_CMD) + " [<start>] [<query>]");
+			send(sender, "To list or search the current URL posts:");
+			send(sender, DOUBLE_INDENT + bold(getNick() + ": " + VIEW_CMD) + " [<start>] [<query>]");
 		}
-		else if (lcTopic.endsWith(_channel.substring(1).toLowerCase()))
+		else if (lcTopic.endsWith(getChannel().substring(1).toLowerCase()))
 		{
-			this.sendNotice(sender, "To list the last 5 posts from the channel's weblog:");
-			this.sendNotice(sender, DOUBLE_INDENT + bold(getNick() + ": " + _channel.substring(1)));
+			send(sender, "To list the last 5 posts from the channel's weblog:");
+			send(sender, DOUBLE_INDENT + bold(getNick() + ": " + getChannel().substring(1)));
 		}
 		else if (lcTopic.endsWith(GOOGLE_CMD))
 		{
-			this.sendNotice(sender, "To search Google:");
-			this.sendNotice(sender, DOUBLE_INDENT + bold(getNick() + ": " + GOOGLE_CMD + " <query>"));
+			send(sender, "To search Google:");
+			send(sender, DOUBLE_INDENT + bold(getNick() + ": " + GOOGLE_CMD + " <query>"));
 		}
 		else if (lcTopic.endsWith(RECAP_CMD))
 		{
-			this.sendNotice(sender, "To list the last 10 public channel messages:");
-			this.sendNotice(sender, DOUBLE_INDENT + bold(getNick() + ": " + RECAP_CMD));
+			send(sender, "To list the last 10 public channel messages:");
+			send(sender, DOUBLE_INDENT + bold(getNick() + ": " + RECAP_CMD));
 		}
 		else if (lcTopic.endsWith(CALC_CMD))
 		{
-			this.sendNotice(sender, "To solve a mathematical calculation:");
-			this.sendNotice(sender, DOUBLE_INDENT + bold(getNick() + ": " + CALC_CMD + " <calculation>"));
+			send(sender, "To solve a mathematical calculation:");
+			send(sender, DOUBLE_INDENT + bold(getNick() + ": " + CALC_CMD + " <calculation>"));
 		}
 		else if (lcTopic.endsWith(LOOKUP_CMD))
 		{
-			this.sendNotice(sender, "To perform a DNS lookup query:");
-			this.sendNotice(sender, DOUBLE_INDENT + bold(getNick() + ": " + LOOKUP_CMD + " <ip address or hostname>"));
+			send(sender, "To perform a DNS lookup query:");
+			send(sender, DOUBLE_INDENT + bold(getNick() + ": " + LOOKUP_CMD + " <ip address or hostname>"));
 		}
 		else if (lcTopic.endsWith(TIME_CMD))
 		{
-			this.sendNotice(sender, "To display a country's current date/time:");
-			this.sendNotice(sender, DOUBLE_INDENT + bold(getNick() + ": " + TIME_CMD) + " [<country code>]");
+			send(sender, "To display a country's current date/time:");
+			send(sender, DOUBLE_INDENT + bold(getNick() + ": " + TIME_CMD) + " [<country code>]");
 
-			this.sendNotice(sender, "For a listing of the supported countries:");
-			this.sendNotice(sender, DOUBLE_INDENT + bold(getNick() + ": " + TIME_CMD));
+			send(sender, "For a listing of the supported countries:");
+			send(sender, DOUBLE_INDENT + bold(getNick() + ": " + TIME_CMD));
 		}
 		else if (lcTopic.endsWith(SPELL_CMD))
 		{
-			this.sendNotice(sender, "To have Google try to correctly spell a sentence:");
-			this.sendNotice(sender, DOUBLE_INDENT + bold(getNick() + ": " + SPELL_CMD + " <sentence>"));
+			send(sender, "To have Google try to correctly spell a sentence:");
+			send(sender, DOUBLE_INDENT + bold(getNick() + ": " + SPELL_CMD + " <sentence>"));
 		}
 		else if (lcTopic.endsWith(STOCK_CMD))
 		{
-			this.sendNotice(sender, "To retrieve a stock quote:");
-			this.sendNotice(sender, DOUBLE_INDENT + bold(getNick() + ": " + STOCK_CMD + " <symbol>"));
+			send(sender, "To retrieve a stock quote:");
+			send(sender, DOUBLE_INDENT + bold(getNick() + ": " + STOCK_CMD + " <symbol[.country code]>"));
 		}
 		else if (lcTopic.endsWith(DICE_CMD))
 		{
-			this.sendNotice(sender, "To roll the dice:");
-			this.sendNotice(sender, DOUBLE_INDENT + bold(getNick() + ": " + DICE_CMD));
+			send(sender, "To roll the dice:");
+			send(sender, DOUBLE_INDENT + bold(getNick() + ": " + DICE_CMD));
 		}
 		else if (lcTopic.endsWith(WEATHER_CMD))
 		{
-			this.sendNotice(sender, "To display weather information:");
-			this.sendNotice(sender, DOUBLE_INDENT + bold(getNick() + ": " + WEATHER_CMD + " <station id>"));
-			this.sendNotice(sender,
-							"For a listing of the ICAO station IDs, please visit: <" + Weather.STATIONS_URL + '>');
+			send(sender, "To display weather information:");
+			send(sender, DOUBLE_INDENT + bold(getNick() + ": " + WEATHER_CMD + " <station id>"));
+			send(sender, "For a listing of the ICAO station IDs, please visit: <" + Weather.STATIONS_URL + '>');
 		}
 		else if (lcTopic.endsWith(USERS_CMD))
 		{
-			this.sendNotice(sender, "To list the users present on the channel:");
-			this.sendNotice(sender, DOUBLE_INDENT + bold(getNick() + ": " + USERS_CMD));
+			send(sender, "To list the users present on the channel:");
+			send(sender, DOUBLE_INDENT + bold(getNick() + ": " + USERS_CMD));
 		}
 		else if (lcTopic.endsWith(INFO_CMD))
 		{
-			this.sendNotice(sender, "To view information about the bot:");
-			this.sendNotice(sender, DOUBLE_INDENT + bold(getNick() + ": " + INFO_CMD));
+			send(sender, "To view information about the bot:");
+			send(sender, DOUBLE_INDENT + bold(getNick() + ": " + INFO_CMD));
 		}
 		else if (lcTopic.endsWith(CYCLE_CMD))
 		{
 			if (isOp(sender))
 			{
-				this.sendNotice(sender, "To have the bot leave the channel and come back:");
-				this.sendNotice(sender, DOUBLE_INDENT + bold("/msg " + getNick() + ' ' + CYCLE_CMD));
+				send(sender, "To have the bot leave the channel and come back:");
+				send(sender, DOUBLE_INDENT + bold("/msg " + getNick() + ' ' + CYCLE_CMD));
 			}
 		}
 		else if (lcTopic.endsWith(ME_CMD))
 		{
 			if (isOp(sender))
 			{
-				this.sendNotice(sender, "To have the bot perform an action:");
-				this.sendNotice(sender, DOUBLE_INDENT + bold("/msg " + getNick() + ' ' + ME_CMD + " <action>"));
+				send(sender, "To have the bot perform an action:");
+				send(sender, DOUBLE_INDENT + bold("/msg " + getNick() + ' ' + ME_CMD + " <action>"));
 			}
 		}
 		else if (lcTopic.endsWith(SAY_CMD))
 		{
 			if (isOp(sender))
 			{
-				this.sendNotice(sender, "To have the bot say something on the channel:");
-				this.sendNotice(sender, DOUBLE_INDENT + bold("/msg " + getNick() + ' ' + SAY_CMD + " <text>"));
+				send(sender, "To have the bot say something on the channel:");
+				send(sender, DOUBLE_INDENT + bold("/msg " + getNick() + ' ' + SAY_CMD + " <text>"));
 			}
 		}
 		else if (lcTopic.startsWith(CURRENCY_CMD))
 		{
-			this.sendNotice(sender, "To convert from one currency to another:");
-			this.sendNotice(sender, DOUBLE_INDENT + bold(getNick() + ": " + CURRENCY_CMD + " [100 USD to EUR]"));
+			send(sender, "To convert from one currency to another:");
+			send(sender, DOUBLE_INDENT + bold(getNick() + ": " + CURRENCY_CMD + " [100 USD to EUR]"));
 
 			if (lcTopic.endsWith(CURRENCY_CMD))
 			{
-				this.sendNotice(sender, "For a listing of supported currencies:");
-				this.sendNotice(sender, DOUBLE_INDENT + bold(getNick() + ": " + CURRENCY_CMD));
+				send(sender, "For a listing of supported currencies:");
+				send(sender, DOUBLE_INDENT + bold(getNick() + ": " + CURRENCY_CMD));
 			}
 		}
 		else
 		{
-			this.sendNotice(sender, bold("Type a URL on " + _channel + " to post it."));
-			this.sendNotice(sender, "For more information on specific command, type:");
-			this.sendNotice(sender, DOUBLE_INDENT + bold(getNick() + ": " + HELP_CMD + " <command>"));
-			this.sendNotice(sender, "The commands are:");
-			this.sendNotice(sender,
-							DOUBLE_INDENT +
-							bold(CALC_CMD + ' ' + CURRENCY_CMD + ' ' + DICE_CMD + ' ' + GOOGLE_CMD + ' ' + INFO_CMD +
-								 ' ' + _channel.substring(1) + ' ' + LOOKUP_CMD));
-			this.sendNotice(sender,
-							DOUBLE_INDENT +
-							bold(HELP_POSTING_KEYWORD + ' ' + RECAP_CMD + ' ' + SPELL_CMD + ' ' + STOCK_CMD + ' ' +
-								 TIME_CMD + ' ' + USERS_CMD + ' ' + VIEW_CMD));
-			this.sendNotice(sender, DOUBLE_INDENT + bold(WEATHER_CMD));
+			send(sender, bold("Type a URL on " + getChannel() + " to post it."));
+			send(sender, "For more information on specific command, type:");
+			send(sender, DOUBLE_INDENT + bold(getNick() + ": " + HELP_CMD + " <command>"));
+			send(sender, "The commands are:");
+			send(sender,
+				 DOUBLE_INDENT +
+				 bold(CALC_CMD + ' ' + CURRENCY_CMD + ' ' + DICE_CMD + ' ' + GOOGLE_CMD + ' ' + INFO_CMD + ' ' +
+					  getChannel().substring(1) + ' ' + LOOKUP_CMD));
+			send(sender,
+				 DOUBLE_INDENT +
+				 bold(HELP_POSTING_KEYWORD + ' ' + RECAP_CMD + ' ' + SPELL_CMD + ' ' + STOCK_CMD + ' ' + TIME_CMD +
+					  ' ' + USERS_CMD + ' ' + VIEW_CMD));
+			send(sender, DOUBLE_INDENT + bold(WEATHER_CMD));
 
 			if (isOp(sender))
 			{
-				this.sendNotice(sender, "The op commands are:");
-				this.sendNotice(sender, DOUBLE_INDENT + bold(CYCLE_CMD + ' ' + ME_CMD + ' ' + SAY_CMD));
+				send(sender, "The op commands are:");
+				send(sender, DOUBLE_INDENT + bold(CYCLE_CMD + ' ' + ME_CMD + ' ' + SAY_CMD));
 			}
 		}
+	}
+
+	/**
+	 * Sends a private notice.
+	 *
+	 * @param sender The nick of the person who sent the message.
+	 * @param message The actual message.
+	 */
+	public final void send(String sender, String message)
+	{
+		send(sender, message, false);
 	}
 
 	/**
@@ -938,54 +900,21 @@ public class Mobibot extends PircBot
 	{
 		if (isPrivate)
 		{
+			if (_logger.isDebugEnabled())
+			{
+				_logger.debug("Sending message to " + sender + ": " + message);
+			}
+
 			this.sendMessage(sender, message);
 		}
 		else
 		{
+			if (_logger.isDebugEnabled())
+			{
+				_logger.debug("Sending notice to " + sender + ": " + message);
+			}
+
 			this.sendNotice(sender, message);
-		}
-	}
-
-	/**
-	 * Copies a file
-	 *
-	 * @param in The source file.
-	 * @param out The destination file
-	 *
-	 * @throws IOException If the file could not be copied.
-	 */
-	public void copyFile(File in, File out)
-				  throws IOException
-	{
-		FileChannel inChannel;
-		FileChannel outChannel;
-
-		inChannel = new FileInputStream(in).getChannel();
-		outChannel = new FileOutputStream(out).getChannel();
-
-		try
-		{
-			inChannel.transferTo(0, inChannel.size(), outChannel);
-		}
-		finally
-		{
-			try
-			{
-				inChannel.close();
-			}
-			catch (IOException ignore)
-			{
-				; // Do nothing
-			}
-
-			try
-			{
-				outChannel.close();
-			}
-			catch (IOException ignore)
-			{
-				; // Do nothing
-			}
 		}
 	}
 
@@ -1000,7 +929,7 @@ public class Mobibot extends PircBot
 	 */
 	protected final void onAction(String sender, String login, String hostname, String target, String action)
 	{
-		if (target.equals(_channel))
+		if (target.equals(getChannel()))
 		{
 			recap(sender, action, true);
 		}
@@ -1063,7 +992,10 @@ public class Mobibot extends PircBot
 	 */
 	protected final void onMessage(String channel, String sender, String login, String hostname, String message)
 	{
-		_logger.debug(">>> " + sender + ": " + message);
+		if (_logger.isDebugEnabled())
+		{
+			_logger.debug(">>> " + sender + ": " + message);
+		}
 
 		if (message.matches(LINK_MATCH))
 		{
@@ -1095,14 +1027,14 @@ public class Mobibot extends PircBot
 
 				final int index = _entries.size() - 1;
 				final EntryLink entry = (EntryLink) _entries.get(index);
-				this.sendNotice(channel, buildLink(index, entry));
+				send(channel, buildLink(index, entry));
 
 				saveEntries(isBackup);
 			}
 			else
 			{
 				final EntryLink entry = (EntryLink) _entries.get(dupIndex);
-				this.sendNotice(sender, "Duplicate >> " + buildLink(dupIndex, entry));
+				send(sender, "Duplicate >> " + buildLink(dupIndex, entry));
 			}
 		}
 		else if (message.matches(getNickPattern() + ":.*"))
@@ -1124,13 +1056,13 @@ public class Mobibot extends PircBot
 			else if (cmd.equals(PING_CMD))
 			{
 				final String[] pings =
-					{
-						"is barely alive.", "is trying to stay awake.", "has gone fishing.",
-						"is somewhere over the rainbow.", "has fallen and can't get up.",
-						"is running. You better go chase it.", "has just spontantiously combusted.",
-						"is talking to itself... don't interrupt. That's rude.", "is bartending at an AA meeting.",
-						"is hibernating.", "is saving energy: apathetic mode activated.", "is busy. Go away!"
-					};
+				{
+					"is barely alive.", "is trying to stay awake.", "has gone fishing.",
+					"is somewhere over the rainbow.", "has fallen and can't get up.",
+					"is running. You better go chase it.", "has just spontantiously combusted.",
+					"is talking to itself... don't interrupt. That's rude.", "is bartending at an AA meeting.",
+					"is hibernating.", "is saving energy: apathetic mode activated.", "is busy. Go away!"
+				};
 
 				final Random r = new Random();
 
@@ -1159,26 +1091,26 @@ public class Mobibot extends PircBot
 				int y = r.nextInt(6) + 1;
 				final int total = i + y;
 
-				this.sendNotice(_channel, sender + " rolled two dice: " + i + " and " + y + " for a total of " + total);
+				send(getChannel(), sender + " rolled two dice: " + i + " and " + y + " for a total of " + total);
 
 				i = r.nextInt(6) + 1;
 				y = r.nextInt(6) + 1;
-				this.sendAction(_channel, "rolled two dice: " + i + " and " + y + " for a total of " + (i + y));
+				this.sendAction(getChannel(), "rolled two dice: " + i + " and " + y + " for a total of " + (i + y));
 
 				if (total < (i + y))
 				{
-					this.sendAction(_channel, "wins.");
+					this.sendAction(getChannel(), "wins.");
 				}
 				else if (total > (i + y))
 				{
-					this.sendAction(_channel, "lost.");
+					this.sendAction(getChannel(), "lost.");
 				}
 				else
 				{
-					this.sendAction(_channel, "tied.");
+					this.sendAction(getChannel(), "tied.");
 				}
 			}
-			else if (cmd.equalsIgnoreCase(_channel.substring(1)))
+			else if (cmd.equalsIgnoreCase(getChannel().substring(1)))
 			{
 				feedResponse(sender);
 			}
@@ -1214,7 +1146,7 @@ public class Mobibot extends PircBot
 
 					try
 					{
-						this.sendNotice(_channel, String.valueOf(me.getValue()));
+						send(getChannel(), String.valueOf(me.getValue()));
 					}
 					catch (Exception e)
 					{
@@ -1247,7 +1179,7 @@ public class Mobibot extends PircBot
 				if (cmd.length() == 0)
 				{
 					final EntryLink entry = (EntryLink) _entries.get(index);
-					this.sendNotice(_channel, buildLink(index, entry));
+					send(getChannel(), buildLink(index, entry));
 
 					if (entry.hasComments())
 					{
@@ -1255,7 +1187,7 @@ public class Mobibot extends PircBot
 
 						for (int i = 0; i < comments.length; i++)
 						{
-							this.sendNotice(_channel, buildComment(index, i, comments[i]));
+							send(getChannel(), buildComment(index, i, comments[i]));
 						}
 					}
 				}
@@ -1268,12 +1200,12 @@ public class Mobibot extends PircBot
 						if (entry.getLogin().equals(login) || isOp(sender))
 						{
 							_entries.remove(index);
-							this.sendNotice(_channel, "Entry " + LINK_CMD + (index + 1) + " removed.");
+							send(getChannel(), "Entry " + LINK_CMD + (index + 1) + " removed.");
 							saveEntries(false);
 						}
 						else
 						{
-							this.sendNotice(sender, "Please ask a channel op to remove this entry for you.");
+							send(sender, "Please ask a channel op to remove this entry for you.");
 						}
 					}
 					else if (cmd.charAt(0) == '|')
@@ -1282,7 +1214,7 @@ public class Mobibot extends PircBot
 						{
 							final EntryLink entry = (EntryLink) _entries.get(index);
 							entry.setTitle(cmd.substring(1));
-							this.sendNotice(_channel, buildLink(index, entry));
+							send(getChannel(), buildLink(index, entry));
 							saveEntries(false);
 						}
 					}
@@ -1297,13 +1229,13 @@ public class Mobibot extends PircBot
 							if (link.matches(LINK_MATCH))
 							{
 								entry.setLink(link);
-								this.sendNotice(_channel, buildLink(index, entry));
+								send(getChannel(), buildLink(index, entry));
 								saveEntries(false);
 							}
 						}
 						else
 						{
-							this.sendNotice(sender, "Please ask a channel op to change this link for you.");
+							send(sender, "Please ask a channel op to change this link for you.");
 						}
 					}
 					else if (cmd.charAt(0) == '?')
@@ -1314,13 +1246,13 @@ public class Mobibot extends PircBot
 							{
 								final EntryLink entry = (EntryLink) _entries.get(index);
 								entry.setNick(cmd.substring(1));
-								this.sendNotice(_channel, buildLink(index, entry));
+								send(getChannel(), buildLink(index, entry));
 								saveEntries(false);
 							}
 						}
 						else
 						{
-							this.sendNotice(sender, "Please ask a channel op to change the author of this link for you.");
+							send(sender, "Please ask a channel op to change the author of this link for you.");
 						}
 					}
 					else
@@ -1329,7 +1261,7 @@ public class Mobibot extends PircBot
 						final int cindex = entry.addComment(cmd, sender);
 
 						final EntryComment comment = entry.getComment(cindex);
-						this.sendNotice(sender, buildComment(index, cindex, comment));
+						send(sender, buildComment(index, cindex, comment));
 						saveEntries(false);
 					}
 				}
@@ -1352,13 +1284,12 @@ public class Mobibot extends PircBot
 					if (cmd.length() == 0)
 					{
 						final EntryComment comment = entry.getComment(cindex);
-						this.sendNotice(_channel, buildComment(index, cindex, comment));
+						send(getChannel(), buildComment(index, cindex, comment));
 					}
 					else if ("-".equals(cmd))
 					{
 						entry.deleteComment(cindex);
-						this.sendNotice(_channel, "Comment " + LINK_CMD + (index + 1) + '.' + (cindex + 1) +
-										" removed.");
+						send(getChannel(), "Comment " + LINK_CMD + (index + 1) + '.' + (cindex + 1) + " removed.");
 						saveEntries(false);
 					}
 					else if (cmd.charAt(0) == '?')
@@ -1369,14 +1300,13 @@ public class Mobibot extends PircBot
 							{
 								final EntryComment comment = entry.getComment(cindex);
 								comment.setNick(cmd.substring(1));
-								this.sendNotice(_channel, buildComment(index, cindex, comment));
+								send(getChannel(), buildComment(index, cindex, comment));
 								saveEntries(false);
 							}
 						}
 						else
 						{
-							this.sendNotice(sender,
-											"Please ask a channel op to change the author of this comment for you.");
+							send(sender, "Please ask a channel op to change the author of this comment for you.");
 						}
 					}
 					else
@@ -1384,7 +1314,7 @@ public class Mobibot extends PircBot
 						entry.setComment(cindex, cmd, sender);
 
 						final EntryComment comment = entry.getComment(cindex);
-						this.sendNotice(sender, buildComment(index, cindex, comment));
+						send(sender, buildComment(index, cindex, comment));
 						saveEntries(false);
 					}
 				}
@@ -1406,7 +1336,10 @@ public class Mobibot extends PircBot
 	 */
 	protected final void onPrivateMessage(String sender, String login, String hostname, String message)
 	{
-		_logger.debug(">>> " + sender + ": " + message);
+		if (_logger.isDebugEnabled())
+		{
+			_logger.debug(">>> " + sender + ": " + message);
+		}
 
 		final String[] cmds = message.split(" ", 2);
 		final String cmd = cmds[0].toLowerCase();
@@ -1421,7 +1354,7 @@ public class Mobibot extends PircBot
 		{
 			helpResponse(sender, args);
 		}
-		else if (cmd.equals("kill"))
+		else if ("kill".equals(cmd))
 		{
 			if (isOp(sender))
 			{
@@ -1433,7 +1366,7 @@ public class Mobibot extends PircBot
 		{
 			if (isOp(sender))
 			{
-				this.sendNotice(_channel, sender + " has just signed my death sentence.");
+				send(getChannel(), sender + " has just signed my death sentence.");
 				saveEntries(true);
 				sleep(3);
 				this.quitServer("The Bot Is Out There!");
@@ -1442,11 +1375,11 @@ public class Mobibot extends PircBot
 		}
 		else if (cmd.equals(CYCLE_CMD))
 		{
-			this.sendNotice(_channel, sender + " has just asked me to leave. I'll be back!");
+			send(getChannel(), sender + " has just asked me to leave. I'll be back!");
 			sleep(0);
-			this.partChannel(_channel);
+			this.partChannel(getChannel());
 			sleep(5);
-			this.joinChannel(_channel);
+			this.joinChannel(getChannel());
 		}
 		else if (cmd.equals(RECAP_CMD))
 		{
@@ -1470,7 +1403,7 @@ public class Mobibot extends PircBot
 			{
 				if (cmds.length > 1)
 				{
-					this.sendAction(_channel, args);
+					this.sendAction(getChannel(), args);
 				}
 				else
 				{
@@ -1491,7 +1424,7 @@ public class Mobibot extends PircBot
 			{
 				if (cmds.length > 1)
 				{
-					this.sendMessage(_channel, args);
+					this.sendMessage(getChannel(), args);
 				}
 				else
 				{
@@ -1650,6 +1583,49 @@ public class Mobibot extends PircBot
 	}
 
 	/**
+	 * Copies a file.
+	 *
+	 * @param in The source file.
+	 * @param out The destination file.
+	 *
+	 * @throws IOException If the file could not be copied.
+	 */
+	private void copyFile(File in, File out)
+				   throws IOException
+	{
+		final FileChannel inChannel;
+		final FileChannel outChannel;
+
+		inChannel = new FileInputStream(in).getChannel();
+		outChannel = new FileOutputStream(out).getChannel();
+
+		try
+		{
+			inChannel.transferTo(0L, inChannel.size(), outChannel);
+		}
+		finally
+		{
+			try
+			{
+				inChannel.close();
+			}
+			catch (IOException ignore)
+			{
+				; // Do nothing
+			}
+
+			try
+			{
+				outChannel.close();
+			}
+			catch (IOException ignore)
+			{
+				; // Do nothing
+			}
+		}
+	}
+
+	/**
 	 * Ensures that the given location (File/URL) has a trailing slash (<code>/</code>) to indicate a directory.
 	 *
 	 * @param location The File or URL location.
@@ -1732,7 +1708,7 @@ public class Mobibot extends PircBot
 	 */
 	private boolean isOp(String sender)
 	{
-		final User[] users = this.getUsers(_channel);
+		final User[] users = this.getUsers(getChannel());
 
 		User user;
 
@@ -1777,7 +1753,7 @@ public class Mobibot extends PircBot
 		}
 		else
 		{
-			this.sendNotice(sender, "There is no weblog setup for this channel.");
+			send(sender, "There is no weblog setup for this channel.");
 		}
 	}
 
@@ -1826,7 +1802,7 @@ public class Mobibot extends PircBot
 		}
 		else
 		{
-			this.sendNotice(sender, "The Google search facility is disabled.");
+			send(sender, "The Google search facility is disabled.");
 		}
 	}
 
@@ -1972,24 +1948,33 @@ public class Mobibot extends PircBot
 	 */
 	private synchronized void saveEntries(boolean isDayBackup)
 	{
+		if (_logger.isDebugEnabled())
+		{
+			_logger.debug("Saving...");
+		}
+
 		if (isValidString(_logsDir) && isValidString(_weblogURL))
 		{
 			FileWriter fw = null;
 
 			try
 			{
-				fw = new FileWriter(new File(_logsDir + "current.xml"));
+				fw = new FileWriter(new File(_logsDir + CURRENT_XML));
 
-				Channel rss = new Channel();
-				rss.setTitle(_channel + " IRC Links");
-				rss.setDescription("Links from " + _ircServer + " on " + _channel);
+				SyndFeed rss = new SyndFeedImpl();
+				rss.setFeedType("rss_2.0");
+				rss.setTitle(getChannel() + " IRC Links");
+				rss.setDescription("Links from " + _ircServer + " on " + getChannel());
 				rss.setLink(_weblogURL);
-				rss.setPubDate(Calendar.getInstance().getTime());
+				rss.setPublishedDate(Calendar.getInstance().getTime());
+				rss.setLanguage("en");
 
 				EntryLink entry;
 				StringBuffer buff;
 				EntryComment comment;
-				Item item;
+				final List items = new ArrayList();
+				SyndEntry item;
+				SyndContent description;
 
 				for (int i = (_entries.size() - 1); i >= 0; --i)
 				{
@@ -2014,26 +1999,36 @@ public class Mobibot extends PircBot
 						}
 					}
 
-					item = new Item();
+					item = new SyndEntryImpl();
 					item.setLink(entry.getLink());
-					item.setDescription(buff.toString());
+					description = new SyndContentImpl();
+					description.setValue(buff.toString());
+					item.setDescription(description);
 					item.setTitle(entry.getTitle());
-					item.setPubDate(entry.getDate());
-					item.setAuthor(_channel.substring(1) + '@' + _ircServer + " (" + entry.getNick() + ')');
+					item.setPublishedDate(entry.getDate());
+					item.setAuthor(getChannel().substring(1) + '@' + _ircServer + " (" + entry.getNick() + ')');
 
-					rss.addItem(item);
+					items.add(item);
 				}
 
-				fw.write(rss.getFeed("2.0"));
+				rss.setEntries(items);
+
+				if (_logger.isDebugEnabled())
+				{
+					_logger.debug("Writing the entries feed.");
+				}
+
+				final SyndFeedOutput output = new SyndFeedOutput();
+				output.output(rss, fw);
+				fw.close();
+
+				fw = new FileWriter(new File(_logsDir + getToday() + ".xml"));
+				output.output(rss, fw);
 
 				if (isDayBackup)
 				{
 					if (isValidString(_backlogsURL))
 					{
-						fw.close();
-						fw = new FileWriter(new File(_logsDir + getToday() + ".xml"));
-						fw.write(rss.getFeed("2.0"));
-
 						if (_history.indexOf(getToday()) == -1)
 						{
 							_history.add(getToday());
@@ -2045,22 +2040,39 @@ public class Mobibot extends PircBot
 						}
 
 						fw.close();
-						fw = new FileWriter(new File(_logsDir + "nav.xml"));
-						rss = new Channel();
-						rss.setTitle(_channel + " IRC Links Backlogs");
-						rss.setDescription("Backlogs of Links from " + _ircServer + " on " + _channel);
+						fw = new FileWriter(new File(_logsDir + NAV_XML));
+						rss = new SyndFeedImpl();
+						rss.setFeedType("rss_2.0");
+						rss.setTitle(getChannel() + " IRC Links Backlogs");
+						rss.setDescription("Backlogs of Links from " + _ircServer + " on " + getChannel());
 						rss.setLink(_backlogsURL);
-						rss.setPubDate(Calendar.getInstance().getTime());
+						rss.setPublishedDate(Calendar.getInstance().getTime());
 
 						String date;
+						items.clear();
 
 						for (int i = (_history.size() - 1); i >= 0; --i)
 						{
 							date = (String) _history.get(i);
-							rss.addItem(_backlogsURL + date + ".xml", "Links for " + date, date);
+
+							item = new SyndEntryImpl();
+							item.setLink(_backlogsURL + date + ".xml");
+							item.setTitle(date);
+							description = new SyndContentImpl();
+							description.setValue("Links for " + date);
+							item.setDescription(description);
+
+							items.add(item);
 						}
 
-						fw.write(rss.getFeed("2.0"));
+						rss.setEntries(items);
+
+						if (_logger.isDebugEnabled())
+						{
+							_logger.debug("Writing the backlog feed.");
+						}
+
+						output.output(rss, fw);
 					}
 					else
 					{
@@ -2087,45 +2099,6 @@ public class Mobibot extends PircBot
 		else
 		{
 			_logger.warn("Unable to generate the feed. At least one of the required property is missing.");
-		}
-
-		// Save the data
-		ObjectOutputStream oos = null;
-
-		try
-		{
-			oos = new ObjectOutputStream(new FileOutputStream(_data));
-
-			oos.writeObject(_entries.clone());
-			oos.writeObject(getToday());
-			oos.writeObject(_history.clone());
-		}
-		catch (IOException e)
-		{
-			_logger.warn("Unable to save the data file.", e);
-		}
-		finally
-		{
-			try
-			{
-				if (oos != null)
-				{
-					oos.close();
-				}
-			}
-			catch (IOException e)
-			{
-				_logger.debug("Unable to close the data file stream.", e);
-			}
-		}
-
-		try
-		{
-			copyFile(new File(_data), new File(_data + ".bak"));
-		}
-		catch (IOException e)
-		{
-			_logger.warn("Unable to backup the data file.", e);
 		}
 	}
 
@@ -2158,7 +2131,7 @@ public class Mobibot extends PircBot
 		{
 			try
 			{
-				this.sendNotice(_channel, lookup(query));
+				send(getChannel(), lookup(query));
 			}
 			catch (UnknownHostException e)
 			{
@@ -2178,24 +2151,24 @@ public class Mobibot extends PircBot
 
 								if ((line.length() > 0) && (line.charAt(0) != '#'))
 								{
-									this.sendNotice(_channel, line);
+									send(getChannel(), line);
 								}
 							}
 						}
 						else
 						{
-							this.sendNotice(_channel, "Unknown host.");
+							send(getChannel(), "Unknown host.");
 						}
 					}
 					catch (IOException ioe)
 					{
 						_logger.debug("Unable to perform whois IP lookup: " + query, ioe);
-						this.sendNotice(_channel, "Unable to perform whois IP lookup: " + ioe.getMessage());
+						send(getChannel(), "Unable to perform whois IP lookup: " + ioe.getMessage());
 					}
 				}
 				else
 				{
-					this.sendNotice(_channel, "Unknown host.");
+					send(getChannel(), "Unknown host.");
 				}
 			}
 		}
@@ -2217,7 +2190,7 @@ public class Mobibot extends PircBot
 		{
 			if (spell.length() > 0)
 			{
-				new Thread(new GoogleSearch(this, _googleKey, _channel, spell, true)).start();
+				new Thread(new GoogleSearch(this, _googleKey, getChannel(), spell, true)).start();
 			}
 			else
 			{
@@ -2226,7 +2199,7 @@ public class Mobibot extends PircBot
 		}
 		else
 		{
-			this.sendNotice(_channel, "The Google spelling facility is disabled.");
+			send(getChannel(), "The Google spelling facility is disabled.");
 		}
 	}
 
@@ -2289,11 +2262,11 @@ public class Mobibot extends PircBot
 		{
 			if (isInvalidTz)
 			{
-				this.sendNotice(sender, response);
+				send(sender, response);
 			}
 			else
 			{
-				this.sendNotice(_channel, response);
+				send(getChannel(), response);
 			}
 		}
 	}
@@ -2313,7 +2286,7 @@ public class Mobibot extends PircBot
 	 *
 	 * @return The nickname regexp pattern.
 	 */
-	private final String getNickPattern()
+	private String getNickPattern()
 	{
 		final StringBuffer buff = new StringBuffer(0);
 		final String nick = getNick();
@@ -2337,6 +2310,80 @@ public class Mobibot extends PircBot
 	}
 
 	/**
+	 * Loads the backlogs.
+	 *
+	 * @param file The file containing the backlogs.
+	 *
+	 * @throws FileNotFoundException If the file was not found.
+	 * @throws FeedException If an error occurred while reading the feed.
+	 */
+	private void loadBacklogs(String file)
+					   throws FileNotFoundException, FeedException
+	{
+		_history.clear();
+
+		SyndFeedInput input = new SyndFeedInput();
+		SyndFeed feed = input.build(new InputStreamReader(new FileInputStream(new File(file))));
+
+		List items = feed.getEntries();
+		SyndEntry item;
+
+		for (int i = items.size() - 1; i >= 0; i--)
+		{
+			item = (SyndEntryImpl) items.get(i);
+			_history.add(item.getTitle());
+		}
+	}
+
+	/**
+	 * Loads the current entries.
+	 *
+	 * @param file The file containing the current entries.
+	 *
+	 * @throws FileNotFoundException If the file was not found.
+	 * @throws FeedException If an error occurred while reading the feed.
+	 */
+	private void loadEntries(String file)
+					  throws FileNotFoundException, FeedException
+	{
+		_entries.clear();
+
+		SyndFeedInput input = new SyndFeedInput();
+		SyndFeed feed = input.build(new InputStreamReader(new FileInputStream(new File(file))));
+
+		setToday(ISO_SDF.format(feed.getPublishedDate()));
+
+		List items = feed.getEntries();
+		SyndEntry item;
+		SyndContent description;
+		String[] comments;
+		String[] comment;
+		String author;
+		EntryLink entry;
+
+		for (int i = items.size() - 1; i >= 0; i--)
+		{
+			item = (SyndEntryImpl) items.get(i);
+			author = item.getAuthor().substring(item.getAuthor().lastIndexOf('(') + 1, item.getAuthor().length() - 1);
+			entry = new EntryLink(item.getLink(), item.getTitle(), author, item.getPublishedDate());
+			description = item.getDescription();
+			comments = description.getValue().split("<br/>");
+
+			for (int j = 0; j < comments.length; j++)
+			{
+				comment = comments[j].split(":");
+
+				if (comment.length == 2)
+				{
+					entry.addComment(comment[1].trim(), comment[0]);
+				}
+			}
+
+			_entries.add(entry);
+		}
+	}
+
+	/**
 	 * Responds with the users on a channel.
 	 *
 	 * @param sender The nick of the person who sent the message.
@@ -2344,7 +2391,7 @@ public class Mobibot extends PircBot
 	 */
 	private void usersResponse(String sender, boolean isPrivate)
 	{
-		final User[] users = this.getUsers(_channel);
+		final User[] users = this.getUsers(getChannel());
 		final String[] nicks = new String[users.length];
 
 		for (int i = 0; i < users.length; i++)

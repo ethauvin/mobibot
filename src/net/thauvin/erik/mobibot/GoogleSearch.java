@@ -115,7 +115,7 @@ public class GoogleSearch implements Runnable
 	/**
 	 * Main processing method.
 	 */
-	public void run()
+	public final void run()
 	{
 		GOOGLE_BEAN.setKey(_key);
 
@@ -127,17 +127,17 @@ public class GoogleSearch implements Runnable
 
 				if (Mobibot.isValidString(r))
 				{
-					_bot.sendNotice(_sender, Mobibot.unescapeXml(r));
+					_bot.send(_sender, Mobibot.unescapeXml(r));
 				}
 				else
 				{
-					_bot.sendNotice(_sender, "You've just won our spelling bee contest.");
+					_bot.send(_sender, "You've just won our spelling bee contest.");
 				}
 			}
 			catch (GoogleSearchFault e)
 			{
 				_bot.getLogger().warn("Unable to spell: " + _query, e);
-				_bot.sendNotice(_sender, "An error has occurred: " + e.getMessage());
+				_bot.send(_sender, "An error has occurred: " + e.getMessage());
 			}
 		}
 		else
@@ -152,17 +152,17 @@ public class GoogleSearch implements Runnable
 				{
 					for (int i = 0; i < GOOGLE_BEAN.getResultElementsCount(); i++)
 					{
-						_bot.sendNotice(_sender,
+						_bot.send(_sender,
 										Mobibot.unescapeXml(GOOGLE_BEAN.getResultElementProperty(i, "title").replaceAll("<([bB]|/[bB])>",
 																														Colors.BOLD)));
-						_bot.sendNotice(_sender, TAB_INDENT + GOOGLE_BEAN.getResultElementProperty(i, "url"));
+						_bot.send(_sender, TAB_INDENT + GOOGLE_BEAN.getResultElementProperty(i, "url"));
 					}
 				}
 			}
 			catch (GoogleSearchFault e)
 			{
 				_bot.getLogger().warn("Unable to search in Google for: " + _query, e);
-				_bot.sendNotice(_sender, "An error has occurred: " + e.getMessage());
+				_bot.send(_sender, "An error has occurred: " + e.getMessage());
 			}
 		}
 	}

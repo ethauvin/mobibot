@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="mobibot" default="build" basedir=".">
 	<property file="${basedir}/build.properties" />
-	<property name="path.classes" value="build" />
-	<property name="path.src" value="src" />
-	<property name="path.dist" value="dist" />
-	<property name="path.lib" value="lib" />
 	<path id="path.source">
 		<pathelement location="${path.src}" />
 	</path>
@@ -13,12 +9,19 @@
 			<include name="**/*.jar"/>
 		</fileset>
 	</path>
+	<path id="ant.class">
+		<fileset dir="${path.ant}">
+			<include name="**/*.jar"/>
+		</fileset>
+	</path>
+	<taskdef name="jreleaseinfo" classname="ch.oscg.jreleaseinfo.anttask.JReleaseInfoAntTask" classpathref="ant.class"/>
 	<target name="init">
 		<tstamp />
 		<mkdir dir="${path.classes}"/>
 		<mkdir dir="${path.dist}"/>
 	</target>
 	<target name="compile" depends="init" description="Compiles sources">
+		<jreleaseinfo targetDir="${basedir}/${path.src}" className="ReleaseInfo" packageName="${proj.package}" project="${proj.name}" version="${proj.version}" buildnumfile="${basedir}/buildnum.properties"/>
 		<mkdir dir="${path.classes}" />
 		<javac sourcepathref="path.source" classpathref="path.class" destdir="${path.classes}" debug="on" deprecation="on">
 			<src refid="path.source" />
@@ -34,7 +37,7 @@
 		</pathconvert>
 		<jar destfile="${basedir}/${path.dist}/${ant.project.name}.jar" basedir="${path.classes}" excludes="**/.dependency-info/**">
 			<manifest>
-				<attribute name="Main-Class" value="${main.class}"/>
+				<attribute name="Main-Class" value="${proj.run}"/>
 				<attribute name="Class-Path" value=". ${mf.lib}"/>
 			</manifest>
 		</jar>

@@ -66,7 +66,7 @@ public class CurrencyConverter implements Runnable
 	/**
 	 * The exchange rates table URL.
 	 */
-	public static final String EXCHANGE_TABLE_URL = "http://www.ecb.int/stats/eurofxref/eurofxref-daily.xml";
+	private static final String EXCHANGE_TABLE_URL = "http://www.ecb.int/stats/eurofxref/eurofxref-daily.xml";
 
 	/**
 	 * The exchange rates.
@@ -119,7 +119,7 @@ public class CurrencyConverter implements Runnable
 	}
 
 	// Converts specified currencies.
-	public void run()
+	public final void run()
 	{
 		if (EXCHANGE_RATES.isEmpty())
 		{
@@ -150,12 +150,12 @@ public class CurrencyConverter implements Runnable
 			catch (JDOMException e)
 			{
 				_bot.getLogger().debug("Unable to parse the exchange rates table.", e);
-				_bot.sendNotice(_sender, "An error has occurred while parsing the exchange rates table.");
+				_bot.send(_sender, "An error has occurred while parsing the exchange rates table.");
 			}
 			catch (IOException e)
 			{
 				_bot.getLogger().debug("Unable to fetch the exchange rates table.", e);
-				_bot.sendNotice(_sender,
+				_bot.send(_sender,
 								"An error has occurred while fetching the exchange rates table:  " + e.getMessage());
 			}
 		}
@@ -170,7 +170,7 @@ public class CurrencyConverter implements Runnable
 				{
 					if (cmds[3].equals(cmds[1]))
 					{
-						_bot.sendNotice(_sender, "You're kidding, right?");
+						_bot.send(_sender, "You're kidding, right?");
 					}
 					else
 					{
@@ -180,7 +180,7 @@ public class CurrencyConverter implements Runnable
 							final double from = Double.parseDouble((String) EXCHANGE_RATES.get(cmds[1].toUpperCase()));
 							final double to = Double.parseDouble((String) EXCHANGE_RATES.get(cmds[3].toUpperCase()));
 
-							_bot.sendNotice(_bot.getChannel(),
+							_bot.send(_bot.getChannel(),
 											NumberFormat.getCurrencyInstance(Locale.US).format(amt).substring(1) + ' ' +
 											cmds[1].toUpperCase() + " = " +
 											NumberFormat.getCurrencyInstance(Locale.US).format((amt * to) / from)
@@ -188,7 +188,7 @@ public class CurrencyConverter implements Runnable
 						}
 						catch (NullPointerException e)
 						{
-							_bot.sendNotice(_sender,
+							_bot.send(_sender,
 											"The supported currencies are: " + EXCHANGE_RATES.keySet().toString());
 						}
 					}
@@ -196,7 +196,7 @@ public class CurrencyConverter implements Runnable
 			}
 			else if (_query.equals(RATES_KEYWORD))
 			{
-				_bot.sendNotice(_sender, "Last Update: " + s_date);
+				_bot.send(_sender, "Last Update: " + s_date);
 
 				final Iterator it = EXCHANGE_RATES.keySet().iterator();
 				String rate;
@@ -213,19 +213,19 @@ public class CurrencyConverter implements Runnable
 					buff.append(rate).append(": ").append(EXCHANGE_RATES.get(rate));
 				}
 
-				_bot.sendNotice(_sender, buff.toString());
+				_bot.send(_sender, buff.toString());
 
 			}
 			else
 			{
 				_bot.helpResponse(_sender, Mobibot.CURRENCY_CMD + ' ' + _query);
-				_bot.sendNotice(_sender, "The supported currencies are: " + EXCHANGE_RATES.keySet().toString());
+				_bot.send(_sender, "The supported currencies are: " + EXCHANGE_RATES.keySet().toString());
 			}
 		}
 		else
 		{
 			_bot.getLogger().debug("The exchange rate table is empty.");
-			_bot.sendNotice(_sender, "Sorry, but the exchange rate table is empty.");
+			_bot.send(_sender, "Sorry, but the exchange rate table is empty.");
 		}
 	}
 }

@@ -1,6 +1,8 @@
+DevSuite
 build
 dist
 log4j.properties
 mobibot.properties
+fetcher.properties
 *.ser
 logs

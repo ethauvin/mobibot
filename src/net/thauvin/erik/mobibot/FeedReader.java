@@ -36,20 +36,15 @@
  */
 package net.thauvin.erik.mobibot;
 
-import org.crazybob.rss.Channel;
-import org.crazybob.rss.Item;
-import org.crazybob.rss.Parser;
-import org.crazybob.rss.UrlLoader;
-import org.crazybob.rss.UrlLoader.Response;
+import com.sun.syndication.feed.synd.SyndEntry;
+import com.sun.syndication.feed.synd.SyndEntryImpl;
+import com.sun.syndication.feed.synd.SyndFeed;
+import com.sun.syndication.fetcher.FeedFetcher;
+import com.sun.syndication.fetcher.impl.HttpURLFeedFetcher;
 
-import org.jdom.JDOMException;
+import java.net.MalformedURLException;
+import java.net.URL;
 
-import org.jdom.input.SAXBuilder;
-
-import java.io.IOException;
-import java.io.StringReader;
-
-import java.util.Iterator;
 import java.util.List;
 
 
@@ -106,58 +101,32 @@ public class FeedReader implements Runnable
 	/**
 	 * Fetches the Feed's items.
 	 */
-	public void run()
+	public final void run()
 	{
-		List items = null;
+		final FeedFetcher fetcher = new HttpURLFeedFetcher(_bot.getFeedInfoCache());
 
 		try
 		{
-			final Response response = new UrlLoader().load(_url, _bot.getFeedLastMod());
+			final SyndFeed feed = fetcher.retrieveFeed(new URL(_url));
+			SyndEntry item;
+			final List items = feed.getEntries();
 
-			if (response != null)
+			for (int i = 0; (i < items.size()) && (i < MAX_ITEMS); i++)
 			{
-				_bot.setFeedLastMod(response.getLastModified());
-
-				final Channel chan = new Parser().parse(new SAXBuilder().build(new StringReader(response.getBody())));
-				items = chan.getItems();
-				_bot.setFeedItems(items);
+				item = (SyndEntryImpl) items.get(i);
+				_bot.send(_sender, item.getTitle());
+				_bot.send(_sender, TAB_INDENT + item.getLink());
 			}
 		}
-		catch (JDOMException e)
+		catch (MalformedURLException e)
 		{
-			_bot.getLogger().debug("Unable to parse the feed.", e);
-			_bot.sendNotice(_sender, "An error has occurred while parsing the feed.");
+			_bot.getLogger().debug("Invalid feed URL.", e);
+			_bot.send(_sender, "The feed URL is invalid.");
 		}
-		catch (IOException e)
+		catch (Exception e)
 		{
 			_bot.getLogger().debug("Unable to fetch the feed.", e);
-			_bot.sendNotice(_sender, "An error has occurred while fetching the feed: " + e.getMessage());
-		}
-
-		if (items == null)
-		{
-			items = _bot.getFeedItems();
-		}
-
-		if ((items != null) && (!items.isEmpty()))
-		{
-			Item item;
-			int i = 0;
-			final Iterator it = items.iterator();
-
-			while (it.hasNext() && (i < MAX_ITEMS))
-			{
-				item = (Item) it.next();
-				_bot.sendNotice(_sender, item.getTitle());
-				_bot.sendNotice(_sender, TAB_INDENT  + item.getLink());
-
-				i++;
-			}
-
-			if (_bot.getFeedLastMod().length() > 0)
-			{
-				_bot.sendNotice(_sender, "Last Updated: " + _bot.getFeedLastMod());
-			}
+			_bot.send(_sender, "An error has occurred while fetching the feed: " + e.getMessage());
 		}
 	}
 }

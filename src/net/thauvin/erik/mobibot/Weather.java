@@ -98,7 +98,7 @@ public class Weather implements Runnable
 	/**
 	 * Main processing method.
 	 */
-	public void run()
+	public final void run()
 	{
 		if (_station.length() == 4)
 		{

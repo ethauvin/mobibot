@@ -90,7 +90,7 @@ public class StockQuote implements Runnable
 	/**
 	 * Returns the specified stock quote.
 	 */
-	public void run()
+	public final void run()
 	{
 		try
 		{
@@ -107,54 +107,54 @@ public class StockQuote implements Runnable
 			{
 				if ((quote.length > 3) && (!"\"N/A\"".equalsIgnoreCase(quote[3])))
 				{
-					_bot.sendNotice(_bot.getChannel(),
+					_bot.send(_bot.getChannel(),
 									"Symbol: " + quote[0].replaceAll("\"", "") + " [" + quote[1].replaceAll("\"", "") +
 									']');
 
 					if (quote.length > 5)
 					{
-						_bot.sendNotice(_bot.getChannel(), "Last Trade: " + quote[2] + " (" + quote[5] + ')');
+						_bot.send(_bot.getChannel(), "Last Trade: " + quote[2] + " (" + quote[5] + ')');
 					}
 					else
 					{
-						_bot.sendNotice(_bot.getChannel(), "Last Trade: " + quote[2]);
+						_bot.send(_bot.getChannel(), "Last Trade: " + quote[2]);
 					}
 
 					if (quote.length > 4)
 					{
-						_bot.sendNotice(_sender,
+						_bot.send(_sender,
 										"Time: " + quote[3].replaceAll("\"", "") + ' ' + quote[4].replaceAll("\"", ""));
 					}
 
 					if (quote.length > 6)
 					{
-						_bot.sendNotice(_sender, "Open: " + quote[6]);
+						_bot.send(_sender, "Open: " + quote[6]);
 					}
 
 					if (quote.length > 7)
 					{
-						_bot.sendNotice(_sender, "Day's Range: " + quote[7] + " - " + quote[8]);
+						_bot.send(_sender, "Day's Range: " + quote[7] + " - " + quote[8]);
 					}
 
 					if (quote.length > 9)
 					{
-						_bot.sendNotice(_sender, "Volume: " + quote[9]);
+						_bot.send(_sender, "Volume: " + quote[9]);
 					}
 				}
 				else
 				{
-					_bot.sendNotice(_sender, "Invalid ticker symbol.");
+					_bot.send(_sender, "Invalid ticker symbol.");
 				}
 			}
 			else
 			{
-				_bot.sendNotice(_sender, "No data returned.");
+				_bot.send(_sender, "No data returned.");
 			}
 		}
 		catch (IOException e)
 		{
 			_bot.getLogger().debug("Unable to retrieve stock quote for: " + _symbol, e);
-			_bot.sendNotice(_sender, "An error has occurred: " + e.getMessage());
+			_bot.send(_sender, "An error has occurred: " + e.getMessage());
 		}
 	}
 }
