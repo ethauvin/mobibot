@@ -81,7 +81,7 @@ public class CurrencyConverter implements Runnable
 	/**
 	 * The last exchange rates table publication date.
 	 */
-	private static String s_date = "";
+	private String s_date = "";
 
 	/**
 	 * The bot.

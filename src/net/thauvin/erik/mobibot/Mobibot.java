@@ -88,7 +88,7 @@ public class Mobibot extends PircBot
 	private static final String[] INFO_STRS =
 	{
 		"Mobibot v" + ReleaseInfo.getVersion() + '.' + ReleaseInfo.getBuildNumber() +
-		" by Erik C. Thauvin (erik@thauvin.net)", "http://www.thauvin.net/mobitopia/mobibot/"
+		" by Erik C. Thauvin (erik@thauvin.net)", "http://mobitopia.thauvin.net/mobibot/"
 	};
 
 	/**
@@ -182,6 +182,11 @@ public class Mobibot extends PircBot
 	private static final String HELP_POSTING_KEYWORD = "posting";
 
 	/**
+	 * The help on tags keyword.
+	 */
+	private static final String HELP_TAGS_KEYWORD = "tags";
+
+	/**
 	 * The Google command.
 	 */
 	private static final String GOOGLE_CMD = "google";
@@ -250,6 +255,11 @@ public class Mobibot extends PircBot
 	 * The empty title string.
 	 */
 	private static final String NO_TITLE = "No Title";
+
+	/**
+	 * The tags/categories marker.
+	 */
+	private static final String TAGS_MARKER = "tags:";
 
 	/**
 	 * The countries supporte by the {@link #TIME_CMD time} command.
@@ -336,6 +346,7 @@ public class Mobibot extends PircBot
 		COUNTRIES_MAP.put("NL", "Europe/Amsterdam");
 		COUNTRIES_MAP.put("NO", "Europe/Oslo");
 		COUNTRIES_MAP.put("NZ", "Pacific/Auckland");
+		COUNTRIES_MAP.put("PK", "Asia/Karachi");
 		COUNTRIES_MAP.put("RU", "Europe/Moscow");
 		COUNTRIES_MAP.put("SE", "Europe/Stockholm");
 		COUNTRIES_MAP.put("SG", "Asia/Singapore");
@@ -368,7 +379,7 @@ public class Mobibot extends PircBot
 	/**
 	 * The number of milliseconds to delay between consecutive messages.
 	 */
-	private static final int MESSAGE_DELAY = 1000;
+	private static final long MESSAGE_DELAY = 1000L;
 
 	/**
 	 * The name of the file containing the current entries.
@@ -381,11 +392,6 @@ public class Mobibot extends PircBot
 	private static final String NAV_XML = "nav.xml";
 
 	/**
-	 * The del.icio.us posts handler.
-	 */
-	private static DeliciousPoster _delicious = null;
-
-	/**
 	 * The backlogs URL.
 	 */
 	private String _backlogsURL = "";
@@ -394,6 +400,16 @@ public class Mobibot extends PircBot
 	 * The main channel.
 	 */
 	private final String _channel;
+
+	/**
+	 * The default tags/categories.
+	 */
+	private String _defaultTags = "";
+
+	/**
+	 * The del.icio.us posts handler.
+	 */
+	private DeliciousPoster _delicious = null;
 
 	/**
 	 * The entries array.
@@ -410,7 +426,10 @@ public class Mobibot extends PircBot
 	 */
 	private String _feedURL = "";
 
-	// The Google API key.
+	/**
+	 * The Google API key.
+	 */
+
 	private String _googleKey = "";
 
 	/**
@@ -637,14 +656,6 @@ public class Mobibot extends PircBot
 				System.setErr(stderr);
 			}
 
-			// Get the del.icio.us properties
-			final String dname = p.getProperty("delicious-user");
-			final String dpwd = p.getProperty("delicious-pwd");
-
-			if (isValidString(dname) && isValidString(dpwd))
-			{
-				_delicious = new DeliciousPoster(dname, dpwd, p.getProperty("delicious-tags", ""));
-			}
 
 			// Get the bot's properties
 			final String login = p.getProperty("login", nickname);
@@ -653,6 +664,11 @@ public class Mobibot extends PircBot
 			final String backlogsURL = ensureDir(p.getProperty("backlogs", weblogURL), true);
 			final String googleKey = p.getProperty("google", "");
 			final String ignoredNicks = p.getProperty("ignore", "");
+			final String tags = p.getProperty("tags", "");
+
+			// Get the del.icio.us properties
+			final String dname = p.getProperty("delicious-user");
+			final String dpwd = p.getProperty("delicious-pwd");
 
 			// Create the bot
 			final Mobibot bot = new Mobibot(server, channel, logsDir);
@@ -672,6 +688,16 @@ public class Mobibot extends PircBot
 
 			// Set the Google key
 			bot.setGoogleKey(googleKey);
+
+
+			if (isValidString(dname) && isValidString(dpwd))
+			{
+				// Set the del.icio.us authentication
+				bot.setDeliciousAuth(dname, dpwd);
+			}
+
+			// Set the tags
+			bot.setTags(tags);
 
 			// Set the ignored nicks
 			bot.setIgnoredNicks(ignoredNicks);
@@ -753,7 +779,7 @@ public class Mobibot extends PircBot
 	{
 		if (isValidString(channel) && isValidString(action))
 		{
-			this.sendAction(channel, action);
+			sendAction(channel, action);
 		}
 	}
 
@@ -799,7 +825,8 @@ public class Mobibot extends PircBot
 
 		if (lcTopic.endsWith(HELP_POSTING_KEYWORD))
 		{
-			send(sender, bold("Post a URL, by saying it on a line on its own."));
+			send(sender, bold("Post a URL, by saying it on a line on its own:"));
+			send(sender, DOUBLE_INDENT + bold("<url> [<title>] [" + TAGS_MARKER + "<+tag> [...]]"));
 			send(sender, "I will reply with a label, for example: " + bold(LINK_CMD + '1'));
 			send(sender, "To add a title, use a its label and a pipe:");
 			send(sender, DOUBLE_INDENT + bold(LINK_CMD + "1:|This is the title"));
@@ -811,6 +838,11 @@ public class Mobibot extends PircBot
 			send(sender, "To delete a comment, use its label and a minus sign: ");
 			send(sender, DOUBLE_INDENT + bold(LINK_CMD + "1.1:-"));
 			send(sender, "You can also view a posting by saying its label.");
+		}
+		else if (lcTopic.endsWith(HELP_TAGS_KEYWORD))
+		{
+			send(sender, bold("To categorize or tag a URL, use its label and a T:"));
+			send(sender, DOUBLE_INDENT + bold(LINK_CMD + "1T:<+tag|-tag> [...]"));
 		}
 		else if (lcTopic.endsWith(VIEW_CMD))
 		{
@@ -938,7 +970,9 @@ public class Mobibot extends PircBot
 				 bold(INFO_CMD + ' ' + getChannel().substring(1) + ' ' + LOOKUP_CMD + ' ' + HELP_POSTING_KEYWORD + ' ' +
 					  RECAP_CMD));
 			send(sender,
-				 DOUBLE_INDENT + bold(SPELL_CMD + ' ' + STOCK_CMD + ' ' + TIME_CMD + ' ' + USERS_CMD + ' ' + VIEW_CMD));
+				 DOUBLE_INDENT +
+				 bold(SPELL_CMD + ' ' + STOCK_CMD + ' ' + HELP_TAGS_KEYWORD + ' ' + TIME_CMD + ' ' + USERS_CMD + ' ' +
+					  VIEW_CMD));
 			send(sender, DOUBLE_INDENT + bold(WEATHER_CMD));
 
 			if (isOp(sender))
@@ -978,7 +1012,7 @@ public class Mobibot extends PircBot
 					_logger.debug("Sending message to " + sender + ": " + message);
 				}
 
-				this.sendMessage(sender, message);
+				sendMessage(sender, message);
 			}
 			else
 			{
@@ -987,7 +1021,7 @@ public class Mobibot extends PircBot
 					_logger.debug("Sending notice to " + sender + ": " + message);
 				}
 
-				this.sendNotice(sender, message);
+				sendNotice(sender, message);
 			}
 		}
 	}
@@ -1102,7 +1136,18 @@ public class Mobibot extends PircBot
 
 					if (title.indexOf(getNick()) == -1)
 					{
-						_entries.add(new EntryLink(cmd, title, sender, login));
+						final int tagSep = title.lastIndexOf(TAGS_MARKER);
+
+						if (tagSep != -1)
+						{
+							_entries.add(new EntryLink(cmd, title.substring(0, tagSep), sender, login, channel,
+													   (_defaultTags + ' ' +
+														title.substring(tagSep + TAGS_MARKER.length()))));
+						}
+						else
+						{
+							_entries.add(new EntryLink(cmd, title, sender, login, channel, _defaultTags));
+						}
 					}
 					else
 					{
@@ -1111,7 +1156,7 @@ public class Mobibot extends PircBot
 				}
 				else
 				{
-					_entries.add(new EntryLink(cmd, NO_TITLE, sender, login));
+					_entries.add(new EntryLink(cmd, NO_TITLE, sender, login, channel, _defaultTags));
 				}
 
 				if (isCommand)
@@ -1122,7 +1167,7 @@ public class Mobibot extends PircBot
 
 					if (_delicious != null)
 					{
-						_delicious.addPost(entry, postedBy(entry, channel));
+						_delicious.addPost(entry);
 					}
 
 					saveEntries(isBackup);
@@ -1354,6 +1399,11 @@ public class Mobibot extends PircBot
 					final EntryLink entry = (EntryLink) _entries.get(index);
 					send(getChannel(), buildLink(index, entry));
 
+					if (entry.hasTags())
+					{
+						send(getChannel(), buildTags(index, entry));
+					}
+
 					if (entry.hasComments())
 					{
 						final EntryComment[] comments = entry.getComments();
@@ -1395,7 +1445,7 @@ public class Mobibot extends PircBot
 
 							if (_delicious != null)
 							{
-								_delicious.addPost(entry, postedBy(entry, channel));
+								_delicious.addPost(entry);
 							}
 
 							send(getChannel(), buildLink(index, entry));
@@ -1412,16 +1462,13 @@ public class Mobibot extends PircBot
 
 							if (link.matches(LINK_MATCH))
 							{
-								if (_delicious != null)
-								{
-									_delicious.deletePost(entry);
-								}
+								final String oldLink = entry.getLink();
 
 								entry.setLink(link);
 
 								if (_delicious != null)
 								{
-									_delicious.addPost(entry, postedBy(entry, channel));
+									_delicious.updatePost(oldLink, entry);
 								}
 
 								send(getChannel(), buildLink(index, entry));
@@ -1458,6 +1505,51 @@ public class Mobibot extends PircBot
 						final EntryComment comment = entry.getComment(cindex);
 						send(sender, buildComment(index, cindex, comment));
 						saveEntries(false);
+					}
+				}
+			}
+		}
+		else if (message.matches(LINK_CMD + "[0-9]+T:.*"))
+		{
+			isCommand = true;
+
+			final String[] cmds = message.substring(1).split("T:", 2);
+			final int index = Integer.parseInt(cmds[0]) - 1;
+
+			if (index < _entries.size())
+			{
+				final String cmd = cmds[1].trim();
+
+				final EntryLink entry = (EntryLink) _entries.get(index);
+
+				if (cmd.length() != 0)
+				{
+					if (entry.getLogin().equals(login) || isOp(sender))
+					{
+						entry.setTags(cmd);
+
+						if (_delicious != null)
+						{
+							_delicious.addPost(entry);
+						}
+
+						send(getChannel(), buildTags(index, entry));
+						saveEntries(false);
+					}
+					else
+					{
+						send(sender, "Please ask a channel op to change the tags for you.");
+					}
+				}
+				else
+				{
+					if (entry.hasTags())
+					{
+						send(getChannel(), buildTags(index, entry));
+					}
+					else
+					{
+						send(sender, "The entry has no tags. Why don't add some?");
 					}
 				}
 			}
@@ -1556,7 +1648,7 @@ public class Mobibot extends PircBot
 		{
 			if (isOp(sender))
 			{
-				this.sendRawLine("QUIT : Poof!");
+				sendRawLine("QUIT : Poof!");
 				System.exit(0);
 			}
 		}
@@ -1567,7 +1659,7 @@ public class Mobibot extends PircBot
 				send(getChannel(), sender + " has just signed my death sentence.");
 				saveEntries(true);
 				sleep(3);
-				this.quitServer("The Bot Is Out There!");
+				quitServer("The Bot Is Out There!");
 				System.exit(0);
 			}
 		}
@@ -1575,9 +1667,9 @@ public class Mobibot extends PircBot
 		{
 			send(getChannel(), sender + " has just asked me to leave. I'll be back!");
 			sleep(0);
-			this.partChannel(getChannel());
+			partChannel(getChannel());
 			sleep(5);
-			this.joinChannel(getChannel());
+			joinChannel(getChannel());
 		}
 		else if (cmd.equals(RECAP_CMD))
 		{
@@ -1613,7 +1705,7 @@ public class Mobibot extends PircBot
 		{
 			if (isOp(sender))
 			{
-				this.changeNick(args);
+				changeNick(args);
 			}
 		}
 		else if (cmd.startsWith(SAY_CMD))
@@ -1744,6 +1836,19 @@ public class Mobibot extends PircBot
 		buff.append(" ( ").append(entry.getLink()).append(" )");
 
 		return buff.toString();
+	}
+
+	/**
+	 * Build an entry's tags/categories for diplay on the channel.
+	 *
+	 * @param  entryIndex The entry's index.
+	 * @param  entry      The {@link EntryLink entry} object.
+	 *
+	 * @return The entry's tags.
+	 */
+	private static String buildTags(int entryIndex, EntryLink entry)
+	{
+		return (LINK_CMD + (entryIndex + 1) + "T: " + entry.getDeliciousTags());
 	}
 
 	/**
@@ -2123,7 +2228,7 @@ public class Mobibot extends PircBot
 	 */
 	private boolean isOp(String sender)
 	{
-		final User[] users = this.getUsers(getChannel());
+		final User[] users = getUsers(getChannel());
 
 		User user;
 
@@ -2153,10 +2258,10 @@ public class Mobibot extends PircBot
 	{
 		_history.clear();
 
-		SyndFeedInput input = new SyndFeedInput();
-		SyndFeed feed = input.build(new InputStreamReader(new FileInputStream(new File(file))));
+		final SyndFeedInput input = new SyndFeedInput();
+		final SyndFeed feed = input.build(new InputStreamReader(new FileInputStream(new File(file))));
 
-		List items = feed.getEntries();
+		final List items = feed.getEntries();
 		SyndEntry item;
 
 		for (int i = items.size() - 1; i >= 0; i--)
@@ -2179,12 +2284,12 @@ public class Mobibot extends PircBot
 	{
 		_entries.clear();
 
-		SyndFeedInput input = new SyndFeedInput();
-		SyndFeed feed = input.build(new InputStreamReader(new FileInputStream(new File(file))));
+		final SyndFeedInput input = new SyndFeedInput();
+		final SyndFeed feed = input.build(new InputStreamReader(new FileInputStream(new File(file))));
 
 		setToday(ISO_SDF.format(feed.getPublishedDate()));
 
-		List items = feed.getEntries();
+		final List items = feed.getEntries();
 		SyndEntry item;
 		SyndContent description;
 		String[] comments;
@@ -2196,7 +2301,8 @@ public class Mobibot extends PircBot
 		{
 			item = (SyndEntryImpl) items.get(i);
 			author = item.getAuthor().substring(item.getAuthor().lastIndexOf('(') + 1, item.getAuthor().length() - 1);
-			entry = new EntryLink(item.getLink(), item.getTitle(), author, item.getPublishedDate());
+			entry = new EntryLink(item.getLink(), item.getTitle(), author, getChannel(), item.getPublishedDate(),
+								  item.getCategories());
 			description = item.getDescription();
 			comments = description.getValue().split("<br/>");
 
@@ -2275,19 +2381,6 @@ public class Mobibot extends PircBot
 
 
 	/**
-	 * Returns he del.icio.us extended attribution line.
-	 *
-	 * @param  entry  The entry.
-	 * @param  channel The channel
-	 *
-	 * @return The extended attribution line.
-	 */
-	private String postedBy(EntryLink entry, String channel)
-	{
-		return "Posted by " + entry.getNick() + " on " + channel + " (" + _ircServer + ')';
-	}
-
-	/**
 	 * Stores the last 10 public messages and actions.
 	 *
 	 * @param sender   The nick of the person who sent the private message.
@@ -2350,7 +2443,7 @@ public class Mobibot extends PircBot
 				EntryLink entry;
 				StringBuffer buff;
 				EntryComment comment;
-				final List items = new ArrayList();
+				final List items = new ArrayList(0);
 				SyndEntry item;
 				SyndContent description;
 
@@ -2385,6 +2478,7 @@ public class Mobibot extends PircBot
 					item.setTitle(entry.getTitle());
 					item.setPublishedDate(entry.getDate());
 					item.setAuthor(getChannel().substring(1) + '@' + _ircServer + " (" + entry.getNick() + ')');
+					item.setCategories(entry.getTags());
 
 					items.add(item);
 				}
@@ -2491,6 +2585,17 @@ public class Mobibot extends PircBot
 	}
 
 	/**
+	 * Sets the del.icio.us authentication.
+	 *
+	 * @param username The del.icio.us username.
+	 * @param password The del.icio.us password.
+	 */
+	private void setDeliciousAuth(String username, String password)
+	{
+		_delicious = new DeliciousPoster(username, password, _ircServer);
+	}
+
+	/**
 	 * Sets the feed URL.
 	 *
 	 * @param feedURL The feed URL.
@@ -2526,6 +2631,16 @@ public class Mobibot extends PircBot
 				_ignoredNicks.add(st.nextToken().trim().toLowerCase());
 			}
 		}
+	}
+
+	/**
+	 * Sets the default tags/categories.
+	 *
+	 * @param tags The tags.
+	 */
+	private void setTags(String tags)
+	{
+		_defaultTags = tags;
 	}
 
 	/**
@@ -2648,7 +2763,7 @@ public class Mobibot extends PircBot
 	 */
 	private void usersResponse(String sender, boolean isPrivate)
 	{
-		final User[] users = this.getUsers(getChannel());
+		final User[] users = getUsers(getChannel());
 		final String[] nicks = new String[users.length];
 
 		for (int i = 0; i < users.length; i++)

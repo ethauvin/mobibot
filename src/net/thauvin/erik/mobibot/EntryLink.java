@@ -36,22 +36,20 @@
  */
 package net.thauvin.erik.mobibot;
 
+import com.sun.syndication.feed.synd.SyndCategoryImpl;
+
 import java.io.Serializable;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 
 /**
  * The class used to store link entries.
  *
- * @author Erik C. Thauvin
+ * @author  Erik C. Thauvin
  * @version $Revision$, $Date$
- *
  * @created Jan 31, 2004
- * @since 1.0
+ * @since   1.0
  */
 public class EntryLink implements Serializable
 {
@@ -60,51 +58,72 @@ public class EntryLink implements Serializable
 	 */
 	static final long serialVersionUID = 3676245542270899086L;
 
-	/**
-	 * The creation date.
-	 */
+	// The channel
+	private String _channel = "";
+
+	// The link's comments
+	private final List _comments = new ArrayList(0);
+
+	// The creation date
 	private Date _date = Calendar.getInstance().getTime();
 
-	/**
-	 * The comments.
-	 */
-	private final List _comments = new ArrayList(0);
+	// The link's URL
 	private String _link = "";
+
+	// The author's login
 	private String _login = "";
+
+	// The author's nickname
 	private String _nick = "";
+
+	// The tags/categories
+	private final List _tags = new ArrayList(0);
+
+	// The link's title
 	private String _title = "";
 
-
 	/**
 	 * Creates a new entry.
 	 *
-	 * @param link The new entry's link.
-	 * @param title The new entry's title.
-	 * @param nick The nickname of the author of the link.
-	 * @param date The entry date.
+	 * @param link    The new entry's link.
+	 * @param title   The new entry's title.
+	 * @param nick    The nickname of the author of the link.
+	 * @param login   The login of the author of the link.
+	 * @param channel The channel.
+	 * @param tags    The entry's tags/categories.
 	 */
-	public EntryLink(String link, String title, String nick, Date date)
-	{
-		_link = link;
-		_title = title;
-		_nick = nick;
-		_date = date;
-	}
-
-	/**
-	 * Creates a new entry.
-	 *
-	 * @param link The new entry's link.
-	 * @param title The new entry's title.
-	 * @param nick The nickname of the author of the link.
-	 * @param login The login of the author of the link.
-	 */
-	public EntryLink(String link, String title, String nick, String login)
+	public EntryLink(String link, String title, String nick, String login, String channel, String tags)
 	{
 		_link = link;
 		_title = title;
 		_nick = nick;
 		_login = login;
+		_channel = channel;
+
+		setTags(tags);
+	}
+
+
+	/**
+	 * Creates a new entry.
+	 *
+	 * @param link    The new entry's link.
+	 * @param title   The new entry's title.
+	 * @param nick    The nickname of the author of the link.
+	 * @param channel The channel.
+	 * @param date    The entry date.
+	 * @param tags    The entry's tags/categories.
+	 */
+	public EntryLink(String link, String title, String nick, String channel, Date date, List tags)
+	{
+		_link = link;
+		_title = title;
+		_nick = nick;
+		_channel = channel;
+		_date = date;
+
+
+		setTags(tags);
 	}
 
 	/**
@@ -112,28 +131,51 @@ public class EntryLink implements Serializable
 	 */
 	protected EntryLink()
 	{
-		; // Required for serialization.		
+		; // Required for serialization.
 	}
 
 	/**
-	 * Sets a comment.
+	 * Adds a new comment.
 	 *
-	 * @param index The comment's index.
-	 * @param comment The actual comment.
-	 * @param nick The nickname of the author of the comment.
+	 * @param  comment The actual comment.
+	 * @param  nick    The nickname of the author of the comment.
+	 *
+	 * @return The total number of comments for this entry.
 	 */
-	public final synchronized void setComment(int index, String comment, String nick)
+	public final synchronized int addComment(String comment, String nick)
+	{
+		_comments.add(new EntryComment(comment, nick));
+
+		return (_comments.size() - 1);
+	}
+
+	/**
+	 * Deletes a specific comment.
+	 *
+	 * @param index The index of the comment to delete.
+	 */
+	public final synchronized void deleteComment(int index)
 	{
 		if (index < _comments.size())
 		{
-			_comments.set(index, new EntryComment(comment, nick));
+			_comments.remove(index);
 		}
+	}
+
+	/**
+	 * Returns the channel the link was posted on.
+	 *
+	 * @return The channel
+	 */
+	public final synchronized String getChannel()
+	{
+		return _channel;
 	}
 
 	/**
 	 * Returns a comment.
 	 *
-	 * @param index The comment's index.
+	 * @param  index The comment's index.
 	 *
 	 * @return The specific comment.
 	 */
@@ -173,13 +215,25 @@ public class EntryLink implements Serializable
 	}
 
 	/**
-	 * Sets the comment's link.
+	 * Returns the tags formatted for del.icio.us.
 	 *
-	 * @param link The new link.
+	 * @return The tags as a space-deliminted string.
 	 */
-	public final synchronized void setLink(String link)
+	public final synchronized String getDeliciousTags()
 	{
-		this._link = link;
+		final StringBuffer tags = new StringBuffer(0);
+
+		for (int i = 0; i < _tags.size(); i++)
+		{
+			if (i != 0)
+			{
+				tags.append(' ');
+			}
+
+			tags.append(((SyndCategoryImpl) _tags.get(i)).getName());
+		}
+
+		return tags.toString();
 	}
 
 	/**
@@ -193,16 +247,6 @@ public class EntryLink implements Serializable
 	}
 
 	/**
-	 * Set the comment's author login.
-	 *
-	 * @param login The new login.
-	 */
-	public final synchronized void setLogin(String login)
-	{
-		this._login = login;
-	}
-
-	/**
 	 * Return's the comment's author login.
 	 *
 	 * @return The login;
@@ -210,16 +254,6 @@ public class EntryLink implements Serializable
 	public final synchronized String getLogin()
 	{
 		return _login;
-	}
-
-	/**
-	 * Sets the comment's author nickname.
-	 *
-	 * @param nick The new nickname.
-	 */
-	public final synchronized void setNick(String nick)
-	{
-		this._nick = nick;
 	}
 
 	/**
@@ -233,13 +267,13 @@ public class EntryLink implements Serializable
 	}
 
 	/**
-	 * Sets the comment's title.
+	 * Returns the tags.
 	 *
-	 * @param title The new title.
+	 * @return The tags.
 	 */
-	public final synchronized void setTitle(String title)
+	public final synchronized List getTags()
 	{
-		this._title = title;
+		return _tags;
 	}
 
 	/**
@@ -253,40 +287,152 @@ public class EntryLink implements Serializable
 	}
 
 	/**
-	 * Adds a new comment.
-	 *
-	 * @param comment The actual comment.
-	 * @param nick The nickname of the author of the comment.
-	 *
-	 * @return The total number of comments for this entry.
-	 */
-	public final synchronized int addComment(String comment, String nick)
-	{
-		_comments.add(new EntryComment(comment, nick));
-
-		return (_comments.size() - 1);
-	}
-
-	/**
-	 * Deletes a specific comment.
-	 *
-	 * @param index The index of the comment to delete.
-	 */
-	public final synchronized void deleteComment(int index)
-	{
-		if (index < _comments.size())
-		{
-			_comments.remove(index);
-		}
-	}
-
-	/**
 	 * Returns true if the entry has comments.
 	 *
 	 * @return true if there are comments, false otherwise.
 	 */
 	public final synchronized boolean hasComments()
 	{
-		return (_comments.size() > 0);
+		return (!_comments.isEmpty());
+	}
+
+	/**
+	 * Returns true if the entry has tags.
+	 *
+	 * @return true if there are tags, false otherwise.
+	 */
+	public final synchronized boolean hasTags()
+	{
+		return (!_tags.isEmpty());
+	}
+
+	/**
+	 * Sets the channel.
+	 *
+	 * @param channel The channel.
+	 */
+	public final synchronized void setChannel(String channel)
+	{
+		_channel = channel;
+	}
+
+	/**
+	 * /** Sets a comment.
+	 *
+	 * @param index   The comment's index.
+	 * @param comment The actual comment.
+	 * @param nick    The nickname of the author of the comment.
+	 */
+	public final synchronized void setComment(int index, String comment, String nick)
+	{
+		if (index < _comments.size())
+		{
+			_comments.set(index, new EntryComment(comment, nick));
+		}
+	}
+
+	/**
+	 * Sets the comment's link.
+	 *
+	 * @param link The new link.
+	 */
+	public final synchronized void setLink(String link)
+	{
+		_link = link;
+	}
+
+	/**
+	 * Set the comment's author login.
+	 *
+	 * @param login The new login.
+	 */
+	public final synchronized void setLogin(String login)
+	{
+		_login = login;
+	}
+
+	/**
+	 * Sets the comment's author nickname.
+	 *
+	 * @param nick The new nickname.
+	 */
+	public final synchronized void setNick(String nick)
+	{
+		_nick = nick;
+	}
+
+	/**
+	 * Sets the tags.
+	 *
+	 * @param tags The tags.
+	 */
+	public final synchronized void setTags(List tags)
+	{
+		_tags.addAll(tags);
+	}
+
+	/**
+	 * Sets the tags.
+	 *
+	 * @param tags The space-delimited tags.
+	 */
+	public final synchronized void setTags(String tags)
+	{
+		if (tags != null)
+		{
+			final String[] parts = tags.split(" ");
+
+			SyndCategoryImpl tag;
+			String part;
+			char mod;
+
+			for (int i = 0; i < parts.length; i++)
+			{
+				part = parts[i].trim();
+
+				if (part.length() > 2)
+				{
+					tag = new SyndCategoryImpl();
+					tag.setName(part.substring(1).toLowerCase());
+
+					mod = part.charAt(0);
+
+					if (mod == '-')
+					{
+						// Don't remove the channel tag, if any.
+						if (!tag.getName().equals(_channel.substring(1)))
+						{
+							_tags.remove(tag);
+						}
+					}
+					else if (mod == '+')
+					{
+						if (!_tags.contains(tag))
+						{
+							_tags.add(tag);
+						}
+					}
+					else
+					{
+						tag.setName(part.trim().toLowerCase());
+
+						if (!_tags.contains(tag))
+						{
+							_tags.add(tag);
+						}
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * Sets the comment's title.
+	 *
+	 * @param title The new title.
+	 */
+	public final synchronized void setTitle(String title)
+	{
+		_title = title;
 	}
 }

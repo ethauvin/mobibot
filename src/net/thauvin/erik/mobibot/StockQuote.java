@@ -45,11 +45,10 @@ import java.io.IOException;
 /**
  * Retrieves a stock quote from Yahoo!.
  *
- * @author Erik C. Thauvin
+ * @author  Erik C. Thauvin
  * @version $Revision$, $Date$
- *
  * @created Feb 7, 2004
- * @since 1.0
+ * @since   1.0
  */
 public class StockQuote implements Runnable
 {
@@ -76,7 +75,7 @@ public class StockQuote implements Runnable
 	/**
 	 * Creates a new StockQuote object.
 	 *
-	 * @param bot The bot.
+	 * @param bot    The bot.
 	 * @param sender The nick of the person who sent the message.
 	 * @param symbol The stock symbol.
 	 */
@@ -95,8 +94,8 @@ public class StockQuote implements Runnable
 		try
 		{
 			final HttpClient client = new HttpClient();
-			client.setConnectionTimeout(Mobibot.CONNECT_TIMEOUT);
-			client.setTimeout(Mobibot.CONNECT_TIMEOUT);
+			client.getHttpConnectionManager().getParams().setConnectionTimeout(Mobibot.CONNECT_TIMEOUT);
+			client.getHttpConnectionManager().getParams().setSoTimeout(Mobibot.CONNECT_TIMEOUT);
 
 			final GetMethod getMethod = new GetMethod(YAHOO_URL + _symbol.toUpperCase());
 			client.executeMethod(getMethod);
@@ -108,8 +107,7 @@ public class StockQuote implements Runnable
 				if ((quote.length > 3) && (!"\"N/A\"".equalsIgnoreCase(quote[3])))
 				{
 					_bot.send(_bot.getChannel(),
-									"Symbol: " + quote[0].replaceAll("\"", "") + " [" + quote[1].replaceAll("\"", "") +
-									']');
+							  "Symbol: " + quote[0].replaceAll("\"", "") + " [" + quote[1].replaceAll("\"", "") + ']');
 
 					if (quote.length > 5)
 					{
@@ -123,7 +121,7 @@ public class StockQuote implements Runnable
 					if (quote.length > 4)
 					{
 						_bot.send(_sender,
-										"Time: " + quote[3].replaceAll("\"", "") + ' ' + quote[4].replaceAll("\"", ""));
+								  "Time: " + quote[3].replaceAll("\"", "") + ' ' + quote[4].replaceAll("\"", ""));
 					}
 
 					if (quote.length > 6)
