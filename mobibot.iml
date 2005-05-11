@@ -102,15 +102,6 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/lib/commons-net-1.2.2.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
           <root url="jar://$MODULE_DIR$/lib/jdom-1.0.jar!/" />
         </CLASSES>
         <JAVADOC />
@@ -157,6 +148,15 @@
       <library>
         <CLASSES>
           <root url="jar://$MODULE_DIR$/lib/delicious-1.5.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/lib/commons-net-1.4.0.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />

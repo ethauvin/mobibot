@@ -71,7 +71,7 @@
     <option name="PUT_FOCUS_INTO_COMMENT" value="false" />
     <option name="SHOW_CHECKIN_OPTIONS" value="true" />
     <option name="FORCE_NON_EMPTY_COMMENT" value="false" />
-    <option name="LAST_COMMIT_MESSAGE" value="Update to delcious-java 1.5." />
+    <option name="LAST_COMMIT_MESSAGE" value="Updated locations." />
     <option name="SAVE_LAST_COMMIT_MESSAGE" value="true" />
     <option name="CHECKIN_DIALOG_SPLITTER_PROPORTION" value="0.8" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="false" />
@@ -122,7 +122,7 @@
       </entry>
       <entry file="file://$PROJECT_DIR$/src/net/thauvin/erik/mobibot/Mobibot.java" pinned="false">
         <provider selected="true" editor-type-id="text-editor">
-          <state line="90" column="79" selection-start="3025" selection-end="3025" vertical-scroll-proportion="0.19666667">
+          <state line="90" column="79" selection-start="3025" selection-end="3025" vertical-scroll-proportion="0.21166667">
             <folding>
               <element signature="imports" expanded="true" />
             </folding>
@@ -131,7 +131,7 @@
       </entry>
       <entry file="file://$PROJECT_DIR$/src/net/thauvin/erik/mobibot/EntryLink.java" pinned="false">
         <provider selected="true" editor-type-id="text-editor">
-          <state line="394" column="26" selection-start="8275" selection-end="8275" vertical-scroll-proportion="0.5479675">
+          <state line="394" column="26" selection-start="8275" selection-end="8275" vertical-scroll-proportion="0.58861786">
             <folding />
           </state>
         </provider>
@@ -194,17 +194,18 @@
   <component name="J2EEProjectPane" />
   <component name="NamedScopeManager" />
   <component name="PackagesPane">
+    <expanded_node url="net.thauvin.erik" module="mobibot" type="package" />
     <expanded_node url="net.thauvin.erik.mobibot" module="mobibot" type="package" />
-    <expanded_node url="" module="mobibot" type="module" />
     <expanded_node url="net" module="mobibot" type="package" />
     <expanded_node url="net.thauvin" module="mobibot" type="package" />
-    <expanded_node url="net.thauvin.erik" module="mobibot" type="package" />
+    <expanded_node url="" module="mobibot" type="module" />
   </component>
   <component name="ProjectPane">
-    <expanded_node url="file://$PROJECT_DIR$" module="mobibot" type="directory" />
-    <expanded_node url="" module="mobibot" type="module" />
     <expanded_node url="file://$PROJECT_DIR$/properties" module="mobibot" type="directory" />
+    <expanded_node url="file://$PROJECT_DIR$/lib" module="mobibot" type="directory" />
     <expanded_node url="file://$PROJECT_DIR$/website" module="mobibot" type="directory" />
+    <expanded_node url="" module="mobibot" type="module" />
+    <expanded_node url="file://$PROJECT_DIR$" module="mobibot" type="directory" />
   </component>
   <component name="ProjectView">
     <navigator currentView="ProjectPane" splitterProportion="0.5">
@@ -247,8 +248,8 @@
     <property name="last_opened_file_path" value="C:\Documents and Settings\erik\My Documents\My Received Files\src\MathEvaluator" />
     <property name="cvs_file_history_flatOrder5" value="5" />
     <property name="cvs_file_history_flatWidth5" value="136" />
-    <property name="cvs_file_history_treeOrder2" value="2" />
     <property name="cvs_file_history_treeWidth3" value="136" />
+    <property name="cvs_file_history_treeOrder2" value="2" />
     <property name="cvs_file_history_treeWidth5" value="136" />
     <property name="cvs_file_history_flatOrder6" value="6" />
     <property name="cvs_file_history_flatWidth0" value="135" />
@@ -267,20 +268,6 @@
   </component>
   <component name="RunManager">
     <activeType name="Application" />
-    <configuration selected="false" default="true" type="Application" factoryName="Application">
-      <option name="MAIN_CLASS_NAME" />
-      <option name="VM_PARAMETERS" />
-      <option name="PROGRAM_PARAMETERS" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <module name="" />
-    </configuration>
-    <configuration selected="false" default="true" type="Remote" factoryName="Remote">
-      <option name="USE_SOCKET_TRANSPORT" value="true" />
-      <option name="SERVER_MODE" value="false" />
-      <option name="SHMEM_ADDRESS" value="javadebug" />
-      <option name="HOST" value="localhost" />
-      <option name="PORT" value="5005" />
-    </configuration>
     <configuration selected="false" default="true" type="Applet" factoryName="Applet">
       <module name="" />
       <option name="MAIN_CLASS_NAME" />
@@ -290,20 +277,6 @@
       <option name="HEIGHT" value="300" />
       <option name="POLICY_FILE" value="C:/IntelliJ-IDEA/bin/appletviewer.policy" />
       <option name="VM_PARAMETERS" />
-    </configuration>
-    <configuration selected="false" default="true" type="WebLogic Instance" factoryName="Local">
-      <option name="WORKING_DIRECTORY" />
-      <option name="HOST" value="localhost" />
-      <option name="PORT" value="7001" />
-      <option name="LOCAL" value="true" />
-      <option name="OPEN_IN_BROWSER" value="true" />
-      <option name="OPEN_IN_BROWSER_URL" value="/" />
-      <option name="COMMON_VM_ARGUMENTS" value="" />
-      <option name="DOMAIN_PATH" value="" />
-      <option name="USER" value="weblogic" />
-      <option name="PASSWORD" value="weblogic" />
-      <option name="SERVER_NAME" value="myserver" />
-      <option name="DOMAIN_NAME" value="mydomain" />
     </configuration>
     <configuration selected="false" default="true" type="JUnit" factoryName="JUnit">
       <module name="" />
@@ -319,20 +292,48 @@
         <value defaultName="wholeProject" />
       </option>
     </configuration>
+    <configuration selected="false" default="true" type="WebLogic Instance" factoryName="Local">
+      <option name="WORKING_DIRECTORY" />
+      <option name="HOST" value="localhost" />
+      <option name="PORT" value="7001" />
+      <option name="LOCAL" value="true" />
+      <option name="OPEN_IN_BROWSER" value="true" />
+      <option name="OPEN_IN_BROWSER_URL" value="/" />
+      <option name="COMMON_VM_ARGUMENTS" value="" />
+      <option name="DOMAIN_PATH" value="" />
+      <option name="USER" value="weblogic" />
+      <option name="PASSWORD" value="weblogic" />
+      <option name="SERVER_NAME" value="myserver" />
+      <option name="DOMAIN_NAME" value="mydomain" />
+    </configuration>
+    <configuration selected="false" default="true" type="Application" factoryName="Application">
+      <option name="MAIN_CLASS_NAME" />
+      <option name="VM_PARAMETERS" />
+      <option name="PROGRAM_PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <module name="" />
+    </configuration>
+    <configuration selected="false" default="true" type="Remote" factoryName="Remote">
+      <option name="USE_SOCKET_TRANSPORT" value="true" />
+      <option name="SERVER_MODE" value="false" />
+      <option name="SHMEM_ADDRESS" value="javadebug" />
+      <option name="HOST" value="localhost" />
+      <option name="PORT" value="5005" />
+    </configuration>
     <configuration selected="true" default="false" name="Mobibot" type="Application" factoryName="Application">
       <option name="MAIN_CLASS_NAME" value="net.thauvin.erik.mobibot.Mobibot" />
       <option name="VM_PARAMETERS" value="" />
       <option name="PROGRAM_PARAMETERS" value="-d" />
       <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
       <module name="mobibot" />
-      <RunnerSettings RunnerId="Run" />
       <RunnerSettings RunnerId="Debug">
         <option name="DEBUG_PORT" value="1063" />
         <option name="TRANSPORT" value="0" />
         <option name="LOCAL" value="false" />
       </RunnerSettings>
-      <ConfigurationWrapper RunnerId="Run" />
+      <RunnerSettings RunnerId="Run" />
       <ConfigurationWrapper RunnerId="Debug" />
+      <ConfigurationWrapper RunnerId="Run" />
     </configuration>
   </component>
   <component name="SelectInManager">
@@ -393,7 +394,7 @@
       <window_info id="CVS" active="false" anchor="bottom" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.33032128" order="8" />
       <window_info id="Regex" active="false" anchor="bottom" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.44135803" order="10" x="22" y="277" width="980" height="214" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.33024693" order="7" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="docked" type="docked" visible="true" weight="0.1658576" order="0" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="docked" type="docked" visible="true" weight="0.23300971" order="0" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.33032128" order="1" />
       <window_info id="Jalopy" active="false" anchor="bottom" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.33032128" order="8" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.27959183" order="1" />
@@ -502,9 +503,7 @@
     <entry file="file://$PROJECT_DIR$/src/net/thauvin/erik/mobibot/StockQuote.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="97" column="63" selection-start="3007" selection-end="3007" vertical-scroll-proportion="0.51932776">
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -547,7 +546,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/net/thauvin/erik/mobibot/Mobibot.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="90" column="79" selection-start="3025" selection-end="3025" vertical-scroll-proportion="0.19666667">
+        <state line="90" column="79" selection-start="3025" selection-end="3025" vertical-scroll-proportion="0.21166667">
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -556,7 +555,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/net/thauvin/erik/mobibot/EntryLink.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="394" column="26" selection-start="8275" selection-end="8275" vertical-scroll-proportion="0.5479675">
+        <state line="394" column="26" selection-start="8275" selection-end="8275" vertical-scroll-proportion="0.58861786">
           <folding />
         </state>
       </provider>
