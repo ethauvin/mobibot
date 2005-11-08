@@ -88,7 +88,7 @@ public class Mobibot extends PircBot
 	private static final String[] INFO_STRS =
 	{
 		"Mobibot v" + ReleaseInfo.getVersion() + '.' + ReleaseInfo.getBuildNumber() +
-		" by Erik C. Thauvin (erik@thauvin.net)", "http://mobitopia.thauvin.net/mobibot/"
+		" by Erik C. Thauvin (erik@thauvin.net)", "http://www.mobitopia.org/mobibot/"
 	};
 
 	/**
@@ -321,6 +321,11 @@ public class Mobibot extends PircBot
 	 */
 	private static final List RECAP_ARRAY = new ArrayList(MAX_RECAP);
 
+	/**
+	 * The default port.
+	 */
+	private static final int DEFAULT_PORT = 6667;
+
 	// Initialize the countries.
 	static
 	{
@@ -443,6 +448,12 @@ public class Mobibot extends PircBot
 	private final Vector _ignoredNicks = new Vector(0);
 
 	/**
+	 * The IRC port.
+	 */
+
+	private final int _ircPort;
+
+	/**
 	 * The IRC server.
 	 */
 	private final String _ircServer;
@@ -478,12 +489,13 @@ public class Mobibot extends PircBot
 	 * @param channel The channel.
 	 * @param logsDir The logs directory.
 	 */
-	public Mobibot(String server, String channel, String logsDir)
+	public Mobibot(String server, int port, String channel, String logsDir)
 	{
 		System.getProperties().setProperty("sun.net.client.defaultConnectTimeout", String.valueOf(CONNECT_TIMEOUT));
 		System.getProperties().setProperty("sun.net.client.defaultReadTimeout", String.valueOf(CONNECT_TIMEOUT));
 
 		_ircServer = server;
+		_ircPort = port;
 		_channel = channel;
 		_logsDir = logsDir;
 
@@ -619,6 +631,7 @@ public class Mobibot extends PircBot
 			// Get the main properties
 			final String channel = p.getProperty("channel");
 			final String server = p.getProperty("server");
+			final int port = getPort(p.getProperty("port", String.valueOf(DEFAULT_PORT)), DEFAULT_PORT);
 			final String nickname = p.getProperty("nick", Mobibot.class.getName().toLowerCase());
 			final String logsDir = ensureDir(p.getProperty("logs", "."), false);
 
@@ -664,6 +677,8 @@ public class Mobibot extends PircBot
 			final String backlogsURL = ensureDir(p.getProperty("backlogs", weblogURL), true);
 			final String googleKey = p.getProperty("google", "");
 			final String ignoredNicks = p.getProperty("ignore", "");
+			final String identNick = p.getProperty("ident-nick", "");
+			final String identMsg = p.getProperty("ident-msg", "");
 			final String tags = p.getProperty("tags", "");
 
 			// Get the del.icio.us properties
@@ -671,7 +686,7 @@ public class Mobibot extends PircBot
 			final String dpwd = p.getProperty("delicious-pwd");
 
 			// Create the bot
-			final Mobibot bot = new Mobibot(server, channel, logsDir);
+			final Mobibot bot = new Mobibot(server, port, channel, logsDir);
 
 			// Initialize the bot
 			bot.setVerbose(true);
@@ -708,7 +723,7 @@ public class Mobibot extends PircBot
 			// Connect
 			try
 			{
-				bot.connect(server);
+				bot.connect(server, port);
 			}
 			catch (Exception e)
 			{
@@ -720,7 +735,7 @@ public class Mobibot extends PircBot
 
 					try
 					{
-						bot.connect(server);
+						bot.connect(server, port);
 					}
 					catch (Exception ex)
 					{
@@ -736,9 +751,16 @@ public class Mobibot extends PircBot
 			}
 
 			bot.setVersion(INFO_STRS[0]);
+
+			if (isValidString(identNick) && isValidString(identMsg))
+			{
+				bot.sendMessage(identNick, identMsg);
+			}
+
 			bot.joinChannel(channel);
 		}
 	}
+
 
 	/**
 	 * Converts XML/XHTML entities to plain text.
@@ -1058,7 +1080,7 @@ public class Mobibot extends PircBot
 		// Connect
 		try
 		{
-			connect(_ircServer);
+			connect(_ircServer, _ircPort);
 		}
 		catch (Exception e)
 		{
@@ -1070,7 +1092,7 @@ public class Mobibot extends PircBot
 
 				try
 				{
-					connect(_ircServer);
+					connect(_ircServer, _ircPort);
 				}
 				catch (Exception ex)
 				{
@@ -1815,11 +1837,11 @@ public class Mobibot extends PircBot
 	{
 		final StringBuffer buff = new StringBuffer(LINK_CMD + (index + 1) + ": ");
 
-		buff.append('[' + entry.getNick() + ']');
+		buff.append('[').append(entry.getNick()).append(']');
 
 		if (isView && entry.hasComments())
 		{
-			buff.append("[+" + entry.getCommentsCount() + ']');
+			buff.append("[+").append(entry.getCommentsCount()).append(']');
 		}
 
 		buff.append(' ');
@@ -1883,6 +1905,30 @@ public class Mobibot extends PircBot
 				return location + File.separatorChar;
 			}
 		}
+	}
+
+	/**
+	 * Returns the port.
+	 *
+	 * @param  property     The port property value.
+	 * @param  defaultValue The default value.
+	 *
+	 * @return The port or default value if invalid.
+	 */
+	private static int getPort(String property, int defaultValue)
+	{
+		int port;
+
+		try
+		{
+			port = Integer.parseInt(property);
+		}
+		catch (NumberFormatException ignore)
+		{
+			port = defaultValue;
+		}
+
+		return port;
 	}
 
 	/**

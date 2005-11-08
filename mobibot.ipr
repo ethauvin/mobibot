@@ -21,10 +21,10 @@
     <includetestsoutputpath>false</includetestsoutputpath>
     <languages>
       <language name="ant" engine="org.kos.bsfconsoleplugin.languages.AntConsoleBSFEngine" />
-      <language name="beanshell" engine="bsh.util.BeanShellBSFEngine" />
       <language name="netrexx" engine="org.apache.bsf.engines.netrexx.NetRexxEngine" />
       <language name="xslt" engine="org.apache.bsf.engines.xslt.XSLTEngine" />
       <language name="beanbasic" engine="org.apache.bsf.engines.beanbasic.BeanBasicEngine" />
+      <language name="beanshell" engine="bsh.util.BeanShellBSFEngine" />
       <language name="bml" engine="org.apache.bml.ext.BMLEngine" />
       <language name="groovy" engine="org.codehaus.groovy.bsf.GroovyEngine" />
       <language name="jacl" engine="org.apache.bsf.engines.jacl.JaclEngine" />
@@ -76,6 +76,9 @@
   </component>
   <component name="DataSourceManager" />
   <component name="DataSourceManagerImpl" />
+  <component name="DependenciesAnalyzeManager">
+    <option name="myForwardDirection" value="false" />
+  </component>
   <component name="DependencyValidationManager" />
   <component name="EntryPointsManager">
     <entry_points />
@@ -92,7 +95,6 @@
     <option name="DEPRECATION" value="true" />
     <option name="ADDITIONAL_OPTIONS_STRING" value="" />
     <option name="MAXIMUM_HEAP_SIZE" value="128" />
-    <option name="USE_GENERICS_COMPILER" value="false" />
   </component>
   <component name="JavadocGenerationManager">
     <option name="OUTPUT_DIRECTORY" />
@@ -263,5 +265,6 @@
     <option name="INSTRUMENT_CLASSES" value="true" />
     <option name="COPY_FORMS_RUNTIME_TO_OUTPUT" value="true" />
   </component>
+  <UsedPathMacros />
 </project>
 
