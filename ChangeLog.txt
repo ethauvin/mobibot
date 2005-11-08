@@ -1,3 +1,55 @@
+2005-11-08 14:58  erik
+
+	* buildnum.properties, mobibot.iml, mobibot.ipr, mobibot.iws,
+	  lib/delicious-1.6.jar, lib/delicious-1.7.jar,
+	  lib/delicious-1.9.jar, src/net/thauvin/erik/mobibot/Mobibot.java,
+	  src/net/thauvin/erik/mobibot/ReleaseInfo.java: Added ability to
+	  set the port.  Added NickServ registartion.  Updated to delicious
+	  1.9 API.  Update URL to mobitopia.org.
+
+2005-08-08 21:53  erik
+
+	* lib/delicious-1.7.jar: Updated to delicious 1.7
+
+2005-05-11 02:05  erik
+
+	* buildnum.properties, mobibot.iml, mobibot.ipr, mobibot.iws,
+	  lib/commons-httpclient-3.0-rc1.jar,
+	  lib/commons-httpclient-3.0-rc2.jar, lib/delicious-1.5.jar,
+	  lib/delicious-1.6.jar,
+	  src/net/thauvin/erik/mobibot/ReleaseInfo.java: Updated to
+	  commons-httpclient 3.0rc2 Updated to delicious 1.6
+
+2005-05-10 22:47  erik
+
+	* mobibot.iml, mobibot.iws, lib/commons-net-1.2.2.jar,
+	  lib/commons-net-1.4.0.jar: Updated to commons-net 1.4.0
+
+2005-05-05 12:47  erik
+
+	* properties/mobibot.properties,
+	  src/net/thauvin/erik/mobibot/CurrencyConverter.java,
+	  src/net/thauvin/erik/mobibot/DeliciousPoster.java,
+	  src/net/thauvin/erik/mobibot/EntryLink.java,
+	  src/net/thauvin/erik/mobibot/Mobibot.java, buildnum.properties,
+	  mobibot.fb, mobibot.ipr, mobibot.iws,
+	  src/net/thauvin/erik/mobibot/ReleaseInfo.java,
+	  src/net/thauvin/erik/mobibot/StockQuote.java: Updated locations.
+
+2005-03-06 13:04  erik
+
+	* mobibot.iws, lib/delicious-1.4.jar: Update to delcious-java 1.5.
+
+2005-03-06 13:04  erik
+
+	* lib/delicious-1.5.jar, buildnum.properties, mobibot.iml,
+	  mobibot.iws, src/net/thauvin/erik/mobibot/ReleaseInfo.java:
+	  Update to delicious-java 1.5.
+
+2005-03-06 08:30  erik
+
+	* ChangeLog.txt: Updated ChangeLog.
+
 2005-03-06 08:28  erik
 
 	* buildnum.properties, mobibot.iws,
