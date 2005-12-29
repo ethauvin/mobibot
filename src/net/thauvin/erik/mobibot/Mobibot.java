@@ -162,6 +162,11 @@ public class Mobibot extends PircBot
 	private static final String CYCLE_CMD = "cycle";
 
 	/**
+	 * The msg command.
+	 */
+	private static final String MSG_CMD = "msg";
+
+	/**
 	 * The ignore command.
 	 */
 	private static final String IGNORE_CMD = "ignore";
@@ -419,7 +424,7 @@ public class Mobibot extends PircBot
 	/**
 	 * The entries array.
 	 */
-	private final Vector _entries = new Vector(0);
+	private final List _entries = new Vector(0);
 
 	/**
 	 * The feed info cache.
@@ -440,17 +445,27 @@ public class Mobibot extends PircBot
 	/**
 	 * The history/backlogs array.
 	 */
-	private final Vector _history = new Vector(0);
+	private final List _history = new Vector(0);
+
+	/**
+	 * The ident message.
+	 */
+	private String _identMsg = "";
+
+
+	/**
+	 * The ident nick.
+	 */
+	private String _identNick = "";
 
 	/**
 	 * The ignored nicks array.
 	 */
-	private final Vector _ignoredNicks = new Vector(0);
+	private final List _ignoredNicks = new Vector(0);
 
 	/**
 	 * The IRC port.
 	 */
-
 	private final int _ircPort;
 
 	/**
@@ -473,7 +488,9 @@ public class Mobibot extends PircBot
 	 */
 	private final String _logsDir;
 
-	// Today's date.
+	/**
+	 * Today's date.
+	 */
 	private String _today = today();
 
 	/**
@@ -486,6 +503,7 @@ public class Mobibot extends PircBot
 	 * Creates a new Mobibot object.
 	 *
 	 * @param server  The server.
+	 * @param port    The port.
 	 * @param channel The channel.
 	 * @param logsDir The logs directory.
 	 */
@@ -547,12 +565,7 @@ public class Mobibot extends PircBot
 	 */
 	public static boolean isValidString(String s)
 	{
-		if ((s != null) && (s.trim().length() > 0))
-		{
-			return true;
-		}
-
-		return false;
+		return (s != null) && (s.trim().length() > 0);
 	}
 
 	/**
@@ -695,6 +708,10 @@ public class Mobibot extends PircBot
 			bot.setLogin(login);
 			bot.setVersion(weblogURL);
 			bot.setMessageDelay(MESSAGE_DELAY);
+
+			// Set the ident nick and message
+			bot.setIdentNick(identNick);
+			bot.setIdentMsg(identMsg);
 
 			// Set the URLs
 			bot.setWeblogURL(weblogURL);
@@ -959,6 +976,14 @@ public class Mobibot extends PircBot
 				send(sender, DOUBLE_INDENT + bold("/msg " + getNick() + ' ' + SAY_CMD + " <text>"));
 			}
 		}
+		else if (lcTopic.endsWith(MSG_CMD))
+		{
+			if (isOp(sender))
+			{
+				send(sender, "To have the bot send a private message to someone:");
+				send(sender, DOUBLE_INDENT + bold("/msg " + getNick() + ' ' + MSG_CMD + " <nick> <text>"));
+			}
+		}
 		else if (lcTopic.startsWith(CURRENCY_CMD))
 		{
 			send(sender, "To convert from one currency to another:");
@@ -1000,7 +1025,7 @@ public class Mobibot extends PircBot
 			if (isOp(sender))
 			{
 				send(sender, "The op commands are:");
-				send(sender, DOUBLE_INDENT + bold(CYCLE_CMD + ' ' + ME_CMD + ' ' + SAY_CMD));
+				send(sender, DOUBLE_INDENT + bold(CYCLE_CMD + ' ' + ME_CMD + ' ' + MSG_CMD + ' ' + SAY_CMD));
 			}
 		}
 	}
@@ -1108,6 +1133,12 @@ public class Mobibot extends PircBot
 		}
 
 		setVersion(INFO_STRS[0]);
+
+		if (isValidString(_identNick) && isValidString(_identMsg))
+		{
+			sendMessage(_identNick, _identMsg);
+		}
+
 		joinChannel(getChannel());
 	}
 
@@ -1744,6 +1775,30 @@ public class Mobibot extends PircBot
 				}
 			}
 		}
+		else if (cmd.startsWith(MSG_CMD))
+		{
+			if (isOp(sender))
+			{
+				if (cmds.length > 1)
+				{
+					final String[] msg = args.split(" ", 2);
+
+					if (args.length() > 2)
+					{
+						System.out.println(msg[0] + ' ' + msg[1]);
+						send(msg[0], msg[1], true);
+					}
+					else
+					{
+						helpResponse(sender, MSG_CMD);
+					}
+				}
+				else
+				{
+					helpResponse(sender, MSG_CMD);
+				}
+			}
+		}
 		else if (cmd.startsWith(VIEW_CMD))
 		{
 			viewResponse(sender, args, true);
@@ -1871,6 +1926,70 @@ public class Mobibot extends PircBot
 	private static String buildTags(int entryIndex, EntryLink entry)
 	{
 		return (LINK_CMD + (entryIndex + 1) + "T: " + entry.getDeliciousTags());
+	}
+
+	/**
+	 * Copies a file.
+	 *
+	 * @param  in  The source file.
+	 * @param  out The destination file.
+	 *
+	 * @throws IOException If the file could not be copied.
+	 */
+	private static void copyFile(File in, File out)
+						  throws IOException
+	{
+		FileChannel inChannel = null;
+		FileChannel outChannel = null;
+		FileInputStream input = null;
+		FileOutputStream output = null;
+
+		try
+		{
+			input = new FileInputStream(in);
+			output = new FileOutputStream(out);
+
+			inChannel = input.getChannel();
+			outChannel = output.getChannel();
+
+			inChannel.transferTo(0L, inChannel.size(), outChannel);
+		}
+		finally
+		{
+			try
+			{
+				if (inChannel != null)
+				{
+					inChannel.close();
+				}
+
+				if (input != null)
+				{
+					input.close();
+				}
+			}
+			catch (Exception ignore)
+			{
+				; // Do nothing
+			}
+
+			try
+			{
+				if (outChannel != null)
+				{
+					outChannel.close();
+				}
+
+				if (output != null)
+				{
+					output.close();
+				}
+			}
+			catch (Exception ignore)
+			{
+				; // Do nothing
+			}
+		}
 	}
 
 	/**
@@ -2015,6 +2134,25 @@ public class Mobibot extends PircBot
 		return buffer.toString();
 	}
 
+
+	/**
+	 * Stores the last 10 public messages and actions.
+	 *
+	 * @param sender   The nick of the person who sent the private message.
+	 * @param message  The actual message sent.
+	 * @param isAction Set to true if the message is an action.
+	 */
+	private static void recap(String sender, String message, boolean isAction)
+	{
+		RECAP_ARRAY.add(HHMM_SDF.format(Calendar.getInstance().getTime()) + " -> " + sender + (isAction ? " " : ": ") +
+						message);
+
+		if (RECAP_ARRAY.size() > MAX_RECAP)
+		{
+			RECAP_ARRAY.remove(0);
+		}
+	}
+
 	/**
 	 * Sleeps for the specified number of seconds.
 	 *
@@ -2072,49 +2210,6 @@ public class Mobibot extends PircBot
 		}
 
 		return lines;
-	}
-
-	/**
-	 * Copies a file.
-	 *
-	 * @param  in  The source file.
-	 * @param  out The destination file.
-	 *
-	 * @throws IOException If the file could not be copied.
-	 */
-	private void copyFile(File in, File out)
-				   throws IOException
-	{
-		final FileChannel inChannel;
-		final FileChannel outChannel;
-
-		inChannel = new FileInputStream(in).getChannel();
-		outChannel = new FileOutputStream(out).getChannel();
-
-		try
-		{
-			inChannel.transferTo(0L, inChannel.size(), outChannel);
-		}
-		finally
-		{
-			try
-			{
-				inChannel.close();
-			}
-			catch (IOException ignore)
-			{
-				; // Do nothing
-			}
-
-			try
-			{
-				outChannel.close();
-			}
-			catch (IOException ignore)
-			{
-				; // Do nothing
-			}
-		}
 	}
 
 	/**
@@ -2305,16 +2400,39 @@ public class Mobibot extends PircBot
 		_history.clear();
 
 		final SyndFeedInput input = new SyndFeedInput();
-		final SyndFeed feed = input.build(new InputStreamReader(new FileInputStream(new File(file))));
 
-		final List items = feed.getEntries();
-		SyndEntry item;
+		InputStreamReader reader = null;
 
-		for (int i = items.size() - 1; i >= 0; i--)
+		try
 		{
-			item = (SyndEntryImpl) items.get(i);
-			_history.add(item.getTitle());
+			reader = new InputStreamReader(new FileInputStream(new File(file)));
+
+			final SyndFeed feed = input.build(reader);
+
+			final List items = feed.getEntries();
+			SyndEntry item;
+
+			for (int i = items.size() - 1; i >= 0; i--)
+			{
+				item = (SyndEntryImpl) items.get(i);
+				_history.add(item.getTitle());
+			}
 		}
+		finally
+		{
+			if (reader != null)
+			{
+				try
+				{
+					reader.close();
+				}
+				catch (IOException ignore)
+				{
+					; // Do nothing
+				}
+			}
+		}
+
 	}
 
 	/**
@@ -2331,38 +2449,61 @@ public class Mobibot extends PircBot
 		_entries.clear();
 
 		final SyndFeedInput input = new SyndFeedInput();
-		final SyndFeed feed = input.build(new InputStreamReader(new FileInputStream(new File(file))));
 
-		setToday(ISO_SDF.format(feed.getPublishedDate()));
+		InputStreamReader reader = null;
 
-		final List items = feed.getEntries();
-		SyndEntry item;
-		SyndContent description;
-		String[] comments;
-		String[] comment;
-		String author;
-		EntryLink entry;
-
-		for (int i = items.size() - 1; i >= 0; i--)
+		try
 		{
-			item = (SyndEntryImpl) items.get(i);
-			author = item.getAuthor().substring(item.getAuthor().lastIndexOf('(') + 1, item.getAuthor().length() - 1);
-			entry = new EntryLink(item.getLink(), item.getTitle(), author, getChannel(), item.getPublishedDate(),
-								  item.getCategories());
-			description = item.getDescription();
-			comments = description.getValue().split("<br/>");
+			reader = new InputStreamReader(new FileInputStream(new File(file)));
 
-			for (int j = 0; j < comments.length; j++)
+			final SyndFeed feed = input.build(reader);
+
+			setToday(ISO_SDF.format(feed.getPublishedDate()));
+
+			final List items = feed.getEntries();
+			SyndEntry item;
+			SyndContent description;
+			String[] comments;
+			String[] comment;
+			String author;
+			EntryLink entry;
+
+			for (int i = items.size() - 1; i >= 0; i--)
 			{
-				comment = comments[j].split(":");
+				item = (SyndEntryImpl) items.get(i);
+				author = item.getAuthor().substring(item.getAuthor().lastIndexOf('(') + 1,
+													item.getAuthor().length() - 1);
+				entry = new EntryLink(item.getLink(), item.getTitle(), author, getChannel(), item.getPublishedDate(),
+									  item.getCategories());
+				description = item.getDescription();
+				comments = description.getValue().split("<br/>");
 
-				if (comment.length == 2)
+				for (int j = 0; j < comments.length; j++)
 				{
-					entry.addComment(comment[1].trim(), comment[0]);
+					comment = comments[j].split(":");
+
+					if (comment.length == 2)
+					{
+						entry.addComment(comment[1].trim(), comment[0]);
+					}
+				}
+
+				_entries.add(entry);
+			}
+		}
+		finally
+		{
+			if (reader != null)
+			{
+				try
+				{
+					reader.close();
+				}
+				catch (IOException ignore)
+				{
+					; // Do nothing
 				}
 			}
-
-			_entries.add(entry);
 		}
 	}
 
@@ -2422,25 +2563,6 @@ public class Mobibot extends PircBot
 		else
 		{
 			helpResponse(sender, LOOKUP_CMD);
-		}
-	}
-
-
-	/**
-	 * Stores the last 10 public messages and actions.
-	 *
-	 * @param sender   The nick of the person who sent the private message.
-	 * @param message  The actual message sent.
-	 * @param isAction Set to true if the message is an action.
-	 */
-	private void recap(String sender, String message, boolean isAction)
-	{
-		RECAP_ARRAY.add(HHMM_SDF.format(Calendar.getInstance().getTime()) + " -> " + sender + (isAction ? " " : ": ") +
-						message);
-
-		if (RECAP_ARRAY.size() > MAX_RECAP)
-		{
-			RECAP_ARRAY.remove(0);
 		}
 	}
 
@@ -2659,6 +2781,27 @@ public class Mobibot extends PircBot
 	private void setGoogleKey(String googleKey)
 	{
 		_googleKey = googleKey;
+	}
+
+	/**
+	 * Sets the ident message.
+	 *
+	 * @param msg The message.
+	 */
+	private void setIdentMsg(String msg)
+	{
+		_identMsg = msg;
+	}
+
+
+	/**
+	 * Sets the ident nickname.
+	 *
+	 * @param nick The nickname.
+	 */
+	private void setIdentNick(String nick)
+	{
+		_identNick = nick;
 	}
 
 	/**

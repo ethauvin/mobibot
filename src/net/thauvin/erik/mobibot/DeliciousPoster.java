@@ -49,93 +49,93 @@ import del.icio.us.Delicious;
  */
 public class DeliciousPoster
 {
-	private final Delicious _delicious;
-	private final String _ircServer;
+    private final Delicious _delicious;
+    private final String _ircServer;
 
-	/**
-	 * Creates a new DeliciousPoster instance.
-	 *
-	 * @param username  The del.icio.us username.
-	 * @param password  The del.icio.us password.
-	 * @param ircServer The IRC server.
-	 */
-	public DeliciousPoster(String username, String password, String ircServer)
-	{
-		_delicious = new Delicious(username, password);
-		_ircServer = ircServer;
-	}
+    /**
+     * Creates a new DeliciousPoster instance.
+     *
+     * @param username  The del.icio.us username.
+     * @param password  The del.icio.us password.
+     * @param ircServer The IRC server.
+     */
+    public DeliciousPoster(String username, String password, String ircServer)
+    {
+        _delicious = new Delicious(username, password);
+        _ircServer = ircServer;
+    }
 
-	/**
-	 * Adds a post to del.icio.us.
-	 *
-	 * @param entry The entry to add.
-	 */
-	public final void addPost(final EntryLink entry)
-	{
-		final SwingWorker worker = new SwingWorker()
-		{
-			public Object construct()
-			{
-				return Boolean.valueOf(_delicious.addPost(entry.getLink(), entry.getTitle(), postedBy(entry),
-														  entry.getDeliciousTags(), entry.getDate()));
-			}
-		};
+    /**
+     * Adds a post to del.icio.us.
+     *
+     * @param entry The entry to add.
+     */
+    public final void addPost(final EntryLink entry)
+    {
+        final SwingWorker worker = new SwingWorker()
+        {
+            public Object construct()
+            {
+                return Boolean.valueOf(_delicious.addPost(entry.getLink(), entry.getTitle(), postedBy(entry),
+                                                          entry.getDeliciousTags(), entry.getDate()));
+            }
+        };
 
-		worker.start();
-	}
+        worker.start();
+    }
 
-	/**
-	 * Deletes a post to del.icio.us.
-	 *
-	 * @param entry The entry to delete.
-	 */
-	public final void deletePost(EntryLink entry)
-	{
-		final String link = entry.getLink();
+    /**
+     * Deletes a post to del.icio.us.
+     *
+     * @param entry The entry to delete.
+     */
+    public final void deletePost(EntryLink entry)
+    {
+        final String link = entry.getLink();
 
-		final SwingWorker worker = new SwingWorker()
-		{
-			public Object construct()
-			{
-				return Boolean.valueOf(_delicious.deletePost(link));
-			}
-		};
+        final SwingWorker worker = new SwingWorker()
+        {
+            public Object construct()
+            {
+                return Boolean.valueOf(_delicious.deletePost(link));
+            }
+        };
 
-		worker.start();
-	}
+        worker.start();
+    }
 
-	/**
-	 * Updates a post to del.icio.us.
-	 *
-	 * @param oldUrl The old post URL.
-	 * @param entry  The entry to add.
-	 */
-	public final void updatePost(final String oldUrl, final EntryLink entry)
-	{
-		final SwingWorker worker = new SwingWorker()
-		{
-			public Object construct()
-			{
-				_delicious.deletePost(oldUrl);
+    /**
+     * Updates a post to del.icio.us.
+     *
+     * @param oldUrl The old post URL.
+     * @param entry  The entry to add.
+     */
+    public final void updatePost(final String oldUrl, final EntryLink entry)
+    {
+        final SwingWorker worker = new SwingWorker()
+        {
+            public Object construct()
+            {
+                _delicious.deletePost(oldUrl);
 
-				return Boolean.valueOf(_delicious.addPost(entry.getLink(), entry.getTitle(), postedBy(entry),
-														  entry.getDeliciousTags(), entry.getDate()));
-			}
-		};
+                return Boolean.valueOf(_delicious.addPost(entry.getLink(), entry.getTitle(), postedBy(entry),
+                                                          entry.getDeliciousTags(), entry.getDate()));
+            }
+        };
 
-		worker.start();
-	}
+        worker.start();
+    }
 
 
-	/**
-	 * Returns he del.icio.us extended attribution line.
-	 *
-	 * @param  entry The entry.
-	 *
-	 * @return The extended attribution line.
-	 */
-	private String postedBy(EntryLink entry)
-	{
-		return "Posted by " + entry.getNick() + " on " + entry.getChannel() + " (" + _ircServer + ')';
-	}
+    /**
+     * Returns he del.icio.us extended attribution line.
+     *
+     * @param  entry The entry.
+     *
+     * @return The extended attribution line.
+     */
+    private String postedBy(EntryLink entry)
+    {
+        return "Posted by " + entry.getNick() + " on " + entry.getChannel() + " (" + _ircServer + ')';
+    }
 }
