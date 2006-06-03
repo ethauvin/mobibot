@@ -21,10 +21,10 @@
     <includetestsoutputpath>false</includetestsoutputpath>
     <languages>
       <language name="ant" engine="org.kos.bsfconsoleplugin.languages.AntConsoleBSFEngine" />
-      <language name="beanshell" engine="bsh.util.BeanShellBSFEngine" />
       <language name="netrexx" engine="org.apache.bsf.engines.netrexx.NetRexxEngine" />
       <language name="xslt" engine="org.apache.bsf.engines.xslt.XSLTEngine" />
       <language name="beanbasic" engine="org.apache.bsf.engines.beanbasic.BeanBasicEngine" />
+      <language name="beanshell" engine="bsh.util.BeanShellBSFEngine" />
       <language name="bml" engine="org.apache.bml.ext.BMLEngine" />
       <language name="groovy" engine="org.codehaus.groovy.bsf.GroovyEngine" />
       <language name="jacl" engine="org.apache.bsf.engines.jacl.JaclEngine" />

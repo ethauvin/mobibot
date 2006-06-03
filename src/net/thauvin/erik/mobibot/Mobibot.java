@@ -86,10 +86,10 @@ public class Mobibot extends PircBot
 	 * The info strings.
 	 */
 	private static final String[] INFO_STRS =
-	{
-		"Mobibot v" + ReleaseInfo.getVersion() + '.' + ReleaseInfo.getBuildNumber() +
-		" by Erik C. Thauvin (erik@thauvin.net)", "http://www.mobitopia.org/mobibot/"
-	};
+		{
+			"Mobibot v" + ReleaseInfo.getVersion() + '.' + ReleaseInfo.getBuildNumber() +
+			" by Erik C. Thauvin (erik@thauvin.net)", "http://www.mobitopia.org/mobibot/"
+		};
 
 	/**
 	 * Debug command line argument.
@@ -274,7 +274,8 @@ public class Mobibot extends PircBot
 	/**
 	 * The date/time format for the {@link #TIME_CMD time} command.
 	 */
-	private static final SimpleDateFormat TIME_SDF = new SimpleDateFormat("'The time is 'HH:mm' on 'EEE, d MMM yyyy' in '");
+	private static final SimpleDateFormat TIME_SDF =
+		new SimpleDateFormat("'The time is 'HH:mm' on 'EEE, d MMM yyyy' in '");
 
 	/**
 	 * The beats (Internet Time) keyword.
@@ -424,7 +425,7 @@ public class Mobibot extends PircBot
 	/**
 	 * The entries array.
 	 */
-	private final List _entries = new Vector(0);
+	private final List _entries = new ArrayList(0);
 
 	/**
 	 * The feed info cache.
@@ -445,7 +446,7 @@ public class Mobibot extends PircBot
 	/**
 	 * The history/backlogs array.
 	 */
-	private final List _history = new Vector(0);
+	private final List _history = new ArrayList(0);
 
 	/**
 	 * The ident message.
@@ -461,7 +462,7 @@ public class Mobibot extends PircBot
 	/**
 	 * The ignored nicks array.
 	 */
-	private final List _ignoredNicks = new Vector(0);
+	private final List _ignoredNicks = new ArrayList(0);
 
 	/**
 	 * The IRC port.
@@ -571,7 +572,9 @@ public class Mobibot extends PircBot
 	/**
 	 * The Truth Is Out There...
 	 *
-	 * @param args The command line arguments.
+	 * @param        args The command line arguments.
+	 *
+	 * @noinspection UseOfSystemOutOrSystemErr,ACCESS_STATIC_VIA_INSTANCE
 	 */
 	public static void main(String[] args)
 	{
@@ -580,7 +583,8 @@ public class Mobibot extends PircBot
 		options.addOption(HELP_ARG.substring(0, 1), HELP_ARG, false, "print this help message");
 		options.addOption(DEBUG_ARG.substring(0, 1), DEBUG_ARG, false,
 						  "print debug & logging data directly to the console");
-		options.addOption(PROPS_ARG.substring(0, 1), PROPS_ARG, true, "use alternate properties file");
+		options.addOption(OptionBuilder.withArgName("file").hasArg().withDescription("use alternate properties file")
+							  .withLongOpt(PROPS_ARG).create(PROPS_ARG.substring(0, 1)));
 
 		// Parse the command line
 		final CommandLineParser parser = new PosixParser();
@@ -655,8 +659,9 @@ public class Mobibot extends PircBot
 
 				try
 				{
-					stdout = new PrintStream(new FileOutputStream(logsDir + channel.substring(1) + '.' + today() +
-																  ".log", true));
+					stdout =
+						new PrintStream(new FileOutputStream(logsDir + channel.substring(1) + '.' + today() + ".log",
+															 true));
 				}
 				catch (IOException e)
 				{
@@ -1009,15 +1014,12 @@ public class Mobibot extends PircBot
 			send(sender, "For more information on specific command, type:");
 			send(sender, DOUBLE_INDENT + bold(getNick() + ": " + HELP_CMD + " <command>"));
 			send(sender, "The commands are:");
-			send(sender,
-				 DOUBLE_INDENT +
+			send(sender, DOUBLE_INDENT +
 				 bold(CALC_CMD + ' ' + CURRENCY_CMD + ' ' + DICE_CMD + ' ' + GOOGLE_CMD + ' ' + IGNORE_CMD));
-			send(sender,
-				 DOUBLE_INDENT +
+			send(sender, DOUBLE_INDENT +
 				 bold(INFO_CMD + ' ' + getChannel().substring(1) + ' ' + LOOKUP_CMD + ' ' + HELP_POSTING_KEYWORD + ' ' +
 					  RECAP_CMD));
-			send(sender,
-				 DOUBLE_INDENT +
+			send(sender, DOUBLE_INDENT +
 				 bold(SPELL_CMD + ' ' + STOCK_CMD + ' ' + HELP_TAGS_KEYWORD + ' ' + TIME_CMD + ' ' + USERS_CMD + ' ' +
 					  VIEW_CMD));
 			send(sender, DOUBLE_INDENT + bold(WEATHER_CMD));
@@ -1092,6 +1094,8 @@ public class Mobibot extends PircBot
 
 	/**
 	 * This method carries out the actions to be performed when the PircBot gets disconnected.
+	 *
+	 * @noinspection UseOfSystemOutOrSystemErr
 	 */
 	protected final void onDisconnect()
 	{
@@ -1123,8 +1127,12 @@ public class Mobibot extends PircBot
 				{
 					if (retries == MAX_RECONNECT)
 					{
-						_logger.debug("Unable to reconnect to " + _ircServer + " after " + MAX_RECONNECT + " retries.",
-									  ex);
+						if (_logger.isDebugEnabled())
+						{
+							_logger.debug("Unable to reconnect to " + _ircServer + " after " + MAX_RECONNECT +
+										  " retries.", ex);
+						}
+
 						e.printStackTrace(System.err);
 						System.exit(1);
 					}
@@ -1259,13 +1267,13 @@ public class Mobibot extends PircBot
 			else if (cmd.equals(PING_CMD))
 			{
 				final String[] pings =
-				{
-					"is barely alive.", "is trying to stay awake.", "has gone fishing.",
-					"is somewhere over the rainbow.", "has fallen and can't get up.",
-					"is running. You better go chase it.", "has just spontantiously combusted.",
-					"is talking to itself... don't interrupt. That's rude.", "is bartending at an AA meeting.",
-					"is hibernating.", "is saving energy: apathetic mode activated.", "is busy. Go away!"
-				};
+					{
+						"is barely alive.", "is trying to stay awake.", "has gone fishing.",
+						"is somewhere over the rainbow.", "has fallen and can't get up.",
+						"is running. You better go chase it.", "has just spontantiously combusted.",
+						"is talking to itself... don't interrupt. That's rude.", "is bartending at an AA meeting.",
+						"is hibernating.", "is saving energy: apathetic mode activated.", "is busy. Go away!"
+					};
 
 				final Random r = new Random();
 
@@ -1354,7 +1362,10 @@ public class Mobibot extends PircBot
 					}
 					catch (Exception e)
 					{
-						_logger.debug("Unable to calculate: " + message, e);
+						if (_logger.isDebugEnabled())
+						{
+							_logger.debug("Unable to calculate: " + message, e);
+						}
 					}
 				}
 				else
@@ -1498,7 +1509,7 @@ public class Mobibot extends PircBot
 
 							if (_delicious != null)
 							{
-								_delicious.addPost(entry);
+								_delicious.updatePost(entry.getLink(), entry);
 							}
 
 							send(getChannel(), buildLink(index, entry));
@@ -1583,7 +1594,7 @@ public class Mobibot extends PircBot
 
 						if (_delicious != null)
 						{
-							_delicious.addPost(entry);
+							_delicious.updatePost(entry.getLink(), entry);
 						}
 
 						send(getChannel(), buildTags(index, entry));
@@ -1672,10 +1683,12 @@ public class Mobibot extends PircBot
 	/**
 	 * This method is called whenever a private message is sent to the bot.
 	 *
-	 * @param sender   The nick of the person who sent the private message.
-	 * @param login    The login of the person who sent the private message.
-	 * @param hostname The hostname of the person who sent the private message.
-	 * @param message  The actual message sent.
+	 * @param        sender   The nick of the person who sent the private message.
+	 * @param        login    The login of the person who sent the private message.
+	 * @param        hostname The hostname of the person who sent the private message.
+	 * @param        message  The actual message sent.
+	 *
+	 * @noinspection UseOfSystemOutOrSystemErr
 	 */
 	protected final void onPrivateMessage(String sender, String login, String hostname, String message)
 	{
@@ -2338,8 +2351,7 @@ public class Mobibot extends PircBot
 		timeInSeconds -= (hours * 3600L);
 
 		final long minutes = timeInSeconds / 60L;
-		send(sender,
-			 "Uptime: " + days + " day(s) " + hours + " hour(s) " + minutes + " minute(s)  [Entries: " +
+		send(sender, "Uptime: " + days + " day(s) " + hours + " hour(s) " + minutes + " minute(s)  [Entries: " +
 			 _entries.size() + ']', isPrivate);
 	}
 
@@ -2471,10 +2483,11 @@ public class Mobibot extends PircBot
 			for (int i = items.size() - 1; i >= 0; i--)
 			{
 				item = (SyndEntryImpl) items.get(i);
-				author = item.getAuthor().substring(item.getAuthor().lastIndexOf('(') + 1,
-													item.getAuthor().length() - 1);
-				entry = new EntryLink(item.getLink(), item.getTitle(), author, getChannel(), item.getPublishedDate(),
-									  item.getCategories());
+				author =
+					item.getAuthor().substring(item.getAuthor().lastIndexOf('(') + 1, item.getAuthor().length() - 1);
+				entry =
+					new EntryLink(item.getLink(), item.getTitle(), author, getChannel(), item.getPublishedDate(),
+								  item.getCategories());
 				description = item.getDescription();
 				comments = description.getValue().split("<br/>");
 
@@ -2550,7 +2563,11 @@ public class Mobibot extends PircBot
 					}
 					catch (IOException ioe)
 					{
-						_logger.debug("Unable to perform whois IP lookup: " + query, ioe);
+						if (_logger.isDebugEnabled())
+						{
+							_logger.debug("Unable to perform whois IP lookup: " + query, ioe);
+						}
+
 						send(getChannel(), "Unable to perform whois IP lookup: " + ioe.getMessage());
 					}
 				}
@@ -2917,8 +2934,9 @@ public class Mobibot extends PircBot
 			else
 			{
 				TIME_SDF.setTimeZone(TimeZone.getTimeZone(tz));
-				response = TIME_SDF.format(Calendar.getInstance().getTime()) +
-						   tz.substring(tz.indexOf('/') + 1).replace('_', ' ');
+				response =
+					TIME_SDF.format(Calendar.getInstance().getTime()) +
+					tz.substring(tz.indexOf('/') + 1).replace('_', ' ');
 			}
 		}
 		else
@@ -3041,8 +3059,7 @@ public class Mobibot extends PircBot
 					{
 						if (sent > MAX_ENTRIES)
 						{
-							send(sender,
-								 "To view more, try: " +
+							send(sender, "To view more, try: " +
 								 bold(getNick() + ": " + VIEW_CMD + ' ' + (i + 1) + ' ' + lcArgs), isPrivate);
 
 							break;

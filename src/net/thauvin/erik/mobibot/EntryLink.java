@@ -435,4 +435,25 @@ public class EntryLink implements Serializable
 	{
 		_title = title;
 	}
+
+	/**
+	 * Returns a string representation of the object.
+	 *
+	 * @return A string representation of the object.
+	 */
+	public final String toString()
+	{
+		final StringBuffer sb = new StringBuffer(super.toString());
+		sb.append("[ channel -> '").append(_channel).append('\'');
+		sb.append(", comments -> ").append(_comments);
+		sb.append(", date -> ").append(_date);
+		sb.append(", link -> '").append(_link).append('\'');
+		sb.append(", login -> '").append(_login).append('\'');
+		sb.append(", nick -> '").append(_nick).append('\'');
+		sb.append(", tags -> ").append(_tags);
+		sb.append(", title -> '").append(_title).append('\'');
+		sb.append(" ]");
+
+		return sb.toString();
+	}
 }
