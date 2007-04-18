@@ -40,15 +40,15 @@ import net.sf.jweather.metar.Metar;
 import net.sf.jweather.metar.SkyCondition;
 import net.sf.jweather.metar.WeatherCondition;
 
+import java.text.DecimalFormat;
+import java.util.Date;
 import java.util.Iterator;
-
 
 /**
  * Fetches the weather data from a specific station ID.
  *
  * @author Erik C. Thauvin
  * @version $Revision$, $Date$
- *
  * @created Feb 7, 2004
  * @since 1.0
  */
@@ -58,6 +58,11 @@ public class Weather implements Runnable
 	 * The URL where the stations are listed.
 	 */
 	public static final String STATIONS_URL = "http://www.rap.ucar.edu/weather/surface/stations.txt";
+
+	/**
+	 * The decimal number format.
+	 */
+	private static final DecimalFormat NUMBER_FORMAT = new DecimalFormat("0.##");
 
 	/**
 	 * The bot.
@@ -110,12 +115,18 @@ public class Weather implements Runnable
 
 				_bot.send(_sender, "Station ID: " + metar.getStationID(), _isPrivate);
 
+				_bot.send(_sender,
+				          "At: " + metar.getDateString() + " UTC ("
+				          + (((new Date()).getTime() - metar.getDate().getTime()) / 1000L / 60L) + " minutes ago)",
+				          _isPrivate);
+
 				result = metar.getWindSpeedInMPH();
 
 				if (result != null)
 				{
-					_bot.send(_sender, "Wind Speed: " + result + " mph, " + metar.getWindSpeedInKnots() + " knots",
-							  _isPrivate);
+					_bot.send(_sender,
+					          "Wind Speed: " + result + " mph, " + metar.getWindSpeedInKnots() + " knots",
+					          _isPrivate);
 				}
 
 				result = metar.getVisibility();
@@ -124,11 +135,11 @@ public class Weather implements Runnable
 				{
 					if (!metar.getVisibilityLessThan())
 					{
-						_bot.send(_sender, "Visibility: " + result + " mile(s)", _isPrivate);
+						_bot.send(_sender, "Visibility: " + NUMBER_FORMAT.format(result) + " mile(s)", _isPrivate);
 					}
 					else
 					{
-						_bot.send(_sender, "Visibility: < " + result + " mile(s)", _isPrivate);
+						_bot.send(_sender, "Visibility: < " + NUMBER_FORMAT.format(result) + " mile(s)", _isPrivate);
 					}
 				}
 
@@ -143,8 +154,9 @@ public class Weather implements Runnable
 
 				if (result != null)
 				{
-					_bot.send(_sender, "Temperature: " + result + " C, " + metar.getTemperatureInFahrenheit() + " F",
-							  _isPrivate);
+					_bot.send(_sender,
+					          "Temperature: " + result + " C, " + metar.getTemperatureInFahrenheit() + " F",
+					          _isPrivate);
 				}
 
 				if (metar.getWeatherConditions() != null)
