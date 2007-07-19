@@ -460,6 +460,11 @@ public class Mobibot extends PircBot
 	private String _identNick = "";
 
 	/**
+	 * The NickServ ident password.
+	 */
+	private String _ident = "";
+
+	/**
 	 * The ignored nicks array.
 	 */
 	private final List _ignoredNicks = new ArrayList(0);
@@ -583,7 +588,7 @@ public class Mobibot extends PircBot
 		options.addOption(HELP_ARG.substring(0, 1), HELP_ARG, false, "print this help message");
 		options.addOption(DEBUG_ARG.substring(0, 1), DEBUG_ARG, false,
 						  "print debug & logging data directly to the console");
-		options.addOption(OptionBuilder.withArgName("file").hasArg().withDescription("use alternate properties file")
+		options.addOption(OptionBuilder.hasArg().withDescription("use alternate properties file")
 							  .withLongOpt(PROPS_ARG).create(PROPS_ARG.substring(0, 1)));
 
 		// Parse the command line
@@ -697,6 +702,7 @@ public class Mobibot extends PircBot
 			final String ignoredNicks = p.getProperty("ignore", "");
 			final String identNick = p.getProperty("ident-nick", "");
 			final String identMsg = p.getProperty("ident-msg", "");
+			final String ident = p.getProperty("ident", "");
 			final String tags = p.getProperty("tags", "");
 
 			// Get the del.icio.us properties
@@ -713,6 +719,9 @@ public class Mobibot extends PircBot
 			bot.setLogin(login);
 			bot.setVersion(weblogURL);
 			bot.setMessageDelay(MESSAGE_DELAY);
+
+			// Set the ident password
+			bot.setIdent(ident);
 
 			// Set the ident nick and message
 			bot.setIdentNick(identNick);
@@ -774,6 +783,13 @@ public class Mobibot extends PircBot
 
 			bot.setVersion(INFO_STRS[0]);
 
+			// Identify with NickServ
+			if (isValidString(ident))
+			{
+				bot.identify(ident);
+			}
+
+			// Identify with a specified nick
 			if (isValidString(identNick) && isValidString(identMsg))
 			{
 				bot.sendMessage(identNick, identMsg);
@@ -1141,6 +1157,11 @@ public class Mobibot extends PircBot
 		}
 
 		setVersion(INFO_STRS[0]);
+
+		if (isValidString(_ident))
+		{
+			identify(_ident);
+		}
 
 		if (isValidString(_identNick) && isValidString(_identMsg))
 		{
@@ -2799,6 +2820,17 @@ public class Mobibot extends PircBot
 	{
 		_googleKey = googleKey;
 	}
+
+	/**
+	 * Sets the ident password.
+	 *
+	 * @param pwd The password.
+	 */
+	private void setIdent(String pwd)
+	{
+		_ident = pwd;
+	}
+
 
 	/**
 	 * Sets the ident message.

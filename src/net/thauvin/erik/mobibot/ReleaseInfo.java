@@ -1,5 +1,5 @@
 /* Created by JReleaseInfo AntTask from Open Source Competence Group */
-/* Creation date Mon Apr 16 15:39:07 GMT 2007 */
+/* Creation date Wed Jul 18 23:09:10 PDT 2007 */
 package net.thauvin.erik.mobibot;
 
 import java.util.Date;
@@ -20,31 +20,21 @@ public class ReleaseInfo {
    }
 
 
-   /** buildDate (set during build process to 1176737947817L). */
-   private static final Date buildDate = new Date(1176737947817L);
+   /** buildDate (set during build process to 1184825350594L). */
+   private static final Date buildDate = new Date(1184825350594L);
 
    /**
-    * Get buildDate (set during build process to Mon Apr 16 15:39:07 GMT 2007).
+    * Get buildDate (set during build process to Wed Jul 18 23:09:10 PDT 2007).
     * @return Date buildDate
     */
    public static Date getBuildDate() { return buildDate; }
 
 
    /**
-    * Get buildNumber (set during build process to 68).
+    * Get buildNumber (set during build process to 70).
     * @return int buildNumber
     */
-   public static int getBuildNumber() { return 68; }
-
-
-   /** version (set during build process to "0.3"). */
-   private static final String version = "0.3";
-
-   /**
-    * Get version (set during build process to "0.3").
-    * @return String version
-    */
-   public static String getVersion() { return version; }
+   public static int getBuildNumber() { return 70; }
 
 
    /** project (set during build process to "mobibot"). */
@@ -55,5 +45,15 @@ public class ReleaseInfo {
     * @return String project
     */
    public static String getProject() { return project; }
+
+
+   /** version (set during build process to "0.3"). */
+   private static final String version = "0.3";
+
+   /**
+    * Get version (set during build process to "0.3").
+    * @return String version
+    */
+   public static String getVersion() { return version; }
 
 }

@@ -12,15 +12,6 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/lib/pircbot.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
           <root url="jar://$MODULE_DIR$/lib/commons-logging.jar!/" />
         </CLASSES>
         <JAVADOC />
@@ -157,6 +148,15 @@
       <library>
         <CLASSES>
           <root url="jar://$MODULE_DIR$/lib/rome-0.4.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/lib/pircbot.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
