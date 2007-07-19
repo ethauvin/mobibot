@@ -588,7 +588,7 @@ public class Mobibot extends PircBot
 		options.addOption(HELP_ARG.substring(0, 1), HELP_ARG, false, "print this help message");
 		options.addOption(DEBUG_ARG.substring(0, 1), DEBUG_ARG, false,
 						  "print debug & logging data directly to the console");
-		options.addOption(OptionBuilder.hasArg().withDescription("use alternate properties file")
+		options.addOption(OptionBuilder.withArgName("file").hasArg().withDescription("use alternate properties file")
 							  .withLongOpt(PROPS_ARG).create(PROPS_ARG.substring(0, 1)));
 
 		// Parse the command line
