@@ -37,43 +37,34 @@
 package net.thauvin.erik.mobibot;
 
 import com.primalworld.math.MathEvaluator;
-
 import com.sun.syndication.feed.synd.*;
 import com.sun.syndication.fetcher.impl.FeedFetcherCache;
 import com.sun.syndication.fetcher.impl.HashMapFeedInfoCache;
 import com.sun.syndication.io.FeedException;
 import com.sun.syndication.io.SyndFeedInput;
 import com.sun.syndication.io.SyndFeedOutput;
-
 import org.apache.commons.cli.*;
 import org.apache.commons.logging.impl.Log4JLogger;
 import org.apache.commons.net.WhoisClient;
-
 import org.apache.log4j.Level;
-
 import org.jibble.pircbot.Colors;
 import org.jibble.pircbot.PircBot;
 import org.jibble.pircbot.User;
 
 import java.io.*;
-
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-
 import java.nio.channels.FileChannel;
-
 import java.text.SimpleDateFormat;
-
 import java.util.*;
-
 
 /**
  * Implements the #mobitopia bot.
  *
- * @author  Erik C. Thauvin
+ * @author Erik C. Thauvin
  * @version $Revision$, $Date$
  * @created Jan 31, 2004
- * @since   1.0
+ * @since 1.0
  */
 public class Mobibot extends PircBot
 {
@@ -85,11 +76,10 @@ public class Mobibot extends PircBot
 	/**
 	 * The info strings.
 	 */
-	private static final String[] INFO_STRS =
-		{
-			"Mobibot v" + ReleaseInfo.getVersion() + '.' + ReleaseInfo.getBuildNumber() +
-			" by Erik C. Thauvin (erik@thauvin.net)", "http://www.mobitopia.org/mobibot/"
-		};
+	private static final String[] INFO_STRS = {"Mobibot v" + ReleaseInfo.getVersion() + '.'
+	                                           + ReleaseInfo.getBuildNumber()
+	                                           + " by Erik C. Thauvin (erik@thauvin.net)",
+	                                           "http://www.mobitopia.org/mobibot/"};
 
 	/**
 	 * Debug command line argument.
@@ -197,6 +187,10 @@ public class Mobibot extends PircBot
 	private static final String GOOGLE_CMD = "google";
 
 	/**
+	 * The Jaiku command.
+	 */
+	private static final String JAIKU_CMD = "jaiku";
+	/**
 	 * The math command.
 	 */
 	private static final String CALC_CMD = "calc";
@@ -275,7 +269,7 @@ public class Mobibot extends PircBot
 	 * The date/time format for the {@link #TIME_CMD time} command.
 	 */
 	private static final SimpleDateFormat TIME_SDF =
-		new SimpleDateFormat("'The time is 'HH:mm' on 'EEE, d MMM yyyy' in '");
+			new SimpleDateFormat("'The time is 'HH:mm' on 'EEE, d MMM yyyy' in '");
 
 	/**
 	 * The beats (Internet Time) keyword.
@@ -444,6 +438,16 @@ public class Mobibot extends PircBot
 	private String _googleKey = "";
 
 	/**
+	 * The Jaiku API key.
+	 */
+	private String _jaikuKey = "";
+
+	/**
+	 * The Jaiku user.
+	 */
+	private String _jaikuUser = "";
+
+	/**
 	 * The history/backlogs array.
 	 */
 	private final List _history = new ArrayList(0);
@@ -452,7 +456,6 @@ public class Mobibot extends PircBot
 	 * The ident message.
 	 */
 	private String _identMsg = "";
-
 
 	/**
 	 * The ident nick.
@@ -504,12 +507,11 @@ public class Mobibot extends PircBot
 	 */
 	private String _weblogURL = "";
 
-
 	/**
 	 * Creates a new Mobibot object.
 	 *
-	 * @param server  The server.
-	 * @param port    The port.
+	 * @param server The server.
+	 * @param port The port.
 	 * @param channel The channel.
 	 * @param logsDir The logs directory.
 	 */
@@ -565,7 +567,7 @@ public class Mobibot extends PircBot
 	/**
 	 * Returns true if the given string is valid.
 	 *
-	 * @param  s The string to validate.
+	 * @param s The string to validate.
 	 *
 	 * @return true if the string is non-empty and not null, false otherwise.
 	 */
@@ -577,7 +579,7 @@ public class Mobibot extends PircBot
 	/**
 	 * The Truth Is Out There...
 	 *
-	 * @param        args The command line arguments.
+	 * @param args The command line arguments.
 	 *
 	 * @noinspection UseOfSystemOutOrSystemErr,ACCESS_STATIC_VIA_INSTANCE
 	 */
@@ -586,10 +588,12 @@ public class Mobibot extends PircBot
 		// Setup the command line options
 		final Options options = new Options();
 		options.addOption(HELP_ARG.substring(0, 1), HELP_ARG, false, "print this help message");
-		options.addOption(DEBUG_ARG.substring(0, 1), DEBUG_ARG, false,
-						  "print debug & logging data directly to the console");
+		options.addOption(DEBUG_ARG.substring(0, 1),
+		                  DEBUG_ARG,
+		                  false,
+		                  "print debug & logging data directly to the console");
 		options.addOption(OptionBuilder.withArgName("file").hasArg().withDescription("use alternate properties file")
-							  .withLongOpt(PROPS_ARG).create(PROPS_ARG.substring(0, 1)));
+				.withLongOpt(PROPS_ARG).create(PROPS_ARG.substring(0, 1)));
 
 		// Parse the command line
 		final CommandLineParser parser = new PosixParser();
@@ -664,9 +668,8 @@ public class Mobibot extends PircBot
 
 				try
 				{
-					stdout =
-						new PrintStream(new FileOutputStream(logsDir + channel.substring(1) + '.' + today() + ".log",
-															 true));
+					stdout = new PrintStream(new FileOutputStream(
+							logsDir + channel.substring(1) + '.' + today() + ".log", true));
 				}
 				catch (IOException e)
 				{
@@ -692,7 +695,6 @@ public class Mobibot extends PircBot
 				System.setErr(stderr);
 			}
 
-
 			// Get the bot's properties
 			final String login = p.getProperty("login", nickname);
 			final String weblogURL = p.getProperty("weblog", "");
@@ -708,6 +710,10 @@ public class Mobibot extends PircBot
 			// Get the del.icio.us properties
 			final String dname = p.getProperty("delicious-user");
 			final String dpwd = p.getProperty("delicious-pwd");
+
+			// Get the Jaiku properties
+			final String jname = p.getProperty("jaiku-user");
+			final String jkey = p.getProperty("jaiku-key");
 
 			// Create the bot
 			final Mobibot bot = new Mobibot(server, port, channel, logsDir);
@@ -735,11 +741,16 @@ public class Mobibot extends PircBot
 			// Set the Google key
 			bot.setGoogleKey(googleKey);
 
-
 			if (isValidString(dname) && isValidString(dpwd))
 			{
 				// Set the del.icio.us authentication
 				bot.setDeliciousAuth(dname, dpwd);
+			}
+
+			if (isValidString(jname) && isValidString(jkey))
+			{
+				// Set the Jaiku authentication
+				bot.setJaikuAuth(jname, jkey);
 			}
 
 			// Set the tags
@@ -772,8 +783,8 @@ public class Mobibot extends PircBot
 					{
 						if (retries == MAX_RECONNECT)
 						{
-							System.err.println("Unable to connect to " + server + " after " + MAX_RECONNECT +
-											   " retries.");
+							System.err.println(
+									"Unable to connect to " + server + " after " + MAX_RECONNECT + " retries.");
 							e.printStackTrace(System.err);
 							System.exit(1);
 						}
@@ -799,11 +810,10 @@ public class Mobibot extends PircBot
 		}
 	}
 
-
 	/**
 	 * Converts XML/XHTML entities to plain text.
 	 *
-	 * @param  str The string to unescape.
+	 * @param str The string to unescape.
 	 *
 	 * @return The unescaped string.
 	 */
@@ -833,7 +843,7 @@ public class Mobibot extends PircBot
 	 * Sends an action to the channel.
 	 *
 	 * @param channel The channel.
-	 * @param action  The action.
+	 * @param action The action.
 	 */
 	public final void action(String channel, String action)
 	{
@@ -877,7 +887,7 @@ public class Mobibot extends PircBot
 	 * Responds with the bot's help.
 	 *
 	 * @param sender The nick of the person who sent the private message.
-	 * @param topic  The help topic, if any.
+	 * @param topic The help topic, if any.
 	 */
 	public final void helpResponse(String sender, String topic)
 	{
@@ -918,6 +928,11 @@ public class Mobibot extends PircBot
 		{
 			send(sender, "To search Google:");
 			send(sender, DOUBLE_INDENT + bold(getNick() + ": " + GOOGLE_CMD + " <query>"));
+		}
+		else if (lcTopic.endsWith(JAIKU_CMD))
+		{
+			send(sender, "To post to Jaiku:");
+			send(sender, DOUBLE_INDENT + bold(getNick() + ": " + JAIKU_CMD + " <message>"));
 		}
 		else if (lcTopic.endsWith(RECAP_CMD))
 		{
@@ -1030,15 +1045,16 @@ public class Mobibot extends PircBot
 			send(sender, "For more information on specific command, type:");
 			send(sender, DOUBLE_INDENT + bold(getNick() + ": " + HELP_CMD + " <command>"));
 			send(sender, "The commands are:");
-			send(sender, DOUBLE_INDENT +
-				 bold(CALC_CMD + ' ' + CURRENCY_CMD + ' ' + DICE_CMD + ' ' + GOOGLE_CMD + ' ' + IGNORE_CMD));
-			send(sender, DOUBLE_INDENT +
-				 bold(INFO_CMD + ' ' + getChannel().substring(1) + ' ' + LOOKUP_CMD + ' ' + HELP_POSTING_KEYWORD + ' ' +
-					  RECAP_CMD));
-			send(sender, DOUBLE_INDENT +
-				 bold(SPELL_CMD + ' ' + STOCK_CMD + ' ' + HELP_TAGS_KEYWORD + ' ' + TIME_CMD + ' ' + USERS_CMD + ' ' +
-					  VIEW_CMD));
-			send(sender, DOUBLE_INDENT + bold(WEATHER_CMD));
+			send(sender,
+			     DOUBLE_INDENT + bold(
+					     CALC_CMD + ' ' + CURRENCY_CMD + ' ' + DICE_CMD + ' ' + GOOGLE_CMD + ' ' + IGNORE_CMD));
+			send(sender,
+			     DOUBLE_INDENT + bold(INFO_CMD + ' ' + getChannel().substring(1) + ' ' + LOOKUP_CMD + ' '
+			                          + HELP_POSTING_KEYWORD + ' ' + RECAP_CMD));
+			send(sender,
+			     DOUBLE_INDENT + bold(SPELL_CMD + ' ' + STOCK_CMD + ' ' + HELP_TAGS_KEYWORD + ' ' + TIME_CMD + ' '
+			                          + USERS_CMD + ' ' + VIEW_CMD));
+			send(sender, DOUBLE_INDENT + bold(JAIKU_CMD + ' ' + WEATHER_CMD));
 
 			if (isOp(sender))
 			{
@@ -1051,7 +1067,7 @@ public class Mobibot extends PircBot
 	/**
 	 * Sends a private notice.
 	 *
-	 * @param sender  The nick of the person who sent the message.
+	 * @param sender The nick of the person who sent the message.
 	 * @param message The actual message.
 	 */
 	public final void send(String sender, String message)
@@ -1062,8 +1078,8 @@ public class Mobibot extends PircBot
 	/**
 	 * Sends a private message or notice.
 	 *
-	 * @param sender    The nick of the person who sent the message.
-	 * @param message   The actual message.
+	 * @param sender The nick of the person who sent the message.
+	 * @param message The actual message.
 	 * @param isPrivate Set to true if the response should be a private message, otherwise a notice is sent.
 	 */
 	public final void send(String sender, String message, boolean isPrivate)
@@ -1094,11 +1110,11 @@ public class Mobibot extends PircBot
 	/**
 	 * This method is called whenever an ACTION is sent from a user.
 	 *
-	 * @param sender   The nick of the person who sent the action.
-	 * @param login    The login of the person who sent the action.
+	 * @param sender The nick of the person who sent the action.
+	 * @param login The login of the person who sent the action.
 	 * @param hostname The hostname of the person who sent the action.
-	 * @param target   The target of the action, be it a channel or our nick.
-	 * @param action   The action carried out by the user.
+	 * @param target The target of the action, be it a channel or our nick.
+	 * @param action The action carried out by the user.
 	 */
 	protected final void onAction(String sender, String login, String hostname, String target, String action)
 	{
@@ -1145,8 +1161,9 @@ public class Mobibot extends PircBot
 					{
 						if (_logger.isDebugEnabled())
 						{
-							_logger.debug("Unable to reconnect to " + _ircServer + " after " + MAX_RECONNECT +
-										  " retries.", ex);
+							_logger.debug(
+									"Unable to reconnect to " + _ircServer + " after " + MAX_RECONNECT + " retries.",
+									ex);
 						}
 
 						e.printStackTrace(System.err);
@@ -1174,11 +1191,11 @@ public class Mobibot extends PircBot
 	/**
 	 * This method is called whenever a message is sent to a channel.
 	 *
-	 * @param channel  The channel to which the message was sent.
-	 * @param sender   The nick of the person who sent the message.
-	 * @param login    The login of the person who sent the message.
+	 * @param channel The channel to which the message was sent.
+	 * @param sender The nick of the person who sent the message.
+	 * @param login The login of the person who sent the message.
 	 * @param hostname The hostname of the person who sent the message.
-	 * @param message  The actual message sent.
+	 * @param message The actual message sent.
 	 */
 	protected final void onMessage(String channel, String sender, String login, String hostname, String message)
 	{
@@ -1222,9 +1239,13 @@ public class Mobibot extends PircBot
 
 						if (tagSep != -1)
 						{
-							_entries.add(new EntryLink(cmd, title.substring(0, tagSep), sender, login, channel,
-													   (_defaultTags + ' ' +
-														title.substring(tagSep + TAGS_MARKER.length()))));
+							_entries.add(new EntryLink(cmd,
+							                           title.substring(0, tagSep),
+							                           sender,
+							                           login,
+							                           channel,
+							                           (_defaultTags + ' ' + title
+									                           .substring(tagSep + TAGS_MARKER.length()))));
 						}
 						else
 						{
@@ -1287,14 +1308,18 @@ public class Mobibot extends PircBot
 			}
 			else if (cmd.equals(PING_CMD))
 			{
-				final String[] pings =
-					{
-						"is barely alive.", "is trying to stay awake.", "has gone fishing.",
-						"is somewhere over the rainbow.", "has fallen and can't get up.",
-						"is running. You better go chase it.", "has just spontantiously combusted.",
-						"is talking to itself... don't interrupt. That's rude.", "is bartending at an AA meeting.",
-						"is hibernating.", "is saving energy: apathetic mode activated.", "is busy. Go away!"
-					};
+				final String[] pings = {"is barely alive.",
+				                        "is trying to stay awake.",
+				                        "has gone fishing.",
+				                        "is somewhere over the rainbow.",
+				                        "has fallen and can't get up.",
+				                        "is running. You better go chase it.",
+				                        "has just spontantiously combusted.",
+				                        "is talking to itself... don't interrupt. That's rude.",
+				                        "is bartending at an AA meeting.",
+				                        "is hibernating.",
+				                        "is saving energy: apathetic mode activated.",
+				                        "is busy. Go away!"};
 
 				final Random r = new Random();
 
@@ -1361,6 +1386,10 @@ public class Mobibot extends PircBot
 			else if (cmd.startsWith(GOOGLE_CMD))
 			{
 				googleResponse(sender, args);
+			}
+			else if (cmd.startsWith(JAIKU_CMD))
+			{
+				jaikuResponse(sender, args);
 			}
 			else if (cmd.startsWith(SPELL_CMD))
 			{
@@ -1704,10 +1733,10 @@ public class Mobibot extends PircBot
 	/**
 	 * This method is called whenever a private message is sent to the bot.
 	 *
-	 * @param        sender   The nick of the person who sent the private message.
-	 * @param        login    The login of the person who sent the private message.
-	 * @param        hostname The hostname of the person who sent the private message.
-	 * @param        message  The actual message sent.
+	 * @param sender The nick of the person who sent the private message.
+	 * @param login The login of the person who sent the private message.
+	 * @param hostname The hostname of the person who sent the private message.
+	 * @param message The actual message sent.
 	 *
 	 * @noinspection UseOfSystemOutOrSystemErr
 	 */
@@ -1874,7 +1903,7 @@ public class Mobibot extends PircBot
 	/**
 	 * Makes the given string bold.
 	 *
-	 * @param  s The string.
+	 * @param s The string.
 	 *
 	 * @return The bold string.
 	 */
@@ -1886,27 +1915,27 @@ public class Mobibot extends PircBot
 	/**
 	 * Builds an entry's comment for display on the channel.
 	 *
-	 * @param  entryIndex   The entry's index.
-	 * @param  commentIndex The comment's index.
-	 * @param  comment      The {@link EntryComment comment} object.
+	 * @param entryIndex The entry's index.
+	 * @param commentIndex The comment's index.
+	 * @param comment The {@link EntryComment comment} object.
 	 *
 	 * @return The entry's comment.
 	 */
 	private static String buildComment(int entryIndex, int commentIndex, EntryComment comment)
 	{
-		return (LINK_CMD + (entryIndex + 1) + '.' + (commentIndex + 1) + ": [" + comment.getNick() + "] " +
-				comment.getComment());
+		return (LINK_CMD + (entryIndex + 1) + '.' + (commentIndex + 1) + ": [" + comment.getNick() + "] " + comment
+				.getComment());
 	}
 
 	/**
 	 * Builds an entry's link for display on the channel.
 	 *
-	 * @param  index The entry's index.
-	 * @param  entry The {@link EntryLink entry} object.
+	 * @param index The entry's index.
+	 * @param entry The {@link EntryLink entry} object.
 	 *
 	 * @return The entry's link.
 	 *
-	 * @see    #buildLink(int, EntryLink, boolean)
+	 * @see #buildLink(int,EntryLink,boolean)
 	 */
 	private static String buildLink(int index, EntryLink entry)
 	{
@@ -1916,9 +1945,9 @@ public class Mobibot extends PircBot
 	/**
 	 * Builds an entry's link for display on the channel.
 	 *
-	 * @param  index  The entry's index.
-	 * @param  entry  The {@link EntryLink entry} object.
-	 * @param  isView Set to true to display the number of comments.
+	 * @param index The entry's index.
+	 * @param entry The {@link EntryLink entry} object.
+	 * @param isView Set to true to display the number of comments.
 	 *
 	 * @return The entry's link.
 	 */
@@ -1952,8 +1981,8 @@ public class Mobibot extends PircBot
 	/**
 	 * Build an entry's tags/categories for diplay on the channel.
 	 *
-	 * @param  entryIndex The entry's index.
-	 * @param  entry      The {@link EntryLink entry} object.
+	 * @param entryIndex The entry's index.
+	 * @param entry The {@link EntryLink entry} object.
 	 *
 	 * @return The entry's tags.
 	 */
@@ -1965,13 +1994,13 @@ public class Mobibot extends PircBot
 	/**
 	 * Copies a file.
 	 *
-	 * @param  in  The source file.
-	 * @param  out The destination file.
+	 * @param in The source file.
+	 * @param out The destination file.
 	 *
 	 * @throws IOException If the file could not be copied.
 	 */
 	private static void copyFile(File in, File out)
-						  throws IOException
+			throws IOException
 	{
 		FileChannel inChannel = null;
 		FileChannel outChannel = null;
@@ -2029,8 +2058,8 @@ public class Mobibot extends PircBot
 	/**
 	 * Ensures that the given location (File/URL) has a trailing slash (<code>/</code>) to indicate a directory.
 	 *
-	 * @param  location The File or URL location.
-	 * @param  isUrl    Set to true if the location is a URL
+	 * @param location The File or URL location.
+	 * @param isUrl Set to true if the location is a URL
 	 *
 	 * @return The location ending with a slash.
 	 */
@@ -2063,8 +2092,8 @@ public class Mobibot extends PircBot
 	/**
 	 * Returns the port.
 	 *
-	 * @param  property     The port property value.
-	 * @param  defaultValue The default value.
+	 * @param property The port property value.
+	 * @param defaultValue The default value.
 	 *
 	 * @return The port or default value if invalid.
 	 */
@@ -2127,14 +2156,14 @@ public class Mobibot extends PircBot
 	/**
 	 * Performs a DNS lookup on the specified query.
 	 *
-	 * @param     query The IP address or hostname.
+	 * @param query The IP address or hostname.
 	 *
-	 * @return    The lookup query result string.
+	 * @return The lookup query result string.
 	 *
-	 * @exception UnknownHostException If the host is unknown.
+	 * @throws UnknownHostException If the host is unknown.
 	 */
 	private static String lookup(String query)
-						  throws UnknownHostException
+			throws UnknownHostException
 	{
 		final StringBuffer buffer = new StringBuffer("");
 
@@ -2168,18 +2197,17 @@ public class Mobibot extends PircBot
 		return buffer.toString();
 	}
 
-
 	/**
 	 * Stores the last 10 public messages and actions.
 	 *
-	 * @param sender   The nick of the person who sent the private message.
-	 * @param message  The actual message sent.
+	 * @param sender The nick of the person who sent the private message.
+	 * @param message The actual message sent.
 	 * @param isAction Set to true if the message is an action.
 	 */
 	private static void recap(String sender, String message, boolean isAction)
 	{
-		RECAP_ARRAY.add(HHMM_SDF.format(Calendar.getInstance().getTime()) + " -> " + sender + (isAction ? " " : ": ") +
-						message);
+		RECAP_ARRAY.add(HHMM_SDF.format(Calendar.getInstance().getTime()) + " -> " + sender + (isAction ? " " : ": ")
+		                + message);
 
 		if (RECAP_ARRAY.size() > MAX_RECAP)
 		{
@@ -2217,14 +2245,14 @@ public class Mobibot extends PircBot
 	/**
 	 * Performs a whois IP query.
 	 *
-	 * @param  query The IP address.
+	 * @param query The IP address.
 	 *
 	 * @return The IP whois data, if any.
 	 *
 	 * @throws IOException If a connection error occurs.
 	 */
 	private static String[] whois(String query)
-						   throws IOException
+			throws IOException
 	{
 		final WhoisClient whois = new WhoisClient();
 		String[] lines;
@@ -2266,7 +2294,7 @@ public class Mobibot extends PircBot
 	/**
 	 * Returns the index of the specified duplicate entry, if any.
 	 *
-	 * @param  link The link.
+	 * @param link The link.
 	 *
 	 * @return The index or -1 if none.
 	 */
@@ -2304,7 +2332,8 @@ public class Mobibot extends PircBot
 
 			if (Character.isLetter(c))
 			{
-				buff.append('[').append(String.valueOf(c).toLowerCase()).append(String.valueOf(c).toUpperCase()).append(']');
+				buff.append('[').append(String.valueOf(c).toLowerCase()).append(String.valueOf(c).toUpperCase())
+						.append(']');
 			}
 			else
 			{
@@ -2329,7 +2358,7 @@ public class Mobibot extends PircBot
 	 * Responds with the Google search results for the specified query.
 	 *
 	 * @param sender The nick of the person who sent the private message.
-	 * @param query  The Google query to execute.
+	 * @param query The Google query to execute.
 	 */
 	private void googleResponse(String sender, String query)
 	{
@@ -2351,9 +2380,34 @@ public class Mobibot extends PircBot
 	}
 
 	/**
+	 * Posts a message to Jaiku.
+	 *
+	 * @param sender The sender's nick.
+	 * @param message The message.
+	 */
+	private void jaikuResponse(String sender, String message)
+	{
+		if (isValidString(_jaikuKey) && isValidString(_jaikuUser))
+		{
+			if (message.length() > 0)
+			{
+				new Thread(new Jaiku(this, sender, _jaikuUser, _jaikuKey, message)).start();
+			}
+			else
+			{
+				helpResponse(sender, JAIKU_CMD);
+			}
+		}
+		else
+		{
+			send(sender, "The Jaiku posting facility is disabled.");
+		}
+	}
+
+	/**
 	 * Responds with the bot's information.
 	 *
-	 * @param sender    The nick of the person who sent the message.
+	 * @param sender The nick of the person who sent the message.
 	 * @param isPrivate Set to true is the response should be send as a private message.
 	 */
 	private void infoResponse(String sender, boolean isPrivate)
@@ -2372,14 +2426,16 @@ public class Mobibot extends PircBot
 		timeInSeconds -= (hours * 3600L);
 
 		final long minutes = timeInSeconds / 60L;
-		send(sender, "Uptime: " + days + " day(s) " + hours + " hour(s) " + minutes + " minute(s)  [Entries: " +
-			 _entries.size() + ']', isPrivate);
+		send(sender,
+		     "Uptime: " + days + " day(s) " + hours + " hour(s) " + minutes + " minute(s)  [Entries: " + _entries.size()
+		     + ']',
+		     isPrivate);
 	}
 
 	/**
 	 * Determines whether the specified nick should be ignored.
 	 *
-	 * @param  nick The nick.
+	 * @param nick The nick.
 	 *
 	 * @return <code>true</code> if the nick should be ignored, <code>false</code> otherwise.
 	 */
@@ -2396,7 +2452,7 @@ public class Mobibot extends PircBot
 	/**
 	 * Returns true is the specified sender is an Op on the {@link #_channel channel}.
 	 *
-	 * @param  sender The sender.
+	 * @param sender The sender.
 	 *
 	 * @return true, if the sender is an Op.
 	 */
@@ -2422,13 +2478,13 @@ public class Mobibot extends PircBot
 	/**
 	 * Loads the backlogs.
 	 *
-	 * @param  file The file containing the backlogs.
+	 * @param file The file containing the backlogs.
 	 *
 	 * @throws FileNotFoundException If the file was not found.
-	 * @throws FeedException         If an error occurred while reading the feed.
+	 * @throws FeedException If an error occurred while reading the feed.
 	 */
 	private void loadBacklogs(String file)
-					   throws FileNotFoundException, FeedException
+			throws FileNotFoundException, FeedException
 	{
 		_history.clear();
 
@@ -2471,13 +2527,13 @@ public class Mobibot extends PircBot
 	/**
 	 * Loads the current entries.
 	 *
-	 * @param  file The file containing the current entries.
+	 * @param file The file containing the current entries.
 	 *
 	 * @throws FileNotFoundException If the file was not found.
-	 * @throws FeedException         If an error occurred while reading the feed.
+	 * @throws FeedException If an error occurred while reading the feed.
 	 */
 	private void loadEntries(String file)
-					  throws FileNotFoundException, FeedException
+			throws FileNotFoundException, FeedException
 	{
 		_entries.clear();
 
@@ -2504,11 +2560,14 @@ public class Mobibot extends PircBot
 			for (int i = items.size() - 1; i >= 0; i--)
 			{
 				item = (SyndEntryImpl) items.get(i);
-				author =
-					item.getAuthor().substring(item.getAuthor().lastIndexOf('(') + 1, item.getAuthor().length() - 1);
-				entry =
-					new EntryLink(item.getLink(), item.getTitle(), author, getChannel(), item.getPublishedDate(),
-								  item.getCategories());
+				author = item.getAuthor()
+						.substring(item.getAuthor().lastIndexOf('(') + 1, item.getAuthor().length() - 1);
+				entry = new EntryLink(item.getLink(),
+				                      item.getTitle(),
+				                      author,
+				                      getChannel(),
+				                      item.getPublishedDate(),
+				                      item.getCategories());
 				description = item.getDescription();
 				comments = description.getValue().split("<br/>");
 
@@ -2545,7 +2604,7 @@ public class Mobibot extends PircBot
 	 * Responds with the results of a DNS query.
 	 *
 	 * @param sender The nick of the person who sent the message
-	 * @param query  The hostname or IP address.
+	 * @param query The hostname or IP address.
 	 */
 	private void lookupResponse(String sender, String query)
 	{
@@ -2557,7 +2616,8 @@ public class Mobibot extends PircBot
 			}
 			catch (UnknownHostException e)
 			{
-				if (query.matches("(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)"))
+				if (query.matches(
+						"(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)"))
 				{
 					try
 					{
@@ -2607,7 +2667,7 @@ public class Mobibot extends PircBot
 	/**
 	 * Responds with the last 10 public messages.
 	 *
-	 * @param sender    The nick of the person who sent the private message.
+	 * @param sender The nick of the person who sent the private message.
 	 * @param isPrivate Set to true is the response should be send as a private message.
 	 */
 	private void recapResponse(String sender, boolean isPrivate)
@@ -2822,6 +2882,18 @@ public class Mobibot extends PircBot
 	}
 
 	/**
+	 * Sets the Jaiku user and API key..
+	 *
+	 * @param user The Jaiku user.
+	 * @param key The Jaiku API key.
+	 */
+	private void setJaikuAuth(String user, String key)
+	{
+		_jaikuKey = key;
+		_jaikuUser = user;
+	}
+
+	/**
 	 * Sets the ident password.
 	 *
 	 * @param pwd The password.
@@ -2830,7 +2902,6 @@ public class Mobibot extends PircBot
 	{
 		_ident = pwd;
 	}
-
 
 	/**
 	 * Sets the ident message.
@@ -2841,7 +2912,6 @@ public class Mobibot extends PircBot
 	{
 		_identMsg = msg;
 	}
-
 
 	/**
 	 * Sets the ident nickname.
@@ -2905,7 +2975,7 @@ public class Mobibot extends PircBot
 	 * Uses Google to correctly spell a sentence.
 	 *
 	 * @param sender The nick of the person who sent the message
-	 * @param spell  The sentence to spell.
+	 * @param spell The sentence to spell.
 	 */
 	private void spellResponse(String sender, String spell)
 	{
@@ -2947,8 +3017,8 @@ public class Mobibot extends PircBot
 	/**
 	 * Responds with the current time.
 	 *
-	 * @param sender    The nick of the person who sent the message.
-	 * @param args      The time command arguments.
+	 * @param sender The nick of the person who sent the message.
+	 * @param args The time command arguments.
 	 * @param isPrivate Set to true is the response should be send as a private message.
 	 */
 	private void timeResponse(String sender, String args, boolean isPrivate)
@@ -2966,9 +3036,8 @@ public class Mobibot extends PircBot
 			else
 			{
 				TIME_SDF.setTimeZone(TimeZone.getTimeZone(tz));
-				response =
-					TIME_SDF.format(Calendar.getInstance().getTime()) +
-					tz.substring(tz.indexOf('/') + 1).replace('_', ' ');
+				response = TIME_SDF.format(Calendar.getInstance().getTime()) + tz.substring(tz.indexOf('/') + 1)
+						.replace('_', ' ');
 			}
 		}
 		else
@@ -2997,7 +3066,7 @@ public class Mobibot extends PircBot
 	/**
 	 * Responds with the users on a channel.
 	 *
-	 * @param sender    The nick of the person who sent the message.
+	 * @param sender The nick of the person who sent the message.
 	 * @param isPrivate Set to true is the response should be send as a private message.
 	 */
 	private void usersResponse(String sender, boolean isPrivate)
@@ -3025,8 +3094,8 @@ public class Mobibot extends PircBot
 	/**
 	 * Responds with the stored links.
 	 *
-	 * @param sender    The nick of the person who sent the message.
-	 * @param args      The view command arguments.
+	 * @param sender The nick of the person who sent the message.
+	 * @param args The view command arguments.
 	 * @param isPrivate Set to true is the response should be send as a private message.
 	 */
 	private void viewResponse(String sender, String args, boolean isPrivate)
@@ -3085,14 +3154,16 @@ public class Mobibot extends PircBot
 
 				if (lcArgs.length() > 0)
 				{
-					if ((entry.getLink().toLowerCase().indexOf(lcArgs) != -1) ||
-							(entry.getTitle().toLowerCase().indexOf(lcArgs) != -1) ||
-							(entry.getNick().toLowerCase().indexOf(lcArgs) != -1))
+					if ((entry.getLink().toLowerCase().indexOf(lcArgs) != -1)
+					    || (entry.getTitle().toLowerCase().indexOf(lcArgs) != -1) || (
+							entry.getNick().toLowerCase().indexOf(lcArgs) != -1))
 					{
 						if (sent > MAX_ENTRIES)
 						{
-							send(sender, "To view more, try: " +
-								 bold(getNick() + ": " + VIEW_CMD + ' ' + (i + 1) + ' ' + lcArgs), isPrivate);
+							send(sender,
+							     "To view more, try: " + bold(
+									     getNick() + ": " + VIEW_CMD + ' ' + (i + 1) + ' ' + lcArgs),
+							     isPrivate);
 
 							break;
 						}
@@ -3105,8 +3176,9 @@ public class Mobibot extends PircBot
 				{
 					if (sent > MAX_ENTRIES)
 					{
-						send(sender, "To view more, try: " + bold(getNick() + ": " + VIEW_CMD + ' ' + (i + 1)),
-							 isPrivate);
+						send(sender,
+						     "To view more, try: " + bold(getNick() + ": " + VIEW_CMD + ' ' + (i + 1)),
+						     isPrivate);
 
 						break;
 					}
@@ -3125,8 +3197,8 @@ public class Mobibot extends PircBot
 	/**
 	 * Responds with weather from the specified station ID.
 	 *
-	 * @param sender    The nick of the person who sent the message.
-	 * @param id        The station's ID.
+	 * @param sender The nick of the person who sent the message.
+	 * @param id The station's ID.
 	 * @param isPrivate Set to true is the response should be send as a private message.
 	 */
 	private void weatherResponse(String sender, String id, boolean isPrivate)
