@@ -19,8 +19,9 @@
   <component name="ChangeListManager">
     <list default="true" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/buildnum.properties" afterPath="$PROJECT_DIR$/buildnum.properties" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/net/thauvin/erik/mobibot/Jaiku.java" afterPath="$PROJECT_DIR$/src/net/thauvin/erik/mobibot/Jaiku.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build.properties" afterPath="$PROJECT_DIR$/build.properties" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/net/thauvin/erik/mobibot/ReleaseInfo.java" afterPath="$PROJECT_DIR$/src/net/thauvin/erik/mobibot/ReleaseInfo.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mobibot.iws" afterPath="$PROJECT_DIR$/mobibot.iws" />
     </list>
   </component>
   <component name="ChangeListSynchronizer" />
@@ -159,28 +160,28 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="Mobibot.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/net/thauvin/erik/mobibot/Mobibot.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="715" column="56" selection-start="17568" selection-end="17568" vertical-scroll-proportion="0.025914634">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Jaiku.java" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="Jaiku.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/net/thauvin/erik/mobibot/Jaiku.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="93" column="54" selection-start="2001" selection-end="2001" vertical-scroll-proportion="1.2086438">
+            <state line="93" column="54" selection-start="2001" selection-end="2001" vertical-scroll-proportion="1.2250372">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="GoogleSearch.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/net/thauvin/erik/mobibot/GoogleSearch.java">
+      <file leaf-file-name="build.properties" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/build.properties">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="54" column="49" selection-start="2053" selection-end="2073" vertical-scroll-proportion="0.025914634">
+            <state line="2" column="16" selection-start="44" selection-end="44" vertical-scroll-proportion="0.050670642">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="buildnum.properties" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/buildnum.properties">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="3" column="0" selection-start="98" selection-end="98" vertical-scroll-proportion="0.07600596">
               <folding />
             </state>
           </provider>
@@ -372,20 +373,34 @@
           <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewModuleNode" />
         </PATH_ELEMENT>
       </PATH>
+      <PATH>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="mobibot.ipr" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="mobibot" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewModuleNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:K:\java\mobibot" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+      </PATH>
     </subPane>
   </component>
   <component name="ProjectReloadState">
     <option name="STATE" value="0" />
   </component>
   <component name="ProjectView">
-    <navigator currentView="PackagesPane" proportions="0.16666667" version="1" splitterProportion="0.5">
+    <navigator currentView="ProjectPane" proportions="0.16666667" version="1" splitterProportion="0.5">
       <flattenPackages />
       <showMembers />
       <showModules />
       <showLibraryContents />
       <hideEmptyPackages />
       <abbreviatePackageNames />
-      <showStructure ProjectPane="false" PackagesPane="false" Scope="false" Favorites="false" />
+      <showStructure Favorites="false" ProjectPane="false" Scope="false" PackagesPane="false" />
       <autoscrollToSource />
       <autoscrollFromSource />
       <sortByType />
@@ -476,6 +491,18 @@
       <option name="HOST" value="localhost" />
       <option name="PORT" value="5005" />
     </configuration>
+    <configuration default="true" type="Applet" factoryName="Applet">
+      <module name="" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="HTML_FILE_NAME" />
+      <option name="HTML_USED" value="false" />
+      <option name="WIDTH" value="400" />
+      <option name="HEIGHT" value="300" />
+      <option name="POLICY_FILE" value="C:/IntelliJ-IDEA/bin/appletviewer.policy" />
+      <option name="VM_PARAMETERS" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+    </configuration>
     <configuration default="true" type="WebLogic Instance" factoryName="Local">
       <option name="WORKING_DIRECTORY" />
       <option name="HOST" value="localhost" />
@@ -523,18 +550,6 @@
       <method>
         <option name="Make" value="true" />
       </method>
-    </configuration>
-    <configuration default="true" type="Applet" factoryName="Applet">
-      <module name="" />
-      <option name="MAIN_CLASS_NAME" />
-      <option name="HTML_FILE_NAME" />
-      <option name="HTML_USED" value="false" />
-      <option name="WIDTH" value="400" />
-      <option name="HEIGHT" value="300" />
-      <option name="POLICY_FILE" value="C:/IntelliJ-IDEA/bin/appletviewer.policy" />
-      <option name="VM_PARAMETERS" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
     </configuration>
     <configuration default="false" name="Mobibot" type="Application" factoryName="Application" enabled="false" merge="false">
       <option name="MAIN_CLASS_NAME" value="net.thauvin.erik.mobibot.Mobibot" />
@@ -789,16 +804,30 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/net/thauvin/erik/mobibot/Mobibot.java">
+    <entry file="file://$PROJECT_DIR$/src/net/thauvin/erik/mobibot/GoogleSearch.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="715" column="56" selection-start="17568" selection-end="17568" vertical-scroll-proportion="0.025914634">
+        <state line="54" column="49" selection-start="2053" selection-end="2073" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/net/thauvin/erik/mobibot/GoogleSearch.java">
+    <entry file="file://$PROJECT_DIR$/src/net/thauvin/erik/mobibot/Mobibot.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="54" column="49" selection-start="2053" selection-end="2073" vertical-scroll-proportion="0.025914634">
+        <state line="715" column="56" selection-start="17568" selection-end="17568" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/net/thauvin/erik/mobibot/Jaiku.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="93" column="54" selection-start="2001" selection-end="2001" vertical-scroll-proportion="1.2250372">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/build.properties">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="2" column="16" selection-start="44" selection-end="44" vertical-scroll-proportion="0.050670642">
           <folding />
         </state>
       </provider>
@@ -852,9 +881,9 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/net/thauvin/erik/mobibot/Jaiku.java">
+    <entry file="file://$PROJECT_DIR$/buildnum.properties">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="93" column="54" selection-start="2001" selection-end="2001" vertical-scroll-proportion="1.2086438">
+        <state line="3" column="0" selection-start="98" selection-end="98" vertical-scroll-proportion="0.07600596">
           <folding />
         </state>
       </provider>
