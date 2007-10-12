@@ -90,6 +90,8 @@ public class Jaiku implements Runnable
 			params.add(map);
 
 			client.execute("presence.send", params);
+
+			_bot.send(_sender, "You message was posted to http://jaiku.com/channel/" + _bot.getChannel().substring(1));
 		}
 		catch (Exception e)
 		{

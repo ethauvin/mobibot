@@ -18,10 +18,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mobibot.iml" afterPath="$PROJECT_DIR$/mobibot.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/buildnum.properties" afterPath="$PROJECT_DIR$/buildnum.properties" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/net/thauvin/erik/mobibot/Mobibot.java" afterPath="$PROJECT_DIR$/src/net/thauvin/erik/mobibot/Mobibot.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mobibot.iws" afterPath="$PROJECT_DIR$/mobibot.iws" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/net/thauvin/erik/mobibot/Jaiku.java" afterPath="$PROJECT_DIR$/src/net/thauvin/erik/mobibot/Jaiku.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/net/thauvin/erik/mobibot/ReleaseInfo.java" afterPath="$PROJECT_DIR$/src/net/thauvin/erik/mobibot/ReleaseInfo.java" />
     </list>
   </component>
@@ -164,7 +162,7 @@
       <file leaf-file-name="Mobibot.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/net/thauvin/erik/mobibot/Mobibot.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="715" column="56" selection-start="17568" selection-end="17568" vertical-scroll-proportion="0.3677483">
+            <state line="715" column="56" selection-start="17568" selection-end="17568" vertical-scroll-proportion="0.025914634">
               <folding />
             </state>
           </provider>
@@ -173,7 +171,7 @@
       <file leaf-file-name="Jaiku.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/net/thauvin/erik/mobibot/Jaiku.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="83" column="25" selection-start="1610" selection-end="1610" vertical-scroll-proportion="0.6647287">
+            <state line="93" column="54" selection-start="2001" selection-end="2001" vertical-scroll-proportion="1.2086438">
               <folding />
             </state>
           </provider>
@@ -182,7 +180,7 @@
       <file leaf-file-name="GoogleSearch.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/net/thauvin/erik/mobibot/GoogleSearch.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="54" column="49" selection-start="2053" selection-end="2073" vertical-scroll-proportion="0.01671583">
+            <state line="54" column="49" selection-start="2053" selection-end="2073" vertical-scroll-proportion="0.025914634">
               <folding />
             </state>
           </provider>
@@ -191,7 +189,7 @@
       <file leaf-file-name="DeliciousPoster.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/net/thauvin/erik/mobibot/DeliciousPoster.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="50" column="13" selection-start="1995" selection-end="1995" vertical-scroll-proportion="0.016472869">
+            <state line="50" column="13" selection-start="1995" selection-end="1995" vertical-scroll-proportion="0.025335321">
               <folding />
             </state>
           </provider>
@@ -200,7 +198,7 @@
       <file leaf-file-name="CurrencyConverter.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/net/thauvin/erik/mobibot/CurrencyConverter.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="63" column="13" selection-start="2150" selection-end="2150" vertical-scroll-proportion="0.016472869">
+            <state line="63" column="13" selection-start="2150" selection-end="2150" vertical-scroll-proportion="0.025335321">
               <folding />
             </state>
           </provider>
@@ -209,7 +207,7 @@
       <file leaf-file-name="StockQuote.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/net/thauvin/erik/mobibot/StockQuote.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="52" column="13" selection-start="2029" selection-end="2029" vertical-scroll-proportion="0.016472869">
+            <state line="52" column="13" selection-start="2029" selection-end="2029" vertical-scroll-proportion="0.025335321">
               <folding />
             </state>
           </provider>
@@ -218,7 +216,7 @@
       <file leaf-file-name="SwingWorker.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/net/thauvin/erik/mobibot/SwingWorker.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="16" column="22" selection-start="536" selection-end="536" vertical-scroll-proportion="0.016472869">
+            <state line="16" column="22" selection-start="536" selection-end="536" vertical-scroll-proportion="0.025335321">
               <folding />
             </state>
           </provider>
@@ -227,7 +225,7 @@
       <file leaf-file-name="Weather.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/net/thauvin/erik/mobibot/Weather.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="54" column="13" selection-start="2110" selection-end="2110" vertical-scroll-proportion="0.016472869">
+            <state line="54" column="13" selection-start="2110" selection-end="2110" vertical-scroll-proportion="0.025335321">
               <folding />
             </state>
           </provider>
@@ -236,7 +234,7 @@
       <file leaf-file-name="EntryLink.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/net/thauvin/erik/mobibot/EntryLink.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="53" column="13" selection-start="2001" selection-end="2001" vertical-scroll-proportion="0.016472869">
+            <state line="53" column="13" selection-start="2001" selection-end="2001" vertical-scroll-proportion="0.025335321">
               <folding />
             </state>
           </provider>
@@ -245,7 +243,7 @@
       <file leaf-file-name="EntryComment.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/net/thauvin/erik/mobibot/EntryComment.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="53" column="13" selection-start="2016" selection-end="2016" vertical-scroll-proportion="0.016472869">
+            <state line="53" column="13" selection-start="2016" selection-end="2016" vertical-scroll-proportion="0.025335321">
               <folding />
             </state>
           </provider>
@@ -387,7 +385,7 @@
       <showLibraryContents />
       <hideEmptyPackages />
       <abbreviatePackageNames />
-      <showStructure Favorites="false" PackagesPane="false" Scope="false" ProjectPane="false" />
+      <showStructure ProjectPane="false" PackagesPane="false" Scope="false" Favorites="false" />
       <autoscrollToSource />
       <autoscrollFromSource />
       <sortByType />
@@ -401,11 +399,11 @@
     <property name="cvs_file_history_flatWidth2" value="135" />
     <property name="cvs_file_history_flatOrder4" value="4" />
     <property name="cvs_file_history_flatOrder1" value="1" />
-    <property name="vcs_file_view_flatWidth2" value="81" />
     <property name="cvs_file_history_flatWidth1" value="135" />
+    <property name="vcs_file_view_flatWidth2" value="81" />
     <property name="vcs_file_view_flatWidth5" value="81" />
-    <property name="vcs_file_view_flatOrder3" value="3" />
     <property name="cvs_file_history_flatOrder2" value="2" />
+    <property name="vcs_file_view_flatOrder3" value="3" />
     <property name="MemberChooser.showClasses" value="true" />
     <property name="cvs_file_history_flatWidth4" value="135" />
     <property name="vcs_file_view_treeWidth0" value="100" />
@@ -470,19 +468,7 @@
     <option name="showLabels" value="true" />
   </component>
   <component name="RestoreUpdateTree" />
-  <component name="RunManager" selected="Application.Jaiku">
-    <configuration default="true" type="Applet" factoryName="Applet">
-      <module name="" />
-      <option name="MAIN_CLASS_NAME" />
-      <option name="HTML_FILE_NAME" />
-      <option name="HTML_USED" value="false" />
-      <option name="WIDTH" value="400" />
-      <option name="HEIGHT" value="300" />
-      <option name="POLICY_FILE" value="C:/IntelliJ-IDEA/bin/appletviewer.policy" />
-      <option name="VM_PARAMETERS" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-    </configuration>
+  <component name="RunManager" selected="Application.Mobibot">
     <configuration default="true" type="Remote" factoryName="Remote">
       <option name="USE_SOCKET_TRANSPORT" value="true" />
       <option name="SERVER_MODE" value="false" />
@@ -506,19 +492,6 @@
       <predefined_log_file id="WEBLOGIC_DOMAIN_LOG_FILE" enabled="true" />
       <predefined_log_file id="WEBLOGIC_SERVER_LOG_FILE" enabled="true" />
     </configuration>
-    <configuration default="true" type="Application" factoryName="Application" enabled="false" merge="false">
-      <option name="MAIN_CLASS_NAME" />
-      <option name="VM_PARAMETERS" />
-      <option name="PROGRAM_PARAMETERS" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="ENABLE_SWING_INSPECTOR" value="false" />
-      <module name="" />
-      <method>
-        <option name="Make" value="true" />
-      </method>
-    </configuration>
     <configuration default="true" type="JUnit" factoryName="JUnit" enabled="false" merge="false">
       <module name="" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
@@ -538,6 +511,31 @@
         <option name="Make" value="true" />
       </method>
     </configuration>
+    <configuration default="true" type="Application" factoryName="Application" enabled="false" merge="false">
+      <option name="MAIN_CLASS_NAME" />
+      <option name="VM_PARAMETERS" />
+      <option name="PROGRAM_PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="ENABLE_SWING_INSPECTOR" value="false" />
+      <module name="" />
+      <method>
+        <option name="Make" value="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="Applet" factoryName="Applet">
+      <module name="" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="HTML_FILE_NAME" />
+      <option name="HTML_USED" value="false" />
+      <option name="WIDTH" value="400" />
+      <option name="HEIGHT" value="300" />
+      <option name="POLICY_FILE" value="C:/IntelliJ-IDEA/bin/appletviewer.policy" />
+      <option name="VM_PARAMETERS" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+    </configuration>
     <configuration default="false" name="Mobibot" type="Application" factoryName="Application" enabled="false" merge="false">
       <option name="MAIN_CLASS_NAME" value="net.thauvin.erik.mobibot.Mobibot" />
       <option name="VM_PARAMETERS" value="" />
@@ -554,21 +552,6 @@
       </RunnerSettings>
       <RunnerSettings RunnerId="Run" />
       <ConfigurationWrapper RunnerId="Debug" />
-      <ConfigurationWrapper RunnerId="Run" />
-      <method>
-        <option name="Make" value="true" />
-      </method>
-    </configuration>
-    <configuration default="false" name="Jaiku" type="Application" factoryName="Application" enabled="false" merge="false">
-      <option name="MAIN_CLASS_NAME" value="net.thauvin.erik.mobibot.Jaiku" />
-      <option name="VM_PARAMETERS" value="" />
-      <option name="PROGRAM_PARAMETERS" value="" />
-      <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" value="" />
-      <option name="ENABLE_SWING_INSPECTOR" value="false" />
-      <module name="mobibot" />
-      <RunnerSettings RunnerId="Run" />
       <ConfigurationWrapper RunnerId="Run" />
       <method>
         <option name="Make" value="true" />
@@ -656,7 +639,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1616" height="1216" extended-state="6" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" order="3" />
       <window_info id="CVS" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32962963" order="12" />
@@ -667,7 +650,7 @@
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3293247" order="1" />
       <window_info id="BeanShell Box" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3293247" order="8" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2788152" order="1" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32747456" order="13" />
+      <window_info id="Messages" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32747456" order="13" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32962963" order="6" />
       <window_info id="Module Dependencies" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" order="7" />
       <window_info id="Dependency Viewer" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" order="11" />
@@ -806,72 +789,72 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/net/thauvin/erik/mobibot/Mobibot.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="715" column="56" selection-start="17568" selection-end="17568" vertical-scroll-proportion="0.025914634">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/net/thauvin/erik/mobibot/GoogleSearch.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="54" column="49" selection-start="2053" selection-end="2073" vertical-scroll-proportion="0.01671583">
+        <state line="54" column="49" selection-start="2053" selection-end="2073" vertical-scroll-proportion="0.025914634">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/net/thauvin/erik/mobibot/DeliciousPoster.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="50" column="13" selection-start="1995" selection-end="1995" vertical-scroll-proportion="0.016472869">
+        <state line="50" column="13" selection-start="1995" selection-end="1995" vertical-scroll-proportion="0.025335321">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/net/thauvin/erik/mobibot/CurrencyConverter.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="63" column="13" selection-start="2150" selection-end="2150" vertical-scroll-proportion="0.016472869">
+        <state line="63" column="13" selection-start="2150" selection-end="2150" vertical-scroll-proportion="0.025335321">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/net/thauvin/erik/mobibot/StockQuote.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="52" column="13" selection-start="2029" selection-end="2029" vertical-scroll-proportion="0.016472869">
+        <state line="52" column="13" selection-start="2029" selection-end="2029" vertical-scroll-proportion="0.025335321">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/net/thauvin/erik/mobibot/SwingWorker.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="16" column="22" selection-start="536" selection-end="536" vertical-scroll-proportion="0.016472869">
+        <state line="16" column="22" selection-start="536" selection-end="536" vertical-scroll-proportion="0.025335321">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/net/thauvin/erik/mobibot/Weather.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="54" column="13" selection-start="2110" selection-end="2110" vertical-scroll-proportion="0.016472869">
+        <state line="54" column="13" selection-start="2110" selection-end="2110" vertical-scroll-proportion="0.025335321">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/net/thauvin/erik/mobibot/EntryLink.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="53" column="13" selection-start="2001" selection-end="2001" vertical-scroll-proportion="0.016472869">
+        <state line="53" column="13" selection-start="2001" selection-end="2001" vertical-scroll-proportion="0.025335321">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/net/thauvin/erik/mobibot/EntryComment.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="53" column="13" selection-start="2016" selection-end="2016" vertical-scroll-proportion="0.016472869">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/net/thauvin/erik/mobibot/Mobibot.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="715" column="56" selection-start="17568" selection-end="17568" vertical-scroll-proportion="0.3677483">
+        <state line="53" column="13" selection-start="2016" selection-end="2016" vertical-scroll-proportion="0.025335321">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/net/thauvin/erik/mobibot/Jaiku.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="83" column="25" selection-start="1610" selection-end="1610" vertical-scroll-proportion="0.6647287">
+        <state line="93" column="54" selection-start="2001" selection-end="2001" vertical-scroll-proportion="1.2086438">
           <folding />
         </state>
       </provider>

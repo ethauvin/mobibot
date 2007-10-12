@@ -1,5 +1,5 @@
 /* Created by JReleaseInfo AntTask from Open Source Competence Group */
-/* Creation date Thu Oct 11 16:35:17 PDT 2007 */
+/* Creation date Thu Oct 11 18:06:05 PDT 2007 */
 package net.thauvin.erik.mobibot;
 
 import java.util.Date;
@@ -20,21 +20,21 @@ public class ReleaseInfo {
    }
 
 
-   /** buildDate (set during build process to 1192145717288L). */
-   private static final Date buildDate = new Date(1192145717288L);
+   /** buildDate (set during build process to 1192151165055L). */
+   private static final Date buildDate = new Date(1192151165055L);
 
    /**
-    * Get buildDate (set during build process to Thu Oct 11 16:35:17 PDT 2007).
+    * Get buildDate (set during build process to Thu Oct 11 18:06:05 PDT 2007).
     * @return Date buildDate
     */
    public static Date getBuildDate() { return buildDate; }
 
 
    /**
-    * Get buildNumber (set during build process to 72).
+    * Get buildNumber (set during build process to 73).
     * @return int buildNumber
     */
-   public static int getBuildNumber() { return 72; }
+   public static int getBuildNumber() { return 73; }
 
 
    /** project (set during build process to "mobibot"). */
