@@ -190,6 +190,11 @@ public class Mobibot extends PircBot
 	 * The Jaiku command.
 	 */
 	private static final String JAIKU_CMD = "jaiku";
+
+	/**
+	 * The Twitter command.
+	 */
+	private static final String TWITTER_CMD = "twitter";
 	/**
 	 * The math command.
 	 */
@@ -446,6 +451,21 @@ public class Mobibot extends PircBot
 	 * The Jaiku user.
 	 */
 	private String _jaikuUser = "";
+
+	/**
+	 * The Twitter password.
+	 */
+	private String _twitterPwd = "";
+
+	/**
+	 * The Twitter user.
+	 */
+	private String _twitterUser = "";
+
+	/**
+	 * The Twitter client id/source.
+	 */
+	private String _twitterSrc = "";
 
 	/**
 	 * The history/backlogs array.
@@ -715,6 +735,11 @@ public class Mobibot extends PircBot
 			final String jname = p.getProperty("jaiku-user");
 			final String jkey = p.getProperty("jaiku-key");
 
+			// Get the Twitter properties
+			final String tname = p.getProperty("twitter-user");
+			final String tpwd = p.getProperty("twitter-pwd");
+			final String tsrc = p.getProperty("twitter-src", "");
+
 			// Create the bot
 			final Mobibot bot = new Mobibot(server, port, channel, logsDir);
 
@@ -751,6 +776,12 @@ public class Mobibot extends PircBot
 			{
 				// Set the Jaiku authentication
 				bot.setJaikuAuth(jname, jkey);
+			}
+
+			if (isValidString(tname) && isValidString(tpwd))
+			{
+				// Set the Twitter authentication
+				bot.setTwitterAuth(tname, tpwd, tsrc);
 			}
 
 			// Set the tags
@@ -934,6 +965,11 @@ public class Mobibot extends PircBot
 			send(sender, "To post to Jaiku:");
 			send(sender, DOUBLE_INDENT + bold(getNick() + ": " + JAIKU_CMD + " <message>"));
 		}
+		else if (lcTopic.endsWith(TWITTER_CMD))
+		{
+			send(sender, "To post to Twitter:");
+			send(sender, DOUBLE_INDENT + bold(getNick() + ": " + TWITTER_CMD + " <message>"));
+		}
 		else if (lcTopic.endsWith(RECAP_CMD))
 		{
 			send(sender, "To list the last 10 public channel messages:");
@@ -1054,7 +1090,7 @@ public class Mobibot extends PircBot
 			send(sender,
 			     DOUBLE_INDENT + bold(SPELL_CMD + ' ' + STOCK_CMD + ' ' + HELP_TAGS_KEYWORD + ' ' + TIME_CMD + ' '
 			                          + USERS_CMD + ' ' + VIEW_CMD));
-			send(sender, DOUBLE_INDENT + bold(JAIKU_CMD + ' ' + WEATHER_CMD));
+			send(sender, DOUBLE_INDENT + bold(JAIKU_CMD + ' ' + TWITTER_CMD + ' ' + WEATHER_CMD));
 
 			if (isOp(sender))
 			{
@@ -1390,6 +1426,10 @@ public class Mobibot extends PircBot
 			else if (cmd.startsWith(JAIKU_CMD))
 			{
 				jaikuResponse(sender, args);
+			}
+			else if (cmd.startsWith(TWITTER_CMD))
+			{
+				twitterResponse(sender, args);
 			}
 			else if (cmd.startsWith(SPELL_CMD))
 			{
@@ -2405,6 +2445,31 @@ public class Mobibot extends PircBot
 	}
 
 	/**
+	 * Posts a message to Twitter.
+	 *
+	 * @param sender The sender's nick.
+	 * @param message The message.
+	 */
+	private void twitterResponse(String sender, String message)
+	{
+		if (isValidString(_twitterPwd) && isValidString(_twitterUser))
+		{
+			if (message.length() > 0)
+			{
+				new Thread(new Twitter(this, sender, _twitterUser, _twitterPwd, _twitterSrc, message)).start();
+			}
+			else
+			{
+				helpResponse(sender, TWITTER_CMD);
+			}
+		}
+		else
+		{
+			send(sender, "The Twitter posting facility is disabled.");
+		}
+	}
+
+	/**
 	 * Responds with the bot's information.
 	 *
 	 * @param sender The nick of the person who sent the message.
@@ -2441,12 +2506,8 @@ public class Mobibot extends PircBot
 	 */
 	private boolean isIgnoredNick(String nick)
 	{
-		if (isValidString(nick))
-		{
-			return _ignoredNicks.contains(nick.toLowerCase());
-		}
+		return isValidString(nick) && _ignoredNicks.contains(nick.toLowerCase());
 
-		return false;
 	}
 
 	/**
@@ -2891,6 +2952,20 @@ public class Mobibot extends PircBot
 	{
 		_jaikuKey = key;
 		_jaikuUser = user;
+	}
+
+	/**
+	 * Sets the Twitter user and password..
+	 *
+	 * @param user The Twitter user.
+	 * @param key The Twitter password.
+	 * @param source The Twitter source.
+	 */
+	private void setTwitterAuth(String user, String key, String source)
+	{
+		_twitterPwd = key;
+		_twitterUser = user;
+		_twitterSrc = source;
 	}
 
 	/**
