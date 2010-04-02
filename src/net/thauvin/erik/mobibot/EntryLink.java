@@ -380,7 +380,7 @@ public class EntryLink implements Serializable
 	{
 		if (tags != null)
 		{
-			final String[] parts = tags.split(" ");
+			final String[] parts = tags.replaceAll(", ", " ").replaceAll(",", " ").split(" ");
 
 			SyndCategoryImpl tag;
 			String part;
@@ -390,7 +390,7 @@ public class EntryLink implements Serializable
 			{
 				part = parts[i].trim();
 
-				if (part.length() > 2)
+				if (part.length() >= 2)
 				{
 					tag = new SyndCategoryImpl();
 					tag.setName(part.substring(1).toLowerCase());

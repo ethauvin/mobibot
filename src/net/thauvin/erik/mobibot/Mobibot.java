@@ -810,7 +810,7 @@ public class Mobibot extends PircBot
 					{
 						bot.connect(server, port);
 					}
-					catch (Exception ex)
+					catch (Exception ignore)
 					{
 						if (retries == MAX_RECONNECT)
 						{
@@ -2675,7 +2675,7 @@ public class Mobibot extends PircBot
 			{
 				send(getChannel(), lookup(query));
 			}
-			catch (UnknownHostException e)
+			catch (UnknownHostException ignore)
 			{
 				if (query.matches(
 						"(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)"))
