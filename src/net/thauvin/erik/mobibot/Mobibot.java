@@ -74,12 +74,34 @@ public class Mobibot extends PircBot
 	public static final int CONNECT_TIMEOUT = 5000;
 
 	/**
+	 * The HH:MM timestamp simple date format.
+	 */
+	private static final SimpleDateFormat HHMM_SDF = new SimpleDateFormat("HH:mm");
+
+	/**
+	 * The ISO (YYYY-MM-DD) simple date format.
+	 */
+	private static final SimpleDateFormat ISO_SDF = new SimpleDateFormat("yyyy-MM-dd");
+
+	/**
 	 * The info strings.
 	 */
-	private static final String[] INFO_STRS = {"Mobibot v" + ReleaseInfo.getVersion() + '.'
-	                                           + ReleaseInfo.getBuildNumber()
-	                                           + " by Erik C. Thauvin (erik@thauvin.net)",
-	                                           "http://www.mobitopia.org/mobibot/"};
+	private static final String[] INFO_STRS =
+			{"Mobibot v" + ReleaseInfo.getVersion() + '.' + ReleaseInfo.getBuildNumber()
+			 + " by Erik C. Thauvin (erik@thauvin.net)", "http://www.mobitopia.org/mobibot/"};
+
+	/**
+	 * The version strings.
+	 */
+	private static final String[] VERSION_STRS =
+			{"Version: " + ReleaseInfo.getVersion() + '.' + ReleaseInfo.getBuildNumber() + " ("
+			 + ISO_SDF.format(ReleaseInfo.getBuildDate()) + ')',
+			 "Platform: " + System.getProperty("os.name") + " (" + System.getProperty("os.version") + ", "
+			 + System.getProperty("os.arch") + ", " + System.getProperty("user.country") + ')',
+			 "Runtime: " + System.getProperty("java.runtime.name") + " (build "
+			 + System.getProperty("java.runtime.version") + ')',
+			 "VM: " + System.getProperty("java.vm.name") + " (build " + System.getProperty("java.vm.version") + ", "
+			 + System.getProperty("java.vm.info") + ')'};
 
 	/**
 	 * Debug command line argument.
@@ -297,6 +319,11 @@ public class Mobibot extends PircBot
 	private static final String INFO_CMD = "info";
 
 	/**
+	 * The version command.
+	 */
+	private static final String VERSION_CMD = "version";
+
+	/**
 	 * The view command.
 	 */
 	private static final String VIEW_CMD = "view";
@@ -305,16 +332,6 @@ public class Mobibot extends PircBot
 	 * The weather command.
 	 */
 	public static final String WEATHER_CMD = "weather";
-
-	/**
-	 * The HH:MM timestamp simple date format.
-	 */
-	private static final SimpleDateFormat HHMM_SDF = new SimpleDateFormat("HH:mm");
-
-	/**
-	 * The ISO (YYYY-MM-DD) simple date format.
-	 */
-	private static final SimpleDateFormat ISO_SDF = new SimpleDateFormat("yyyy-MM-dd");
 
 	/**
 	 * The start time.
@@ -332,6 +349,7 @@ public class Mobibot extends PircBot
 	private static final int DEFAULT_PORT = 6667;
 
 	// Initialize the countries.
+
 	static
 	{
 		COUNTRIES_MAP.put("AU", "Australia/Sydney");
@@ -1048,6 +1066,14 @@ public class Mobibot extends PircBot
 				send(sender, DOUBLE_INDENT + bold("/msg " + getNick() + ' ' + SAY_CMD + " <text>"));
 			}
 		}
+		else if (lcTopic.endsWith(VERSION_CMD))
+		{
+			if (isOp(sender))
+			{
+				send(sender, "To view the version data (bot, java, etc.):");
+				send(sender, DOUBLE_INDENT + bold("/msg " + getNick() + ' ' + VERSION_CMD));
+			}
+		}
 		else if (lcTopic.endsWith(MSG_CMD))
 		{
 			if (isOp(sender))
@@ -1085,17 +1111,21 @@ public class Mobibot extends PircBot
 			     DOUBLE_INDENT + bold(
 					     CALC_CMD + ' ' + CURRENCY_CMD + ' ' + DICE_CMD + ' ' + GOOGLE_CMD + ' ' + IGNORE_CMD));
 			send(sender,
-			     DOUBLE_INDENT + bold(INFO_CMD + ' ' + getChannel().substring(1) + ' ' + LOOKUP_CMD + ' '
-			                          + HELP_POSTING_KEYWORD + ' ' + RECAP_CMD));
+			     DOUBLE_INDENT + bold(
+					     INFO_CMD + ' ' + getChannel().substring(1) + ' ' + LOOKUP_CMD + ' ' + HELP_POSTING_KEYWORD
+					     + ' ' + RECAP_CMD));
 			send(sender,
-			     DOUBLE_INDENT + bold(SPELL_CMD + ' ' + STOCK_CMD + ' ' + HELP_TAGS_KEYWORD + ' ' + TIME_CMD + ' '
-			                          + USERS_CMD + ' ' + VIEW_CMD));
+			     DOUBLE_INDENT + bold(
+					     SPELL_CMD + ' ' + STOCK_CMD + ' ' + HELP_TAGS_KEYWORD + ' ' + TIME_CMD + ' ' + USERS_CMD + ' '
+					     + VIEW_CMD));
 			send(sender, DOUBLE_INDENT + bold(JAIKU_CMD + ' ' + TWITTER_CMD + ' ' + WEATHER_CMD));
 
 			if (isOp(sender))
 			{
 				send(sender, "The op commands are:");
-				send(sender, DOUBLE_INDENT + bold(CYCLE_CMD + ' ' + ME_CMD + ' ' + MSG_CMD + ' ' + SAY_CMD));
+				send(sender,
+				     DOUBLE_INDENT + bold(
+						     CYCLE_CMD + ' ' + ME_CMD + ' ' + MSG_CMD + ' ' + SAY_CMD + ' ' + VERSION_CMD));
 			}
 		}
 	}
@@ -1376,6 +1406,10 @@ public class Mobibot extends PircBot
 			else if (cmd.equals(INFO_CMD))
 			{
 				infoResponse(sender, false);
+			}
+			else if (cmd.equals(VERSION_CMD))
+			{
+				versionResponse(sender, false);
 			}
 			else if (cmd.equals(DICE_CMD))
 			{
@@ -1917,6 +1951,10 @@ public class Mobibot extends PircBot
 		else if (cmd.equals(INFO_CMD))
 		{
 			infoResponse(sender, true);
+		}
+		else if (cmd.equals(VERSION_CMD))
+		{
+			versionResponse(sender, true);
 		}
 		else if (cmd.equals(DEBUG_CMD))
 		{
@@ -2495,6 +2533,23 @@ public class Mobibot extends PircBot
 		     "Uptime: " + days + " day(s) " + hours + " hour(s) " + minutes + " minute(s)  [Entries: " + _entries.size()
 		     + ']',
 		     isPrivate);
+	}
+
+	/**
+	 * Responds with the bot's version info.
+	 *
+	 * @param sender The nick of the person who sent the message.
+	 * @param isPrivate Set to true is the response should be send as a private message.
+	 */
+	private void versionResponse(String sender, boolean isPrivate)
+	{
+		if (isOp(sender))
+		{
+			for (int i = 0; i < VERSION_STRS.length; i++)
+			{
+				send(sender, VERSION_STRS[i], isPrivate);
+			}
+		}
 	}
 
 	/**
