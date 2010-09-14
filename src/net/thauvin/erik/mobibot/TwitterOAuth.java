@@ -57,6 +57,11 @@ public class TwitterOAuth
 					{
 						accessToken = twitter.getOAuthAccessToken();
 					}
+					
+					System.out.println(
+							"Please add the following to the bot's property file:" + "\n\n" + "twitter-consumerKey="
+							+ args[0] + '\n' + "twitter-consumerSecret=" + args[1] + '\n' + "twitter-token="
+							+ accessToken.getToken() + '\n' + "twitter-tokenSecret=" + accessToken.getTokenSecret());
 				}
 				catch (TwitterException te)
 				{
@@ -70,11 +75,6 @@ public class TwitterOAuth
 					}
 				}
 			}
-
-			System.out.println(
-					"Please add the following to the bot's property file:" + "\n\n" + "twitter-consumerKey=" + args[0]
-					+ '\n' + "twitter-consumerSecret=" + args[1] + '\n' + "twitter-token=" + accessToken.getToken()
-					+ '\n' + "twitter-tokenSecret=" + accessToken.getTokenSecret());
 		}
 		else
 		{
