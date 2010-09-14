@@ -186,7 +186,7 @@ public class CurrencyConverter implements Runnable
 											NumberFormat.getCurrencyInstance(Locale.US).format((amt * to) / from)
 														.substring(1) + ' ' + cmds[3].toUpperCase());
 						}
-						catch (NullPointerException e)
+						catch (NullPointerException ignore)
 						{
 							_bot.send(_sender,
 											"The supported currencies are: " + EXCHANGE_RATES.keySet().toString());

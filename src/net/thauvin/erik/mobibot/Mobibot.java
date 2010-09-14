@@ -94,7 +94,8 @@ public class Mobibot extends PircBot
 	 * The version strings.
 	 */
 	private static final String[] VERSION_STRS =
-			{"Version: " + ReleaseInfo.getVersion() + '.' + ReleaseInfo.getBuildNumber() + " (" + ISO_SDF.format(ReleaseInfo.getBuildDate()) + ')',
+			{"Version: " + ReleaseInfo.getVersion() + '.' + ReleaseInfo.getBuildNumber() + " ("
+			 + ISO_SDF.format(ReleaseInfo.getBuildDate()) + ')',
 			 "Platform: " + System.getProperty("os.name") + " (" + System.getProperty("os.version") + ", "
 			 + System.getProperty("os.arch") + ", " + System.getProperty("user.country") + ')',
 			 "Runtime: " + System.getProperty("java.runtime.name") + " (build "
@@ -588,7 +589,7 @@ public class Mobibot extends PircBot
 		}
 		catch (FeedException e)
 		{
-			_logger.error("An error occured while parsing the '" + CURRENT_XML + "' file.", e);
+			_logger.error("An error occurred while parsing the '" + CURRENT_XML + "' file.", e);
 		}
 
 		// Load the backlogs, if any.
@@ -602,7 +603,7 @@ public class Mobibot extends PircBot
 		}
 		catch (FeedException e)
 		{
-			_logger.error("An error occured while parsing the '" + NAV_XML + "' file.", e);
+			_logger.error("An error occurred while parsing the '" + NAV_XML + "' file.", e);
 		}
 	}
 
@@ -979,17 +980,17 @@ public class Mobibot extends PircBot
 			send(sender, "To list the last 5 posts from the channel's weblog:");
 			send(sender, DOUBLE_INDENT + bold(getNick() + ": " + getChannel().substring(1)));
 		}
-		else if (lcTopic.endsWith(GOOGLE_CMD))
+		else if (lcTopic.endsWith(GOOGLE_CMD) && isGoogleEnabled())
 		{
 			send(sender, "To search Google:");
 			send(sender, DOUBLE_INDENT + bold(getNick() + ": " + GOOGLE_CMD + " <query>"));
 		}
-		else if (lcTopic.endsWith(JAIKU_CMD))
+		else if (lcTopic.endsWith(JAIKU_CMD) && isJaikuEnabled())
 		{
 			send(sender, "To post to Jaiku:");
 			send(sender, DOUBLE_INDENT + bold(getNick() + ": " + JAIKU_CMD + " <message>"));
 		}
-		else if (lcTopic.endsWith(TWITTER_CMD))
+		else if (lcTopic.endsWith(TWITTER_CMD) && isTwitterEnabled())
 		{
 			send(sender, "To post to Twitter:");
 			send(sender, DOUBLE_INDENT + bold(getNick() + ": " + TWITTER_CMD + " <message>"));
@@ -1017,7 +1018,7 @@ public class Mobibot extends PircBot
 			send(sender, "For a listing of the supported countries:");
 			send(sender, DOUBLE_INDENT + bold(getNick() + ": " + TIME_CMD));
 		}
-		else if (lcTopic.endsWith(SPELL_CMD))
+		else if (lcTopic.endsWith(SPELL_CMD) && isGoogleEnabled())
 		{
 			send(sender, "To have Google try to correctly spell a sentence:");
 			send(sender, DOUBLE_INDENT + bold(getNick() + ": " + SPELL_CMD + " <sentence>"));
@@ -1113,25 +1114,81 @@ public class Mobibot extends PircBot
 			send(sender, "For more information on specific command, type:");
 			send(sender, DOUBLE_INDENT + bold(getNick() + ": " + HELP_CMD + " <command>"));
 			send(sender, "The commands are:");
-			send(sender,
-			     DOUBLE_INDENT + bold(
-					     CALC_CMD + ' ' + CURRENCY_CMD + ' ' + DICE_CMD + ' ' + GOOGLE_CMD + ' ' + IGNORE_CMD));
-			send(sender,
-			     DOUBLE_INDENT + bold(
-					     INFO_CMD + ' ' + getChannel().substring(1) + ' ' + LOOKUP_CMD + ' ' + HELP_POSTING_KEYWORD
-					     + ' ' + RECAP_CMD));
-			send(sender,
-			     DOUBLE_INDENT + bold(
-					     SPELL_CMD + ' ' + STOCK_CMD + ' ' + HELP_TAGS_KEYWORD + ' ' + TIME_CMD + ' ' + USERS_CMD + ' '
-					     + VIEW_CMD));
-			send(sender, DOUBLE_INDENT + bold(JAIKU_CMD + ' ' + TWITTER_CMD + ' ' + WEATHER_CMD));
+
+			final String[] cmds = {CALC_CMD,
+			                       CURRENCY_CMD,
+			                       DICE_CMD,
+			                       GOOGLE_CMD,
+			                       IGNORE_CMD,
+			                       INFO_CMD,
+			                       JAIKU_CMD,
+			                       LOOKUP_CMD,
+			                       getChannel().substring(1),
+			                       HELP_POSTING_KEYWORD,
+			                       RECAP_CMD,
+			                       SPELL_CMD,
+			                       STOCK_CMD,
+			                       HELP_TAGS_KEYWORD,
+			                       TIME_CMD,
+			                       TWITTER_CMD,
+			                       USERS_CMD,
+			                       VIEW_CMD,
+			                       WEATHER_CMD};
+
+			Arrays.sort(cmds);
+
+			final StringBuffer sb = new StringBuffer(0);
+			boolean isValidCmd = true;
+
+			for (int i = 0, cmdCount = 1; i < cmds.length; i++, cmdCount++)
+			{
+				if (cmds[i].equals(GOOGLE_CMD) || cmds[i].equals(SPELL_CMD))
+				{
+					isValidCmd = isGoogleEnabled();
+				}
+
+				if (cmds[i].equals(JAIKU_CMD))
+				{
+					isValidCmd = isJaikuEnabled();
+				}
+
+				if (cmds[i].equals(TWITTER_CMD))
+				{
+					isValidCmd = isTwitterEnabled();
+				}
+
+				if (isValidCmd)
+				{
+					if (sb.length() > 0)
+					{
+						sb.append("  ");
+					}
+
+					sb.append(cmds[i]);
+				}
+				else
+				{
+					cmdCount--;
+				}
+
+				// 5 commands per line or last command
+				if (sb.length() > 0 && (cmdCount == 5 || i == (cmds.length - 1)))
+				{
+					send(sender, DOUBLE_INDENT + bold(sb.toString()));
+
+					sb.setLength(0);
+					cmdCount = 0;
+				}
+
+				isValidCmd = true;
+			}
 
 			if (isOp(sender))
 			{
 				send(sender, "The op commands are:");
 				send(sender,
 				     DOUBLE_INDENT + bold(
-						     CYCLE_CMD + ' ' + ME_CMD + ' ' + MSG_CMD + ' ' + SAY_CMD + ' ' + VERSION_CMD));
+						     CYCLE_CMD + "  " + ME_CMD + "  " + MSG_CMD + "  " + SAY_CMD + "  " + VERSION_CMD));
 			}
 		}
 	}
@@ -1233,8 +1290,9 @@ public class Mobibot extends PircBot
 					{
 						if (_logger.isDebugEnabled())
 						{
-							_logger.debug("Unable to reconnect to " + _ircServer + " after " + MAX_RECONNECT + " retries.",
-							              ex);
+							_logger.debug(
+									"Unable to reconnect to " + _ircServer + " after " + MAX_RECONNECT + " retries.",
+									ex);
 						}
 
 						e.printStackTrace(System.err);
@@ -1385,7 +1443,7 @@ public class Mobibot extends PircBot
 				                        "is somewhere over the rainbow.",
 				                        "has fallen and can't get up.",
 				                        "is running. You better go chase it.",
-				                        "has just spontantiously combusted.",
+				                        "has just spontaneously combusted.",
 				                        "is talking to itself... don't interrupt. That's rude.",
 				                        "is bartending at an AA meeting.",
 				                        "is hibernating.",
@@ -2438,6 +2496,16 @@ public class Mobibot extends PircBot
 	}
 
 	/**
+	 * Returns <code>true</code> if Google services are enabled.
+	 *
+	 * @return <code>true</code> or <code>false</code>
+	 */
+	private boolean isGoogleEnabled()
+	{
+		return isValidString(_googleKey);
+	}
+
+	/**
 	 * Responds with the Google search results for the specified query.
 	 *
 	 * @param sender The nick of the person who sent the private message.
@@ -2445,7 +2513,7 @@ public class Mobibot extends PircBot
 	 */
 	private void googleResponse(String sender, String query)
 	{
-		if (isValidString(_googleKey))
+		if (isGoogleEnabled())
 		{
 			if (query.length() > 0)
 			{
@@ -2463,6 +2531,16 @@ public class Mobibot extends PircBot
 	}
 
 	/**
+	 * Returns <code>true</code> if jaiku posting is enabled.
+	 *
+	 * @return <code>true</code> or <code>false</code>
+	 */
+	private boolean isJaikuEnabled()
+	{
+		return isValidString(_jaikuKey) && isValidString(_jaikuUser);
+	}
+
+	/**
 	 * Posts a message to Jaiku.
 	 *
 	 * @param sender The sender's nick.
@@ -2470,7 +2548,7 @@ public class Mobibot extends PircBot
 	 */
 	private void jaikuResponse(String sender, String message)
 	{
-		if (isValidString(_jaikuKey) && isValidString(_jaikuUser))
+		if (isJaikuEnabled())
 		{
 			if (message.length() > 0)
 			{
@@ -2488,6 +2566,17 @@ public class Mobibot extends PircBot
 	}
 
 	/**
+	 * Returns <code>true</code> if twitter posting is enabled.
+	 *
+	 * @return <code>true</code> or <code>false</code>
+	 */
+	private boolean isTwitterEnabled()
+	{
+		return isValidString(_twitterConsumerKey) && isValidString(_twitterConsumerSecret)
+		       && isValidString(_twitterToken) && isValidString(_twitterTokenSecret);
+	}
+
+	/**
 	 * Posts a message to Twitter.
 	 *
 	 * @param sender The sender's nick.
@@ -2495,8 +2584,7 @@ public class Mobibot extends PircBot
 	 */
 	private void twitterResponse(String sender, String message)
 	{
-		if (isValidString(_twitterConsumerKey) && isValidString(_twitterConsumerSecret) && isValidString(_twitterToken)
-		    && isValidString(_twitterTokenSecret))
+		if (isTwitterEnabled())
 		{
 			if (message.length() > 0)
 			{
@@ -3123,7 +3211,7 @@ public class Mobibot extends PircBot
 	 */
 	private void spellResponse(String sender, String spell)
 	{
-		if (isValidString(_googleKey))
+		if (isGoogleEnabled())
 		{
 			if (spell.length() > 0)
 			{

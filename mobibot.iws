@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AnalysisUIOptions">
+    <option name="SCOPE_TYPE" value="8" />
+    <option name="CUSTOM_SCOPE_NAME" value="Project and Libraries" />
+  </component>
   <component name="CCaseConfig">
     <option name="checkoutReserved" value="false" />
     <option name="markExternalChangeAsUpToDate" value="true" />
@@ -29,9 +33,16 @@
     <option name="USER" value="" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" readonly="true" id="944923a8-a8d5-4232-a77e-02473b958f59" name="Default" comment="" />
-    <ignored path="$USER_HOME_GRAILS$/" />
+    <list default="true" readonly="true" id="944923a8-a8d5-4232-a77e-02473b958f59" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/licenses/License.txt" afterPath="$PROJECT_DIR$/licenses/License.txt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/buildnum.properties" afterPath="$PROJECT_DIR$/buildnum.properties" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/net/thauvin/erik/mobibot/Mobibot.java" afterPath="$PROJECT_DIR$/src/net/thauvin/erik/mobibot/Mobibot.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mobibot.iws" afterPath="$PROJECT_DIR$/mobibot.iws" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/net/thauvin/erik/mobibot/CurrencyConverter.java" afterPath="$PROJECT_DIR$/src/net/thauvin/erik/mobibot/CurrencyConverter.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/net/thauvin/erik/mobibot/ReleaseInfo.java" afterPath="$PROJECT_DIR$/src/net/thauvin/erik/mobibot/ReleaseInfo.java" />
+    </list>
     <ignored path="$USER_HOME_GRIFFON$/" />
+    <ignored path="$USER_HOME_GRAILS$/" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -128,55 +139,91 @@
   <component name="FileColors" enabled="true" enabledForTabs="true" />
   <component name="FileEditorManager">
     <leaf>
+      <file leaf-file-name="FeedReader.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/net/thauvin/erik/mobibot/FeedReader.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="GoogleSearch.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/net/thauvin/erik/mobibot/GoogleSearch.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Jaiku.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/net/thauvin/erik/mobibot/Jaiku.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="EntryLink.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/net/thauvin/erik/mobibot/EntryLink.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Mobibot.java" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/net/thauvin/erik/mobibot/Mobibot.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="637" column="26" selection-start="15201" selection-end="15201" vertical-scroll-proportion="-2.1819105">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ReleaseInfo.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/net/thauvin/erik/mobibot/ReleaseInfo.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="40" column="42" selection-start="1170" selection-end="1170" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="StockQuote.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/net/thauvin/erik/mobibot/StockQuote.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file leaf-file-name="Twitter.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/net/thauvin/erik/mobibot/Twitter.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="93" column="18" selection-start="2403" selection-end="2403" vertical-scroll-proportion="0.0">
+            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="TwitterOAuth.java" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="TwitterOAuth.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/net/thauvin/erik/mobibot/TwitterOAuth.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="62" column="60" selection-start="1972" selection-end="1975" vertical-scroll-proportion="0.84626865">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Mobibot.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/net/thauvin/erik/mobibot/Mobibot.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="2512" column="124" selection-start="59852" selection-end="59852" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="build.properties" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/build.properties">
-          <provider selected="true" editor-type-id="text-editor">
             <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="mobibot.properties" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/mobibot.properties">
+      <file leaf-file-name="Weather.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/net/thauvin/erik/mobibot/Weather.java">
           <provider selected="true" editor-type-id="text-editor">
             <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="buildnum.properties" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/buildnum.properties">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="2" column="16" selection-start="97" selection-end="97" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -206,10 +253,11 @@
       <list>
         <option value="$PROJECT_DIR$/src/net/thauvin/erik/mobibot/EntryLink.java" />
         <option value="$PROJECT_DIR$/src/net/thauvin/erik/mobibot/TwitterTest.java" />
-        <option value="$PROJECT_DIR$/src/net/thauvin/erik/mobibot/Mobibot.java" />
         <option value="$PROJECT_DIR$/src/net/thauvin/erik/mobibot/Twitter.java" />
-        <option value="$PROJECT_DIR$/buildnum.properties" />
         <option value="$PROJECT_DIR$/src/net/thauvin/erik/mobibot/TwitterOAuth.java" />
+        <option value="$PROJECT_DIR$/buildnum.properties" />
+        <option value="$PROJECT_DIR$/src/net/thauvin/erik/mobibot/CurrencyConverter.java" />
+        <option value="$PROJECT_DIR$/src/net/thauvin/erik/mobibot/Mobibot.java" />
       </list>
     </option>
   </component>
@@ -336,6 +384,7 @@
       <sortByType />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="Favorites" />
       <pane id="ProjectPane">
         <subPane>
@@ -369,23 +418,8 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="mobibot" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="mobibot" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="lib" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
         </subPane>
       </pane>
-      <pane id="Scope" />
       <pane id="PackagesPane">
         <subPane>
           <PATH>
@@ -823,23 +857,24 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="154" y="0" width="1414" height="1175" extended-state="0" />
-    <editor active="false" />
+    <frame x="153" y="0" width="1415" height="1175" extended-state="0" />
+    <editor active="true" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32934684" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.09696521" sideWeight="0.66762453" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32854405" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.09689349" sideWeight="0.66475093" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39907408" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="IDEtalk Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="IDEtalk" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3256705" sideWeight="0.5" order="19" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33024693" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.27818063" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.18134715" sideWeight="0.66762453" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.18121302" sideWeight="0.66475093" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Dependency Viewer" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="17" side_tool="false" content_ui="tabs" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32854405" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39367816" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" x="22" y="277" width="980" height="213" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="IntelliTail" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
@@ -851,11 +886,11 @@
       <window_info id="BeanShell Box" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3293247" sideWeight="0.5" order="13" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32854405" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Profile" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="16" side_tool="false" content_ui="tabs" />
       <window_info id="BSFConsole" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32962963" sideWeight="0.5" order="21" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32969153" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Jalopy" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32962963" sideWeight="0.5" order="15" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3256705" sideWeight="0.5" order="19" side_tool="false" content_ui="tabs" />
       <window_info id="Web" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Code Outline" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="EJB" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -863,7 +898,6 @@
       <window_info id="Module Dependencies" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="CVS" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32962963" sideWeight="0.5" order="18" side_tool="false" content_ui="tabs" />
       <window_info id="Duplicates" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32934684" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Regex" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.44135803" sideWeight="0.5" order="20" side_tool="false" content_ui="tabs" x="22" y="277" width="980" height="214" />
     </layout>
   </component>
@@ -965,66 +999,6 @@
     <option name="myLastEditedConfigurable" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/licenses/PircBot License.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/licenses/ROME License.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/licenses/Twitter4J LICENSE.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="23" column="0" selection-start="1423" selection-end="1423" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/.cvsignore">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="7" column="52" selection-start="85" selection-end="85" vertical-scroll-proportion="0.09915014" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/net/thauvin/erik/mobibot/Jaiku.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="28" column="13" selection-start="642" selection-end="642" vertical-scroll-proportion="-0.13314448" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/net/thauvin/erik/mobibot/ReleaseInfo.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="56" column="28" selection-start="1568" selection-end="1578" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/net/thauvin/erik/mobibot/EntryLink.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="382" column="80" selection-start="8127" selection-end="8127" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/net/thauvin/erik/mobibot/StockQuote.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="52" column="13" selection-start="2029" selection-end="2029" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/build.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="34" column="59" selection-start="1429" selection-end="1429" vertical-scroll-proportion="-22.173914" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/net/thauvin/erik/mobibot/Twitter.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="93" column="18" selection-start="2403" selection-end="2403" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/net/thauvin/erik/mobibot/Mobibot.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="2512" column="124" selection-start="59852" selection-end="59852" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/build.properties">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/mobibot.properties">
       <provider selected="true" editor-type-id="text-editor">
         <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" />
@@ -1032,12 +1006,105 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/buildnum.properties">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="2" column="16" selection-start="97" selection-end="97" vertical-scroll-proportion="0.0" />
+        <state line="3" column="0" selection-start="98" selection-end="98" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/net/thauvin/erik/mobibot/SwingWorker.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="50" column="27" selection-start="1450" selection-end="1450" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/net/thauvin/erik/mobibot/CurrencyConverter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="10" column="3" selection-start="279" selection-end="279" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/net/thauvin/erik/mobibot/DeliciousPoster.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/net/thauvin/erik/mobibot/EntryComment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/net/thauvin/erik/mobibot/EntryLink.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/net/thauvin/erik/mobibot/FeedReader.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/net/thauvin/erik/mobibot/GoogleSearch.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/net/thauvin/erik/mobibot/Jaiku.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/net/thauvin/erik/mobibot/ReleaseInfo.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="40" column="42" selection-start="1170" selection-end="1170" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/net/thauvin/erik/mobibot/StockQuote.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/net/thauvin/erik/mobibot/Twitter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/net/thauvin/erik/mobibot/TwitterOAuth.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="62" column="60" selection-start="1972" selection-end="1975" vertical-scroll-proportion="0.84626865">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/net/thauvin/erik/mobibot/Weather.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/net/thauvin/erik/mobibot/Mobibot.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="637" column="26" selection-start="15201" selection-end="15201" vertical-scroll-proportion="-2.1819105">
           <folding />
         </state>
       </provider>
