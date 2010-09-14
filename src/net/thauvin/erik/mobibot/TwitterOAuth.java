@@ -20,7 +20,7 @@ import java.io.InputStreamReader;
  * Go to <a href="http://twitter.com/oauth_clients/new">http://twitter.com/oauth_clients/new</a> to register your bot.
  * Then execute:
  * <p/>
- * <code>java -cp "mobibot.jar:../lib/*" net.thauvin.erik.mobibot.TwitterOAuth <consumerKey> <consumerSecret></code>
+ * <code>java -cp "mobibot.jar:lib/*" net.thauvin.erik.mobibot.TwitterOAuth <consumerKey> <consumerSecret></code>
  * <p/>
  * and follow the prompts/instructions.
  *
