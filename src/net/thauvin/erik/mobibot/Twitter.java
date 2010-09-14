@@ -9,6 +9,10 @@
  */
 package net.thauvin.erik.mobibot;
 
+import twitter4j.Status;
+import twitter4j.TwitterFactory;
+import twitter4j.http.AccessToken;
+
 /**
  * Inserts presence information into Twitter.
  *
@@ -25,14 +29,14 @@ public class Twitter implements Runnable
 	private final Mobibot _bot;
 
 	/**
-	 * The Twitter API password.
+	 * The Twitter consumer secret.
 	 */
-	private final String _pwd;
+	private final String _consumerSecret;
 
 	/**
-	 * The Twitter user.
+	 * The Twitter consumer key.
 	 */
-	private final String _user;
+	private final String _consumerKey;
 
 	/**
 	 * The Twitter message.
@@ -40,9 +44,14 @@ public class Twitter implements Runnable
 	private final String _message;
 
 	/**
-	 * The Twitter source.
+	 * The Twitter access token.
 	 */
-	private final String _source;
+	private final String _accessToken;
+
+	/**
+	 * The Twitter access token secret.
+	 */
+	private final String _accessTokenSecret;
 
 	/**
 	 * The nick of the person who sent the message.
@@ -54,17 +63,20 @@ public class Twitter implements Runnable
 	 *
 	 * @param bot The bot.
 	 * @param sender The nick of the person who sent the message.
-	 * @param user The Twitter user.
-	 * @param password The Twitter password.
-	 * @param source The Twitter client id/source.
+	 * @param consumerKey The Twitter consumer key.
+	 * @param consumerSecret The Twitter consumer secret.
+	 * @param accessToken The Twitter access token.
+	 * @param accessTokenSecret The Twitter access token secret.
 	 * @param message The Twitter message.
 	 */
-	public Twitter(Mobibot bot, String sender, String user, String password, String source, String message)
+	public Twitter(Mobibot bot, String sender, String consumerKey, String consumerSecret, String accessToken,
+	               String accessTokenSecret, String message)
 	{
 		_bot = bot;
-		_user = user;
-		_pwd = password;
-		_source = source;
+		_consumerKey = consumerKey;
+		_consumerSecret = consumerSecret;
+		_accessToken = accessToken;
+		_accessTokenSecret = accessTokenSecret;
 		_message = message;
 		_sender = sender;
 	}
@@ -73,16 +85,17 @@ public class Twitter implements Runnable
 	{
 		try
 		{
-			twitter4j.Twitter twitter = new twitter4j.Twitter(_user, _pwd);
+			final twitter4j.Twitter twitter = new TwitterFactory().getOAuthAuthorizedInstance(_consumerKey,
+			                                                                                  _consumerSecret,
+			                                                                                  new AccessToken(
+					                                                                                  _accessToken,
+					                                                                                  _accessTokenSecret));
 
-			if (Mobibot.isValidString(_source))
-			{
-				twitter.setSource(_source);
-			}
+			final Status status = twitter.updateStatus(_message + " (" + _sender + ')');
 
-			twitter.update(_message + " (" + _sender + ')');
-
-			_bot.send(_sender, "You message was posted to http://twitter.com/" + _user);
+			_bot.send(_sender,
+			          "You message was posted to http://twitter.com/" + twitter.getScreenName() + "/statuses/" + status
+					          .getId());
 		}
 		catch (Exception e)
 		{

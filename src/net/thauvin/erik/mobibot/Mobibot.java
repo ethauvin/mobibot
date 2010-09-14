@@ -94,8 +94,7 @@ public class Mobibot extends PircBot
 	 * The version strings.
 	 */
 	private static final String[] VERSION_STRS =
-			{"Version: " + ReleaseInfo.getVersion() + '.' + ReleaseInfo.getBuildNumber() + " ("
-			 + ISO_SDF.format(ReleaseInfo.getBuildDate()) + ')',
+			{"Version: " + ReleaseInfo.getVersion() + '.' + ReleaseInfo.getBuildNumber() + " (" + ISO_SDF.format(ReleaseInfo.getBuildDate()) + ')',
 			 "Platform: " + System.getProperty("os.name") + " (" + System.getProperty("os.version") + ", "
 			 + System.getProperty("os.arch") + ", " + System.getProperty("user.country") + ')',
 			 "Runtime: " + System.getProperty("java.runtime.name") + " (build "
@@ -471,19 +470,24 @@ public class Mobibot extends PircBot
 	private String _jaikuUser = "";
 
 	/**
-	 * The Twitter password.
+	 * The Twitter consumer key.
 	 */
-	private String _twitterPwd = "";
+	private String _twitterConsumerKey = "";
 
 	/**
-	 * The Twitter user.
+	 * The Twitter consumer secret.
 	 */
-	private String _twitterUser = "";
+	private String _twitterConsumerSecret = "";
 
 	/**
-	 * The Twitter client id/source.
+	 * The Twitter token.
 	 */
-	private String _twitterSrc = "";
+	private String _twitterToken = "";
+
+	/**
+	 * The Twitter token secret.
+	 */
+	private String _twitterTokenSecret = "";
 
 	/**
 	 * The history/backlogs array.
@@ -754,9 +758,10 @@ public class Mobibot extends PircBot
 			final String jkey = p.getProperty("jaiku-key");
 
 			// Get the Twitter properties
-			final String tname = p.getProperty("twitter-user");
-			final String tpwd = p.getProperty("twitter-pwd");
-			final String tsrc = p.getProperty("twitter-src", "");
+			final String tconsumerKey = p.getProperty("twitter-consumerKey");
+			final String tconsumerSecret = p.getProperty("twitter-consumerSecret");
+			final String ttoken = p.getProperty("twitter-token", "");
+			final String ttokenSecret = p.getProperty("twitter-tokenSecret", "");
 
 			// Create the bot
 			final Mobibot bot = new Mobibot(server, port, channel, logsDir);
@@ -796,10 +801,11 @@ public class Mobibot extends PircBot
 				bot.setJaikuAuth(jname, jkey);
 			}
 
-			if (isValidString(tname) && isValidString(tpwd))
+			if (isValidString(tconsumerKey) && isValidString(tconsumerSecret) && isValidString(ttoken) && isValidString(
+					ttokenSecret))
 			{
 				// Set the Twitter authentication
-				bot.setTwitterAuth(tname, tpwd, tsrc);
+				bot.setTwitterAuth(tconsumerKey, tconsumerSecret, ttoken, ttokenSecret);
 			}
 
 			// Set the tags
@@ -1227,9 +1233,8 @@ public class Mobibot extends PircBot
 					{
 						if (_logger.isDebugEnabled())
 						{
-							_logger.debug(
-									"Unable to reconnect to " + _ircServer + " after " + MAX_RECONNECT + " retries.",
-									ex);
+							_logger.debug("Unable to reconnect to " + _ircServer + " after " + MAX_RECONNECT + " retries.",
+							              ex);
 						}
 
 						e.printStackTrace(System.err);
@@ -2490,11 +2495,18 @@ public class Mobibot extends PircBot
 	 */
 	private void twitterResponse(String sender, String message)
 	{
-		if (isValidString(_twitterPwd) && isValidString(_twitterUser))
+		if (isValidString(_twitterConsumerKey) && isValidString(_twitterConsumerSecret) && isValidString(_twitterToken)
+		    && isValidString(_twitterTokenSecret))
 		{
 			if (message.length() > 0)
 			{
-				new Thread(new Twitter(this, sender, _twitterUser, _twitterPwd, _twitterSrc, message)).start();
+				new Thread(new Twitter(this,
+				                       sender,
+				                       _twitterConsumerKey,
+				                       _twitterConsumerSecret,
+				                       _twitterToken,
+				                       _twitterTokenSecret,
+				                       message)).start();
 			}
 			else
 			{
@@ -3010,17 +3022,19 @@ public class Mobibot extends PircBot
 	}
 
 	/**
-	 * Sets the Twitter user and password..
+	 * Sets the Twitter consumerSecret and password..
 	 *
-	 * @param user The Twitter user.
-	 * @param key The Twitter password.
-	 * @param source The Twitter source.
+	 * @param consumerKey The Twitter consumer key.
+	 * @param consumerSecret The Twitter consumer secret.
+	 * @param token The Twitter token.
+	 * @param tokenSecret The Twitter token secret.
 	 */
-	private void setTwitterAuth(String user, String key, String source)
+	private void setTwitterAuth(String consumerKey, String consumerSecret, String token, String tokenSecret)
 	{
-		_twitterPwd = key;
-		_twitterUser = user;
-		_twitterSrc = source;
+		_twitterConsumerKey = consumerKey;
+		_twitterConsumerSecret = consumerSecret;
+		_twitterToken = token;
+		_twitterTokenSecret = tokenSecret;
 	}
 
 	/**
