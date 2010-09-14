@@ -25,6 +25,7 @@ import java.io.InputStreamReader;
  * and follow the prompts/instructions.
  *
  * @author <a href="mailto:erik@thauvin.net">Erik C. Thauvin</a>
+ * @author <a href="http://twitter4j.org/en/code-examples.html#oauth">http://twitter4j.org/en/code-examples.html#oauth</a>
  * @version $Revision$, $Date$
  * @created Sep 13, 2010
  * @since 1.0
@@ -57,7 +58,7 @@ public class TwitterOAuth
 					{
 						accessToken = twitter.getOAuthAccessToken();
 					}
-					
+
 					System.out.println(
 							"Please add the following to the bot's property file:" + "\n\n" + "twitter-consumerKey="
 							+ args[0] + '\n' + "twitter-consumerSecret=" + args[1] + '\n' + "twitter-token="
