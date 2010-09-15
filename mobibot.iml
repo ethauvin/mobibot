@@ -29,7 +29,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/lib/log4j-1.2.13.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/log4j-1.2.16.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -83,7 +83,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/lib/commons-codec-1.3.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/commons-codec-1.4.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -119,7 +119,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/lib/xmlrpc-client-3.1.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/xmlrpc-client-3.1.3.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -137,7 +137,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/lib/xmlrpc-common-3.1.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/xmlrpc-common-3.1.3.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -182,7 +182,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/lib/commons-cli-1.1.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/commons-cli-1.2.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />

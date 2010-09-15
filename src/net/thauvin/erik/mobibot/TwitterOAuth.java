@@ -1,9 +1,3 @@
-/*
- * @(#)TwitterOAuth.java
- *
- * Copyright (C) 2010 Erik C. Thauvin
- * All rights reserved.
- */
 package net.thauvin.erik.mobibot;
 
 import twitter4j.TwitterException;
