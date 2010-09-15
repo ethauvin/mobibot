@@ -1,7 +1,7 @@
 /*
- * @(#)GoogleSearch.java
+ * @(#)Identica.java
  *
- * Copyright (c) 2004, Erik C. Thauvin (erik@thauvin.net)
+ * Copyright (C) 2010 Erik C. Thauvin
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -36,39 +36,45 @@
  */
 package net.thauvin.erik.mobibot;
 
-import twitter4j.internal.org.json.JSONArray;
+import twitter4j.internal.http.BASE64Encoder;
 import twitter4j.internal.org.json.JSONObject;
+import twitter4j.internal.org.json.XML;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
 
 /**
- * Performs a Google search or spell checking query.
+ * The <code>Identica</code> class.
  *
- * @author Erik C. Thauvin
+ * @author <a href="mailto:erik@thauvin.net">Erik C. Thauvin</a>
  * @version $Revision$, $Date$
- * @created Feb 7, 2004
+ * @created Sep 14, 2010
  * @since 1.0
  */
-public class GoogleSearch implements Runnable
+public class Identica implements Runnable
 {
-	/**
-	 * The tab indent (4 spaces).
-	 */
-	private static final String TAB_INDENT = "    ";
-
 	/**
 	 * The bot.
 	 */
 	private final Mobibot _bot;
 
 	/**
-	 * The search query.
+	 * The identi.ca user.
 	 */
-	private final String _query;
+	private final String _user;
+
+	/**
+	 * The identi.ca password.
+	 */
+	private final String _pwd;
+	/**
+	 * The identi.ca message.
+	 */
+	private final String _message;
 
 	/**
 	 * The nick of the person who sent the message.
@@ -76,32 +82,38 @@ public class GoogleSearch implements Runnable
 	private final String _sender;
 
 	/**
-	 * Creates a new GoogleSearch object.
+	 * Creates a new identi.ca object.
 	 *
 	 * @param bot The bot.
 	 * @param sender The nick of the person who sent the message.
-	 * @param query The Google query
+	 * @param user The identi.ca user.
+	 * @param pwd The identi.ca passwword.
+	 * @param message The identi.ca message.
 	 */
-	public GoogleSearch(Mobibot bot, String sender, String query)
+	public Identica(Mobibot bot, String sender, String user, String pwd, String message)
 	{
 		_bot = bot;
 		_sender = sender;
-		_query = query;
+		_user = user;
+		_pwd = pwd;
+		_message = message;
 	}
 
-	/**
-	 * Main processing method.
-	 */
 	public final void run()
 	{
-
 		try
 		{
-			final String query = URLEncoder.encode(_query, "UTF-8");
+			final String auth = _user + ':' + _pwd;
 
-			final URL url =
-					new URL("http://ajax.googleapis.com/ajax/services/search/web?start=0&rsz=small&v=1.0&q=" + query);
+			final URL url = new URL("http://identi.ca/api/statuses/update.xml");
 			final URLConnection conn = url.openConnection();
+			conn.setRequestProperty("Authorization", "Basic " + BASE64Encoder.encode(auth.getBytes()));
+			conn.setDoOutput(true);
+
+			final OutputStreamWriter writer = new OutputStreamWriter(conn.getOutputStream());
+
+			writer.write("status=" + URLEncoder.encode(_message + " (" + _sender + ')', "UTF-8"));
+			writer.flush();
 
 			final StringBuffer sb = new StringBuffer();
 			final BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
@@ -112,22 +124,17 @@ public class GoogleSearch implements Runnable
 				sb.append(line);
 			}
 
-			final JSONObject json = new JSONObject(sb.toString());
-			final JSONArray ja = json.getJSONObject("responseData").getJSONArray("results");
+			final JSONObject response = XML.toJSONObject(sb.toString());
+			final int id = response.getJSONObject("status").getInt("id");
 
-			for (int i = 0; i < ja.length(); i++)
-			{
-				final JSONObject j = ja.getJSONObject(i);
-				_bot.send(_sender, Mobibot.unescapeXml(j.getString("titleNoFormatting")));
-				_bot.send(_sender, TAB_INDENT + j.getString("url"));
-			}
+			_bot.send(_sender, "You message was posted to http://identi.ca/notice/" + id);
 
+			writer.close();
 			reader.close();
-
 		}
 		catch (Exception e)
 		{
-			_bot.getLogger().warn("Unable to search in Google for: " + _query, e);
+			_bot.getLogger().warn("Unable to post to identi.ca: " + _message, e);
 			_bot.send(_sender, "An error has occurred: " + e.getMessage());
 		}
 	}

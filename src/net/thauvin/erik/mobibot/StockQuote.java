@@ -36,19 +36,19 @@
  */
 package net.thauvin.erik.mobibot;
 
+import com.Ostermiller.util.CSVParser;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.methods.GetMethod;
 
 import java.io.IOException;
 
-
 /**
  * Retrieves a stock quote from Yahoo!.
  *
- * @author  Erik C. Thauvin
+ * @author Erik C. Thauvin
  * @version $Revision$, $Date$
  * @created Feb 7, 2004
- * @since   1.0
+ * @since 1.0
  */
 public class StockQuote implements Runnable
 {
@@ -75,7 +75,7 @@ public class StockQuote implements Runnable
 	/**
 	 * Creates a new StockQuote object.
 	 *
-	 * @param bot    The bot.
+	 * @param bot The bot.
 	 * @param sender The nick of the person who sent the message.
 	 * @param symbol The stock symbol.
 	 */
@@ -100,48 +100,55 @@ public class StockQuote implements Runnable
 			final GetMethod getMethod = new GetMethod(YAHOO_URL + _symbol.toUpperCase());
 			client.executeMethod(getMethod);
 
-			final String[] quote = getMethod.getResponseBodyAsString().split(",");
+			final String[][] lines = CSVParser.parse(getMethod.getResponseBodyAsString());
 
-			if (quote.length > 0)
+			if (lines.length > 0)
 			{
-				if ((quote.length > 3) && (!"\"N/A\"".equalsIgnoreCase(quote[3])))
-				{
-					_bot.send(_bot.getChannel(),
-							  "Symbol: " + quote[0].replaceAll("\"", "") + " [" + quote[1].replaceAll("\"", "") + ']');
+				final String[] quote = lines[0];
 
-					if (quote.length > 5)
+				if (quote.length > 0)
+				{
+					if ((quote.length > 3) && (!"N/A".equalsIgnoreCase(quote[3])))
 					{
-						_bot.send(_bot.getChannel(), "Last Trade: " + quote[2] + " (" + quote[5] + ')');
+						_bot.send(_bot.getChannel(), "Symbol: " + quote[0] + " [" + quote[1] + ']');
+
+						if (quote.length > 5)
+						{
+							_bot.send(_bot.getChannel(), "Last Trade: " + quote[2] + " (" + quote[5] + ')');
+						}
+						else
+						{
+							_bot.send(_bot.getChannel(), "Last Trade: " + quote[2]);
+						}
+
+						if (quote.length > 4)
+						{
+							_bot.send(_sender, "Time: " + quote[3] + ' ' + quote[4]);
+						}
+
+						if (quote.length > 6 && !"N/A".equalsIgnoreCase(quote[6]))
+						{
+							_bot.send(_sender, "Open: " + quote[6]);
+						}
+
+						if (quote.length > 7 && !"N/A".equalsIgnoreCase(quote[7]) && !"N/A".equalsIgnoreCase(quote[8]))
+						{
+							_bot.send(_sender, "Day's Range: " + quote[7] + " - " + quote[8]);
+						}
+
+						if (quote.length > 9 && !"0".equalsIgnoreCase(quote[9]))
+						{
+							_bot.send(_sender, "Volume: " + quote[9]);
+						}
 					}
 					else
 					{
-						_bot.send(_bot.getChannel(), "Last Trade: " + quote[2]);
-					}
-
-					if (quote.length > 4)
-					{
-						_bot.send(_sender,
-								  "Time: " + quote[3].replaceAll("\"", "") + ' ' + quote[4].replaceAll("\"", ""));
-					}
-
-					if (quote.length > 6)
-					{
-						_bot.send(_sender, "Open: " + quote[6]);
-					}
-
-					if (quote.length > 7)
-					{
-						_bot.send(_sender, "Day's Range: " + quote[7] + " - " + quote[8]);
-					}
-
-					if (quote.length > 9)
-					{
-						_bot.send(_sender, "Volume: " + quote[9]);
+						_bot.send(_sender, "Invalid ticker symbol.");
 					}
 				}
 				else
 				{
-					_bot.send(_sender, "Invalid ticker symbol.");
+					_bot.send(_sender, "No values returned.");
 				}
 			}
 			else

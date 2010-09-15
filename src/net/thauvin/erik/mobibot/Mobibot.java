@@ -87,15 +87,14 @@ public class Mobibot extends PircBot
 	 * The info strings.
 	 */
 	private static final String[] INFO_STRS =
-			{"Mobibot v" + ReleaseInfo.getVersion() + '.' + ReleaseInfo.getBuildNumber()
+			{ReleaseInfo.getProject() + " v" + ReleaseInfo.getVersion() + '.' + ReleaseInfo.getBuildNumber()
 			 + " by Erik C. Thauvin (erik@thauvin.net)", "http://www.mobitopia.org/mobibot/"};
 
 	/**
 	 * The version strings.
 	 */
 	private static final String[] VERSION_STRS =
-			{"Version: " + ReleaseInfo.getVersion() + '.' + ReleaseInfo.getBuildNumber() + " ("
-			 + ISO_SDF.format(ReleaseInfo.getBuildDate()) + ')',
+			{"Version: " + ReleaseInfo.getVersion() + '.' + ReleaseInfo.getBuildNumber() + " (" + ISO_SDF.format(ReleaseInfo.getBuildDate()) + ')',
 			 "Platform: " + System.getProperty("os.name") + " (" + System.getProperty("os.version") + ", "
 			 + System.getProperty("os.arch") + ", " + System.getProperty("user.country") + ')',
 			 "Runtime: " + System.getProperty("java.runtime.name") + " (build "
@@ -209,9 +208,9 @@ public class Mobibot extends PircBot
 	private static final String GOOGLE_CMD = "google";
 
 	/**
-	 * The Jaiku command.
+	 * The identi.ca command.
 	 */
-	private static final String JAIKU_CMD = "jaiku";
+	private static final String IDENTICA_CMD = "identica";
 
 	/**
 	 * The Twitter command.
@@ -261,11 +260,6 @@ public class Mobibot extends PircBot
 	 * The recap command.
 	 */
 	private static final String RECAP_CMD = "recap";
-
-	/**
-	 * The spell command.
-	 */
-	private static final String SPELL_CMD = "spell";
 
 	/**
 	 * The stock command.
@@ -455,20 +449,14 @@ public class Mobibot extends PircBot
 	private String _feedURL = "";
 
 	/**
-	 * The Google API key.
+	 * The identi.ca user.
 	 */
-
-	private String _googleKey = "";
-
-	/**
-	 * The Jaiku API key.
-	 */
-	private String _jaikuKey = "";
+	private String _identicaUser = "";
 
 	/**
-	 * The Jaiku user.
+	 * The identi.ca password.
 	 */
-	private String _jaikuUser = "";
+	private String _identicaPwd = "";
 
 	/**
 	 * The Twitter consumer key.
@@ -743,7 +731,6 @@ public class Mobibot extends PircBot
 			final String weblogURL = p.getProperty("weblog", "");
 			final String feedURL = p.getProperty("feed", "");
 			final String backlogsURL = ensureDir(p.getProperty("backlogs", weblogURL), true);
-			final String googleKey = p.getProperty("google", "");
 			final String ignoredNicks = p.getProperty("ignore", "");
 			final String identNick = p.getProperty("ident-nick", "");
 			final String identMsg = p.getProperty("ident-msg", "");
@@ -754,9 +741,9 @@ public class Mobibot extends PircBot
 			final String dname = p.getProperty("delicious-user");
 			final String dpwd = p.getProperty("delicious-pwd");
 
-			// Get the Jaiku properties
-			final String jname = p.getProperty("jaiku-user");
-			final String jkey = p.getProperty("jaiku-key");
+			// Get the identi.ca properties
+			final String iname = p.getProperty("identica-user");
+			final String ipwd = p.getProperty("identica-pwd");
 
 			// Get the Twitter properties
 			final String tconsumerKey = p.getProperty("twitter-consumerKey");
@@ -787,19 +774,16 @@ public class Mobibot extends PircBot
 			bot.setFeedURL(feedURL);
 			bot.setBacklogsURL(backlogsURL);
 
-			// Set the Google key
-			bot.setGoogleKey(googleKey);
-
 			if (isValidString(dname) && isValidString(dpwd))
 			{
 				// Set the del.icio.us authentication
 				bot.setDeliciousAuth(dname, dpwd);
 			}
 
-			if (isValidString(jname) && isValidString(jkey))
+			if (isValidString(iname) && isValidString(ipwd))
 			{
-				// Set the Jaiku authentication
-				bot.setJaikuAuth(jname, jkey);
+				// Set the identi.ca authentication
+				bot.setIdenticaAuth(iname, ipwd);
 			}
 
 			if (isValidString(tconsumerKey) && isValidString(tconsumerSecret) && isValidString(ttoken) && isValidString(
@@ -980,15 +964,15 @@ public class Mobibot extends PircBot
 			send(sender, "To list the last 5 posts from the channel's weblog:");
 			send(sender, DOUBLE_INDENT + bold(getNick() + ": " + getChannel().substring(1)));
 		}
-		else if (lcTopic.endsWith(GOOGLE_CMD) && isGoogleEnabled())
+		else if (lcTopic.endsWith(GOOGLE_CMD))
 		{
 			send(sender, "To search Google:");
 			send(sender, DOUBLE_INDENT + bold(getNick() + ": " + GOOGLE_CMD + " <query>"));
 		}
-		else if (lcTopic.endsWith(JAIKU_CMD) && isJaikuEnabled())
+		else if (lcTopic.endsWith(IDENTICA_CMD) && isIdenticaEnabled())
 		{
-			send(sender, "To post to Jaiku:");
-			send(sender, DOUBLE_INDENT + bold(getNick() + ": " + JAIKU_CMD + " <message>"));
+			send(sender, "To post to identi.ca:");
+			send(sender, DOUBLE_INDENT + bold(getNick() + ": " + IDENTICA_CMD + " <message>"));
 		}
 		else if (lcTopic.endsWith(TWITTER_CMD) && isTwitterEnabled())
 		{
@@ -1017,11 +1001,6 @@ public class Mobibot extends PircBot
 
 			send(sender, "For a listing of the supported countries:");
 			send(sender, DOUBLE_INDENT + bold(getNick() + ": " + TIME_CMD));
-		}
-		else if (lcTopic.endsWith(SPELL_CMD) && isGoogleEnabled())
-		{
-			send(sender, "To have Google try to correctly spell a sentence:");
-			send(sender, DOUBLE_INDENT + bold(getNick() + ": " + SPELL_CMD + " <sentence>"));
 		}
 		else if (lcTopic.endsWith(STOCK_CMD))
 		{
@@ -1119,14 +1098,13 @@ public class Mobibot extends PircBot
 			                       CURRENCY_CMD,
 			                       DICE_CMD,
 			                       GOOGLE_CMD,
+			                       IDENTICA_CMD,
 			                       IGNORE_CMD,
 			                       INFO_CMD,
-			                       JAIKU_CMD,
 			                       LOOKUP_CMD,
 			                       getChannel().substring(1),
 			                       HELP_POSTING_KEYWORD,
 			                       RECAP_CMD,
-			                       SPELL_CMD,
 			                       STOCK_CMD,
 			                       HELP_TAGS_KEYWORD,
 			                       TIME_CMD,
@@ -1142,14 +1120,9 @@ public class Mobibot extends PircBot
 
 			for (int i = 0, cmdCount = 1; i < cmds.length; i++, cmdCount++)
 			{
-				if (cmds[i].equals(GOOGLE_CMD) || cmds[i].equals(SPELL_CMD))
+				if (cmds[i].equals(IDENTICA_CMD))
 				{
-					isValidCmd = isGoogleEnabled();
-				}
-
-				if (cmds[i].equals(JAIKU_CMD))
-				{
-					isValidCmd = isJaikuEnabled();
+					isValidCmd = isIdenticaEnabled();
 				}
 
 				if (cmds[i].equals(TWITTER_CMD))
@@ -1290,9 +1263,8 @@ public class Mobibot extends PircBot
 					{
 						if (_logger.isDebugEnabled())
 						{
-							_logger.debug(
-									"Unable to reconnect to " + _ircServer + " after " + MAX_RECONNECT + " retries.",
-									ex);
+							_logger.debug("Unable to reconnect to " + _ircServer + " after " + MAX_RECONNECT + " retries.",
+							              ex);
 						}
 
 						e.printStackTrace(System.err);
@@ -1520,17 +1492,13 @@ public class Mobibot extends PircBot
 			{
 				googleResponse(sender, args);
 			}
-			else if (cmd.startsWith(JAIKU_CMD))
+			else if (cmd.startsWith(IDENTICA_CMD))
 			{
-				jaikuResponse(sender, args);
+				identicaResponse(sender, args);
 			}
 			else if (cmd.startsWith(TWITTER_CMD))
 			{
 				twitterResponse(sender, args);
-			}
-			else if (cmd.startsWith(SPELL_CMD))
-			{
-				spellResponse(sender, args);
 			}
 			else if (cmd.startsWith(STOCK_CMD))
 			{
@@ -2496,16 +2464,6 @@ public class Mobibot extends PircBot
 	}
 
 	/**
-	 * Returns <code>true</code> if Google services are enabled.
-	 *
-	 * @return <code>true</code> or <code>false</code>
-	 */
-	private boolean isGoogleEnabled()
-	{
-		return isValidString(_googleKey);
-	}
-
-	/**
 	 * Responds with the Google search results for the specified query.
 	 *
 	 * @param sender The nick of the person who sent the private message.
@@ -2513,55 +2471,50 @@ public class Mobibot extends PircBot
 	 */
 	private void googleResponse(String sender, String query)
 	{
-		if (isGoogleEnabled())
+
+		if (query.length() > 0)
 		{
-			if (query.length() > 0)
-			{
-				new Thread(new GoogleSearch(this, _googleKey, sender, query, false)).start();
-			}
-			else
-			{
-				helpResponse(sender, GOOGLE_CMD);
-			}
+			new Thread(new GoogleSearch(this, sender, query)).start();
 		}
 		else
 		{
-			send(sender, "The Google search facility is disabled.");
+			helpResponse(sender, GOOGLE_CMD);
 		}
+
 	}
 
 	/**
-	 * Returns <code>true</code> if jaiku posting is enabled.
+	 * Returns <code>true</code> if identi.ca posting is enabled.
 	 *
 	 * @return <code>true</code> or <code>false</code>
 	 */
-	private boolean isJaikuEnabled()
+	private boolean isIdenticaEnabled()
 	{
-		return isValidString(_jaikuKey) && isValidString(_jaikuUser);
+		return isValidString(_identicaPwd) && isValidString(_identicaUser);
 	}
 
 	/**
-	 * Posts a message to Jaiku.
+	 * Posts a message to identi.ca.
 	 *
 	 * @param sender The sender's nick.
 	 * @param message The message.
 	 */
-	private void jaikuResponse(String sender, String message)
+	private void identicaResponse(String sender, String message)
 	{
-		if (isJaikuEnabled())
+		if (isIdenticaEnabled())
 		{
 			if (message.length() > 0)
 			{
-				new Thread(new Jaiku(this, sender, _jaikuUser, _jaikuKey, message)).start();
+				new Thread(new Identica(this, sender, _identicaUser, _identicaPwd, message)).start();
 			}
 			else
 			{
-				helpResponse(sender, JAIKU_CMD);
+				helpResponse(sender, IDENTICA_CMD);
 			}
 		}
 		else
 		{
-			send(sender, "The Jaiku posting facility is disabled.");
+			send(sender, "The identi.ca posting facility is disabled.");
 		}
 	}
 
@@ -3088,25 +3041,15 @@ public class Mobibot extends PircBot
 	}
 
 	/**
-	 * Sets the Google API key.
+	 * Sets the identi.ca user and password...
 	 *
-	 * @param googleKey The Google API key.
+	 * @param user The identi.ca user.
+	 * @param key The identi.ca password.
 	 */
-	private void setGoogleKey(String googleKey)
+	private void setIdenticaAuth(String user, String key)
 	{
-		_googleKey = googleKey;
-	}
-
-	/**
-	 * Sets the Jaiku user and API key..
-	 *
-	 * @param user The Jaiku user.
-	 * @param key The Jaiku API key.
-	 */
-	private void setJaikuAuth(String user, String key)
-	{
-		_jaikuKey = key;
-		_jaikuUser = user;
+		_identicaPwd = key;
+		_identicaUser = user;
 	}
 
 	/**
@@ -3201,31 +3144,6 @@ public class Mobibot extends PircBot
 	private void setWeblogURL(String weblogURL)
 	{
 		_weblogURL = weblogURL;
-	}
-
-	/**
-	 * Uses Google to correctly spell a sentence.
-	 *
-	 * @param sender The nick of the person who sent the message
-	 * @param spell The sentence to spell.
-	 */
-	private void spellResponse(String sender, String spell)
-	{
-		if (isGoogleEnabled())
-		{
-			if (spell.length() > 0)
-			{
-				new Thread(new GoogleSearch(this, _googleKey, getChannel(), spell, true)).start();
-			}
-			else
-			{
-				helpResponse(sender, SPELL_CMD);
-			}
-		}
-		else
-		{
-			send(getChannel(), "The Google spelling facility is disabled.");
-		}
 	}
 
 	/**
