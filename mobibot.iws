@@ -34,11 +34,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" readonly="true" id="944923a8-a8d5-4232-a77e-02473b958f59" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/buildnum.properties" afterPath="$PROJECT_DIR$/buildnum.properties" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mobibot.iws" afterPath="$PROJECT_DIR$/mobibot.iws" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mobibot.iml" afterPath="$PROJECT_DIR$/mobibot.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/net/thauvin/erik/mobibot/TwitterOAuth.java" afterPath="$PROJECT_DIR$/src/net/thauvin/erik/mobibot/TwitterOAuth.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/net/thauvin/erik/mobibot/ReleaseInfo.java" afterPath="$PROJECT_DIR$/src/net/thauvin/erik/mobibot/ReleaseInfo.java" />
     </list>
     <ignored path="$USER_HOME_GRAILS$/" />
     <ignored path="$USER_HOME_GRIFFON$/" />
@@ -150,7 +146,7 @@
       <file leaf-file-name="Mobibot.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/net/thauvin/erik/mobibot/Mobibot.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="25" column="124" selection-start="1171" selection-end="1171" vertical-scroll-proportion="0.588697">
+            <state line="25" column="124" selection-start="1171" selection-end="1171" vertical-scroll-proportion="0.015243903">
               <folding />
             </state>
           </provider>
@@ -187,9 +183,7 @@
         <entry file="file://$PROJECT_DIR$/src/net/thauvin/erik/mobibot/TwitterOAuth.java">
           <provider selected="true" editor-type-id="text-editor">
             <state line="17" column="31" selection-start="558" selection-end="558" vertical-scroll-proportion="0.0">
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
+              <folding />
             </state>
           </provider>
         </entry>
@@ -385,36 +379,6 @@
       <sortByType />
     </navigator>
     <panes>
-      <pane id="PackagesPane">
-        <subPane>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="mobibot" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="mobibot" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewModuleNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="mobibot" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="mobibot" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewModuleNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="net.thauvin.erik.mobibot" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
-            </PATH_ELEMENT>
-          </PATH>
-        </subPane>
-      </pane>
-      <pane id="Favorites" />
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -449,6 +413,36 @@
           </PATH>
         </subPane>
       </pane>
+      <pane id="Scope" />
+      <pane id="Favorites" />
+      <pane id="PackagesPane">
+        <subPane>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="mobibot" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="mobibot" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewModuleNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="mobibot" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="mobibot" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewModuleNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="net.thauvin.erik.mobibot" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
+            </PATH_ELEMENT>
+          </PATH>
+        </subPane>
+      </pane>
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -469,14 +463,14 @@
     <property name="vcs_file_view_treeOrder1" value="1" />
     <property name="vcs_file_view_treeOrder4" value="4" />
     <property name="vcs_file_view_flatWidth5" value="81" />
-    <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="cvs_file_history_flatWidth6" value="135" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="cvs_file_history_flatWidth4" value="135" />
     <property name="cvs_file_history_flatWidth5" value="136" />
-    <property name="cvs_file_history_flatWidth2" value="135" />
     <property name="vcs_file_view_flatOrder0" value="0" />
-    <property name="cvs_file_history_flatWidth3" value="136" />
+    <property name="cvs_file_history_flatWidth2" value="135" />
     <property name="cvs_file_history_treeOrder0" value="0" />
+    <property name="cvs_file_history_flatWidth3" value="136" />
     <property name="vcs_file_view_flatWidth0" value="81" />
     <property name="vcs_file_view_flatOrder2" value="2" />
     <property name="cvs_file_history_flatWidth0" value="135" />
@@ -508,8 +502,8 @@
     <property name="cvs_file_history_treeWidth1" value="135" />
     <property name="cvs_file_history_treeWidth2" value="135" />
     <property name="cvs_file_history_treeWidth3" value="136" />
-    <property name="MemberChooser.showClasses" value="true" />
     <property name="cvs_file_history_treeWidth4" value="135" />
+    <property name="MemberChooser.showClasses" value="true" />
     <property name="cvs_file_history_treeWidth5" value="136" />
     <property name="cvs_file_history_treeWidth6" value="135" />
     <property name="cvs_file_history_flatOrder4" value="4" />
@@ -519,8 +513,8 @@
     <property name="cvs_file_history_flatOrder0" value="0" />
     <property name="cvs_file_history_flatOrder1" value="1" />
     <property name="cvs_file_history_flatOrder6" value="6" />
-    <property name="dynamic.classpath" value="false" />
     <property name="options.searchVisible" value="true" />
+    <property name="dynamic.classpath" value="false" />
   </component>
   <component name="RecentsManager">
     <key name="CopyClassDialog.RECENTS_KEY">
@@ -649,19 +643,13 @@
         <option name="Maven.BeforeRunTask" enabled="false" />
       </method>
     </configuration>
-    <configuration default="true" type="WebLogic Instance" factoryName="Local">
-      <option name="PORT" value="7001" />
-      <deployment />
-      <server-settings>
-        <option name="PASSWORD" value="weblogic" />
-      </server-settings>
-      <predefined_log_file id="WEBLOGIC_DOMAIN_LOG_FILE" enabled="true" />
-      <predefined_log_file id="WEBLOGIC_SERVER_LOG_FILE" enabled="true" />
+    <configuration default="true" type="PhpUnitRemoteRunConfigurationType" factoryName="PHPUnit on Server">
       <method>
         <option name="AntTarget" enabled="false" />
         <option name="BuildArtifacts" enabled="false" />
-        <option name="Make" enabled="true" />
+        <option name="FtpUpload" enabled="false" />
         <option name="Maven.BeforeRunTask" enabled="false" />
+        <option name="ValidateXdebugSetup" enabled="true" />
       </method>
     </configuration>
     <configuration default="true" type="JavascriptDebugSession" factoryName="Local">
@@ -675,13 +663,19 @@
         <option name="Maven.BeforeRunTask" enabled="false" />
       </method>
     </configuration>
-    <configuration default="true" type="PhpUnitRemoteRunConfigurationType" factoryName="PHPUnit on Server">
+    <configuration default="true" type="WebLogic Instance" factoryName="Local">
+      <option name="PORT" value="7001" />
+      <deployment />
+      <server-settings>
+        <option name="PASSWORD" value="weblogic" />
+      </server-settings>
+      <predefined_log_file id="WEBLOGIC_DOMAIN_LOG_FILE" enabled="true" />
+      <predefined_log_file id="WEBLOGIC_SERVER_LOG_FILE" enabled="true" />
       <method>
         <option name="AntTarget" enabled="false" />
         <option name="BuildArtifacts" enabled="false" />
-        <option name="FtpUpload" enabled="false" />
+        <option name="Make" enabled="true" />
         <option name="Maven.BeforeRunTask" enabled="false" />
-        <option name="ValidateXdebugSetup" enabled="true" />
       </method>
     </configuration>
     <configuration default="true" type="JUnit" factoryName="JUnit">
@@ -858,7 +852,7 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="153" y="0" width="1415" height="1175" extended-state="0" />
+    <frame x="191" y="0" width="1415" height="1175" extended-state="0" />
     <editor active="false" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32934684" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
@@ -868,12 +862,11 @@
       <window_info id="IDEtalk Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="IDEtalk" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3256705" sideWeight="0.5" order="19" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33024693" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.27818063" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.18121302" sideWeight="0.66762453" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.18121302" sideWeight="0.66762453" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Dependency Viewer" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="17" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39367816" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" x="22" y="277" width="980" height="213" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -891,12 +884,13 @@
       <window_info id="BSFConsole" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32962963" sideWeight="0.5" order="21" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32969153" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Jalopy" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32962963" sideWeight="0.5" order="15" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3256705" sideWeight="0.5" order="19" side_tool="false" content_ui="tabs" />
       <window_info id="Web" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Code Outline" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="EJB" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="JProfiler" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="14" side_tool="false" content_ui="tabs" />
-      <window_info id="CVS" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32962963" sideWeight="0.5" order="18" side_tool="false" content_ui="tabs" />
       <window_info id="Module Dependencies" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
+      <window_info id="CVS" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32962963" sideWeight="0.5" order="18" side_tool="false" content_ui="tabs" />
       <window_info id="Duplicates" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32854405" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Regex" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.44135803" sideWeight="0.5" order="20" side_tool="false" content_ui="tabs" x="22" y="277" width="980" height="214" />
@@ -1030,37 +1024,14 @@
         <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/net/thauvin/erik/mobibot/Weather.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/net/thauvin/erik/mobibot/CurrencyConverter.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="63" column="13" selection-start="2150" selection-end="2150" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/net/thauvin/erik/mobibot/DeliciousPoster.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="50" column="13" selection-start="1995" selection-end="1995" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/net/thauvin/erik/mobibot/EntryComment.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="53" column="13" selection-start="2016" selection-end="2016" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/net/thauvin/erik/mobibot/EntryLink.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="53" column="13" selection-start="2001" selection-end="2001" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
+        <state line="53" column="13" selection-start="2001" selection-end="2001" vertical-scroll-proportion="0.0" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/net/thauvin/erik/mobibot/SwingWorker.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="16" column="22" selection-start="536" selection-end="536" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/net/thauvin/erik/mobibot/ReleaseInfo.java">
@@ -1068,32 +1039,39 @@
         <state line="40" column="42" selection-start="1170" selection-end="1170" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/net/thauvin/erik/mobibot/SwingWorker.java">
+    <entry file="file://$PROJECT_DIR$/src/net/thauvin/erik/mobibot/Twitter.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="16" column="22" selection-start="536" selection-end="536" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
+        <state line="23" column="13" selection-start="517" selection-end="517" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/net/thauvin/erik/mobibot/TwitterOAuth.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="17" column="31" selection-start="558" selection-end="558" vertical-scroll-proportion="0.0">
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
+        <state line="17" column="31" selection-start="558" selection-end="558" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/net/thauvin/erik/mobibot/Twitter.java">
+    <entry file="file://$PROJECT_DIR$/src/net/thauvin/erik/mobibot/CurrencyConverter.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="23" column="13" selection-start="517" selection-end="517" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
+        <state line="63" column="13" selection-start="2150" selection-end="2150" vertical-scroll-proportion="0.0" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/net/thauvin/erik/mobibot/DeliciousPoster.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="50" column="13" selection-start="1995" selection-end="1995" vertical-scroll-proportion="0.0" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/net/thauvin/erik/mobibot/EntryComment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="53" column="13" selection-start="2016" selection-end="2016" vertical-scroll-proportion="0.0" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/net/thauvin/erik/mobibot/Weather.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/net/thauvin/erik/mobibot/Mobibot.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="25" column="124" selection-start="1171" selection-end="1171" vertical-scroll-proportion="0.588697">
+        <state line="25" column="124" selection-start="1171" selection-end="1171" vertical-scroll-proportion="0.015243903">
           <folding />
         </state>
       </provider>
