@@ -94,7 +94,8 @@ public class Mobibot extends PircBot
 	 * The version strings.
 	 */
 	private static final String[] VERSION_STRS =
-			{"Version: " + ReleaseInfo.getVersion() + '.' + ReleaseInfo.getBuildNumber() + " (" + ISO_SDF.format(ReleaseInfo.getBuildDate()) + ')',
+			{"Version: " + ReleaseInfo.getVersion() + '.' + ReleaseInfo.getBuildNumber() + " ("
+			 + ISO_SDF.format(ReleaseInfo.getBuildDate()) + ')',
 			 "Platform: " + System.getProperty("os.name") + " (" + System.getProperty("os.version") + ", "
 			 + System.getProperty("os.arch") + ", " + System.getProperty("user.country") + ')',
 			 "Runtime: " + System.getProperty("java.runtime.name") + " (build "
@@ -1263,8 +1264,9 @@ public class Mobibot extends PircBot
 					{
 						if (_logger.isDebugEnabled())
 						{
-							_logger.debug("Unable to reconnect to " + _ircServer + " after " + MAX_RECONNECT + " retries.",
-							              ex);
+							_logger.debug(
+									"Unable to reconnect to " + _ircServer + " after " + MAX_RECONNECT + " retries.",
+									ex);
 						}
 
 						e.printStackTrace(System.err);
@@ -2722,7 +2724,6 @@ public class Mobibot extends PircBot
 			SyndEntry item;
 			SyndContent description;
 			String[] comments;
-			String[] comment;
 			String author;
 			EntryLink entry;
 
@@ -2740,13 +2741,14 @@ public class Mobibot extends PircBot
 				description = item.getDescription();
 				comments = description.getValue().split("<br/>");
 
+				int split;
 				for (int j = 0; j < comments.length; j++)
 				{
-					comment = comments[j].split(":");
+					split = comments[j].indexOf(": ");
 
-					if (comment.length == 2)
+					if (split != -1)
 					{
-						entry.addComment(comment[1].trim(), comment[0]);
+						entry.addComment(comments[j].substring(split + 2).trim(), comments[j].substring(0, split));
 					}
 				}
 
@@ -2886,10 +2888,12 @@ public class Mobibot extends PircBot
 				{
 					entry = (EntryLink) _entries.get(i);
 
-					buff = new StringBuffer(0);
+					buff = new StringBuffer("Posted by <b>" + entry.getNick() + "</b> on <b>" + entry.getChannel() + "</b> (<a href=\"irc://" + _ircServer + '/' + entry.getChannel() + "\">" + _ircServer + "</a>)");
 
 					if (entry.getCommentsCount() > 0)
 					{
+						buff.append("<br/><br/>");
+
 						final EntryComment[] comments = entry.getComments();
 
 						for (int j = 0; j < comments.length; j++)
