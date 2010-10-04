@@ -2888,7 +2888,7 @@ public class Mobibot extends PircBot
 				{
 					entry = (EntryLink) _entries.get(i);
 
-					buff = new StringBuffer("Posted by <b>" + entry.getNick() + "</b> on <b>" + entry.getChannel() + "</b> (<a href=\"irc://" + _ircServer + '/' + entry.getChannel() + "\">" + _ircServer + "</a>)");
+					buff = new StringBuffer("Posted by <b>" + entry.getNick() + "</b> on <a href=\"irc://" + _ircServer + '/' + entry.getChannel() + "\"><b>" + entry.getChannel() + "</b></a>");
 
 					if (entry.getCommentsCount() > 0)
 					{
