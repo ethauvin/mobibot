@@ -1,0 +1,7 @@
+/build/
+/dist/
+CVS
+/logs/
+/mobibot.properties
+/fetcher.properties
+/log4j.properties
