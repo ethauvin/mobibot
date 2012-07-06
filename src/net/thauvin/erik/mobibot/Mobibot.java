@@ -50,6 +50,8 @@ import org.apache.log4j.Level;
 import org.jibble.pircbot.Colors;
 import org.jibble.pircbot.PircBot;
 import org.jibble.pircbot.User;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 
 import java.io.*;
 import java.net.InetAddress;
@@ -94,12 +96,11 @@ public class Mobibot extends PircBot
 	 * The version strings.
 	 */
 	private static final String[] VERSION_STRS =
-			{"Version: " + ReleaseInfo.getVersion() + '.' + ReleaseInfo.getBuildNumber() + " ("
-			 + ISO_SDF.format(ReleaseInfo.getBuildDate()) + ')',
-			 "Platform: " + System.getProperty("os.name") + " (" + System.getProperty("os.version") + ", "
-			 + System.getProperty("os.arch") + ", " + System.getProperty("user.country") + ')',
-			 "Runtime: " + System.getProperty("java.runtime.name") + " (build "
-			 + System.getProperty("java.runtime.version") + ')',
+			{"Version: " + ReleaseInfo.getVersion() + '.' + ReleaseInfo.getBuildNumber() + " (" + ISO_SDF.format(ReleaseInfo.getBuildDate()) + ')',
+			 "Platform: " + System.getProperty("os.name") + " (" + System.getProperty("os.version") + ", " + System
+					 .getProperty("os.arch") + ", " + System.getProperty("user.country") + ')',
+			 "Runtime: " + System.getProperty("java.runtime.name") + " (build " + System
+					 .getProperty("java.runtime.version") + ')',
 			 "VM: " + System.getProperty("java.vm.name") + " (build " + System.getProperty("java.vm.version") + ", "
 			 + System.getProperty("java.vm.info") + ')'};
 
@@ -613,7 +614,7 @@ public class Mobibot extends PircBot
 	 *
 	 * @param args The command line arguments.
 	 *
-	 * @noinspection UseOfSystemOutOrSystemErr,ACCESS_STATIC_VIA_INSTANCE
+	 * @noinspection UseOfSystemOutOrSystemErr, ACCESS_STATIC_VIA_INSTANCE
 	 */
 	public static void main(String[] args)
 	{
@@ -625,7 +626,7 @@ public class Mobibot extends PircBot
 		                  false,
 		                  "print debug & logging data directly to the console");
 		options.addOption(OptionBuilder.withArgName("file").hasArg().withDescription("use alternate properties file")
-				.withLongOpt(PROPS_ARG).create(PROPS_ARG.substring(0, 1)));
+				                  .withLongOpt(PROPS_ARG).create(PROPS_ARG.substring(0, 1)));
 
 		// Parse the command line
 		final CommandLineParser parser = new PosixParser();
@@ -1314,59 +1315,67 @@ public class Mobibot extends PircBot
 			isCommand = true;
 
 			final String[] cmds = message.split(" ", 2);
-			final String cmd = cmds[0].trim();
-			boolean isBackup = false;
 
-			final int dupIndex = findDupEntry(cmd);
-
-			if (dupIndex == -1)
+			if (cmds.length == 1 || (cmds[1].indexOf(getNick()) == -1))
 			{
-				if (!today().equals(getToday()))
+				final String link = cmds[0].trim();
+				boolean isBackup = false;
+
+				final int dupIndex = findDupEntry(link);
+
+				if (dupIndex == -1)
 				{
-					isBackup = true;
-					saveEntries(isBackup);
-
-					_entries.clear();
-					setToday(today());
-				}
-
-				final boolean hasTitle = (cmds.length > 1) && (cmds[1].trim().length() > 0);
-
-				if (hasTitle)
-				{
-					final String title = cmds[1].trim();
-
-					if (title.indexOf(getNick()) == -1)
+					if (!today().equals(getToday()))
 					{
-						final int tagSep = title.lastIndexOf(TAGS_MARKER);
+						isBackup = true;
+						saveEntries(isBackup);
 
-						if (tagSep != -1)
+						_entries.clear();
+						setToday(today());
+					}
+
+					final StringBuffer tags = new StringBuffer(_defaultTags);
+					String title = NO_TITLE;
+
+					if (cmds.length == 2)
+					{
+						final String[] data = cmds[1].trim().split(TAGS_MARKER, 2);
+
+						if (data.length == 1)
 						{
-							_entries.add(new EntryLink(cmd,
-							                           title.substring(0, tagSep),
-							                           sender,
-							                           login,
-							                           channel,
-							                           (_defaultTags + ' ' + title
-									                           .substring(tagSep + TAGS_MARKER.length()))));
+							title = data[0].trim();
 						}
 						else
 						{
-							_entries.add(new EntryLink(cmd, title, sender, login, channel, _defaultTags));
+							if (isValidString(data[0]))
+							{
+								title = data[0].trim();
+							}
+
+							tags.append(' ').append(data[1].trim());
 						}
 					}
-					else
-					{
-						isCommand = false;
-					}
-				}
-				else
-				{
-					_entries.add(new EntryLink(cmd, NO_TITLE, sender, login, channel, _defaultTags));
-				}
 
-				if (isCommand)
-				{
+					if (NO_TITLE.equals(title))
+					{
+						try
+						{
+							final Document html = Jsoup.connect(link).get();
+							final String htmlTitle = html.title();
+
+							if (isValidString(htmlTitle))
+							{
+								title = htmlTitle;
+							}
+						}
+						catch (IOException ignore)
+						{
+							// Do nothing
+						}
+					}
+
+					_entries.add(new EntryLink(link, title, sender, login, channel, tags.toString()));
+
 					final int index = _entries.size() - 1;
 					final EntryLink entry = (EntryLink) _entries.get(index);
 					send(channel, buildLink(index, entry));
@@ -1378,17 +1387,17 @@ public class Mobibot extends PircBot
 
 					saveEntries(isBackup);
 
-					if (!hasTitle)
+					if (NO_TITLE.equals(entry.getTitle()))
 					{
 						send(sender, "Please specify a title, by typing:", true);
 						send(sender, DOUBLE_INDENT + bold(LINK_CMD + (index + 1) + ":|This is the title"), true);
 					}
 				}
-			}
-			else
-			{
-				final EntryLink entry = (EntryLink) _entries.get(dupIndex);
-				send(sender, "Duplicate >> " + buildLink(dupIndex, entry));
+				else
+				{
+					final EntryLink entry = (EntryLink) _entries.get(dupIndex);
+					send(sender, "Duplicate >> " + buildLink(dupIndex, entry));
+				}
 			}
 		}
 		else if (message.matches(getNickPattern() + ":.*"))
@@ -2046,7 +2055,7 @@ public class Mobibot extends PircBot
 	 *
 	 * @return The entry's link.
 	 *
-	 * @see #buildLink(int,EntryLink,boolean)
+	 * @see #buildLink(int, EntryLink, boolean)
 	 */
 	private static String buildLink(int index, EntryLink entry)
 	{
@@ -2099,7 +2108,7 @@ public class Mobibot extends PircBot
 	 */
 	private static String buildTags(int entryIndex, EntryLink entry)
 	{
-		return (LINK_CMD + (entryIndex + 1) + "T: " + entry.getDeliciousTags());
+		return (LINK_CMD + (entryIndex + 1) + "T: " + entry.getDeliciousTags().replaceAll(",", ", "));
 	}
 
 	/**
@@ -2527,8 +2536,8 @@ public class Mobibot extends PircBot
 	 */
 	private boolean isTwitterEnabled()
 	{
-		return isValidString(_twitterConsumerKey) && isValidString(_twitterConsumerSecret)
-		       && isValidString(_twitterToken) && isValidString(_twitterTokenSecret);
+		return isValidString(_twitterConsumerKey) && isValidString(_twitterConsumerSecret) && isValidString(
+				_twitterToken) && isValidString(_twitterTokenSecret);
 	}
 
 	/**
@@ -2888,7 +2897,9 @@ public class Mobibot extends PircBot
 				{
 					entry = (EntryLink) _entries.get(i);
 
-					buff = new StringBuffer("Posted by <b>" + entry.getNick() + "</b> on <a href=\"irc://" + _ircServer + '/' + entry.getChannel() + "\"><b>" + entry.getChannel() + "</b></a>");
+					buff = new StringBuffer(
+							"Posted by <b>" + entry.getNick() + "</b> on <a href=\"irc://" + _ircServer + '/' + entry
+									.getChannel() + "\"><b>" + entry.getChannel() + "</b></a>");
 
 					if (entry.getCommentsCount() > 0)
 					{
@@ -3308,8 +3319,8 @@ public class Mobibot extends PircBot
 
 				if (lcArgs.length() > 0)
 				{
-					if ((entry.getLink().toLowerCase().indexOf(lcArgs) != -1)
-					    || (entry.getTitle().toLowerCase().indexOf(lcArgs) != -1) || (
+					if ((entry.getLink().toLowerCase().indexOf(lcArgs) != -1) || (
+							entry.getTitle().toLowerCase().indexOf(lcArgs) != -1) || (
 							entry.getNick().toLowerCase().indexOf(lcArgs) != -1))
 					{
 						if (sent > MAX_ENTRIES)

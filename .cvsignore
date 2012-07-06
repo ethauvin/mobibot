@@ -6,3 +6,4 @@ mobibot.properties
 fetcher.properties
 *.ser
 logs
+.git

@@ -191,7 +191,7 @@ public class EntryLink implements Serializable
 	 */
 	public final synchronized EntryComment[] getComments()
 	{
-		return ((EntryComment[]) _comments.toArray(new EntryComment[0]));
+		return ((EntryComment[]) _comments.toArray(new EntryComment[_comments.size()]));
 	}
 
 	/**
@@ -217,19 +217,15 @@ public class EntryLink implements Serializable
 	/**
 	 * Returns the tags formatted for del.icio.us.
 	 *
-	 * @return The tags as a space-deliminted string.
+	 * @return The tags as a comma-delimited string.
 	 */
 	public final synchronized String getDeliciousTags()
 	{
-		final StringBuffer tags = new StringBuffer(0);
+		final StringBuffer tags = new StringBuffer(_nick);
 
 		for (int i = 0; i < _tags.size(); i++)
 		{
-			if (i != 0)
-			{
-				tags.append(' ');
-			}
-
+			tags.append(',');
 			tags.append(((SyndCategoryImpl) _tags.get(i)).getName());
 		}
 
