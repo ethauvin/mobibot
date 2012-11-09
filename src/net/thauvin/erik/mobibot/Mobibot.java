@@ -96,7 +96,8 @@ public class Mobibot extends PircBot
 	 * The version strings.
 	 */
 	private static final String[] VERSION_STRS =
-			{"Version: " + ReleaseInfo.getVersion() + '.' + ReleaseInfo.getBuildNumber() + " (" + ISO_SDF.format(ReleaseInfo.getBuildDate()) + ')',
+			{"Version: " + ReleaseInfo.getVersion() + '.' + ReleaseInfo.getBuildNumber() + " (" + ISO_SDF
+					.format(ReleaseInfo.getBuildDate()) + ')',
 			 "Platform: " + System.getProperty("os.name") + " (" + System.getProperty("os.version") + ", " + System
 					 .getProperty("os.arch") + ", " + System.getProperty("user.country") + ')',
 			 "Runtime: " + System.getProperty("java.runtime.name") + " (build " + System
@@ -2757,7 +2758,8 @@ public class Mobibot extends PircBot
 
 					if (split != -1)
 					{
-						entry.addComment(comments[j].substring(split + 2).trim(), comments[j].substring(0, split));
+						entry.addComment(comments[j].substring(split + 2).trim(),
+						                 comments[j].substring(0, split).trim());
 					}
 				}
 
@@ -2903,7 +2905,7 @@ public class Mobibot extends PircBot
 
 					if (entry.getCommentsCount() > 0)
 					{
-						buff.append("<br/><br/>");
+						buff.append(" <br/><br/>");
 
 						final EntryComment[] comments = entry.getComments();
 
@@ -2913,7 +2915,7 @@ public class Mobibot extends PircBot
 
 							if (j > 0)
 							{
-								buff.append("<br/>");
+								buff.append(" <br/>");
 							}
 
 							buff.append(comment.getNick()).append(": ").append(comment.getComment());
