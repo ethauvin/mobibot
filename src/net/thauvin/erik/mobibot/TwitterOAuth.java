@@ -2,8 +2,8 @@ package net.thauvin.erik.mobibot;
 
 import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
-import twitter4j.http.AccessToken;
-import twitter4j.http.RequestToken;
+import twitter4j.auth.AccessToken;
+import twitter4j.auth.RequestToken;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;

@@ -38,7 +38,7 @@ package net.thauvin.erik.mobibot;
 
 import twitter4j.Status;
 import twitter4j.TwitterFactory;
-import twitter4j.http.AccessToken;
+import twitter4j.conf.ConfigurationBuilder;
 
 /**
  * Inserts presence information into Twitter.
@@ -112,17 +112,22 @@ public class Twitter implements Runnable
 	{
 		try
 		{
-			final twitter4j.Twitter twitter = new TwitterFactory().getOAuthAuthorizedInstance(_consumerKey,
-			                                                                                  _consumerSecret,
-			                                                                                  new AccessToken(
-					                                                                                  _accessToken,
-					                                                                                  _accessTokenSecret));
+			final ConfigurationBuilder cb = new ConfigurationBuilder();
+			cb.setDebugEnabled(true).setOAuthConsumerKey(_consumerKey).setOAuthConsumerSecret(_consumerSecret)
+					.setOAuthAccessToken(_accessToken).setOAuthAccessTokenSecret(_accessTokenSecret);
+			final TwitterFactory tf = new TwitterFactory(cb.build());
+			final twitter4j.Twitter twitter = tf.getInstance();
 
 			final Status status = twitter.updateStatus(_message + " (" + _sender + ')');
 
 			_bot.send(_sender,
 			          "You message was posted to http://twitter.com/" + twitter.getScreenName() + "/statuses/" + status
 					          .getId());
+
+			twitter.shutdown();
+
+			// @TODO Does it help?
+			twitter4j.internal.json.DataObjectFactoryUtil.clearThreadLocalMap();
 		}
 		catch (Exception e)
 		{

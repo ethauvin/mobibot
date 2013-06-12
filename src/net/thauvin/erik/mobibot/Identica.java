@@ -36,9 +36,9 @@
  */
 package net.thauvin.erik.mobibot;
 
+import org.json.XML;
 import twitter4j.internal.http.BASE64Encoder;
-import twitter4j.internal.org.json.JSONObject;
-import twitter4j.internal.org.json.XML;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
