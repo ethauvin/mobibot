@@ -1,16 +1,8 @@
 Some very basic instructions:
 
-	ant jar
-	
-	mkdir run
-	
-	cp dist/mobibot.jar run
-	cp -R lib run
-	cp properties/*.properties run
-	
-	cd run
-	
-	mkdir logs
+	./gradlew deploy
+
+	cd deploy
 
 	{ configure the properties }
 	vi *.properties
