@@ -90,7 +90,15 @@ public class Mobibot extends PircBot
 	/**
 	 * The HH:MM timestamp simple date format.
 	 */
-	private static final SimpleDateFormat HHMM_SDF = new SimpleDateFormat("HH:mm");
+	private static final SimpleDateFormat HHMM_SDF = new SimpleDateFormat("HH:mm z");
+
+	/**
+	 * Initialize {@link #HHMM_SDF timestamp}
+	 */
+	static
+	{
+		HHMM_SDF.setTimeZone(TimeZone.getTimeZone("UTC"));
+	}
 
 	/**
 	 * The ISO (YYYY-MM-DD) simple date format.
@@ -135,6 +143,11 @@ public class Mobibot extends PircBot
 	private static final String PROPS_ARG = "properties";
 
 	/**
+	 * Properties version line argument.
+	 */
+	private static final String VERSION_ARG = "version";
+
+	/**
 	 * The maximum number of times the bot will try to reconnect, if disconnected.
 	 */
 	private static final int MAX_RECONNECT = 10;
@@ -152,7 +165,7 @@ public class Mobibot extends PircBot
 	/**
 	 * The recap array.
 	 */
-	private static final List RECAP_ARRAY = new ArrayList(MAX_RECAP);
+	private static final List<String> RECAP_ARRAY = new ArrayList<String>(MAX_RECAP);
 
 	/**
 	 * The maximum number of backlogs to keep.
@@ -275,6 +288,11 @@ public class Mobibot extends PircBot
 	private static final String PONG_CMD = "pong";
 
 	/**
+	 * The quote command.
+	 */
+	private static final String QUOTE_CMD = "quote";
+
+	/**
 	 * The recap command.
 	 */
 	private static final String RECAP_CMD = "recap";
@@ -290,6 +308,11 @@ public class Mobibot extends PircBot
 	private static final String TIME_CMD = "time";
 
 	/**
+	 * The war command.
+	 */
+	private static final String WAR_CMD = "war";
+
+	/**
 	 * The empty title string.
 	 */
 	private static final String NO_TITLE = "No Title";
@@ -300,9 +323,20 @@ public class Mobibot extends PircBot
 	private static final String TAGS_MARKER = "tags:";
 
 	/**
-	 * The countries supporte by the {@link #TIME_CMD time} command.
+	 * The countries supported by the {@link #TIME_CMD time} command.
 	 */
-	private static final Map COUNTRIES_MAP = new TreeMap();
+	private static final Map<String, String> COUNTRIES_MAP = new TreeMap<String, String>();
+
+	/**
+	 * The deck of card for the {@link #WAR_CMD war} command.
+	 */
+	private static final String[] WAR_DECK =
+			new String[]{"Ace", "King", "Queen", "Jack", "10", "9", "8", "7", "6", "5", "4", "3", "2"};
+
+	/**
+	 * The suits for the deck of card for the {@link #WAR_CMD war} command.
+	 */
+	private static final String[] WAR_SUITS = new String[]{"Hearts", "Spades", "Diamonds", "Clubs"};
 
 	/**
 	 * The date/time format for the {@link #TIME_CMD time} command.
@@ -345,8 +379,6 @@ public class Mobibot extends PircBot
 	 */
 	private static final int DEFAULT_PORT = 6667;
 
-	// Initialize the countries.
-
 	/**
 	 * The whois host.
 	 */
@@ -370,118 +402,121 @@ public class Mobibot extends PircBot
 	/**
 	 * The main channel.
 	 */
-	private final String _channel;
+	private final String channel;
 
 	/**
 	 * The entries array.
 	 */
-	private final List _entries = new ArrayList(0);
+	private final List<EntryLink> entries = new ArrayList<EntryLink>(0);
 
 	/**
 	 * The feed info cache.
 	 */
-	private final FeedFetcherCache _feedInfoCache = HashMapFeedInfoCache.getInstance();
+	private final FeedFetcherCache feedInfoCache = HashMapFeedInfoCache.getInstance();
 
 	/**
 	 * The history/backlogs array.
 	 */
-	private final List _history = new ArrayList(0);
+	private final List<String> history = new ArrayList<String>(0);
 
 	/**
 	 * The ignored nicks array.
 	 */
-	private final List _ignoredNicks = new ArrayList(0);
+	private final List<String> ignoredNicks = new ArrayList<String>(0);
 
 	/**
 	 * The IRC port.
 	 */
-	private final int _ircPort;
+	private final int ircPort;
 
 	/**
 	 * The IRC server.
 	 */
-	private final String _ircServer;
+	private final String ircServer;
 
 	/**
 	 * The logger.
 	 */
-	private final Log4JLogger _logger;
+	private final Log4JLogger logger;
 
 	/**
 	 * The logger default level.
 	 */
-	private final Level _loggerLevel;
+	private final Level loggerLevel;
 
 	/**
 	 * The log directory.
 	 */
-	private final String _logsDir;
+	private final String logsDir;
 
 	/**
 	 * The backlogs URL.
 	 */
-	private String _backlogsURL = "";
+	private String backlogsURL = "";
 
 	/**
 	 * The default tags/categories.
 	 */
-	private String _defaultTags = "";
+	private String defaultTags = "";
 
 	/**
 	 * The del.icio.us posts handler.
 	 */
-	private DeliciousPoster _delicious = null;
+	private DeliciousPoster delicious = null;
 
 	/**
 	 * The feed URL.
 	 */
-	private String _feedURL = "";
+	private String feedURL = "";
 
 	/**
 	 * The Twitter consumer key.
 	 */
-	private String _twitterConsumerKey = "";
+	private String twitterConsumerKey = "";
 
 	/**
 	 * The Twitter consumer secret.
 	 */
-	private String _twitterConsumerSecret = "";
+	private String twitterConsumerSecret = "";
 
 	/**
 	 * The Twitter token.
 	 */
-	private String _twitterToken = "";
+	private String twitterToken = "";
 
 	/**
 	 * The Twitter token secret.
 	 */
-	private String _twitterTokenSecret = "";
+	private String twitterTokenSecret = "";
 
 	/**
 	 * The ident message.
 	 */
-	private String _identMsg = "";
+	private String identMsg = "";
 
 	/**
 	 * The ident nick.
 	 */
-	private String _identNick = "";
+	private String identNick = "";
 
 	/**
 	 * The NickServ ident password.
 	 */
-	private String _ident = "";
+	private String ident = "";
 
 	/**
 	 * Today's date.
 	 */
-	private String _today = today();
+	private String today = today();
 
 	/**
 	 * The weblog URL.
 	 */
-	private String _weblogURL = "";
+	private String weblogURL = "";
 
+	/**
+	 * Initialize the countries.
+	 */
 	static
 	{
 		COUNTRIES_MAP.put("AU", "Australia/Sydney");
@@ -544,24 +579,24 @@ public class Mobibot extends PircBot
 		System.getProperties().setProperty("sun.net.client.defaultConnectTimeout", String.valueOf(CONNECT_TIMEOUT));
 		System.getProperties().setProperty("sun.net.client.defaultReadTimeout", String.valueOf(CONNECT_TIMEOUT));
 
-		_ircServer = server;
-		_ircPort = port;
-		_channel = channel;
-		_logsDir = logsDir;
+		ircServer = server;
+		ircPort = port;
+		this.channel = channel;
+		this.logsDir = logsDir;
 
 		// Set the logger
-		_logger = new Log4JLogger(Mobibot.class.getPackage().getName());
-		_loggerLevel = _logger.getLogger().getLevel();
+		logger = new Log4JLogger(Mobibot.class.getPackage().getName());
+		loggerLevel = logger.getLogger().getLevel();
 
 		// Load the current entries, if any.
 		try
 		{
-			loadEntries(_logsDir + CURRENT_XML);
+			loadEntries(this.logsDir + CURRENT_XML);
 
-			if (!today().equals(_today))
+			if (!today().equals(today))
 			{
-				_entries.clear();
-				_today = today();
+				entries.clear();
+				today = today();
 			}
 		}
 		catch (FileNotFoundException ignore)
@@ -570,13 +605,13 @@ public class Mobibot extends PircBot
 		}
 		catch (FeedException e)
 		{
-			_logger.error("An error occurred while parsing the '" + CURRENT_XML + "' file.", e);
+			logger.error("An error occurred while parsing the '" + CURRENT_XML + "' file.", e);
 		}
 
 		// Load the backlogs, if any.
 		try
 		{
-			loadBacklogs(_logsDir + NAV_XML);
+			loadBacklogs(this.logsDir + NAV_XML);
 		}
 		catch (FileNotFoundException ignore)
 		{
@@ -584,7 +619,7 @@ public class Mobibot extends PircBot
 		}
 		catch (FeedException e)
 		{
-			_logger.error("An error occurred while parsing the '" + NAV_XML + "' file.", e);
+			logger.error("An error occurred while parsing the '" + NAV_XML + "' file.", e);
 		}
 	}
 
@@ -619,6 +654,7 @@ public class Mobibot extends PircBot
 		//noinspection AccessStaticViaInstance
 		options.addOption(OptionBuilder.withArgName("file").hasArg().withDescription("use alternate properties file")
 				                  .withLongOpt(PROPS_ARG).create(PROPS_ARG.substring(0, 1)));
+		options.addOption(VERSION_ARG.substring(0, 1), VERSION_ARG, false, "print version info");
 
 		// Parse the command line
 		final CommandLineParser parser = new PosixParser();
@@ -639,6 +675,13 @@ public class Mobibot extends PircBot
 		{
 			// Output the usage
 			new HelpFormatter().printHelp(Mobibot.class.getName(), options);
+		}
+		else if (line.hasOption(VERSION_ARG.charAt(0)))
+		{
+			for (final String s : INFO_STRS)
+			{
+				System.out.println(s);
+			}
 		}
 		else
 		{
@@ -682,7 +725,7 @@ public class Mobibot extends PircBot
 			// Get the main properties
 			final String channel = p.getProperty("channel");
 			final String server = p.getProperty("server");
-			final int port = getPort(p.getProperty("port", String.valueOf(DEFAULT_PORT)), DEFAULT_PORT);
+			final int port = getPort(p.getProperty("port", String.valueOf(DEFAULT_PORT)));
 			final String nickname = p.getProperty("nick", Mobibot.class.getName().toLowerCase());
 			final String logsDir = ensureDir(p.getProperty("logs", "."), false);
 
@@ -854,6 +897,18 @@ public class Mobibot extends PircBot
 	}
 
 	/**
+	 * Makes the given int bold.
+	 *
+	 * @param i The int.
+	 *
+	 * @return The bold string.
+	 */
+	private static String bold(int i)
+	{
+		return Colors.BOLD + i + Colors.BOLD;
+	}
+
+	/**
 	 * Makes the given string bold.
 	 *
 	 * @param s The string.
@@ -906,7 +961,7 @@ public class Mobibot extends PircBot
 	 */
 	private static String buildLink(int index, EntryLink entry, boolean isView)
 	{
-		final StringBuffer buff = new StringBuffer(LINK_CMD + (index + 1) + ": ");
+		final StringBuilder buff = new StringBuilder(LINK_CMD + (index + 1) + ": ");
 
 		buff.append('[').append(entry.getNick()).append(']');
 
@@ -1047,11 +1102,10 @@ public class Mobibot extends PircBot
 	 * Returns the port.
 	 *
 	 * @param property The port property value.
-	 * @param defaultValue The default value.
 	 *
 	 * @return The port or default value if invalid.
 	 */
-	private static int getPort(String property, int defaultValue)
+	private static int getPort(String property)
 	{
 		int port;
 
@@ -1061,7 +1115,7 @@ public class Mobibot extends PircBot
 		}
 		catch (NumberFormatException ignore)
 		{
-			port = defaultValue;
+			port = Mobibot.DEFAULT_PORT;
 		}
 
 		return port;
@@ -1119,16 +1173,16 @@ public class Mobibot extends PircBot
 	private static String lookup(String query)
 			throws UnknownHostException
 	{
-		final StringBuffer buffer = new StringBuffer("");
+		final StringBuilder buffer = new StringBuilder("");
 
-		final InetAddress[] result = InetAddress.getAllByName(query);
+		final InetAddress[] results = InetAddress.getAllByName(query);
 		String hostInfo;
 
-		for (int i = 0; i < result.length; i++)
+		for (final InetAddress result : results)
 		{
-			if (result[i].getHostAddress().equals(query))
+			if (result.getHostAddress().equals(query))
 			{
-				hostInfo = result[i].getHostName();
+				hostInfo = result.getHostName();
 
 				if (hostInfo.equals(query))
 				{
@@ -1137,7 +1191,7 @@ public class Mobibot extends PircBot
 			}
 			else
 			{
-				hostInfo = result[i].getHostAddress();
+				hostInfo = result.getHostAddress();
 			}
 
 			if (buffer.length() > 0)
@@ -1259,7 +1313,7 @@ public class Mobibot extends PircBot
 	 */
 	public final String getChannel()
 	{
-		return _channel;
+		return channel;
 	}
 
 	/**
@@ -1269,7 +1323,7 @@ public class Mobibot extends PircBot
 	 */
 	public final synchronized FeedFetcherCache getFeedInfoCache()
 	{
-		return _feedInfoCache;
+		return feedInfoCache;
 	}
 
 	/**
@@ -1279,7 +1333,7 @@ public class Mobibot extends PircBot
 	 */
 	public final Log4JLogger getLogger()
 	{
-		return _logger;
+		return logger;
 	}
 
 	/**
@@ -1356,6 +1410,11 @@ public class Mobibot extends PircBot
 			send(sender, "For a listing of the supported countries:");
 			send(sender, DOUBLE_INDENT + bold(getNick() + ": " + TIME_CMD));
 		}
+		else if (lcTopic.endsWith(QUOTE_CMD))
+		{
+			send(sender, "To retrieve a random quote:");
+			send(sender, DOUBLE_INDENT + bold(getNick() + ": " + QUOTE_CMD));
+		}
 		else if (lcTopic.endsWith(STOCK_CMD))
 		{
 			send(sender, "To retrieve a stock quote:");
@@ -1365,6 +1424,11 @@ public class Mobibot extends PircBot
 		{
 			send(sender, "To roll the dice:");
 			send(sender, DOUBLE_INDENT + bold(getNick() + ": " + DICE_CMD));
+		}
+		else if (lcTopic.endsWith(WAR_CMD))
+		{
+			send(sender, "To play war:");
+			send(sender, DOUBLE_INDENT + bold(getNick() + ": " + WAR_CMD));
 		}
 		else if (lcTopic.endsWith(WEATHER_CMD))
 		{
@@ -1458,6 +1522,7 @@ public class Mobibot extends PircBot
 					LOOKUP_CMD,
 					getChannel().substring(1),
 					HELP_POSTING_KEYWORD,
+					QUOTE_CMD,
 					RECAP_CMD,
 					STOCK_CMD,
 					HELP_TAGS_KEYWORD,
@@ -1465,12 +1530,13 @@ public class Mobibot extends PircBot
 					TWITTER_CMD,
 					USERS_CMD,
 					VIEW_CMD,
+					WAR_CMD,
 					WEATHER_CMD
 			};
 
 			Arrays.sort(cmds);
 
-			final StringBuffer sb = new StringBuffer(0);
+			final StringBuilder sb = new StringBuilder(0);
 			boolean isValidCmd = true;
 
 			for (int i = 0, cmdCount = 1; i < cmds.length; i++, cmdCount++)
@@ -1541,18 +1607,18 @@ public class Mobibot extends PircBot
 		{
 			if (isPrivate)
 			{
-				if (_logger.isDebugEnabled())
+				if (logger.isDebugEnabled())
 				{
-					_logger.debug("Sending message to " + sender + ": " + message);
+					logger.debug("Sending message to " + sender + ": " + message);
 				}
 
 				sendMessage(sender, message);
 			}
 			else
 			{
-				if (_logger.isDebugEnabled())
+				if (logger.isDebugEnabled())
 				{
-					_logger.debug("Sending notice to " + sender + ": " + message);
+					logger.debug("Sending notice to " + sender + ": " + message);
 				}
 
 				sendNotice(sender, message);
@@ -1584,9 +1650,9 @@ public class Mobibot extends PircBot
 	 */
 	protected final void onDisconnect()
 	{
-		if (isValidString(_weblogURL))
+		if (isValidString(weblogURL))
 		{
-			setVersion(_weblogURL);
+			setVersion(weblogURL);
 		}
 
 		sleep(5);
@@ -1594,7 +1660,7 @@ public class Mobibot extends PircBot
 		// Connect
 		try
 		{
-			connect(_ircServer, _ircPort);
+			connect(ircServer, ircPort);
 		}
 		catch (Exception e)
 		{
@@ -1606,16 +1672,16 @@ public class Mobibot extends PircBot
 
 				try
 				{
-					connect(_ircServer, _ircPort);
+					connect(ircServer, ircPort);
 				}
 				catch (Exception ex)
 				{
 					if (retries == MAX_RECONNECT)
 					{
-						if (_logger.isDebugEnabled())
+						if (logger.isDebugEnabled())
 						{
-							_logger.debug(
-									"Unable to reconnect to " + _ircServer + " after " + MAX_RECONNECT + " retries.",
+							logger.debug(
+									"Unable to reconnect to " + ircServer + " after " + MAX_RECONNECT + " retries.",
 									ex);
 						}
 
@@ -1628,14 +1694,14 @@ public class Mobibot extends PircBot
 
 		setVersion(INFO_STRS[0]);
 
-		if (isValidString(_ident))
+		if (isValidString(ident))
 		{
-			identify(_ident);
+			identify(ident);
 		}
 
-		if (isValidString(_identNick) && isValidString(_identMsg))
+		if (isValidString(identNick) && isValidString(identMsg))
 		{
-			sendMessage(_identNick, _identMsg);
+			sendMessage(identNick, identMsg);
 		}
 
 		joinChannel(getChannel());
@@ -1652,9 +1718,9 @@ public class Mobibot extends PircBot
 	 */
 	protected final void onMessage(String channel, String sender, String login, String hostname, String message)
 	{
-		if (_logger.isDebugEnabled())
+		if (logger.isDebugEnabled())
 		{
-			_logger.debug(">>> " + sender + ": " + message);
+			logger.debug(">>> " + sender + ": " + message);
 		}
 
 		boolean isCommand = false;
@@ -1665,7 +1731,7 @@ public class Mobibot extends PircBot
 
 			final String[] cmds = message.split(" ", 2);
 
-			if (cmds.length == 1 || (cmds[1].indexOf(getNick()) == -1))
+			if (cmds.length == 1 || (!cmds[1].contains(getNick())))
 			{
 				final String link = cmds[0].trim();
 				boolean isBackup = false;
@@ -1679,11 +1745,11 @@ public class Mobibot extends PircBot
 						isBackup = true;
 						saveEntries(true);
 
-						_entries.clear();
+						entries.clear();
 						setToday(today());
 					}
 
-					final StringBuffer tags = new StringBuffer(_defaultTags);
+					final StringBuilder tags = new StringBuilder(defaultTags);
 					String title = NO_TITLE;
 
 					if (cmds.length == 2)
@@ -1723,15 +1789,15 @@ public class Mobibot extends PircBot
 						}
 					}
 
-					_entries.add(new EntryLink(link, title, sender, login, channel, tags.toString()));
+					entries.add(new EntryLink(link, title, sender, login, channel, tags.toString()));
 
-					final int index = _entries.size() - 1;
-					final EntryLink entry = (EntryLink) _entries.get(index);
+					final int index = entries.size() - 1;
+					final EntryLink entry = entries.get(index);
 					send(channel, buildLink(index, entry));
 
-					if (_delicious != null)
+					if (delicious != null)
 					{
-						_delicious.addPost(entry);
+						delicious.addPost(entry);
 					}
 
 					saveEntries(isBackup);
@@ -1744,7 +1810,7 @@ public class Mobibot extends PircBot
 				}
 				else
 				{
-					final EntryLink entry = (EntryLink) _entries.get(dupIndex);
+					final EntryLink entry = entries.get(dupIndex);
 					send(sender, "Duplicate >> " + buildLink(dupIndex, entry));
 				}
 			}
@@ -1811,23 +1877,63 @@ public class Mobibot extends PircBot
 			else if (cmd.equals(DICE_CMD))
 			{
 				final Random r = new Random();
+
 				int i = r.nextInt(6) + 1;
 				int y = r.nextInt(6) + 1;
-				final int total = i + y;
+				final int playerTotal = i + y;
 
-				send(getChannel(), sender + " rolled two dice: " + i + " and " + y + " for a total of " + total);
+				send(getChannel(),
+				     sender + " rolled two dice: " + bold(i) + " and " + bold(y) + " for a total of "
+				     + bold(playerTotal));
 
 				i = r.nextInt(6) + 1;
 				y = r.nextInt(6) + 1;
-				action("rolled two dice: " + i + " and " + y + " for a total of " + (i + y));
+				final int total = i + y;
 
-				if (total < (i + y))
+				action("rolled two dice: " + bold(i) + " and " + bold(y) + " for a total of " + bold(total));
+
+				if (playerTotal < total)
 				{
 					action("wins.");
 				}
-				else if (total > (i + y))
+				else if (playerTotal > total)
 				{
 					action("lost.");
+				}
+				else
+				{
+					action("tied.");
+				}
+			}
+			else if (cmd.equals(WAR_CMD))
+			{
+				final Random r = new Random();
+
+				int i;
+				int y;
+
+				while (true)
+				{
+					i = r.nextInt(WAR_DECK.length);
+					y = r.nextInt(WAR_DECK.length);
+
+					send(getChannel(),
+					     sender + " drew the " + bold(WAR_DECK[i]) + " of " + WAR_SUITS[r.nextInt(WAR_SUITS.length)]);
+					action("drew the " + bold(WAR_DECK[y]) + " of " + WAR_SUITS[r.nextInt(WAR_SUITS.length)]);
+
+					if (i != y)
+					{
+						break;
+					}
+				}
+
+				if (i < y)
+				{
+					action("lost.");
+				}
+				else if (i > y)
+				{
+					action("wins.");
 				}
 				else
 				{
@@ -1862,6 +1968,10 @@ public class Mobibot extends PircBot
 			{
 				stockResponse(sender, args);
 			}
+			else if (cmd.startsWith(QUOTE_CMD))
+			{
+				new Thread(new Quote(this, sender)).start();
+			}
 			else if (cmd.startsWith(CALC_CMD))
 			{
 				if (cmds.length > 1)
@@ -1875,9 +1985,9 @@ public class Mobibot extends PircBot
 					}
 					catch (Exception e)
 					{
-						if (_logger.isDebugEnabled())
+						if (logger.isDebugEnabled())
 						{
-							_logger.debug("Unable to calculate: " + message, e);
+							logger.debug("Unable to calculate: " + message, e);
 						}
 					}
 				}
@@ -1901,11 +2011,11 @@ public class Mobibot extends PircBot
 					final String nick = sender.toLowerCase();
 					final boolean isMe = args.toLowerCase().startsWith(IGNORE_ME_KEYWORD);
 
-					if (_ignoredNicks.contains(nick))
+					if (ignoredNicks.contains(nick))
 					{
 						if (isMe)
 						{
-							_ignoredNicks.remove(nick);
+							ignoredNicks.remove(nick);
 
 							send(sender, "You are no longer ignored.");
 						}
@@ -1918,7 +2028,7 @@ public class Mobibot extends PircBot
 					{
 						if (isMe)
 						{
-							_ignoredNicks.add(nick);
+							ignoredNicks.add(nick);
 
 							send(sender, "You are now ignored.");
 						}
@@ -1934,29 +2044,25 @@ public class Mobibot extends PircBot
 					{
 						final String[] nicks = args.toLowerCase().split(" ");
 
-						String nick;
-
-						for (int i = 0; i < nicks.length; i++)
+						for (String nick : nicks)
 						{
-							nick = nicks[i];
-
 							if (IGNORE_ME_KEYWORD.equals(nick))
 							{
 								nick = sender.toLowerCase();
 							}
 
-							if (_ignoredNicks.contains(nick))
+							if (ignoredNicks.contains(nick))
 							{
-								_ignoredNicks.remove(nick);
+								ignoredNicks.remove(nick);
 							}
 							else
 							{
-								_ignoredNicks.add(nick);
+								ignoredNicks.add(nick);
 							}
 						}
 					}
 
-					send(sender, "The following nicks are ignored: " + _ignoredNicks.toString());
+					send(sender, "The following nicks are ignored: " + ignoredNicks.toString());
 				}
 			}
 		}
@@ -1967,13 +2073,13 @@ public class Mobibot extends PircBot
 			final String[] cmds = message.substring(1).split(":", 2);
 			final int index = Integer.parseInt(cmds[0]) - 1;
 
-			if (index < _entries.size())
+			if (index < entries.size())
 			{
 				final String cmd = cmds[1].trim();
 
 				if (cmd.length() == 0)
 				{
-					final EntryLink entry = (EntryLink) _entries.get(index);
+					final EntryLink entry = entries.get(index);
 					send(getChannel(), buildLink(index, entry));
 
 					if (entry.hasTags())
@@ -1995,16 +2101,16 @@ public class Mobibot extends PircBot
 				{
 					if ("-".equals(cmd))
 					{
-						final EntryLink entry = (EntryLink) _entries.get(index);
+						final EntryLink entry = entries.get(index);
 
 						if (entry.getLogin().equals(login) || isOp(sender))
 						{
-							if (_delicious != null)
+							if (delicious != null)
 							{
-								_delicious.deletePost(entry);
+								delicious.deletePost(entry);
 							}
 
-							_entries.remove(index);
+							entries.remove(index);
 							send(getChannel(), "Entry " + LINK_CMD + (index + 1) + " removed.");
 							saveEntries(false);
 						}
@@ -2017,12 +2123,12 @@ public class Mobibot extends PircBot
 					{
 						if (cmd.length() > 1)
 						{
-							final EntryLink entry = (EntryLink) _entries.get(index);
+							final EntryLink entry = entries.get(index);
 							entry.setTitle(cmd.substring(1).trim());
 
-							if (_delicious != null)
+							if (delicious != null)
 							{
-								_delicious.updatePost(entry.getLink(), entry);
+								delicious.updatePost(entry.getLink(), entry);
 							}
 
 							send(getChannel(), buildLink(index, entry));
@@ -2031,7 +2137,7 @@ public class Mobibot extends PircBot
 					}
 					else if (cmd.charAt(0) == '=')
 					{
-						final EntryLink entry = (EntryLink) _entries.get(index);
+						final EntryLink entry = entries.get(index);
 
 						if (entry.getLogin().equals(login) || isOp(sender))
 						{
@@ -2043,9 +2149,9 @@ public class Mobibot extends PircBot
 
 								entry.setLink(link);
 
-								if (_delicious != null)
+								if (delicious != null)
 								{
-									_delicious.updatePost(oldLink, entry);
+									delicious.updatePost(oldLink, entry);
 								}
 
 								send(getChannel(), buildLink(index, entry));
@@ -2063,7 +2169,7 @@ public class Mobibot extends PircBot
 						{
 							if (cmd.length() > 1)
 							{
-								final EntryLink entry = (EntryLink) _entries.get(index);
+								final EntryLink entry = entries.get(index);
 								entry.setNick(cmd.substring(1));
 								send(getChannel(), buildLink(index, entry));
 								saveEntries(false);
@@ -2076,7 +2182,7 @@ public class Mobibot extends PircBot
 					}
 					else
 					{
-						final EntryLink entry = (EntryLink) _entries.get(index);
+						final EntryLink entry = entries.get(index);
 						final int cindex = entry.addComment(cmd, sender);
 
 						final EntryComment comment = entry.getComment(cindex);
@@ -2093,11 +2199,11 @@ public class Mobibot extends PircBot
 			final String[] cmds = message.substring(1).split("T:", 2);
 			final int index = Integer.parseInt(cmds[0]) - 1;
 
-			if (index < _entries.size())
+			if (index < entries.size())
 			{
 				final String cmd = cmds[1].trim();
 
-				final EntryLink entry = (EntryLink) _entries.get(index);
+				final EntryLink entry = entries.get(index);
 
 				if (cmd.length() != 0)
 				{
@@ -2105,9 +2211,9 @@ public class Mobibot extends PircBot
 					{
 						entry.setTags(cmd);
 
-						if (_delicious != null)
+						if (delicious != null)
 						{
-							_delicious.updatePost(entry.getLink(), entry);
+							delicious.updatePost(entry.getLink(), entry);
 						}
 
 						send(getChannel(), buildTags(index, entry));
@@ -2138,9 +2244,9 @@ public class Mobibot extends PircBot
 			final String[] cmds = message.substring(1).split("[.:]", 3);
 			final int index = Integer.parseInt(cmds[0]) - 1;
 
-			if (index < _entries.size())
+			if (index < entries.size())
 			{
-				final EntryLink entry = (EntryLink) _entries.get(index);
+				final EntryLink entry = entries.get(index);
 				final int cindex = Integer.parseInt(cmds[1]) - 1;
 
 				if (cindex < entry.getCommentsCount())
@@ -2205,9 +2311,9 @@ public class Mobibot extends PircBot
 	 */
 	protected final void onPrivateMessage(String sender, String login, String hostname, String message)
 	{
-		if (_logger.isDebugEnabled())
+		if (logger.isDebugEnabled())
 		{
-			_logger.debug(">>> " + sender + ": " + message);
+			logger.debug(">>> " + sender + ": " + message);
 		}
 
 		final String[] cmds = message.split(" ", 2);
@@ -2262,8 +2368,8 @@ public class Mobibot extends PircBot
 		{
 			if (isOp(sender))
 			{
-				_history.add(0, args);
-				send(sender, _history.toString(), true);
+				history.add(0, args);
+				send(sender, history.toString(), true);
 			}
 		}
 		else if (cmd.startsWith(ME_CMD))
@@ -2349,16 +2455,16 @@ public class Mobibot extends PircBot
 		{
 			if (isOp(sender))
 			{
-				if (_logger.isDebugEnabled())
+				if (logger.isDebugEnabled())
 				{
-					_logger.getLogger().setLevel(_loggerLevel);
+					logger.getLogger().setLevel(loggerLevel);
 				}
 				else
 				{
-					_logger.getLogger().setLevel(Level.DEBUG);
+					logger.getLogger().setLevel(Level.DEBUG);
 				}
 
-				send(sender, "Debug logging is " + (_logger.isDebugEnabled() ? "enabled." : "disabled."), true);
+				send(sender, "Debug logging is " + (logger.isDebugEnabled() ? "enabled." : "disabled."), true);
 			}
 		}
 		else
@@ -2374,9 +2480,9 @@ public class Mobibot extends PircBot
 	 */
 	private void feedResponse(String sender)
 	{
-		if (isValidString(_feedURL))
+		if (isValidString(feedURL))
 		{
-			new Thread(new FeedReader(this, sender, _feedURL)).start();
+			new Thread(new FeedReader(this, sender, feedURL)).start();
 		}
 		else
 		{
@@ -2395,9 +2501,9 @@ public class Mobibot extends PircBot
 	{
 		EntryLink entry;
 
-		for (int i = 0; i < _entries.size(); i++)
+		for (int i = 0; i < entries.size(); i++)
 		{
-			entry = (EntryLink) _entries.get(i);
+			entry = entries.get(i);
 
 			if (link.equals(entry.getLink()))
 			{
@@ -2415,7 +2521,7 @@ public class Mobibot extends PircBot
 	 */
 	private String getNickPattern()
 	{
-		final StringBuffer buff = new StringBuffer(0);
+		final StringBuilder buff = new StringBuilder(0);
 		final String nick = getNick();
 		char c;
 
@@ -2444,7 +2550,7 @@ public class Mobibot extends PircBot
 	 */
 	private synchronized String getToday()
 	{
-		return _today;
+		return today;
 	}
 
 	/**
@@ -2454,7 +2560,7 @@ public class Mobibot extends PircBot
 	 */
 	private synchronized void setToday(String today)
 	{
-		_today = today;
+		this.today = today;
 	}
 
 	/**
@@ -2484,8 +2590,8 @@ public class Mobibot extends PircBot
 	 */
 	private boolean isTwitterEnabled()
 	{
-		return isValidString(_twitterConsumerKey) && isValidString(_twitterConsumerSecret) && isValidString(
-				_twitterToken) && isValidString(_twitterTokenSecret);
+		return isValidString(twitterConsumerKey) && isValidString(twitterConsumerSecret) && isValidString(twitterToken)
+		       && isValidString(twitterTokenSecret);
 	}
 
 	/**
@@ -2502,10 +2608,10 @@ public class Mobibot extends PircBot
 			{
 				new Thread(new Twitter(this,
 				                       sender,
-				                       _twitterConsumerKey,
-				                       _twitterConsumerSecret,
-				                       _twitterToken,
-				                       _twitterTokenSecret,
+				                       twitterConsumerKey,
+				                       twitterConsumerSecret,
+				                       twitterToken,
+				                       twitterTokenSecret,
 				                       message)).start();
 			}
 			else
@@ -2527,9 +2633,9 @@ public class Mobibot extends PircBot
 	 */
 	private void infoResponse(String sender, boolean isPrivate)
 	{
-		for (int i = 0; i < INFO_STRS.length; i++)
+		for (final String info : INFO_STRS)
 		{
-			send(sender, INFO_STRS[i], isPrivate);
+			send(sender, info, isPrivate);
 		}
 
 		long timeInSeconds = (System.currentTimeMillis() - START_TIME) / 1000L;
@@ -2542,7 +2648,7 @@ public class Mobibot extends PircBot
 
 		final long minutes = timeInSeconds / 60L;
 		send(sender,
-		     "Uptime: " + days + " day(s) " + hours + " hour(s) " + minutes + " minute(s)  [Entries: " + _entries.size()
+		     "Uptime: " + days + " day(s) " + hours + " hour(s) " + minutes + " minute(s)  [Entries: " + entries.size()
 		     + ']',
 		     isPrivate
 		);
@@ -2558,9 +2664,9 @@ public class Mobibot extends PircBot
 	{
 		if (isOp(sender))
 		{
-			for (int i = 0; i < VERSION_STRS.length; i++)
+			for (final String version : VERSION_STRS)
 			{
-				send(sender, VERSION_STRS[i], isPrivate);
+				send(sender, version, isPrivate);
 			}
 		}
 	}
@@ -2574,12 +2680,12 @@ public class Mobibot extends PircBot
 	 */
 	private boolean isIgnoredNick(String nick)
 	{
-		return isValidString(nick) && _ignoredNicks.contains(nick.toLowerCase());
+		return isValidString(nick) && ignoredNicks.contains(nick.toLowerCase());
 
 	}
 
 	/**
-	 * Returns true is the specified sender is an Op on the {@link #_channel channel}.
+	 * Returns true is the specified sender is an Op on the {@link #channel channel}.
 	 *
 	 * @param sender The sender.
 	 *
@@ -2589,11 +2695,8 @@ public class Mobibot extends PircBot
 	{
 		final User[] users = getUsers(getChannel());
 
-		User user;
-
-		for (int i = 0; i < users.length; i++)
+		for (final User user : users)
 		{
-			user = users[i];
 
 			if (user.getNick().equals(sender))
 			{
@@ -2615,7 +2718,7 @@ public class Mobibot extends PircBot
 	private void loadBacklogs(String file)
 			throws FileNotFoundException, FeedException
 	{
-		_history.clear();
+		history.clear();
 
 		final SyndFeedInput input = new SyndFeedInput();
 
@@ -2633,7 +2736,7 @@ public class Mobibot extends PircBot
 			for (int i = items.size() - 1; i >= 0; i--)
 			{
 				item = (SyndEntryImpl) items.get(i);
-				_history.add(item.getTitle());
+				history.add(item.getTitle());
 			}
 		}
 		finally
@@ -2661,10 +2764,11 @@ public class Mobibot extends PircBot
 	 * @throws FileNotFoundException If the file was not found.
 	 * @throws FeedException If an error occurred while reading the feed.
 	 */
+	@SuppressWarnings("unchecked")
 	private void loadEntries(String file)
 			throws FileNotFoundException, FeedException
 	{
-		_entries.clear();
+		entries.clear();
 
 		final SyndFeedInput input = new SyndFeedInput();
 
@@ -2700,18 +2804,17 @@ public class Mobibot extends PircBot
 				comments = description.getValue().split("<br/>");
 
 				int split;
-				for (int j = 0; j < comments.length; j++)
+				for (final String comment : comments)
 				{
-					split = comments[j].indexOf(": ");
+					split = comment.indexOf(": ");
 
 					if (split != -1)
 					{
-						entry.addComment(comments[j].substring(split + 2).trim(),
-						                 comments[j].substring(0, split).trim());
+						entry.addComment(comment.substring(split + 2).trim(), comment.substring(0, split).trim());
 					}
 				}
 
-				_entries.add(entry);
+				entries.add(entry);
 			}
 		}
 		finally
@@ -2757,9 +2860,9 @@ public class Mobibot extends PircBot
 						{
 							String line;
 
-							for (int i = 0; i < lines.length; i++)
+							for (final String rawLine : lines)
 							{
-								line = lines[i].trim();
+								line = rawLine.trim();
 
 								if ((line.length() > 0) && (line.charAt(0) != '#'))
 								{
@@ -2774,9 +2877,9 @@ public class Mobibot extends PircBot
 					}
 					catch (IOException ioe)
 					{
-						if (_logger.isDebugEnabled())
+						if (logger.isDebugEnabled())
 						{
-							_logger.debug("Unable to perform whois IP lookup: " + query, ioe);
+							logger.debug("Unable to perform whois IP lookup: " + query, ioe);
 						}
 
 						send(getChannel(), "Unable to perform whois IP lookup: " + ioe.getMessage());
@@ -2802,9 +2905,9 @@ public class Mobibot extends PircBot
 	 */
 	private void recapResponse(String sender, boolean isPrivate)
 	{
-		for (int i = 0; i < RECAP_ARRAY.size(); i++)
+		for (final String recap : RECAP_ARRAY)
 		{
-			send(sender, (String) RECAP_ARRAY.get(i), isPrivate);
+			send(sender, recap, isPrivate);
 		}
 	}
 
@@ -2815,40 +2918,40 @@ public class Mobibot extends PircBot
 	 */
 	private void saveEntries(boolean isDayBackup)
 	{
-		if (_logger.isDebugEnabled())
+		if (logger.isDebugEnabled())
 		{
-			_logger.debug("Saving...");
+			logger.debug("Saving...");
 		}
 
-		if (isValidString(_logsDir) && isValidString(_weblogURL))
+		if (isValidString(logsDir) && isValidString(weblogURL))
 		{
 			FileWriter fw = null;
 
 			try
 			{
-				fw = new FileWriter(new File(_logsDir + CURRENT_XML));
+				fw = new FileWriter(new File(logsDir + CURRENT_XML));
 
 				SyndFeed rss = new SyndFeedImpl();
 				rss.setFeedType("rss_2.0");
 				rss.setTitle(getChannel() + " IRC Links");
-				rss.setDescription("Links from " + _ircServer + " on " + getChannel());
-				rss.setLink(_weblogURL);
+				rss.setDescription("Links from " + ircServer + " on " + getChannel());
+				rss.setLink(weblogURL);
 				rss.setPublishedDate(Calendar.getInstance().getTime());
 				rss.setLanguage("en");
 
 				EntryLink entry;
 				StringBuffer buff;
 				EntryComment comment;
-				final List items = new ArrayList(0);
+				final List<SyndEntry> items = new ArrayList<SyndEntry>(0);
 				SyndEntry item;
 				SyndContent description;
 
-				for (int i = (_entries.size() - 1); i >= 0; --i)
+				for (int i = (entries.size() - 1); i >= 0; --i)
 				{
-					entry = (EntryLink) _entries.get(i);
+					entry = entries.get(i);
 
 					buff = new StringBuffer(
-							"Posted by <b>" + entry.getNick() + "</b> on <a href=\"irc://" + _ircServer + '/' + entry
+							"Posted by <b>" + entry.getNick() + "</b> on <a href=\"irc://" + ircServer + '/' + entry
 									.getChannel() + "\"><b>" + entry.getChannel() + "</b></a>"
 					);
 
@@ -2878,7 +2981,7 @@ public class Mobibot extends PircBot
 					item.setDescription(description);
 					item.setTitle(entry.getTitle());
 					item.setPublishedDate(entry.getDate());
-					item.setAuthor(getChannel().substring(1) + '@' + _ircServer + " (" + entry.getNick() + ')');
+					item.setAuthor(getChannel().substring(1) + '@' + ircServer + " (" + entry.getNick() + ')');
 					item.setCategories(entry.getTags());
 
 					items.add(item);
@@ -2886,50 +2989,50 @@ public class Mobibot extends PircBot
 
 				rss.setEntries(items);
 
-				if (_logger.isDebugEnabled())
+				if (logger.isDebugEnabled())
 				{
-					_logger.debug("Writing the entries feed.");
+					logger.debug("Writing the entries feed.");
 				}
 
 				final SyndFeedOutput output = new SyndFeedOutput();
 				output.output(rss, fw);
 				fw.close();
 
-				fw = new FileWriter(new File(_logsDir + getToday() + ".xml"));
+				fw = new FileWriter(new File(logsDir + getToday() + ".xml"));
 				output.output(rss, fw);
 
 				if (isDayBackup)
 				{
-					if (isValidString(_backlogsURL))
+					if (isValidString(backlogsURL))
 					{
-						if (_history.indexOf(getToday()) == -1)
+						if (history.indexOf(getToday()) == -1)
 						{
-							_history.add(getToday());
+							history.add(getToday());
 
-							while (_history.size() > MAX_BACKLOGS)
+							while (history.size() > MAX_BACKLOGS)
 							{
-								_history.remove(0);
+								history.remove(0);
 							}
 						}
 
 						fw.close();
-						fw = new FileWriter(new File(_logsDir + NAV_XML));
+						fw = new FileWriter(new File(logsDir + NAV_XML));
 						rss = new SyndFeedImpl();
 						rss.setFeedType("rss_2.0");
 						rss.setTitle(getChannel() + " IRC Links Backlogs");
-						rss.setDescription("Backlogs of Links from " + _ircServer + " on " + getChannel());
-						rss.setLink(_backlogsURL);
+						rss.setDescription("Backlogs of Links from " + ircServer + " on " + getChannel());
+						rss.setLink(backlogsURL);
 						rss.setPublishedDate(Calendar.getInstance().getTime());
 
 						String date;
 						items.clear();
 
-						for (int i = (_history.size() - 1); i >= 0; --i)
+						for (int i = (history.size() - 1); i >= 0; --i)
 						{
-							date = (String) _history.get(i);
+							date = history.get(i);
 
 							item = new SyndEntryImpl();
-							item.setLink(_backlogsURL + date + ".xml");
+							item.setLink(backlogsURL + date + ".xml");
 							item.setTitle(date);
 							description = new SyndContentImpl();
 							description.setValue("Links for " + date);
@@ -2940,22 +3043,22 @@ public class Mobibot extends PircBot
 
 						rss.setEntries(items);
 
-						if (_logger.isDebugEnabled())
+						if (logger.isDebugEnabled())
 						{
-							_logger.debug("Writing the backlog feed.");
+							logger.debug("Writing the backlog feed.");
 						}
 
 						output.output(rss, fw);
 					}
 					else
 					{
-						_logger.warn("Unable to generate the backlogs feed. No property configured.");
+						logger.warn("Unable to generate the backlogs feed. No property configured.");
 					}
 				}
 			}
 			catch (Exception e)
 			{
-				_logger.warn("Unable to generate the feed.", e);
+				logger.warn("Unable to generate the feed.", e);
 			}
 			finally
 			{
@@ -2974,7 +3077,7 @@ public class Mobibot extends PircBot
 		}
 		else
 		{
-			_logger.warn("Unable to generate the feed. At least one of the required property is missing.");
+			logger.warn("Unable to generate the feed. At least one of the required property is missing.");
 		}
 	}
 
@@ -2985,7 +3088,7 @@ public class Mobibot extends PircBot
 	 */
 	private void setBacklogsURL(String backlogsURL)
 	{
-		_backlogsURL = backlogsURL;
+		this.backlogsURL = backlogsURL;
 	}
 
 	/**
@@ -2996,7 +3099,7 @@ public class Mobibot extends PircBot
 	 */
 	private void setDeliciousAuth(String username, String password)
 	{
-		_delicious = new DeliciousPoster(username, password, _ircServer);
+		delicious = new DeliciousPoster(username, password, ircServer);
 	}
 
 	/**
@@ -3006,7 +3109,7 @@ public class Mobibot extends PircBot
 	 */
 	private void setFeedURL(String feedURL)
 	{
-		_feedURL = feedURL;
+		this.feedURL = feedURL;
 	}
 
 	/**
@@ -3019,10 +3122,10 @@ public class Mobibot extends PircBot
 	 */
 	private void setTwitterAuth(String consumerKey, String consumerSecret, String token, String tokenSecret)
 	{
-		_twitterConsumerKey = consumerKey;
-		_twitterConsumerSecret = consumerSecret;
-		_twitterToken = token;
-		_twitterTokenSecret = tokenSecret;
+		twitterConsumerKey = consumerKey;
+		twitterConsumerSecret = consumerSecret;
+		twitterToken = token;
+		twitterTokenSecret = tokenSecret;
 	}
 
 	/**
@@ -3032,7 +3135,7 @@ public class Mobibot extends PircBot
 	 */
 	private void setIdent(String pwd)
 	{
-		_ident = pwd;
+		ident = pwd;
 	}
 
 	/**
@@ -3042,7 +3145,7 @@ public class Mobibot extends PircBot
 	 */
 	private void setIdentMsg(String msg)
 	{
-		_identMsg = msg;
+		identMsg = msg;
 	}
 
 	/**
@@ -3052,7 +3155,7 @@ public class Mobibot extends PircBot
 	 */
 	private void setIdentNick(String nick)
 	{
-		_identNick = nick;
+		identNick = nick;
 	}
 
 	/**
@@ -3068,7 +3171,7 @@ public class Mobibot extends PircBot
 
 			while (st.hasMoreTokens())
 			{
-				_ignoredNicks.add(st.nextToken().trim().toLowerCase());
+				ignoredNicks.add(st.nextToken().trim().toLowerCase());
 			}
 		}
 	}
@@ -3080,7 +3183,7 @@ public class Mobibot extends PircBot
 	 */
 	private void setTags(String tags)
 	{
-		_defaultTags = tags;
+		defaultTags = tags;
 	}
 
 	/**
@@ -3090,7 +3193,7 @@ public class Mobibot extends PircBot
 	 */
 	private void setWeblogURL(String weblogURL)
 	{
-		_weblogURL = weblogURL;
+		this.weblogURL = weblogURL;
 	}
 
 	/**
@@ -3121,7 +3224,7 @@ public class Mobibot extends PircBot
 	private void timeResponse(String sender, String args, boolean isPrivate)
 	{
 		boolean isInvalidTz = false;
-		final String tz = ((String) COUNTRIES_MAP.get((args.substring(args.indexOf(' ') + 1).trim().toUpperCase())));
+		final String tz = (COUNTRIES_MAP.get((args.substring(args.indexOf(' ') + 1).trim().toUpperCase())));
 		final String response;
 
 		if (tz != null)
@@ -3178,16 +3281,16 @@ public class Mobibot extends PircBot
 
 		Arrays.sort(nicks, String.CASE_INSENSITIVE_ORDER);
 
-		final StringBuffer buff = new StringBuffer(0);
+		final StringBuilder buff = new StringBuilder(0);
 
-		for (int i = 0; i < nicks.length; i++)
+		for (final String nick : nicks)
 		{
-			if (isOp(nicks[i]))
+			if (isOp(nick))
 			{
 				buff.append('@');
 			}
 
-			buff.append(nicks[i]).append(' ');
+			buff.append(nick).append(' ');
 		}
 
 		send(sender, buff.toString(), isPrivate);
@@ -3204,9 +3307,9 @@ public class Mobibot extends PircBot
 	{
 		String lcArgs = args.toLowerCase();
 
-		if (!_entries.isEmpty())
+		if (!entries.isEmpty())
 		{
-			final int max = _entries.size();
+			final int max = entries.size();
 			int i = 0;
 
 			if (!(lcArgs.length() > 0) && (max > MAX_ENTRIES))
@@ -3252,13 +3355,13 @@ public class Mobibot extends PircBot
 
 			for (; i < max; i++)
 			{
-				entry = (EntryLink) _entries.get(i);
+				entry = entries.get(i);
 
 				if (lcArgs.length() > 0)
 				{
-					if ((entry.getLink().toLowerCase().indexOf(lcArgs) != -1) || (
-							entry.getTitle().toLowerCase().indexOf(lcArgs) != -1) || (
-							    entry.getNick().toLowerCase().indexOf(lcArgs) != -1))
+					if ((entry.getLink().toLowerCase().contains(lcArgs)) ||
+					    (entry.getTitle().toLowerCase().contains(lcArgs)) ||
+					    (entry.getNick().toLowerCase().contains(lcArgs)))
 					{
 						if (sent > MAX_ENTRIES)
 						{

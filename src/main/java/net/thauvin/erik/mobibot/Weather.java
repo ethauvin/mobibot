@@ -67,22 +67,22 @@ public class Weather implements Runnable
 	/**
 	 * The bot.
 	 */
-	private final Mobibot _bot;
+	private final Mobibot bot;
 
 	/**
 	 * The nick of the person who sent the message.
 	 */
-	private final String _sender;
+	private final String sender;
 
 	/**
 	 * The station ID.
 	 */
-	private final String _station;
+	private final String station;
 
 	/**
 	 * The private message flag.
 	 */
-	private final boolean _isPrivate;
+	private final boolean isPrivate;
 
 	/**
 	 * Creates a new Weather object.
@@ -94,10 +94,10 @@ public class Weather implements Runnable
 	 */
 	public Weather(Mobibot bot, String sender, String station, boolean isPrivate)
 	{
-		_bot = bot;
-		_sender = sender;
-		_station = station.toUpperCase();
-		_isPrivate = isPrivate;
+		this.bot = bot;
+		this.sender = sender;
+		this.station = station.toUpperCase();
+		this.isPrivate = isPrivate;
 	}
 
 	/**
@@ -105,29 +105,28 @@ public class Weather implements Runnable
 	 */
 	public final void run()
 	{
-		if (_station.length() == 4)
+		if (station.length() == 4)
 		{
-			final Metar metar = net.sf.jweather.Weather.getMetar(_station);
+			final Metar metar = net.sf.jweather.Weather.getMetar(station);
 
 			if (metar != null)
 			{
 				Float result;
 
-				_bot.send(_sender, "Station ID: " + metar.getStationID(), _isPrivate);
+				bot.send(sender, "Station ID: " + metar.getStationID(), isPrivate);
 
-				_bot.send(_sender,
+				bot.send(sender,
 				          "At: " + metar.getDateString() + " UTC (" + (
 						          ((new Date()).getTime() - metar.getDate().getTime()) / 1000L / 60L) + " minutes ago)",
-				          _isPrivate
+				          isPrivate
 				);
 
 				result = metar.getWindSpeedInMPH();
 
 				if (result != null)
 				{
-					_bot.send(_sender,
-					          "Wind Speed: " + result + " mph, " + metar.getWindSpeedInKnots() + " knots",
-					          _isPrivate);
+					bot.send(sender,
+					          "Wind Speed: " + result + " mph, " + metar.getWindSpeedInKnots() + " knots", isPrivate);
 				}
 
 				result = metar.getVisibility();
@@ -136,11 +135,11 @@ public class Weather implements Runnable
 				{
 					if (!metar.getVisibilityLessThan())
 					{
-						_bot.send(_sender, "Visibility: " + NUMBER_FORMAT.format(result) + " mile(s)", _isPrivate);
+						bot.send(sender, "Visibility: " + NUMBER_FORMAT.format(result) + " mile(s)", isPrivate);
 					}
 					else
 					{
-						_bot.send(_sender, "Visibility: < " + NUMBER_FORMAT.format(result) + " mile(s)", _isPrivate);
+						bot.send(sender, "Visibility: < " + NUMBER_FORMAT.format(result) + " mile(s)", isPrivate);
 					}
 				}
 
@@ -148,26 +147,26 @@ public class Weather implements Runnable
 
 				if (result != null)
 				{
-					_bot.send(_sender, "Pressure: " + result + " in Hg", _isPrivate);
+					bot.send(sender, "Pressure: " + result + " in Hg", isPrivate);
 				}
 
 				result = metar.getTemperatureInCelsius();
 
 				if (result != null)
 				{
-					_bot.send(_sender,
-					          "Temperature: " + result + " C, " + metar.getTemperatureInFahrenheit() + " F",
-					          _isPrivate);
+					bot.send(sender,
+					          "Temperature: " + result + " C, " + metar.getTemperatureInFahrenheit() + " F", isPrivate);
 				}
 
 				if (metar.getWeatherConditions() != null)
 				{
 					final Iterator it = metar.getWeatherConditions().iterator();
 
+					//noinspection WhileLoopReplaceableByForEach
 					while (it.hasNext())
 					{
 						final WeatherCondition weatherCondition = (WeatherCondition) it.next();
-						_bot.send(_sender, weatherCondition.getNaturalLanguageString(), _isPrivate);
+						bot.send(sender, weatherCondition.getNaturalLanguageString(), isPrivate);
 					}
 				}
 
@@ -175,10 +174,11 @@ public class Weather implements Runnable
 				{
 					final Iterator it = metar.getSkyConditions().iterator();
 
+					//noinspection WhileLoopReplaceableByForEach
 					while (it.hasNext())
 					{
 						final SkyCondition skyCondition = (SkyCondition) it.next();
-						_bot.send(_sender, skyCondition.getNaturalLanguageString(), _isPrivate);
+						bot.send(sender, skyCondition.getNaturalLanguageString(), isPrivate);
 					}
 				}
 
@@ -186,12 +186,12 @@ public class Weather implements Runnable
 			}
 			else
 			{
-				_bot.send(_sender, "Invalid Station ID. Please try again.", _isPrivate);
+				bot.send(sender, "Invalid Station ID. Please try again.", isPrivate);
 
 				return;
 			}
 		}
 
-		_bot.helpResponse(_sender, Mobibot.WEATHER_CMD);
+		bot.helpResponse(sender, Mobibot.WEATHER_CMD);
 	}
 }

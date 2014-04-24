@@ -52,17 +52,19 @@ public class EntryComment implements Serializable
 {
 	/**
 	 * The serial version UID.
+	 *
+	 * @noinspection UnusedDeclaration
 	 */
 	static final long serialVersionUID = 6957415292233553224L;
 
 	/**
 	 * The creation date.
 	 */
-	private final Date _date = Calendar.getInstance().getTime();
+	private final Date date = Calendar.getInstance().getTime();
 
-	private String _comment = "";
+	private String comment = "";
 
-	private String _nick = "";
+	private String nick = "";
 
 	/**
 	 * Creates a new comment.
@@ -72,8 +74,8 @@ public class EntryComment implements Serializable
 	 */
 	public EntryComment(String comment, String nick)
 	{
-		_comment = comment;
-		_nick = nick;
+		this.comment = comment;
+		this.nick = nick;
 	}
 
 	/**
@@ -92,7 +94,7 @@ public class EntryComment implements Serializable
 	 */
 	public final String getComment()
 	{
-		return _comment;
+		return comment;
 	}
 
 	/**
@@ -103,17 +105,19 @@ public class EntryComment implements Serializable
 	 */
 	public final void setComment(String comment)
 	{
-		_comment = comment;
+		this.comment = comment;
 	}
 
 	/**
 	 * Returns the comment's creation date.
 	 *
 	 * @return The date.
+	 *
+	 * @noinspection UnusedDeclaration
 	 */
 	public final Date getDate()
 	{
-		return _date;
+		return date;
 	}
 
 	/**
@@ -123,7 +127,7 @@ public class EntryComment implements Serializable
 	 */
 	public final String getNick()
 	{
-		return _nick;
+		return nick;
 	}
 
 	/**
@@ -133,6 +137,6 @@ public class EntryComment implements Serializable
 	 */
 	public final void setNick(String nick)
 	{
-		_nick = nick;
+		this.nick = nick;
 	}
 }

@@ -1,7 +1,7 @@
 /*
- * @(#)Twitter.java
+ * @(#)Quote.java
  *
- * Copyright (C) 2007 Erik C. Thauvin
+ * Copyright (c) 2014, Erik C. Thauvin (erik@thauvin.net)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -36,19 +36,22 @@
  */
 package net.thauvin.erik.mobibot;
 
-import twitter4j.Status;
-import twitter4j.TwitterFactory;
-import twitter4j.conf.ConfigurationBuilder;
+import org.jibble.pircbot.Colors;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.net.URLConnection;
 
 /**
- * Inserts presence information into Twitter.
+ * Retrieve quote from <a href="iheartquotes.com">I Heart Quotes</a>
  *
  * @author <a href="mailto:erik@thauvin.net">Erik C. Thauvin</a>
- * @version $Revision$, $Date$
- * @created Sept 10, 2008
+ * @created 2014-04-20
  * @since 1.0
  */
-public class Twitter implements Runnable
+public class Quote implements Runnable
 {
 	/**
 	 * The bot.
@@ -56,78 +59,50 @@ public class Twitter implements Runnable
 	private final Mobibot bot;
 
 	/**
-	 * The Twitter consumer secret.
-	 */
-	private final String consumerSecret;
-
-	/**
-	 * The Twitter consumer key.
-	 */
-	private final String consumerKey;
-
-	/**
-	 * The Twitter message.
-	 */
-	private final String message;
-
-	/**
-	 * The Twitter access token.
-	 */
-	private final String accessToken;
-
-	/**
-	 * The Twitter access token secret.
-	 */
-	private final String accessTokenSecret;
-
-	/**
 	 * The nick of the person who sent the message.
 	 */
 	private final String sender;
 
 	/**
-	 * Creates a new Twitter object.
+	 * Creates a new StockQuote object.
 	 *
 	 * @param bot The bot.
 	 * @param sender The nick of the person who sent the message.
-	 * @param consumerKey The Twitter consumer key.
-	 * @param consumerSecret The Twitter consumer secret.
-	 * @param accessToken The Twitter access token.
-	 * @param accessTokenSecret The Twitter access token secret.
-	 * @param message The Twitter message.
 	 */
-	public Twitter(Mobibot bot, String sender, String consumerKey, String consumerSecret, String accessToken,
-	               String accessTokenSecret, String message)
+	public Quote(Mobibot bot, String sender)
 	{
 		this.bot = bot;
-		this.consumerKey = consumerKey;
-		this.consumerSecret = consumerSecret;
-		this.accessToken = accessToken;
-		this.accessTokenSecret = accessTokenSecret;
-		this.message = message;
 		this.sender = sender;
 	}
 
+	/**
+	 * Returns a random quote.
+	 */
 	public final void run()
 	{
 		try
 		{
-			final ConfigurationBuilder cb = new ConfigurationBuilder();
-			cb.setDebugEnabled(true).setOAuthConsumerKey(consumerKey).setOAuthConsumerSecret(consumerSecret)
-					.setOAuthAccessToken(accessToken).setOAuthAccessTokenSecret(accessTokenSecret);
-			final TwitterFactory tf = new TwitterFactory(cb.build());
-			final twitter4j.Twitter twitter = tf.getInstance();
+			final URL url = new URL("http://www.iheartquotes.com/api/v1/random?format=json&max_lines=1");
+			final URLConnection conn = url.openConnection();
 
-			final Status status = twitter.updateStatus(message + " (" + sender + ')');
+			final StringBuilder sb = new StringBuilder();
+			final BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 
-			bot.send(sender,
-			          "You message was posted to http://twitter.com/" + twitter.getScreenName() + "/statuses/" + status
-					          .getId()
-			);
+			String line;
+			while ((line = reader.readLine()) != null)
+			{
+				sb.append(line);
+			}
+
+			final JSONObject json = new JSONObject(sb.toString());
+
+			bot.send(bot.getChannel(), Colors.BLUE + json.getString("quote") + Colors.BLUE);
+
+			reader.close();
 		}
 		catch (Exception e)
 		{
-			bot.getLogger().warn("Unable to post to Twitter: " + message, e);
+			bot.getLogger().warn("Unable to retrieve random quote.", e);
 			bot.send(sender, "An error has occurred: " + e.getMessage());
 		}
 	}

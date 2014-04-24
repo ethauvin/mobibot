@@ -60,17 +60,17 @@ public class StockQuote implements Runnable
 	/**
 	 * The bot.
 	 */
-	private final Mobibot _bot;
+	private final Mobibot bot;
 
 	/**
 	 * The nick of the person who sent the message.
 	 */
-	private final String _sender;
+	private final String sender;
 
 	/**
 	 * The stock symbol.
 	 */
-	private final String _symbol;
+	private final String symbol;
 
 	/**
 	 * Creates a new StockQuote object.
@@ -81,9 +81,9 @@ public class StockQuote implements Runnable
 	 */
 	public StockQuote(Mobibot bot, String sender, String symbol)
 	{
-		_bot = bot;
-		_sender = sender;
-		_symbol = symbol;
+		this.bot = bot;
+		this.sender = sender;
+		this.symbol = symbol;
 	}
 
 	/**
@@ -97,7 +97,7 @@ public class StockQuote implements Runnable
 			client.getHttpConnectionManager().getParams().setConnectionTimeout(Mobibot.CONNECT_TIMEOUT);
 			client.getHttpConnectionManager().getParams().setSoTimeout(Mobibot.CONNECT_TIMEOUT);
 
-			final GetMethod getMethod = new GetMethod(YAHOO_URL + _symbol.toUpperCase());
+			final GetMethod getMethod = new GetMethod(YAHOO_URL + symbol.toUpperCase());
 			client.executeMethod(getMethod);
 
 			final String[][] lines = CSVParser.parse(getMethod.getResponseBodyAsString());
@@ -110,56 +110,56 @@ public class StockQuote implements Runnable
 				{
 					if ((quote.length > 3) && (!"N/A".equalsIgnoreCase(quote[3])))
 					{
-						_bot.send(_bot.getChannel(), "Symbol: " + quote[0] + " [" + quote[1] + ']');
+						bot.send(bot.getChannel(), "Symbol: " + quote[0] + " [" + quote[1] + ']');
 
 						if (quote.length > 5)
 						{
-							_bot.send(_bot.getChannel(), "Last Trade: " + quote[2] + " (" + quote[5] + ')');
+							bot.send(bot.getChannel(), "Last Trade: " + quote[2] + " (" + quote[5] + ')');
 						}
 						else
 						{
-							_bot.send(_bot.getChannel(), "Last Trade: " + quote[2]);
+							bot.send(bot.getChannel(), "Last Trade: " + quote[2]);
 						}
 
 						if (quote.length > 4)
 						{
-							_bot.send(_sender, "Time: " + quote[3] + ' ' + quote[4]);
+							bot.send(sender, "Time: " + quote[3] + ' ' + quote[4]);
 						}
 
 						if (quote.length > 6 && !"N/A".equalsIgnoreCase(quote[6]))
 						{
-							_bot.send(_sender, "Open: " + quote[6]);
+							bot.send(sender, "Open: " + quote[6]);
 						}
 
 						if (quote.length > 7 && !"N/A".equalsIgnoreCase(quote[7]) && !"N/A".equalsIgnoreCase(quote[8]))
 						{
-							_bot.send(_sender, "Day's Range: " + quote[7] + " - " + quote[8]);
+							bot.send(sender, "Day's Range: " + quote[7] + " - " + quote[8]);
 						}
 
 						if (quote.length > 9 && !"0".equalsIgnoreCase(quote[9]))
 						{
-							_bot.send(_sender, "Volume: " + quote[9]);
+							bot.send(sender, "Volume: " + quote[9]);
 						}
 					}
 					else
 					{
-						_bot.send(_sender, "Invalid ticker symbol.");
+						bot.send(sender, "Invalid ticker symbol.");
 					}
 				}
 				else
 				{
-					_bot.send(_sender, "No values returned.");
+					bot.send(sender, "No values returned.");
 				}
 			}
 			else
 			{
-				_bot.send(_sender, "No data returned.");
+				bot.send(sender, "No data returned.");
 			}
 		}
 		catch (IOException e)
 		{
-			_bot.getLogger().debug("Unable to retrieve stock quote for: " + _symbol, e);
-			_bot.send(_sender, "An error has occurred: " + e.getMessage());
+			bot.getLogger().debug("Unable to retrieve stock quote for: " + symbol, e);
+			bot.send(sender, "An error has occurred: " + e.getMessage());
 		}
 	}
 }

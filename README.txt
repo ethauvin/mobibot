@@ -1,6 +1,12 @@
 Some very basic instructions:
 
-	./gradlew deploy
+	{ clone with git or download the ZIP}
+	git clone git://github.com/ethauvin/mobibot.git
+	
+	cd mobibot
+	
+	{ build with gradle }
+	./gradlew
 
 	cd deploy
 
@@ -9,7 +15,9 @@ Some very basic instructions:
 	
 	{ help }
 	java -jar mobibot.jar -h
-	
+
+	{ twitter oauth token request }
+    java -cp mobibot.jar net.thauvin.erik.mobibot.TwitterOAuth <consumerKey> <consumerSecret>
+
 	{ launch }
 	/usr/bin/nohup java -jar mobibot.jar &
-	

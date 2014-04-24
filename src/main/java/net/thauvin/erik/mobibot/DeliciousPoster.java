@@ -49,9 +49,9 @@ import del.icio.us.Delicious;
  */
 public class DeliciousPoster
 {
-	private final Delicious _delicious;
+	private final Delicious delicious;
 
-	private final String _ircServer;
+	private final String ircServer;
 
 	/**
 	 * Creates a new DeliciousPoster instance.
@@ -62,8 +62,8 @@ public class DeliciousPoster
 	 */
 	public DeliciousPoster(String username, String password, String ircServer)
 	{
-		_delicious = new Delicious(username, password);
-		_ircServer = ircServer;
+		delicious = new Delicious(username, password);
+		this.ircServer = ircServer;
 	}
 
 	/**
@@ -77,7 +77,7 @@ public class DeliciousPoster
 		{
 			public Object construct()
 			{
-				return Boolean.valueOf(_delicious.addPost(entry.getLink(),
+				return Boolean.valueOf(delicious.addPost(entry.getLink(),
 				                                          entry.getTitle(),
 				                                          postedBy(entry),
 				                                          entry.getDeliciousTags(),
@@ -101,7 +101,7 @@ public class DeliciousPoster
 		{
 			public Object construct()
 			{
-				return Boolean.valueOf(_delicious.deletePost(link));
+				return Boolean.valueOf(delicious.deletePost(link));
 			}
 		};
 
@@ -122,9 +122,9 @@ public class DeliciousPoster
 			{
 				if (!oldUrl.equals(entry.getLink()))
 				{
-					_delicious.deletePost(oldUrl);
+					delicious.deletePost(oldUrl);
 
-					return Boolean.valueOf(_delicious.addPost(entry.getLink(),
+					return Boolean.valueOf(delicious.addPost(entry.getLink(),
 					                                          entry.getTitle(),
 					                                          postedBy(entry),
 					                                          entry.getDeliciousTags(),
@@ -132,7 +132,7 @@ public class DeliciousPoster
 				}
 				else
 				{
-					return Boolean.valueOf(_delicious.addPost(entry.getLink(),
+					return Boolean.valueOf(delicious.addPost(entry.getLink(),
 					                                          entry.getTitle(),
 					                                          postedBy(entry),
 					                                          entry.getDeliciousTags(),
@@ -155,6 +155,6 @@ public class DeliciousPoster
 	 */
 	private String postedBy(EntryLink entry)
 	{
-		return "Posted by " + entry.getNick() + " on " + entry.getChannel() + " (" + _ircServer + ')';
+		return "Posted by " + entry.getNick() + " on " + entry.getChannel() + " (" + ircServer + ')';
 	}
 }

@@ -69,17 +69,17 @@ public class FeedReader implements Runnable
 	/**
 	 * The bot.
 	 */
-	private final Mobibot _bot;
+	private final Mobibot bot;
 
 	/**
 	 * The nick of the person who sent the message.
 	 */
-	private final String _sender;
+	private final String sender;
 
 	/**
 	 * The URL to fetch.
 	 */
-	private final String _url;
+	private final String url;
 
 	/**
 	 * Creates a new FeedReader object.
@@ -90,9 +90,9 @@ public class FeedReader implements Runnable
 	 */
 	public FeedReader(Mobibot bot, String sender, String url)
 	{
-		_bot = bot;
-		_sender = sender;
-		_url = url;
+		this.bot = bot;
+		this.sender = sender;
+		this.url = url;
 	}
 
 	/**
@@ -100,30 +100,30 @@ public class FeedReader implements Runnable
 	 */
 	public final void run()
 	{
-		final FeedFetcher fetcher = new HttpURLFeedFetcher(_bot.getFeedInfoCache());
+		final FeedFetcher fetcher = new HttpURLFeedFetcher(bot.getFeedInfoCache());
 
 		try
 		{
-			final SyndFeed feed = fetcher.retrieveFeed(new URL(_url));
+			final SyndFeed feed = fetcher.retrieveFeed(new URL(url));
 			SyndEntry item;
 			final List items = feed.getEntries();
 
 			for (int i = 0; (i < items.size()) && (i < MAX_ITEMS); i++)
 			{
 				item = (SyndEntryImpl) items.get(i);
-				_bot.send(_sender, item.getTitle());
-				_bot.send(_sender, TAB_INDENT + item.getLink());
+				bot.send(sender, item.getTitle());
+				bot.send(sender, TAB_INDENT + item.getLink());
 			}
 		}
 		catch (MalformedURLException e)
 		{
-			_bot.getLogger().debug("Invalid feed URL.", e);
-			_bot.send(_sender, "The feed URL is invalid.");
+			bot.getLogger().debug("Invalid feed URL.", e);
+			bot.send(sender, "The feed URL is invalid.");
 		}
 		catch (Exception e)
 		{
-			_bot.getLogger().debug("Unable to fetch the feed.", e);
-			_bot.send(_sender, "An error has occurred while fetching the feed: " + e.getMessage());
+			bot.getLogger().debug("Unable to fetch the feed.", e);
+			bot.send(sender, "An error has occurred while fetching the feed: " + e.getMessage());
 		}
 	}
 }

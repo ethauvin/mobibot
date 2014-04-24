@@ -56,32 +56,34 @@ public class EntryLink implements Serializable
 {
 	/**
 	 * The serial version UID.
+	 *
+	 * @noinspection UnusedDeclaration
 	 */
 	static final long serialVersionUID = 3676245542270899086L;
 
 	// The link's comments
-	private final List _comments = new ArrayList(0);
+	private final List<EntryComment> comments = new ArrayList<EntryComment>(0);
 
 	// The tags/categories
-	private final List _tags = new ArrayList(0);
+	private final List<SyndCategoryImpl> tags = new ArrayList<SyndCategoryImpl>(0);
 
 	// The channel
-	private String _channel = "";
+	private String channel = "";
 
 	// The creation date
-	private Date _date = Calendar.getInstance().getTime();
+	private Date date = Calendar.getInstance().getTime();
 
 	// The link's URL
-	private String _link = "";
+	private String link = "";
 
 	// The author's login
-	private String _login = "";
+	private String login = "";
 
 	// The author's nickname
-	private String _nick = "";
+	private String nick = "";
 
 	// The link's title
-	private String _title = "";
+	private String title = "";
 
 	/**
 	 * Creates a new entry.
@@ -95,11 +97,11 @@ public class EntryLink implements Serializable
 	 */
 	public EntryLink(String link, String title, String nick, String login, String channel, String tags)
 	{
-		_link = link;
-		_title = title;
-		_nick = nick;
-		_login = login;
-		_channel = channel;
+		this.link = link;
+		this.title = title;
+		this.nick = nick;
+		this.login = login;
+		this.channel = channel;
 
 		setTags(tags);
 	}
@@ -114,13 +116,13 @@ public class EntryLink implements Serializable
 	 * @param date The entry date.
 	 * @param tags The entry's tags/categories.
 	 */
-	public EntryLink(String link, String title, String nick, String channel, Date date, List tags)
+	public EntryLink(String link, String title, String nick, String channel, Date date, List<SyndCategoryImpl> tags)
 	{
-		_link = link;
-		_title = title;
-		_nick = nick;
-		_channel = channel;
-		_date = date;
+		this.link = link;
+		this.title = title;
+		this.nick = nick;
+		this.channel = channel;
+		this.date = date;
 
 		setTags(tags);
 	}
@@ -144,9 +146,9 @@ public class EntryLink implements Serializable
 	 */
 	public final synchronized int addComment(String comment, String nick)
 	{
-		_comments.add(new EntryComment(comment, nick));
+		comments.add(new EntryComment(comment, nick));
 
-		return (_comments.size() - 1);
+		return (comments.size() - 1);
 	}
 
 	/**
@@ -156,9 +158,9 @@ public class EntryLink implements Serializable
 	 */
 	public final synchronized void deleteComment(int index)
 	{
-		if (index < _comments.size())
+		if (index < comments.size())
 		{
-			_comments.remove(index);
+			comments.remove(index);
 		}
 	}
 
@@ -169,7 +171,7 @@ public class EntryLink implements Serializable
 	 */
 	public final synchronized String getChannel()
 	{
-		return _channel;
+		return channel;
 	}
 
 	/**
@@ -180,7 +182,7 @@ public class EntryLink implements Serializable
 	 */
 	public final synchronized void setChannel(String channel)
 	{
-		_channel = channel;
+		this.channel = channel;
 	}
 
 	/**
@@ -192,7 +194,7 @@ public class EntryLink implements Serializable
 	 */
 	public final synchronized EntryComment getComment(int index)
 	{
-		return ((EntryComment) _comments.get(index));
+		return (comments.get(index));
 	}
 
 	/**
@@ -202,7 +204,7 @@ public class EntryLink implements Serializable
 	 */
 	public final synchronized EntryComment[] getComments()
 	{
-		return ((EntryComment[]) _comments.toArray(new EntryComment[_comments.size()]));
+		return (comments.toArray(new EntryComment[comments.size()]));
 	}
 
 	/**
@@ -212,7 +214,7 @@ public class EntryLink implements Serializable
 	 */
 	public final synchronized int getCommentsCount()
 	{
-		return _comments.size();
+		return comments.size();
 	}
 
 	/**
@@ -222,7 +224,7 @@ public class EntryLink implements Serializable
 	 */
 	public final synchronized Date getDate()
 	{
-		return _date;
+		return date;
 	}
 
 	/**
@@ -232,12 +234,12 @@ public class EntryLink implements Serializable
 	 */
 	public final synchronized String getDeliciousTags()
 	{
-		final StringBuffer tags = new StringBuffer(_nick);
+		final StringBuilder tags = new StringBuilder(nick);
 
-		for (int i = 0; i < _tags.size(); i++)
+		for (final Object tag : this.tags)
 		{
 			tags.append(',');
-			tags.append(((SyndCategoryImpl) _tags.get(i)).getName());
+			tags.append(((SyndCategoryImpl) tag).getName());
 		}
 
 		return tags.toString();
@@ -250,7 +252,7 @@ public class EntryLink implements Serializable
 	 */
 	public final synchronized String getLink()
 	{
-		return _link;
+		return link;
 	}
 
 	/**
@@ -260,7 +262,7 @@ public class EntryLink implements Serializable
 	 */
 	public final synchronized void setLink(String link)
 	{
-		_link = link;
+		this.link = link;
 	}
 
 	/**
@@ -270,7 +272,7 @@ public class EntryLink implements Serializable
 	 */
 	public final synchronized String getLogin()
 	{
-		return _login;
+		return login;
 	}
 
 	/**
@@ -281,7 +283,7 @@ public class EntryLink implements Serializable
 	 */
 	public final synchronized void setLogin(String login)
 	{
-		_login = login;
+		this.login = login;
 	}
 
 	/**
@@ -291,7 +293,7 @@ public class EntryLink implements Serializable
 	 */
 	public final synchronized String getNick()
 	{
-		return _nick;
+		return nick;
 	}
 
 	/**
@@ -301,7 +303,7 @@ public class EntryLink implements Serializable
 	 */
 	public final synchronized void setNick(String nick)
 	{
-		_nick = nick;
+		this.nick = nick;
 	}
 
 	/**
@@ -311,7 +313,7 @@ public class EntryLink implements Serializable
 	 */
 	public final synchronized List getTags()
 	{
-		return _tags;
+		return tags;
 	}
 
 	/**
@@ -329,9 +331,9 @@ public class EntryLink implements Serializable
 			String part;
 			char mod;
 
-			for (int i = 0; i < parts.length; i++)
+			for (final String rawPart : parts)
 			{
-				part = parts[i].trim();
+				part = rawPart.trim();
 
 				if (part.length() >= 2)
 				{
@@ -343,25 +345,25 @@ public class EntryLink implements Serializable
 					if (mod == '-')
 					{
 						// Don't remove the channel tag, if any.
-						if (!tag.getName().equals(_channel.substring(1)))
+						if (!tag.getName().equals(channel.substring(1)))
 						{
-							_tags.remove(tag);
+							this.tags.remove(tag);
 						}
 					}
 					else if (mod == '+')
 					{
-						if (!_tags.contains(tag))
+						if (!this.tags.contains(tag))
 						{
-							_tags.add(tag);
+							this.tags.add(tag);
 						}
 					}
 					else
 					{
 						tag.setName(part.trim().toLowerCase());
 
-						if (!_tags.contains(tag))
+						if (!this.tags.contains(tag))
 						{
-							_tags.add(tag);
+							this.tags.add(tag);
 						}
 					}
 				}
@@ -376,7 +378,7 @@ public class EntryLink implements Serializable
 	 */
 	public final synchronized String getTitle()
 	{
-		return _title;
+		return title;
 	}
 
 	/**
@@ -386,7 +388,7 @@ public class EntryLink implements Serializable
 	 */
 	public final synchronized void setTitle(String title)
 	{
-		_title = title;
+		this.title = title;
 	}
 
 	/**
@@ -396,7 +398,7 @@ public class EntryLink implements Serializable
 	 */
 	public final synchronized boolean hasComments()
 	{
-		return (!_comments.isEmpty());
+		return (!comments.isEmpty());
 	}
 
 	/**
@@ -406,7 +408,7 @@ public class EntryLink implements Serializable
 	 */
 	public final synchronized boolean hasTags()
 	{
-		return (!_tags.isEmpty());
+		return (!tags.isEmpty());
 	}
 
 	/**
@@ -418,9 +420,9 @@ public class EntryLink implements Serializable
 	 */
 	public final synchronized void setComment(int index, String comment, String nick)
 	{
-		if (index < _comments.size())
+		if (index < comments.size())
 		{
-			_comments.set(index, new EntryComment(comment, nick));
+			comments.set(index, new EntryComment(comment, nick));
 		}
 	}
 
@@ -429,9 +431,9 @@ public class EntryLink implements Serializable
 	 *
 	 * @param tags The tags.
 	 */
-	public final synchronized void setTags(List tags)
+	public final synchronized void setTags(List<SyndCategoryImpl> tags)
 	{
-		_tags.addAll(tags);
+		this.tags.addAll(tags);
 	}
 
 	/**
@@ -442,8 +444,8 @@ public class EntryLink implements Serializable
 	public final String toString()
 	{
 
-		return super.toString() + "[ channel -> '" + _channel + '\'' + ", comments -> " + _comments + ", date -> "
-		       + _date + ", link -> '" + _link + '\'' + ", login -> '" + _login + '\'' + ", nick -> '" + _nick + '\''
-		       + ", tags -> " + _tags + ", title -> '" + _title + '\'' + " ]";
+		return super.toString() + "[ channel -> '" + channel + '\'' + ", comments -> " + comments + ", date -> "
+		       + date + ", link -> '" + link + '\'' + ", login -> '" + login + '\'' + ", nick -> '" + nick + '\''
+		       + ", tags -> " + tags + ", title -> '" + title + '\'' + " ]";
 	}
 }

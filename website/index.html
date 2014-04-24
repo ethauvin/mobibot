@@ -1,56 +1,114 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<title>mobibot</title>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-<link rel="stylesheet" type="text/css" href="simple.css" />
+    <title>mobibot</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link rel="stylesheet" type="text/css" href="simple.css"/>
+    <script type="text/javascript">
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-20827507-3']);
+        _gaq.push(['_trackPageview']);
+
+        (function ()
+        {
+            var ga = document.createElement('script');
+            ga.type = 'text/javascript';
+            ga.async = true;
+            ga.src =
+            ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(ga, s);
+        })();
+    </script>
 </head>
-<body> 
-<div id="content"> 
-  <h1>mobibot</h1> 
-  <h2>The #mobitopia bot</h2> 
-  <p class="note"> The latest version of mobibot is always available via <a href="http://cvs.thauvin.net/java/mobibot/"><strong>CVS</strong></a>. </p> 
-  <h3>About mobibot</h3> 
-  <p><strong>mobibot</strong> is the <a href="http://www.mobitopia.org/"><strong>#mobitopia</strong></a> IRC channel bot. It is built on Paul Mutton's <a href="http://www.jibble.org/pircbot.php"><strong>PircBot Java-based Framework</strong></a>.</p> 
-  <p>mobibot is making extensive use of various <strong>open source libraries</strong>, including:</p>  
-  <ul> 
-  	<li><a href="http://commons.apache.org/proper/commons-cli/">Commons CLI</a></li>
-    <li><a href="http://hc.apache.org/httpclient-3.x/">Commons HTTPClient</a></li>
-    <li><a href="http://commons.apache.org/proper/commons-logging/">Commons Logging</a></li>
-    <li><a href="http://commons.apache.org/proper/commons-net/">Commons Net</a></li>
-    <li><a href="http://sourceforge.net/projects/delicious-java/">delicious-java</a></li>
-    <li><a href="http://sourceforge.net/projects/jweather/">JWeather</a></li> 
-    <li><a href="http://www.objecthunter.net/exp4j/">exp4j</a></li>
-    <li><a href="http://ostermiller.org/utils/">OstermillerUtils</a></li>
-    <li><a href="http://rometools.github.io/rome/">Rome</a></li>
-    <li><a href="http://twitter4j.org/en/index.html">Twitter4J</a></li>
-  </ul>  
-  <p>mobibot was written by <a href="http://erik.thauvin.net/"><strong>Erik C. Thauvin</strong></a> as a replacement for the channel's original <a href="http://usefulinc.com/chump/">ChumpBot</a>. </p> 
-  <h3>Features</h3> 
-  <p>mobibot's main functionality is to <strong>capture URLs</strong> posted on the channel. The URLs are automatically gathered into a publishable <a href="http://www.mobitopia.org/rss.xml"><strong>RSS feed</strong></a>. </p> 
-  <p>Other features include:</p> 
-  <ul> 
-    <li>Performing calculations</li> 
-    <li>Converting between currencies</li> 
-    <li>Rolling dice</li> 
-    <li>Performing Google searches</li> 
-    <li>Displaying the latest entries on Mobitopia</li> 
-    <li>Performing DNS lookups</li> 
-    <li>Recapping public channel messages</li> 
-    <li>Retrieving stock quotes</li> 
-    <li>Displaying the time in various time zones</li> 
-    <li>Listing the users on the channel</li> 
-    <li>Displaying weather information</li>
-    <li>Posting to <a href="http://twitter.com/mobitopia">Twitter</a></li>
-  </ul> 
-  <p>Some of the internal features include RSS feed backlogs, rolling logs, debugging toggle and much more.</p>
-  <p>If you have any feature suggestions, please post them to the <a href="http://erik.thauvin.net/wiki/mobibot"><strong>mobibot wiki</strong></a>. </p>
-  <h3>Using mobibot</h3> 
-  <p>To use mobibot, simply <strong>join <a href="irc://irc.freenode.net/#mobitopia">#mobitopia</a></strong> on <strong>irc.freenode.net</strong> and type:</p> 
-  <p><code>mobibot: help</code></p> 
-  <p>mobibot will reply with a listing of the commands currently supported.</p> 
-  <h3>Licenses</h3> 
-  <p>There are various open source licenses attached to mobibot. Please refer to the <strong><a href="http://cvs.thauvin.net/java/mobibot/licenses/">licenses</a></strong> directory in the CVS tree for more details.</p> 
-</div> 
+<body>
+<div id="content">
+    <h1>mobibot</h1>
+
+    <h2>The #mobitopia bot</h2>
+
+    <p class="note"> The latest version of mobibot is always available via
+        <a href="https://github.com/ethauvin/mobibot/"><strong>GitHub</strong></a>. </p>
+
+    <h3>About mobibot</h3>
+
+    <p><strong>mobibot</strong> is the
+        <a href="http://www.mobitopia.org/"><strong>#mobitopia</strong></a> IRC channel bot. It is built on Paul Mutton's
+        <a href="http://www.jibble.org/pircbot.php"><strong>PircBot Java-based Framework</strong></a>.</p>
+
+    <p>mobibot is making extensive use of various <strong>open source libraries</strong>, including:</p>
+    <ul>
+        <li><a href="http://commons.apache.org/proper/commons-cli/">Commons CLI</a></li>
+        <li><a href="http://hc.apache.org/httpclient-3.x/">Commons HTTPClient</a></li>
+        <li><a href="http://commons.apache.org/proper/commons-logging/">Commons Logging</a></li>
+        <li><a href="http://commons.apache.org/proper/commons-net/">Commons Net</a></li>
+        <li><a href="http://sourceforge.net/projects/delicious-java/">delicious-java</a></li>
+        <li><a href="http://sourceforge.net/projects/jweather/">JWeather</a></li>
+        <li><a href="http://www.objecthunter.net/exp4j/">exp4j</a></li>
+        <li><a href="http://ostermiller.org/utils/">OstermillerUtils</a></li>
+        <li><a href="http://rometools.github.io/rome/">Rome</a></li>
+        <li><a href="http://twitter4j.org/en/index.html">Twitter4J</a></li>
+        <li><a href="http://jsoup.org/">jsoup</a></li>
+    </ul>
+    <p>mobibot was written by
+        <a href="http://erik.thauvin.net/"><strong>Erik C. Thauvin</strong></a> as a replacement for the channel's original
+        <a href="https://github.com/edumbill/chump">ChumpBot</a>. </p>
+
+    <h3>Features</h3>
+
+    <p>mobibot's main functionality is to
+        <strong>capture URLs</strong> posted on the channel. The URLs are automatically gathered into a publishable
+        <a href="http://www.mobitopia.org/rss.xml"><strong>RSS feed</strong></a>. </p>
+
+    <p>Other features include:</p>
+    <ul>
+        <li>Displaying the latest entries on Mobitopia</li>
+        <li>Performing calculations
+            <div><code>mobibot: calc (floor(sqrt(3))+3.14)*3^2</code></div>
+        </li>
+        <li>Converting between currencies
+            <div><code>mobibot: currency 17.54 USD to EUR</code></div>
+        </li>
+        <li>Performing Google searches
+            <div><code>mobibot: google mobitopia on irc</code></div>
+        </li>
+        <li>Displaying weather information
+            <div><code>mobibot: weather KSFO</code></div>
+        </li>
+        <li>Performing DNS lookups
+            <div><code>mobibot: lookup www.apple.com</code></div>
+        </li>
+        <li>Retrieving stock quotes
+            <div><code>mobibot: stock GOOG</code></div>
+        </li>
+        <li>Displaying the time in various time zones
+            <div><code>mobibot: time UK</code></div>
+        </li>
+        <li>Recapping public channel messages</li>
+        <li>Listing the users on the channel</li>
+        <li>Random quotes from <a href="http://iheartquotes.com">I Heart Quotes</a></li>
+        <li>Rolling dice and playing war</li>
+        <li>Posting to <a href="http://twitter.com/mobitopia">Twitter</a></li>
+    </ul>
+    <p>Some of the internal features include RSS feed backlogs, rolling logs, debugging toggle and much more.</p>
+
+    <p>If you have any feature suggestions, please post them to the
+        <a href="http://erik.thauvin.net/wiki/mobibot"><strong>mobibot wiki</strong></a>. </p>
+
+    <h3>Using mobibot</h3>
+
+    <p>To use mobibot, simply <strong>join <a href="irc://irc.freenode.net/#mobitopia">#mobitopia</a></strong> on
+        <strong>irc.freenode.net</strong> and type:</p>
+
+    <p><code>mobibot: help</code></p>
+
+    <p>mobibot will reply with a listing of the commands currently supported.</p>
+
+    <h3>Licenses</h3>
+
+    <p>There are various open source licenses attached to mobibot. Please refer to the
+        <strong><a href="https://github.com/ethauvin/mobibot/tree/master/licenses">licenses</a></strong> directory in the source tree for more details.
+    </p>
+</div>
 </body>
 </html>

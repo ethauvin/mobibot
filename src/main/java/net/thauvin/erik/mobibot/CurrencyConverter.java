@@ -65,7 +65,7 @@ public class CurrencyConverter implements Runnable
 	/**
 	 * The exchange rates.
 	 */
-	private static final Map EXCHANGE_RATES = new TreeMap();
+	private static final Map<String, String> EXCHANGE_RATES = new TreeMap<String, String>();
 
 	/**
 	 * The rates keyword.
@@ -75,22 +75,22 @@ public class CurrencyConverter implements Runnable
 	/**
 	 * The bot.
 	 */
-	private final Mobibot _bot;
+	private final Mobibot bot;
 
 	/**
-	 * The actual currency _query.
+	 * The actual currency query.
 	 */
-	private final String _query;
+	private final String query;
 
 	/**
 	 * The nick of the person who sent the message.
 	 */
-	private final String _sender;
+	private final String sender;
 
 	/**
 	 * The last exchange rates table publication date.
 	 */
-	private String s_date = "";
+	private String pubDate = "";
 
 	/**
 	 * Creates a new CurrencyConverter object.
@@ -102,11 +102,11 @@ public class CurrencyConverter implements Runnable
 	 */
 	public CurrencyConverter(Mobibot bot, String sender, String query, String date)
 	{
-		_bot = bot;
-		_sender = sender;
-		_query = query.toLowerCase();
+		this.bot = bot;
+		this.sender = sender;
+		this.query = query.toLowerCase();
 
-		if (!s_date.equals(date))
+		if (!pubDate.equals(date))
 		{
 			EXCHANGE_RATES.clear();
 		}
@@ -128,14 +128,14 @@ public class CurrencyConverter implements Runnable
 				final Element cubeRoot = root.getChild("Cube", ns);
 				final Element cubeTime = cubeRoot.getChild("Cube", ns);
 
-				s_date = cubeTime.getAttribute("time").getValue();
+				pubDate = cubeTime.getAttribute("time").getValue();
 
 				final List cubes = cubeTime.getChildren();
 				Element cube;
 
-				for (int i = 0; i < cubes.size(); i++)
+				for (final Object rawCube : cubes)
 				{
-					cube = (Element) cubes.get(i);
+					cube = (Element) rawCube;
 					EXCHANGE_RATES.put(cube.getAttribute("currency").getValue(), cube.getAttribute("rate").getValue());
 				}
 
@@ -143,37 +143,37 @@ public class CurrencyConverter implements Runnable
 			}
 			catch (JDOMException e)
 			{
-				_bot.getLogger().debug("Unable to parse the exchange rates table.", e);
-				_bot.send(_sender, "An error has occurred while parsing the exchange rates table.");
+				bot.getLogger().debug("Unable to parse the exchange rates table.", e);
+				bot.send(sender, "An error has occurred while parsing the exchange rates table.");
 			}
 			catch (IOException e)
 			{
-				_bot.getLogger().debug("Unable to fetch the exchange rates table.", e);
-				_bot.send(_sender, "An error has occurred while fetching the exchange rates table:  " + e.getMessage());
+				bot.getLogger().debug("Unable to fetch the exchange rates table.", e);
+				bot.send(sender, "An error has occurred while fetching the exchange rates table:  " + e.getMessage());
 			}
 		}
 
 		if (!EXCHANGE_RATES.isEmpty())
 		{
-			if (_query.matches("\\d+([,\\d]+)?(\\.\\d+)? [a-z]{3}+ to [a-z]{3}+"))
+			if (query.matches("\\d+([,\\d]+)?(\\.\\d+)? [a-z]{3}+ to [a-z]{3}+"))
 			{
-				final String[] cmds = _query.split(" ");
+				final String[] cmds = query.split(" ");
 
 				if (cmds.length == 4)
 				{
 					if (cmds[3].equals(cmds[1]))
 					{
-						_bot.send(_sender, "You're kidding, right?");
+						bot.send(sender, "You're kidding, right?");
 					}
 					else
 					{
 						try
 						{
 							final double amt = Double.parseDouble(cmds[0].replaceAll(",", ""));
-							final double from = Double.parseDouble((String) EXCHANGE_RATES.get(cmds[1].toUpperCase()));
-							final double to = Double.parseDouble((String) EXCHANGE_RATES.get(cmds[3].toUpperCase()));
+							final double from = Double.parseDouble(EXCHANGE_RATES.get(cmds[1].toUpperCase()));
+							final double to = Double.parseDouble(EXCHANGE_RATES.get(cmds[3].toUpperCase()));
 
-							_bot.send(_bot.getChannel(),
+							bot.send(bot.getChannel(),
 							          NumberFormat.getCurrencyInstance(Locale.US).format(amt).substring(1) + ' ' +
 							          cmds[1].toUpperCase() + " = " +
 							          NumberFormat.getCurrencyInstance(Locale.US).format((amt * to) / from).substring(1)
@@ -182,23 +182,23 @@ public class CurrencyConverter implements Runnable
 						}
 						catch (NullPointerException ignored)
 						{
-							_bot.send(_sender, "The supported currencies are: " + EXCHANGE_RATES.keySet().toString());
+							bot.send(sender, "The supported currencies are: " + EXCHANGE_RATES.keySet().toString());
 						}
 					}
 				}
 			}
-			else if (_query.equals(RATES_KEYWORD))
+			else if (query.equals(RATES_KEYWORD))
 			{
-				_bot.send(_sender, "Last Update: " + s_date);
+				bot.send(sender, "Last Update: " + pubDate);
 
-				final Iterator it = EXCHANGE_RATES.keySet().iterator();
+				final Iterator<String> it = EXCHANGE_RATES.keySet().iterator();
 				String rate;
 
-				final StringBuffer buff = new StringBuffer(0);
+				final StringBuilder buff = new StringBuilder(0);
 
 				while (it.hasNext())
 				{
-					rate = (String) it.next();
+					rate = it.next();
 					if (buff.length() > 0)
 					{
 						buff.append(", ");
@@ -206,19 +206,19 @@ public class CurrencyConverter implements Runnable
 					buff.append(rate).append(": ").append(EXCHANGE_RATES.get(rate));
 				}
 
-				_bot.send(_sender, buff.toString());
+				bot.send(sender, buff.toString());
 
 			}
 			else
 			{
-				_bot.helpResponse(_sender, Mobibot.CURRENCY_CMD + ' ' + _query);
-				_bot.send(_sender, "The supported currencies are: " + EXCHANGE_RATES.keySet().toString());
+				bot.helpResponse(sender, Mobibot.CURRENCY_CMD + ' ' + query);
+				bot.send(sender, "The supported currencies are: " + EXCHANGE_RATES.keySet().toString());
 			}
 		}
 		else
 		{
-			_bot.getLogger().debug("The exchange rate table is empty.");
-			_bot.send(_sender, "Sorry, but the exchange rate table is empty.");
+			bot.getLogger().debug("The exchange rate table is empty.");
+			bot.send(sender, "Sorry, but the exchange rate table is empty.");
 		}
 	}
 }

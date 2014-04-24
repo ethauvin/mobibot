@@ -1,10 +1,14 @@
 apply plugin: 'java'
 apply plugin: 'idea'
 
-version = '0.5'
-ext.packageName = 'net.thauvin.erik.mobibot'
-ext.mainClassName = packageName + '.Mobibot'
-ext.deployDir = 'deploy'
+defaultTasks 'deploy'
+
+version = '0.6'
+
+def packageName = 'net.thauvin.erik.mobibot'
+def mainClassName = packageName + '.Mobibot'
+def deployDir = 'deploy'
+def isRelease = 'release' in gradle.startParameter.taskNames
 
 repositories {
   mavenCentral()
@@ -40,51 +44,67 @@ dependencies {
   //compile files('../path/to/example.jar')
 }
 
-task wrapper(type: Wrapper) {
-  gradleVersion = gradle.gradleVersion
-}
-
 compileJava {
-  dependsOn wrapper
   doFirst {
-    ant.taskdef(name: 'jreleaseinfo',
-                classname: 'ch.oscg.jreleaseinfo.anttask.JReleaseInfoAntTask',
-                classpath: 'ant/jreleaseinfo-1.3.0.jar')
-    ant.jreleaseinfo(targetDir: file('src/main/java'),
-                     className: 'ReleaseInfo',
-                     packageName: packageName,
-                     project: rootProject.name,
-                     version: version,
-                     buildnumfile: file('buildnum.properties'))
+    if (isRelease)
+    {
+      ant.taskdef(name: 'jreleaseinfo',
+                  classname: 'ch.oscg.jreleaseinfo.anttask.JReleaseInfoAntTask',
+                  classpath: 'ant/jreleaseinfo-1.3.0.jar')
+      ant.jreleaseinfo(targetDir: file('src/main/java'),
+                       className: 'ReleaseInfo',
+                       packageName: packageName,
+                       project: rootProject.name,
+                       version: version,
+                       buildnumfile: file('buildnum.properties'))
+
+    }
+
   }
+  //options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
 }
 
 jar {
-  doFirst {
-    manifest {
-      attributes("Manifest-Version": "1.0",
-                 "Main-Class": mainClassName,
-                 "Class-Path": '. ./lib/' + configurations.compile.collect { it.getName() }.join(' ./lib/'))
-    }
-  }
+  manifest.attributes(
+          'Main-Class': mainClassName,
+          'Class-Path': '. ./lib/' + configurations.compile.collect { it.getName() }.join(' ./lib/'))
 
   version = null
 }
 
-task deploy(dependsOn: build) {
+clean {
+  delete deployDir
+}
+
+task wrapper(type: Wrapper) {
+  gradleVersion = gradle.gradleVersion
+}
+
+task copyToDeploy(type: Copy) {
+  from('properties') {
+    include '*.properties'
+  }
+  from jar
+  into deployDir
+}
+
+task copyToDeployLib(type: Copy) {
+  configurations.runtime
+  into deployDir + '/lib'
+}
+
+task deploy(dependsOn: ['build', 'copyToDeploy', 'copyToDeployLib']) {
   description = "Copies all needed files to the ${deployDir} directory."
-  copy {
-    into deployDir + '/lib'
-    from configurations.runtime
-  }
-  copy {
-    from 'properties'
-    into deployDir
-    include('*.properties')
-  }
-  copy {
-    from jar
-    into deployDir
-  }
-  file(deployDir + '/logs').mkdirs();
+  group = "Publishing"
+  outputs.dir deployDir
+  inputs.files copyToDeploy
+  inputs.files copyToDeployLib
+  mustRunAfter clean
+  file(deployDir + '/logs').mkdir()
+}
+
+task release(dependsOn: ['deploy', 'wrapper']) {
+  group = "Publishing"
+  description = "Releases new version."
+  isRelease = true
 }

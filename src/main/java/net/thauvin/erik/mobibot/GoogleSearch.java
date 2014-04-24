@@ -64,17 +64,17 @@ public class GoogleSearch implements Runnable
 	/**
 	 * The bot.
 	 */
-	private final Mobibot _bot;
+	private final Mobibot bot;
 
 	/**
 	 * The search query.
 	 */
-	private final String _query;
+	private final String query;
 
 	/**
 	 * The nick of the person who sent the message.
 	 */
-	private final String _sender;
+	private final String sender;
 
 	/**
 	 * Creates a new GoogleSearch object.
@@ -85,9 +85,9 @@ public class GoogleSearch implements Runnable
 	 */
 	public GoogleSearch(Mobibot bot, String sender, String query)
 	{
-		_bot = bot;
-		_sender = sender;
-		_query = query;
+		this.bot = bot;
+		this.sender = sender;
+		this.query = query;
 	}
 
 	/**
@@ -98,13 +98,13 @@ public class GoogleSearch implements Runnable
 
 		try
 		{
-			final String query = URLEncoder.encode(_query, "UTF-8");
+			final String query = URLEncoder.encode(this.query, "UTF-8");
 
 			final URL url =
 					new URL("http://ajax.googleapis.com/ajax/services/search/web?start=0&rsz=small&v=1.0&q=" + query);
 			final URLConnection conn = url.openConnection();
 
-			final StringBuffer sb = new StringBuffer();
+			final StringBuilder sb = new StringBuilder();
 			final BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 
 			String line;
@@ -119,8 +119,8 @@ public class GoogleSearch implements Runnable
 			for (int i = 0; i < ja.length(); i++)
 			{
 				final JSONObject j = ja.getJSONObject(i);
-				_bot.send(_sender, Mobibot.unescapeXml(j.getString("titleNoFormatting")));
-				_bot.send(_sender, TAB_INDENT + j.getString("url"));
+				bot.send(sender, Mobibot.unescapeXml(j.getString("titleNoFormatting")));
+				bot.send(sender, TAB_INDENT + j.getString("url"));
 			}
 
 			reader.close();
@@ -128,8 +128,8 @@ public class GoogleSearch implements Runnable
 		}
 		catch (Exception e)
 		{
-			_bot.getLogger().warn("Unable to search in Google for: " + _query, e);
-			_bot.send(_sender, "An error has occurred: " + e.getMessage());
+			bot.getLogger().warn("Unable to search in Google for: " + query, e);
+			bot.send(sender, "An error has occurred: " + e.getMessage());
 		}
 	}
 }

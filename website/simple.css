@@ -3,7 +3,7 @@ body {
     font-family: Verdana, Arial, Helvetica, sans-serif;
     font-size: 13px;
     color: #000000;
-    margin: 0px;
+    margin: 0;
 }
 
 h1 {
@@ -24,6 +24,7 @@ code {
     font-size: 12px;
     color: #000066;
     background-color: #ffeedd;
+    margin-left: 20px
 }
 
 a:hover {
@@ -34,8 +35,8 @@ a:hover {
 #content {
     float: none;
     position: relative;
-    margin: 0px 10px 10px 10px;
-    padding: 0px 10px 10px 10px;
+    margin: 0 10px 10px 10px;
+    padding: 0 10px 10px 10px;
 }
 
 #content p {
