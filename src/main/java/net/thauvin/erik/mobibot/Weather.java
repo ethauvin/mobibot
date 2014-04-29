@@ -1,7 +1,7 @@
 /*
  * @(#)Weather.java
  *
- * Copyright (c) 2004, Erik C. Thauvin (erik@thauvin.net)
+ * Copyright (c) 2004-2014, Erik C. Thauvin (erik@thauvin.net)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -30,10 +30,8 @@
  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- * $Id$
- *
  */
+
 package net.thauvin.erik.mobibot;
 
 import net.sf.jweather.metar.Metar;
@@ -48,7 +46,6 @@ import java.util.Iterator;
  * Fetches the weather data from a specific station ID.
  *
  * @author Erik C. Thauvin
- * @version $Revision$, $Date$
  * @created Feb 7, 2004
  * @since 1.0
  */
@@ -116,9 +113,9 @@ public class Weather implements Runnable
 				bot.send(sender, "Station ID: " + metar.getStationID(), isPrivate);
 
 				bot.send(sender,
-				          "At: " + metar.getDateString() + " UTC (" + (
-						          ((new Date()).getTime() - metar.getDate().getTime()) / 1000L / 60L) + " minutes ago)",
-				          isPrivate
+				         "At: " + Utils.UTC_SDF.format(metar.getDate()) + " UTC (" + (
+						         ((new Date()).getTime() - metar.getDate().getTime()) / 1000L / 60L) + " minutes ago)",
+				         isPrivate
 				);
 
 				result = metar.getWindSpeedInMPH();
@@ -126,28 +123,30 @@ public class Weather implements Runnable
 				if (result != null)
 				{
 					bot.send(sender,
-					          "Wind Speed: " + result + " mph, " + metar.getWindSpeedInKnots() + " knots", isPrivate);
+					         "Wind Speed: " + result + " mph, " + metar.getWindSpeedInKnots() + " knots, " + metar
+							         .getWindSpeedInMPS() + " m/s",
+					         isPrivate
+					);
 				}
 
 				result = metar.getVisibility();
 
 				if (result != null)
 				{
-					if (!metar.getVisibilityLessThan())
-					{
-						bot.send(sender, "Visibility: " + NUMBER_FORMAT.format(result) + " mile(s)", isPrivate);
-					}
-					else
-					{
-						bot.send(sender, "Visibility: < " + NUMBER_FORMAT.format(result) + " mile(s)", isPrivate);
-					}
+					bot.send(sender,
+					         "Visibility: " + (metar.getVisibilityLessThan() ? "< " : "") + NUMBER_FORMAT.format(result)
+					         + " mi, " + metar.getVisibilityInKilometers() + " km",
+					         isPrivate
+					);
 				}
 
 				result = metar.getPressure();
 
 				if (result != null)
 				{
-					bot.send(sender, "Pressure: " + result + " in Hg", isPrivate);
+					bot.send(sender,
+					         "Pressure: " + result + " Hg, " + metar.getPressureInHectoPascals() + " hPa",
+					         isPrivate);
 				}
 
 				result = metar.getTemperatureInCelsius();
@@ -155,7 +154,8 @@ public class Weather implements Runnable
 				if (result != null)
 				{
 					bot.send(sender,
-					          "Temperature: " + result + " C, " + metar.getTemperatureInFahrenheit() + " F", isPrivate);
+					         "Temperature: " + result + " \u00B0C, " + metar.getTemperatureInFahrenheit() + " \u00B0F",
+					         isPrivate);
 				}
 
 				if (metar.getWeatherConditions() != null)
@@ -192,6 +192,6 @@ public class Weather implements Runnable
 			}
 		}
 
-		bot.helpResponse(sender, Mobibot.WEATHER_CMD);
+		bot.helpResponse(sender, Commands.WEATHER_CMD);
 	}
 }

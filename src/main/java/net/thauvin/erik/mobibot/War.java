@@ -1,5 +1,5 @@
 /*
- * @(#)EntryComment.java
+ * @(#)War.java
  *
  * Copyright (c) 2004-2014, Erik C. Thauvin (erik@thauvin.net)
  * All rights reserved.
@@ -31,111 +31,80 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package net.thauvin.erik.mobibot;
 
-import java.io.Serializable;
-import java.util.Calendar;
-import java.util.Date;
+import java.util.Random;
 
 /**
- * The class used to store comments associated to a specific entry.
+ * The <code>War</code> class.
  *
- * @author Erik C. Thauvin
- * @created Jan 31, 2004
+ * @author <a href="mailto:erik@thauvin.net">Erik C. Thauvin</a>
+ * @created 2014-04-28
  * @since 1.0
  */
-public class EntryComment implements Serializable
+public class War
 {
 	/**
-	 * The serial version UID.
-	 *
-	 * @noinspection UnusedDeclaration
+	 * The deck of card for the {@link net.thauvin.erik.mobibot.Commands#WAR_CMD war} command.
 	 */
-	static final long serialVersionUID = 6957415292233553224L;
+	private static final String[] WAR_DECK =
+			new String[]{"Ace", "King", "Queen", "Jack", "10", "9", "8", "7", "6", "5", "4", "3", "2"};
 
 	/**
-	 * The creation date.
+	 * The suits for the deck of card for the {@link Commands#WAR_CMD war} command.
 	 */
-	private final Date date = Calendar.getInstance().getTime();
-
-	private String comment = "";
-
-	private String nick = "";
+	private static final String[] WAR_SUITS = new String[]{"Hearts", "Spades", "Diamonds", "Clubs"};
 
 	/**
-	 * Creates a new comment.
+	 * Disables the default constructor.
 	 *
-	 * @param comment The new comment.
-	 * @param nick The nickname of the comment's author.
+	 * @throws UnsupportedOperationException if an error occurred. if the constructor is called.
 	 */
-	public EntryComment(String comment, String nick)
+	private War()
+			throws UnsupportedOperationException
 	{
-		this.comment = comment;
-		this.nick = nick;
+		throw new UnsupportedOperationException("Illegal constructor call.");
 	}
 
 	/**
-	 * Creates a new comment.
+	 * Plays war.
 	 *
-	 * @noinspection UnusedDeclaration
+	 * @param bot The bot.
+	 * @param sender The sender's nickname.
 	 */
-	protected EntryComment()
+	public static void play(Mobibot bot, String sender)
 	{
-		; // Required for serialization.
-	}
+		final Random r = new Random();
 
-	/**
-	 * Returns the comment.
-	 *
-	 * @return The comment.
-	 */
-	public final String getComment()
-	{
-		return comment;
-	}
+		int i;
+		int y;
 
-	/**
-	 * Sets the comment.
-	 *
-	 * @param comment The actual comment.
-	 *
-	 * @noinspection UnusedDeclaration
-	 */
-	public final void setComment(String comment)
-	{
-		this.comment = comment;
-	}
+		while (true)
+		{
+			i = r.nextInt(WAR_DECK.length);
+			y = r.nextInt(WAR_DECK.length);
 
-	/**
-	 * Returns the comment's creation date.
-	 *
-	 * @return The date.
-	 *
-	 * @noinspection UnusedDeclaration
-	 */
-	public final Date getDate()
-	{
-		return date;
-	}
+			bot.send(bot.getChannel(),
+			         sender + " drew the " + Utils.bold(WAR_DECK[i]) + " of " + WAR_SUITS[r.nextInt(WAR_SUITS.length)]);
+			bot.action("drew the " + Utils.bold(WAR_DECK[y]) + " of " + WAR_SUITS[r.nextInt(WAR_SUITS.length)]);
 
-	/**
-	 * Returns the nickname of the author of the comment.
-	 *
-	 * @return The nickname.
-	 */
-	public final String getNick()
-	{
-		return nick;
-	}
+			if (i != y)
+			{
+				break;
+			}
+		}
 
-	/**
-	 * Sets the nickname of the author of the comment.
-	 *
-	 * @param nick The new nickname.
-	 */
-	public final void setNick(String nick)
-	{
-		this.nick = nick;
+		if (i < y)
+		{
+			bot.action("lost.");
+		}
+		else if (i > y)
+		{
+			bot.action("wins.");
+		}
+		else
+		{
+			bot.action("tied.");
+		}
 	}
 }

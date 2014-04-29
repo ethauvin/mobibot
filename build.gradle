@@ -61,13 +61,12 @@ compileJava {
     }
 
   }
-  //options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
+  options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
 }
 
 jar {
-  manifest.attributes(
-          'Main-Class': mainClassName,
-          'Class-Path': '. ./lib/' + configurations.compile.collect { it.getName() }.join(' ./lib/'))
+  manifest.attributes('Main-Class': mainClassName,
+                      'Class-Path': '. ./lib/' + configurations.compile.collect { it.getName() }.join(' ./lib/'))
 
   version = null
 }
@@ -106,5 +105,4 @@ task deploy(dependsOn: ['build', 'copyToDeploy', 'copyToDeployLib']) {
 task release(dependsOn: ['deploy', 'wrapper']) {
   group = "Publishing"
   description = "Releases new version."
-  isRelease = true
 }

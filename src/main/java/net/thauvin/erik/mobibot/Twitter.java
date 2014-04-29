@@ -1,7 +1,7 @@
 /*
  * @(#)Twitter.java
  *
- * Copyright (C) 2007 Erik C. Thauvin
+ * Copyright (c) 2004-2014, Erik C. Thauvin (erik@thauvin.net)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -30,10 +30,8 @@
  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- * $Id$
- *
  */
+
 package net.thauvin.erik.mobibot;
 
 import twitter4j.Status;
@@ -44,7 +42,6 @@ import twitter4j.conf.ConfigurationBuilder;
  * Inserts presence information into Twitter.
  *
  * @author <a href="mailto:erik@thauvin.net">Erik C. Thauvin</a>
- * @version $Revision$, $Date$
  * @created Sept 10, 2008
  * @since 1.0
  */
@@ -121,8 +118,8 @@ public class Twitter implements Runnable
 			final Status status = twitter.updateStatus(message + " (" + sender + ')');
 
 			bot.send(sender,
-			          "You message was posted to http://twitter.com/" + twitter.getScreenName() + "/statuses/" + status
-					          .getId()
+			         "You message was posted to http://twitter.com/" + twitter.getScreenName() + "/statuses/" + status
+					         .getId()
 			);
 		}
 		catch (Exception e)

@@ -1,7 +1,7 @@
 /*
  * @(#)CurrencyConverter.java
  *
- * Copyright (c) 2004, Erik C. Thauvin (erik@thauvin.net)
+ * Copyright (c) 2004-2014, Erik C. Thauvin (erik@thauvin.net)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -30,10 +30,8 @@
  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- * $Id$
- *
  */
+
 package net.thauvin.erik.mobibot;
 
 import org.jdom.Document;
@@ -51,7 +49,6 @@ import java.util.*;
  * Converts various currencies.
  *
  * @author Erik C. Thauvin
- * @version $Revision$, $Date$
  * @created Feb 11, 2004
  * @since 1.0
  */
@@ -68,11 +65,6 @@ public class CurrencyConverter implements Runnable
 	private static final Map<String, String> EXCHANGE_RATES = new TreeMap<String, String>();
 
 	/**
-	 * The rates keyword.
-	 */
-	private static final String RATES_KEYWORD = "rates";
-
-	/**
 	 * The bot.
 	 */
 	private final Mobibot bot;
@@ -80,12 +72,12 @@ public class CurrencyConverter implements Runnable
 	/**
 	 * The actual currency query.
 	 */
-	private final String query;
+	private String query;
 
 	/**
 	 * The nick of the person who sent the message.
 	 */
-	private final String sender;
+	private String sender;
 
 	/**
 	 * The last exchange rates table publication date.
@@ -96,17 +88,24 @@ public class CurrencyConverter implements Runnable
 	 * Creates a new CurrencyConverter object.
 	 *
 	 * @param bot The bot.
-	 * @param sender The nick of the person who sent the message.
-	 * @param query The currency query.
-	 * @param date The current date.
 	 */
-	public CurrencyConverter(Mobibot bot, String sender, String query, String date)
+	public CurrencyConverter(Mobibot bot)
 	{
 		this.bot = bot;
-		this.sender = sender;
-		this.query = query.toLowerCase();
+	}
 
-		if (!pubDate.equals(date))
+	/**
+	 * Sets the query.
+	 *
+	 * @param sender The nick of the person who sent the message.
+	 * @param query The currency query.
+	 */
+	public void setQuery(String sender, String query)
+	{
+		this.query = query;
+		this.sender = sender;
+
+		if (!pubDate.equals(Utils.today()))
 		{
 			EXCHANGE_RATES.clear();
 		}
@@ -115,110 +114,115 @@ public class CurrencyConverter implements Runnable
 	// Converts specified currencies.
 	public final void run()
 	{
-		if (EXCHANGE_RATES.isEmpty())
+		if (Utils.isValidString(sender) && Utils.isValidString(query))
 		{
-			try
+			if (EXCHANGE_RATES.isEmpty())
 			{
-				final SAXBuilder builder = new SAXBuilder();
-				builder.setIgnoringElementContentWhitespace(true);
-
-				final Document doc = builder.build(new URL(EXCHANGE_TABLE_URL));
-				final Element root = doc.getRootElement();
-				final Namespace ns = root.getNamespace("");
-				final Element cubeRoot = root.getChild("Cube", ns);
-				final Element cubeTime = cubeRoot.getChild("Cube", ns);
-
-				pubDate = cubeTime.getAttribute("time").getValue();
-
-				final List cubes = cubeTime.getChildren();
-				Element cube;
-
-				for (final Object rawCube : cubes)
+				try
 				{
-					cube = (Element) rawCube;
-					EXCHANGE_RATES.put(cube.getAttribute("currency").getValue(), cube.getAttribute("rate").getValue());
-				}
+					final SAXBuilder builder = new SAXBuilder();
+					builder.setIgnoringElementContentWhitespace(true);
 
-				EXCHANGE_RATES.put("EUR", "1");
-			}
-			catch (JDOMException e)
-			{
-				bot.getLogger().debug("Unable to parse the exchange rates table.", e);
-				bot.send(sender, "An error has occurred while parsing the exchange rates table.");
-			}
-			catch (IOException e)
-			{
-				bot.getLogger().debug("Unable to fetch the exchange rates table.", e);
-				bot.send(sender, "An error has occurred while fetching the exchange rates table:  " + e.getMessage());
-			}
-		}
+					final Document doc = builder.build(new URL(EXCHANGE_TABLE_URL));
+					final Element root = doc.getRootElement();
+					final Namespace ns = root.getNamespace("");
+					final Element cubeRoot = root.getChild("Cube", ns);
+					final Element cubeTime = cubeRoot.getChild("Cube", ns);
 
-		if (!EXCHANGE_RATES.isEmpty())
-		{
-			if (query.matches("\\d+([,\\d]+)?(\\.\\d+)? [a-z]{3}+ to [a-z]{3}+"))
-			{
-				final String[] cmds = query.split(" ");
+					pubDate = cubeTime.getAttribute("time").getValue();
 
-				if (cmds.length == 4)
-				{
-					if (cmds[3].equals(cmds[1]))
+					final List cubes = cubeTime.getChildren();
+					Element cube;
+
+					for (final Object rawCube : cubes)
 					{
-						bot.send(sender, "You're kidding, right?");
+						cube = (Element) rawCube;
+						EXCHANGE_RATES
+								.put(cube.getAttribute("currency").getValue(), cube.getAttribute("rate").getValue());
 					}
-					else
+
+					EXCHANGE_RATES.put("EUR", "1");
+				}
+				catch (JDOMException e)
+				{
+					bot.getLogger().debug("Unable to parse the exchange rates table.", e);
+					bot.send(sender, "An error has occurred while parsing the exchange rates table.");
+				}
+				catch (IOException e)
+				{
+					bot.getLogger().debug("Unable to fetch the exchange rates table.", e);
+					bot.send(sender,
+					         "An error has occurred while fetching the exchange rates table:  " + e.getMessage());
+				}
+			}
+
+			if (!EXCHANGE_RATES.isEmpty())
+			{
+				if (query.matches("\\d+([,\\d]+)?(\\.\\d+)? [a-zA-Z]{3}+ to [a-zA-Z]{3}+"))
+				{
+					final String[] cmds = query.split(" ");
+
+					if (cmds.length == 4)
 					{
-						try
+						if (cmds[3].equals(cmds[1]) || cmds[0].equals("0"))
 						{
-							final double amt = Double.parseDouble(cmds[0].replaceAll(",", ""));
-							final double from = Double.parseDouble(EXCHANGE_RATES.get(cmds[1].toUpperCase()));
-							final double to = Double.parseDouble(EXCHANGE_RATES.get(cmds[3].toUpperCase()));
-
-							bot.send(bot.getChannel(),
-							          NumberFormat.getCurrencyInstance(Locale.US).format(amt).substring(1) + ' ' +
-							          cmds[1].toUpperCase() + " = " +
-							          NumberFormat.getCurrencyInstance(Locale.US).format((amt * to) / from).substring(1)
-							          + ' ' + cmds[3].toUpperCase()
-							);
+							bot.send(sender, "You're kidding, right?");
 						}
-						catch (NullPointerException ignored)
+						else
 						{
-							bot.send(sender, "The supported currencies are: " + EXCHANGE_RATES.keySet().toString());
+							try
+							{
+								final double amt = Double.parseDouble(cmds[0].replaceAll(",", ""));
+								final double from = Double.parseDouble(EXCHANGE_RATES.get(cmds[1].toUpperCase()));
+								final double to = Double.parseDouble(EXCHANGE_RATES.get(cmds[3].toUpperCase()));
+
+								bot.send(bot.getChannel(),
+								         NumberFormat.getCurrencyInstance(Locale.US).format(amt).substring(1) + ' ' +
+								         cmds[1].toUpperCase() + " = " +
+								         NumberFormat.getCurrencyInstance(Locale.US).format((amt * to) / from)
+										         .substring(1) + ' ' + cmds[3].toUpperCase()
+								);
+							}
+							catch (NullPointerException ignored)
+							{
+								bot.send(sender, "The supported currencies are: " + EXCHANGE_RATES.keySet().toString());
+							}
 						}
 					}
 				}
-			}
-			else if (query.equals(RATES_KEYWORD))
-			{
-				bot.send(sender, "Last Update: " + pubDate);
-
-				final Iterator<String> it = EXCHANGE_RATES.keySet().iterator();
-				String rate;
-
-				final StringBuilder buff = new StringBuilder(0);
-
-				while (it.hasNext())
+				else if (query.equals(Commands.CURRENCY_RATES_KEYWORD))
 				{
-					rate = it.next();
-					if (buff.length() > 0)
+					bot.send(sender, "Last Update: " + pubDate);
+
+					final Iterator<String> it = EXCHANGE_RATES.keySet().iterator();
+					String rate;
+
+					final StringBuilder buff = new StringBuilder(0);
+
+					while (it.hasNext())
 					{
-						buff.append(", ");
+						rate = it.next();
+						if (buff.length() > 0)
+						{
+							buff.append(", ");
+						}
+						buff.append(rate).append(": ").append(EXCHANGE_RATES.get(rate));
 					}
-					buff.append(rate).append(": ").append(EXCHANGE_RATES.get(rate));
+
+					bot.send(sender, buff.toString());
+
 				}
-
-				bot.send(sender, buff.toString());
-
+				else
+				{
+					bot.helpResponse(sender, Commands.CURRENCY_CMD + ' ' + query);
+					bot.send(sender, "The supported currencies are: " + EXCHANGE_RATES.keySet().toString());
+				}
 			}
 			else
 			{
-				bot.helpResponse(sender, Mobibot.CURRENCY_CMD + ' ' + query);
-				bot.send(sender, "The supported currencies are: " + EXCHANGE_RATES.keySet().toString());
+				bot.getLogger().debug("The exchange rate table is empty.");
+				bot.send(sender, "Sorry, but the exchange rate table is empty.");
 			}
-		}
-		else
-		{
-			bot.getLogger().debug("The exchange rate table is empty.");
-			bot.send(sender, "Sorry, but the exchange rate table is empty.");
 		}
 	}
 }

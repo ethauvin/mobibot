@@ -1,5 +1,5 @@
 /*
- * @(#)Quote.java
+ * @(#)Dice.java
  *
  * Copyright (c) 2004-2014, Erik C. Thauvin (erik@thauvin.net)
  * All rights reserved.
@@ -31,84 +31,67 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package net.thauvin.erik.mobibot;
 
-import org.jibble.pircbot.Colors;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.net.URLConnection;
+import java.util.Random;
 
 /**
- * Retrieve quote from <a href="iheartquotes.com">I Heart Quotes</a>
+ * The {@link net.thauvin.erik.mobibot.Commands#DICE_CMD} command
  *
  * @author <a href="mailto:erik@thauvin.net">Erik C. Thauvin</a>
- * @created 2014-04-20
+ * @created 2014-04-28
  * @since 1.0
  */
-public class Quote implements Runnable
+public class Dice
 {
-
 	/**
-	 * The I Heart Quotes URL.
-	 */
-	private static final String QUOTE_URL =
-			"http://www.iheartquotes.com/api/v1/random?format=json&max_lines=1&source=esr+humorix_misc+humorix_stories+joel_on_software+macintosh+math+mav_flame+osp_rules+paul_graham+prog_style+subversion";
-
-	/**
-	 * The bot.
-	 */
-	private final Mobibot bot;
-
-	/**
-	 * The nick of the person who sent the message.
-	 */
-	private final String sender;
-
-	/**
-	 * Creates a new StockQuote object.
+	 * Disables the default constructor.
 	 *
-	 * @param bot The bot.
-	 * @param sender The nick of the person who sent the message.
+	 * @throws UnsupportedOperationException if an error occurred. if the constructor is called.
 	 */
-	public Quote(Mobibot bot, String sender)
+	private Dice()
+			throws UnsupportedOperationException
 	{
-		this.bot = bot;
-		this.sender = sender;
+		throw new UnsupportedOperationException("Illegal constructor call.");
 	}
 
 	/**
-	 * Returns a random quote.
+	 * Rolls the dice
+	 *
+	 * @param bot The bot.
+	 * @param sender The sender's nickname.
 	 */
-	public final void run()
+	public static void roll(Mobibot bot, String sender)
 	{
-		try
+		final Random r = new Random();
+
+		int i = r.nextInt(6) + 1;
+		int y = r.nextInt(6) + 1;
+		final int playerTotal = i + y;
+
+		bot.send(bot.getChannel(),
+		         sender + " rolled two dice: " + Utils.bold(i) + " and " + Utils.bold(y) + " for a total of " + Utils
+				         .bold(playerTotal)
+		);
+
+		i = r.nextInt(6) + 1;
+		y = r.nextInt(6) + 1;
+		final int total = i + y;
+
+		bot.action(
+				"rolled two dice: " + Utils.bold(i) + " and " + Utils.bold(y) + " for a total of " + Utils.bold(total));
+
+		if (playerTotal < total)
 		{
-			final URL url = new URL(QUOTE_URL);
-			final URLConnection conn = url.openConnection();
-
-			final StringBuilder sb = new StringBuilder();
-			final BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-
-			String line;
-			while ((line = reader.readLine()) != null)
-			{
-				sb.append(line);
-			}
-
-			final JSONObject json = new JSONObject(sb.toString());
-
-			bot.send(bot.getChannel(), Colors.CYAN + json.getString("quote") + Colors.CYAN);
-
-			reader.close();
+			bot.action("wins.");
 		}
-		catch (Exception e)
+		else if (playerTotal > total)
 		{
-			bot.getLogger().warn("Unable to retrieve random quote.", e);
-			bot.send(sender, "An error has occurred: " + e.getMessage());
+			bot.action("lost.");
+		}
+		else
+		{
+			bot.action("tied.");
 		}
 	}
 }

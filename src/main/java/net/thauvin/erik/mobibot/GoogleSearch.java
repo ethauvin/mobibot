@@ -1,7 +1,7 @@
 /*
  * @(#)GoogleSearch.java
  *
- * Copyright (c) 2004, Erik C. Thauvin (erik@thauvin.net)
+ * Copyright (c) 2004-2014, Erik C. Thauvin (erik@thauvin.net)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -30,12 +30,9 @@
  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- * $Id$
- *
  */
-package net.thauvin.erik.mobibot;
 
+package net.thauvin.erik.mobibot;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -50,7 +47,6 @@ import java.net.URLEncoder;
  * Performs a Google search or spell checking query.
  *
  * @author Erik C. Thauvin
- * @version $Revision$, $Date$
  * @created Feb 7, 2004
  * @since 1.0
  */
@@ -95,7 +91,6 @@ public class GoogleSearch implements Runnable
 	 */
 	public final void run()
 	{
-
 		try
 		{
 			final String query = URLEncoder.encode(this.query, "UTF-8");
@@ -119,12 +114,11 @@ public class GoogleSearch implements Runnable
 			for (int i = 0; i < ja.length(); i++)
 			{
 				final JSONObject j = ja.getJSONObject(i);
-				bot.send(sender, Mobibot.unescapeXml(j.getString("titleNoFormatting")));
+				bot.send(sender, Utils.unescapeXml(j.getString("titleNoFormatting")));
 				bot.send(sender, TAB_INDENT + j.getString("url"));
 			}
 
 			reader.close();
-
 		}
 		catch (Exception e)
 		{

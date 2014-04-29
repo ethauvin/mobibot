@@ -1,7 +1,7 @@
 /*
  * @(#)EntryLink.java
  *
- * Copyright (c) 2004, Erik C. Thauvin (erik@thauvin.net)
+ * Copyright (c) 2004-2014, Erik C. Thauvin (erik@thauvin.net)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -30,10 +30,8 @@
  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- * $Id$
- *
  */
+
 package net.thauvin.erik.mobibot;
 
 import com.sun.syndication.feed.synd.SyndCategoryImpl;
@@ -48,7 +46,6 @@ import java.util.List;
  * The class used to store link entries.
  *
  * @author Erik C. Thauvin
- * @version $Revision$, $Date$
  * @created Jan 31, 2004
  * @since 1.0
  */
@@ -107,6 +104,61 @@ public class EntryLink implements Serializable
 	}
 
 	/**
+	 * Sets the tags.
+	 *
+	 * @param tags The space-delimited tags.
+	 */
+	public final synchronized void setTags(String tags)
+	{
+		if (tags != null)
+		{
+			final String[] parts = tags.replaceAll(", ", " ").replaceAll(",", " ").split(" ");
+
+			SyndCategoryImpl tag;
+			String part;
+			char mod;
+
+			for (final String rawPart : parts)
+			{
+				part = rawPart.trim();
+
+				if (part.length() >= 2)
+				{
+					tag = new SyndCategoryImpl();
+					tag.setName(part.substring(1).toLowerCase());
+
+					mod = part.charAt(0);
+
+					if (mod == '-')
+					{
+						// Don't remove the channel tag, if any.
+						if (!tag.getName().equals(channel.substring(1)))
+						{
+							this.tags.remove(tag);
+						}
+					}
+					else if (mod == '+')
+					{
+						if (!this.tags.contains(tag))
+						{
+							this.tags.add(tag);
+						}
+					}
+					else
+					{
+						tag.setName(part.trim().toLowerCase());
+
+						if (!this.tags.contains(tag))
+						{
+							this.tags.add(tag);
+						}
+					}
+				}
+			}
+		}
+	}
+
+	/**
 	 * Creates a new entry.
 	 *
 	 * @param link The new entry's link.
@@ -129,6 +181,7 @@ public class EntryLink implements Serializable
 
 	/**
 	 * Creates a new EntryLink object.
+	 *
 	 * @noinspection UnusedDeclaration
 	 */
 	protected EntryLink()
@@ -178,6 +231,7 @@ public class EntryLink implements Serializable
 	 * Sets the channel.
 	 *
 	 * @param channel The channel.
+	 *
 	 * @noinspection UnusedDeclaration
 	 */
 	public final synchronized void setChannel(String channel)
@@ -279,6 +333,7 @@ public class EntryLink implements Serializable
 	 * Set the comment's author login.
 	 *
 	 * @param login The new login.
+	 *
 	 * @noinspection UnusedDeclaration
 	 */
 	public final synchronized void setLogin(String login)
@@ -319,56 +374,11 @@ public class EntryLink implements Serializable
 	/**
 	 * Sets the tags.
 	 *
-	 * @param tags The space-delimited tags.
+	 * @param tags The tags.
 	 */
-	public final synchronized void setTags(String tags)
+	final synchronized void setTags(List<SyndCategoryImpl> tags)
 	{
-		if (tags != null)
-		{
-			final String[] parts = tags.replaceAll(", ", " ").replaceAll(",", " ").split(" ");
-
-			SyndCategoryImpl tag;
-			String part;
-			char mod;
-
-			for (final String rawPart : parts)
-			{
-				part = rawPart.trim();
-
-				if (part.length() >= 2)
-				{
-					tag = new SyndCategoryImpl();
-					tag.setName(part.substring(1).toLowerCase());
-
-					mod = part.charAt(0);
-
-					if (mod == '-')
-					{
-						// Don't remove the channel tag, if any.
-						if (!tag.getName().equals(channel.substring(1)))
-						{
-							this.tags.remove(tag);
-						}
-					}
-					else if (mod == '+')
-					{
-						if (!this.tags.contains(tag))
-						{
-							this.tags.add(tag);
-						}
-					}
-					else
-					{
-						tag.setName(part.trim().toLowerCase());
-
-						if (!this.tags.contains(tag))
-						{
-							this.tags.add(tag);
-						}
-					}
-				}
-			}
-		}
+		this.tags.addAll(tags);
 	}
 
 	/**
@@ -427,16 +437,6 @@ public class EntryLink implements Serializable
 	}
 
 	/**
-	 * Sets the tags.
-	 *
-	 * @param tags The tags.
-	 */
-	public final synchronized void setTags(List<SyndCategoryImpl> tags)
-	{
-		this.tags.addAll(tags);
-	}
-
-	/**
 	 * Returns a string representation of the object.
 	 *
 	 * @return A string representation of the object.
@@ -444,8 +444,8 @@ public class EntryLink implements Serializable
 	public final String toString()
 	{
 
-		return super.toString() + "[ channel -> '" + channel + '\'' + ", comments -> " + comments + ", date -> "
-		       + date + ", link -> '" + link + '\'' + ", login -> '" + login + '\'' + ", nick -> '" + nick + '\''
+		return super.toString() + "[ channel -> '" + channel + '\'' + ", comments -> " + comments + ", date -> " + date
+		       + ", link -> '" + link + '\'' + ", login -> '" + login + '\'' + ", nick -> '" + nick + '\''
 		       + ", tags -> " + tags + ", title -> '" + title + '\'' + " ]";
 	}
 }

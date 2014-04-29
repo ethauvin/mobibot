@@ -1,7 +1,7 @@
 /*
  * @(#)DeliciousPoster.java
  *
- * Copyright (c) 2005, Erik C. Thauvin (erik@thauvin.net)
+ * Copyright (c) 2004-2014, Erik C. Thauvin (erik@thauvin.net)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -30,10 +30,8 @@
  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- * $Id$
- *
  */
+
 package net.thauvin.erik.mobibot;
 
 import del.icio.us.Delicious;
@@ -42,11 +40,10 @@ import del.icio.us.Delicious;
  * The class to handle posts to del.icio.us.
  *
  * @author Erik C. Thauvin
- * @version $Revision$, $Date$
  * @created Mar 5, 2005
- * @noinspection UnnecessaryBoxing
  * @since 1.0
  */
+@SuppressWarnings("UnnecessaryBoxing")
 public class DeliciousPoster
 {
 	private final Delicious delicious;
@@ -78,14 +75,26 @@ public class DeliciousPoster
 			public Object construct()
 			{
 				return Boolean.valueOf(delicious.addPost(entry.getLink(),
-				                                          entry.getTitle(),
-				                                          postedBy(entry),
-				                                          entry.getDeliciousTags(),
-				                                          entry.getDate()));
+				                                         entry.getTitle(),
+				                                         postedBy(entry),
+				                                         entry.getDeliciousTags(),
+				                                         entry.getDate()));
 			}
 		};
 
 		worker.start();
+	}
+
+	/**
+	 * Returns he del.icio.us extended attribution line.
+	 *
+	 * @param entry The entry.
+	 *
+	 * @return The extended attribution line.
+	 */
+	private String postedBy(EntryLink entry)
+	{
+		return "Posted by " + entry.getNick() + " on " + entry.getChannel() + " (" + ircServer + ')';
 	}
 
 	/**
@@ -125,36 +134,24 @@ public class DeliciousPoster
 					delicious.deletePost(oldUrl);
 
 					return Boolean.valueOf(delicious.addPost(entry.getLink(),
-					                                          entry.getTitle(),
-					                                          postedBy(entry),
-					                                          entry.getDeliciousTags(),
-					                                          entry.getDate()));
+					                                         entry.getTitle(),
+					                                         postedBy(entry),
+					                                         entry.getDeliciousTags(),
+					                                         entry.getDate()));
 				}
 				else
 				{
 					return Boolean.valueOf(delicious.addPost(entry.getLink(),
-					                                          entry.getTitle(),
-					                                          postedBy(entry),
-					                                          entry.getDeliciousTags(),
-					                                          entry.getDate(),
-					                                          true,
-					                                          true));
+					                                         entry.getTitle(),
+					                                         postedBy(entry),
+					                                         entry.getDeliciousTags(),
+					                                         entry.getDate(),
+					                                         true,
+					                                         true));
 				}
 			}
 		};
 
 		worker.start();
-	}
-
-	/**
-	 * Returns he del.icio.us extended attribution line.
-	 *
-	 * @param entry The entry.
-	 *
-	 * @return The extended attribution line.
-	 */
-	private String postedBy(EntryLink entry)
-	{
-		return "Posted by " + entry.getNick() + " on " + entry.getChannel() + " (" + ircServer + ')';
 	}
 }

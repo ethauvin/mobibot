@@ -1,5 +1,5 @@
 /*
- * @(#)EntryComment.java
+ * @(#)TellMessage.java
  *
  * Copyright (c) 2004-2014, Erik C. Thauvin (erik@thauvin.net)
  * All rights reserved.
@@ -39,103 +39,108 @@ import java.util.Calendar;
 import java.util.Date;
 
 /**
- * The class used to store comments associated to a specific entry.
+ * The <code>TellMessage</code> class.
  *
- * @author Erik C. Thauvin
- * @created Jan 31, 2004
+ * @author <a href="mailto:erik@thauvin.net">Erik C. Thauvin</a>
+ * @created 2014-04-24
  * @since 1.0
  */
-public class EntryComment implements Serializable
+public class TellMessage implements Serializable
 {
+	private static final long serialVersionUID = 1L;
+
+	private final String sender;
+
+	private final String recipient;
+
+	private final String message;
+
+	private final String id;
+
+	final private Date queued;
+
+	private Date received;
+
+	private boolean isReceived;
+
+	private boolean isNotified;
+
 	/**
-	 * The serial version UID.
+	 * Create a new message.
 	 *
-	 * @noinspection UnusedDeclaration
+	 * @param sender The sender's nick.
+	 * @param recipient The recipient's nick.
+	 * @param message The message.
 	 */
-	static final long serialVersionUID = 6957415292233553224L;
-
-	/**
-	 * The creation date.
-	 */
-	private final Date date = Calendar.getInstance().getTime();
-
-	private String comment = "";
-
-	private String nick = "";
-
-	/**
-	 * Creates a new comment.
-	 *
-	 * @param comment The new comment.
-	 * @param nick The nickname of the comment's author.
-	 */
-	public EntryComment(String comment, String nick)
+	public TellMessage(String sender, String recipient, String message)
 	{
-		this.comment = comment;
-		this.nick = nick;
+		this.sender = sender;
+		this.recipient = recipient;
+		this.message = message;
+
+		this.queued = Calendar.getInstance().getTime();
+		this.id = Utils.TIMESTAMP_SDF.format(this.queued);
+
 	}
 
-	/**
-	 * Creates a new comment.
-	 *
-	 * @noinspection UnusedDeclaration
-	 */
-	protected EntryComment()
+	public String getSender()
 	{
-		; // Required for serialization.
+		return sender;
 	}
 
-	/**
-	 * Returns the comment.
-	 *
-	 * @return The comment.
-	 */
-	public final String getComment()
+	public String getRecipient()
 	{
-		return comment;
+		return recipient;
 	}
 
-	/**
-	 * Sets the comment.
-	 *
-	 * @param comment The actual comment.
-	 *
-	 * @noinspection UnusedDeclaration
-	 */
-	public final void setComment(String comment)
+	public String getMessage()
 	{
-		this.comment = comment;
+		return message;
 	}
 
-	/**
-	 * Returns the comment's creation date.
-	 *
-	 * @return The date.
-	 *
-	 * @noinspection UnusedDeclaration
-	 */
-	public final Date getDate()
+	public Date getQueued()
 	{
-		return date;
+		return queued;
 	}
 
-	/**
-	 * Returns the nickname of the author of the comment.
-	 *
-	 * @return The nickname.
-	 */
-	public final String getNick()
+	public Date getReceived()
 	{
-		return nick;
+		return received;
 	}
 
-	/**
-	 * Sets the nickname of the author of the comment.
-	 *
-	 * @param nick The new nickname.
-	 */
-	public final void setNick(String nick)
+	public void setReceived()
 	{
-		this.nick = nick;
+		this.received = Calendar.getInstance().getTime();
+		this.isReceived = true;
+	}
+
+	public boolean isNotified()
+	{
+		return this.isNotified;
+	}
+
+	public void setNotified()
+	{
+		this.isNotified = true;
+	}
+
+	public String getId()
+	{
+		return this.id;
+	}
+
+	public boolean isReceived()
+	{
+		return this.isReceived;
+	}
+
+	public boolean isMatchId(String id)
+	{
+		return this.id.equals(id);
+	}
+
+	public boolean isMatch(String nick)
+	{
+		return (sender.equalsIgnoreCase(nick) || recipient.equalsIgnoreCase(nick));
 	}
 }

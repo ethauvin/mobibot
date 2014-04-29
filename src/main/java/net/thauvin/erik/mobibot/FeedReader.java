@@ -1,7 +1,7 @@
 /*
  * @(#)FeedReader.java
  *
- * Copyright (c) 2004, Erik C. Thauvin (erik@thauvin.net)
+ * Copyright (c) 2004-2014, Erik C. Thauvin (erik@thauvin.net)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -30,10 +30,8 @@
  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- * $Id$
- *
  */
+
 package net.thauvin.erik.mobibot;
 
 import com.sun.syndication.feed.synd.SyndEntry;
@@ -50,7 +48,6 @@ import java.util.List;
  * Reads a RSS feed.
  *
  * @author Erik C. Thauvin
- * @version $Revision$, $Date$
  * @created Feb 1, 2004
  * @since 1.0
  */

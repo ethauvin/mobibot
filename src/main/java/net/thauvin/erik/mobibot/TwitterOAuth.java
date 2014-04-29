@@ -20,7 +20,6 @@ import java.io.InputStreamReader;
  *
  * @author <a href="mailto:erik@thauvin.net">Erik C. Thauvin</a>
  * @author <a href="http://twitter4j.org/en/code-examples.html#oauth">http://twitter4j.org/en/code-examples.html#oauth</a>
- * @version $Revision$, $Date$
  * @created Sep 13, 2010
  * @since 1.0
  */
