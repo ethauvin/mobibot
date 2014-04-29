@@ -105,8 +105,8 @@ public class Utils
 	 * @param out The destination file.
 	 *
 	 * @throws java.io.IOException If the file could not be copied.
-	 * @noinspection UnusedDeclaration
 	 */
+	@SuppressWarnings("UnusedDeclaration")
 	public static void copyFile(File in, File out)
 			throws IOException
 	{
@@ -296,6 +296,72 @@ public class Utils
 	}
 
 	/**
+	 * Builds an entry's comment for display on the channel.
+	 *
+	 * @param entryIndex The entry's index.
+	 * @param commentIndex The comment's index.
+	 * @param comment The {@link net.thauvin.erik.mobibot.EntryComment comment} object.
+	 *
+	 * @return The entry's comment.
+	 */
+	static String buildComment(int entryIndex, int commentIndex, EntryComment comment)
+	{
+		return (Commands.LINK_CMD + (entryIndex + 1) + '.' + (commentIndex + 1) + ": [" + comment.getNick() + "] "
+		        + comment.getComment());
+	}
+
+	/**
+	 * Builds an entry's link for display on the channel.
+	 *
+	 * @param index The entry's index.
+	 * @param entry The {@link net.thauvin.erik.mobibot.EntryLink entry} object.
+	 *
+	 * @return The entry's link.
+	 *
+	 * @see #buildLink(int, net.thauvin.erik.mobibot.EntryLink, boolean)
+	 */
+	static String buildLink(int index, EntryLink entry)
+	{
+		return buildLink(index, entry, false);
+	}
+
+	/**
+	 * Builds an entry's link for display on the channel.
+	 *
+	 * @param index The entry's index.
+	 * @param entry The {@link net.thauvin.erik.mobibot.EntryLink entry} object.
+	 * @param isView Set to true to display the number of comments.
+	 *
+	 * @return The entry's link.
+	 */
+	static String buildLink(int index, EntryLink entry, boolean isView)
+	{
+		final StringBuilder buff = new StringBuilder(Commands.LINK_CMD + (index + 1) + ": ");
+
+		buff.append('[').append(entry.getNick()).append(']');
+
+		if (isView && entry.hasComments())
+		{
+			buff.append("[+").append(entry.getCommentsCount()).append(']');
+		}
+
+		buff.append(' ');
+
+		if (Mobibot.NO_TITLE.equals(entry.getTitle()))
+		{
+			buff.append(bold(entry.getTitle()));
+		}
+		else
+		{
+			buff.append(entry.getTitle());
+		}
+
+		buff.append(" ( ").append(entry.getLink()).append(" )");
+
+		return buff.toString();
+	}
+
+	/**
 	 * Makes the given string bold.
 	 *
 	 * @param s The string.
@@ -305,5 +371,18 @@ public class Utils
 	public static String bold(String s)
 	{
 		return Colors.BOLD + s + Colors.BOLD;
+	}
+
+	/**
+	 * Build an entry's tags/categories for display on the channel.
+	 *
+	 * @param entryIndex The entry's index.
+	 * @param entry The {@link net.thauvin.erik.mobibot.EntryLink entry} object.
+	 *
+	 * @return The entry's tags.
+	 */
+	static String buildTags(int entryIndex, EntryLink entry)
+	{
+		return (Commands.LINK_CMD + (entryIndex + 1) + "T: " + entry.getDeliciousTags().replaceAll(",", ", "));
 	}
 }

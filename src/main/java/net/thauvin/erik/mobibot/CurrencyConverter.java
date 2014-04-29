@@ -94,23 +94,6 @@ public class CurrencyConverter implements Runnable
 		this.bot = bot;
 	}
 
-	/**
-	 * Sets the query.
-	 *
-	 * @param sender The nick of the person who sent the message.
-	 * @param query The currency query.
-	 */
-	public void setQuery(String sender, String query)
-	{
-		this.query = query;
-		this.sender = sender;
-
-		if (!pubDate.equals(Utils.today()))
-		{
-			EXCHANGE_RATES.clear();
-		}
-	}
-
 	// Converts specified currencies.
 	public final void run()
 	{
@@ -223,6 +206,23 @@ public class CurrencyConverter implements Runnable
 				bot.getLogger().debug("The exchange rate table is empty.");
 				bot.send(sender, "Sorry, but the exchange rate table is empty.");
 			}
+		}
+	}
+
+	/**
+	 * Sets the query.
+	 *
+	 * @param sender The nick of the person who sent the message.
+	 * @param query The currency query.
+	 */
+	public void setQuery(String sender, String query)
+	{
+		this.query = query;
+		this.sender = sender;
+
+		if (!pubDate.equals(Utils.today()))
+		{
+			EXCHANGE_RATES.clear();
 		}
 	}
 }

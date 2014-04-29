@@ -1,14 +1,17 @@
 apply plugin: 'java'
 apply plugin: 'idea'
+apply plugin: 'application'
 
 defaultTasks 'deploy'
 
 version = '0.6'
 
 def packageName = 'net.thauvin.erik.mobibot'
-def mainClassName = packageName + '.Mobibot'
 def deployDir = 'deploy'
 def isRelease = 'release' in gradle.startParameter.taskNames
+
+mainClassName = packageName + '.Mobibot'
+[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
 repositories {
   mavenCentral()

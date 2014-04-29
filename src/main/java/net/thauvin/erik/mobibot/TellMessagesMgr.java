@@ -139,17 +139,14 @@ public class TellMessagesMgr
 		final Calendar maxDate = Calendar.getInstance();
 		final Date today = new Date();
 
-		synchronized (tellMessages)
+		for (final TellMessage message : tellMessages)
 		{
-			for (final TellMessage message : tellMessages)
-			{
-				maxDate.setTime(message.getQueued());
-				maxDate.add(Calendar.DATE, tellMaxDays);
+			maxDate.setTime(message.getQueued());
+			maxDate.add(Calendar.DATE, tellMaxDays);
 
-				if (maxDate.getTime().before(today))
-				{
-					tellMessages.remove(message);
-				}
+			if (maxDate.getTime().before(today))
+			{
+				tellMessages.remove(message);
 			}
 		}
 	}

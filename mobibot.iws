@@ -33,34 +33,27 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="944923a8-a8d5-4232-a77e-02473b958f59" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/Commands.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/Dice.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/EntriesMgr.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/Lookup.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/TellMessage.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/TellMessagesMgr.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/Utils.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/War.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/WorldTime.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/licenses/Apache LICENSE.txt" afterPath="$PROJECT_DIR$/licenses/Apache LICENSE.txt" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/CurrencyConverter.java" afterPath="$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/CurrencyConverter.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/DeliciousPoster.java" afterPath="$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/DeliciousPoster.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/EntryComment.java" afterPath="$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/EntryComment.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/EntryLink.java" afterPath="$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/EntryLink.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/FeedReader.java" afterPath="$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/FeedReader.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/GoogleSearch.java" afterPath="$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/GoogleSearch.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/licenses/JDOM License.txt" afterPath="$PROJECT_DIR$/licenses/JDOM License.txt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/licenses/JWeather License.txt" afterPath="$PROJECT_DIR$/licenses/JWeather License.txt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/licenses/License.txt" afterPath="$PROJECT_DIR$/licenses/License.txt" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/Mobibot.java" afterPath="$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/Mobibot.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/Quote.java" afterPath="$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/Quote.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/ReleaseInfo.java" afterPath="$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/ReleaseInfo.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/StockQuote.java" afterPath="$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/StockQuote.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/licenses/OstermillerUtil License.txt" afterPath="$PROJECT_DIR$/licenses/OstermillerUtil License.txt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/licenses/ROME License.txt" afterPath="$PROJECT_DIR$/licenses/ROME License.txt" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/SwingWorker.java" afterPath="$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/SwingWorker.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/Twitter.java" afterPath="$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/Twitter.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/TwitterOAuth.java" afterPath="$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/TwitterOAuth.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/TellMessage.java" afterPath="$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/TellMessage.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/TellMessagesMgr.java" afterPath="$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/TellMessagesMgr.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/licenses/Twitter4J LICENSE.txt" afterPath="$PROJECT_DIR$/licenses/Twitter4J LICENSE.txt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/Utils.java" afterPath="$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/Utils.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/Weather.java" afterPath="$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/Weather.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build.gradle" afterPath="$PROJECT_DIR$/build.gradle" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/buildnum.properties" afterPath="$PROJECT_DIR$/buildnum.properties" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mobibot.ipr" afterPath="$PROJECT_DIR$/mobibot.ipr" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/licenses/delicious-java License.txt" afterPath="$PROJECT_DIR$/licenses/delicious-java License.txt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/website/index.html" afterPath="$PROJECT_DIR$/website/index.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/licenses/jsoup License.txt" afterPath="$PROJECT_DIR$/licenses/jsoup License.txt" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mobibot.iws" afterPath="$PROJECT_DIR$/mobibot.iws" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/properties/mobibot.properties" afterPath="$PROJECT_DIR$/properties/mobibot.properties" />
     </list>
     <ignored path="$USER_HOME$/.griffon/" />
     <ignored path="$USER_HOME$/.grails/" />
@@ -163,21 +156,125 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="WorldTime.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/WorldTime.java">
+      <file leaf-file-name="Mobibot.java" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/Mobibot.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="2125" max-vertical-offset="3315">
-              <caret line="125" column="66" selection-start-line="125" selection-start-column="52" selection-end-line="125" selection-end-column="52" />
+            <state vertical-scroll-proportion="0.4461153" vertical-offset="45833" max-vertical-offset="47804">
+              <caret line="2717" column="92" selection-start-line="2717" selection-start-column="51" selection-end-line="2717" selection-end-column="51" />
+              <folding>
+                <element signature="e#0#67517#0" expanded="true" />
+                <element signature="imports" expanded="true" />
+                <element signature="e#5390#5398#0" expanded="true" />
+                <element signature="e#5536#5549#0" expanded="true" />
+                <element signature="e#5705#5716#0" expanded="true" />
+                <element signature="e#5935#5943#0" expanded="true" />
+                <element signature="e#6044#6052#0" expanded="true" />
+                <element signature="e#7793#7826#0" expanded="true" />
+                <element signature="e#16444#16445#0" expanded="true" />
+                <element signature="e#16462#16463#0" expanded="true" />
+                <element signature="e#16579#16580#0" expanded="true" />
+                <element signature="e#16602#16603#0" expanded="true" />
+                <element signature="e#16714#16715#0" expanded="true" />
+                <element signature="e#16735#16736#0" expanded="true" />
+                <element signature="e#16850#16851#0" expanded="true" />
+                <element signature="e#16879#16880#0" expanded="true" />
+                <element signature="e#17786#17787#0" expanded="true" />
+                <element signature="e#17811#17812#0" expanded="true" />
+                <element signature="e#18643#18644#0" expanded="true" />
+                <element signature="e#18709#18710#0" expanded="true" />
+                <element signature="e#19073#19106#0" expanded="true" />
+                <element signature="e#19145#19146#0" expanded="true" />
+                <element signature="e#19175#19176#0" expanded="true" />
+                <element signature="e#19291#19292#0" expanded="true" />
+                <element signature="e#19311#19312#0" expanded="true" />
+                <element signature="e#19412#19413#0" expanded="true" />
+                <element signature="e#19479#19480#0" expanded="true" />
+                <element signature="e#19605#19606#0" expanded="true" />
+                <element signature="e#19640#19641#0" expanded="true" />
+                <element signature="e#21615#21616#0" expanded="true" />
+                <element signature="e#21640#21641#0" expanded="true" />
+                <element signature="e#21775#21776#0" expanded="true" />
+                <element signature="e#21812#21813#0" expanded="true" />
+                <element signature="e#21984#21985#0" expanded="true" />
+                <element signature="e#22011#22012#0" expanded="true" />
+                <element signature="e#22121#22122#0" expanded="true" />
+                <element signature="e#22144#22145#0" expanded="true" />
+                <element signature="e#22258#22259#0" expanded="true" />
+                <element signature="e#22279#22280#0" expanded="true" />
+                <element signature="e#22934#22935#0" expanded="true" />
+                <element signature="e#22953#22954#0" expanded="true" />
+                <element signature="e#23063#23064#0" expanded="true" />
+                <element signature="e#23086#23087#0" expanded="true" />
+                <element signature="e#23211#23212#0" expanded="true" />
+                <element signature="e#23244#23245#0" expanded="true" />
+                <element signature="e#31567#31575#0" expanded="true" />
+                <element signature="e#54561#54562#0" expanded="true" />
+                <element signature="e#54592#54593#0" expanded="true" />
+                <element signature="e#54895#54896#0" expanded="true" />
+                <element signature="e#54935#54936#0" expanded="true" />
+                <element signature="e#56718#56719#0" expanded="true" />
+                <element signature="e#56766#56767#0" expanded="true" />
+                <element signature="e#57622#57623#0" expanded="true" />
+                <element signature="e#57694#57695#0" expanded="true" />
+                <element signature="e#57812#57813#0" expanded="true" />
+                <element signature="e#57833#57834#0" expanded="true" />
+                <element signature="e#58406#58407#0" expanded="true" />
+                <element signature="e#58441#58442#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Weather.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/Weather.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="889" max-vertical-offset="2669">
+              <caret line="147" column="56" selection-start-line="147" selection-start-column="40" selection-end-line="147" selection-end-column="40" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Mobibot.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/Mobibot.java">
+      <file leaf-file-name="buildnum.properties" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/buildnum.properties">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="21157" max-vertical-offset="45492">
-              <caret line="383" column="23" selection-start-line="383" selection-start-column="23" selection-end-line="383" selection-end-column="23" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="153">
+              <caret line="3" column="0" selection-start-line="3" selection-start-column="0" selection-end-line="3" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="EntryLink.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/EntryLink.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="5853" max-vertical-offset="6664">
+              <caret line="323" column="42" selection-start-line="323" selection-start-column="42" selection-end-line="323" selection-end-column="42" />
+              <folding>
+                <element signature="e#0#9451#0" expanded="true" />
+                <element signature="imports" expanded="true" />
+                <element signature="e#2175#2189#0" expanded="true" />
+                <element signature="e#2277#2295#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="EntryComment.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/EntryComment.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="107" max-vertical-offset="1530">
+              <caret line="110" column="42" selection-start-line="110" selection-start-column="42" selection-end-line="110" selection-end-column="42" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="TellMessagesMgr.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/TellMessagesMgr.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="1071" max-vertical-offset="1972">
+              <caret line="136" column="18" selection-start-line="136" selection-start-column="18" selection-end-line="136" selection-end-column="18" />
               <folding />
             </state>
           </provider>
@@ -186,9 +283,34 @@
       <file leaf-file-name="Utils.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/Utils.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="1156" max-vertical-offset="5338">
-              <caret line="68" column="34" selection-start-line="68" selection-start-column="34" selection-end-line="68" selection-end-column="34" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="1332" max-vertical-offset="6358">
+              <caret line="341" column="112" selection-start-line="341" selection-start-column="0" selection-end-line="341" selection-end-column="0" />
+              <folding>
+                <element signature="e#0#9144#0" expanded="true" />
+                <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="TellMessage.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/TellMessage.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="594" max-vertical-offset="1428">
+              <caret line="135" column="29" selection-start-line="135" selection-start-column="29" selection-end-line="135" selection-end-column="29" />
               <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Commands.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/Commands.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="2890" max-vertical-offset="4369">
+              <caret line="213" column="36" selection-start-line="213" selection-start-column="31" selection-end-line="213" selection-end-column="43" />
+              <folding>
+                <element signature="e#0#5604#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -198,69 +320,6 @@
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0" vertical-offset="1581" max-vertical-offset="6613">
               <caret line="93" column="33" selection-start-line="93" selection-start-column="25" selection-end-line="93" selection-end-column="36" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="DeliciousPoster.java" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/DeliciousPoster.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.6626984" vertical-offset="556" max-vertical-offset="1989">
-              <caret line="112" column="33" selection-start-line="112" selection-start-column="33" selection-end-line="112" selection-end-column="33" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Dice.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/Dice.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="782" max-vertical-offset="1734">
-              <caret line="46" column="21" selection-start-line="46" selection-start-column="7" selection-end-line="46" selection-end-column="7" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Lookup.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/Lookup.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="2414" max-vertical-offset="2839">
-              <caret line="142" column="42" selection-start-line="142" selection-start-column="42" selection-end-line="142" selection-end-column="42" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="CurrencyConverter.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/CurrencyConverter.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="2460" max-vertical-offset="3927">
-              <caret line="110" column="72" selection-start-line="110" selection-start-column="9" selection-end-line="110" selection-end-column="9" />
-              <folding>
-                <element signature="e#0#6496#0" expanded="true" />
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Commands.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/Commands.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="395" max-vertical-offset="4437">
-              <caret line="39" column="50" selection-start-line="39" selection-start-column="50" selection-end-line="39" selection-end-column="50" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Quote.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/Quote.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="1819" max-vertical-offset="2023">
-              <caret line="107" column="30" selection-start-line="107" selection-start-column="27" selection-end-line="107" selection-end-column="27" />
               <folding />
             </state>
           </provider>
@@ -299,6 +358,20 @@
               <option name="taskNames">
                 <list>
                   <option value="deploy" />
+                </list>
+              </option>
+            </ExternalSystemSettings>
+          </option>
+        </ExternalTaskExecutionInfo>
+        <ExternalTaskExecutionInfo>
+          <option name="executorId" value="Run" />
+          <option name="settings">
+            <ExternalSystemSettings>
+              <option name="externalProjectPath" value="$PROJECT_DIR$" />
+              <option name="externalSystemIdString" value="GRADLE" />
+              <option name="taskNames">
+                <list>
+                  <option value="distZip" />
                 </list>
               </option>
             </ExternalSystemSettings>
@@ -393,6 +466,11 @@
                 <option name="name" value="test" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
+                <option name="description" value="Bundles the project as a JVM application with libs and OS specific scripts." />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
+                <option name="name" value="distTar" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
                 <option name="description" value="Releases new version." />
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
                 <option name="name" value="release" />
@@ -433,6 +511,11 @@
                 <option name="name" value="javadoc" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
+                <option name="description" value="Bundles the project as a JVM application with libs and OS specific scripts." />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
+                <option name="name" value="distZip" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
                 <option name="description" value="Assembles a jar archive containing the main classes." />
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
                 <option name="name" value="jar" />
@@ -446,6 +529,11 @@
                 <option name="description" value="Assembles and tests this project and all projects that depend on it." />
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
                 <option name="name" value="buildDependents" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Installs the project as a JVM application along with libs and OS specific scripts." />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
+                <option name="name" value="installApp" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
                 <option name="description" value="Assembles classes 'main'." />
@@ -467,8 +555,18 @@
                 <option name="name" value="processResources" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
+                <option name="description" value="Creates OS specific scripts to run the project as a JVM application." />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
+                <option name="name" value="startScripts" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
                 <option name="name" value="wrapper" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Runs this project as a JVM application" />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
+                <option name="name" value="run" />
               </ExternalTaskPojo>
             </list>
           </value>
@@ -535,6 +633,21 @@
                 <option name="name" value="deploy" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
+                <option name="description" value="Bundles the project as a JVM application with libs and OS specific scripts." />
+                <option name="linkedExternalProjectPath" value="K:\java\mobibot" />
+                <option name="name" value="distTar" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Bundles the project as a JVM application with libs and OS specific scripts." />
+                <option name="linkedExternalProjectPath" value="K:\java\mobibot" />
+                <option name="name" value="distZip" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Installs the project as a JVM application along with libs and OS specific scripts." />
+                <option name="linkedExternalProjectPath" value="K:\java\mobibot" />
+                <option name="name" value="installApp" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
                 <option name="description" value="Assembles a jar archive containing the main classes." />
                 <option name="linkedExternalProjectPath" value="K:\java\mobibot" />
                 <option name="name" value="jar" />
@@ -560,6 +673,16 @@
                 <option name="name" value="release" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
+                <option name="description" value="Runs this project as a JVM application" />
+                <option name="linkedExternalProjectPath" value="K:\java\mobibot" />
+                <option name="name" value="run" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Creates OS specific scripts to run the project as a JVM application." />
+                <option name="linkedExternalProjectPath" value="K:\java\mobibot" />
+                <option name="name" value="startScripts" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
                 <option name="description" value="Runs the unit tests." />
                 <option name="linkedExternalProjectPath" value="K:\java\mobibot" />
                 <option name="name" value="test" />
@@ -580,7 +703,7 @@
     </option>
     <option name="modificationStamps">
       <map>
-        <entry key="$PROJECT_DIR$" value="2796410469833" />
+        <entry key="$PROJECT_DIR$" value="2796686495306" />
       </map>
     </option>
     <option name="projectBuildClasspath">
@@ -698,31 +821,31 @@
         <option value="$PROJECT_DIR$/build.gradle" />
         <option value="$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/Entries.java" />
         <option value="$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/MiscUtils.java" />
-        <option value="$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/EntryComment.java" />
-        <option value="$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/FeedReader.java" />
-        <option value="$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/StockQuote.java" />
-        <option value="$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/SwingWorker.java" />
-        <option value="$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/Twitter.java" />
         <option value="$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/Time.java" />
         <option value="$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/TimeCmd.java" />
         <option value="$PROJECT_DIR$/mobibot.properties" />
         <option value="$PROJECT_DIR$/deploy/mobibot.properties" />
-        <option value="$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/GoogleSearch.java" />
-        <option value="$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/DeliciousPoster.java" />
         <option value="$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/WorldTime.java" />
-        <option value="$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/EntryLink.java" />
-        <option value="$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/TellMessagesMgr.java" />
         <option value="$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/EntriesMgr.java" />
-        <option value="$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/Utils.java" />
-        <option value="$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/Weather.java" />
-        <option value="$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/War.java" />
-        <option value="$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/Dice.java" />
-        <option value="$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/Lookup.java" />
-        <option value="$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/TellMessage.java" />
-        <option value="$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/Quote.java" />
-        <option value="$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/Commands.java" />
-        <option value="$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/Mobibot.java" />
+        <option value="$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/SwingWorker.java" />
+        <option value="$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/EntryLink.java" />
         <option value="$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/CurrencyConverter.java" />
+        <option value="$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/DeliciousPoster.java" />
+        <option value="$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/Dice.java" />
+        <option value="$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/EntryComment.java" />
+        <option value="$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/FeedReader.java" />
+        <option value="$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/GoogleSearch.java" />
+        <option value="$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/Lookup.java" />
+        <option value="$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/Quote.java" />
+        <option value="$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/StockQuote.java" />
+        <option value="$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/Twitter.java" />
+        <option value="$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/War.java" />
+        <option value="$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/Commands.java" />
+        <option value="$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/Utils.java" />
+        <option value="$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/TellMessage.java" />
+        <option value="$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/TellMessagesMgr.java" />
+        <option value="$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/Mobibot.java" />
+        <option value="$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/Weather.java" />
       </list>
     </option>
   </component>
@@ -1479,46 +1602,6 @@
       <sortByType />
     </navigator>
     <panes>
-      <pane id="Scope">
-        <subPane subId="Project Files">
-          <PATH>
-            <PATH_ELEMENT USER_OBJECT="Root">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-          </PATH>
-        </subPane>
-        <subPane subId="All">
-          <PATH>
-            <PATH_ELEMENT USER_OBJECT="Root">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT USER_OBJECT="mobibot">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT USER_OBJECT="Root">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT USER_OBJECT="mobibot">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT USER_OBJECT="src">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT USER_OBJECT="net/thauvin/erik/mobibot">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-          </PATH>
-        </subPane>
-      </pane>
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -1669,6 +1752,46 @@
           </PATH>
         </subPane>
       </pane>
+      <pane id="Scope">
+        <subPane subId="Project Files">
+          <PATH>
+            <PATH_ELEMENT USER_OBJECT="Root">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+          </PATH>
+        </subPane>
+        <subPane subId="All">
+          <PATH>
+            <PATH_ELEMENT USER_OBJECT="Root">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="mobibot">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT USER_OBJECT="Root">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="mobibot">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="src">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="net/thauvin/erik/mobibot">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+          </PATH>
+        </subPane>
+      </pane>
       <pane id="PackagesPane">
         <subPane>
           <PATH>
@@ -1742,7 +1865,7 @@
     <property name="vcs_file_view_flatWidth4" value="82" />
     <property name="GoToFile.includeJavaFiles" value="false" />
     <property name="RunManagerConfig.compileBeforeRunning" value="true" />
-    <property name="options.lastSelected" value="reference.settings.project.maven.importing" />
+    <property name="options.lastSelected" value="preferences.sourceCode.Java" />
     <property name="project.structure.side.proportion" value="0.2" />
     <property name="MemberChooser.copyJavadoc" value="false" />
     <property name="project.structure.last.edited" value="Modules" />
@@ -1784,8 +1907,8 @@
       <recent name="net.thauvin.erik.mobibot" />
     </key>
     <key name="MoveMembersDialog.RECENTS_KEY">
-      <recent name="net.thauvin.erik.mobibot.Commands" />
       <recent name="net.thauvin.erik.mobibot.Utils" />
+      <recent name="net.thauvin.erik.mobibot.Commands" />
       <recent name="net.thauvin.erik.mobibot.War" />
       <recent name="net.thauvin.erik.mobibot.Time" />
       <recent name="net.thauvin.erik.mobibot.EntriesMgr" />
@@ -1806,7 +1929,7 @@
     <option name="referencePos" value="0" />
     <option name="showLabels" value="true" />
   </component>
-  <component name="RunManager" selected="Gradle.mobibot [compileJava]">
+  <component name="RunManager" selected="Gradle.mobibot [distZip]">
     <configuration default="false" name="mobibot [build]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
@@ -1875,6 +1998,25 @@
         <option name="taskNames">
           <list>
             <option value="compileJava" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <RunnerSettings RunnerId="ExternalSystemTaskRunner" />
+      <ConfigurationWrapper RunnerId="ExternalSystemTaskRunner" />
+      <method />
+    </configuration>
+    <configuration default="false" name="mobibot [distZip]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="distZip" />
           </list>
         </option>
         <option name="vmOptions" />
@@ -2185,20 +2327,22 @@
       <ConfigurationWrapper RunnerId="Run" />
       <method />
     </configuration>
-    <list size="6">
+    <list size="7">
       <item index="0" class="java.lang.String" itemvalue="Application.Mobibot" />
       <item index="1" class="java.lang.String" itemvalue="Application.TwitterOAuth" />
       <item index="2" class="java.lang.String" itemvalue="Gradle.mobibot [build]" />
       <item index="3" class="java.lang.String" itemvalue="Gradle.mobibot [deploy]" />
       <item index="4" class="java.lang.String" itemvalue="Gradle.mobibot [release]" />
       <item index="5" class="java.lang.String" itemvalue="Gradle.mobibot [compileJava]" />
+      <item index="6" class="java.lang.String" itemvalue="Gradle.mobibot [distZip]" />
     </list>
     <recent_temporary>
-      <list size="4">
-        <item index="0" class="java.lang.String" itemvalue="Gradle.mobibot [compileJava]" />
-        <item index="1" class="java.lang.String" itemvalue="Gradle.mobibot [release]" />
-        <item index="2" class="java.lang.String" itemvalue="Gradle.mobibot [deploy]" />
-        <item index="3" class="java.lang.String" itemvalue="Gradle.mobibot [build]" />
+      <list size="5">
+        <item index="0" class="java.lang.String" itemvalue="Gradle.mobibot [distZip]" />
+        <item index="1" class="java.lang.String" itemvalue="Gradle.mobibot [compileJava]" />
+        <item index="2" class="java.lang.String" itemvalue="Gradle.mobibot [release]" />
+        <item index="3" class="java.lang.String" itemvalue="Gradle.mobibot [deploy]" />
+        <item index="4" class="java.lang.String" itemvalue="Gradle.mobibot [build]" />
       </list>
     </recent_temporary>
   </component>
@@ -2322,11 +2466,15 @@
       <workItem from="1398667437285" duration="14777000" />
       <workItem from="1398725125314" duration="186000" />
       <workItem from="1398736740069" duration="354000" />
+      <workItem from="1398741101527" duration="153000" />
+      <workItem from="1398750996638" duration="2877000" />
+      <workItem from="1398764128641" duration="5827000" />
+      <workItem from="1398771310468" duration="7179000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="196942000" />
+    <option name="totallyTimeSpent" value="212978000" />
   </component>
   <component name="TodoView" selected-index="0">
     <todo-panel id="selected-file">
@@ -2357,6 +2505,7 @@
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32867134" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.31728044" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32969153" sideWeight="0.5" order="13" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.09114249" sideWeight="0.60704356" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39907408" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -2365,18 +2514,17 @@
       <window_info id="Favorites" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32969153" sideWeight="0.5" order="10" side_tool="true" content_ui="tabs" />
       <window_info id="IDEtalk" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32914045" sideWeight="0.5" order="14" side_tool="false" content_ui="tabs" />
-      <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.12660669" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.12660669" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32798395" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24037763" sideWeight="0.52858573" order="1" side_tool="true" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.1844473" sideWeight="0.5288007" order="1" side_tool="true" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3996139" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32969153" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="13" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.1844473" sideWeight="0.47141424" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.18696883" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" x="22" y="277" width="980" height="213" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.1844473" sideWeight="0.47119924" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.18602455" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" x="22" y="277" width="980" height="213" />
       <window_info id="Maven projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Data Sources" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.31852552" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Profile" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="19" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3210576" sideWeight="0.5" order="22" side_tool="false" content_ui="tabs" />
       <window_info id="Web" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -2400,7 +2548,7 @@
       <window_info id="EJB" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Dependency Viewer" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="20" side_tool="false" content_ui="tabs" />
       <window_info id="Duplicates" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3295562" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3241966" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32389048" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Regex" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.44135803" sideWeight="0.5" order="23" side_tool="false" content_ui="tabs" x="22" y="277" width="980" height="214" />
     </layout>
     <layout-to-restore>
@@ -2605,13 +2753,13 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/README.txt">
-      <provider editor-type-id="com.intellij.persistence.database.editor.CsvTableFileEditorProvider">
-        <state />
-      </provider>
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-8.16" vertical-offset="0" max-vertical-offset="391">
           <caret line="12" column="4" selection-start-line="12" selection-start-column="4" selection-end-line="12" selection-end-column="4" />
         </state>
+      </provider>
+      <provider editor-type-id="com.intellij.persistence.database.editor.CsvTableFileEditorProvider">
+        <state />
       </provider>
     </entry>
     <entry file="file://K:/Gradle/build.gradle">
@@ -2671,13 +2819,13 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/licenses/License.txt">
-      <provider editor-type-id="com.intellij.persistence.database.editor.CsvTableFileEditorProvider">
-        <state />
-      </provider>
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.035789475" vertical-offset="0" max-vertical-offset="950">
           <caret line="2" column="23" selection-start-line="2" selection-start-column="23" selection-end-line="2" selection-end-column="23" />
         </state>
+      </provider>
+      <provider editor-type-id="com.intellij.persistence.database.editor.CsvTableFileEditorProvider">
+        <state />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/website/simple.css">
@@ -2698,13 +2846,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1938">
           <caret line="10" column="0" selection-start-line="10" selection-start-column="0" selection-end-line="10" selection-end-column="60" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/buildnum.properties">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="153">
-          <caret line="3" column="0" selection-start-line="3" selection-start-column="0" selection-end-line="3" selection-end-column="0" />
         </state>
       </provider>
     </entry>
@@ -2743,24 +2884,42 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/EntryComment.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/WorldTime.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1615">
-          <caret line="48" column="13" selection-start-line="48" selection-start-column="1" selection-end-line="48" selection-end-column="1" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="1650" max-vertical-offset="2703">
+          <caret line="125" column="66" selection-start-line="125" selection-start-column="52" selection-end-line="125" selection-end-column="52" />
+          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/ReleaseInfo.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/CurrencyConverter.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1190">
-          <caret line="51" column="0" selection-start-line="51" selection-start-column="0" selection-end-line="51" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="250" max-vertical-offset="3230">
+          <caret line="96" column="0" selection-start-line="96" selection-start-column="0" selection-end-line="96" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/SwingWorker.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/DeliciousPoster.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="187" max-vertical-offset="2380">
-          <caret line="52" column="40" selection-start-line="52" selection-start-column="37" selection-end-line="52" selection-end-column="37" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="879" max-vertical-offset="1989">
+          <caret line="106" column="58" selection-start-line="106" selection-start-column="44" selection-end-line="106" selection-end-column="44" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/Dice.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1122">
+          <caret line="44" column="13" selection-start-line="44" selection-start-column="13" selection-end-line="44" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/FeedReader.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="221" max-vertical-offset="1564">
+          <caret line="54" column="13" selection-start-line="54" selection-start-column="1" selection-end-line="54" selection-end-column="1" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -2768,76 +2927,65 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="607" max-vertical-offset="1632">
           <caret line="120" column="27" selection-start-line="120" selection-start-column="27" selection-end-line="120" selection-end-column="27" />
+          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/TwitterOAuth.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/Lookup.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.08052885" vertical-offset="630" max-vertical-offset="1462">
-          <caret line="41" column="81" selection-start-line="41" selection-start-column="81" selection-end-line="41" selection-end-column="81" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="1391" max-vertical-offset="2091">
+          <caret line="142" column="42" selection-start-line="142" selection-start-column="42" selection-end-line="142" selection-end-column="42" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/FeedReader.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/StockQuote.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="204" max-vertical-offset="2108">
-          <caret line="54" column="13" selection-start-line="54" selection-start-column="1" selection-end-line="54" selection-end-column="1" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/EntryLink.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="6233" max-vertical-offset="7769">
-          <caret line="405" column="6" selection-start-line="405" selection-start-column="6" selection-end-line="405" selection-end-column="6" />
+        <state vertical-scroll-proportion="0.020383693" vertical-offset="136" max-vertical-offset="2244">
+          <caret line="45" column="129" selection-start-line="45" selection-start-column="26" selection-end-line="45" selection-end-column="26" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/Twitter.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1734">
+        <state vertical-scroll-proportion="0.0" vertical-offset="153" max-vertical-offset="1734">
           <caret line="44" column="0" selection-start-line="44" selection-start-column="0" selection-end-line="44" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/TellMessagesMgr.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="908" max-vertical-offset="2023">
-          <caret line="136" column="88" selection-start-line="136" selection-start-column="88" selection-end-line="136" selection-end-column="88" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/War.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="17" max-vertical-offset="1343">
-          <caret line="47" column="97" selection-start-line="47" selection-start-column="94" selection-end-line="47" selection-end-column="94" />
+          <caret line="47" column="94" selection-start-line="47" selection-start-column="94" selection-end-line="47" selection-end-column="94" />
+          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/TellMessage.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/TwitterOAuth.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="398" max-vertical-offset="1428">
-          <caret line="49" column="30" selection-start-line="49" selection-start-column="30" selection-end-line="49" selection-end-column="30" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1360">
+          <caret line="41" column="81" selection-start-line="41" selection-start-column="81" selection-end-line="41" selection-end-column="81" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/Weather.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/Quote.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="1537" max-vertical-offset="3349">
-          <caret line="135" column="39" selection-start-line="135" selection-start-column="36" selection-end-line="135" selection-end-column="36" />
+        <state vertical-scroll-proportion="0.75152254" vertical-offset="556" max-vertical-offset="1377">
+          <caret line="107" column="30" selection-start-line="107" selection-start-column="27" selection-end-line="107" selection-end-column="27" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/StockQuote.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/ReleaseInfo.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2244">
-          <caret line="45" column="129" selection-start-line="45" selection-start-column="26" selection-end-line="45" selection-end-column="26" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="1097" max-vertical-offset="1785">
+          <caret line="104" column="4" selection-start-line="104" selection-start-column="4" selection-end-line="104" selection-end-column="4" />
+          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/WorldTime.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/SwingWorker.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="743" max-vertical-offset="2703">
-          <caret line="125" column="66" selection-start-line="125" selection-start-column="52" selection-end-line="125" selection-end-column="52" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="612" max-vertical-offset="2788">
+          <caret line="36" column="13" selection-start-line="36" selection-start-column="13" selection-end-line="36" selection-end-column="13" />
           <folding />
         </state>
       </provider>
@@ -2850,70 +2998,144 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/Commands.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="395" max-vertical-offset="4437">
-          <caret line="39" column="50" selection-start-line="39" selection-start-column="50" selection-end-line="39" selection-end-column="50" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/Dice.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1122">
-          <caret line="46" column="21" selection-start-line="46" selection-start-column="7" selection-end-line="46" selection-end-column="7" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/Lookup.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="1391" max-vertical-offset="2091">
-          <caret line="142" column="42" selection-start-line="142" selection-start-column="42" selection-end-line="142" selection-end-column="42" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/Quote.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1377">
-          <caret line="107" column="30" selection-start-line="107" selection-start-column="27" selection-end-line="107" selection-end-column="27" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/Utils.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="3534" max-vertical-offset="5066">
-          <caret line="68" column="34" selection-start-line="68" selection-start-column="34" selection-end-line="68" selection-end-column="34" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/CurrencyConverter.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="2460" max-vertical-offset="3927">
-          <caret line="110" column="72" selection-start-line="110" selection-start-column="9" selection-end-line="110" selection-end-column="9" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="1332" max-vertical-offset="6358">
+          <caret line="341" column="112" selection-start-line="341" selection-start-column="0" selection-end-line="341" selection-end-column="0" />
           <folding>
-            <element signature="e#0#6496#0" expanded="true" />
+            <element signature="e#0#9144#0" expanded="true" />
             <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/Mobibot.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/TellMessage.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="21157" max-vertical-offset="45492">
-          <caret line="383" column="23" selection-start-line="383" selection-start-column="23" selection-end-line="383" selection-end-column="23" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="594" max-vertical-offset="1428">
+          <caret line="135" column="29" selection-start-line="135" selection-start-column="29" selection-end-line="135" selection-end-column="29" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/DeliciousPoster.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/Commands.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.6626984" vertical-offset="556" max-vertical-offset="1989">
-          <caret line="112" column="33" selection-start-line="112" selection-start-column="33" selection-end-line="112" selection-end-column="33" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="2890" max-vertical-offset="4369">
+          <caret line="213" column="36" selection-start-line="213" selection-start-column="31" selection-end-line="213" selection-end-column="43" />
+          <folding>
+            <element signature="e#0#5604#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/TellMessagesMgr.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="1071" max-vertical-offset="1972">
+          <caret line="136" column="18" selection-start-line="136" selection-start-column="18" selection-end-line="136" selection-end-column="18" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/EntryLink.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="4895" max-vertical-offset="7531">
+          <caret line="323" column="42" selection-start-line="323" selection-start-column="42" selection-end-line="323" selection-end-column="42" />
+          <folding>
+            <element signature="e#0#9451#0" expanded="true" />
+            <element signature="imports" expanded="true" />
+            <element signature="e#2175#2189#0" expanded="true" />
+            <element signature="e#2277#2295#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/EntryComment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="928" max-vertical-offset="1683">
+          <caret line="110" column="42" selection-start-line="110" selection-start-column="42" selection-end-line="110" selection-end-column="42" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/buildnum.properties">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="153">
+          <caret line="3" column="0" selection-start-line="3" selection-start-column="0" selection-end-line="3" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/Weather.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="889" max-vertical-offset="2669">
+          <caret line="147" column="56" selection-start-line="147" selection-start-column="40" selection-end-line="147" selection-end-column="40" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/net/thauvin/erik/mobibot/Mobibot.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.4461153" vertical-offset="45833" max-vertical-offset="47804">
+          <caret line="2717" column="92" selection-start-line="2717" selection-start-column="51" selection-end-line="2717" selection-end-column="51" />
+          <folding>
+            <element signature="e#0#67517#0" expanded="true" />
+            <element signature="imports" expanded="true" />
+            <element signature="e#5390#5398#0" expanded="true" />
+            <element signature="e#5536#5549#0" expanded="true" />
+            <element signature="e#5705#5716#0" expanded="true" />
+            <element signature="e#5935#5943#0" expanded="true" />
+            <element signature="e#6044#6052#0" expanded="true" />
+            <element signature="e#7793#7826#0" expanded="true" />
+            <element signature="e#16444#16445#0" expanded="true" />
+            <element signature="e#16462#16463#0" expanded="true" />
+            <element signature="e#16579#16580#0" expanded="true" />
+            <element signature="e#16602#16603#0" expanded="true" />
+            <element signature="e#16714#16715#0" expanded="true" />
+            <element signature="e#16735#16736#0" expanded="true" />
+            <element signature="e#16850#16851#0" expanded="true" />
+            <element signature="e#16879#16880#0" expanded="true" />
+            <element signature="e#17786#17787#0" expanded="true" />
+            <element signature="e#17811#17812#0" expanded="true" />
+            <element signature="e#18643#18644#0" expanded="true" />
+            <element signature="e#18709#18710#0" expanded="true" />
+            <element signature="e#19073#19106#0" expanded="true" />
+            <element signature="e#19145#19146#0" expanded="true" />
+            <element signature="e#19175#19176#0" expanded="true" />
+            <element signature="e#19291#19292#0" expanded="true" />
+            <element signature="e#19311#19312#0" expanded="true" />
+            <element signature="e#19412#19413#0" expanded="true" />
+            <element signature="e#19479#19480#0" expanded="true" />
+            <element signature="e#19605#19606#0" expanded="true" />
+            <element signature="e#19640#19641#0" expanded="true" />
+            <element signature="e#21615#21616#0" expanded="true" />
+            <element signature="e#21640#21641#0" expanded="true" />
+            <element signature="e#21775#21776#0" expanded="true" />
+            <element signature="e#21812#21813#0" expanded="true" />
+            <element signature="e#21984#21985#0" expanded="true" />
+            <element signature="e#22011#22012#0" expanded="true" />
+            <element signature="e#22121#22122#0" expanded="true" />
+            <element signature="e#22144#22145#0" expanded="true" />
+            <element signature="e#22258#22259#0" expanded="true" />
+            <element signature="e#22279#22280#0" expanded="true" />
+            <element signature="e#22934#22935#0" expanded="true" />
+            <element signature="e#22953#22954#0" expanded="true" />
+            <element signature="e#23063#23064#0" expanded="true" />
+            <element signature="e#23086#23087#0" expanded="true" />
+            <element signature="e#23211#23212#0" expanded="true" />
+            <element signature="e#23244#23245#0" expanded="true" />
+            <element signature="e#31567#31575#0" expanded="true" />
+            <element signature="e#54561#54562#0" expanded="true" />
+            <element signature="e#54592#54593#0" expanded="true" />
+            <element signature="e#54895#54896#0" expanded="true" />
+            <element signature="e#54935#54936#0" expanded="true" />
+            <element signature="e#56718#56719#0" expanded="true" />
+            <element signature="e#56766#56767#0" expanded="true" />
+            <element signature="e#57622#57623#0" expanded="true" />
+            <element signature="e#57694#57695#0" expanded="true" />
+            <element signature="e#57812#57813#0" expanded="true" />
+            <element signature="e#57833#57834#0" expanded="true" />
+            <element signature="e#58406#58407#0" expanded="true" />
+            <element signature="e#58441#58442#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

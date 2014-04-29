@@ -49,8 +49,6 @@ public class EntryComment implements Serializable
 {
 	/**
 	 * The serial version UID.
-	 *
-	 * @noinspection UnusedDeclaration
 	 */
 	static final long serialVersionUID = 6957415292233553224L;
 
@@ -77,9 +75,8 @@ public class EntryComment implements Serializable
 
 	/**
 	 * Creates a new comment.
-	 *
-	 * @noinspection UnusedDeclaration
 	 */
+	@SuppressWarnings("UnusedDeclaration")
 	protected EntryComment()
 	{
 		; // Required for serialization.
@@ -99,9 +96,8 @@ public class EntryComment implements Serializable
 	 * Sets the comment.
 	 *
 	 * @param comment The actual comment.
-	 *
-	 * @noinspection UnusedDeclaration
 	 */
+	@SuppressWarnings("UnusedDeclaration")
 	public final void setComment(String comment)
 	{
 		this.comment = comment;
@@ -111,9 +107,8 @@ public class EntryComment implements Serializable
 	 * Returns the comment's creation date.
 	 *
 	 * @return The date.
-	 *
-	 * @noinspection UnusedDeclaration
 	 */
+	@SuppressWarnings("UnusedDeclaration")
 	public final Date getDate()
 	{
 		return date;

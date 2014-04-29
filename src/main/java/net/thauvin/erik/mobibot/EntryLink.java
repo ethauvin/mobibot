@@ -53,8 +53,6 @@ public class EntryLink implements Serializable
 {
 	/**
 	 * The serial version UID.
-	 *
-	 * @noinspection UnusedDeclaration
 	 */
 	static final long serialVersionUID = 3676245542270899086L;
 
@@ -180,16 +178,6 @@ public class EntryLink implements Serializable
 	}
 
 	/**
-	 * Creates a new EntryLink object.
-	 *
-	 * @noinspection UnusedDeclaration
-	 */
-	protected EntryLink()
-	{
-		; // Required for serialization.
-	}
-
-	/**
 	 * Adds a new comment.
 	 *
 	 * @param comment The actual comment.
@@ -231,9 +219,8 @@ public class EntryLink implements Serializable
 	 * Sets the channel.
 	 *
 	 * @param channel The channel.
-	 *
-	 * @noinspection UnusedDeclaration
 	 */
+	@SuppressWarnings("UnusedDeclaration")
 	public final synchronized void setChannel(String channel)
 	{
 		this.channel = channel;
@@ -333,9 +320,8 @@ public class EntryLink implements Serializable
 	 * Set the comment's author login.
 	 *
 	 * @param login The new login.
-	 *
-	 * @noinspection UnusedDeclaration
 	 */
+	@SuppressWarnings("UnusedDeclaration")
 	public final synchronized void setLogin(String login)
 	{
 		this.login = login;

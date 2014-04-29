@@ -40,7 +40,6 @@ import net.sf.jweather.metar.WeatherCondition;
 
 import java.text.DecimalFormat;
 import java.util.Date;
-import java.util.Iterator;
 
 /**
  * Fetches the weather data from a specific station ID.
@@ -160,25 +159,17 @@ public class Weather implements Runnable
 
 				if (metar.getWeatherConditions() != null)
 				{
-					final Iterator it = metar.getWeatherConditions().iterator();
-
-					//noinspection WhileLoopReplaceableByForEach
-					while (it.hasNext())
+					for (final Object weatherCondition : metar.getWeatherConditions())
 					{
-						final WeatherCondition weatherCondition = (WeatherCondition) it.next();
-						bot.send(sender, weatherCondition.getNaturalLanguageString(), isPrivate);
+						bot.send(sender, ((WeatherCondition) weatherCondition).getNaturalLanguageString(), isPrivate);
 					}
 				}
 
 				if (metar.getSkyConditions() != null)
 				{
-					final Iterator it = metar.getSkyConditions().iterator();
-
-					//noinspection WhileLoopReplaceableByForEach
-					while (it.hasNext())
+					for (final Object skyCondition : metar.getSkyConditions())
 					{
-						final SkyCondition skyCondition = (SkyCondition) it.next();
-						bot.send(sender, skyCondition.getNaturalLanguageString(), isPrivate);
+						bot.send(sender, ((SkyCondition) skyCondition).getNaturalLanguageString(), isPrivate);
 					}
 				}
 

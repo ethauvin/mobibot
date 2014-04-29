@@ -51,6 +51,7 @@ import java.io.*;
 import java.net.UnknownHostException;
 import java.text.DecimalFormat;
 import java.util.*;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Implements the #mobitopia bot.
@@ -65,6 +66,11 @@ public class Mobibot extends PircBot
 	 * The connect/read timeout in ms.
 	 */
 	public static final int CONNECT_TIMEOUT = 5000;
+
+	/**
+	 * The empty title string.
+	 */
+	public static final String NO_TITLE = "No Title";
 
 	/**
 	 * The serialized object file extension.
@@ -124,11 +130,6 @@ public class Mobibot extends PircBot
 	private static final String LINK_MATCH = "^[hH][tT][tT][pP](|[sS])://.*";
 
 	/**
-	 * The empty title string.
-	 */
-	private static final String NO_TITLE = "No Title";
-
-	/**
 	 * The tags/categories marker.
 	 */
 	private static final String TAGS_MARKER = "tags:";
@@ -177,7 +178,7 @@ public class Mobibot extends PircBot
 	/**
 	 * The {@link Commands#TELL_CMD} messages queue.
 	 */
-	private final List<TellMessage> tellMessages = new ArrayList<TellMessage>(0);
+	private final List<TellMessage> tellMessages = new CopyOnWriteArrayList<TellMessage>();
 
 	/**
 	 * The main channel.
@@ -318,6 +319,7 @@ public class Mobibot extends PircBot
 	 * @param channel The channel.
 	 * @param logsDir The logs directory.
 	 */
+	@SuppressWarnings("WeakerAccess")
 	public Mobibot(String server, int port, String nickname, String channel, String logsDir)
 	{
 		System.getProperties().setProperty("sun.net.client.defaultConnectTimeout", String.valueOf(CONNECT_TIMEOUT));
@@ -378,8 +380,6 @@ public class Mobibot extends PircBot
 	 * The Truth Is Out There...
 	 *
 	 * @param args The command line arguments.
-	 *
-	 * @noinspection UseOfSystemOutOrSystemErr, ACCESS_STATIC_VIA_INSTANCE, unchecked
 	 */
 	public static void main(String[] args)
 	{
@@ -791,155 +791,6 @@ public class Mobibot extends PircBot
 	}
 
 	/**
-	 * Builds an entry's comment for display on the channel.
-	 *
-	 * @param entryIndex The entry's index.
-	 * @param commentIndex The comment's index.
-	 * @param comment The {@link EntryComment comment} object.
-	 *
-	 * @return The entry's comment.
-	 */
-	private static String buildComment(int entryIndex, int commentIndex, EntryComment comment)
-	{
-		return (Commands.LINK_CMD + (entryIndex + 1) + '.' + (commentIndex + 1) + ": [" + comment.getNick() + "] "
-		        + comment.getComment());
-	}
-
-	/**
-	 * Builds an entry's link for display on the channel.
-	 *
-	 * @param index The entry's index.
-	 * @param entry The {@link EntryLink entry} object.
-	 *
-	 * @return The entry's link.
-	 *
-	 * @see #buildLink(int, EntryLink, boolean)
-	 */
-	private static String buildLink(int index, EntryLink entry)
-	{
-		return buildLink(index, entry, false);
-	}
-
-	/**
-	 * Builds an entry's link for display on the channel.
-	 *
-	 * @param index The entry's index.
-	 * @param entry The {@link EntryLink entry} object.
-	 * @param isView Set to true to display the number of comments.
-	 *
-	 * @return The entry's link.
-	 */
-	private static String buildLink(int index, EntryLink entry, boolean isView)
-	{
-		final StringBuilder buff = new StringBuilder(Commands.LINK_CMD + (index + 1) + ": ");
-
-		buff.append('[').append(entry.getNick()).append(']');
-
-		if (isView && entry.hasComments())
-		{
-			buff.append("[+").append(entry.getCommentsCount()).append(']');
-		}
-
-		buff.append(' ');
-
-		if (NO_TITLE.equals(entry.getTitle()))
-		{
-			buff.append(Utils.bold(entry.getTitle()));
-		}
-		else
-		{
-			buff.append(entry.getTitle());
-		}
-
-		buff.append(" ( ").append(entry.getLink()).append(" )");
-
-		return buff.toString();
-	}
-
-	/**
-	 * Build an entry's tags/categories for diplay on the channel.
-	 *
-	 * @param entryIndex The entry's index.
-	 * @param entry The {@link EntryLink entry} object.
-	 *
-	 * @return The entry's tags.
-	 */
-	private static String buildTags(int entryIndex, EntryLink entry)
-	{
-		return (Commands.LINK_CMD + (entryIndex + 1) + "T: " + entry.getDeliciousTags().replaceAll(",", ", "));
-	}
-
-	/**
-	 * Get today's date for the feed.
-	 *
-	 * @return Today's date.
-	 */
-	public synchronized String getToday()
-	{
-		return today;
-	}
-
-	/**
-	 * Returns the backlogs URL.
-	 *
-	 * @return The backlogs URL.
-	 */
-	public final String getBacklogsUrl()
-	{
-		return backLogsUrl;
-	}
-
-	/**
-	 * Sets the backlogs URL.
-	 *
-	 * @param backLogsUrl The backlogs URL.
-	 */
-	private void setBacklogsUrl(String backLogsUrl)
-	{
-		this.backLogsUrl = backLogsUrl;
-	}
-
-	/**
-	 * Returns the weblog URL.
-	 *
-	 * @return The weblog URL.
-	 */
-	public final String getWeblogUrl()
-	{
-		return weblogUrl;
-	}
-
-	/**
-	 * Sets the weblog URL.
-	 *
-	 * @param weblogUrl The weblog URL.
-	 */
-	private void setWeblogUrl(String weblogUrl)
-	{
-		this.weblogUrl = weblogUrl;
-	}
-
-	/**
-	 * Returns the log directory.
-	 *
-	 * @return the log directory.
-	 */
-	public final String getLogsDir()
-	{
-		return logsDir;
-	}
-
-	/**
-	 * Returns the irc server.
-	 *
-	 * @return The irc server.
-	 */
-	public final String getIrcServer()
-	{
-		return ircServer;
-	}
-
-	/**
 	 * Sends an action to the current channel.
 	 *
 	 * @param action The action.
@@ -964,6 +815,101 @@ public class Mobibot extends PircBot
 	}
 
 	/**
+	 * Processes the {@link Commands#CALC_CMD} command.
+	 *
+	 * @param sender The nick of the person who sent the message
+	 * @param args The command arguments.
+	 * @param message The actual message.
+	 */
+	private void calcResponse(String sender, String args, String message)
+	{
+		if (Utils.isValidString(args))
+		{
+			final DecimalFormat decimalFormat = new DecimalFormat("#.##");
+
+			try
+			{
+				final Calculable calc = new ExpressionBuilder(args).build();
+				send(getChannel(), args.replaceAll(" ", "") + " = " + decimalFormat.format(calc.calculate()));
+			}
+			catch (Exception e)
+			{
+				if (logger.isDebugEnabled())
+				{
+					logger.debug("Unable to calculate: " + message, e);
+				}
+
+				send(getChannel(), "No idea. This is the kind of math I don't get.");
+			}
+		}
+		else
+		{
+			helpResponse(sender, Commands.CALC_CMD);
+		}
+	}
+
+	/**
+	 * Responds with the title and links from the RSS feed.
+	 *
+	 * @param sender The nick of the person who sent the private message.
+	 */
+	private void feedResponse(String sender)
+	{
+		if (Utils.isValidString(feedURL))
+		{
+			new Thread(new FeedReader(this, sender, feedURL)).start();
+		}
+		else
+		{
+			send(sender, "There is no weblog setup for this channel.");
+		}
+	}
+
+	/**
+	 * Returns the index of the specified duplicate entry, if any.
+	 *
+	 * @param link The link.
+	 *
+	 * @return The index or -1 if none.
+	 */
+	private int findDupEntry(String link)
+	{
+		EntryLink entry;
+
+		for (int i = 0; i < entries.size(); i++)
+		{
+			entry = entries.get(i);
+
+			if (link.equals(entry.getLink()))
+			{
+				return i;
+			}
+		}
+
+		return -1;
+	}
+
+	/**
+	 * Returns the backlogs URL.
+	 *
+	 * @return The backlogs URL.
+	 */
+	public final String getBacklogsUrl()
+	{
+		return backLogsUrl;
+	}
+
+	/**
+	 * Sets the backlogs URL.
+	 *
+	 * @param backLogsUrl The backlogs URL.
+	 */
+	private void setBacklogsUrl(String backLogsUrl)
+	{
+		this.backLogsUrl = backLogsUrl;
+	}
+
+	/**
 	 * Returns the {@link FeedFetcherCache feed info cache}.
 	 *
 	 * @return The feed info cache.
@@ -971,6 +917,103 @@ public class Mobibot extends PircBot
 	public final synchronized FeedFetcherCache getFeedInfoCache()
 	{
 		return feedInfoCache;
+	}
+
+	/**
+	 * Returns the irc server.
+	 *
+	 * @return The irc server.
+	 */
+	public final String getIrcServer()
+	{
+		return ircServer;
+	}
+
+	/**
+	 * Returns the log directory.
+	 *
+	 * @return the log directory.
+	 */
+	public final String getLogsDir()
+	{
+		return logsDir;
+	}
+
+	/**
+	 * Returns the bot's nickname regexp pattern.
+	 *
+	 * @return The nickname regexp pattern.
+	 */
+	private String getNickPattern()
+	{
+		final StringBuilder buff = new StringBuilder(0);
+		final String nick = getNick();
+		char c;
+
+		for (int i = 0; i < nick.length(); i++)
+		{
+			c = nick.charAt(i);
+
+			if (Character.isLetter(c))
+			{
+				buff.append('[').append(String.valueOf(c).toLowerCase()).append(String.valueOf(c).toUpperCase())
+						.append(']');
+			}
+			else
+			{
+				buff.append(c);
+			}
+		}
+
+		return buff.toString();
+	}
+
+	/**
+	 * Get today's date for the feed.
+	 *
+	 * @return Today's date.
+	 */
+	public synchronized String getToday()
+	{
+		return today;
+	}
+
+	/**
+	 * Returns the weblog URL.
+	 *
+	 * @return The weblog URL.
+	 */
+	public final String getWeblogUrl()
+	{
+		return weblogUrl;
+	}
+
+	/**
+	 * Sets the weblog URL.
+	 *
+	 * @param weblogUrl The weblog URL.
+	 */
+	private void setWeblogUrl(String weblogUrl)
+	{
+		this.weblogUrl = weblogUrl;
+	}
+
+	/**
+	 * Responds with the Google search results for the specified query.
+	 *
+	 * @param sender The nick of the person who sent the private message.
+	 * @param query The Google query to execute.
+	 */
+	private void googleResponse(String sender, String query)
+	{
+		if (query.length() > 0)
+		{
+			new Thread(new GoogleSearch(this, sender, query)).start();
+		}
+		else
+		{
+			helpResponse(sender, Commands.GOOGLE_CMD);
+		}
 	}
 
 	/**
@@ -1155,7 +1198,7 @@ public class Mobibot extends PircBot
 			send(sender, "To view queued and sent messages:");
 			send(sender, DOUBLE_INDENT + Utils.bold(getNick() + ": " + Commands.TELL_CMD + ' ' + Commands.VIEW_CMD));
 
-			send(sender, "Messages are kept for about " + Utils.bold(tellMaxDays) + " days.");
+			send(sender, "Messages are kept for around " + Utils.bold(tellMaxDays) + " days.");
 		}
 		else
 		{
@@ -1230,14 +1273,210 @@ public class Mobibot extends PircBot
 	}
 
 	/**
-	 * Sends a private notice.
+	 * Processes the {@link net.thauvin.erik.mobibot.Commands#IGNORE_CMD} command.
+	 *
+	 * @param sender The sender.
+	 * @param args The command arguments.
+	 */
+	private void ignoreResponse(String sender, String args)
+	{
+		if (!isOp(sender))
+		{
+			final String nick = sender.toLowerCase();
+			final boolean isMe = args.toLowerCase().startsWith(Commands.IGNORE_ME_KEYWORD);
+
+			if (ignoredNicks.contains(nick))
+			{
+				if (isMe)
+				{
+					ignoredNicks.remove(nick);
+
+					send(sender, "You are no longer ignored.");
+				}
+				else
+				{
+					send(sender, "You are currently ignored.");
+				}
+			}
+			else
+			{
+				if (isMe)
+				{
+					ignoredNicks.add(nick);
+
+					send(sender, "You are now ignored.");
+				}
+				else
+				{
+					send(sender, "You are not currently ignored.");
+				}
+			}
+		}
+		else
+		{
+			if (args.length() > 0)
+			{
+				final String[] nicks = args.toLowerCase().split(" ");
+
+				for (String nick : nicks)
+				{
+					if (Commands.IGNORE_ME_KEYWORD.equals(nick))
+					{
+						nick = sender.toLowerCase();
+					}
+
+					if (ignoredNicks.contains(nick))
+					{
+						ignoredNicks.remove(nick);
+					}
+					else
+					{
+						ignoredNicks.add(nick);
+					}
+				}
+			}
+
+			send(sender, "The following nicks are ignored: " + ignoredNicks.toString());
+		}
+	}
+
+	/**
+	 * Responds with the bot's information.
 	 *
 	 * @param sender The nick of the person who sent the message.
-	 * @param message The actual message.
+	 * @param isPrivate Set to true is the response should be send as a private message.
 	 */
-	public final void send(String sender, String message)
+	private void infoResponse(String sender, boolean isPrivate)
 	{
-		send(sender, message, false);
+		for (final String info : INFO_STRS)
+		{
+			send(sender, info, isPrivate);
+		}
+
+		long timeInSeconds = (System.currentTimeMillis() - START_TIME) / 1000L;
+
+		final long days = timeInSeconds / 86400L;
+		timeInSeconds -= (days * 86400L);
+
+		final long hours = timeInSeconds / 3600L;
+		timeInSeconds -= (hours * 3600L);
+
+		final long minutes = timeInSeconds / 60L;
+		send(sender,
+		     "Uptime: " + days + " day(s) " + hours + " hour(s) " + minutes + " minute(s)  [Entries: " + entries.size()
+		     + (isTellEnabled() && isOp(sender) ? ", Messages: " + tellMessages.size() : "") + ']',
+		     isPrivate
+		);
+	}
+
+	/**
+	 * Determines whether the specified nick should be ignored.
+	 *
+	 * @param nick The nick.
+	 *
+	 * @return <code>true</code> if the nick should be ignored, <code>false</code> otherwise.
+	 */
+	private boolean isIgnoredNick(String nick)
+	{
+		return Utils.isValidString(nick) && ignoredNicks.contains(nick.toLowerCase());
+
+	}
+
+	/**
+	 * Returns true is the specified sender is an Op on the {@link #channel channel}.
+	 *
+	 * @param sender The sender.
+	 *
+	 * @return true, if the sender is an Op.
+	 */
+	private boolean isOp(String sender)
+	{
+		final User[] users = getUsers(getChannel());
+
+		for (final User user : users)
+		{
+			if (user.getNick().equals(sender))
+			{
+				return user.isOp();
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * Returns <code>true</code> if twitter posting is enabled.
+	 *
+	 * @return <code>true</code> or <code>false</code>
+	 */
+	private boolean isTwitterEnabled()
+	{
+		return Utils.isValidString(twitterConsumerKey) && Utils.isValidString(twitterConsumerSecret) && Utils
+				.isValidString(twitterToken) && Utils.isValidString(twitterTokenSecret);
+	}
+
+	/**
+	 * Responds with the results of a DNS query.
+	 *
+	 * @param sender The nick of the person who sent the message
+	 * @param query The hostname or IP address.
+	 */
+	private void lookupResponse(String sender, String query)
+	{
+		if (query.matches("(\\S.)+(\\S)+"))
+		{
+			try
+			{
+				send(getChannel(), Lookup.lookup(query));
+			}
+			catch (UnknownHostException ignore)
+			{
+				if (query.matches(
+						"(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)"))
+				{
+					try
+					{
+						final String[] lines = Lookup.whois(query);
+
+						if ((lines != null) && (lines.length > 0))
+						{
+							String line;
+
+							for (final String rawLine : lines)
+							{
+								line = rawLine.trim();
+
+								if ((line.length() > 0) && (line.charAt(0) != '#'))
+								{
+									send(getChannel(), line);
+								}
+							}
+						}
+						else
+						{
+							send(getChannel(), "Unknown host.");
+						}
+					}
+					catch (IOException ioe)
+					{
+						if (logger.isDebugEnabled())
+						{
+							logger.debug("Unable to perform whois IP lookup: " + query, ioe);
+						}
+
+						send(getChannel(), "Unable to perform whois IP lookup: " + ioe.getMessage());
+					}
+				}
+				else
+				{
+					send(getChannel(), "Unknown host.");
+				}
+			}
+		}
+		else
+		{
+			helpResponse(sender, Commands.LOOKUP_CMD);
+		}
 	}
 
 	@Override
@@ -1300,16 +1539,6 @@ public class Mobibot extends PircBot
 		joinChannel(getChannel());
 	}
 
-	/**
-	 * Returns the current channel.
-	 *
-	 * @return The current channel.
-	 */
-	public final String getChannel()
-	{
-		return channel;
-	}
-
 	@Override
 	protected final void onMessage(String channel, String sender, String login, String hostname, String message)
 	{
@@ -1320,6 +1549,7 @@ public class Mobibot extends PircBot
 
 		boolean isCommand = false;
 
+		// Capture URLs posted on the channel
 		if (message.matches(LINK_MATCH) && !isIgnoredNick(sender))
 		{
 			isCommand = true;
@@ -1388,7 +1618,7 @@ public class Mobibot extends PircBot
 
 					final int index = entries.size() - 1;
 					final EntryLink entry = entries.get(index);
-					send(channel, buildLink(index, entry));
+					send(channel, Utils.buildLink(index, entry));
 
 					if (delicious != null)
 					{
@@ -1408,10 +1638,11 @@ public class Mobibot extends PircBot
 				else
 				{
 					final EntryLink entry = entries.get(dupIndex);
-					send(sender, "Duplicate >> " + buildLink(dupIndex, entry));
+					send(sender, "Duplicate >> " + Utils.buildLink(dupIndex, entry));
 				}
 			}
 		}
+		// mobibot: <command>
 		else if (message.matches(getNickPattern() + ":.*"))
 		{
 			isCommand = true;
@@ -1426,10 +1657,12 @@ public class Mobibot extends PircBot
 				args = cmds[1].trim();
 			}
 
+			// mobibot: help
 			if (cmd.startsWith(Commands.HELP_CMD))
 			{
 				helpResponse(sender, args);
 			}
+			// mobibot: ping
 			else if (cmd.equals(Commands.PING_CMD))
 			{
 				final String[] pings = {
@@ -1451,169 +1684,113 @@ public class Mobibot extends PircBot
 
 				action(channel, pings[r.nextInt(pings.length)]);
 			}
+			// mobibot: pong
 			else if (cmd.equals(Commands.PONG_CMD))
 			{
 				send(channel, Commands.PING_CMD, true);
 			}
+			// mobibot: recap
 			else if (cmd.equals(Commands.RECAP_CMD))
 			{
 				recapResponse(sender, false);
 			}
+			// mobibot: users
 			else if (cmd.equals(Commands.USERS_CMD))
 			{
 				usersResponse(sender, false);
 			}
+			// mobibot: info
 			else if (cmd.equals(Commands.INFO_CMD))
 			{
 				infoResponse(sender, false);
 			}
+			// mobbiot: version
 			else if (cmd.equals(Commands.VERSION_CMD))
 			{
 				versionResponse(sender, false);
 			}
+			// mobibot: dice
 			else if (cmd.equals(Commands.DICE_CMD))
 			{
 				send(getChannel(), shall_we_play_a_game);
 
 				Dice.roll(this, sender);
 			}
+			// mobibot: war
 			else if (cmd.equals(Commands.WAR_CMD))
 			{
 				send(getChannel(), shall_we_play_a_game);
 
 				War.play(this, sender);
 			}
+			// mobibot: <channel>
 			else if (cmd.equalsIgnoreCase(getChannel().substring(1)))
 			{
 				feedResponse(sender);
 			}
+			// mobibot: currency
 			else if (cmd.startsWith(Commands.CURRENCY_CMD))
 			{
 				currencyConverter.setQuery(sender, args);
 				new Thread(currencyConverter).start();
 			}
+			// mobibot: lookup
 			else if (cmd.startsWith(Commands.LOOKUP_CMD))
 			{
 				lookupResponse(sender, args);
 			}
+			// mobibot: view
 			else if (cmd.startsWith(Commands.VIEW_CMD))
 			{
 				viewResponse(sender, args, false);
 			}
+			// mobibot: google
 			else if (cmd.startsWith(Commands.GOOGLE_CMD))
 			{
 				googleResponse(sender, args);
 			}
+			// mobibot: twitter
 			else if (cmd.startsWith(Commands.TWITTER_CMD) && isTwitterEnabled())
 			{
 				twitterResponse(sender, args);
 			}
+			// mobibot: stock
 			else if (cmd.startsWith(Commands.STOCK_CMD))
 			{
 				stockResponse(sender, args);
 			}
+			// mobibot: quote
 			else if (cmd.startsWith(Commands.QUOTE_CMD))
 			{
 				new Thread(new Quote(this, sender)).start();
 			}
+			// mobibot: calc
 			else if (cmd.startsWith(Commands.CALC_CMD))
 			{
-				if (cmds.length > 1)
-				{
-					final DecimalFormat decimalFormat = new DecimalFormat("#.##");
-
-					try
-					{
-						final Calculable calc = new ExpressionBuilder(args).build();
-						send(getChannel(), args.replaceAll(" ", "") + " = " + decimalFormat.format(calc.calculate()));
-					}
-					catch (Exception e)
-					{
-						if (logger.isDebugEnabled())
-						{
-							logger.debug("Unable to calculate: " + message, e);
-						}
-					}
-				}
-				else
-				{
-					helpResponse(sender, Commands.CALC_CMD);
-				}
+				calcResponse(sender, args, message);
 			}
+			// mobibot: time
 			else if (cmd.startsWith(Commands.TIME_CMD))
 			{
 				worldTime.timeResponse(this, sender, args, false);
 			}
+			// mobibot: tell
 			else if (cmd.startsWith(Commands.TELL_CMD) && isTellEnabled())
 			{
 				tellResponse(sender, args);
 			}
+			// mobibot: weather
 			else if (cmd.startsWith(Commands.WEATHER_CMD))
 			{
 				weatherResponse(sender, args, false);
 			}
+			// mobibot: ignore
 			else if (cmd.startsWith(Commands.IGNORE_CMD))
 			{
-				if (!isOp(sender))
-				{
-					final String nick = sender.toLowerCase();
-					final boolean isMe = args.toLowerCase().startsWith(Commands.IGNORE_ME_KEYWORD);
-
-					if (ignoredNicks.contains(nick))
-					{
-						if (isMe)
-						{
-							ignoredNicks.remove(nick);
-
-							send(sender, "You are no longer ignored.");
-						}
-						else
-						{
-							send(sender, "You are currently ignored.");
-						}
-					}
-					else
-					{
-						if (isMe)
-						{
-							ignoredNicks.add(nick);
-
-							send(sender, "You are now ignored.");
-						}
-						else
-						{
-							send(sender, "You are not currently ignored.");
-						}
-					}
-				}
-				else
-				{
-					if (args.length() > 0)
-					{
-						final String[] nicks = args.toLowerCase().split(" ");
-
-						for (String nick : nicks)
-						{
-							if (Commands.IGNORE_ME_KEYWORD.equals(nick))
-							{
-								nick = sender.toLowerCase();
-							}
-
-							if (ignoredNicks.contains(nick))
-							{
-								ignoredNicks.remove(nick);
-							}
-							else
-							{
-								ignoredNicks.add(nick);
-							}
-						}
-					}
-
-					send(sender, "The following nicks are ignored: " + ignoredNicks.toString());
-				}
+				ignoreResponse(sender, args);
 			}
 		}
+		// L1:<comment>, L1:-, L1:|<title>, etc.
 		else if (message.matches(Commands.LINK_CMD + "[0-9]+:.*"))
 		{
 			isCommand = true;
@@ -1621,6 +1798,7 @@ public class Mobibot extends PircBot
 			final String[] cmds = message.substring(1).split(":", 2);
 			final int index = Integer.parseInt(cmds[0]) - 1;
 
+			// L1:<comment>
 			if (index < entries.size())
 			{
 				final String cmd = cmds[1].trim();
@@ -1628,11 +1806,11 @@ public class Mobibot extends PircBot
 				if (cmd.length() == 0)
 				{
 					final EntryLink entry = entries.get(index);
-					send(getChannel(), buildLink(index, entry));
+					send(getChannel(), Utils.buildLink(index, entry));
 
 					if (entry.hasTags())
 					{
-						send(getChannel(), buildTags(index, entry));
+						send(getChannel(), Utils.buildTags(index, entry));
 					}
 
 					if (entry.hasComments())
@@ -1641,12 +1819,13 @@ public class Mobibot extends PircBot
 
 						for (int i = 0; i < comments.length; i++)
 						{
-							send(getChannel(), buildComment(index, i, comments[i]));
+							send(getChannel(), Utils.buildComment(index, i, comments[i]));
 						}
 					}
 				}
 				else
 				{
+					// L1:-
 					if ("-".equals(cmd))
 					{
 						final EntryLink entry = entries.get(index);
@@ -1667,6 +1846,7 @@ public class Mobibot extends PircBot
 							send(sender, "Please ask a channel op to remove this entry for you.");
 						}
 					}
+					// L1:|<title>
 					else if (cmd.charAt(0) == '|')
 					{
 						if (cmd.length() > 1)
@@ -1679,10 +1859,11 @@ public class Mobibot extends PircBot
 								delicious.updatePost(entry.getLink(), entry);
 							}
 
-							send(getChannel(), buildLink(index, entry));
+							send(getChannel(), Utils.buildLink(index, entry));
 							saveEntries(false);
 						}
 					}
+					// L1:=<url>
 					else if (cmd.charAt(0) == '=')
 					{
 						final EntryLink entry = entries.get(index);
@@ -1702,7 +1883,7 @@ public class Mobibot extends PircBot
 									delicious.updatePost(oldLink, entry);
 								}
 
-								send(getChannel(), buildLink(index, entry));
+								send(getChannel(), Utils.buildLink(index, entry));
 								saveEntries(false);
 							}
 						}
@@ -1711,6 +1892,7 @@ public class Mobibot extends PircBot
 							send(sender, "Please ask a channel op to change this link for you.");
 						}
 					}
+					// L1:?<author>
 					else if (cmd.charAt(0) == '?')
 					{
 						if (isOp(sender))
@@ -1719,7 +1901,7 @@ public class Mobibot extends PircBot
 							{
 								final EntryLink entry = entries.get(index);
 								entry.setNick(cmd.substring(1));
-								send(getChannel(), buildLink(index, entry));
+								send(getChannel(), Utils.buildLink(index, entry));
 								saveEntries(false);
 							}
 						}
@@ -1734,12 +1916,13 @@ public class Mobibot extends PircBot
 						final int cindex = entry.addComment(cmd, sender);
 
 						final EntryComment comment = entry.getComment(cindex);
-						send(sender, buildComment(index, cindex, comment));
+						send(sender, Utils.buildComment(index, cindex, comment));
 						saveEntries(false);
 					}
 				}
 			}
 		}
+		// L1T:<+-tag>
 		else if (message.matches(Commands.LINK_CMD + "[0-9]+T:.*"))
 		{
 			isCommand = true;
@@ -1764,7 +1947,7 @@ public class Mobibot extends PircBot
 							delicious.updatePost(entry.getLink(), entry);
 						}
 
-						send(getChannel(), buildTags(index, entry));
+						send(getChannel(), Utils.buildTags(index, entry));
 						saveEntries(false);
 					}
 					else
@@ -1776,7 +1959,7 @@ public class Mobibot extends PircBot
 				{
 					if (entry.hasTags())
 					{
-						send(getChannel(), buildTags(index, entry));
+						send(getChannel(), Utils.buildTags(index, entry));
 					}
 					else
 					{
@@ -1785,6 +1968,7 @@ public class Mobibot extends PircBot
 				}
 			}
 		}
+		// L1.1:<comment>
 		else if (message.matches(Commands.LINK_CMD + "[0-9]+\\.[0-9]+:.*"))
 		{
 			isCommand = true;
@@ -1801,11 +1985,13 @@ public class Mobibot extends PircBot
 				{
 					final String cmd = cmds[2].trim();
 
+					// L1.1:
 					if (cmd.length() == 0)
 					{
 						final EntryComment comment = entry.getComment(cindex);
-						send(getChannel(), buildComment(index, cindex, comment));
+						send(getChannel(), Utils.buildComment(index, cindex, comment));
 					}
+					// L1.1:-
 					else if ("-".equals(cmd))
 					{
 						entry.deleteComment(cindex);
@@ -1813,6 +1999,7 @@ public class Mobibot extends PircBot
 						     "Comment " + Commands.LINK_CMD + (index + 1) + '.' + (cindex + 1) + " removed.");
 						saveEntries(false);
 					}
+					// L1.1:?<author>
 					else if (cmd.charAt(0) == '?')
 					{
 						if (isOp(sender))
@@ -1821,7 +2008,7 @@ public class Mobibot extends PircBot
 							{
 								final EntryComment comment = entry.getComment(cindex);
 								comment.setNick(cmd.substring(1));
-								send(getChannel(), buildComment(index, cindex, comment));
+								send(getChannel(), Utils.buildComment(index, cindex, comment));
 								saveEntries(false);
 							}
 						}
@@ -1835,7 +2022,7 @@ public class Mobibot extends PircBot
 						entry.setComment(cindex, cmd, sender);
 
 						final EntryComment comment = entry.getComment(cindex);
-						send(sender, buildComment(index, cindex, comment));
+						send(sender, Utils.buildComment(index, cindex, comment));
 						saveEntries(false);
 					}
 				}
@@ -1846,6 +2033,8 @@ public class Mobibot extends PircBot
 		{
 			recap(sender, message, false);
 		}
+
+		tellSendMessages(sender, true);
 	}
 
 	@Override
@@ -2063,51 +2252,66 @@ public class Mobibot extends PircBot
 	 */
 	private void tellSendMessages(String nickname)
 	{
+		tellSendMessages(nickname, false);
+	}
+
+	/**
+	 * Checks and sends {@link Commands#TELL_CMD} messages.
+	 *
+	 * @param nickname The user's nickname.
+	 * @param isMessage The message flag.
+	 */
+	private void tellSendMessages(String nickname, boolean isMessage)
+	{
 		if (!nickname.equals(getNick()) && isTellEnabled())
 		{
-			synchronized (tellMessages)
+			for (final TellMessage message : tellMessages)
 			{
-				for (final TellMessage message : tellMessages)
+				if (message.isMatch(nickname))
 				{
-					if (message.isMatch(nickname))
+					if (message.getRecipient().equalsIgnoreCase(nickname) && !message.isReceived())
 					{
-						if (message.getRecipient().equalsIgnoreCase(nickname) && !message.isReceived())
+						if (message.getSender().equals(nickname))
 						{
-							if (message.getSender().equals(nickname))
+							if (!isMessage)
 							{
 								send(nickname,
 								     Utils.bold("You") + " wanted me to remind you: " + Colors.REVERSE + message
 										     .getMessage() + Colors.REVERSE, true
 								);
+
+								message.setIsReceived();
+								message.setIsNotified();
+
+								saveTellMessages();
 							}
-							else
-							{
-								send(nickname,
-								     message.getSender() + " wanted me to tell you: " + Colors.REVERSE + message
-										     .getMessage() + Colors.REVERSE,
-								     true
-								);
-							}
-
-							message.setReceived();
-
-							saveTellMessages();
-
 						}
-						else if (message.getSender().equalsIgnoreCase(nickname) && message.isReceived() && !message
-								.isNotified())
+						else
 						{
 							send(nickname,
-							     "Your message " + Colors.REVERSE + "[ID " + message.getId() + ']' + Colors.REVERSE
-							     + " was sent to " + Utils.bold(message.getRecipient()) + " on " + Utils.UTC_SDF
-									     .format(message.getReceived()),
+							     message.getSender() + " wanted me to tell you: " + Colors.REVERSE + message
+									     .getMessage() + Colors.REVERSE,
 							     true
 							);
 
-							message.setNotified();
+							message.setIsReceived();
 
 							saveTellMessages();
 						}
+					}
+					else if (message.getSender().equalsIgnoreCase(nickname) && message.isReceived() && !message
+							.isNotified())
+					{
+						send(nickname,
+						     "Your message " + Colors.REVERSE + "[ID " + message.getId() + ']' + Colors.REVERSE
+						     + " was sent to " + Utils.bold(message.getRecipient()) + " on " + Utils.UTC_SDF
+								     .format(message.getReceived()),
+						     true
+						);
+
+						message.setIsNotified();
+
+						saveTellMessages();
 					}
 				}
 			}
@@ -2119,6 +2323,7 @@ public class Mobibot extends PircBot
 	 *
 	 * @return <code>true</code> or <code>false</code>
 	 */
+
 	private boolean isTellEnabled()
 	{
 		return tellMaxSize > 0 && tellMaxDays > 0;
@@ -2165,6 +2370,59 @@ public class Mobibot extends PircBot
 	}
 
 	/**
+	 * Returns the current channel.
+	 *
+	 * @return The current channel.
+	 */
+	public final String getChannel()
+	{
+		return channel;
+	}
+
+	/**
+	 * Responds with the last 10 public messages.
+	 *
+	 * @param sender The nick of the person who sent the private message.
+	 * @param isPrivate Set to true is the response should be send as a private message.
+	 */
+	private void recapResponse(String sender, boolean isPrivate)
+	{
+		for (final String recap : this.recap)
+		{
+			send(sender, recap, isPrivate);
+		}
+	}
+
+	/**
+	 * Sends a private notice.
+	 *
+	 * @param sender The nick of the person who sent the message.
+	 * @param message The actual message.
+	 */
+	public final void send(String sender, String message)
+	{
+		send(sender, message, false);
+	}
+
+	/**
+	 * Responds with the specified stock quote.
+	 *
+	 * @param sender The nick of the person who sent the message.
+	 * @param symbol The stock symbol to lookup.
+	 */
+	private void stockResponse(String sender, String symbol)
+	{
+		if (symbol.length() > 0)
+		{
+			new Thread(new StockQuote(this, sender, symbol)).start();
+		}
+		else
+		{
+			helpResponse(sender, Commands.STOCK_CMD);
+		}
+	}
+
+	/**
 	 * Processes the {@link Commands#TELL_CMD} commands.
 	 *
 	 * @param sender The sender's nick.
@@ -2182,17 +2440,13 @@ public class Mobibot extends PircBot
 			{
 				if (tellMessages.size() > 0)
 				{
-					synchronized (tellMessages)
+					for (final TellMessage message : tellMessages)
 					{
-						for (final TellMessage message : tellMessages)
-						{
-							send(sender,
-							     Utils.bold(message.getSender()) + " --> " + Utils.bold(message.getRecipient())
-							     + " [ID: " + message.getId() + ", " + (message.isReceived() ? "DELIVERED" : "QUEUED")
-							     + ']',
-							     true
-							);
-						}
+						send(sender,
+						     Utils.bold(message.getSender()) + " --> " + Utils.bold(message.getRecipient()) + " [ID: "
+						     + message.getId() + ", " + (message.isReceived() ? "DELIVERED" : "QUEUED") + ']',
+						     true
+						);
 					}
 				}
 				else
@@ -2204,40 +2458,36 @@ public class Mobibot extends PircBot
 			{
 				boolean hasMessage = false;
 
-				synchronized (tellMessages)
+				for (final TellMessage message : tellMessages)
 				{
-					for (final TellMessage message : tellMessages)
+					if (message.isMatch(sender))
 					{
-						if (message.isMatch(sender))
+						if (!hasMessage)
 						{
-							if (!hasMessage)
-							{
-								hasMessage = true;
-								send(sender, "Here are your messages: ", true);
-							}
-
-							if (message.isReceived())
-							{
-								send(sender,
-								     Utils.bold(message.getSender()) + " --> " + Utils.bold(message.getRecipient())
-								     + " [" + Utils.UTC_SDF.format(message.getReceived()) + ", ID: " + message.getId()
-								     + ", DELIVERED]",
-								     true
-								);
-
-							}
-							else
-							{
-								send(sender,
-								     Utils.bold(message.getSender()) + " --> " + Utils.bold(message.getRecipient())
-								     + " [" + Utils.UTC_SDF.format(message.getQueued()) + ", ID: " + message.getId()
-								     + ", QUEUED]",
-								     true
-								);
-							}
-
-							send(sender, DOUBLE_INDENT + message.getMessage(), true);
+							hasMessage = true;
+							send(sender, "Here are your messages: ", true);
 						}
+
+						if (message.isReceived())
+						{
+							send(sender,
+							     Utils.bold(message.getSender()) + " --> " + Utils.bold(message.getRecipient()) + " ["
+							     + Utils.UTC_SDF.format(message.getReceived()) + ", ID: " + message.getId()
+							     + ", DELIVERED]",
+							     true
+							);
+
+						}
+						else
+						{
+							send(sender,
+							     Utils.bold(message.getSender()) + " --> " + Utils.bold(message.getRecipient()) + " ["
+							     + Utils.UTC_SDF.format(message.getQueued()) + ", ID: " + message.getId() + ", QUEUED]",
+							     true
+							);
+						}
+
+						send(sender, DOUBLE_INDENT + message.getMessage(), true);
 					}
 				}
 
@@ -2247,12 +2497,13 @@ public class Mobibot extends PircBot
 				}
 				else
 				{
-					send(sender, "To delete a message that you sent:");
+					send(sender, "To delete one or all delivered messages:");
 					send(sender,
 					     DOUBLE_INDENT + Utils
-							     .bold(getNick() + ": " + Commands.TELL_CMD + ' ' + Commands.TELL_DEL_CMD + " <id>")
+							     .bold(getNick() + ": " + Commands.TELL_CMD + ' ' + Commands.TELL_DEL_CMD + " <id|"
+							           + Commands.TELL_ALL_CMD + '>')
 					);
-					send(sender, "Messages are kept for about " + Utils.bold(tellMaxDays) + " days.");
+					send(sender, "Messages are kept for around " + Utils.bold(tellMaxDays) + " days.");
 				}
 			}
 		}
@@ -2264,10 +2515,33 @@ public class Mobibot extends PircBot
 			{
 				final String id = split[1];
 				boolean deleted = false;
-				boolean found = false;
 
-				synchronized (tellMessages)
+				if (id.equalsIgnoreCase(Commands.TELL_ALL_CMD))
 				{
+					for (final TellMessage message : tellMessages)
+					{
+						if (message.getSender().equalsIgnoreCase(sender) && message.isReceived())
+						{
+							tellMessages.remove(message);
+							deleted = true;
+						}
+					}
+
+					if (deleted)
+					{
+						saveTellMessages();
+						send(sender, "Delivered messages have been deleted.", true);
+					}
+					else
+					{
+						send(sender, "No delivered messages were found.", true);
+					}
+
+				}
+				else
+				{
+					boolean found = false;
+
 					for (final TellMessage message : tellMessages)
 					{
 						found = message.isMatchId(id);
@@ -2282,17 +2556,17 @@ public class Mobibot extends PircBot
 							break;
 						}
 					}
-				}
 
-				if (!deleted)
-				{
-					if (found)
+					if (!deleted)
 					{
-						send(sender, "Only messages that you sent can be deleted.", true);
-					}
-					else
-					{
-						send(sender, "The specified message [ID " + id + "] could not be found.", true);
+						if (found)
+						{
+							send(sender, "Only messages that you sent can be deleted.", true);
+						}
+						else
+						{
+							send(sender, "The specified message [ID " + id + "] could not be found.", true);
+						}
 					}
 				}
 			}
@@ -2334,105 +2608,6 @@ public class Mobibot extends PircBot
 	}
 
 	/**
-	 * Responds with the title and links from the RSS feed.
-	 *
-	 * @param sender The nick of the person who sent the private message.
-	 */
-	private void feedResponse(String sender)
-	{
-		if (Utils.isValidString(feedURL))
-		{
-			new Thread(new FeedReader(this, sender, feedURL)).start();
-		}
-		else
-		{
-			send(sender, "There is no weblog setup for this channel.");
-		}
-	}
-
-	/**
-	 * Returns the index of the specified duplicate entry, if any.
-	 *
-	 * @param link The link.
-	 *
-	 * @return The index or -1 if none.
-	 */
-	private int findDupEntry(String link)
-	{
-		EntryLink entry;
-
-		for (int i = 0; i < entries.size(); i++)
-		{
-			entry = entries.get(i);
-
-			if (link.equals(entry.getLink()))
-			{
-				return i;
-			}
-		}
-
-		return -1;
-	}
-
-	/**
-	 * Returns the bot's nickname regexp pattern.
-	 *
-	 * @return The nickname regexp pattern.
-	 */
-	private String getNickPattern()
-	{
-		final StringBuilder buff = new StringBuilder(0);
-		final String nick = getNick();
-		char c;
-
-		for (int i = 0; i < nick.length(); i++)
-		{
-			c = nick.charAt(i);
-
-			if (Character.isLetter(c))
-			{
-				buff.append('[').append(String.valueOf(c).toLowerCase()).append(String.valueOf(c).toUpperCase())
-						.append(']');
-			}
-			else
-			{
-				buff.append(c);
-			}
-		}
-
-		return buff.toString();
-	}
-
-	/**
-	 * Responds with the Google search results for the specified query.
-	 *
-	 * @param sender The nick of the person who sent the private message.
-	 * @param query The Google query to execute.
-	 */
-	private void googleResponse(String sender, String query)
-	{
-		if (query.length() > 0)
-		{
-			new Thread(new GoogleSearch(this, sender, query)).start();
-		}
-		else
-		{
-			helpResponse(sender, Commands.GOOGLE_CMD);
-		}
-	}
-
-	/**
-	 * Returns <code>true</code> if twitter posting is enabled.
-	 *
-	 * @return <code>true</code> or <code>false</code>
-	 */
-	private boolean isTwitterEnabled()
-	{
-		return Utils.isValidString(twitterConsumerKey) && Utils.isValidString(twitterConsumerSecret) && Utils
-				.isValidString(twitterToken) && Utils.isValidString(twitterTokenSecret);
-	}
-
-	/**
 	 * Posts a message to Twitter.
 	 *
 	 * @param sender The sender's nick.
@@ -2460,183 +2635,6 @@ public class Mobibot extends PircBot
 		else
 		{
 			send(sender, "The Twitter posting facility is disabled.");
-		}
-	}
-
-	/**
-	 * Responds with the bot's information.
-	 *
-	 * @param sender The nick of the person who sent the message.
-	 * @param isPrivate Set to true is the response should be send as a private message.
-	 */
-	private void infoResponse(String sender, boolean isPrivate)
-	{
-		for (final String info : INFO_STRS)
-		{
-			send(sender, info, isPrivate);
-		}
-
-		long timeInSeconds = (System.currentTimeMillis() - START_TIME) / 1000L;
-
-		final long days = timeInSeconds / 86400L;
-		timeInSeconds -= (days * 86400L);
-
-		final long hours = timeInSeconds / 3600L;
-		timeInSeconds -= (hours * 3600L);
-
-		final long minutes = timeInSeconds / 60L;
-		send(sender,
-		     "Uptime: " + days + " day(s) " + hours + " hour(s) " + minutes + " minute(s)  [Entries: " + entries.size()
-		     + (isTellEnabled() && isOp(sender) ? ", Messages: " + tellMessages.size() : "") + ']',
-		     isPrivate
-		);
-	}
-
-	/**
-	 * Responds with the bot's version info.
-	 *
-	 * @param sender The nick of the person who sent the message.
-	 * @param isPrivate Set to true is the response should be send as a private message.
-	 */
-	private void versionResponse(String sender, boolean isPrivate)
-	{
-		if (isOp(sender))
-		{
-			for (final String version : VERSION_STRS)
-			{
-				send(sender, version, isPrivate);
-			}
-		}
-	}
-
-	/**
-	 * Determines whether the specified nick should be ignored.
-	 *
-	 * @param nick The nick.
-	 *
-	 * @return <code>true</code> if the nick should be ignored, <code>false</code> otherwise.
-	 */
-	private boolean isIgnoredNick(String nick)
-	{
-		return Utils.isValidString(nick) && ignoredNicks.contains(nick.toLowerCase());
-
-	}
-
-	/**
-	 * Returns true is the specified sender is an Op on the {@link #channel channel}.
-	 *
-	 * @param sender The sender.
-	 *
-	 * @return true, if the sender is an Op.
-	 */
-	private boolean isOp(String sender)
-	{
-		final User[] users = getUsers(getChannel());
-
-		for (final User user : users)
-		{
-			if (user.getNick().equals(sender))
-			{
-				return user.isOp();
-			}
-		}
-
-		return false;
-	}
-
-	/**
-	 * Responds with the results of a DNS query.
-	 *
-	 * @param sender The nick of the person who sent the message
-	 * @param query The hostname or IP address.
-	 */
-	private void lookupResponse(String sender, String query)
-	{
-		if (query.matches("(\\S.)+(\\S)+"))
-		{
-			try
-			{
-				send(getChannel(), Lookup.lookup(query));
-			}
-			catch (UnknownHostException ignore)
-			{
-				if (query.matches(
-						"(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)"))
-				{
-					try
-					{
-						final String[] lines = Lookup.whois(query);
-
-						if ((lines != null) && (lines.length > 0))
-						{
-							String line;
-
-							for (final String rawLine : lines)
-							{
-								line = rawLine.trim();
-
-								if ((line.length() > 0) && (line.charAt(0) != '#'))
-								{
-									send(getChannel(), line);
-								}
-							}
-						}
-						else
-						{
-							send(getChannel(), "Unknown host.");
-						}
-					}
-					catch (IOException ioe)
-					{
-						if (logger.isDebugEnabled())
-						{
-							logger.debug("Unable to perform whois IP lookup: " + query, ioe);
-						}
-
-						send(getChannel(), "Unable to perform whois IP lookup: " + ioe.getMessage());
-					}
-				}
-				else
-				{
-					send(getChannel(), "Unknown host.");
-				}
-			}
-		}
-		else
-		{
-			helpResponse(sender, Commands.LOOKUP_CMD);
-		}
-	}
-
-	/**
-	 * Responds with the last 10 public messages.
-	 *
-	 * @param sender The nick of the person who sent the private message.
-	 * @param isPrivate Set to true is the response should be send as a private message.
-	 */
-	private void recapResponse(String sender, boolean isPrivate)
-	{
-		for (final String recap : this.recap)
-		{
-			send(sender, recap, isPrivate);
-		}
-	}
-
-	/**
-	 * Responds with the specified stock quote.
-	 *
-	 * @param sender The nick of the person who sent the message.
-	 * @param symbol The stock symbol to lookup.
-	 */
-	private void stockResponse(String sender, String symbol)
-	{
-		if (symbol.length() > 0)
-		{
-			new Thread(new StockQuote(this, sender, symbol)).start();
-		}
-		else
-		{
-			helpResponse(sender, Commands.STOCK_CMD);
 		}
 	}
 
@@ -2671,6 +2669,23 @@ public class Mobibot extends PircBot
 		}
 
 		send(sender, buff.toString(), isPrivate);
+	}
+
+	/**
+	 * Responds with the bot's version info.
+	 *
+	 * @param sender The nick of the person who sent the message.
+	 * @param isPrivate Set to true is the response should be send as a private message.
+	 */
+	private void versionResponse(String sender, boolean isPrivate)
+	{
+		if (isOp(sender))
+		{
+			for (final String version : VERSION_STRS)
+			{
+				send(sender, version, isPrivate);
+			}
+		}
 	}
 
 	/**
@@ -2751,7 +2766,7 @@ public class Mobibot extends PircBot
 							break;
 						}
 
-						send(sender, buildLink(i, entry, true), isPrivate);
+						send(sender, Utils.buildLink(i, entry, true), isPrivate);
 						sent++;
 					}
 				}
@@ -2766,7 +2781,7 @@ public class Mobibot extends PircBot
 						break;
 					}
 
-					send(sender, buildLink(i, entry, true), isPrivate);
+					send(sender, Utils.buildLink(i, entry, true), isPrivate);
 					sent++;
 				}
 			}

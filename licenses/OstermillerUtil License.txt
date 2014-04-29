@@ -1,6 +1,6 @@
 License (http://ostermiller.org/utils/)
 
-OstermillerUtil Java Utilities Copyright (c) 2001-2007 by Stephen Ostermiller 
+OstermillerUtil Java Utilities Copyright (c) 2001-2011 by Stephen Ostermiller 
 and other contributors
 
 The OstermillerUtils library is free software; you can redistribute it and/or 

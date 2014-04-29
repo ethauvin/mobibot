@@ -10,9 +10,8 @@ import javax.swing.*;
  * <p/>
  * Note that the API changed slightly in the 3rd version: You must now invoke start() on the SwingWorker after creating
  * it.
- *
- * @noinspection ALL
  */
+@SuppressWarnings("ALL")
 public abstract class SwingWorker
 {
 	private Object value;  // see getValue(), setValue()

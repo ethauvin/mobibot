@@ -83,14 +83,9 @@ public class TellMessage implements Serializable
 
 	}
 
-	public String getSender()
+	public String getId()
 	{
-		return sender;
-	}
-
-	public String getRecipient()
-	{
-		return recipient;
+		return this.id;
 	}
 
 	public String getMessage()
@@ -108,30 +103,19 @@ public class TellMessage implements Serializable
 		return received;
 	}
 
-	public void setReceived()
+	public String getRecipient()
 	{
-		this.received = Calendar.getInstance().getTime();
-		this.isReceived = true;
+		return recipient;
 	}
 
-	public boolean isNotified()
+	public String getSender()
 	{
-		return this.isNotified;
+		return sender;
 	}
 
-	public void setNotified()
+	public boolean isMatch(String nick)
 	{
-		this.isNotified = true;
-	}
-
-	public String getId()
-	{
-		return this.id;
-	}
-
-	public boolean isReceived()
-	{
-		return this.isReceived;
+		return (sender.equalsIgnoreCase(nick) || recipient.equalsIgnoreCase(nick));
 	}
 
 	public boolean isMatchId(String id)
@@ -139,8 +123,24 @@ public class TellMessage implements Serializable
 		return this.id.equals(id);
 	}
 
-	public boolean isMatch(String nick)
+	public boolean isNotified()
 	{
-		return (sender.equalsIgnoreCase(nick) || recipient.equalsIgnoreCase(nick));
+		return this.isNotified;
+	}
+
+	public boolean isReceived()
+	{
+		return this.isReceived;
+	}
+
+	public void setIsNotified()
+	{
+		this.isNotified = true;
+	}
+
+	public void setIsReceived()
+	{
+		this.received = Calendar.getInstance().getTime();
+		this.isReceived = true;
 	}
 }
