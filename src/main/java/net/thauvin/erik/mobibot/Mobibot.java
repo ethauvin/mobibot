@@ -176,7 +176,7 @@ public class Mobibot extends PircBot
 	private final List<String> recap = new ArrayList<String>(0);
 
 	/**
-	 * The {@link Commands#TELL_CMD} messages queue.
+	 * Processes the {@link Commands#TELL_CMD} messages queue.
 	 */
 	private final List<TellMessage> tellMessages = new CopyOnWriteArrayList<TellMessage>();
 
@@ -311,7 +311,7 @@ public class Mobibot extends PircBot
 	private String weblogUrl = "";
 
 	/**
-	 * Creates a new Mobibot object.
+	 * Creates a new {@link Mobibot} instance.
 	 *
 	 * @param server The server.
 	 * @param port The port.
@@ -345,6 +345,11 @@ public class Mobibot extends PircBot
 		try
 		{
 			today = EntriesMgr.loadEntries(this.logsDir + EntriesMgr.CURRENT_XML, this.channel, entries);
+
+			if (logger.isDebugEnabled())
+			{
+				logger.debug("Last feed: " + today);
+			}
 
 			if (!Utils.today().equals(today))
 			{
@@ -787,6 +792,11 @@ public class Mobibot extends PircBot
 	 */
 	private void cleanTellMessages()
 	{
+		if (logger.isDebugEnabled())
+		{
+			logger.debug("Cleaning the messages.");
+		}
+
 		TellMessagesMgr.cleanTellMessages(tellMessages, tellMaxDays);
 	}
 
@@ -876,13 +886,16 @@ public class Mobibot extends PircBot
 	{
 		EntryLink entry;
 
-		for (int i = 0; i < entries.size(); i++)
+		synchronized (entries)
 		{
-			entry = entries.get(i);
-
-			if (link.equals(entry.getLink()))
+			for (int i = 0; i < entries.size(); i++)
 			{
-				return i;
+				entry = entries.get(i);
+
+				if (link.equals(entry.getLink()))
+				{
+					return i;
+				}
 			}
 		}
 
@@ -896,7 +909,7 @@ public class Mobibot extends PircBot
 	 */
 	public final String getBacklogsUrl()
 	{
-		return backLogsUrl;
+		return this.backLogsUrl;
 	}
 
 	/**
@@ -914,9 +927,9 @@ public class Mobibot extends PircBot
 	 *
 	 * @return The feed info cache.
 	 */
-	public final synchronized FeedFetcherCache getFeedInfoCache()
+	public final FeedFetcherCache getFeedInfoCache()
 	{
-		return feedInfoCache;
+		return this.feedInfoCache;
 	}
 
 	/**
@@ -926,7 +939,7 @@ public class Mobibot extends PircBot
 	 */
 	public final String getIrcServer()
 	{
-		return ircServer;
+		return this.ircServer;
 	}
 
 	/**
@@ -936,7 +949,7 @@ public class Mobibot extends PircBot
 	 */
 	public final String getLogsDir()
 	{
-		return logsDir;
+		return this.logsDir;
 	}
 
 	/**
@@ -973,9 +986,9 @@ public class Mobibot extends PircBot
 	 *
 	 * @return Today's date.
 	 */
-	public synchronized String getToday()
+	public String getToday()
 	{
-		return today;
+		return this.today;
 	}
 
 	/**
@@ -985,7 +998,7 @@ public class Mobibot extends PircBot
 	 */
 	public final String getWeblogUrl()
 	{
-		return weblogUrl;
+		return this.weblogUrl;
 	}
 
 	/**
@@ -1198,7 +1211,7 @@ public class Mobibot extends PircBot
 			send(sender, "To view queued and sent messages:");
 			send(sender, DOUBLE_INDENT + Utils.bold(getNick() + ": " + Commands.TELL_CMD + ' ' + Commands.VIEW_CMD));
 
-			send(sender, "Messages are kept for around " + Utils.bold(tellMaxDays) + " days.");
+			send(sender, "Messages are kept for " + Utils.bold(tellMaxDays) + " days.");
 		}
 		else
 		{
@@ -1362,6 +1375,7 @@ public class Mobibot extends PircBot
 		timeInSeconds -= (hours * 3600L);
 
 		final long minutes = timeInSeconds / 60L;
+
 		send(sender,
 		     "Uptime: " + days + " day(s) " + hours + " hour(s) " + minutes + " minute(s)  [Entries: " + entries.size()
 		     + (isTellEnabled() && isOp(sender) ? ", Messages: " + tellMessages.size() : "") + ']',
@@ -1565,7 +1579,7 @@ public class Mobibot extends PircBot
 
 				if (dupIndex == -1)
 				{
-					if (!Utils.today().equals(getToday()))
+					if (!Utils.today().equals(today))
 					{
 						isBackup = true;
 						saveEntries(true);
@@ -1600,7 +1614,7 @@ public class Mobibot extends PircBot
 					{
 						try
 						{
-							final Document html = Jsoup.connect(link).get();
+							final Document html = Jsoup.connect(link).userAgent("Mozilla").get();
 							final String htmlTitle = html.title();
 
 							if (Utils.isValidString(htmlTitle))
@@ -1968,7 +1982,7 @@ public class Mobibot extends PircBot
 				}
 			}
 		}
-		// L1.1:<comment>
+		// L1.1:<command>
 		else if (message.matches(Commands.LINK_CMD + "[0-9]+\\.[0-9]+:.*"))
 		{
 			isCommand = true;
@@ -2503,7 +2517,7 @@ public class Mobibot extends PircBot
 							     .bold(getNick() + ": " + Commands.TELL_CMD + ' ' + Commands.TELL_DEL_CMD + " <id|"
 							           + Commands.TELL_ALL_CMD + '>')
 					);
-					send(sender, "Messages are kept for around " + Utils.bold(tellMaxDays) + " days.");
+					send(sender, "Messages are kept for " + Utils.bold(tellMaxDays) + " days.");
 				}
 			}
 		}

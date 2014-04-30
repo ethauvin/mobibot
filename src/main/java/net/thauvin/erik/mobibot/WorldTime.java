@@ -40,7 +40,7 @@ import java.util.TimeZone;
 import java.util.TreeMap;
 
 /**
- * Processes the {@link net.thauvin.erik.mobibot.Commands#TIME_CMD} command.
+ * The {@link Commands#TIME_CMD} command.
  *
  * @author <a href="mailto:erik@thauvin.net">Erik C. Thauvin</a>
  * @created 2014-04-27
@@ -65,7 +65,7 @@ public class WorldTime
 			new SimpleDateFormat("'The time is 'HH:mm' on 'EEEE, d MMMM yyyy' in '");
 
 	/**
-	 * Creates a new time object.
+	 * Creates a new {@link WorldTime} instance.
 	 */
 	public WorldTime()
 	{
@@ -140,8 +140,9 @@ public class WorldTime
 	}
 
 	/**
-	 * Responds with the current time.
+	 * Responds with the current time in the specified timezone/country.
 	 *
+	 * @param bot The bot instance.
 	 * @param sender The nick of the person who sent the message.
 	 * @param args The time command arguments.
 	 * @param isPrivate Set to true is the response should be send as a private message.

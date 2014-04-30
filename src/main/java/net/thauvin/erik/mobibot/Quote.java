@@ -43,7 +43,7 @@ import java.net.URL;
 import java.net.URLConnection;
 
 /**
- * Retrieve quote from <a href="iheartquotes.com">I Heart Quotes</a>
+ * Processes the {@link Commands#QUOTE_CMD} command.
  *
  * @author <a href="mailto:erik@thauvin.net">Erik C. Thauvin</a>
  * @created 2014-04-20
@@ -59,7 +59,7 @@ public class Quote implements Runnable
 			"http://www.iheartquotes.com/api/v1/random?format=json&max_lines=1&source=esr+humorix_misc+humorix_stories+joel_on_software+macintosh+math+mav_flame+osp_rules+paul_graham+prog_style+subversion";
 
 	/**
-	 * The bot.
+	 * The bot's instance.
 	 */
 	private final Mobibot bot;
 
@@ -69,9 +69,9 @@ public class Quote implements Runnable
 	private final String sender;
 
 	/**
-	 * Creates a new StockQuote object.
+	 * Creates a new {@link StockQuote} instance.
 	 *
-	 * @param bot The bot.
+	 * @param bot The bot's instance.
 	 * @param sender The nick of the person who sent the message.
 	 */
 	public Quote(Mobibot bot, String sender)
@@ -81,7 +81,7 @@ public class Quote implements Runnable
 	}
 
 	/**
-	 * Returns a random quote.
+	 * Returns a random quote from <a href="http://iheartquotes.com/">I Heart Quote</a>
 	 */
 	public final void run()
 	{

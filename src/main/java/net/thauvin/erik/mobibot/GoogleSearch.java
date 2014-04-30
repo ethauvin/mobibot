@@ -44,7 +44,7 @@ import java.net.URLConnection;
 import java.net.URLEncoder;
 
 /**
- * Performs a Google search or spell checking query.
+ * Processes the {@link Commands#GOOGLE_CMD} command.
  *
  * @author Erik C. Thauvin
  * @created Feb 7, 2004
@@ -73,9 +73,9 @@ public class GoogleSearch implements Runnable
 	private final String sender;
 
 	/**
-	 * Creates a new GoogleSearch object.
+	 * Creates a new {@link GoogleSearch} instance.
 	 *
-	 * @param bot The bot.
+	 * @param bot The bot's instance.
 	 * @param sender The nick of the person who sent the message.
 	 * @param query The Google query
 	 */
@@ -87,7 +87,7 @@ public class GoogleSearch implements Runnable
 	}
 
 	/**
-	 * Main processing method.
+	 * Searches Google.
 	 */
 	public final void run()
 	{

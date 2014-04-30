@@ -39,7 +39,7 @@ import twitter4j.TwitterFactory;
 import twitter4j.conf.ConfigurationBuilder;
 
 /**
- * Inserts presence information into Twitter.
+ * Processes the {@link Commands#TWITTER_CMD} command.
  *
  * @author <a href="mailto:erik@thauvin.net">Erik C. Thauvin</a>
  * @created Sept 10, 2008
@@ -83,9 +83,9 @@ public class Twitter implements Runnable
 	private final String sender;
 
 	/**
-	 * Creates a new Twitter object.
+	 * Creates a new {@link Twitter} instance.
 	 *
-	 * @param bot The bot.
+	 * @param bot The bot's instance.
 	 * @param sender The nick of the person who sent the message.
 	 * @param consumerKey The Twitter consumer key.
 	 * @param consumerSecret The Twitter consumer secret.
@@ -105,6 +105,9 @@ public class Twitter implements Runnable
 		this.sender = sender;
 	}
 
+	/**
+	 * Posts to twitter.
+	 */
 	public final void run()
 	{
 		try

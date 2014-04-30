@@ -36,7 +36,7 @@ package net.thauvin.erik.mobibot;
 import java.util.Random;
 
 /**
- * The <code>War</code> class.
+ * Processes the {@link Commands#WAR_CMD} command.
  *
  * @author <a href="mailto:erik@thauvin.net">Erik C. Thauvin</a>
  * @created 2014-04-28
@@ -69,7 +69,7 @@ public class War
 	/**
 	 * Plays war.
 	 *
-	 * @param bot The bot.
+	 * @param bot The bot's instance.
 	 * @param sender The sender's nickname.
 	 */
 	public static void play(Mobibot bot, String sender)

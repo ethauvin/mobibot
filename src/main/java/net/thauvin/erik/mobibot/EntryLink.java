@@ -37,10 +37,10 @@ package net.thauvin.erik.mobibot;
 import com.sun.syndication.feed.synd.SyndCategoryImpl;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * The class used to store link entries.
@@ -57,10 +57,10 @@ public class EntryLink implements Serializable
 	static final long serialVersionUID = 3676245542270899086L;
 
 	// The link's comments
-	private final List<EntryComment> comments = new ArrayList<EntryComment>(0);
+	private final List<EntryComment> comments = new CopyOnWriteArrayList<EntryComment>();
 
 	// The tags/categories
-	private final List<SyndCategoryImpl> tags = new ArrayList<SyndCategoryImpl>(0);
+	private final List<SyndCategoryImpl> tags = new CopyOnWriteArrayList<SyndCategoryImpl>();
 
 	// The channel
 	private String channel = "";
@@ -106,7 +106,7 @@ public class EntryLink implements Serializable
 	 *
 	 * @param tags The space-delimited tags.
 	 */
-	public final synchronized void setTags(String tags)
+	public final void setTags(String tags)
 	{
 		if (tags != null)
 		{
@@ -185,7 +185,7 @@ public class EntryLink implements Serializable
 	 *
 	 * @return The total number of comments for this entry.
 	 */
-	public final synchronized int addComment(String comment, String nick)
+	public final int addComment(String comment, String nick)
 	{
 		comments.add(new EntryComment(comment, nick));
 
@@ -197,7 +197,7 @@ public class EntryLink implements Serializable
 	 *
 	 * @param index The index of the comment to delete.
 	 */
-	public final synchronized void deleteComment(int index)
+	public final void deleteComment(int index)
 	{
 		if (index < comments.size())
 		{
@@ -210,7 +210,7 @@ public class EntryLink implements Serializable
 	 *
 	 * @return The channel
 	 */
-	public final synchronized String getChannel()
+	public final String getChannel()
 	{
 		return channel;
 	}
@@ -221,7 +221,7 @@ public class EntryLink implements Serializable
 	 * @param channel The channel.
 	 */
 	@SuppressWarnings("UnusedDeclaration")
-	public final synchronized void setChannel(String channel)
+	public final void setChannel(String channel)
 	{
 		this.channel = channel;
 	}
@@ -233,7 +233,7 @@ public class EntryLink implements Serializable
 	 *
 	 * @return The specific comment.
 	 */
-	public final synchronized EntryComment getComment(int index)
+	public final EntryComment getComment(int index)
 	{
 		return (comments.get(index));
 	}
@@ -243,7 +243,7 @@ public class EntryLink implements Serializable
 	 *
 	 * @return The comments.
 	 */
-	public final synchronized EntryComment[] getComments()
+	public final EntryComment[] getComments()
 	{
 		return (comments.toArray(new EntryComment[comments.size()]));
 	}
@@ -253,7 +253,7 @@ public class EntryLink implements Serializable
 	 *
 	 * @return The count of comments.
 	 */
-	public final synchronized int getCommentsCount()
+	public final int getCommentsCount()
 	{
 		return comments.size();
 	}
@@ -263,7 +263,7 @@ public class EntryLink implements Serializable
 	 *
 	 * @return The date.
 	 */
-	public final synchronized Date getDate()
+	public final Date getDate()
 	{
 		return date;
 	}
@@ -273,7 +273,7 @@ public class EntryLink implements Serializable
 	 *
 	 * @return The tags as a comma-delimited string.
 	 */
-	public final synchronized String getDeliciousTags()
+	public final String getDeliciousTags()
 	{
 		final StringBuilder tags = new StringBuilder(nick);
 
@@ -291,7 +291,7 @@ public class EntryLink implements Serializable
 	 *
 	 * @return The link.
 	 */
-	public final synchronized String getLink()
+	public final String getLink()
 	{
 		return link;
 	}
@@ -301,7 +301,7 @@ public class EntryLink implements Serializable
 	 *
 	 * @param link The new link.
 	 */
-	public final synchronized void setLink(String link)
+	public final void setLink(String link)
 	{
 		this.link = link;
 	}
@@ -311,7 +311,7 @@ public class EntryLink implements Serializable
 	 *
 	 * @return The login;
 	 */
-	public final synchronized String getLogin()
+	public final String getLogin()
 	{
 		return login;
 	}
@@ -322,7 +322,7 @@ public class EntryLink implements Serializable
 	 * @param login The new login.
 	 */
 	@SuppressWarnings("UnusedDeclaration")
-	public final synchronized void setLogin(String login)
+	public final void setLogin(String login)
 	{
 		this.login = login;
 	}
@@ -332,7 +332,7 @@ public class EntryLink implements Serializable
 	 *
 	 * @return The nickname.
 	 */
-	public final synchronized String getNick()
+	public final String getNick()
 	{
 		return nick;
 	}
@@ -342,7 +342,7 @@ public class EntryLink implements Serializable
 	 *
 	 * @param nick The new nickname.
 	 */
-	public final synchronized void setNick(String nick)
+	public final void setNick(String nick)
 	{
 		this.nick = nick;
 	}
@@ -352,7 +352,7 @@ public class EntryLink implements Serializable
 	 *
 	 * @return The tags.
 	 */
-	public final synchronized List getTags()
+	public final List getTags()
 	{
 		return tags;
 	}
@@ -362,7 +362,7 @@ public class EntryLink implements Serializable
 	 *
 	 * @param tags The tags.
 	 */
-	final synchronized void setTags(List<SyndCategoryImpl> tags)
+	final void setTags(List<SyndCategoryImpl> tags)
 	{
 		this.tags.addAll(tags);
 	}
@@ -372,7 +372,7 @@ public class EntryLink implements Serializable
 	 *
 	 * @return The title.
 	 */
-	public final synchronized String getTitle()
+	public final String getTitle()
 	{
 		return title;
 	}
@@ -382,7 +382,7 @@ public class EntryLink implements Serializable
 	 *
 	 * @param title The new title.
 	 */
-	public final synchronized void setTitle(String title)
+	public final void setTitle(String title)
 	{
 		this.title = title;
 	}
@@ -392,7 +392,7 @@ public class EntryLink implements Serializable
 	 *
 	 * @return true if there are comments, false otherwise.
 	 */
-	public final synchronized boolean hasComments()
+	public final boolean hasComments()
 	{
 		return (!comments.isEmpty());
 	}
@@ -402,7 +402,7 @@ public class EntryLink implements Serializable
 	 *
 	 * @return true if there are tags, false otherwise.
 	 */
-	public final synchronized boolean hasTags()
+	public final boolean hasTags()
 	{
 		return (!tags.isEmpty());
 	}
@@ -414,7 +414,7 @@ public class EntryLink implements Serializable
 	 * @param comment The actual comment.
 	 * @param nick The nickname of the author of the comment.
 	 */
-	public final synchronized void setComment(int index, String comment, String nick)
+	public final void setComment(int index, String comment, String nick)
 	{
 		if (index < comments.size())
 		{

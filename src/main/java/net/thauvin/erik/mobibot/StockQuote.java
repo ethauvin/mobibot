@@ -41,7 +41,7 @@ import org.apache.commons.httpclient.methods.GetMethod;
 import java.io.IOException;
 
 /**
- * Retrieves a stock quote from Yahoo!.
+ * Processes the {@link Commands#STOCK_CMD} command.
  *
  * @author Erik C. Thauvin
  * @created Feb 7, 2004
@@ -70,9 +70,9 @@ public class StockQuote implements Runnable
 	private final String symbol;
 
 	/**
-	 * Creates a new StockQuote object.
+	 * Creates a new {@link StockQuote} instance.
 	 *
-	 * @param bot The bot.
+	 * @param bot The bot's instance.
 	 * @param sender The nick of the person who sent the message.
 	 * @param symbol The stock symbol.
 	 */
@@ -84,7 +84,7 @@ public class StockQuote implements Runnable
 	}
 
 	/**
-	 * Returns the specified stock quote.
+	 * Returns the specified stock quote from Yahoo!
 	 */
 	public final void run()
 	{

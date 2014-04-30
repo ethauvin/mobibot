@@ -51,7 +51,7 @@ public class DeliciousPoster
 	private final String ircServer;
 
 	/**
-	 * Creates a new DeliciousPoster instance.
+	 * Creates a new {@link DeliciousPoster} instance.
 	 *
 	 * @param username The del.icio.us username.
 	 * @param password The del.icio.us password.

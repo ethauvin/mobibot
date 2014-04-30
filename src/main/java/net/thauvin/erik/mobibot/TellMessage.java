@@ -83,61 +83,121 @@ public class TellMessage implements Serializable
 
 	}
 
+	/**
+	 * Returns the message id.
+	 *
+	 * @return The message id.
+	 */
 	public String getId()
 	{
 		return this.id;
 	}
 
+	/**
+	 * Returns the message text.
+	 *
+	 * @return The text of the message.
+	 */
 	public String getMessage()
 	{
 		return message;
 	}
 
+	/**
+	 * Returns the state of the queue flag.
+	 *
+	 * @return <code>true</code> if the message is queued.
+	 */
 	public Date getQueued()
 	{
 		return queued;
 	}
 
+	/**
+	 * Returns the state of the received flag.
+	 *
+	 * @return <code>true</code> if the message has been received.
+	 */
 	public Date getReceived()
 	{
 		return received;
 	}
 
+	/**
+	 * Returns the message's recipient.
+	 *
+	 * @return The recipient of the message.
+	 */
 	public String getRecipient()
 	{
 		return recipient;
 	}
 
+	/**
+	 * Returns the message's sender.
+	 *
+	 * @return The sender of the message.
+	 */
 	public String getSender()
 	{
 		return sender;
 	}
 
+	/**
+	 * Matches the message sender or recipient.
+	 *
+	 * @param nick The nickname to match with.
+	 *
+	 * @return <code>true</code> if the nickname matches.
+	 */
 	public boolean isMatch(String nick)
 	{
 		return (sender.equalsIgnoreCase(nick) || recipient.equalsIgnoreCase(nick));
 	}
 
+	/**
+	 * Match the message ID.
+	 *
+	 * @param id The ID to match with.
+	 *
+	 * @return <code>true</code> if the id matches.
+	 */
 	public boolean isMatchId(String id)
 	{
 		return this.id.equals(id);
 	}
 
+	/**
+	 * Returns the notification flag state.
+	 *
+	 * @return <code>true</code> if the sender has been notified.
+	 */
 	public boolean isNotified()
 	{
 		return this.isNotified;
 	}
 
+	/**
+	 * Returns the received flag state.
+	 *
+	 * @return <code>true</code> if the message was received.
+	 */
 	public boolean isReceived()
 	{
 		return this.isReceived;
 	}
 
+	/**
+	 * Sets the notified flag.
+	 */
 	public void setIsNotified()
 	{
 		this.isNotified = true;
 	}
 
+	/**
+	 * Sets the received flag.
+	 */
 	public void setIsReceived()
 	{
 		this.received = Calendar.getInstance().getTime();

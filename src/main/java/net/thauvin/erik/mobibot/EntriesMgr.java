@@ -214,6 +214,9 @@ public class EntriesMgr
 	/**
 	 * Saves the entries.
 	 *
+	 * @param bot The bot object.
+	 * @param entries The entries array.
+	 * @param history The history array.
 	 * @param isDayBackup Set the true if the daily backup file should also be created.
 	 */
 	public static void saveEntries(Mobibot bot, List<EntryLink> entries, List<String> history, boolean isDayBackup)

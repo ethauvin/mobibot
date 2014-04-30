@@ -42,7 +42,7 @@ import java.text.DecimalFormat;
 import java.util.Date;
 
 /**
- * Fetches the weather data from a specific station ID.
+ * Processes the {@link Commands#LOOKUP_CMD} command.
  *
  * @author Erik C. Thauvin
  * @created Feb 7, 2004
@@ -81,9 +81,9 @@ public class Weather implements Runnable
 	private final boolean isPrivate;
 
 	/**
-	 * Creates a new Weather object.
+	 * Creates a new {@link Weather} instance.
 	 *
-	 * @param bot The bot.
+	 * @param bot The bot's instance.
 	 * @param sender The nick of the person who sent the message.
 	 * @param station The station ID.
 	 * @param isPrivate Set to true is the response should be send as a private message.
@@ -97,7 +97,7 @@ public class Weather implements Runnable
 	}
 
 	/**
-	 * Main processing method.
+	 * Fetches the weather data from a specific station ID.
 	 */
 	public final void run()
 	{

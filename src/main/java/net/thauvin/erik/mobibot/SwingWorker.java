@@ -5,9 +5,9 @@ import javax.swing.*;
 /**
  * This is the 3rd version of SwingWorker (also known as SwingWorker 3), an abstract class that you subclass to perform
  * GUI-related work in a dedicated thread.  For instructions on and examples of using this class, see:
- * <p/>
+ * <p>
  * http://java.sun.com/docs/books/tutorial/uiswing/misc/threads.html
- * <p/>
+ * </p>
  * Note that the API changed slightly in the 3rd version: You must now invoke start() on the SwingWorker after creating
  * it.
  */
@@ -62,6 +62,8 @@ public abstract class SwingWorker
 
 	/**
 	 * Compute the value to be returned by the <code>get</code> method.
+	 *
+	 * @return The computed value.
 	 */
 	public abstract Object construct();
 
@@ -107,6 +109,8 @@ public abstract class SwingWorker
 
 	/**
 	 * Get the value produced by the worker thread, or null if it hasn't been constructed yet.
+	 *
+	 * @return The value.
 	 */
 	protected synchronized Object getValue()
 	{
@@ -115,6 +119,8 @@ public abstract class SwingWorker
 
 	/**
 	 * Set the value produced by worker thread
+	 *
+	 * @param x The object.
 	 */
 	private synchronized void setValue(Object x)
 	{

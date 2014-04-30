@@ -67,6 +67,10 @@ compileJava {
   options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
 }
 
+javadoc {
+  options.tags = ['created']
+}
+
 jar {
   manifest.attributes('Main-Class': mainClassName,
                       'Class-Path': '. ./lib/' + configurations.compile.collect { it.getName() }.join(' ./lib/'))

@@ -80,6 +80,11 @@ public class TellMessagesMgr
 			try
 			{
 
+				if (logger.isDebugEnabled())
+				{
+					logger.debug("Loading the messages.");
+				}
+
 				return ((List<TellMessage>) input.readObject());
 			}
 			finally
@@ -118,6 +123,10 @@ public class TellMessagesMgr
 
 			try
 			{
+				if (logger.isDebugEnabled())
+				{
+					logger.debug("Saving the messages.");
+				}
 				output.writeObject(messages);
 			}
 			finally
@@ -132,7 +141,10 @@ public class TellMessagesMgr
 	}
 
 	/**
-	 * Cleans the messages queue.
+	 * Cleans the messages queue
+	 *
+	 * @param tellMessages The messages list.
+	 * @param tellMaxDays The maximum number of days to keep messages for.
 	 */
 	public static void cleanTellMessages(List<TellMessage> tellMessages, int tellMaxDays)
 	{

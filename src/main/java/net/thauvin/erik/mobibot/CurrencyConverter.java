@@ -46,7 +46,7 @@ import java.text.NumberFormat;
 import java.util.*;
 
 /**
- * Converts various currencies.
+ * Processes the {@link Commands#CURRENCY_CMD} command.
  *
  * @author Erik C. Thauvin
  * @created Feb 11, 2004
@@ -85,16 +85,18 @@ public class CurrencyConverter implements Runnable
 	private String pubDate = "";
 
 	/**
-	 * Creates a new CurrencyConverter object.
+	 * Creates a new {@link CurrencyConverter} instance.
 	 *
-	 * @param bot The bot.
+	 * @param bot The bot's instance.
 	 */
 	public CurrencyConverter(Mobibot bot)
 	{
 		this.bot = bot;
 	}
 
-	// Converts specified currencies.
+	/**
+	 * Converts the specified currencies.
+	 */
 	public final void run()
 	{
 		if (Utils.isValidString(sender) && Utils.isValidString(query))
@@ -215,7 +217,7 @@ public class CurrencyConverter implements Runnable
 	 * @param sender The nick of the person who sent the message.
 	 * @param query The currency query.
 	 */
-	public void setQuery(String sender, String query)
+	public synchronized void setQuery(String sender, String query)
 	{
 		this.query = query;
 		this.sender = sender;

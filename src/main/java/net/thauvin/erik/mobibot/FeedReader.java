@@ -79,9 +79,9 @@ public class FeedReader implements Runnable
 	private final String url;
 
 	/**
-	 * Creates a new FeedReader object.
+	 * Creates a new {@link FeedReader} instance.
 	 *
-	 * @param bot The bot.
+	 * @param bot The bot's instance.
 	 * @param sender The nick of the person who sent the message.
 	 * @param url The URL to fetch.
 	 */

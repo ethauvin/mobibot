@@ -41,7 +41,7 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 /**
- * Performs a DNS lookup query.
+ * Processes the {@link Commands#LOOKUP_CMD} command.
  *
  * @author <a href="mailto:erik@thauvin.net">Erik C. Thauvin</a>
  * @created 2014-04-26

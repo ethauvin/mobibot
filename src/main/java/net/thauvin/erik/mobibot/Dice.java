@@ -36,7 +36,7 @@ package net.thauvin.erik.mobibot;
 import java.util.Random;
 
 /**
- * The {@link net.thauvin.erik.mobibot.Commands#DICE_CMD} command
+ * Processes the {@link Commands#DICE_CMD} command.
  *
  * @author <a href="mailto:erik@thauvin.net">Erik C. Thauvin</a>
  * @created 2014-04-28
@@ -56,9 +56,9 @@ public class Dice
 	}
 
 	/**
-	 * Rolls the dice
+	 * Rolls the dice.
 	 *
-	 * @param bot The bot.
+	 * @param bot The bot's instance.
 	 * @param sender The sender's nickname.
 	 */
 	public static void roll(Mobibot bot, String sender)
