@@ -127,6 +127,7 @@ public class TellMessagesMgr
 				{
 					logger.debug("Saving the messages.");
 				}
+
 				output.writeObject(messages);
 			}
 			finally

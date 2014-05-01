@@ -90,7 +90,7 @@ public class TellMessage implements Serializable
 	 */
 	public String getId()
 	{
-		return this.id;
+		return id;
 	}
 
 	/**
@@ -174,7 +174,7 @@ public class TellMessage implements Serializable
 	 */
 	public boolean isNotified()
 	{
-		return this.isNotified;
+		return isNotified;
 	}
 
 	/**
@@ -184,7 +184,7 @@ public class TellMessage implements Serializable
 	 */
 	public boolean isReceived()
 	{
-		return this.isReceived;
+		return isReceived;
 	}
 
 	/**
@@ -192,7 +192,7 @@ public class TellMessage implements Serializable
 	 */
 	public void setIsNotified()
 	{
-		this.isNotified = true;
+		isNotified = true;
 	}
 
 	/**
@@ -200,7 +200,7 @@ public class TellMessage implements Serializable
 	 */
 	public void setIsReceived()
 	{
-		this.received = Calendar.getInstance().getTime();
-		this.isReceived = true;
+		received = Calendar.getInstance().getTime();
+		isReceived = true;
 	}
 }

@@ -223,7 +223,7 @@ public class Mobibot extends PircBot
 	/**
 	 * The logger.
 	 */
-	private final Log4JLogger logger;
+	private final Log4JLogger logger = new Log4JLogger(Mobibot.class.getPackage().getName());
 
 	/**
 	 * The logger default level.
@@ -333,8 +333,7 @@ public class Mobibot extends PircBot
 		this.logsDir = logsDir;
 		this.serializedObject = logsDir + getName() + SER_EXT;
 
-		// Set the logger
-		logger = new Log4JLogger(Mobibot.class.getPackage().getName());
+		// Set the logger level
 		loggerLevel = logger.getLogger().getLevel();
 
 		// Initialization
@@ -807,7 +806,7 @@ public class Mobibot extends PircBot
 	 */
 	final void action(String action)
 	{
-		action(getChannel(), action);
+		action(channel, action);
 	}
 
 	/**
@@ -840,7 +839,7 @@ public class Mobibot extends PircBot
 			try
 			{
 				final Calculable calc = new ExpressionBuilder(args).build();
-				send(getChannel(), args.replaceAll(" ", "") + " = " + decimalFormat.format(calc.calculate()));
+				send(channel, args.replaceAll(" ", "") + " = " + decimalFormat.format(calc.calculate()));
 			}
 			catch (Exception e)
 			{
@@ -849,7 +848,7 @@ public class Mobibot extends PircBot
 					logger.debug("Unable to calculate: " + message, e);
 				}
 
-				send(getChannel(), "No idea. This is the kind of math I don't get.");
+				send(channel, "No idea. This is the kind of math I don't get.");
 			}
 		}
 		else
@@ -1065,10 +1064,10 @@ public class Mobibot extends PircBot
 			send(sender, "To list or search the current URL posts:");
 			send(sender, DOUBLE_INDENT + Utils.bold(getNick() + ": " + Commands.VIEW_CMD) + " [<start>] [<query>]");
 		}
-		else if (lcTopic.endsWith(getChannel().substring(1).toLowerCase()))
+		else if (lcTopic.endsWith(channel.substring(1).toLowerCase()))
 		{
 			send(sender, "To list the last 5 posts from the channel's weblog:");
-			send(sender, DOUBLE_INDENT + Utils.bold(getNick() + ": " + getChannel().substring(1)));
+			send(sender, DOUBLE_INDENT + Utils.bold(getNick() + ": " + channel.substring(1)));
 		}
 		else if (lcTopic.endsWith(Commands.GOOGLE_CMD))
 		{
@@ -1215,7 +1214,7 @@ public class Mobibot extends PircBot
 		}
 		else
 		{
-			send(sender, Utils.bold("Type a URL on " + getChannel() + " to post it."));
+			send(sender, Utils.bold("Type a URL on " + channel + " to post it."));
 			send(sender, "For more information on specific command, type:");
 			send(sender, DOUBLE_INDENT + Utils.bold(getNick() + ": " + Commands.HELP_CMD + " <command>"));
 			send(sender, "The commands are:");
@@ -1228,7 +1227,7 @@ public class Mobibot extends PircBot
 			cmds.add(Commands.IGNORE_CMD);
 			cmds.add(Commands.INFO_CMD);
 			cmds.add(Commands.LOOKUP_CMD);
-			cmds.add(getChannel().substring(1));
+			cmds.add(channel.substring(1));
 			cmds.add(Commands.HELP_POSTING_KEYWORD);
 			cmds.add(Commands.QUOTE_CMD);
 			cmds.add(Commands.RECAP_CMD);
@@ -1405,7 +1404,7 @@ public class Mobibot extends PircBot
 	 */
 	private boolean isOp(String sender)
 	{
-		final User[] users = getUsers(getChannel());
+		final User[] users = getUsers(channel);
 
 		for (final User user : users)
 		{
@@ -1441,7 +1440,7 @@ public class Mobibot extends PircBot
 		{
 			try
 			{
-				send(getChannel(), Lookup.lookup(query));
+				send(channel, Lookup.lookup(query));
 			}
 			catch (UnknownHostException ignore)
 			{
@@ -1462,13 +1461,13 @@ public class Mobibot extends PircBot
 
 								if ((line.length() > 0) && (line.charAt(0) != '#'))
 								{
-									send(getChannel(), line);
+									send(channel, line);
 								}
 							}
 						}
 						else
 						{
-							send(getChannel(), "Unknown host.");
+							send(channel, "Unknown host.");
 						}
 					}
 					catch (IOException ioe)
@@ -1478,12 +1477,12 @@ public class Mobibot extends PircBot
 							logger.debug("Unable to perform whois IP lookup: " + query, ioe);
 						}
 
-						send(getChannel(), "Unable to perform whois IP lookup: " + ioe.getMessage());
+						send(channel, "Unable to perform whois IP lookup: " + ioe.getMessage());
 					}
 				}
 				else
 				{
-					send(getChannel(), "Unknown host.");
+					send(channel, "Unknown host.");
 				}
 			}
 		}
@@ -1550,7 +1549,7 @@ public class Mobibot extends PircBot
 			sendMessage(identNick, identMsg);
 		}
 
-		joinChannel(getChannel());
+		joinChannel(channel);
 	}
 
 	@Override
@@ -1726,19 +1725,19 @@ public class Mobibot extends PircBot
 			// mobibot: dice
 			else if (cmd.equals(Commands.DICE_CMD))
 			{
-				send(getChannel(), shall_we_play_a_game);
+				send(channel, shall_we_play_a_game);
 
 				Dice.roll(this, sender);
 			}
 			// mobibot: war
 			else if (cmd.equals(Commands.WAR_CMD))
 			{
-				send(getChannel(), shall_we_play_a_game);
+				send(channel, shall_we_play_a_game);
 
 				War.play(this, sender);
 			}
 			// mobibot: <channel>
-			else if (cmd.equalsIgnoreCase(getChannel().substring(1)))
+			else if (cmd.equalsIgnoreCase(channel.substring(1)))
 			{
 				feedResponse(sender);
 			}
@@ -1820,11 +1819,11 @@ public class Mobibot extends PircBot
 				if (cmd.length() == 0)
 				{
 					final EntryLink entry = entries.get(index);
-					send(getChannel(), Utils.buildLink(index, entry));
+					send(channel, Utils.buildLink(index, entry));
 
 					if (entry.hasTags())
 					{
-						send(getChannel(), Utils.buildTags(index, entry));
+						send(channel, Utils.buildTags(index, entry));
 					}
 
 					if (entry.hasComments())
@@ -1833,7 +1832,7 @@ public class Mobibot extends PircBot
 
 						for (int i = 0; i < comments.length; i++)
 						{
-							send(getChannel(), Utils.buildComment(index, i, comments[i]));
+							send(channel, Utils.buildComment(index, i, comments[i]));
 						}
 					}
 				}
@@ -1852,7 +1851,7 @@ public class Mobibot extends PircBot
 							}
 
 							entries.remove(index);
-							send(getChannel(), "Entry " + Commands.LINK_CMD + (index + 1) + " removed.");
+							send(channel, "Entry " + Commands.LINK_CMD + (index + 1) + " removed.");
 							saveEntries(false);
 						}
 						else
@@ -1873,7 +1872,7 @@ public class Mobibot extends PircBot
 								delicious.updatePost(entry.getLink(), entry);
 							}
 
-							send(getChannel(), Utils.buildLink(index, entry));
+							send(channel, Utils.buildLink(index, entry));
 							saveEntries(false);
 						}
 					}
@@ -1897,7 +1896,7 @@ public class Mobibot extends PircBot
 									delicious.updatePost(oldLink, entry);
 								}
 
-								send(getChannel(), Utils.buildLink(index, entry));
+								send(channel, Utils.buildLink(index, entry));
 								saveEntries(false);
 							}
 						}
@@ -1915,7 +1914,7 @@ public class Mobibot extends PircBot
 							{
 								final EntryLink entry = entries.get(index);
 								entry.setNick(cmd.substring(1));
-								send(getChannel(), Utils.buildLink(index, entry));
+								send(channel, Utils.buildLink(index, entry));
 								saveEntries(false);
 							}
 						}
@@ -1961,7 +1960,7 @@ public class Mobibot extends PircBot
 							delicious.updatePost(entry.getLink(), entry);
 						}
 
-						send(getChannel(), Utils.buildTags(index, entry));
+						send(channel, Utils.buildTags(index, entry));
 						saveEntries(false);
 					}
 					else
@@ -1973,7 +1972,7 @@ public class Mobibot extends PircBot
 				{
 					if (entry.hasTags())
 					{
-						send(getChannel(), Utils.buildTags(index, entry));
+						send(channel, Utils.buildTags(index, entry));
 					}
 					else
 					{
@@ -2003,13 +2002,13 @@ public class Mobibot extends PircBot
 					if (cmd.length() == 0)
 					{
 						final EntryComment comment = entry.getComment(cindex);
-						send(getChannel(), Utils.buildComment(index, cindex, comment));
+						send(channel, Utils.buildComment(index, cindex, comment));
 					}
 					// L1.1:-
 					else if ("-".equals(cmd))
 					{
 						entry.deleteComment(cindex);
-						send(getChannel(),
+						send(channel,
 						     "Comment " + Commands.LINK_CMD + (index + 1) + '.' + (cindex + 1) + " removed.");
 						saveEntries(false);
 					}
@@ -2022,7 +2021,7 @@ public class Mobibot extends PircBot
 							{
 								final EntryComment comment = entry.getComment(cindex);
 								comment.setNick(cmd.substring(1));
-								send(getChannel(), Utils.buildComment(index, cindex, comment));
+								send(channel, Utils.buildComment(index, cindex, comment));
 								saveEntries(false);
 							}
 						}
@@ -2084,7 +2083,7 @@ public class Mobibot extends PircBot
 		{
 			if (isOp(sender))
 			{
-				send(getChannel(), sender + " has just signed my death sentence.");
+				send(channel, sender + " has just signed my death sentence.");
 				saveEntries(true);
 				sleep(3);
 				quitServer("The Bot Is Out There!");
@@ -2093,11 +2092,11 @@ public class Mobibot extends PircBot
 		}
 		else if (cmd.equals(Commands.CYCLE_CMD))
 		{
-			send(getChannel(), sender + " has just asked me to leave. I'll be back!");
+			send(channel, sender + " has just asked me to leave. I'll be back!");
 			sleep(0);
-			partChannel(getChannel());
+			partChannel(channel);
 			sleep(10);
-			joinChannel(getChannel());
+			joinChannel(channel);
 		}
 		else if (cmd.equals(Commands.RECAP_CMD))
 		{
@@ -2111,8 +2110,17 @@ public class Mobibot extends PircBot
 		{
 			if (isOp(sender))
 			{
-				history.add(0, args);
-				send(sender, history.toString(), true);
+				// e.g. 2014-04-01
+				final File backlog = new File(logsDir + args + EntriesMgr.XML_EXT);
+				if (backlog.exists())
+				{
+					history.add(0, args);
+					send(sender, history.toString(), true);
+				}
+				else
+				{
+					send(sender, "The specified log could not be found.");
+				}
 			}
 		}
 		else if (cmd.startsWith(Commands.ME_CMD))
@@ -2142,7 +2150,7 @@ public class Mobibot extends PircBot
 			{
 				if (cmds.length > 1)
 				{
-					send(getChannel(), args, true);
+					send(channel, args, true);
 				}
 				else
 				{
@@ -2222,7 +2230,7 @@ public class Mobibot extends PircBot
 	@Override
 	protected final void onAction(String sender, String login, String hostname, String target, String action)
 	{
-		if (target.equals(getChannel()))
+		if (target.equals(channel))
 		{
 			recap(sender, action, true);
 		}
@@ -2660,7 +2668,7 @@ public class Mobibot extends PircBot
 	 */
 	private void usersResponse(String sender, boolean isPrivate)
 	{
-		final User[] users = getUsers(getChannel());
+		final User[] users = getUsers(channel);
 		final String[] nicks = new String[users.length];
 
 		for (int i = 0; i < users.length; i++)

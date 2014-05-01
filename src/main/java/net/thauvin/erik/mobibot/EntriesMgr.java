@@ -63,6 +63,11 @@ public class EntriesMgr
 	public static final String NAV_XML = "nav.xml";
 
 	/**
+	 * The .xml extension
+	 */
+	public static final String XML_EXT = ".xml";
+
+	/**
 	 * The maximum number of backlogs to keep.
 	 */
 	private static final int MAX_BACKLOGS = 10;
@@ -223,7 +228,7 @@ public class EntriesMgr
 	{
 		if (bot.getLogger().isDebugEnabled())
 		{
-			bot.getLogger().debug("Saving...");
+			bot.getLogger().debug("Saving the feeds...");
 		}
 
 		if (Utils.isValidString(bot.getLogsDir()) && Utils.isValidString(bot.getWeblogUrl()))
@@ -302,7 +307,7 @@ public class EntriesMgr
 				output.output(rss, fw);
 				fw.close();
 
-				fw = new FileWriter(new File(bot.getLogsDir() + bot.getToday() + ".xml"));
+				fw = new FileWriter(new File(bot.getLogsDir() + bot.getToday() + XML_EXT));
 				output.output(rss, fw);
 
 				if (isDayBackup)
@@ -362,7 +367,7 @@ public class EntriesMgr
 			}
 			catch (Exception e)
 			{
-				bot.getLogger().warn("Unable to generate the feed.", e);
+				bot.getLogger().warn("Unable to generate the entries feed.", e);
 			}
 			finally
 			{
@@ -381,7 +386,8 @@ public class EntriesMgr
 		}
 		else
 		{
-			bot.getLogger().warn("Unable to generate the feed. At least one of the required property is missing.");
+			bot.getLogger()
+					.warn("Unable to generate the entries feed. At least one of the required property is missing.");
 		}
 	}
 }
