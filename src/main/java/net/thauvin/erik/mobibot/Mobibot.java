@@ -73,81 +73,9 @@ public class Mobibot extends PircBot
 	public static final String NO_TITLE = "No Title";
 
 	/**
-	 * The serialized object file extension.
-	 */
-	private static final String SER_EXT = ".ser";
-
-	/**
-	 * Shall we play a game?
-	 */
-	private static final String shall_we_play_a_game = "Shall we play a game?";
-
-	/**
-	 * The info strings.
-	 */
-	private static final String[] INFO_STRS = {
-			ReleaseInfo.getProject() + " v" + ReleaseInfo.getVersion() + '.' + ReleaseInfo.getBuildNumber()
-			+ " by Erik C. Thauvin (erik@thauvin.net)", "http://www.mobitopia.org/mobibot/"
-	};
-
-	/**
-	 * The version strings.
-	 */
-	private static final String[] VERSION_STRS = {
-			"Version: " + ReleaseInfo.getVersion() + '.' + ReleaseInfo.getBuildNumber() + " (" + Utils.ISO_SDF
-					.format(ReleaseInfo.getBuildDate()) + ')',
-			"Platform: " + System.getProperty("os.name") + " (" + System.getProperty("os.version") + ", " + System
-					.getProperty("os.arch") + ", " + System.getProperty("user.country") + ')',
-			"Runtime: " + System.getProperty("java.runtime.name") + " (build " + System
-					.getProperty("java.runtime.version") + ')',
-			"VM: " + System.getProperty("java.vm.name") + " (build " + System.getProperty("java.vm.version") + ", "
-			+ System.getProperty("java.vm.info") + ')'
-	};
-
-	/**
-	 * The maximum number of times the bot will try to reconnect, if disconnected.
-	 */
-	private static final int MAX_RECONNECT = 10;
-
-	/**
-	 * The default maximum number of entries to display.
-	 */
-	private static final int MAX_ENTRIES = 8;
-
-	/**
-	 * The default maximum recap entries.
-	 */
-	private static final int MAX_RECAP = 10;
-
-	/**
-	 * The double tab indent (8 spaces).
-	 */
-	private static final String DOUBLE_INDENT = "        ";
-
-	/**
-	 * The link match string.
-	 */
-	private static final String LINK_MATCH = "^[hH][tT][tT][pP](|[sS])://.*";
-
-	/**
-	 * The tags/categories marker.
-	 */
-	private static final String TAGS_MARKER = "tags:";
-
-	/**
-	 * The start time.
-	 */
-	private static final long START_TIME = System.currentTimeMillis();
-
-	/**
 	 * The default port.
 	 */
 	private static final int DEFAULT_PORT = 6667;
-
-	/**
-	 * The number of milliseconds to delay between consecutive messages.
-	 */
-	private static final long MESSAGE_DELAY = 1000L;
 
 	/**
 	 * The default maximum number of days to keep {@link Commands#TELL_CMD} messages.
@@ -171,19 +99,86 @@ public class Mobibot extends PircBot
 	private int tellMaxSize = DEFAULT_TELL_MAX_SIZE;
 
 	/**
-	 * The recap array.
+	 * The double tab indent (8 spaces).
 	 */
-	private final List<String> recap = new ArrayList<String>(0);
+	private static final String DOUBLE_INDENT = "        ";
 
 	/**
-	 * Processes the {@link Commands#TELL_CMD} messages queue.
+	 * The info strings.
 	 */
-	private final List<TellMessage> tellMessages = new CopyOnWriteArrayList<TellMessage>();
+	private static final String[] INFO_STRS = {
+			ReleaseInfo.getProject() + " v" + ReleaseInfo.getVersion() + '.' + ReleaseInfo.getBuildNumber()
+			+ " by Erik C. Thauvin (erik@thauvin.net)", "http://www.mobitopia.org/mobibot/"
+	};
+
+	/**
+	 * The link match string.
+	 */
+	private static final String LINK_MATCH = "^[hH][tT][tT][pP](|[sS])://.*";
+
+	/**
+	 * The default maximum number of entries to display.
+	 */
+	private static final int MAX_ENTRIES = 8;
+
+	/**
+	 * The default maximum recap entries.
+	 */
+	private static final int MAX_RECAP = 10;
+
+	/**
+	 * The maximum number of times the bot will try to reconnect, if disconnected.
+	 */
+	private static final int MAX_RECONNECT = 10;
+
+	/**
+	 * The number of milliseconds to delay between consecutive messages.
+	 */
+	private static final long MESSAGE_DELAY = 1000L;
+
+	/**
+	 * The serialized object file extension.
+	 */
+	private static final String SER_EXT = ".ser";
+
+	/**
+	 * The start time.
+	 */
+	private static final long START_TIME = System.currentTimeMillis();
+
+	/**
+	 * The tags/categories marker.
+	 */
+	private static final String TAGS_MARKER = "tags:";
+
+	/**
+	 * The version strings.
+	 */
+	private static final String[] VERSION_STRS = {
+			"Version: " + ReleaseInfo.getVersion() + '.' + ReleaseInfo.getBuildNumber() + " (" + Utils.ISO_SDF
+					.format(ReleaseInfo.getBuildDate()) + ')',
+			"Platform: " + System.getProperty("os.name") + " (" + System.getProperty("os.version") + ", " + System
+					.getProperty("os.arch") + ", " + System.getProperty("user.country") + ')',
+			"Runtime: " + System.getProperty("java.runtime.name") + " (build " + System
+					.getProperty("java.runtime.version") + ')',
+			"VM: " + System.getProperty("java.vm.name") + " (build " + System.getProperty("java.vm.version") + ", "
+			+ System.getProperty("java.vm.info") + ')'
+	};
+
+	/**
+	 * Shall we play a game?
+	 */
+	private static final String shall_we_play_a_game = "Shall we play a game?";
 
 	/**
 	 * The main channel.
 	 */
 	private final String channel;
+
+	/**
+	 * The currency converter.
+	 */
+	private final CurrencyConverter currencyConverter;
 
 	/**
 	 * The entries array.
@@ -216,11 +211,6 @@ public class Mobibot extends PircBot
 	private final String ircServer;
 
 	/**
-	 * The currency converter.
-	 */
-	private final CurrencyConverter currencyConverter;
-
-	/**
 	 * The logger.
 	 */
 	private final Log4JLogger logger = new Log4JLogger(Mobibot.class.getPackage().getName());
@@ -236,9 +226,19 @@ public class Mobibot extends PircBot
 	private final String logsDir;
 
 	/**
+	 * The recap array.
+	 */
+	private final List<String> recap = new ArrayList<String>(0);
+
+	/**
 	 * The serialized object file.
 	 */
 	private final String serializedObject;
+
+	/**
+	 * Processes the {@link Commands#TELL_CMD} messages queue.
+	 */
+	private final List<TellMessage> tellMessages = new CopyOnWriteArrayList<TellMessage>();
 
 	/**
 	 * Time command.
@@ -266,6 +266,26 @@ public class Mobibot extends PircBot
 	private String feedURL = "";
 
 	/**
+	 * The NickServ ident password.
+	 */
+	private String ident = "";
+
+	/**
+	 * The ident message.
+	 */
+	private String identMsg = "";
+
+	/**
+	 * The ident nick.
+	 */
+	private String identNick = "";
+
+	/**
+	 * Today's date.
+	 */
+	private String today = Utils.today();
+
+	/**
 	 * The Twitter consumer key.
 	 */
 	private String twitterConsumerKey = "";
@@ -284,26 +304,6 @@ public class Mobibot extends PircBot
 	 * The Twitter token secret.
 	 */
 	private String twitterTokenSecret = "";
-
-	/**
-	 * The ident message.
-	 */
-	private String identMsg = "";
-
-	/**
-	 * The ident nick.
-	 */
-	private String identNick = "";
-
-	/**
-	 * The NickServ ident password.
-	 */
-	private String ident = "";
-
-	/**
-	 * Today's date.
-	 */
-	private String today = Utils.today();
 
 	/**
 	 * The weblog URL.
@@ -623,11 +623,14 @@ public class Mobibot extends PircBot
 				bot.sendMessage(identNick, identMsg);
 			}
 
+			bot.joinChannel(channel);
+
 			// Load the messages queue
 			bot.tellMessages.addAll(TellMessagesMgr.load(bot.getSerializedObject(), bot.getLogger()));
-			bot.cleanTellMessages();
-
-			bot.joinChannel(channel);
+			if (bot.cleanTellMessages())
+			{
+				bot.saveTellMessages();
+			}
 		}
 	}
 
@@ -788,15 +791,25 @@ public class Mobibot extends PircBot
 
 	/**
 	 * Cleans the {@link #tellMessages} messages queue.
+	 *
+	 * @return <code>True</code> if the queue was cleaned.
 	 */
-	private void cleanTellMessages()
+	private boolean cleanTellMessages()
 	{
 		if (logger.isDebugEnabled())
 		{
 			logger.debug("Cleaning the messages.");
 		}
 
-		TellMessagesMgr.cleanTellMessages(tellMessages, tellMaxDays);
+		return TellMessagesMgr.cleanTellMessages(tellMessages, tellMaxDays);
+	}
+
+	/**
+	 * Saves the {@link #tellMessages} messages queue.
+	 */
+	private void saveTellMessages()
+	{
+		TellMessagesMgr.save(getSerializedObject(), tellMessages, logger);
 	}
 
 	/**
@@ -919,6 +932,16 @@ public class Mobibot extends PircBot
 	private void setBacklogsUrl(String backLogsUrl)
 	{
 		this.backLogsUrl = backLogsUrl;
+	}
+
+	/**
+	 * Returns the current channel.
+	 *
+	 * @return The current channel.
+	 */
+	public final String getChannel()
+	{
+		return channel;
 	}
 
 	/**
@@ -2008,8 +2031,7 @@ public class Mobibot extends PircBot
 					else if ("-".equals(cmd))
 					{
 						entry.deleteComment(cindex);
-						send(channel,
-						     "Comment " + Commands.LINK_CMD + (index + 1) + '.' + (cindex + 1) + " removed.");
+						send(channel, "Comment " + Commands.LINK_CMD + (index + 1) + '.' + (cindex + 1) + " removed.");
 						saveEntries(false);
 					}
 					// L1.1:?<author>
@@ -2384,24 +2406,6 @@ public class Mobibot extends PircBot
 	}
 
 	/**
-	 * Saves the {@link #tellMessages} messages queue.
-	 */
-	private void saveTellMessages()
-	{
-		TellMessagesMgr.save(getSerializedObject(), tellMessages, logger);
-	}
-
-	/**
-	 * Returns the current channel.
-	 *
-	 * @return The current channel.
-	 */
-	public final String getChannel()
-	{
-		return channel;
-	}
-
-	/**
 	 * Responds with the last 10 public messages.
 	 *
 	 * @param sender The nick of the person who sent the private message.
@@ -2626,7 +2630,10 @@ public class Mobibot extends PircBot
 			}
 		}
 
-		cleanTellMessages();
+		if (cleanTellMessages())
+		{
+			saveTellMessages();
+		}
 	}
 
 	/**
