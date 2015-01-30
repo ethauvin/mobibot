@@ -1,7 +1,7 @@
 /*
- * @(#)Mobibot.java
+ * Mobibot.java
  *
- * Copyright (c) 2004-2014, Erik C. Thauvin (erik@thauvin.net)
+ * Copyright (c) 2004-2015, Erik C. Thauvin (erik@thauvin.net)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -84,19 +84,9 @@ public class Mobibot extends PircBot
 	private static final int DEFAULT_TELL_MAX_DAYS = 7;
 
 	/**
-	 * The number of days message are kept.
-	 */
-	private int tellMaxDays = DEFAULT_TELL_MAX_DAYS;
-
-	/**
 	 * The default {@link Commands#TELL_CMD) message max queue size.
 	 */
 	private static final int DEFAULT_TELL_MAX_SIZE = 50;
-
-	/**
-	 * The maximum number of  {@link Commands#TELL_CMD} messages allowed.
-	 */
-	private int tellMaxSize = DEFAULT_TELL_MAX_SIZE;
 
 	/**
 	 * The double tab indent (8 spaces).
@@ -279,6 +269,16 @@ public class Mobibot extends PircBot
 	 * The ident nick.
 	 */
 	private String identNick = "";
+
+	/**
+	 * The number of days message are kept.
+	 */
+	private int tellMaxDays = DEFAULT_TELL_MAX_DAYS;
+
+	/**
+	 * The maximum number of  {@link Commands#TELL_CMD} messages allowed.
+	 */
+	private int tellMaxSize = DEFAULT_TELL_MAX_SIZE;
 
 	/**
 	 * Today's date.
@@ -1301,8 +1301,7 @@ public class Mobibot extends PircBot
 				send(sender,
 				     DOUBLE_INDENT + Utils
 						     .bold(Commands.CYCLE_CMD + "  " + Commands.ME_CMD + "  " + Commands.MSG_CMD + "  "
-						           + Commands.SAY_CMD + "  " + Commands.VERSION_CMD)
-				);
+						           + Commands.SAY_CMD + "  " + Commands.VERSION_CMD));
 			}
 		}
 	}
@@ -1401,8 +1400,7 @@ public class Mobibot extends PircBot
 		send(sender,
 		     "Uptime: " + days + " day(s) " + hours + " hour(s) " + minutes + " minute(s)  [Entries: " + entries.size()
 		     + (isTellEnabled() && isOp(sender) ? ", Messages: " + tellMessages.size() : "") + ']',
-		     isPrivate
-		);
+		     isPrivate);
 	}
 
 	/**
@@ -2268,8 +2266,7 @@ public class Mobibot extends PircBot
 	private void recap(String sender, String message, boolean isAction)
 	{
 		recap.add(Utils.UTC_SDF.format(Calendar.getInstance().getTime()) + " -> " + sender + (isAction ? " " : ": ")
-		          + message
-		);
+		          + message);
 
 		if (recap.size() > MAX_RECAP)
 		{
@@ -2321,8 +2318,7 @@ public class Mobibot extends PircBot
 							{
 								send(nickname,
 								     Utils.bold("You") + " wanted me to remind you: " + Colors.REVERSE + message
-										     .getMessage() + Colors.REVERSE, true
-								);
+										     .getMessage() + Colors.REVERSE, true);
 
 								message.setIsReceived();
 								message.setIsNotified();
@@ -2335,8 +2331,7 @@ public class Mobibot extends PircBot
 							send(nickname,
 							     message.getSender() + " wanted me to tell you: " + Colors.REVERSE + message
 									     .getMessage() + Colors.REVERSE,
-							     true
-							);
+							     true);
 
 							message.setIsReceived();
 
@@ -2350,8 +2345,7 @@ public class Mobibot extends PircBot
 						     "Your message " + Colors.REVERSE + "[ID " + message.getId() + ']' + Colors.REVERSE
 						     + " was sent to " + Utils.bold(message.getRecipient()) + " on " + Utils.UTC_SDF
 								     .format(message.getReceived()),
-						     true
-						);
+						     true);
 
 						message.setIsNotified();
 
@@ -2471,8 +2465,7 @@ public class Mobibot extends PircBot
 						send(sender,
 						     Utils.bold(message.getSender()) + " --> " + Utils.bold(message.getRecipient()) + " [ID: "
 						     + message.getId() + ", " + (message.isReceived() ? "DELIVERED" : "QUEUED") + ']',
-						     true
-						);
+						     true);
 					}
 				}
 				else
@@ -2500,8 +2493,7 @@ public class Mobibot extends PircBot
 							     Utils.bold(message.getSender()) + " --> " + Utils.bold(message.getRecipient()) + " ["
 							     + Utils.UTC_SDF.format(message.getReceived()) + ", ID: " + message.getId()
 							     + ", DELIVERED]",
-							     true
-							);
+							     true);
 
 						}
 						else
@@ -2509,8 +2501,7 @@ public class Mobibot extends PircBot
 							send(sender,
 							     Utils.bold(message.getSender()) + " --> " + Utils.bold(message.getRecipient()) + " ["
 							     + Utils.UTC_SDF.format(message.getQueued()) + ", ID: " + message.getId() + ", QUEUED]",
-							     true
-							);
+							     true);
 						}
 
 						send(sender, DOUBLE_INDENT + message.getMessage(), true);
@@ -2527,8 +2518,7 @@ public class Mobibot extends PircBot
 					send(sender,
 					     DOUBLE_INDENT + Utils
 							     .bold(getNick() + ": " + Commands.TELL_CMD + ' ' + Commands.TELL_DEL_CMD + " <id|"
-							           + Commands.TELL_ALL_CMD + '>')
-					);
+							           + Commands.TELL_ALL_CMD + '>'));
 					send(sender, "Messages are kept for " + Utils.bold(tellMaxDays) + " days.");
 				}
 			}
@@ -2789,8 +2779,7 @@ public class Mobibot extends PircBot
 							send(sender,
 							     "To view more, try: " + Utils
 									     .bold(getNick() + ": " + Commands.VIEW_CMD + ' ' + (i + 1) + ' ' + lcArgs),
-							     isPrivate
-							);
+							     isPrivate);
 
 							break;
 						}

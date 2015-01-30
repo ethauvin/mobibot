@@ -1,7 +1,7 @@
 /*
- * @(#)TellMessagesMgr.java
+ * TellMessagesMgr.java
  *
- * Copyright (c) 2004-2014, Erik C. Thauvin (erik@thauvin.net)
+ * Copyright (c) 2004-2015, Erik C. Thauvin (erik@thauvin.net)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -31,7 +31,6 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package net.thauvin.erik.mobibot;
 
 import org.apache.commons.logging.impl.Log4JLogger;
@@ -54,12 +53,41 @@ public class TellMessagesMgr
 	/**
 	 * Disables the default constructor.
 	 *
-	 * @throws UnsupportedOperationException if an error occurred. if the constructor is called.
+	 * @throws UnsupportedOperationException If the constructor is called.
 	 */
 	private TellMessagesMgr()
 			throws UnsupportedOperationException
 	{
 		throw new UnsupportedOperationException("Illegal constructor call.");
+	}
+
+	/**
+	 * Cleans the messages queue
+	 *
+	 * @param tellMessages The messages list.
+	 * @param tellMaxDays The maximum number of days to keep messages for.
+	 *
+	 * @return <code>True</code> if the queue was cleaned.
+	 */
+	public static boolean cleanTellMessages(List<TellMessage> tellMessages, int tellMaxDays)
+	{
+		final Calendar maxDate = Calendar.getInstance();
+		final Date today = new Date();
+		boolean cleaned = false;
+
+		for (final TellMessage message : tellMessages)
+		{
+			maxDate.setTime(message.getQueued());
+			maxDate.add(Calendar.DATE, tellMaxDays);
+
+			if (maxDate.getTime().before(today))
+			{
+				tellMessages.remove(message);
+				cleaned = true;
+			}
+		}
+
+		return cleaned;
 	}
 
 	/**
@@ -79,7 +107,6 @@ public class TellMessagesMgr
 
 			try
 			{
-
 				if (logger.isDebugEnabled())
 				{
 					logger.debug("Loading the messages.");
@@ -138,29 +165,6 @@ public class TellMessagesMgr
 		catch (IOException e)
 		{
 			logger.error("Unable to save messages queue.", e);
-		}
-	}
-
-	/**
-	 * Cleans the messages queue
-	 *
-	 * @param tellMessages The messages list.
-	 * @param tellMaxDays The maximum number of days to keep messages for.
-	 */
-	public static void cleanTellMessages(List<TellMessage> tellMessages, int tellMaxDays)
-	{
-		final Calendar maxDate = Calendar.getInstance();
-		final Date today = new Date();
-
-		for (final TellMessage message : tellMessages)
-		{
-			maxDate.setTime(message.getQueued());
-			maxDate.add(Calendar.DATE, tellMaxDays);
-
-			if (maxDate.getTime().before(today))
-			{
-				tellMessages.remove(message);
-			}
 		}
 	}
 }

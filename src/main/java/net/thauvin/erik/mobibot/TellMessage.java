@@ -1,7 +1,7 @@
 /*
- * @(#)TellMessage.java
+ * TellMessage.java
  *
- * Copyright (c) 2004-2014, Erik C. Thauvin (erik@thauvin.net)
+ * Copyright (c) 2004-2015, Erik C. Thauvin (erik@thauvin.net)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -31,7 +31,6 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package net.thauvin.erik.mobibot;
 
 import java.io.Serializable;
@@ -47,23 +46,24 @@ import java.util.Date;
  */
 public class TellMessage implements Serializable
 {
+	@SuppressWarnings({"UnusedDeclaration"})
 	private static final long serialVersionUID = 1L;
-
-	private final String sender;
-
-	private final String recipient;
-
-	private final String message;
 
 	private final String id;
 
+	private final String message;
+
 	final private Date queued;
 
-	private Date received;
+	private final String recipient;
+
+	private final String sender;
+
+	private boolean isNotified;
 
 	private boolean isReceived;
 
-	private boolean isNotified;
+	private Date received;
 
 	/**
 	 * Create a new message.

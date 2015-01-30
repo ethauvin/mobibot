@@ -1,7 +1,7 @@
 /*
- * @(#)CurrencyConverter.java
+ * CurrencyConverter.java
  *
- * Copyright (c) 2004-2014, Erik C. Thauvin (erik@thauvin.net)
+ * Copyright (c) 2004-2015, Erik C. Thauvin (erik@thauvin.net)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -31,7 +31,6 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package net.thauvin.erik.mobibot;
 
 import org.jdom.Document;
@@ -55,19 +54,24 @@ import java.util.*;
 public class CurrencyConverter implements Runnable
 {
 	/**
-	 * The exchange rates table URL.
-	 */
-	private static final String EXCHANGE_TABLE_URL = "http://www.ecb.int/stats/eurofxref/eurofxref-daily.xml";
-
-	/**
 	 * The exchange rates.
 	 */
 	private static final Map<String, String> EXCHANGE_RATES = new TreeMap<String, String>();
 
 	/**
+	 * The exchange rates table URL.
+	 */
+	private static final String EXCHANGE_TABLE_URL = "http://www.ecb.int/stats/eurofxref/eurofxref-daily.xml";
+
+	/**
 	 * The bot.
 	 */
 	private final Mobibot bot;
+
+	/**
+	 * The last exchange rates table publication date.
+	 */
+	private String pubDate = "";
 
 	/**
 	 * The actual currency query.
@@ -78,11 +82,6 @@ public class CurrencyConverter implements Runnable
 	 * The nick of the person who sent the message.
 	 */
 	private String sender;
-
-	/**
-	 * The last exchange rates table publication date.
-	 */
-	private String pubDate = "";
 
 	/**
 	 * Creates a new {@link CurrencyConverter} instance.
@@ -165,8 +164,7 @@ public class CurrencyConverter implements Runnable
 								         NumberFormat.getCurrencyInstance(Locale.US).format(amt).substring(1) + ' ' +
 								         cmds[1].toUpperCase() + " = " +
 								         NumberFormat.getCurrencyInstance(Locale.US).format((amt * to) / from)
-										         .substring(1) + ' ' + cmds[3].toUpperCase()
-								);
+										         .substring(1) + ' ' + cmds[3].toUpperCase());
 							}
 							catch (NullPointerException ignored)
 							{

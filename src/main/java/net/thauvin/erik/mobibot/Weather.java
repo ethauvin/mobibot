@@ -1,7 +1,7 @@
 /*
- * @(#)Weather.java
+ * Weather.java
  *
- * Copyright (c) 2004-2014, Erik C. Thauvin (erik@thauvin.net)
+ * Copyright (c) 2004-2015, Erik C. Thauvin (erik@thauvin.net)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -31,7 +31,6 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package net.thauvin.erik.mobibot;
 
 import net.sf.jweather.metar.Metar;
@@ -66,6 +65,11 @@ public class Weather implements Runnable
 	private final Mobibot bot;
 
 	/**
+	 * The private message flag.
+	 */
+	private final boolean isPrivate;
+
+	/**
 	 * The nick of the person who sent the message.
 	 */
 	private final String sender;
@@ -74,11 +78,6 @@ public class Weather implements Runnable
 	 * The station ID.
 	 */
 	private final String station;
-
-	/**
-	 * The private message flag.
-	 */
-	private final boolean isPrivate;
 
 	/**
 	 * Creates a new {@link Weather} instance.
@@ -114,8 +113,7 @@ public class Weather implements Runnable
 				bot.send(sender,
 				         "At: " + Utils.UTC_SDF.format(metar.getDate()) + " UTC (" + (
 						         ((new Date()).getTime() - metar.getDate().getTime()) / 1000L / 60L) + " minutes ago)",
-				         isPrivate
-				);
+				         isPrivate);
 
 				result = metar.getWindSpeedInMPH();
 
@@ -124,8 +122,7 @@ public class Weather implements Runnable
 					bot.send(sender,
 					         "Wind Speed: " + result + " mph, " + metar.getWindSpeedInKnots() + " knots, " + metar
 							         .getWindSpeedInMPS() + " m/s",
-					         isPrivate
-					);
+					         isPrivate);
 				}
 
 				result = metar.getVisibility();
@@ -135,8 +132,7 @@ public class Weather implements Runnable
 					bot.send(sender,
 					         "Visibility: " + (metar.getVisibilityLessThan() ? "< " : "") + NUMBER_FORMAT.format(result)
 					         + " mi, " + metar.getVisibilityInKilometers() + " km",
-					         isPrivate
-					);
+					         isPrivate);
 				}
 
 				result = metar.getPressure();

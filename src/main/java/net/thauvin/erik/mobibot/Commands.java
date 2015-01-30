@@ -1,7 +1,7 @@
 /*
- * @(#)Commands.java
+ * Commands.java
  *
- * Copyright (c) 2004-2014, Erik C. Thauvin (erik@thauvin.net)
+ * Copyright (c) 2004-2015, Erik C. Thauvin (erik@thauvin.net)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -31,7 +31,6 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package net.thauvin.erik.mobibot;
 
 /**
@@ -44,6 +43,16 @@ package net.thauvin.erik.mobibot;
 public class Commands
 {
 	/**
+	 * The add (back)log command.
+	 */
+	public static final String ADDLOG_CMD = "addlog";
+
+	/**
+	 * The math command.
+	 */
+	public static final String CALC_CMD = "calc";
+
+	/**
 	 * The currency command.
 	 */
 	public static final String CURRENCY_CMD = "currency";
@@ -54,34 +63,14 @@ public class Commands
 	public static final String CURRENCY_RATES_KEYWORD = "rates";
 
 	/**
-	 * The weather command.
+	 * The cycle command.
 	 */
-	public static final String WEATHER_CMD = "weather";
+	public static final String CYCLE_CMD = "cycle";
 
 	/**
 	 * Debug command line argument.
 	 */
 	public static final String DEBUG_ARG = "debug";
-
-	/**
-	 * Help command line argument.
-	 */
-	public static final String HELP_ARG = "help";
-
-	/**
-	 * Properties command line argument.
-	 */
-	public static final String PROPS_ARG = "properties";
-
-	/**
-	 * Properties version line argument.
-	 */
-	public static final String VERSION_ARG = "version";
-
-	/**
-	 * The add (back)log command.
-	 */
-	public static final String ADDLOG_CMD = "addlog";
 
 	/**
 	 * The debug command.
@@ -94,34 +83,19 @@ public class Commands
 	public static final String DICE_CMD = "dice";
 
 	/**
-	 * The say command.
-	 */
-	public static final String SAY_CMD = "say";
-
-	/**
 	 * The die command.
 	 */
 	public static final String DIE_CMD = "die";
 
 	/**
-	 * The cycle command.
+	 * The Google command.
 	 */
-	public static final String CYCLE_CMD = "cycle";
+	public static final String GOOGLE_CMD = "google";
 
 	/**
-	 * The msg command.
+	 * Help command line argument.
 	 */
-	public static final String MSG_CMD = "msg";
-
-	/**
-	 * The ignore command.
-	 */
-	public static final String IGNORE_CMD = "ignore";
-
-	/**
-	 * The ignore <code>me</code> keyword.
-	 */
-	public static final String IGNORE_ME_KEYWORD = "me";
+	public static final String HELP_ARG = "help";
 
 	/**
 	 * The help command.
@@ -139,29 +113,19 @@ public class Commands
 	public static final String HELP_TAGS_KEYWORD = "tags";
 
 	/**
-	 * The Google command.
+	 * The ignore command.
 	 */
-	public static final String GOOGLE_CMD = "google";
+	public static final String IGNORE_CMD = "ignore";
 
 	/**
-	 * The Twitter command.
+	 * The ignore <code>me</code> keyword.
 	 */
-	public static final String TWITTER_CMD = "twitter";
+	public static final String IGNORE_ME_KEYWORD = "me";
 
 	/**
-	 * The math command.
+	 * The info command.
 	 */
-	public static final String CALC_CMD = "calc";
-
-	/**
-	 * The me command.
-	 */
-	public static final String ME_CMD = "me";
-
-	/**
-	 * The nick command.
-	 */
-	public static final String NICK_CMD = "nick";
+	public static final String INFO_CMD = "info";
 
 	/**
 	 * The link command.
@@ -174,6 +138,21 @@ public class Commands
 	public static final String LOOKUP_CMD = "lookup";
 
 	/**
+	 * The me command.
+	 */
+	public static final String ME_CMD = "me";
+
+	/**
+	 * The msg command.
+	 */
+	public static final String MSG_CMD = "msg";
+
+	/**
+	 * The nick command.
+	 */
+	public static final String NICK_CMD = "nick";
+
+	/**
 	 * The ping command.
 	 */
 	public static final String PING_CMD = "ping";
@@ -182,6 +161,11 @@ public class Commands
 	 * The pong command.
 	 */
 	public static final String PONG_CMD = "pong";
+
+	/**
+	 * Properties command line argument.
+	 */
+	public static final String PROPS_ARG = "properties";
 
 	/**
 	 * The quote command.
@@ -194,14 +178,19 @@ public class Commands
 	public static final String RECAP_CMD = "recap";
 
 	/**
+	 * The say command.
+	 */
+	public static final String SAY_CMD = "say";
+
+	/**
 	 * The stock command.
 	 */
 	public static final String STOCK_CMD = "stock";
 
 	/**
-	 * The time command.
+	 * The {@link #TELL_CMD} all command.
 	 */
-	public static final String TIME_CMD = "time";
+	public static final String TELL_ALL_CMD = "all";
 
 	/**
 	 * The tell command.
@@ -214,14 +203,14 @@ public class Commands
 	public static final String TELL_DEL_CMD = "del";
 
 	/**
-	 * The {@link #TELL_CMD} all command.
+	 * The time command.
 	 */
-	public static final String TELL_ALL_CMD = "all";
+	public static final String TIME_CMD = "time";
 
 	/**
-	 * The war command.
+	 * The Twitter command.
 	 */
-	public static final String WAR_CMD = "war";
+	public static final String TWITTER_CMD = "twitter";
 
 	/**
 	 * The users command.
@@ -229,9 +218,9 @@ public class Commands
 	public static final String USERS_CMD = "users";
 
 	/**
-	 * The info command.
+	 * Properties version line argument.
 	 */
-	public static final String INFO_CMD = "info";
+	public static final String VERSION_ARG = "version";
 
 	/**
 	 * The version command.
@@ -244,9 +233,19 @@ public class Commands
 	public static final String VIEW_CMD = "view";
 
 	/**
+	 * The war command.
+	 */
+	public static final String WAR_CMD = "war";
+
+	/**
+	 * The weather command.
+	 */
+	public static final String WEATHER_CMD = "weather";
+
+	/**
 	 * Disables the default constructor.
 	 *
-	 * @throws UnsupportedOperationException if an error occurred. if the constructor is called.
+	 * @throws UnsupportedOperationException If the constructor is called.
 	 */
 	private Commands()
 			throws UnsupportedOperationException

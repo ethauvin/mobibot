@@ -1,7 +1,7 @@
 /*
- * @(#)Twitter.java
+ * Twitter.java
  *
- * Copyright (c) 2004-2014, Erik C. Thauvin (erik@thauvin.net)
+ * Copyright (c) 2004-2015, Erik C. Thauvin (erik@thauvin.net)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -31,7 +31,6 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package net.thauvin.erik.mobibot;
 
 import twitter4j.Status;
@@ -48,26 +47,6 @@ import twitter4j.conf.ConfigurationBuilder;
 public class Twitter implements Runnable
 {
 	/**
-	 * The bot.
-	 */
-	private final Mobibot bot;
-
-	/**
-	 * The Twitter consumer secret.
-	 */
-	private final String consumerSecret;
-
-	/**
-	 * The Twitter consumer key.
-	 */
-	private final String consumerKey;
-
-	/**
-	 * The Twitter message.
-	 */
-	private final String message;
-
-	/**
 	 * The Twitter access token.
 	 */
 	private final String accessToken;
@@ -76,6 +55,26 @@ public class Twitter implements Runnable
 	 * The Twitter access token secret.
 	 */
 	private final String accessTokenSecret;
+
+	/**
+	 * The bot.
+	 */
+	private final Mobibot bot;
+
+	/**
+	 * The Twitter consumer key.
+	 */
+	private final String consumerKey;
+
+	/**
+	 * The Twitter consumer secret.
+	 */
+	private final String consumerSecret;
+
+	/**
+	 * The Twitter message.
+	 */
+	private final String message;
 
 	/**
 	 * The nick of the person who sent the message.
@@ -122,8 +121,7 @@ public class Twitter implements Runnable
 
 			bot.send(sender,
 			         "You message was posted to http://twitter.com/" + twitter.getScreenName() + "/statuses/" + status
-					         .getId()
-			);
+					         .getId());
 		}
 		catch (Exception e)
 		{

@@ -4,19 +4,19 @@ import javax.swing.*;
 
 /**
  * This is the 3rd version of SwingWorker (also known as SwingWorker 3), an abstract class that you subclass to perform
- * GUI-related work in a dedicated thread.  For instructions on and examples of using this class, see:
- * <p>
+ * GUI-related work in a dedicated thread. For instructions on and examples of using this class, see:
+ * <p/>
  * http://java.sun.com/docs/books/tutorial/uiswing/misc/threads.html
- * </p>
- * Note that the API changed slightly in the 3rd version: You must now invoke start() on the SwingWorker after creating
- * it.
+ * <p/>
+ * Note that the API changed slightly in the 3rd version:
+ * You must now invoke start() on the SwingWorker after creating it.
  */
 @SuppressWarnings("ALL")
 public abstract class SwingWorker
 {
-	private Object value;  // see getValue(), setValue()
-
 	private ThreadVar threadVar;
+
+	private Object value;  // see getValue(), setValue()
 
 	/**
 	 * Start a thread that will call the <code>construct</code> method and then exit.
@@ -68,19 +68,6 @@ public abstract class SwingWorker
 	public abstract Object construct();
 
 	/**
-	 * A new method that interrupts the worker thread.  Call this method to force the worker to stop what it's doing.
-	 */
-	public void interrupt()
-	{
-		Thread t = threadVar.get();
-		if (t != null)
-		{
-			t.interrupt();
-		}
-		threadVar.clear();
-	}
-
-	/**
 	 * Return the value created by the <code>construct</code> method. Returns null if either the constructing thread or
 	 * the current thread was interrupted before a value was produced.
 	 *
@@ -128,6 +115,19 @@ public abstract class SwingWorker
 	}
 
 	/**
+	 * A new method that interrupts the worker thread. Call this method to force the worker to stop what it's doing.
+	 */
+	public void interrupt()
+	{
+		Thread t = threadVar.get();
+		if (t != null)
+		{
+			t.interrupt();
+		}
+		threadVar.clear();
+	}
+
+	/**
 	 * Start the worker thread.
 	 */
 	public void start()
@@ -151,14 +151,14 @@ public abstract class SwingWorker
 			thread = t;
 		}
 
-		synchronized Thread get()
-		{
-			return thread;
-		}
-
 		synchronized void clear()
 		{
 			thread = null;
+		}
+
+		synchronized Thread get()
+		{
+			return thread;
 		}
 	}
 }

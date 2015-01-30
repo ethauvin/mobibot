@@ -1,7 +1,7 @@
 /*
- * @(#)Utils.java
+ * Utils.java
  *
- * Copyright (c) 2004-2014, Erik C. Thauvin (erik@thauvin.net)
+ * Copyright (c) 2004-2015, Erik C. Thauvin (erik@thauvin.net)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -31,7 +31,6 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package net.thauvin.erik.mobibot;
 
 import org.jibble.pircbot.Colors;
@@ -59,218 +58,24 @@ public class Utils
 	public static final SimpleDateFormat TIMESTAMP_SDF = new SimpleDateFormat("yyyyMMddHHmmss");
 
 	/**
-	 * The UTC (yyyy-MM-dd HH:mm) simple date format.
-	 */
-	static final SimpleDateFormat UTC_SDF = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-
-	/**
 	 * The ISO (YYYY-MM-DD) simple date format.
 	 */
 	static final SimpleDateFormat ISO_SDF = new SimpleDateFormat("yyyy-MM-dd");
 
 	/**
+	 * The UTC (yyyy-MM-dd HH:mm) simple date format.
+	 */
+	static final SimpleDateFormat UTC_SDF = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+
+	/**
 	 * Disables the default constructor.
 	 *
-	 * @throws UnsupportedOperationException if an error occurred. if the constructor is called.
+	 * @throws UnsupportedOperationException If the constructor is called.
 	 */
 	private Utils()
 			throws UnsupportedOperationException
 	{
 		throw new UnsupportedOperationException("Illegal constructor call.");
-	}
-
-	/**
-	 * Converts XML/XHTML entities to plain text.
-	 *
-	 * @param str The string to unescape.
-	 *
-	 * @return The unescaped string.
-	 */
-	public static String unescapeXml(String str)
-	{
-		String s = str.replaceAll("&amp;", "&");
-		s = s.replaceAll("&lt;", "<");
-		s = s.replaceAll("&gt;", ">");
-		s = s.replaceAll("&quot;", "\"");
-		s = s.replaceAll("&apos;", "'");
-		s = s.replaceAll("&#39;", "'");
-
-		return s;
-	}
-
-	/**
-	 * Copies a file.
-	 *
-	 * @param in The source file.
-	 * @param out The destination file.
-	 *
-	 * @throws java.io.IOException If the file could not be copied.
-	 */
-	@SuppressWarnings("UnusedDeclaration")
-	public static void copyFile(File in, File out)
-			throws IOException
-	{
-		FileChannel inChannel = null;
-		FileChannel outChannel = null;
-		FileInputStream input = null;
-		FileOutputStream output = null;
-
-		try
-		{
-			input = new FileInputStream(in);
-			output = new FileOutputStream(out);
-
-			inChannel = input.getChannel();
-			outChannel = output.getChannel();
-
-			inChannel.transferTo(0L, inChannel.size(), outChannel);
-		}
-		finally
-		{
-			try
-			{
-				if (inChannel != null)
-				{
-					inChannel.close();
-				}
-
-				if (input != null)
-				{
-					input.close();
-				}
-			}
-			catch (Exception ignore)
-			{
-				; // Do nothing
-			}
-
-			try
-			{
-				if (outChannel != null)
-				{
-					outChannel.close();
-				}
-
-				if (output != null)
-				{
-					output.close();
-				}
-			}
-			catch (Exception ignore)
-			{
-				; // Do nothing
-			}
-		}
-	}
-
-	/**
-	 * Returns the current Internet (beat) Time.
-	 *
-	 * @return The Internet Time string.
-	 */
-	public static String internetTime()
-	{
-		final Calendar gc = Calendar.getInstance();
-
-		final int offset = (gc.get(Calendar.ZONE_OFFSET) / (60 * 60 * 1000));
-		int hh = gc.get(Calendar.HOUR_OF_DAY);
-		final int mm = gc.get(Calendar.MINUTE);
-		final int ss = gc.get(Calendar.SECOND);
-
-		hh -= offset; // GMT
-		hh += 1; // BMT
-
-		long beats = Math.round(Math.floor((double) ((((hh * 3600) + (mm * 60) + ss) * 1000) / 86400)));
-
-		if (beats >= 1000)
-		{
-			beats -= (long) 1000;
-		}
-		else if (beats < 0)
-		{
-			beats += (long) 1000;
-		}
-
-		if (beats < 10)
-		{
-			return ("@00" + String.valueOf(beats));
-		}
-		else if (beats < 100)
-		{
-			return ("@0" + String.valueOf(beats));
-		}
-
-		return ('@' + String.valueOf(beats));
-	}
-
-	/**
-	 * Returns a property as an int.
-	 *
-	 * @param property The port property value.
-	 * @param def The default property value.
-	 *
-	 * @return The port or default value if invalid.
-	 */
-	public static int getIntProperty(String property, int def)
-	{
-		int prop;
-
-		try
-		{
-			prop = Integer.parseInt(property);
-		}
-		catch (NumberFormatException ignore)
-		{
-			prop = def;
-		}
-
-		return prop;
-	}
-
-	/**
-	 * Ensures that the given location (File/URL) has a trailing slash (<code>/</code>) to indicate a directory.
-	 *
-	 * @param location The File or URL location.
-	 * @param isUrl Set to true if the location is a URL
-	 *
-	 * @return The location ending with a slash.
-	 */
-	public static String ensureDir(String location, boolean isUrl)
-	{
-		if (isUrl)
-		{
-			if (location.charAt(location.length() - 1) == '/')
-			{
-				return location;
-			}
-			else
-			{
-				return location + '/';
-			}
-		}
-		else
-		{
-			if (location.charAt(location.length() - 1) == File.separatorChar)
-			{
-				return location;
-			}
-			else
-			{
-				return location + File.separatorChar;
-			}
-		}
-	}
-
-	/**
-	 * Returns true if the given string is valid.
-	 *
-	 * @param s The string to validate.
-	 *
-	 * @return true if the string is non-empty and not null, false otherwise.
-	 */
-	public static boolean isValidString(String s)
-	{
-		return (s != null) && (s.trim().length() > 0);
 	}
 
 	/**
@@ -283,16 +88,6 @@ public class Utils
 	public static String bold(int i)
 	{
 		return Colors.BOLD + i + Colors.BOLD;
-	}
-
-	/**
-	 * Returns today's date.
-	 *
-	 * @return Today's date in {@link #ISO_SDF ISO} format.
-	 */
-	public static String today()
-	{
-		return ISO_SDF.format(Calendar.getInstance().getTime());
 	}
 
 	/**
@@ -384,5 +179,209 @@ public class Utils
 	static String buildTags(int entryIndex, EntryLink entry)
 	{
 		return (Commands.LINK_CMD + (entryIndex + 1) + "T: " + entry.getDeliciousTags().replaceAll(",", ", "));
+	}
+
+	/**
+	 * Copies a file.
+	 *
+	 * @param in The source file.
+	 * @param out The destination file.
+	 *
+	 * @throws java.io.IOException If the file could not be copied.
+	 */
+	@SuppressWarnings("UnusedDeclaration")
+	public static void copyFile(File in, File out)
+			throws IOException
+	{
+		FileChannel inChannel = null;
+		FileChannel outChannel = null;
+		FileInputStream input = null;
+		FileOutputStream output = null;
+
+		try
+		{
+			input = new FileInputStream(in);
+			output = new FileOutputStream(out);
+
+			inChannel = input.getChannel();
+			outChannel = output.getChannel();
+
+			inChannel.transferTo(0L, inChannel.size(), outChannel);
+		}
+		finally
+		{
+			try
+			{
+				if (inChannel != null)
+				{
+					inChannel.close();
+				}
+
+				if (input != null)
+				{
+					input.close();
+				}
+			}
+			catch (Exception ignore)
+			{
+				; // Do nothing
+			}
+
+			try
+			{
+				if (outChannel != null)
+				{
+					outChannel.close();
+				}
+
+				if (output != null)
+				{
+					output.close();
+				}
+			}
+			catch (Exception ignore)
+			{
+				; // Do nothing
+			}
+		}
+	}
+
+	/**
+	 * Ensures that the given location (File/URL) has a trailing slash (<code>/</code>) to indicate a directory.
+	 *
+	 * @param location The File or URL location.
+	 * @param isUrl Set to true if the location is a URL
+	 *
+	 * @return The location ending with a slash.
+	 */
+	public static String ensureDir(String location, boolean isUrl)
+	{
+		if (isUrl)
+		{
+			if (location.charAt(location.length() - 1) == '/')
+			{
+				return location;
+			}
+			else
+			{
+				return location + '/';
+			}
+		}
+		else
+		{
+			if (location.charAt(location.length() - 1) == File.separatorChar)
+			{
+				return location;
+			}
+			else
+			{
+				return location + File.separatorChar;
+			}
+		}
+	}
+
+	/**
+	 * Returns a property as an int.
+	 *
+	 * @param property The port property value.
+	 * @param def The default property value.
+	 *
+	 * @return The port or default value if invalid.
+	 */
+	public static int getIntProperty(String property, int def)
+	{
+		int prop;
+
+		try
+		{
+			prop = Integer.parseInt(property);
+		}
+		catch (NumberFormatException ignore)
+		{
+			prop = def;
+		}
+
+		return prop;
+	}
+
+	/**
+	 * Returns the current Internet (beat) Time.
+	 *
+	 * @return The Internet Time string.
+	 */
+	public static String internetTime()
+	{
+		final Calendar gc = Calendar.getInstance();
+
+		final int offset = (gc.get(Calendar.ZONE_OFFSET) / (60 * 60 * 1000));
+		int hh = gc.get(Calendar.HOUR_OF_DAY);
+		final int mm = gc.get(Calendar.MINUTE);
+		final int ss = gc.get(Calendar.SECOND);
+
+		hh -= offset; // GMT
+		hh += 1; // BMT
+
+		long beats = Math.round(Math.floor((double) ((((hh * 3600) + (mm * 60) + ss) * 1000) / 86400)));
+
+		if (beats >= 1000)
+		{
+			beats -= (long) 1000;
+		}
+		else if (beats < 0)
+		{
+			beats += (long) 1000;
+		}
+
+		if (beats < 10)
+		{
+			return ("@00" + String.valueOf(beats));
+		}
+		else if (beats < 100)
+		{
+			return ("@0" + String.valueOf(beats));
+		}
+
+		return ('@' + String.valueOf(beats));
+	}
+
+	/**
+	 * Returns true if the given string is valid.
+	 *
+	 * @param s The string to validate.
+	 *
+	 * @return true if the string is non-empty and not null, false otherwise.
+	 */
+	public static boolean isValidString(String s)
+	{
+		return (s != null) && (s.trim().length() > 0);
+	}
+
+	/**
+	 * Returns today's date.
+	 *
+	 * @return Today's date in {@link #ISO_SDF ISO} format.
+	 */
+	public static String today()
+	{
+		return ISO_SDF.format(Calendar.getInstance().getTime());
+	}
+
+	/**
+	 * Converts XML/XHTML entities to plain text.
+	 *
+	 * @param str The string to unescape.
+	 *
+	 * @return The unescaped string.
+	 */
+	public static String unescapeXml(String str)
+	{
+		String s = str.replaceAll("&amp;", "&");
+		s = s.replaceAll("&lt;", "<");
+		s = s.replaceAll("&gt;", ">");
+		s = s.replaceAll("&quot;", "\"");
+		s = s.replaceAll("&apos;", "'");
+		s = s.replaceAll("&#39;", "'");
+
+		return s;
 	}
 }

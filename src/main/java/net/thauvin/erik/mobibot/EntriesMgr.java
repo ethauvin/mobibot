@@ -1,7 +1,7 @@
 /*
- * @(#)EntriesMgr.java
+ * EntriesMgr.java
  *
- * Copyright (c) 2004-2014, Erik C. Thauvin (erik@thauvin.net)
+ * Copyright (c) 2004-2015, Erik C. Thauvin (erik@thauvin.net)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -75,12 +75,61 @@ public class EntriesMgr
 	/**
 	 * Disables the default constructor.
 	 *
-	 * @throws UnsupportedOperationException if an error occurred. if the constructor is called.
+	 * @throws UnsupportedOperationException If the constructor is called.
 	 */
 	private EntriesMgr()
 			throws UnsupportedOperationException
 	{
 		throw new UnsupportedOperationException("Illegal constructor call.");
+	}
+
+	/**
+	 * Loads the backlogs.
+	 *
+	 * @param file The file containing the backlogs.
+	 * @param history The history list.
+	 *
+	 * @throws FileNotFoundException If the file was not found.
+	 * @throws FeedException If an error occurred while reading the feed.
+	 */
+	public static void loadBacklogs(String file, List<String> history)
+			throws FileNotFoundException, FeedException
+	{
+		history.clear();
+
+		final SyndFeedInput input = new SyndFeedInput();
+
+		InputStreamReader reader = null;
+
+		try
+		{
+			reader = new InputStreamReader(new FileInputStream(new File(file)));
+
+			final SyndFeed feed = input.build(reader);
+
+			final List items = feed.getEntries();
+			SyndEntry item;
+
+			for (int i = items.size() - 1; i >= 0; i--)
+			{
+				item = (SyndEntryImpl) items.get(i);
+				history.add(item.getTitle());
+			}
+		}
+		finally
+		{
+			if (reader != null)
+			{
+				try
+				{
+					reader.close();
+				}
+				catch (IOException ignore)
+				{
+					; // Do nothing
+				}
+			}
+		}
 	}
 
 	/**
@@ -168,55 +217,6 @@ public class EntriesMgr
 	}
 
 	/**
-	 * Loads the backlogs.
-	 *
-	 * @param file The file containing the backlogs.
-	 * @param history The history list.
-	 *
-	 * @throws FileNotFoundException If the file was not found.
-	 * @throws FeedException If an error occurred while reading the feed.
-	 */
-	public static void loadBacklogs(String file, List<String> history)
-			throws FileNotFoundException, FeedException
-	{
-		history.clear();
-
-		final SyndFeedInput input = new SyndFeedInput();
-
-		InputStreamReader reader = null;
-
-		try
-		{
-			reader = new InputStreamReader(new FileInputStream(new File(file)));
-
-			final SyndFeed feed = input.build(reader);
-
-			final List items = feed.getEntries();
-			SyndEntry item;
-
-			for (int i = items.size() - 1; i >= 0; i--)
-			{
-				item = (SyndEntryImpl) items.get(i);
-				history.add(item.getTitle());
-			}
-		}
-		finally
-		{
-			if (reader != null)
-			{
-				try
-				{
-					reader.close();
-				}
-				catch (IOException ignore)
-				{
-					; // Do nothing
-				}
-			}
-		}
-	}
-
-	/**
 	 * Saves the entries.
 	 *
 	 * @param bot The bot object.
@@ -260,8 +260,7 @@ public class EntriesMgr
 
 					buff = new StringBuffer(
 							"Posted by <b>" + entry.getNick() + "</b> on <a href=\"irc://" + bot.getIrcServer() + '/'
-							+ entry.getChannel() + "\"><b>" + entry.getChannel() + "</b></a>"
-					);
+							+ entry.getChannel() + "\"><b>" + entry.getChannel() + "</b></a>");
 
 					if (entry.getCommentsCount() > 0)
 					{

@@ -9,15 +9,9 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
 /**
- * The <code>TwitterOAuth</code> class.
- * <p>
- * Go to <a href="http://twitter.com/oauth_clients/new">http://twitter.com/oauth_clients/new</a> to register your bot.
- * </p>
- * Then execute:
- * <p>
- * <code>java -cp "mobibot.jar:lib/*" net.thauvin.erik.mobibot.TwitterOAuth &lt;consumerKey&gt; &lt;consumerSecret&gt;</code>
- * </p>
- * and follow the prompts/instructions.
+ * The <code>TwitterOAuth</code> class. <p> Go to <a href="http://twitter.com/oauth_clients/new">http://twitter.com/oauth_clients/new</a>
+ * to register your bot. </p> Then execute: <p> <code>java -cp "mobibot.jar:lib/*" net.thauvin.erik.mobibot.TwitterOAuth
+ * &lt;consumerKey&gt; &lt;consumerSecret&gt;</code> </p> and follow the prompts/instructions.
  *
  * @author <a href="mailto:erik@thauvin.net">Erik C. Thauvin</a>
  * @author <a href="http://twitter4j.org/en/code-examples.html#oauth">http://twitter4j.org/en/code-examples.html#oauth</a>

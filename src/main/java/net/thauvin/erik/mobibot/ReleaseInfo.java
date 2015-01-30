@@ -1,7 +1,7 @@
 /*
- * @(#)ReleaseInfo.java
+ * ReleaseInfo.java
  *
- * Copyright (c) 2004-2014, Erik C. Thauvin (erik@thauvin.net)
+ * Copyright (c) 2004-2015, Erik C. Thauvin (erik@thauvin.net)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -83,6 +83,16 @@ public class ReleaseInfo
 	}
 
 	/**
+	 * Get buildNumber (set during build process to 0).
+	 *
+	 * @return int buildNumber
+	 */
+	public static int getBuildNumber()
+	{
+		return 0;
+	}
+
+	/**
 	 * Get project (set during build process to "mobibot").
 	 *
 	 * @return String project
@@ -100,16 +110,6 @@ public class ReleaseInfo
 	public static String getVersion()
 	{
 		return version;
-	}
-
-	/**
-	 * Get buildNumber (set during build process to 0).
-	 *
-	 * @return int buildNumber
-	 */
-	public static int getBuildNumber()
-	{
-		return 0;
 	}
 
 }

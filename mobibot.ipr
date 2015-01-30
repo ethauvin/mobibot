@@ -72,20 +72,24 @@
   </component>
   <component name="CopyrightManager" default="Mobibot">
     <copyright>
-      <option name="notice" value="@(#)&amp;#36;file.fileName&#10;&#10;Copyright (c) 2004-&amp;#36;today.year, Erik C. Thauvin (erik@thauvin.net)&#10;All rights reserved.&#10;&#10;Redistribution and use in source and binary forms, with or without&#10;modification, are permitted provided that the following conditions are&#10;met:&#10;&#10;Redistributions of source code must retain the above copyright notice,&#10;this list of conditions and the following disclaimer.&#10;&#10;Redistributions in binary form must reproduce the above copyright notice,&#10;this list of conditions and the following disclaimer in the documentation&#10;and/or other materials provided with the distribution.&#10;&#10;Neither the name of the author nor the names of its contributors may be&#10;used to endorse or promote products derived from this software without&#10;specific prior written permission.&#10;&#10;THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS&#10;IS&quot; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,&#10;THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR&#10;PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR&#10;CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,&#10;EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,&#10;PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR&#10;PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF&#10;LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING&#10;NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS&#10;SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE." />
+      <option name="notice" value="&amp;#36;file.fileName&#10;&#10;Copyright (c) 2004-&amp;#36;today.year, Erik C. Thauvin (erik@thauvin.net)&#10;All rights reserved.&#10;&#10;Redistribution and use in source and binary forms, with or without&#10;modification, are permitted provided that the following conditions are&#10;met:&#10;&#10;Redistributions of source code must retain the above copyright notice,&#10;this list of conditions and the following disclaimer.&#10;&#10;Redistributions in binary form must reproduce the above copyright notice,&#10;this list of conditions and the following disclaimer in the documentation&#10;and/or other materials provided with the distribution.&#10;&#10;Neither the name of the author nor the names of its contributors may be&#10;used to endorse or promote products derived from this software without&#10;specific prior written permission.&#10;&#10;THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS&#10;IS&quot; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,&#10;THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR&#10;PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR&#10;CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,&#10;EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,&#10;PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR&#10;PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF&#10;LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING&#10;NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS&#10;SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE." />
       <option name="keyword" value="Copyright" />
       <option name="allowReplaceKeyword" value="Erik C. Thauvin" />
       <option name="myName" value="Mobibot" />
       <option name="myLocal" value="true" />
     </copyright>
     <module2copyright>
-      <element module="All" copyright="Mobibot" />
+      <element module="Source" copyright="Mobibot" />
     </module2copyright>
+    <LanguageOptions name="__TEMPLATE__">
+      <option name="addBlankAfter" value="false" />
+    </LanguageOptions>
   </component>
   <component name="DependenciesAnalyzeManager">
     <option name="myForwardDirection" value="false" />
   </component>
   <component name="DependencyValidationManager">
+    <scope name="Source" pattern="file:src/main/java/net/thauvin/erik/mobibot/*&amp;&amp;!file:src/main/java/net/thauvin/erik/mobibot/SwingWorker.java&amp;&amp;!file:src/main/java/net/thauvin/erik/mobibot/TwitterOAuth.java" />
     <option name="SKIP_IMPORT_STATEMENTS" value="false" />
   </component>
   <component name="EclipseCompilerSettings">
@@ -120,7 +124,7 @@
         <option name="gradleHome" value="C:/gradle" />
         <option name="modules">
           <set>
-            <option value="K:\java\mobibot" />
+            <option value="$PROJECT_DIR$" />
           </set>
         </option>
       </GradleProjectSettings>
@@ -651,7 +655,7 @@
       <module fileurl="file://$PROJECT_DIR$/mobibot.iml" filepath="$PROJECT_DIR$/mobibot.iml" />
     </modules>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_5" assert-keyword="true" jdk-15="true" project-jdk-name="1.7.x" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_5" assert-keyword="true" jdk-15="true" project-jdk-name="1.8.x" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/out" />
   </component>
   <component name="ResourceManagerContainer">
@@ -841,4 +845,3 @@
     </library>
   </component>
 </project>
-

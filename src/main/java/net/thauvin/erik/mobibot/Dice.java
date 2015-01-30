@@ -1,7 +1,7 @@
 /*
- * @(#)Dice.java
+ * Dice.java
  *
- * Copyright (c) 2004-2014, Erik C. Thauvin (erik@thauvin.net)
+ * Copyright (c) 2004-2015, Erik C. Thauvin (erik@thauvin.net)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -47,7 +47,7 @@ public class Dice
 	/**
 	 * Disables the default constructor.
 	 *
-	 * @throws UnsupportedOperationException if an error occurred. if the constructor is called.
+	 * @throws UnsupportedOperationException If the constructor is called.
 	 */
 	private Dice()
 			throws UnsupportedOperationException
@@ -71,8 +71,7 @@ public class Dice
 
 		bot.send(bot.getChannel(),
 		         sender + " rolled two dice: " + Utils.bold(i) + " and " + Utils.bold(y) + " for a total of " + Utils
-				         .bold(playerTotal)
-		);
+				         .bold(playerTotal));
 
 		i = r.nextInt(6) + 1;
 		y = r.nextInt(6) + 1;

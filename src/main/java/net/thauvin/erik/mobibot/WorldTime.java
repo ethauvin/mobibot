@@ -1,7 +1,7 @@
 /*
- * @(#)Time.java
+ * WorldTime.java
  *
- * Copyright (c) 2004-2014, Erik C. Thauvin (erik@thauvin.net)
+ * Copyright (c) 2004-2015, Erik C. Thauvin (erik@thauvin.net)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -49,14 +49,14 @@ import java.util.TreeMap;
 public class WorldTime
 {
 	/**
-	 * The countries supported by the {@link net.thauvin.erik.mobibot.Commands#TIME_CMD time} command.
-	 */
-	private static final Map<String, String> COUNTRIES_MAP = new TreeMap<String, String>();
-
-	/**
 	 * The beats (Internet Time) keyword.
 	 */
 	private static final String BEATS_KEYWORD = ".beats";
+
+	/**
+	 * The countries supported by the {@link net.thauvin.erik.mobibot.Commands#TIME_CMD time} command.
+	 */
+	private static final Map<String, String> COUNTRIES_MAP = new TreeMap<String, String>();
 
 	/**
 	 * The date/time format for the {@link net.thauvin.erik.mobibot.Commands#TIME_CMD time} command.
