@@ -95,18 +95,20 @@ task copyToDeploy(type: Copy) {
 }
 
 task copyToDeployLib(type: Copy) {
-  configurations.runtime
+  from configurations.runtime
   into deployDir + '/lib'
 }
 
-task deploy(dependsOn: ['build', 'copyToDeploy', 'copyToDeployLib']) {
+task deploy(dependsOn: ['build']) {
   description = "Copies all needed files to the ${deployDir} directory."
   group = "Publishing"
   outputs.dir deployDir
   inputs.files copyToDeploy
   inputs.files copyToDeployLib
+  doLast {
+    file(deployDir + '/logs').mkdir()
+  }
   mustRunAfter clean
-  file(deployDir + '/logs').mkdir()
 }
 
 task release(dependsOn: ['deploy', 'wrapper']) {
