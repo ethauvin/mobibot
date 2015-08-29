@@ -1211,6 +1211,8 @@ public class Mobibot extends PircBot
 
 			if (lcTopic.endsWith(Commands.CURRENCY_CMD))
 			{
+				send(sender, "For a listing of currency rates:");
+				send(sender, DOUBLE_INDENT + Utils.bold(getNick() + ": " + Commands.CURRENCY_CMD) + ' ' + Commands.CURRENCY_RATES_KEYWORD);
 				send(sender, "For a listing of supported currencies:");
 				send(sender, DOUBLE_INDENT + Utils.bold(getNick() + ": " + Commands.CURRENCY_CMD));
 			}
