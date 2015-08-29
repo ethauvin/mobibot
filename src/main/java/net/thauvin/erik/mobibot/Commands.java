@@ -128,6 +128,11 @@ public class Commands
 	public static final String INFO_CMD = "info";
 
 	/**
+	 * The joke command.
+	 */
+	public static final String JOKE_CMD = "joke";
+
+	/**
 	 * The link command.
 	 */
 	public static final String LINK_CMD = "L";
@@ -166,11 +171,6 @@ public class Commands
 	 * Properties command line argument.
 	 */
 	public static final String PROPS_ARG = "properties";
-
-	/**
-	 * The quote command.
-	 */
-	public static final String QUOTE_CMD = "quote";
 
 	/**
 	 * The recap command.

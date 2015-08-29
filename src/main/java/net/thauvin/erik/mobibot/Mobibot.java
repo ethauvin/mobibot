@@ -1126,10 +1126,10 @@ public class Mobibot extends PircBot
 			send(sender, "For a listing of the supported countries:");
 			send(sender, DOUBLE_INDENT + Utils.bold(getNick() + ": " + Commands.TIME_CMD));
 		}
-		else if (lcTopic.endsWith(Commands.QUOTE_CMD))
+		else if (lcTopic.endsWith(Commands.JOKE_CMD))
 		{
-			send(sender, "To retrieve a random quote:");
-			send(sender, DOUBLE_INDENT + Utils.bold(getNick() + ": " + Commands.QUOTE_CMD));
+			send(sender, "To retrieve a random joke:");
+			send(sender, DOUBLE_INDENT + Utils.bold(getNick() + ": " + Commands.JOKE_CMD));
 		}
 		else if (lcTopic.endsWith(Commands.STOCK_CMD))
 		{
@@ -1212,7 +1212,9 @@ public class Mobibot extends PircBot
 			if (lcTopic.endsWith(Commands.CURRENCY_CMD))
 			{
 				send(sender, "For a listing of currency rates:");
-				send(sender, DOUBLE_INDENT + Utils.bold(getNick() + ": " + Commands.CURRENCY_CMD) + ' ' + Commands.CURRENCY_RATES_KEYWORD);
+				send(sender,
+				     DOUBLE_INDENT + Utils.bold(getNick() + ": " + Commands.CURRENCY_CMD) + ' '
+				     + Commands.CURRENCY_RATES_KEYWORD);
 				send(sender, "For a listing of supported currencies:");
 				send(sender, DOUBLE_INDENT + Utils.bold(getNick() + ": " + Commands.CURRENCY_CMD));
 			}
@@ -1251,10 +1253,10 @@ public class Mobibot extends PircBot
 			cmds.add(Commands.GOOGLE_CMD);
 			cmds.add(Commands.IGNORE_CMD);
 			cmds.add(Commands.INFO_CMD);
+			cmds.add(Commands.JOKE_CMD);
 			cmds.add(Commands.LOOKUP_CMD);
 			cmds.add(channel.substring(1));
 			cmds.add(Commands.HELP_POSTING_KEYWORD);
-			cmds.add(Commands.QUOTE_CMD);
 			cmds.add(Commands.RECAP_CMD);
 			cmds.add(Commands.STOCK_CMD);
 			cmds.add(Commands.HELP_TAGS_KEYWORD);
@@ -1795,10 +1797,10 @@ public class Mobibot extends PircBot
 			{
 				stockResponse(sender, args);
 			}
-			// mobibot: quote
-			else if (cmd.startsWith(Commands.QUOTE_CMD))
+			// mobibot: joke
+			else if (cmd.startsWith(Commands.JOKE_CMD))
 			{
-				new Thread(new Quote(this, sender)).start();
+				new Thread(new Joke(this, sender)).start();
 			}
 			// mobibot: calc
 			else if (cmd.startsWith(Commands.CALC_CMD))

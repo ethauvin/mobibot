@@ -42,20 +42,20 @@ import java.net.URL;
 import java.net.URLConnection;
 
 /**
- * Processes the {@link Commands#QUOTE_CMD} command.
+ * Processes the {@link Commands#JOKE_CMD} command.
  *
  * @author <a href="mailto:erik@thauvin.net">Erik C. Thauvin</a>
  * @created 2014-04-20
  * @since 1.0
  */
-public class Quote implements Runnable
+public class Joke implements Runnable
 {
 
 	/**
 	 * The I Heart Quotes URL.
 	 */
-	private static final String QUOTE_URL =
-			"http://www.iheartquotes.com/api/v1/random?format=json&max_lines=1&source=esr+humorix_misc+humorix_stories+joel_on_software+macintosh+math+mav_flame+osp_rules+paul_graham+prog_style+subversion";
+	private static final String JOKE_URL =
+			"http://api.icndb.com/jokes/random";
 
 	/**
 	 * The bot's instance.
@@ -68,25 +68,25 @@ public class Quote implements Runnable
 	private final String sender;
 
 	/**
-	 * Creates a new {@link StockQuote} instance.
+	 * Creates a new {@link Joke} instance.
 	 *
 	 * @param bot The bot's instance.
 	 * @param sender The nick of the person who sent the message.
 	 */
-	public Quote(Mobibot bot, String sender)
+	public Joke(Mobibot bot, String sender)
 	{
 		this.bot = bot;
 		this.sender = sender;
 	}
 
 	/**
-	 * Returns a random quote from <a href="http://iheartquotes.com/">I Heart Quote</a>
+	 * Returns a random joke from <a href="http://www.icndb.com/">The Internet Chuck Norris Database</a>
 	 */
 	public final void run()
 	{
 		try
 		{
-			final URL url = new URL(QUOTE_URL);
+			final URL url = new URL(JOKE_URL);
 			final URLConnection conn = url.openConnection();
 
 			final StringBuilder sb = new StringBuilder();
@@ -100,13 +100,13 @@ public class Quote implements Runnable
 
 			final JSONObject json = new JSONObject(sb.toString());
 
-			bot.send(bot.getChannel(), Colors.CYAN + json.getString("quote") + Colors.CYAN);
+			bot.send(bot.getChannel(), Colors.CYAN + json.getJSONObject("value").get("joke") + Colors.CYAN);
 
 			reader.close();
 		}
 		catch (Exception e)
 		{
-			bot.getLogger().warn("Unable to retrieve random quote.", e);
+			bot.getLogger().warn("Unable to retrieve random joke.", e);
 			bot.send(sender, "An error has occurred: " + e.getMessage());
 		}
 	}
