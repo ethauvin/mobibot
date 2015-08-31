@@ -392,7 +392,7 @@
     </option>
   </component>
   <component name="libraryTable">
-    <library name="Gradle: commons-cli-1.2">
+    <library name="Gradle: commons-cli:commons-cli:1.2">
       <CLASSES>
         <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/commons-cli/commons-cli/1.2/2bf96b7aa8b611c177d329452af1dc933e14501c/commons-cli-1.2.jar!/" />
       </CLASSES>
@@ -401,7 +401,7 @@
         <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/commons-cli/commons-cli/1.2/6c5459816530a1962ac18cd315cc775b1b384329/commons-cli-1.2-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Gradle: commons-codec-1.9">
+    <library name="Gradle: commons-codec:commons-codec:1.9">
       <CLASSES>
         <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/commons-codec/commons-codec/1.9/9ce04e34240f674bc72680f8b843b1457383161a/commons-codec-1.9.jar!/" />
       </CLASSES>
@@ -410,7 +410,7 @@
         <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/commons-codec/commons-codec/1.9/3f15fff45d57656685abfee9e8302bf14580044c/commons-codec-1.9-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Gradle: commons-httpclient-3.1">
+    <library name="Gradle: commons-httpclient:commons-httpclient:3.1">
       <CLASSES>
         <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/commons-httpclient/commons-httpclient/3.1/964cd74171f427720480efdec40a7c7f6e58426a/commons-httpclient-3.1.jar!/" />
       </CLASSES>
@@ -419,7 +419,7 @@
         <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/commons-httpclient/commons-httpclient/3.1/c6d6ea83d0cf16d3ed9c1b7e600fa0f60b9d3159/commons-httpclient-3.1-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Gradle: commons-logging-1.1.3">
+    <library name="Gradle: commons-logging:commons-logging:1.1.3">
       <CLASSES>
         <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/commons-logging/commons-logging/1.1.3/f6f66e966c70a83ffbdb6f17a0919eaf7c8aca7f/commons-logging-1.1.3.jar!/" />
       </CLASSES>
@@ -428,7 +428,7 @@
         <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/commons-logging/commons-logging/1.1.3/28bb0405fddaf04f15058fbfbe01fe2780d7d3b6/commons-logging-1.1.3-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Gradle: commons-net-1.4.1">
+    <library name="Gradle: commons-net:commons-net:1.4.1">
       <CLASSES>
         <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/commons-net/commons-net/1.4.1/abb932adb2c10790c1eaa4365d3ac2a1ac7cb700/commons-net-1.4.1.jar!/" />
       </CLASSES>
@@ -437,16 +437,7 @@
         <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/commons-net/commons-net/1.4.1/4c85b39e7f03471338bf7d36558eefe1e463e3de/commons-net-1.4.1-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Gradle: delicious-1.14">
-      <CLASSES>
-        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/net.sf.delicious-java/delicious/1.14/6fdcbf3ef291e2a2352fc4c27fe033f02206ee1a/delicious-1.14.jar!/" />
-      </CLASSES>
-      <JAVADOC />
-      <SOURCES>
-        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/net.sf.delicious-java/delicious/1.14/af3389b4f23bb9ac23552bff5ae6ed917df36192/delicious-1.14-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Gradle: exp4j-0.3.11">
+    <library name="Gradle: de.congrace:exp4j:0.3.11">
       <CLASSES>
         <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/de.congrace/exp4j/0.3.11/150e7b4a77af47b03a1b65be7a01bd663ea64420/exp4j-0.3.11.jar!/" />
       </CLASSES>
@@ -455,43 +446,7 @@
         <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/de.congrace/exp4j/0.3.11/61abb5ef010830519e47ac56faade402807b245b/exp4j-0.3.11-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Gradle: jdom-1.1.3">
-      <CLASSES>
-        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jdom/jdom/1.1.3/8bdfeb39fa929c35f5e4f0b02d34350db39a1efc/jdom-1.1.3.jar!/" />
-      </CLASSES>
-      <JAVADOC />
-      <SOURCES>
-        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jdom/jdom/1.1.3/b8b961a9f20d1faf160681c49f773a66b87efd63/jdom-1.1.3-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Gradle: json-20140107">
-      <CLASSES>
-        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.json/json/20140107/d1ffca6e2482b002702c6a576166fd685e3370e3/json-20140107.jar!/" />
-      </CLASSES>
-      <JAVADOC />
-      <SOURCES>
-        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.json/json/20140107/f53f91bc9c21fef71745450dea5200e423e38370/json-20140107-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Gradle: jsoup-1.7.3">
-      <CLASSES>
-        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jsoup/jsoup/1.7.3/92568d7167ce1bf9eb1fd815b022d5a2c113547a/jsoup-1.7.3.jar!/" />
-      </CLASSES>
-      <JAVADOC />
-      <SOURCES>
-        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jsoup/jsoup/1.7.3/b783d347815471821faaa7ae7a4f0d2fec30966e/jsoup-1.7.3-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Gradle: jweather-0.3.0">
-      <CLASSES>
-        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/net.sourceforge.jweather/jweather/0.3.0/8bb010d54c64e66b1738524513b50ed263c35290/jweather-0.3.0.jar!/" />
-      </CLASSES>
-      <JAVADOC />
-      <SOURCES>
-        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/net.sourceforge.jweather/jweather/0.3.0/385ecc27f62f9d7c31de57cee468a8df58cb415e/jweather-0.3.0-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Gradle: log4j-1.2.17">
+    <library name="Gradle: log4j:log4j:1.2.17">
       <CLASSES>
         <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/log4j/log4j/1.2.17/5af35056b4d257e4b64b9e8069c0746e8b08629f/log4j-1.2.17.jar!/" />
       </CLASSES>
@@ -500,43 +455,61 @@
         <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/log4j/log4j/1.2.17/677abe279b68c5e7490d6d50c6951376238d7d3e/log4j-1.2.17-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Gradle: oro-2.0.8">
+    <library name="Gradle: net.sf.delicious-java:delicious:1.14">
       <CLASSES>
-        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/oro/oro/2.0.8/5592374f834645c4ae250f4c9fbb314c9369d698/oro-2.0.8.jar!/" />
+        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/net.sf.delicious-java/delicious/1.14/6fdcbf3ef291e2a2352fc4c27fe033f02206ee1a/delicious-1.14.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES>
-        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/oro/oro/2.0.8/3598e790ecd76ff7eb249853d4d00822ae1a5e71/oro-2.0.8-sources.jar!/" />
+        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/net.sf.delicious-java/delicious/1.14/af3389b4f23bb9ac23552bff5ae6ed917df36192/delicious-1.14-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Gradle: pircbot-1.5.0">
+    <library name="Gradle: net.sourceforge.jweather:jweather:0.3.0">
       <CLASSES>
-        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/pircbot/pircbot/1.5.0/7a9dd235e6e81db733212202cc4067b5625650cf/pircbot-1.5.0.jar!/" />
+        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/net.sourceforge.jweather/jweather/0.3.0/8bb010d54c64e66b1738524513b50ed263c35290/jweather-0.3.0.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES>
-        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/pircbot/pircbot/1.5.0/cc27715d1c9c8246beb6a33ea099a9ca5d4e5da1/pircbot-1.5.0-sources.jar!/" />
+        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/net.sourceforge.jweather/jweather/0.3.0/385ecc27f62f9d7c31de57cee468a8df58cb415e/jweather-0.3.0-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Gradle: rome-1.0">
+    <library name="Gradle: org.jdom:jdom:1.1.3">
       <CLASSES>
-        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/rome/rome/1.0/22b33347f315833e9348cec2751af1a5d5656e4/rome-1.0.jar!/" />
+        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jdom/jdom/1.1.3/8bdfeb39fa929c35f5e4f0b02d34350db39a1efc/jdom-1.1.3.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES>
-        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/rome/rome/1.0/195e9a962672c32943ec8883e010b6a5ea568745/rome-1.0-sources.jar!/" />
+        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jdom/jdom/1.1.3/b8b961a9f20d1faf160681c49f773a66b87efd63/jdom-1.1.3-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Gradle: rome-fetcher-1.0">
+    <library name="Gradle: org.json:json:20140107">
       <CLASSES>
-        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/rome/rome-fetcher/1.0/6044bcd5d6f793fa3a38843e774e58c0737a7125/rome-fetcher-1.0.jar!/" />
+        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.json/json/20140107/d1ffca6e2482b002702c6a576166fd685e3370e3/json-20140107.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES>
-        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/rome/rome-fetcher/1.0/a36d7419a32690c5f47a625691c5490d67b72d4e/rome-fetcher-1.0-sources.jar!/" />
+        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.json/json/20140107/f53f91bc9c21fef71745450dea5200e423e38370/json-20140107-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Gradle: twitter4j-core-4.0.1">
+    <library name="Gradle: org.jsoup:jsoup:1.7.3">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jsoup/jsoup/1.7.3/92568d7167ce1bf9eb1fd815b022d5a2c113547a/jsoup-1.7.3.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jsoup/jsoup/1.7.3/b783d347815471821faaa7ae7a4f0d2fec30966e/jsoup-1.7.3-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Gradle: org.ostermiller:utils:1.07.00">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.ostermiller/utils/1.07.00/a8828217b2dd0507fbe9e9d0b2981acfb908b590/utils-1.07.00.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.ostermiller/utils/1.07.00/586774ee4b8409b6835621bae2186d9b54d1c36a/utils-1.07.00-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Gradle: org.twitter4j:twitter4j-core:4.0.1">
       <CLASSES>
         <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.twitter4j/twitter4j-core/4.0.1/37fd1d1eb3ed57916c9fdd1ea1f6c3afce778c7c/twitter4j-core-4.0.1.jar!/" />
       </CLASSES>
@@ -545,13 +518,40 @@
         <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.twitter4j/twitter4j-core/4.0.1/f1ba5ef4a200e94857bc49d41385a364f1b5571e/twitter4j-core-4.0.1-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Gradle: utils-1.07.00">
+    <library name="Gradle: oro:oro:2.0.8">
       <CLASSES>
-        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.ostermiller/utils/1.07.00/a8828217b2dd0507fbe9e9d0b2981acfb908b590/utils-1.07.00.jar!/" />
+        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/oro/oro/2.0.8/5592374f834645c4ae250f4c9fbb314c9369d698/oro-2.0.8.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES>
-        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.ostermiller/utils/1.07.00/586774ee4b8409b6835621bae2186d9b54d1c36a/utils-1.07.00-sources.jar!/" />
+        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/oro/oro/2.0.8/3598e790ecd76ff7eb249853d4d00822ae1a5e71/oro-2.0.8-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Gradle: pircbot:pircbot:1.5.0">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/pircbot/pircbot/1.5.0/7a9dd235e6e81db733212202cc4067b5625650cf/pircbot-1.5.0.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/pircbot/pircbot/1.5.0/cc27715d1c9c8246beb6a33ea099a9ca5d4e5da1/pircbot-1.5.0-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Gradle: rome:rome-fetcher:1.0">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/rome/rome-fetcher/1.0/6044bcd5d6f793fa3a38843e774e58c0737a7125/rome-fetcher-1.0.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/rome/rome-fetcher/1.0/a36d7419a32690c5f47a625691c5490d67b72d4e/rome-fetcher-1.0-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Gradle: rome:rome:1.0">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/rome/rome/1.0/22b33347f315833e9348cec2751af1a5d5656e4/rome-1.0.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/rome/rome/1.0/195e9a962672c32943ec8883e010b6a5ea568745/rome-1.0-sources.jar!/" />
       </SOURCES>
     </library>
   </component>
