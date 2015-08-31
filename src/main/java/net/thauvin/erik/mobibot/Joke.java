@@ -54,8 +54,7 @@ public class Joke implements Runnable
 	/**
 	 * The I Heart Quotes URL.
 	 */
-	private static final String JOKE_URL =
-			"http://api.icndb.com/jokes/random";
+	private static final String JOKE_URL = "http://api.icndb.com/jokes/random?escape=javascript";
 
 	/**
 	 * The bot's instance.
@@ -100,7 +99,9 @@ public class Joke implements Runnable
 
 			final JSONObject json = new JSONObject(sb.toString());
 
-			bot.send(bot.getChannel(), Colors.CYAN + json.getJSONObject("value").get("joke") + Colors.CYAN);
+			bot.send(bot.getChannel(),
+			         Colors.CYAN + json.getJSONObject("value").get("joke").toString().replaceAll("\\'", "'")
+					         .replaceAll("\\\"", "\"") + Colors.CYAN);
 
 			reader.close();
 		}
