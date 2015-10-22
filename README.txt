@@ -17,7 +17,7 @@ Some very basic instructions:
 	java -jar mobibot.jar -h
 
 	{ twitter oauth token request }
-    java -cp mobibot.jar net.thauvin.erik.mobibot.TwitterOAuth <consumerKey> <consumerSecret>
+	java -cp mobibot.jar net.thauvin.erik.mobibot.TwitterOAuth <consumerKey> <consumerSecret>
 
 	{ launch }
 	/usr/bin/nohup java -jar mobibot.jar &

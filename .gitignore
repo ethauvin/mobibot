@@ -1,6 +1,12 @@
+**/.idea/dictionaries
+**/.idea/gradle.xml
+**/.idea/libraries
+**/.idea/tasks.xml
+**/.idea/workspace.xml
+*.iws
+.DS_Store
 .classpath
 .gradle
-.idea
 .nb-gradle
 .project
 .settings
@@ -10,6 +16,7 @@
 /dist
 /fetcher.properties
 /gen
+/local.properties
 /log4j.properties
 /logs
 /mobibot.properties
@@ -19,3 +26,5 @@
 /test-output
 /weather.log
 CVS
+Thumbs.db
+ehthumbs.db
