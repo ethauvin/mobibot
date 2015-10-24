@@ -46,7 +46,6 @@ import java.util.Date;
  */
 public class TellMessage implements Serializable
 {
-	@SuppressWarnings({"UnusedDeclaration"})
 	private static final long serialVersionUID = 1L;
 
 	private final String id;

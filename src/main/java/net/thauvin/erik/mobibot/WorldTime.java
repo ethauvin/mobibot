@@ -46,7 +46,7 @@ import java.util.TreeMap;
  * @created 2014-04-27
  * @since 1.0
  */
-public class WorldTime
+class WorldTime
 {
 	/**
 	 * The beats (Internet Time) keyword.

@@ -46,14 +46,13 @@ import java.net.UnknownHostException;
  * @created 2014-04-26
  * @since 1.0
  */
-public class Lookup
+class Lookup
 {
 
 	/**
 	 * The whois host.
 	 */
-	@SuppressWarnings("WeakerAccess")
-	public static final String WHOIS_HOST = "whois.arin.net";
+	private static final String WHOIS_HOST = "whois.arin.net";
 
 	/**
 	 * Disables the default constructor.

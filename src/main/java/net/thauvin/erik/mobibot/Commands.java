@@ -40,7 +40,7 @@ package net.thauvin.erik.mobibot;
  * @created 2014-04-26
  * @since 1.0
  */
-public class Commands
+class Commands
 {
 	/**
 	 * The add (back)log command.

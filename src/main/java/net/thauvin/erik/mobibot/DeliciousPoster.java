@@ -42,8 +42,7 @@ import del.icio.us.Delicious;
  * @created Mar 5, 2005
  * @since 1.0
  */
-@SuppressWarnings("UnnecessaryBoxing")
-public class DeliciousPoster
+class DeliciousPoster
 {
 	private final Delicious delicious;
 
@@ -73,11 +72,11 @@ public class DeliciousPoster
 		{
 			public Object construct()
 			{
-				return Boolean.valueOf(delicious.addPost(entry.getLink(),
-				                                         entry.getTitle(),
-				                                         postedBy(entry),
-				                                         entry.getDeliciousTags(),
-				                                         entry.getDate()));
+				return delicious.addPost(entry.getLink(),
+				                         entry.getTitle(),
+				                         postedBy(entry),
+				                         entry.getDeliciousTags(),
+				                         entry.getDate());
 			}
 		};
 
@@ -109,7 +108,7 @@ public class DeliciousPoster
 		{
 			public Object construct()
 			{
-				return Boolean.valueOf(delicious.deletePost(link));
+				return delicious.deletePost(link);
 			}
 		};
 
@@ -132,21 +131,21 @@ public class DeliciousPoster
 				{
 					delicious.deletePost(oldUrl);
 
-					return Boolean.valueOf(delicious.addPost(entry.getLink(),
-					                                         entry.getTitle(),
-					                                         postedBy(entry),
-					                                         entry.getDeliciousTags(),
-					                                         entry.getDate()));
+					return delicious.addPost(entry.getLink(),
+					                         entry.getTitle(),
+					                         postedBy(entry),
+					                         entry.getDeliciousTags(),
+					                         entry.getDate());
 				}
 				else
 				{
-					return Boolean.valueOf(delicious.addPost(entry.getLink(),
-					                                         entry.getTitle(),
-					                                         postedBy(entry),
-					                                         entry.getDeliciousTags(),
-					                                         entry.getDate(),
-					                                         true,
-					                                         true));
+					return delicious.addPost(entry.getLink(),
+					                         entry.getTitle(),
+					                         postedBy(entry),
+					                         entry.getDeliciousTags(),
+					                         entry.getDate(),
+					                         true,
+					                         true);
 				}
 			}
 		};

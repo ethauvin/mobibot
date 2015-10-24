@@ -46,7 +46,7 @@ import java.io.IOException;
  * @created Feb 7, 2004
  * @since 1.0
  */
-public class StockQuote implements Runnable
+class StockQuote implements Runnable
 {
 	/**
 	 * The Yahoo! stock quote URL.

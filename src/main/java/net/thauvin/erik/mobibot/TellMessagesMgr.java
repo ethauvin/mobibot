@@ -48,7 +48,7 @@ import java.util.List;
  * @created 2014-04-26
  * @since 1.0
  */
-public class TellMessagesMgr
+class TellMessagesMgr
 {
 	/**
 	 * Disables the default constructor.
@@ -132,7 +132,7 @@ public class TellMessagesMgr
 			logger.getLogger().error("An error occurred loading the messages queue.", e);
 		}
 
-		return (List<TellMessage>) new ArrayList();
+		return new ArrayList<TellMessage>();
 	}
 
 	/**

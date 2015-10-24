@@ -49,7 +49,7 @@ import java.net.URLEncoder;
  * @created Feb 7, 2004
  * @since 1.0
  */
-public class GoogleSearch implements Runnable
+class GoogleSearch implements Runnable
 {
 	/**
 	 * The tab indent (4 spaces).

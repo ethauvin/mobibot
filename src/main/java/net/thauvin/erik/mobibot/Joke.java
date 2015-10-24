@@ -48,7 +48,7 @@ import java.net.URLConnection;
  * @created 2014-04-20
  * @since 1.0
  */
-public class Joke implements Runnable
+class Joke implements Runnable
 {
 
 	/**

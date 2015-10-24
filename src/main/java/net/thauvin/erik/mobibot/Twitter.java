@@ -44,7 +44,7 @@ import twitter4j.conf.ConfigurationBuilder;
  * @created Sept 10, 2008
  * @since 1.0
  */
-public class Twitter implements Runnable
+class Twitter implements Runnable
 {
 	/**
 	 * The Twitter access token.

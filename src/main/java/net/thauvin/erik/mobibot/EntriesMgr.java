@@ -50,7 +50,7 @@ import java.util.List;
  * @created 2014-04-28
  * @since 1.0
  */
-public class EntriesMgr
+class EntriesMgr
 {
 	/**
 	 * The name of the file containing the current entries.

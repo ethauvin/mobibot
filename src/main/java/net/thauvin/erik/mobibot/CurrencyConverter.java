@@ -51,7 +51,7 @@ import java.util.*;
  * @created Feb 11, 2004
  * @since 1.0
  */
-public class CurrencyConverter implements Runnable
+class CurrencyConverter implements Runnable
 {
 	/**
 	 * The exchange rates.

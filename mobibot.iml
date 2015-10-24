@@ -16,21 +16,21 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" exported="" name="Gradle: log4j:log4j:1.2.17" level="project" />
     <orderEntry type="library" exported="" name="Gradle: pircbot:pircbot:1.5.0" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: commons-codec:commons-codec:1.9" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: commons-logging:commons-logging:1.1.3" level="project" />
     <orderEntry type="library" exported="" name="Gradle: commons-net:commons-net:1.4.1" level="project" />
     <orderEntry type="library" exported="" name="Gradle: commons-cli:commons-cli:1.2" level="project" />
     <orderEntry type="library" exported="" name="Gradle: commons-httpclient:commons-httpclient:3.1" level="project" />
     <orderEntry type="library" exported="" name="Gradle: oro:oro:2.0.8" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: org.jdom:jdom:1.1.3" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: org.jsoup:jsoup:1.7.3" level="project" />
     <orderEntry type="library" exported="" name="Gradle: rome:rome:1.0" level="project" />
     <orderEntry type="library" exported="" name="Gradle: rome:rome-fetcher:1.0" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: org.json:json:20140107" level="project" />
     <orderEntry type="library" exported="" name="Gradle: org.ostermiller:utils:1.07.00" level="project" />
     <orderEntry type="library" exported="" name="Gradle: net.sourceforge.jweather:jweather:0.3.0" level="project" />
     <orderEntry type="library" exported="" name="Gradle: de.congrace:exp4j:0.3.11" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: org.twitter4j:twitter4j-core:4.0.1" level="project" />
     <orderEntry type="library" exported="" name="Gradle: net.sf.delicious-java:delicious:1.14" level="project" />
+    <orderEntry type="library" name="Gradle: org.twitter4j:twitter4j-core:4.0.4" level="project" />
+    <orderEntry type="library" name="Gradle: commons-codec:commons-codec:1.10" level="project" />
+    <orderEntry type="library" name="Gradle: commons-logging:commons-logging:1.2" level="project" />
+    <orderEntry type="library" name="Gradle: org.jsoup:jsoup:1.8.3" level="project" />
+    <orderEntry type="library" name="Gradle: org.json:json:20150729" level="project" />
+    <orderEntry type="library" name="Gradle: org.jdom:jdom:2.0.2" level="project" />
   </component>
 </module>

@@ -50,7 +50,7 @@ import java.util.Calendar;
  * @created 2014-04-26
  * @since 1.0
  */
-public class Utils
+class Utils
 {
 	/**
 	 * The timestamp simple date format.

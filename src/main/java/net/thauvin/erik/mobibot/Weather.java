@@ -47,7 +47,7 @@ import java.util.Date;
  * @created Feb 7, 2004
  * @since 1.0
  */
-public class Weather implements Runnable
+class Weather implements Runnable
 {
 	/**
 	 * The URL where the stations are listed.

@@ -42,7 +42,7 @@ import java.util.Random;
  * @created 2014-04-28
  * @since 1.0
  */
-public class War
+class War
 {
 	/**
 	 * The deck of card for the {@link net.thauvin.erik.mobibot.Commands#WAR_CMD war} command.

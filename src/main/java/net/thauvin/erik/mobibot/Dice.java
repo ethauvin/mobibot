@@ -42,7 +42,7 @@ import java.util.Random;
  * @created 2014-04-28
  * @since 1.0
  */
-public class Dice
+class Dice
 {
 	/**
 	 * Disables the default constructor.

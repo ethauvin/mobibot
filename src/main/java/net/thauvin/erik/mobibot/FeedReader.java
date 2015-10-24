@@ -50,7 +50,7 @@ import java.util.List;
  * @created Feb 1, 2004
  * @since 1.0
  */
-public class FeedReader implements Runnable
+class FeedReader implements Runnable
 {
 	/**
 	 * The maximum number of feed items to display.

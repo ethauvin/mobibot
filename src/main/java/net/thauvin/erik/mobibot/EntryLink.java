@@ -361,7 +361,7 @@ public class EntryLink implements Serializable
 	 *
 	 * @param tags The tags.
 	 */
-	final void setTags(List<SyndCategoryImpl> tags)
+	private void setTags(List<SyndCategoryImpl> tags)
 	{
 		this.tags.addAll(tags);
 	}

@@ -773,8 +773,7 @@ public class Mobibot extends PircBot
 	 *
 	 * @return The file location.
 	 */
-	@SuppressWarnings("WeakerAccess")
-	public String getSerializedObject()
+	private String getSerializedObject()
 	{
 		return serializedObject;
 	}
@@ -828,7 +827,7 @@ public class Mobibot extends PircBot
 	 * @param channel The channel.
 	 * @param action The action.
 	 */
-	final void action(String channel, String action)
+	private void action(String channel, String action)
 	{
 		if (Utils.isValidString(channel) && Utils.isValidString(action))
 		{
