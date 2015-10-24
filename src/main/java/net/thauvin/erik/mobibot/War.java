@@ -85,13 +85,15 @@ class War
 			y = r.nextInt(WAR_DECK.length);
 
 			bot.send(bot.getChannel(),
-			         sender + " drew the " + Utils.bold(WAR_DECK[i]) + " of " + WAR_SUITS[r.nextInt(WAR_SUITS.length)]);
-			bot.action("drew the " + Utils.bold(WAR_DECK[y]) + " of " + WAR_SUITS[r.nextInt(WAR_SUITS.length)]);
+			         sender + " drew the " + Utils.reverseColor(WAR_DECK[i]) + " of " + WAR_SUITS[r.nextInt(WAR_SUITS.length)]);
+			bot.action("drew the " + Utils.reverseColor(WAR_DECK[y]) + " of " + WAR_SUITS[r.nextInt(WAR_SUITS.length)]);
 
 			if (i != y)
 			{
 				break;
 			}
+
+			bot.send(bot.getChannel(), "This means " + Utils.bold("WAR") + '!');
 		}
 
 		if (i < y)

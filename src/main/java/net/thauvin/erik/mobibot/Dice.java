@@ -70,7 +70,7 @@ class Dice
 		final int playerTotal = i + y;
 
 		bot.send(bot.getChannel(),
-		         sender + " rolled two dice: " + Utils.bold(i) + " and " + Utils.bold(y) + " for a total of " + Utils
+		         sender + " rolled two dice: " + Utils.reverseColor(i) + " and " + Utils.reverseColor(y) + " for a total of " + Utils
 				         .bold(playerTotal));
 
 		i = r.nextInt(6) + 1;
@@ -78,7 +78,7 @@ class Dice
 		final int total = i + y;
 
 		bot.action(
-				"rolled two dice: " + Utils.bold(i) + " and " + Utils.bold(y) + " for a total of " + Utils.bold(total));
+				"rolled two dice: " + Utils.reverseColor(i) + " and " + Utils.reverseColor(y) + " for a total of " + Utils.bold(total));
 
 		if (playerTotal < total)
 		{

@@ -89,11 +89,6 @@ public class Mobibot extends PircBot
 	private static final int DEFAULT_TELL_MAX_SIZE = 50;
 
 	/**
-	 * The double tab indent (8 spaces).
-	 */
-	private static final String DOUBLE_INDENT = "        ";
-
-	/**
 	 * The info strings.
 	 */
 	private static final String[] INFO_STRS = {
@@ -132,6 +127,11 @@ public class Mobibot extends PircBot
 	private static final String SER_EXT = ".ser";
 
 	/**
+	 * Shall we play a game?
+	 */
+	private static final String SHALL_WE_PLAY_A_GAME = "Shall we play a game?";
+
+	/**
 	 * The start time.
 	 */
 	private static final long START_TIME = System.currentTimeMillis();
@@ -156,14 +156,14 @@ public class Mobibot extends PircBot
 	};
 
 	/**
-	 * Shall we play a game?
-	 */
-	private static final String shall_we_play_a_game = "Shall we play a game?";
-
-	/**
 	 * The main channel.
 	 */
 	private final String channel;
+
+	/**
+	 * The commands list.
+	 */
+	private final List<String> commandsList = new ArrayList<String>();
 
 	/**
 	 * The currency converter.
@@ -1050,6 +1050,32 @@ public class Mobibot extends PircBot
 		}
 	}
 
+
+	/**
+	 * Returns indented and bold help string.
+	 *
+	 * @param help The help string.
+	 *
+	 * @return The indented help string.
+	 */
+	private String helpIndent(String help)
+	{
+		return  helpIndent(help, true);
+	}
+
+	/**
+	 * Returns indented help string.
+	 *
+	 * @param help The help string.
+	 * @param isBold The bold flag.
+	 *
+	 * @return The indented help string.
+	 */
+	private String helpIndent(String help, boolean isBold)
+	{
+		return "        " + (isBold ? Utils.bold(help) : help);
+	}
+
 	/**
 	 * Responds with the bot's help.
 	 *
@@ -1063,111 +1089,109 @@ public class Mobibot extends PircBot
 		if (lcTopic.endsWith(Commands.HELP_POSTING_KEYWORD))
 		{
 			send(sender, Utils.bold("Post a URL, by saying it on a line on its own:"));
-			send(sender, DOUBLE_INDENT + Utils.bold("<url> [<title>] [" + TAGS_MARKER + "<+tag> [...]]"));
+			send(sender, helpIndent("<url> [<title>] [" + TAGS_MARKER + "<+tag> [...]]"));
 			send(sender, "I will reply with a label, for example: " + Utils.bold(Commands.LINK_CMD + '1'));
 			send(sender, "To add a title, use a its label and a pipe:");
-			send(sender, DOUBLE_INDENT + Utils.bold(Commands.LINK_CMD + "1:|This is the title"));
+			send(sender, helpIndent(Commands.LINK_CMD + "1:|This is the title"));
 			send(sender, "To add a comment: ");
-			send(sender, DOUBLE_INDENT + Utils.bold(Commands.LINK_CMD + "1:This is a comment"));
+			send(sender, helpIndent(Commands.LINK_CMD + "1:This is a comment"));
 			send(sender, "I will reply with a label, for example: " + Utils.bold(Commands.LINK_CMD + "1.1"));
 			send(sender, "To edit a comment, use its label: ");
-			send(sender, DOUBLE_INDENT + Utils.bold(Commands.LINK_CMD + "1.1:This is an edited comment"));
+			send(sender, helpIndent(Commands.LINK_CMD + "1.1:This is an edited comment"));
 			send(sender, "To delete a comment, use its label and a minus sign: ");
-			send(sender, DOUBLE_INDENT + Utils.bold(Commands.LINK_CMD + "1.1:-"));
+			send(sender, helpIndent(Commands.LINK_CMD + "1.1:-"));
 			send(sender, "You can also view a posting by saying its label.");
 		}
 		else if (lcTopic.endsWith(Commands.HELP_TAGS_KEYWORD))
 		{
 			send(sender, Utils.bold("To categorize or tag a URL, use its label and a T:"));
-			send(sender, DOUBLE_INDENT + Utils.bold(Commands.LINK_CMD + "1T:<+tag|-tag> [...]"));
+			send(sender, helpIndent(Commands.LINK_CMD + "1T:<+tag|-tag> [...]"));
 		}
 		else if (lcTopic.endsWith(Commands.VIEW_CMD))
 		{
 			send(sender, "To list or search the current URL posts:");
-			send(sender, DOUBLE_INDENT + Utils.bold(getNick() + ": " + Commands.VIEW_CMD) + " [<start>] [<query>]");
+			send(sender, helpIndent(getNick() + ": " + Commands.VIEW_CMD) + " [<start>] [<query>]");
 		}
 		else if (lcTopic.endsWith(channel.substring(1).toLowerCase()))
 		{
 			send(sender, "To list the last 5 posts from the channel's weblog:");
-			send(sender, DOUBLE_INDENT + Utils.bold(getNick() + ": " + channel.substring(1)));
+			send(sender, helpIndent(getNick() + ": " + channel.substring(1)));
 		}
 		else if (lcTopic.endsWith(Commands.GOOGLE_CMD))
 		{
 			send(sender, "To search Google:");
-			send(sender, DOUBLE_INDENT + Utils.bold(getNick() + ": " + Commands.GOOGLE_CMD + " <query>"));
+			send(sender, helpIndent(getNick() + ": " + Commands.GOOGLE_CMD + " <query>"));
 		}
 		else if (lcTopic.endsWith(Commands.TWITTER_CMD) && isTwitterEnabled())
 		{
 			send(sender, "To post to Twitter:");
-			send(sender, DOUBLE_INDENT + Utils.bold(getNick() + ": " + Commands.TWITTER_CMD + " <message>"));
+			send(sender, helpIndent(getNick() + ": " + Commands.TWITTER_CMD + " <message>"));
 		}
 		else if (lcTopic.endsWith(Commands.RECAP_CMD))
 		{
 			send(sender, "To list the last 10 public channel messages:");
-			send(sender, DOUBLE_INDENT + Utils.bold(getNick() + ": " + Commands.RECAP_CMD));
+			send(sender, helpIndent(getNick() + ": " + Commands.RECAP_CMD));
 		}
 		else if (lcTopic.endsWith(Commands.CALC_CMD))
 		{
 			send(sender, "To solve a mathematical calculation:");
-			send(sender, DOUBLE_INDENT + Utils.bold(getNick() + ": " + Commands.CALC_CMD + " <calculation>"));
+			send(sender, helpIndent(getNick() + ": " + Commands.CALC_CMD + " <calculation>"));
 		}
 		else if (lcTopic.endsWith(Commands.LOOKUP_CMD))
 		{
 			send(sender, "To perform a DNS lookup query:");
-			send(sender,
-			     DOUBLE_INDENT + Utils.bold(getNick() + ": " + Commands.LOOKUP_CMD + " <ip address or hostname>"));
+			send(sender, helpIndent(getNick() + ": " + Commands.LOOKUP_CMD + " <ip address or hostname>"));
 		}
 		else if (lcTopic.endsWith(Commands.TIME_CMD))
 		{
 			send(sender, "To display a country's current date/time:");
-			send(sender, DOUBLE_INDENT + Utils.bold(getNick() + ": " + Commands.TIME_CMD) + " [<country code>]");
+			send(sender, helpIndent(getNick() + ": " + Commands.TIME_CMD) + " [<country code>]");
 
 			send(sender, "For a listing of the supported countries:");
-			send(sender, DOUBLE_INDENT + Utils.bold(getNick() + ": " + Commands.TIME_CMD));
+			send(sender, helpIndent(getNick() + ": " + Commands.TIME_CMD));
 		}
 		else if (lcTopic.endsWith(Commands.JOKE_CMD))
 		{
 			send(sender, "To retrieve a random joke:");
-			send(sender, DOUBLE_INDENT + Utils.bold(getNick() + ": " + Commands.JOKE_CMD));
+			send(sender, helpIndent(getNick() + ": " + Commands.JOKE_CMD));
 		}
 		else if (lcTopic.endsWith(Commands.STOCK_CMD))
 		{
 			send(sender, "To retrieve a stock quote:");
-			send(sender,
-			     DOUBLE_INDENT + Utils.bold(getNick() + ": " + Commands.STOCK_CMD + " <symbol[.country code]>"));
+			send(sender, helpIndent(getNick() + ": " + Commands.STOCK_CMD + " <symbol[.country code]>"));
 		}
 		else if (lcTopic.endsWith(Commands.DICE_CMD))
 		{
 			send(sender, "To roll the dice:");
-			send(sender, DOUBLE_INDENT + Utils.bold(getNick() + ": " + Commands.DICE_CMD));
+			send(sender, helpIndent(getNick() + ": " + Commands.DICE_CMD));
 		}
 		else if (lcTopic.endsWith(Commands.WAR_CMD))
 		{
 			send(sender, "To play war:");
-			send(sender, DOUBLE_INDENT + Utils.bold(getNick() + ": " + Commands.WAR_CMD));
+			send(sender, helpIndent(getNick() + ": " + Commands.WAR_CMD));
 		}
 		else if (lcTopic.endsWith(Commands.WEATHER_CMD))
 		{
 			send(sender, "To display weather information:");
-			send(sender, DOUBLE_INDENT + Utils.bold(getNick() + ": " + Commands.WEATHER_CMD + " <station id>"));
+			send(sender, helpIndent(getNick() + ": " + Commands.WEATHER_CMD + " <station id>"));
 			send(sender, "For a listing of the ICAO station IDs, please visit: " + Weather.STATIONS_URL);
 		}
 		else if (lcTopic.endsWith(Commands.USERS_CMD))
 		{
 			send(sender, "To list the users present on the channel:");
-			send(sender, DOUBLE_INDENT + Utils.bold(getNick() + ": " + Commands.USERS_CMD));
+			send(sender, helpIndent(getNick() + ": " + Commands.USERS_CMD));
 		}
 		else if (lcTopic.endsWith(Commands.INFO_CMD))
 		{
 			send(sender, "To view information about the bot:");
-			send(sender, DOUBLE_INDENT + Utils.bold(getNick() + ": " + Commands.INFO_CMD));
+			send(sender, helpIndent(getNick() + ": " + Commands.INFO_CMD));
 		}
 		else if (lcTopic.endsWith(Commands.CYCLE_CMD))
 		{
 			if (isOp(sender))
 			{
 				send(sender, "To have the bot leave the channel and come back:");
-				send(sender, DOUBLE_INDENT + Utils.bold("/msg " + getNick() + ' ' + Commands.CYCLE_CMD));
+				send(sender, helpIndent("/msg " + getNick() + ' ' + Commands.CYCLE_CMD));
 			}
 		}
 		else if (lcTopic.endsWith(Commands.ME_CMD))
@@ -1175,7 +1199,7 @@ public class Mobibot extends PircBot
 			if (isOp(sender))
 			{
 				send(sender, "To have the bot perform an action:");
-				send(sender, DOUBLE_INDENT + Utils.bold("/msg " + getNick() + ' ' + Commands.ME_CMD + " <action>"));
+				send(sender, helpIndent("/msg " + getNick() + ' ' + Commands.ME_CMD + " <action>"));
 			}
 		}
 		else if (lcTopic.endsWith(Commands.SAY_CMD))
@@ -1183,7 +1207,7 @@ public class Mobibot extends PircBot
 			if (isOp(sender))
 			{
 				send(sender, "To have the bot say something on the channel:");
-				send(sender, DOUBLE_INDENT + Utils.bold("/msg " + getNick() + ' ' + Commands.SAY_CMD + " <text>"));
+				send(sender, helpIndent("/msg " + getNick() + ' ' + Commands.SAY_CMD + " <text>"));
 			}
 		}
 		else if (lcTopic.endsWith(Commands.VERSION_CMD))
@@ -1191,7 +1215,7 @@ public class Mobibot extends PircBot
 			if (isOp(sender))
 			{
 				send(sender, "To view the version data (bot, java, etc.):");
-				send(sender, DOUBLE_INDENT + Utils.bold("/msg " + getNick() + ' ' + Commands.VERSION_CMD));
+				send(sender, helpIndent("/msg " + getNick() + ' ' + Commands.VERSION_CMD));
 			}
 		}
 		else if (lcTopic.endsWith(Commands.MSG_CMD))
@@ -1199,42 +1223,39 @@ public class Mobibot extends PircBot
 			if (isOp(sender))
 			{
 				send(sender, "To have the bot send a private message to someone:");
-				send(sender,
-				     DOUBLE_INDENT + Utils.bold("/msg " + getNick() + ' ' + Commands.MSG_CMD + " <nick> <text>"));
+				send(sender, helpIndent("/msg " + getNick() + ' ' + Commands.MSG_CMD + " <nick> <text>"));
 			}
 		}
 		else if (lcTopic.startsWith(Commands.CURRENCY_CMD))
 		{
 			send(sender, "To convert from one currency to another:");
-			send(sender, DOUBLE_INDENT + Utils.bold(getNick() + ": " + Commands.CURRENCY_CMD + " [100 USD to EUR]"));
+			send(sender, helpIndent(getNick() + ": " + Commands.CURRENCY_CMD + " [100 USD to EUR]"));
 
 			if (lcTopic.endsWith(Commands.CURRENCY_CMD))
 			{
 				send(sender, "For a listing of currency rates:");
 				send(sender,
-				     DOUBLE_INDENT + Utils.bold(getNick() + ": " + Commands.CURRENCY_CMD) + ' '
-				     + Commands.CURRENCY_RATES_KEYWORD);
+				     helpIndent(getNick() + ": " + Commands.CURRENCY_CMD) + ' ' + Commands.CURRENCY_RATES_KEYWORD);
 				send(sender, "For a listing of supported currencies:");
-				send(sender, DOUBLE_INDENT + Utils.bold(getNick() + ": " + Commands.CURRENCY_CMD));
+				send(sender, helpIndent(getNick() + ": " + Commands.CURRENCY_CMD));
 			}
 		}
 		else if (lcTopic.startsWith(Commands.IGNORE_CMD))
 		{
 			send(sender, "To check your ignore status:");
-			send(sender, DOUBLE_INDENT + Utils.bold(getNick() + ": " + Commands.IGNORE_CMD));
+			send(sender, helpIndent(getNick() + ": " + Commands.IGNORE_CMD));
 
 			send(sender, "To toggle your ignore status:");
-			send(sender,
-			     DOUBLE_INDENT + Utils.bold(getNick() + ": " + Commands.IGNORE_CMD + ' ' + Commands.IGNORE_ME_KEYWORD));
+			send(sender, helpIndent(getNick() + ": " + Commands.IGNORE_CMD + ' ' + Commands.IGNORE_ME_KEYWORD));
 
 		}
 		else if (lcTopic.startsWith(Commands.TELL_CMD))
 		{
 			send(sender, "To send a message to someone when they join the channel:");
-			send(sender, DOUBLE_INDENT + Utils.bold(getNick() + ": " + Commands.TELL_CMD + " <nick> <message>"));
+			send(sender, helpIndent(getNick() + ": " + Commands.TELL_CMD + " <nick> <message>"));
 
 			send(sender, "To view queued and sent messages:");
-			send(sender, DOUBLE_INDENT + Utils.bold(getNick() + ": " + Commands.TELL_CMD + ' ' + Commands.VIEW_CMD));
+			send(sender, helpIndent(getNick() + ": " + Commands.TELL_CMD + ' ' + Commands.VIEW_CMD));
 
 			send(sender, "Messages are kept for " + Utils.bold(tellMaxDays) + " days.");
 		}
@@ -1242,56 +1263,58 @@ public class Mobibot extends PircBot
 		{
 			send(sender, Utils.bold("Type a URL on " + channel + " to post it."));
 			send(sender, "For more information on specific command, type:");
-			send(sender, DOUBLE_INDENT + Utils.bold(getNick() + ": " + Commands.HELP_CMD + " <command>"));
+			send(sender, helpIndent(getNick() + ": " + Commands.HELP_CMD + " <command>"));
 			send(sender, "The commands are:");
 
-			final List<String> cmds = new ArrayList<String>();
-			cmds.add(Commands.CALC_CMD);
-			cmds.add(Commands.CURRENCY_CMD);
-			cmds.add(Commands.DICE_CMD);
-			cmds.add(Commands.GOOGLE_CMD);
-			cmds.add(Commands.IGNORE_CMD);
-			cmds.add(Commands.INFO_CMD);
-			cmds.add(Commands.JOKE_CMD);
-			cmds.add(Commands.LOOKUP_CMD);
-			cmds.add(channel.substring(1));
-			cmds.add(Commands.HELP_POSTING_KEYWORD);
-			cmds.add(Commands.RECAP_CMD);
-			cmds.add(Commands.STOCK_CMD);
-			cmds.add(Commands.HELP_TAGS_KEYWORD);
-			cmds.add(Commands.TIME_CMD);
-			cmds.add(Commands.USERS_CMD);
-			cmds.add(Commands.VIEW_CMD);
-			cmds.add(Commands.WAR_CMD);
-			cmds.add(Commands.WEATHER_CMD);
-
-			if (isTellEnabled())
+			if (commandsList.isEmpty())
 			{
-				cmds.add(Commands.TELL_CMD);
-			}
+				commandsList.add(Commands.CALC_CMD);
+				commandsList.add(Commands.CURRENCY_CMD);
+				commandsList.add(Commands.DICE_CMD);
+				commandsList.add(Commands.GOOGLE_CMD);
+				commandsList.add(Commands.IGNORE_CMD);
+				commandsList.add(Commands.INFO_CMD);
+				commandsList.add(Commands.JOKE_CMD);
+				commandsList.add(Commands.LOOKUP_CMD);
+				commandsList.add(channel.substring(1));
+				commandsList.add(Commands.HELP_POSTING_KEYWORD);
+				commandsList.add(Commands.RECAP_CMD);
+				commandsList.add(Commands.STOCK_CMD);
+				commandsList.add(Commands.HELP_TAGS_KEYWORD);
+				commandsList.add(Commands.TIME_CMD);
+				commandsList.add(Commands.USERS_CMD);
+				commandsList.add(Commands.VIEW_CMD);
+				commandsList.add(Commands.WAR_CMD);
+				commandsList.add(Commands.WEATHER_CMD);
 
-			if (isTwitterEnabled())
-			{
-				cmds.add(Commands.TWITTER_CMD);
-			}
+				if (isTellEnabled())
+				{
+					commandsList.add(Commands.TELL_CMD);
+				}
 
-			Collections.sort(cmds);
+				if (isTwitterEnabled())
+				{
+					commandsList.add(Commands.TWITTER_CMD);
+				}
+
+				Collections.sort(commandsList);
+			}
 
 			final StringBuilder sb = new StringBuilder(0);
 
-			for (int i = 0, cmdCount = 1; i < cmds.size(); i++, cmdCount++)
+			for (int i = 0, cmdCount = 1; i < commandsList.size(); i++, cmdCount++)
 			{
 				if (sb.length() > 0)
 				{
 					sb.append("  ");
 				}
 
-				sb.append(cmds.get(i));
+				sb.append(commandsList.get(i));
 
 				// 5 commands per line or last command
-				if (sb.length() > 0 && (cmdCount == 5 || i == (cmds.size() - 1)))
+				if (sb.length() > 0 && (cmdCount == 5 || i == (commandsList.size() - 1)))
 				{
-					send(sender, DOUBLE_INDENT + Utils.bold(sb.toString()));
+					send(sender, helpIndent(sb.toString()));
 
 					sb.setLength(0);
 					cmdCount = 0;
@@ -1302,9 +1325,8 @@ public class Mobibot extends PircBot
 			{
 				send(sender, "The op commands are:");
 				send(sender,
-				     DOUBLE_INDENT + Utils
-						     .bold(Commands.CYCLE_CMD + "  " + Commands.ME_CMD + "  " + Commands.MSG_CMD + "  "
-						           + Commands.SAY_CMD + "  " + Commands.VERSION_CMD));
+				     helpIndent(Commands.CYCLE_CMD + "  " + Commands.ME_CMD + "  " + Commands.MSG_CMD + "  "
+				                + Commands.SAY_CMD + "  " + Commands.VERSION_CMD));
 			}
 		}
 	}
@@ -1667,9 +1689,7 @@ public class Mobibot extends PircBot
 					if (NO_TITLE.equals(entry.getTitle()))
 					{
 						send(sender, "Please specify a title, by typing:", true);
-						send(sender,
-						     DOUBLE_INDENT + Utils.bold(Commands.LINK_CMD + (index + 1) + ":|This is the title"),
-						     true);
+						send(sender, helpIndent(Commands.LINK_CMD + (index + 1) + ":|This is the title"), true);
 					}
 				}
 				else
@@ -1749,14 +1769,14 @@ public class Mobibot extends PircBot
 			// mobibot: dice
 			else if (cmd.equals(Commands.DICE_CMD))
 			{
-				send(channel, shall_we_play_a_game);
+				send(channel, SHALL_WE_PLAY_A_GAME);
 
 				Dice.roll(this, sender);
 			}
 			// mobibot: war
 			else if (cmd.equals(Commands.WAR_CMD))
 			{
-				send(channel, shall_we_play_a_game);
+				send(channel, SHALL_WE_PLAY_A_GAME);
 
 				War.play(this, sender);
 			}
@@ -2507,7 +2527,7 @@ public class Mobibot extends PircBot
 							     true);
 						}
 
-						send(sender, DOUBLE_INDENT + message.getMessage(), true);
+						send(sender, helpIndent(message.getMessage(), false), true);
 					}
 				}
 
@@ -2519,9 +2539,8 @@ public class Mobibot extends PircBot
 				{
 					send(sender, "To delete one or all delivered messages:");
 					send(sender,
-					     DOUBLE_INDENT + Utils
-							     .bold(getNick() + ": " + Commands.TELL_CMD + ' ' + Commands.TELL_DEL_CMD + " <id|"
-							           + Commands.TELL_ALL_CMD + '>'));
+					     helpIndent(getNick() + ": " + Commands.TELL_CMD + ' ' + Commands.TELL_DEL_CMD + " <id|"
+					                + Commands.TELL_ALL_CMD + '>'));
 					send(sender, "Messages are kept for " + Utils.bold(tellMaxDays) + " days.");
 				}
 			}

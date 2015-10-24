@@ -91,6 +91,20 @@ class Utils
 	}
 
 	/**
+	 * Makes the given int reverse color.
+	 *
+	 * @param i The int.
+	 *
+	 * @return The reverse color string.
+	 */
+	public static String reverseColor(int i)
+	{
+		return Colors.REVERSE + i + Colors.REVERSE;
+	}
+
+
+
+	/**
 	 * Builds an entry's comment for display on the channel.
 	 *
 	 * @param entryIndex The entry's index.
@@ -167,6 +181,19 @@ class Utils
 	{
 		return Colors.BOLD + s + Colors.BOLD;
 	}
+
+	/**
+	 * Makes the given string reverse color.
+	 *
+	 * @param s The string.
+	 *
+	 * @return The reverse color string.
+	 */
+	public static String reverseColor(String s)
+	{
+		return Colors.REVERSE + s + Colors.REVERSE;
+	}
+
 
 	/**
 	 * Build an entry's tags/categories for display on the channel.
