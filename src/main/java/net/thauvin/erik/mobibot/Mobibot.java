@@ -36,8 +36,8 @@ package net.thauvin.erik.mobibot;
 import com.sun.syndication.fetcher.impl.FeedFetcherCache;
 import com.sun.syndication.fetcher.impl.HashMapFeedInfoCache;
 import com.sun.syndication.io.FeedException;
-import de.congrace.exp4j.Calculable;
-import de.congrace.exp4j.ExpressionBuilder;
+import net.objecthunter.exp4j.Expression;
+import net.objecthunter.exp4j.ExpressionBuilder;
 import org.apache.commons.cli.*;
 import org.apache.commons.logging.impl.Log4JLogger;
 import org.apache.log4j.Level;
@@ -850,8 +850,8 @@ public class Mobibot extends PircBot
 
 			try
 			{
-				final Calculable calc = new ExpressionBuilder(args).build();
-				send(channel, args.replaceAll(" ", "") + " = " + decimalFormat.format(calc.calculate()));
+				final Expression calc = new ExpressionBuilder(args).build();
+				send(channel, args.replaceAll(" ", "") + " = " + decimalFormat.format(calc.evaluate()));
 			}
 			catch (Exception e)
 			{
@@ -1050,7 +1050,6 @@ public class Mobibot extends PircBot
 		}
 	}
 
-
 	/**
 	 * Returns indented and bold help string.
 	 *
@@ -1060,7 +1059,7 @@ public class Mobibot extends PircBot
 	 */
 	private String helpIndent(String help)
 	{
-		return  helpIndent(help, true);
+		return helpIndent(help, true);
 	}
 
 	/**

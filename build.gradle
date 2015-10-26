@@ -38,7 +38,7 @@ dependencies {
   compile 'org.ostermiller:utils:1.07.00'
 
   compile 'net.sourceforge.jweather:jweather:0.3.0@jar'
-  compile 'de.congrace:exp4j:0.3.11'
+  compile 'net.objecthunter:exp4j:0.4.5'
 
   compile 'org.twitter4j:twitter4j-core:4.0.4'
   compile 'net.sf.delicious-java:delicious:1.14'

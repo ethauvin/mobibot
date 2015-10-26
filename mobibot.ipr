@@ -438,15 +438,6 @@
         <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/commons-net/commons-net/1.4.1/4c85b39e7f03471338bf7d36558eefe1e463e3de/commons-net-1.4.1-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Gradle: de.congrace:exp4j:0.3.11">
-      <CLASSES>
-        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/de.congrace/exp4j/0.3.11/150e7b4a77af47b03a1b65be7a01bd663ea64420/exp4j-0.3.11.jar!/" />
-      </CLASSES>
-      <JAVADOC />
-      <SOURCES>
-        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/de.congrace/exp4j/0.3.11/61abb5ef010830519e47ac56faade402807b245b/exp4j-0.3.11-sources.jar!/" />
-      </SOURCES>
-    </library>
     <library name="Gradle: log4j:log4j:1.2.17">
       <CLASSES>
         <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/log4j/log4j/1.2.17/5af35056b4d257e4b64b9e8069c0746e8b08629f/log4j-1.2.17.jar!/" />
@@ -454,6 +445,15 @@
       <JAVADOC />
       <SOURCES>
         <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/log4j/log4j/1.2.17/677abe279b68c5e7490d6d50c6951376238d7d3e/log4j-1.2.17-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Gradle: net.objecthunter:exp4j:0.4.5">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/net.objecthunter/exp4j/0.4.5/c6876761bb3816c603350f39b22023ee236430be/exp4j-0.4.5.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/net.objecthunter/exp4j/0.4.5/977535d7083d551378ff8ba8e5d2c9ddf5f0c455/exp4j-0.4.5-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Gradle: net.sf.delicious-java:delicious:1.14">
