@@ -677,7 +677,7 @@ public class Mobibot extends PircBot
 	/**
 	 * Sets the del.icio.us authentication.
 	 *
-	 * @param username The del.icio.us username.
+	 * @param username The del.icio.us user name.
 	 * @param password The del.icio.us password.
 	 */
 	private void setDeliciousAuth(String username, String password)
@@ -733,7 +733,7 @@ public class Mobibot extends PircBot
 	 * Set the {@link Commands#TELL_CMD} parameters
 	 *
 	 * @param tellMaxDays The max number of days to hold messages for.
-	 * @param tellMaxSize The maximmm number of messages to hold
+	 * @param tellMaxSize The maximum number of messages to hold
 	 */
 	private void setTell(int tellMaxDays, int tellMaxSize)
 	{
@@ -1261,7 +1261,7 @@ public class Mobibot extends PircBot
 		else
 		{
 			send(sender, Utils.bold("Type a URL on " + channel + " to post it."));
-			send(sender, "For more information on specific command, type:");
+			send(sender, "For more information on a specific command, type:");
 			send(sender, helpIndent(getNick() + ": " + Commands.HELP_CMD + " <command>"));
 			send(sender, "The commands are:");
 

@@ -51,7 +51,7 @@ class DeliciousPoster
 	/**
 	 * Creates a new {@link DeliciousPoster} instance.
 	 *
-	 * @param username The del.icio.us username.
+	 * @param username The del.icio.us user name.
 	 * @param password The del.icio.us password.
 	 * @param ircServer The IRC server.
 	 */

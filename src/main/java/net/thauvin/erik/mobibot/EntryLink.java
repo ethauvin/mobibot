@@ -306,7 +306,7 @@ public class EntryLink implements Serializable
 	}
 
 	/**
-	 * Return's the comment's author login.
+	 * Returns the comment's author login.
 	 *
 	 * @return The login;
 	 */
@@ -316,7 +316,7 @@ public class EntryLink implements Serializable
 	}
 
 	/**
-	 * Set the comment's author login.
+	 * Sets the comment's author login.
 	 *
 	 * @param login The new login.
 	 */
