@@ -88,7 +88,7 @@ class CurrencyConverter implements Runnable
 	 *
 	 * @param bot The bot's instance.
 	 */
-	public CurrencyConverter(Mobibot bot)
+	public CurrencyConverter(final Mobibot bot)
 	{
 		this.bot = bot;
 	}
@@ -186,23 +186,18 @@ class CurrencyConverter implements Runnable
 					{
 						bot.send(sender, "Last Update: " + pubDate);
 
-						final Iterator<String> it = EXCHANGE_RATES.keySet().iterator();
-						String rate;
-
 						final StringBuilder buff = new StringBuilder(0);
 
-						while (it.hasNext())
+						for (final Map.Entry<String, String> rate : EXCHANGE_RATES.entrySet())
 						{
-							rate = it.next();
 							if (buff.length() > 0)
 							{
 								buff.append(", ");
 							}
-							buff.append(rate).append(": ").append(EXCHANGE_RATES.get(rate));
+							buff.append(rate.getKey()).append(": ").append(rate.getValue());
 						}
 
 						bot.send(sender, buff.toString());
-
 					}
 				}
 			}
@@ -221,7 +216,7 @@ class CurrencyConverter implements Runnable
 	 * @param query The currency query.
 	 */
 
-	public synchronized void setQuery(String sender, String query)
+	public synchronized void setQuery(final String sender, final String query)
 	{
 		this.query = query;
 		this.sender = sender;

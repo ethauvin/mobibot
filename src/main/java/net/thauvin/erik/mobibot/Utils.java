@@ -50,7 +50,7 @@ import java.util.Calendar;
  * @created 2014-04-26
  * @since 1.0
  */
-class Utils
+final class Utils
 {
 	/**
 	 * The timestamp simple date format.
@@ -85,24 +85,10 @@ class Utils
 	 *
 	 * @return The bold string.
 	 */
-	public static String bold(int i)
+	public static String bold(final int i)
 	{
 		return Colors.BOLD + i + Colors.BOLD;
 	}
-
-	/**
-	 * Makes the given int reverse color.
-	 *
-	 * @param i The int.
-	 *
-	 * @return The reverse color string.
-	 */
-	public static String reverseColor(int i)
-	{
-		return Colors.REVERSE + i + Colors.REVERSE;
-	}
-
-
 
 	/**
 	 * Builds an entry's comment for display on the channel.
@@ -113,7 +99,7 @@ class Utils
 	 *
 	 * @return The entry's comment.
 	 */
-	static String buildComment(int entryIndex, int commentIndex, EntryComment comment)
+	static String buildComment(final int entryIndex, final int commentIndex, final EntryComment comment)
 	{
 		return (Commands.LINK_CMD + (entryIndex + 1) + '.' + (commentIndex + 1) + ": [" + comment.getNick() + "] "
 		        + comment.getComment());
@@ -129,7 +115,7 @@ class Utils
 	 *
 	 * @see #buildLink(int, net.thauvin.erik.mobibot.EntryLink, boolean)
 	 */
-	static String buildLink(int index, EntryLink entry)
+	static String buildLink(final int index, final EntryLink entry)
 	{
 		return buildLink(index, entry, false);
 	}
@@ -143,7 +129,7 @@ class Utils
 	 *
 	 * @return The entry's link.
 	 */
-	static String buildLink(int index, EntryLink entry, boolean isView)
+	static String buildLink(final int index, final EntryLink entry, final boolean isView)
 	{
 		final StringBuilder buff = new StringBuilder(Commands.LINK_CMD + (index + 1) + ": ");
 
@@ -177,23 +163,10 @@ class Utils
 	 *
 	 * @return The bold string.
 	 */
-	public static String bold(String s)
+	public static String bold(final String s)
 	{
 		return Colors.BOLD + s + Colors.BOLD;
 	}
-
-	/**
-	 * Makes the given string reverse color.
-	 *
-	 * @param s The string.
-	 *
-	 * @return The reverse color string.
-	 */
-	public static String reverseColor(String s)
-	{
-		return Colors.REVERSE + s + Colors.REVERSE;
-	}
-
 
 	/**
 	 * Build an entry's tags/categories for display on the channel.
@@ -203,7 +176,7 @@ class Utils
 	 *
 	 * @return The entry's tags.
 	 */
-	static String buildTags(int entryIndex, EntryLink entry)
+	static String buildTags(final int entryIndex, final EntryLink entry)
 	{
 		return (Commands.LINK_CMD + (entryIndex + 1) + "T: " + entry.getDeliciousTags().replaceAll(",", ", "));
 	}
@@ -217,7 +190,7 @@ class Utils
 	 * @throws java.io.IOException If the file could not be copied.
 	 */
 	@SuppressWarnings("UnusedDeclaration")
-	public static void copyFile(File in, File out)
+	public static void copyFile(final File in, final File out)
 			throws IOException
 	{
 		FileChannel inChannel = null;
@@ -281,7 +254,7 @@ class Utils
 	 *
 	 * @return The location ending with a slash.
 	 */
-	public static String ensureDir(String location, boolean isUrl)
+	public static String ensureDir(final String location, final boolean isUrl)
 	{
 		if (isUrl)
 		{
@@ -315,7 +288,7 @@ class Utils
 	 *
 	 * @return The port or default value if invalid.
 	 */
-	public static int getIntProperty(String property, int def)
+	public static int getIntProperty(final String property, final int def)
 	{
 		int prop;
 
@@ -361,11 +334,11 @@ class Utils
 
 		if (beats < 10)
 		{
-			return ("@00" + String.valueOf(beats));
+			return ("@00" + beats);
 		}
 		else if (beats < 100)
 		{
-			return ("@0" + String.valueOf(beats));
+			return ("@0" + beats);
 		}
 
 		return ('@' + String.valueOf(beats));
@@ -378,9 +351,45 @@ class Utils
 	 *
 	 * @return true if the string is non-empty and not null, false otherwise.
 	 */
-	public static boolean isValidString(String s)
+	public static boolean isValidString(final CharSequence s)
 	{
-		return (s != null) && (s.trim().length() > 0);
+		final int len;
+		if (s == null || (len = s.length()) == 0)
+		{
+			return false;
+		}
+		for (int i = 0; i < len; i++)
+		{
+			if (!Character.isWhitespace(s.charAt(i)))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Makes the given int reverse color.
+	 *
+	 * @param i The int.
+	 *
+	 * @return The reverse color string.
+	 */
+	public static String reverseColor(final int i)
+	{
+		return Colors.REVERSE + i + Colors.REVERSE;
+	}
+
+	/**
+	 * Makes the given string reverse color.
+	 *
+	 * @param s The string.
+	 *
+	 * @return The reverse color string.
+	 */
+	public static String reverseColor(final String s)
+	{
+		return Colors.REVERSE + s + Colors.REVERSE;
 	}
 
 	/**
@@ -400,7 +409,7 @@ class Utils
 	 *
 	 * @return The unescaped string.
 	 */
-	public static String unescapeXml(String str)
+	public static String unescapeXml(final String str)
 	{
 		String s = str.replaceAll("&amp;", "&");
 		s = s.replaceAll("&lt;", "<");
