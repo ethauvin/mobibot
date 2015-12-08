@@ -345,11 +345,11 @@ final class Utils
 	}
 
 	/**
-	 * Returns true if the given string is valid.
+	 * Returns <code>true</code> if the given string is <em>not</em> blank or null.
 	 *
-	 * @param s The string to validate.
+	 * @param s The string to check.
 	 *
-	 * @return true if the string is non-empty and not null, false otherwise.
+	 * @return <code>true</code> if the string is valid, <code>false</code> otherwise.
 	 */
 	public static boolean isValidString(final CharSequence s)
 	{
