@@ -1,35 +1,33 @@
 /*
  * Mobibot.java
  *
- * Copyright (c) 2004-2015, Erik C. Thauvin (erik@thauvin.net)
+ * Copyright (c) 2004-2016, Erik C. Thauvin (erik@thauvin.net)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are
- * met:
+ * modification, are permitted provided that the following conditions are met:
  *
- * Redistributions of source code must retain the above copyright notice,
- * this list of conditions and the following disclaimer.
+ *   Redistributions of source code must retain the above copyright notice, this
+ *   list of conditions and the following disclaimer.
  *
- * Redistributions in binary form must reproduce the above copyright notice,
- * this list of conditions and the following disclaimer in the documentation
- * and/or other materials provided with the distribution.
+ *   Redistributions in binary form must reproduce the above copyright notice,
+ *   this list of conditions and the following disclaimer in the documentation
+ *   and/or other materials provided with the distribution.
  *
- * Neither the name of the author nor the names of its contributors may be
- * used to endorse or promote products derived from this software without
- * specific prior written permission.
+ *   Neither the name of this project nor the names of its contributors may be
+ *   used to endorse or promote products derived from this software without
+ *   specific prior written permission.
  *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
- * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
- * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
- * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
- * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package net.thauvin.erik.mobibot;
 
@@ -38,6 +36,7 @@ import com.sun.syndication.fetcher.impl.HashMapFeedInfoCache;
 import com.sun.syndication.io.FeedException;
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
+import net.thauvin.erik.semver.Version;
 import org.apache.commons.cli.*;
 import org.apache.commons.logging.impl.Log4JLogger;
 import org.apache.log4j.Level;
@@ -60,6 +59,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * @created Jan 31, 2004
  * @since 1.0
  */
+@Version(properties = "version.properties", className = "ReleaseInfo")
 public class Mobibot extends PircBot
 {
 	/**
@@ -92,8 +92,8 @@ public class Mobibot extends PircBot
 	 * The info strings.
 	 */
 	private static final String[] INFO_STRS = {
-			ReleaseInfo.getProject() + " v" + ReleaseInfo.getVersion() + '.' + ReleaseInfo.getBuildNumber()
-			+ " by Erik C. Thauvin (erik@thauvin.net)", "http://www.mobitopia.org/mobibot/"
+			ReleaseInfo.getProject() + " v" + ReleaseInfo.getVersion() + " by Erik C. Thauvin (erik@thauvin.net)",
+			"http://www.mobitopia.org/mobibot/"
 	};
 
 	/**
@@ -145,8 +145,7 @@ public class Mobibot extends PircBot
 	 * The version strings.
 	 */
 	private static final String[] VERSION_STRS = {
-			"Version: " + ReleaseInfo.getVersion() + '.' + ReleaseInfo.getBuildNumber() + " (" + Utils.ISO_SDF
-					.format(ReleaseInfo.getBuildDate()) + ')',
+			"Version: " + ReleaseInfo.getVersion() + " (" + Utils.ISO_SDF.format(ReleaseInfo.getBuildDate()) + ')',
 			"Platform: " + System.getProperty("os.name") + " (" + System.getProperty("os.version") + ", " + System
 					.getProperty("os.arch") + ", " + System.getProperty("user.country") + ')',
 			"Runtime: " + System.getProperty("java.runtime.name") + " (build " + System
@@ -320,7 +319,8 @@ public class Mobibot extends PircBot
 	 * @param logsDir The logs directory.
 	 */
 	@SuppressWarnings("WeakerAccess")
-	public Mobibot(String server, int port, String nickname, String channel, String logsDir)
+	public Mobibot(final String server, final int port, final String nickname, final String channel,
+	               final String logsDir)
 	{
 		System.getProperties().setProperty("sun.net.client.defaultConnectTimeout", String.valueOf(CONNECT_TIMEOUT));
 		System.getProperties().setProperty("sun.net.client.defaultReadTimeout", String.valueOf(CONNECT_TIMEOUT));
@@ -385,7 +385,7 @@ public class Mobibot extends PircBot
 	 *
 	 * @param args The command line arguments.
 	 */
-	public static void main(String[] args)
+	public static void main(final String[] args)
 	{
 		// Setup the command line options
 		final Options options = new Options();
@@ -639,7 +639,7 @@ public class Mobibot extends PircBot
 	 *
 	 * @param pwd The password.
 	 */
-	private void setIdent(String pwd)
+	private void setIdent(final String pwd)
 	{
 		ident = pwd;
 	}
@@ -649,7 +649,7 @@ public class Mobibot extends PircBot
 	 *
 	 * @param nick The nickname.
 	 */
-	private void setIdentNick(String nick)
+	private void setIdentNick(final String nick)
 	{
 		identNick = nick;
 	}
@@ -659,7 +659,7 @@ public class Mobibot extends PircBot
 	 *
 	 * @param msg The message.
 	 */
-	private void setIdentMsg(String msg)
+	private void setIdentMsg(final String msg)
 	{
 		identMsg = msg;
 	}
@@ -669,7 +669,7 @@ public class Mobibot extends PircBot
 	 *
 	 * @param feedURL The feed URL.
 	 */
-	private void setFeedURL(String feedURL)
+	private void setFeedURL(final String feedURL)
 	{
 		this.feedURL = feedURL;
 	}
@@ -680,7 +680,7 @@ public class Mobibot extends PircBot
 	 * @param username The del.icio.us user name.
 	 * @param password The del.icio.us password.
 	 */
-	private void setDeliciousAuth(String username, String password)
+	private void setDeliciousAuth(final String username, final String password)
 	{
 		delicious = new DeliciousPoster(username, password, ircServer);
 	}
@@ -693,7 +693,8 @@ public class Mobibot extends PircBot
 	 * @param token The Twitter token.
 	 * @param tokenSecret The Twitter token secret.
 	 */
-	private void setTwitterAuth(String consumerKey, String consumerSecret, String token, String tokenSecret)
+	private void setTwitterAuth(final String consumerKey, final String consumerSecret, final String token,
+	                            final String tokenSecret)
 	{
 		twitterConsumerKey = consumerKey;
 		twitterConsumerSecret = consumerSecret;
@@ -706,7 +707,7 @@ public class Mobibot extends PircBot
 	 *
 	 * @param tags The tags.
 	 */
-	private void setTags(String tags)
+	private void setTags(final String tags)
 	{
 		defaultTags = tags;
 	}
@@ -716,7 +717,7 @@ public class Mobibot extends PircBot
 	 *
 	 * @param nicks The nicks to ignore
 	 */
-	private void setIgnoredNicks(String nicks)
+	private void setIgnoredNicks(final String nicks)
 	{
 		if (Utils.isValidString(nicks))
 		{
@@ -735,7 +736,7 @@ public class Mobibot extends PircBot
 	 * @param tellMaxDays The max number of days to hold messages for.
 	 * @param tellMaxSize The maximum number of messages to hold
 	 */
-	private void setTell(int tellMaxDays, int tellMaxSize)
+	private void setTell(final int tellMaxDays, final int tellMaxSize)
 	{
 		this.tellMaxDays = tellMaxDays;
 		this.tellMaxSize = tellMaxSize;
@@ -746,7 +747,7 @@ public class Mobibot extends PircBot
 	 *
 	 * @param isDayBackup Set the true if the daily backup file should also be created.
 	 */
-	private void saveEntries(boolean isDayBackup)
+	private void saveEntries(final boolean isDayBackup)
 	{
 		EntriesMgr.saveEntries(this, entries, history, isDayBackup);
 	}
@@ -756,7 +757,7 @@ public class Mobibot extends PircBot
 	 *
 	 * @param secs The number of seconds to sleep for.
 	 */
-	private static void sleep(int secs)
+	private static void sleep(final int secs)
 	{
 		try
 		{
@@ -816,7 +817,7 @@ public class Mobibot extends PircBot
 	 *
 	 * @param action The action.
 	 */
-	final void action(String action)
+	final void action(final String action)
 	{
 		action(channel, action);
 	}
@@ -827,7 +828,7 @@ public class Mobibot extends PircBot
 	 * @param channel The channel.
 	 * @param action The action.
 	 */
-	private void action(String channel, String action)
+	private void action(final String channel, final String action)
 	{
 		if (Utils.isValidString(channel) && Utils.isValidString(action))
 		{
@@ -842,7 +843,7 @@ public class Mobibot extends PircBot
 	 * @param args The command arguments.
 	 * @param message The actual message.
 	 */
-	private void calcResponse(String sender, String args, String message)
+	private void calcResponse(final String sender, final String args, final String message)
 	{
 		if (Utils.isValidString(args))
 		{
@@ -874,7 +875,7 @@ public class Mobibot extends PircBot
 	 *
 	 * @param sender The nick of the person who sent the private message.
 	 */
-	private void feedResponse(String sender)
+	private void feedResponse(final String sender)
 	{
 		if (Utils.isValidString(feedURL))
 		{
@@ -893,7 +894,7 @@ public class Mobibot extends PircBot
 	 *
 	 * @return The index or -1 if none.
 	 */
-	private int findDupEntry(String link)
+	private int findDupEntry(final String link)
 	{
 		EntryLink entry;
 
@@ -928,7 +929,7 @@ public class Mobibot extends PircBot
 	 *
 	 * @param backLogsUrl The backlogs URL.
 	 */
-	private void setBacklogsUrl(String backLogsUrl)
+	private void setBacklogsUrl(final String backLogsUrl)
 	{
 		this.backLogsUrl = backLogsUrl;
 	}
@@ -1027,7 +1028,7 @@ public class Mobibot extends PircBot
 	 *
 	 * @param weblogUrl The weblog URL.
 	 */
-	private void setWeblogUrl(String weblogUrl)
+	private void setWeblogUrl(final String weblogUrl)
 	{
 		this.weblogUrl = weblogUrl;
 	}
@@ -1038,7 +1039,7 @@ public class Mobibot extends PircBot
 	 * @param sender The nick of the person who sent the private message.
 	 * @param query The Google query to execute.
 	 */
-	private void googleResponse(String sender, String query)
+	private void googleResponse(final String sender, final String query)
 	{
 		if (query.length() > 0)
 		{
@@ -1057,7 +1058,7 @@ public class Mobibot extends PircBot
 	 *
 	 * @return The indented help string.
 	 */
-	private String helpIndent(String help)
+	private String helpIndent(final String help)
 	{
 		return helpIndent(help, true);
 	}
@@ -1070,7 +1071,7 @@ public class Mobibot extends PircBot
 	 *
 	 * @return The indented help string.
 	 */
-	private String helpIndent(String help, boolean isBold)
+	private String helpIndent(final String help, final boolean isBold)
 	{
 		return "        " + (isBold ? Utils.bold(help) : help);
 	}
@@ -1081,7 +1082,7 @@ public class Mobibot extends PircBot
 	 * @param sender The nick of the person who sent the private message.
 	 * @param topic The help topic, if any.
 	 */
-	public final void helpResponse(String sender, String topic)
+	public final void helpResponse(final String sender, final String topic)
 	{
 		final String lcTopic = topic.toLowerCase();
 
@@ -1336,7 +1337,7 @@ public class Mobibot extends PircBot
 	 * @param sender The sender.
 	 * @param args The command arguments.
 	 */
-	private void ignoreResponse(String sender, String args)
+	private void ignoreResponse(final String sender, final String args)
 	{
 		if (!isOp(sender))
 		{
@@ -1404,7 +1405,7 @@ public class Mobibot extends PircBot
 	 * @param sender The nick of the person who sent the message.
 	 * @param isPrivate Set to true is the response should be send as a private message.
 	 */
-	private void infoResponse(String sender, boolean isPrivate)
+	private void infoResponse(final String sender, final boolean isPrivate)
 	{
 		for (final String info : INFO_STRS)
 		{
@@ -1434,7 +1435,7 @@ public class Mobibot extends PircBot
 	 *
 	 * @return <code>true</code> if the nick should be ignored, <code>false</code> otherwise.
 	 */
-	private boolean isIgnoredNick(String nick)
+	private boolean isIgnoredNick(final String nick)
 	{
 		return Utils.isValidString(nick) && ignoredNicks.contains(nick.toLowerCase());
 
@@ -1447,7 +1448,7 @@ public class Mobibot extends PircBot
 	 *
 	 * @return true, if the sender is an Op.
 	 */
-	private boolean isOp(String sender)
+	private boolean isOp(final String sender)
 	{
 		final User[] users = getUsers(channel);
 
@@ -1479,7 +1480,7 @@ public class Mobibot extends PircBot
 	 * @param sender The nick of the person who sent the message
 	 * @param query The hostname or IP address.
 	 */
-	private void lookupResponse(String sender, String query)
+	private void lookupResponse(final String sender, final String query)
 	{
 		if (query.matches("(\\S.)+(\\S)+"))
 		{
@@ -1598,7 +1599,8 @@ public class Mobibot extends PircBot
 	}
 
 	@Override
-	protected final void onMessage(String channel, String sender, String login, String hostname, String message)
+	protected final void onMessage(final String channel, final String sender, final String login, final String hostname,
+	                               final String message)
 	{
 		if (logger.isDebugEnabled())
 		{
@@ -2093,7 +2095,8 @@ public class Mobibot extends PircBot
 	}
 
 	@Override
-	protected final void onPrivateMessage(String sender, String login, String hostname, String message)
+	protected final void onPrivateMessage(final String sender, final String login, final String hostname,
+	                                      final String message)
 	{
 		if (logger.isDebugEnabled())
 		{
@@ -2270,7 +2273,8 @@ public class Mobibot extends PircBot
 	}
 
 	@Override
-	protected final void onAction(String sender, String login, String hostname, String target, String action)
+	protected final void onAction(final String sender, final String login, final String hostname, final String target,
+	                              final String action)
 	{
 		if (target.equals(channel))
 		{
@@ -2285,7 +2289,7 @@ public class Mobibot extends PircBot
 	 * @param message The actual message sent.
 	 * @param isAction Set to true if the message is an action.
 	 */
-	private void recap(String sender, String message, boolean isAction)
+	private void recap(final String sender, final String message, final boolean isAction)
 	{
 		recap.add(Utils.UTC_SDF.format(Calendar.getInstance().getTime()) + " -> " + sender + (isAction ? " " : ": ")
 		          + message);
@@ -2297,13 +2301,13 @@ public class Mobibot extends PircBot
 	}
 
 	@Override
-	protected void onJoin(String channel, String sender, String login, String hostname)
+	protected void onJoin(final String channel, final String sender, final String login, final String hostname)
 	{
 		tellSendMessages(sender);
 	}
 
 	@Override
-	protected void onNickChange(String oldNick, String login, String hostname, String newNick)
+	protected void onNickChange(final String oldNick, final String login, final String hostname, final String newNick)
 	{
 		tellSendMessages(newNick);
 	}
@@ -2313,7 +2317,7 @@ public class Mobibot extends PircBot
 	 *
 	 * @param nickname The user's nickname.
 	 */
-	private void tellSendMessages(String nickname)
+	private void tellSendMessages(final String nickname)
 	{
 		tellSendMessages(nickname, false);
 	}
@@ -2324,7 +2328,7 @@ public class Mobibot extends PircBot
 	 * @param nickname The user's nickname.
 	 * @param isMessage The message flag.
 	 */
-	private void tellSendMessages(String nickname, boolean isMessage)
+	private void tellSendMessages(final String nickname, final boolean isMessage)
 	{
 		if (!nickname.equals(getNick()) && isTellEnabled())
 		{
@@ -2396,7 +2400,7 @@ public class Mobibot extends PircBot
 	 * @param message The actual message.
 	 * @param isPrivate Set to true if the response should be a private message, otherwise a notice is sent.
 	 */
-	public final void send(String sender, String message, boolean isPrivate)
+	public final void send(final String sender, final String message, final boolean isPrivate)
 	{
 		if (Utils.isValidString(message) && Utils.isValidString(sender))
 		{
@@ -2427,7 +2431,7 @@ public class Mobibot extends PircBot
 	 * @param sender The nick of the person who sent the private message.
 	 * @param isPrivate Set to true is the response should be send as a private message.
 	 */
-	private void recapResponse(String sender, boolean isPrivate)
+	private void recapResponse(final String sender, final boolean isPrivate)
 	{
 		for (final String recap : this.recap)
 		{
@@ -2441,7 +2445,7 @@ public class Mobibot extends PircBot
 	 * @param sender The nick of the person who sent the message.
 	 * @param message The actual message.
 	 */
-	public final void send(String sender, String message)
+	public final void send(final String sender, final String message)
 	{
 		send(sender, message, false);
 	}
@@ -2452,7 +2456,7 @@ public class Mobibot extends PircBot
 	 * @param sender The nick of the person who sent the message.
 	 * @param symbol The stock symbol to lookup.
 	 */
-	private void stockResponse(String sender, String symbol)
+	private void stockResponse(final String sender, final String symbol)
 	{
 		if (symbol.length() > 0)
 		{
@@ -2470,7 +2474,7 @@ public class Mobibot extends PircBot
 	 * @param sender The sender's nick.
 	 * @param cmds The commands string.
 	 */
-	private void tellResponse(String sender, String cmds)
+	private void tellResponse(final String sender, final String cmds)
 	{
 		if (!Utils.isValidString(cmds))
 		{
@@ -2653,7 +2657,7 @@ public class Mobibot extends PircBot
 	 * @param sender The sender's nick.
 	 * @param message The message.
 	 */
-	private void twitterResponse(String sender, String message)
+	private void twitterResponse(final String sender, final String message)
 	{
 		if (isTwitterEnabled())
 		{
@@ -2684,7 +2688,7 @@ public class Mobibot extends PircBot
 	 * @param sender The nick of the person who sent the message.
 	 * @param isPrivate Set to true is the response should be send as a private message.
 	 */
-	private void usersResponse(String sender, boolean isPrivate)
+	private void usersResponse(final String sender, final boolean isPrivate)
 	{
 		final User[] users = getUsers(channel);
 		final String[] nicks = new String[users.length];
@@ -2717,7 +2721,7 @@ public class Mobibot extends PircBot
 	 * @param sender The nick of the person who sent the message.
 	 * @param isPrivate Set to true is the response should be send as a private message.
 	 */
-	private void versionResponse(String sender, boolean isPrivate)
+	private void versionResponse(final String sender, final boolean isPrivate)
 	{
 		if (isOp(sender))
 		{
@@ -2735,7 +2739,7 @@ public class Mobibot extends PircBot
 	 * @param args The view command arguments.
 	 * @param isPrivate Set to true is the response should be send as a private message.
 	 */
-	private void viewResponse(String sender, String args, boolean isPrivate)
+	private void viewResponse(final String sender, final String args, final boolean isPrivate)
 	{
 		String lcArgs = args.toLowerCase();
 
@@ -2838,7 +2842,7 @@ public class Mobibot extends PircBot
 	 * @param id The station's ID.
 	 * @param isPrivate Set to true is the response should be send as a private message.
 	 */
-	private void weatherResponse(String sender, String id, boolean isPrivate)
+	private void weatherResponse(final String sender, final String id, final boolean isPrivate)
 	{
 		new Thread(new Weather(this, sender, id, isPrivate)).start();
 	}

@@ -1,35 +1,33 @@
 /*
  * EntryLink.java
  *
- * Copyright (c) 2004-2015, Erik C. Thauvin (erik@thauvin.net)
+ * Copyright (c) 2004-2016, Erik C. Thauvin (erik@thauvin.net)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are
- * met:
+ * modification, are permitted provided that the following conditions are met:
  *
- * Redistributions of source code must retain the above copyright notice,
- * this list of conditions and the following disclaimer.
+ *   Redistributions of source code must retain the above copyright notice, this
+ *   list of conditions and the following disclaimer.
  *
- * Redistributions in binary form must reproduce the above copyright notice,
- * this list of conditions and the following disclaimer in the documentation
- * and/or other materials provided with the distribution.
+ *   Redistributions in binary form must reproduce the above copyright notice,
+ *   this list of conditions and the following disclaimer in the documentation
+ *   and/or other materials provided with the distribution.
  *
- * Neither the name of the author nor the names of its contributors may be
- * used to endorse or promote products derived from this software without
- * specific prior written permission.
+ *   Neither the name of this project nor the names of its contributors may be
+ *   used to endorse or promote products derived from this software without
+ *   specific prior written permission.
  *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
- * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
- * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
- * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
- * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package net.thauvin.erik.mobibot;
 
@@ -89,7 +87,7 @@ public class EntryLink implements Serializable
 	 * @param channel The channel.
 	 * @param tags The entry's tags/categories.
 	 */
-	public EntryLink(String link, String title, String nick, String login, String channel, String tags)
+	public EntryLink(final String link, final String title, final String nick, final String login, final String channel, final String tags)
 	{
 		this.link = link;
 		this.title = title;
@@ -105,7 +103,7 @@ public class EntryLink implements Serializable
 	 *
 	 * @param tags The space-delimited tags.
 	 */
-	public final void setTags(String tags)
+	public final void setTags(final String tags)
 	{
 		if (tags != null)
 		{
@@ -165,7 +163,7 @@ public class EntryLink implements Serializable
 	 * @param date The entry date.
 	 * @param tags The entry's tags/categories.
 	 */
-	public EntryLink(String link, String title, String nick, String channel, Date date, List<SyndCategoryImpl> tags)
+	public EntryLink(final String link, final String title, final String nick, final String channel, final Date date, final List<SyndCategoryImpl> tags)
 	{
 		this.link = link;
 		this.title = title;
@@ -184,7 +182,7 @@ public class EntryLink implements Serializable
 	 *
 	 * @return The total number of comments for this entry.
 	 */
-	public final int addComment(String comment, String nick)
+	public final int addComment(final String comment, final String nick)
 	{
 		comments.add(new EntryComment(comment, nick));
 
@@ -196,7 +194,7 @@ public class EntryLink implements Serializable
 	 *
 	 * @param index The index of the comment to delete.
 	 */
-	public final void deleteComment(int index)
+	public final void deleteComment(final int index)
 	{
 		if (index < comments.size())
 		{
@@ -220,7 +218,7 @@ public class EntryLink implements Serializable
 	 * @param channel The channel.
 	 */
 	@SuppressWarnings("UnusedDeclaration")
-	public final void setChannel(String channel)
+	public final void setChannel(final String channel)
 	{
 		this.channel = channel;
 	}
@@ -232,7 +230,7 @@ public class EntryLink implements Serializable
 	 *
 	 * @return The specific comment.
 	 */
-	public final EntryComment getComment(int index)
+	public final EntryComment getComment(final int index)
 	{
 		return (comments.get(index));
 	}
@@ -300,7 +298,7 @@ public class EntryLink implements Serializable
 	 *
 	 * @param link The new link.
 	 */
-	public final void setLink(String link)
+	public final void setLink(final String link)
 	{
 		this.link = link;
 	}
@@ -321,7 +319,7 @@ public class EntryLink implements Serializable
 	 * @param login The new login.
 	 */
 	@SuppressWarnings("UnusedDeclaration")
-	public final void setLogin(String login)
+	public final void setLogin(final String login)
 	{
 		this.login = login;
 	}
@@ -341,7 +339,7 @@ public class EntryLink implements Serializable
 	 *
 	 * @param nick The new nickname.
 	 */
-	public final void setNick(String nick)
+	public final void setNick(final String nick)
 	{
 		this.nick = nick;
 	}
@@ -361,7 +359,7 @@ public class EntryLink implements Serializable
 	 *
 	 * @param tags The tags.
 	 */
-	private void setTags(List<SyndCategoryImpl> tags)
+	private void setTags(final List<SyndCategoryImpl> tags)
 	{
 		this.tags.addAll(tags);
 	}
@@ -381,7 +379,7 @@ public class EntryLink implements Serializable
 	 *
 	 * @param title The new title.
 	 */
-	public final void setTitle(String title)
+	public final void setTitle(final String title)
 	{
 		this.title = title;
 	}
@@ -413,7 +411,7 @@ public class EntryLink implements Serializable
 	 * @param comment The actual comment.
 	 * @param nick The nickname of the author of the comment.
 	 */
-	public final void setComment(int index, String comment, String nick)
+	public final void setComment(final int index, final String comment, final String nick)
 	{
 		if (index < comments.size())
 		{

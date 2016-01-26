@@ -1,35 +1,33 @@
 /*
  * Lookup.java
  *
- * Copyright (c) 2004-2015, Erik C. Thauvin (erik@thauvin.net)
+ * Copyright (c) 2004-2016, Erik C. Thauvin (erik@thauvin.net)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are
- * met:
+ * modification, are permitted provided that the following conditions are met:
  *
- * Redistributions of source code must retain the above copyright notice,
- * this list of conditions and the following disclaimer.
+ *   Redistributions of source code must retain the above copyright notice, this
+ *   list of conditions and the following disclaimer.
  *
- * Redistributions in binary form must reproduce the above copyright notice,
- * this list of conditions and the following disclaimer in the documentation
- * and/or other materials provided with the distribution.
+ *   Redistributions in binary form must reproduce the above copyright notice,
+ *   this list of conditions and the following disclaimer in the documentation
+ *   and/or other materials provided with the distribution.
  *
- * Neither the name of the author nor the names of its contributors may be
- * used to endorse or promote products derived from this software without
- * specific prior written permission.
+ *   Neither the name of this project nor the names of its contributors may be
+ *   used to endorse or promote products derived from this software without
+ *   specific prior written permission.
  *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
- * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
- * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
- * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
- * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package net.thauvin.erik.mobibot;
 
@@ -46,7 +44,7 @@ import java.net.UnknownHostException;
  * @created 2014-04-26
  * @since 1.0
  */
-class Lookup
+final class Lookup
 {
 
 	/**
@@ -74,7 +72,7 @@ class Lookup
 	 *
 	 * @throws java.net.UnknownHostException If the host is unknown.
 	 */
-	public static String lookup(String query)
+	public static String lookup(final String query)
 			throws UnknownHostException
 	{
 		final StringBuilder buffer = new StringBuilder("");
@@ -118,7 +116,7 @@ class Lookup
 	 *
 	 * @throws java.io.IOException If a connection error occurs.
 	 */
-	public static String[] whois(String query)
+	public static String[] whois(final String query)
 			throws IOException
 	{
 		return whois(query, WHOIS_HOST);
@@ -135,7 +133,7 @@ class Lookup
 	 * @throws java.io.IOException If a connection error occurs.
 	 */
 	@SuppressWarnings("WeakerAccess, SameParameterValue")
-	public static String[] whois(String query, String host)
+	public static String[] whois(final String query, final String host)
 			throws IOException
 	{
 		final WhoisClient whois = new WhoisClient();

@@ -1,117 +1,136 @@
+plugins {
+	id "com.ewerk.gradle.plugins.annotation-processor" version "1.0.2"
+}
 apply plugin: 'java'
 apply plugin: 'idea'
 apply plugin: 'application'
 
 defaultTasks 'deploy'
 
-version = '0.6'
-
 def packageName = 'net.thauvin.erik.mobibot'
 def deployDir = 'deploy'
 def isRelease = 'release' in gradle.startParameter.taskNames
+
+def getVersion(isIncrement = false)
+{
+	def propsFile = 'version.properties'
+	def majorKey = 'version.major'
+	def minorKey = 'version.minor'
+	def patchKey = 'version.patch'
+	def metaKey = 'version.buildmeta'
+	def preKey = 'version.prerelease'
+	if (isIncrement)
+	{
+		ant.propertyfile(file: propsFile) {
+			entry(key: patchKey,
+			      type: 'int',
+			      default: '-1',
+			      operation: '+')
+		}
+	}
+	def p = new Properties()
+	file(propsFile).withInputStream { stream -> p.load(stream) }
+	def metadata = p.getProperty(metaKey, '')
+	def prerelease = p.getProperty(preKey, '')
+	return (p.getProperty(majorKey, '1') + '.' + p.getProperty(minorKey, '0') + '.' + p.getProperty(patchKey, '0') +
+	        (prerelease.length() > 0 ? '-' + prerelease : '') + (metadata.length() > 0 ? '+' + metadata : ''))
+}
+
+version = getVersion()
 
 mainClassName = packageName + '.Mobibot'
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
 repositories {
-  mavenCentral()
+	mavenLocal()
+	mavenCentral()
 }
 
 dependencies {
-  compile 'log4j:log4j:1.2.17@jar'
+	compile 'log4j:log4j:1.2.17@jar'
 
-  compile 'pircbot:pircbot:1.5.0'
+	compile 'pircbot:pircbot:1.5.0'
 
-  compile 'commons-codec:commons-codec:1.10'
-  compile 'commons-logging:commons-logging:1.2'
-  compile 'commons-net:commons-net:1.4.1'
-  compile 'commons-cli:commons-cli:1.2'
-  compile 'commons-httpclient:commons-httpclient:3.1'
+	compile 'commons-codec:commons-codec:1.10'
+	compile 'commons-logging:commons-logging:1.2'
+	compile 'commons-net:commons-net:1.4.1'
+	compile 'commons-cli:commons-cli:1.2'
+	compile 'commons-httpclient:commons-httpclient:3.1'
 
-  compile 'oro:oro:2.0.8'
+	compile 'oro:oro:2.0.8'
 
-  compile 'org.jdom:jdom:1.1.3'
-  compile 'org.jsoup:jsoup:1.8.3'
-  compile 'rome:rome:1.0@jar'
-  compile 'rome:rome-fetcher:1.0@jar'
-  compile 'org.json:json:20150729'
-  compile 'org.ostermiller:utils:1.07.00'
+	compile 'org.jdom:jdom:1.1.3'
+	compile 'org.jsoup:jsoup:1.8.3'
+	compile 'rome:rome:1.0@jar'
+	compile 'rome:rome-fetcher:1.0@jar'
+	compile 'org.json:json:20150729'
+	compile 'org.ostermiller:utils:1.07.00'
 
-  compile 'net.sourceforge.jweather:jweather:0.3.0@jar'
-  compile 'net.objecthunter:exp4j:0.4.5'
+	compile 'net.sourceforge.jweather:jweather:0.3.0@jar'
+	compile 'net.objecthunter:exp4j:0.4.5'
 
-  compile 'org.twitter4j:twitter4j-core:4.0.4'
-  compile 'net.sf.delicious-java:delicious:1.14'
+	compile 'org.twitter4j:twitter4j-core:4.0.4'
+	compile 'net.sf.delicious-java:delicious:1.14'
 
-  //compile fileTree(dir: 'lib', include: '*.jar')
-  //compile files('../path/to/example.jar')
+	compile 'net.thauvin.erik:semver:0.9.1-beta'
+}
+
+annotationProcessor {
+	project.version = getVersion(isRelease)
+	library 'net.thauvin.erik:semver:0.9.1-beta'
+	processor 'net.thauvin.erik.semver.VersionProcessor'
 }
 
 compileJava {
-  doFirst {
-    if (isRelease)
-    {
-      ant.taskdef(name: 'jreleaseinfo',
-                  classname: 'ch.oscg.jreleaseinfo.anttask.JReleaseInfoAntTask',
-                  classpath: 'ant/jreleaseinfo-1.3.0.jar')
-      ant.jreleaseinfo(targetDir: file('src/main/java'),
-                       className: 'ReleaseInfo',
-                       packageName: packageName,
-                       project: rootProject.name,
-                       version: version,
-                       buildnumfile: file('buildnum.properties'))
-
-    }
-
-  }
-  options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
+	options.compilerArgs << '-proc:none' << '-Xlint:unchecked' << '-Xlint:deprecation'
 }
 
 javadoc {
-  options.tags = ['created']
+	options.tags = ['created']
 }
 
 jar {
-  manifest.attributes('Main-Class': mainClassName,
-                      'Class-Path': '. ./lib/' + configurations.compile.collect { it.getName() }.join(' ./lib/'))
+	manifest.attributes('Main-Class': mainClassName,
+	                    'Class-Path': '. ./lib/' + configurations.compile.collect { it.getName() }.join(' ./lib/'))
 
-  version = null
+	version = null
 }
 
 clean {
-  delete deployDir
+	delete deployDir
 }
 
 task wrapper(type: Wrapper) {
-  gradleVersion = gradle.gradleVersion
+	gradleVersion = gradle.gradleVersion
 }
 
 task copyToDeploy(type: Copy) {
-  from('properties') {
-    include '*.properties'
-  }
-  from jar
-  into deployDir
+	from('properties') {
+		include '*.properties'
+	}
+	from jar
+	into deployDir
 }
 
 task copyToDeployLib(type: Copy) {
-  from configurations.runtime
-  into deployDir + '/lib'
+	from configurations.runtime
+	into deployDir + '/lib'
 }
 
 task deploy(dependsOn: ['build']) {
-  description = "Copies all needed files to the ${deployDir} directory."
-  group = "Publishing"
-  outputs.dir deployDir
-  inputs.files copyToDeploy
-  inputs.files copyToDeployLib
-  doLast {
-    file(deployDir + '/logs').mkdir()
-  }
-  mustRunAfter clean
+	description = 'Copies all needed files to the ${deployDir} directory.'
+	group = 'Publishing'
+	outputs.dir deployDir
+	inputs.files copyToDeploy
+	inputs.files copyToDeployLib
+	doLast {
+		file(deployDir + '/logs').mkdir()
+	}
+	mustRunAfter clean
 }
 
-task release(dependsOn: ['deploy', 'wrapper']) {
-  group = "Publishing"
-  description = "Releases new version."
+task release(dependsOn: ['deploy', 'wrapper']) << {
+	group = 'Publishing'
+	description = 'Releases new version.'
+	isRelease = true
 }
