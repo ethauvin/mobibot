@@ -394,13 +394,12 @@ public class Mobibot extends PircBot
 		                  Commands.DEBUG_ARG,
 		                  false,
 		                  "print debug & logging data directly to the console");
-		//noinspection AccessStaticViaInstance
-		options.addOption(OptionBuilder.withArgName("file").hasArg().withDescription("use alternate properties file")
-				                  .withLongOpt(Commands.PROPS_ARG).create(Commands.PROPS_ARG.substring(0, 1)));
+		options.addOption(Option.builder(Commands.PROPS_ARG.substring(0, 1)).hasArg().argName("file")
+				                  .desc("use alternate properties file").longOpt(Commands.PROPS_ARG).build());
 		options.addOption(Commands.VERSION_ARG.substring(0, 1), Commands.VERSION_ARG, false, "print version info");
 
 		// Parse the command line
-		final CommandLineParser parser = new PosixParser();
+		final CommandLineParser parser = new DefaultParser();
 		CommandLine line = null;
 
 		try

@@ -31,7 +31,7 @@
  */
 package net.thauvin.erik.mobibot;
 
-import org.apache.commons.net.WhoisClient;
+import org.apache.commons.net.whois.WhoisClient;
 
 import java.io.IOException;
 import java.net.InetAddress;

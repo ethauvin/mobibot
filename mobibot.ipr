@@ -400,13 +400,13 @@
     </option>
   </component>
   <component name="libraryTable">
-    <library name="Gradle: commons-cli:commons-cli:1.2">
+    <library name="Gradle: commons-cli:commons-cli:1.3.1">
       <CLASSES>
-        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/commons-cli/commons-cli/1.2/2bf96b7aa8b611c177d329452af1dc933e14501c/commons-cli-1.2.jar!/" />
+        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/commons-cli/commons-cli/1.3.1/1303efbc4b181e5a58bf2e967dc156a3132b97c0/commons-cli-1.3.1.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES>
-        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/commons-cli/commons-cli/1.2/6c5459816530a1962ac18cd315cc775b1b384329/commons-cli-1.2-sources.jar!/" />
+        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/commons-cli/commons-cli/1.3.1/12ec02d8cb9fbb33bd05506109a4fc8bcc3578/commons-cli-1.3.1-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Gradle: commons-codec:commons-codec:1.10">
@@ -454,13 +454,13 @@
         <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/commons-logging/commons-logging/1.2/ecf26c7507d67782a3bbd148d170b31dfad001aa/commons-logging-1.2-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Gradle: commons-net:commons-net:1.4.1">
+    <library name="Gradle: commons-net:commons-net:3.4">
       <CLASSES>
-        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/commons-net/commons-net/1.4.1/abb932adb2c10790c1eaa4365d3ac2a1ac7cb700/commons-net-1.4.1.jar!/" />
+        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/commons-net/commons-net/3.4/5e984db9554728564d58e90da5d90eff8ae8cf2d/commons-net-3.4.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES>
-        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/commons-net/commons-net/1.4.1/4c85b39e7f03471338bf7d36558eefe1e463e3de/commons-net-1.4.1-sources.jar!/" />
+        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/commons-net/commons-net/3.4/8439b8f20d7bdec502423732798a639501732c8/commons-net-3.4-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Gradle: log4j:log4j:1.2.17">
@@ -499,13 +499,13 @@
         <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/net.sourceforge.jweather/jweather/0.3.0/385ecc27f62f9d7c31de57cee468a8df58cb415e/jweather-0.3.0-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Gradle: net.thauvin.erik:semver:0.9.1-beta">
+    <library name="Gradle: net.thauvin.erik:semver:0.9.5-beta">
       <CLASSES>
-        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/net.thauvin.erik/semver/0.9.1-beta/644e4543823ae014b38e5f089f9d1c5cf9b5b1db/semver-0.9.1-beta.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/net/thauvin/erik/semver/0.9.5-beta/semver-0.9.5-beta.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES>
-        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/net.thauvin.erik/semver/0.9.1-beta/f100911addb16b8924d91897972ae074925908fc/semver-0.9.1-beta-sources.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/net/thauvin/erik/semver/0.9.5-beta/semver-0.9.5-beta-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Gradle: org.apache.velocity:velocity:1.7">
@@ -517,22 +517,22 @@
         <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.apache.velocity/velocity/1.7/eb11eb70171ed64842b2e5216d5904e21ed162ac/velocity-1.7-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Gradle: org.jdom:jdom:1.1.3">
+    <library name="Gradle: org.jdom:jdom:2.0.2">
       <CLASSES>
-        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jdom/jdom/1.1.3/8bdfeb39fa929c35f5e4f0b02d34350db39a1efc/jdom-1.1.3.jar!/" />
+        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jdom/jdom/2.0.2/d06c71e0df0ac4b94deb737718580ccce22d92e8/jdom-2.0.2.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES>
-        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jdom/jdom/1.1.3/b8b961a9f20d1faf160681c49f773a66b87efd63/jdom-1.1.3-sources.jar!/" />
+        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jdom/jdom/2.0.2/2c0614e33230394e42f5cfe55c20d5ae8949c108/jdom-2.0.2-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Gradle: org.json:json:20150729">
+    <library name="Gradle: org.json:json:20151123">
       <CLASSES>
-        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.json/json/20150729/7ad48f520e9f94787fdbf2beb9916c76971bdcb0/json-20150729.jar!/" />
+        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.json/json/20151123/1675d5c1142000dedd6627a73af26a8b885ef0e1/json-20151123.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES>
-        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.json/json/20150729/d71e3dbedb977d57f76453af0bb43eed162adc30/json-20150729-sources.jar!/" />
+        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.json/json/20151123/9c179a1becb79c6af729c89f7b212b1cb5e68da3/json-20151123-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Gradle: org.jsoup:jsoup:1.8.3">
