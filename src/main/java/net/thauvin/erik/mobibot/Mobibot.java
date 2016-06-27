@@ -268,6 +268,11 @@ public class Mobibot extends PircBot
 	private String identMsg = "";
 
 	/**
+ 	 * The last player.
+ 	 */
+	private String lastPlayer = ""; 
+
+	/**
 	 * The ident nick.
 	 */
 	private String identNick = "";
@@ -1359,8 +1364,8 @@ public class Mobibot extends PircBot
 			{
 				send(sender, "The op commands are:");
 				send(sender,
-				     helpIndent(Commands.CYCLE_CMD + "  " + Commands.ME_CMD + "  " + Commands.MSG_CMD + "  "
-				                + Commands.SAY_CMD + "  " + Commands.VERSION_CMD));
+				     helpIndent(Commands.CYCLE_CMD + "  " + Commands.INFO_CMD + "  " + Commands.ME_CMD + "  "
+								+ Commands.MSG_CMD + "  " + Commands.SAY_CMD + "  " + Commands.VERSION_CMD));
 			}
 		}
 	}
@@ -1814,14 +1819,22 @@ public class Mobibot extends PircBot
 			// mobibot: dice
 			else if (cmd.equals(Commands.DICE_CMD))
 			{
-				send(channel, SHALL_WE_PLAY_A_GAME);
+				if (!lastPlayer.equalsIgnoreCase(sender))
+				{
+					send(channel, SHALL_WE_PLAY_A_GAME);
+					lastPlayer = sender;
+				}
 
 				Dice.roll(this, sender);
 			}
 			// mobibot: war
 			else if (cmd.equals(Commands.WAR_CMD))
 			{
-				send(channel, SHALL_WE_PLAY_A_GAME);
+				if (!lastPlayer.equalsIgnoreCase(sender))
+				{
+					send(channel, SHALL_WE_PLAY_A_GAME);
+					lastPlayer = sender;
+				}
 
 				War.play(this, sender);
 			}
@@ -2384,8 +2397,8 @@ public class Mobibot extends PircBot
 						if (!isMessage)
 						{
 							send(nickname,
-							     Utils.bold("You") + " wanted me to remind you: " + Colors.REVERSE + message
-									     .getMessage() + Colors.NORMAL, true);
+							     Utils.bold("You") + " wanted me to remind you: " + Utils.reverseColor(message
+									     .getMessage()), true);
 
 							message.setIsReceived();
 							message.setIsNotified();
@@ -2396,8 +2409,7 @@ public class Mobibot extends PircBot
 					else
 					{
 						send(nickname,
-						     message.getSender() + " wanted me to tell you: " + Colors.REVERSE + message.getMessage()
-						     + Colors.NORMAL,
+						     message.getSender() + " wanted me to tell you: " + Utils.reverseColor(message.getMessage()),
 						     true);
 
 						message.setIsReceived();
@@ -2409,7 +2421,7 @@ public class Mobibot extends PircBot
 						.isNotified())
 				{
 					send(nickname,
-					     "Your message " + Colors.REVERSE + "[ID " + message.getId() + ']' + Colors.NORMAL
+					     "Your message " + Utils.reverseColor("[ID " + message.getId() + ']')
 					     + " was sent to " + Utils.bold(message.getRecipient()) + " on " + Utils.UTC_SDF
 							     .format(message.getReceived()),
 					     true);

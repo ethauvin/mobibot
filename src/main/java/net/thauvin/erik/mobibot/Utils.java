@@ -85,7 +85,7 @@ final class Utils
 	 */
 	public static String bold(final int i)
 	{
-		return Colors.BOLD + i + Colors.BOLD;
+		return bold(Integer.toString(i));
 	}
 
 	/**
@@ -163,7 +163,7 @@ final class Utils
 	 */
 	public static String bold(final String s)
 	{
-		return Colors.BOLD + s + Colors.NORMAL;
+		return Colors.BOLD + s + Colors.BOLD;
 	}
 
 	/**
@@ -387,7 +387,7 @@ final class Utils
 	 */
 	public static String reverseColor(final int i)
 	{
-		return Colors.REVERSE + i + Colors.REVERSE;
+		return reverseColor(Integer.toString(i));
 	}
 
 	/**

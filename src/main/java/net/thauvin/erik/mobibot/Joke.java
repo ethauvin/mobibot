@@ -99,7 +99,7 @@ class Joke implements Runnable
 
 			bot.send(bot.getChannel(),
 			         Colors.CYAN + json.getJSONObject("value").get("joke").toString().replaceAll("\\'", "'")
-					         .replaceAll("\\\"", "\"") + Colors.CYAN);
+					         .replaceAll("\\\"", "\"") + Colors.NORMAL);
 
 			reader.close();
 		}
