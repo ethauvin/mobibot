@@ -31,9 +31,7 @@
  */
 package net.thauvin.erik.mobibot;
 
-import com.sun.syndication.fetcher.impl.FeedFetcherCache;
-import com.sun.syndication.fetcher.impl.HashMapFeedInfoCache;
-import com.sun.syndication.io.FeedException;
+import com.rometools.rome.io.FeedException;
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
 import net.thauvin.erik.semver.Version;
@@ -174,10 +172,6 @@ public class Mobibot extends PircBot
 	 */
 	private final List<EntryLink> entries = new ArrayList<EntryLink>(0);
 
-	/**
-	 * The feed info cache.
-	 */
-	private final FeedFetcherCache feedInfoCache = HashMapFeedInfoCache.getInstance();
 
 	/**
 	 * The history/backlogs array.
@@ -943,15 +937,6 @@ public class Mobibot extends PircBot
 		return channel;
 	}
 
-	/**
-	 * Returns the {@link FeedFetcherCache feed info cache}.
-	 *
-	 * @return The feed info cache.
-	 */
-	public final FeedFetcherCache getFeedInfoCache()
-	{
-		return this.feedInfoCache;
-	}
 
 	/**
 	 * Returns the irc server.

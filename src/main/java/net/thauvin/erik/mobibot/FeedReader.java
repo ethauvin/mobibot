@@ -31,11 +31,11 @@
  */
 package net.thauvin.erik.mobibot;
 
-import com.sun.syndication.feed.synd.SyndEntry;
-import com.sun.syndication.feed.synd.SyndEntryImpl;
-import com.sun.syndication.feed.synd.SyndFeed;
-import com.sun.syndication.fetcher.FeedFetcher;
-import com.sun.syndication.fetcher.impl.HttpURLFeedFetcher;
+import com.rometools.rome.feed.synd.SyndEntry;
+import com.rometools.rome.feed.synd.SyndEntryImpl;
+import com.rometools.rome.feed.synd.SyndFeed;
+import com.rometools.rome.io.SyndFeedInput;
+import com.rometools.rome.io.XmlReader;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -94,11 +94,11 @@ class FeedReader implements Runnable
 	 */
 	public final void run()
 	{
-		final FeedFetcher fetcher = new HttpURLFeedFetcher(bot.getFeedInfoCache());
-
 		try
 		{
-			final SyndFeed feed = fetcher.retrieveFeed(new URL(url));
+			final SyndFeedInput input = new SyndFeedInput();
+			final SyndFeed feed = input.build(new XmlReader(new URL(url)));
+
 			SyndEntry item;
 			final List items = feed.getEntries();
 

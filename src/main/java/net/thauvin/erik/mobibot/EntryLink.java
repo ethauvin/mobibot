@@ -31,7 +31,8 @@
  */
 package net.thauvin.erik.mobibot;
 
-import com.sun.syndication.feed.synd.SyndCategoryImpl;
+import com.rometools.rome.feed.synd.SyndCategory;
+import com.rometools.rome.feed.synd.SyndCategoryImpl;
 
 import java.io.Serializable;
 import java.util.Calendar;
@@ -57,7 +58,7 @@ public class EntryLink implements Serializable
 	private final List<EntryComment> comments = new CopyOnWriteArrayList<EntryComment>();
 
 	// The tags/categories
-	private final List<SyndCategoryImpl> tags = new CopyOnWriteArrayList<SyndCategoryImpl>();
+	private final List<SyndCategory> tags = new CopyOnWriteArrayList<SyndCategory>();
 
 	// The channel
 	private String channel = "";
@@ -87,7 +88,8 @@ public class EntryLink implements Serializable
 	 * @param channel The channel.
 	 * @param tags The entry's tags/categories.
 	 */
-	public EntryLink(final String link, final String title, final String nick, final String login, final String channel, final String tags)
+	public EntryLink(final String link, final String title, final String nick, final String login, final String channel,
+	                 final String tags)
 	{
 		this.link = link;
 		this.title = title;
@@ -163,7 +165,8 @@ public class EntryLink implements Serializable
 	 * @param date The entry date.
 	 * @param tags The entry's tags/categories.
 	 */
-	public EntryLink(final String link, final String title, final String nick, final String channel, final Date date, final List<SyndCategoryImpl> tags)
+	public EntryLink(final String link, final String title, final String nick, final String channel, final Date date,
+	                 final List<SyndCategory> tags)
 	{
 		this.link = link;
 		this.title = title;
@@ -349,7 +352,7 @@ public class EntryLink implements Serializable
 	 *
 	 * @return The tags.
 	 */
-	public final List getTags()
+	public final List<SyndCategory> getTags()
 	{
 		return tags;
 	}
@@ -359,7 +362,7 @@ public class EntryLink implements Serializable
 	 *
 	 * @param tags The tags.
 	 */
-	private void setTags(final List<SyndCategoryImpl> tags)
+	private void setTags(final List<SyndCategory> tags)
 	{
 		this.tags.addAll(tags);
 	}

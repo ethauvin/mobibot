@@ -1,15 +1,17 @@
 buildscript {
-  repositories {
-    mavenCentral()
-  }
-  dependencies {
-    classpath 'com.coders-kitchen:compileonlyplugin:1.0.0'
-  }
+	repositories {
+		mavenCentral()
+	}
+	dependencies {
+		classpath 'com.coders-kitchen:compileonlyplugin:1.0.0'
+	}
 }
+
 plugins {
 	id "com.ewerk.gradle.plugins.annotation-processor" version "1.0.2"
 	id "com.github.ben-manes.versions" version "0.12.0"
 }
+
 apply plugin: 'java'
 apply plugin: 'idea'
 apply plugin: 'application'
@@ -21,14 +23,16 @@ def packageName = 'net.thauvin.erik.mobibot'
 def deployDir = 'deploy'
 def isRelease = 'release' in gradle.startParameter.taskNames
 
-def getVersion(isIncrement = false) {
+def getVersion(isIncrement = false)
+{
 	def propsFile = 'version.properties'
 	def majorKey = 'version.major'
 	def minorKey = 'version.minor'
 	def patchKey = 'version.patch'
 	def metaKey = 'version.buildmeta'
 	def preKey = 'version.prerelease'
-	if (isIncrement) {
+	if (isIncrement)
+	{
 		ant.propertyfile(file: propsFile) {
 			entry(key: patchKey,
 			      type: 'int',
@@ -67,11 +71,8 @@ dependencies {
 
 	compile 'oro:oro:2.0.8'
 
-	compile 'org.jdom:jdom:1.1.3'
-	compile 'org.jdom:jdom2:2.0.6'
 	compile 'org.jsoup:jsoup:1.9.2'
-	compile 'rome:rome:1.0@jar'
-	compile 'rome:rome-fetcher:1.0@jar'
+	compile 'com.rometools:rome:1.6.1'
 	compile 'org.json:json:20160212'
 	compile 'org.ostermiller:utils:1.07.00'
 
@@ -109,6 +110,10 @@ clean {
 	delete deployDir
 }
 
+run {
+	args '--v'
+}
+
 task wrapper(type: Wrapper) {
 	gradleVersion = gradle.gradleVersion
 }
@@ -137,6 +142,7 @@ task deploy(dependsOn: ['build']) {
 	}
 	mustRunAfter clean
 }
+
 
 task release(dependsOn: ['deploy', 'wrapper']) << {
 	group = 'Publishing'

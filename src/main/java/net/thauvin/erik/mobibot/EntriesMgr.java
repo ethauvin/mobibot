@@ -31,10 +31,10 @@
  */
 package net.thauvin.erik.mobibot;
 
-import com.sun.syndication.feed.synd.*;
-import com.sun.syndication.io.FeedException;
-import com.sun.syndication.io.SyndFeedInput;
-import com.sun.syndication.io.SyndFeedOutput;
+import com.rometools.rome.feed.synd.*;
+import com.rometools.rome.io.FeedException;
+import com.rometools.rome.io.SyndFeedInput;
+import com.rometools.rome.io.SyndFeedOutput;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -139,8 +139,8 @@ final class EntriesMgr
 	 *
 	 * @return The feed's last published date.
 	 *
-	 * @throws java.io.FileNotFoundException If the file was not found.
-	 * @throws com.sun.syndication.io.FeedException If an error occurred while reading the feed.
+	 * @throws FileNotFoundException If the file was not found.
+	 * @throws FeedException If an error occurred while reading the feed.
 	 */
 	@SuppressWarnings("unchecked")
 	public static String loadEntries(final String file, final String channel, final List<EntryLink> entries)
@@ -222,7 +222,8 @@ final class EntriesMgr
 	 * @param history The history array.
 	 * @param isDayBackup Set the true if the daily backup file should also be created.
 	 */
-	public static void saveEntries(final Mobibot bot, final List<EntryLink> entries, final List<String> history, final boolean isDayBackup)
+	public static void saveEntries(final Mobibot bot, final List<EntryLink> entries, final List<String> history,
+	                               final boolean isDayBackup)
 	{
 		if (bot.getLogger().isDebugEnabled())
 		{
