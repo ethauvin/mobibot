@@ -160,7 +160,7 @@ public class Mobibot extends PircBot
 	/**
 	 * The commands list.
 	 */
-	private final List<String> commandsList = new ArrayList<String>();
+	private final List<String> commandsList = new ArrayList<>();
 
 	/**
 	 * The currency converter.
@@ -170,18 +170,17 @@ public class Mobibot extends PircBot
 	/**
 	 * The entries array.
 	 */
-	private final List<EntryLink> entries = new ArrayList<EntryLink>(0);
-
+	private final List<EntryLink> entries = new ArrayList<>(0);
 
 	/**
 	 * The history/backlogs array.
 	 */
-	private final List<String> history = new ArrayList<String>(0);
+	private final List<String> history = new ArrayList<>(0);
 
 	/**
 	 * The ignored nicks array.
 	 */
-	private final List<String> ignoredNicks = new ArrayList<String>(0);
+	private final List<String> ignoredNicks = new ArrayList<>(0);
 
 	/**
 	 * The IRC port.
@@ -211,7 +210,7 @@ public class Mobibot extends PircBot
 	/**
 	 * The recap array.
 	 */
-	private final List<String> recap = new ArrayList<String>(0);
+	private final List<String> recap = new ArrayList<>(0);
 
 	/**
 	 * The serialized object file.
@@ -221,7 +220,7 @@ public class Mobibot extends PircBot
 	/**
 	 * Processes the {@link Commands#TELL_CMD} messages queue.
 	 */
-	private final List<TellMessage> tellMessages = new CopyOnWriteArrayList<TellMessage>();
+	private final List<TellMessage> tellMessages = new CopyOnWriteArrayList<>();
 
 	/**
 	 * Time command.
@@ -247,6 +246,16 @@ public class Mobibot extends PircBot
 	 * The feed URL.
 	 */
 	private String feedURL = "";
+
+	/**
+	 * The Google API Key.
+	 */
+	private String googleApiKey = "";
+
+	/**
+	 * The Google Custom Search Engine ID.
+	 */
+	private String googleCseCx = "";
 
 	/**
 	 * The NickServ ident password.
@@ -521,6 +530,10 @@ public class Mobibot extends PircBot
 			final String ttoken = p.getProperty("twitter-token", "");
 			final String ttokenSecret = p.getProperty("twitter-tokenSecret", "");
 
+			// Get the Google properties
+			final String googleApiKey = p.getProperty("google-api-key");
+			final String googleCseCx = p.getProperty("google-cse-cx");
+
 			// Get the tell command settings
 			final int tellMaxDays = Utils.getIntProperty(p.getProperty("tell-max-days"), DEFAULT_TELL_MAX_DAYS);
 			final int tellMaxSize = Utils.getIntProperty(p.getProperty("tell-max-size"), DEFAULT_TELL_MAX_SIZE);
@@ -558,6 +571,14 @@ public class Mobibot extends PircBot
 			{
 				// Set the Twitter authentication
 				bot.setTwitterAuth(tconsumerKey, tconsumerSecret, ttoken, ttokenSecret);
+			}
+
+			if (Utils.isValidString(googleApiKey))
+			{
+				if (Utils.isValidString(googleCseCx))
+				{
+					bot.setGoogleAuth(googleApiKey, googleCseCx);
+				}
 			}
 
 			// Set the tags
@@ -693,6 +714,15 @@ public class Mobibot extends PircBot
 		twitterConsumerSecret = consumerSecret;
 		twitterToken = token;
 		twitterTokenSecret = tokenSecret;
+	}
+
+	/**
+	 * Sets the Google authentication.
+	 */
+	private void setGoogleAuth(final String apiKey, final String cseCx)
+	{
+		this.googleApiKey = apiKey;
+		this.googleCseCx = cseCx;
 	}
 
 	/**
@@ -937,6 +967,15 @@ public class Mobibot extends PircBot
 		return channel;
 	}
 
+	/**
+	 * Returns the Google API Key, if any.
+	 *
+	 * @return The Google API key or <code>empty</code>.
+	 */
+	public String getGoogleApiKey()
+	{
+		return this.googleApiKey;
+	}
 
 	/**
 	 * Returns the irc server.
@@ -1025,13 +1064,20 @@ public class Mobibot extends PircBot
 	 */
 	private void googleResponse(final String sender, final String query)
 	{
-		if (query.length() > 0)
+		if (isGseEnabled())
 		{
-			new Thread(new GoogleSearch(this, sender, query)).start();
+			if (query.length() > 0)
+			{
+				new Thread(new GoogleSearch(this, googleCseCx, sender, query)).start();
+			}
+			else
+			{
+				helpResponse(sender, Commands.GOOGLE_CMD);
+			}
 		}
 		else
 		{
-			helpResponse(sender, Commands.GOOGLE_CMD);
+			send(sender, "The Google searching facility is disabled.");
 		}
 	}
 
@@ -1101,7 +1147,7 @@ public class Mobibot extends PircBot
 			send(sender, "To list the last 5 posts from the channel's weblog:");
 			send(sender, helpIndent(getNick() + ": " + channel.substring(1)));
 		}
-		else if (lcTopic.endsWith(Commands.GOOGLE_CMD))
+		else if (lcTopic.endsWith(Commands.GOOGLE_CMD) && isGseEnabled())
 		{
 			send(sender, "To search Google:");
 			send(sender, helpIndent(getNick() + ": " + Commands.GOOGLE_CMD + " <query>"));
@@ -1255,7 +1301,6 @@ public class Mobibot extends PircBot
 				commandsList.add(Commands.CALC_CMD);
 				commandsList.add(Commands.CURRENCY_CMD);
 				commandsList.add(Commands.DICE_CMD);
-				commandsList.add(Commands.GOOGLE_CMD);
 				commandsList.add(Commands.IGNORE_CMD);
 				commandsList.add(Commands.INFO_CMD);
 				commandsList.add(Commands.JOKE_CMD);
@@ -1279,6 +1324,11 @@ public class Mobibot extends PircBot
 				if (isTwitterEnabled())
 				{
 					commandsList.add(Commands.TWITTER_CMD);
+				}
+
+				if (isGseEnabled())
+				{
+					commandsList.add(Commands.GOOGLE_CMD);
 				}
 
 				Collections.sort(commandsList);
@@ -1410,6 +1460,16 @@ public class Mobibot extends PircBot
 		     "Uptime: " + days + " day(s) " + hours + " hour(s) " + minutes + " minute(s)  [Entries: " + entries.size()
 		     + (isTellEnabled() && isOp(sender) ? ", Messages: " + tellMessages.size() : "") + ']',
 		     isPrivate);
+	}
+
+	/**
+	 * Returns <code>true</code> if Google search is enabled.
+	 *
+	 * @return <code>true</code> or <code>false</code>
+	 */
+	private boolean isGseEnabled()
+	{
+		return Utils.isValidString(googleApiKey) && Utils.isValidString(googleCseCx);
 	}
 
 	/**
@@ -1787,7 +1847,7 @@ public class Mobibot extends PircBot
 				viewResponse(sender, args, false);
 			}
 			// mobibot: google
-			else if (cmd.startsWith(Commands.GOOGLE_CMD))
+			else if (cmd.startsWith(Commands.GOOGLE_CMD) && isGseEnabled())
 			{
 				googleResponse(sender, args);
 			}
@@ -2316,53 +2376,49 @@ public class Mobibot extends PircBot
 	{
 		if (!nickname.equals(getNick()) && isTellEnabled())
 		{
-			for (final TellMessage message : tellMessages)
-			{
-				if (message.isMatch(nickname))
+			tellMessages.stream().filter(message -> message.isMatch(nickname)).forEach(message -> {
+				if (message.getRecipient().equalsIgnoreCase(nickname) && !message.isReceived())
 				{
-					if (message.getRecipient().equalsIgnoreCase(nickname) && !message.isReceived())
+					if (message.getSender().equals(nickname))
 					{
-						if (message.getSender().equals(nickname))
-						{
-							if (!isMessage)
-							{
-								send(nickname,
-								     Utils.bold("You") + " wanted me to remind you: " + Colors.REVERSE + message
-										     .getMessage() + Colors.REVERSE, true);
-
-								message.setIsReceived();
-								message.setIsNotified();
-
-								saveTellMessages();
-							}
-						}
-						else
+						if (!isMessage)
 						{
 							send(nickname,
-							     message.getSender() + " wanted me to tell you: " + Colors.REVERSE + message
-									     .getMessage() + Colors.REVERSE,
-							     true);
+							     Utils.bold("You") + " wanted me to remind you: " + Colors.REVERSE + message
+									     .getMessage() + Colors.NORMAL, true);
 
 							message.setIsReceived();
+							message.setIsNotified();
 
 							saveTellMessages();
 						}
 					}
-					else if (message.getSender().equalsIgnoreCase(nickname) && message.isReceived() && !message
-							.isNotified())
+					else
 					{
 						send(nickname,
-						     "Your message " + Colors.REVERSE + "[ID " + message.getId() + ']' + Colors.REVERSE
-						     + " was sent to " + Utils.bold(message.getRecipient()) + " on " + Utils.UTC_SDF
-								     .format(message.getReceived()),
+						     message.getSender() + " wanted me to tell you: " + Colors.REVERSE + message.getMessage()
+						     + Colors.NORMAL,
 						     true);
 
-						message.setIsNotified();
+						message.setIsReceived();
 
 						saveTellMessages();
 					}
 				}
-			}
+				else if (message.getSender().equalsIgnoreCase(nickname) && message.isReceived() && !message
+						.isNotified())
+				{
+					send(nickname,
+					     "Your message " + Colors.REVERSE + "[ID " + message.getId() + ']' + Colors.NORMAL
+					     + " was sent to " + Utils.bold(message.getRecipient()) + " on " + Utils.UTC_SDF
+							     .format(message.getReceived()),
+					     true);
+
+					message.setIsNotified();
+
+					saveTellMessages();
+				}
+			});
 		}
 	}
 

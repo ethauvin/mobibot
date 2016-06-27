@@ -142,14 +142,14 @@ final class Utils
 
 		if (Mobibot.NO_TITLE.equals(entry.getTitle()))
 		{
-			buff.append(bold(entry.getTitle()));
+			buff.append(entry.getTitle());
 		}
 		else
 		{
-			buff.append(entry.getTitle());
+			buff.append(bold(entry.getTitle()));
 		}
 
-		buff.append(" ( ").append(entry.getLink()).append(" )");
+		buff.append(" ( ").append(Utils.green(entry.getLink())).append(" )");
 
 		return buff.toString();
 	}
@@ -163,7 +163,19 @@ final class Utils
 	 */
 	public static String bold(final String s)
 	{
-		return Colors.BOLD + s + Colors.BOLD;
+		return Colors.BOLD + s + Colors.NORMAL;
+	}
+
+	/**
+	 * Makes the given string green.
+	 *
+	 * @param s The string.
+	 *
+	 * @return The bold string.
+	 */
+	public static String green(final String s)
+	{
+		return Colors.DARK_GREEN + s + Colors.NORMAL;
 	}
 
 	/**

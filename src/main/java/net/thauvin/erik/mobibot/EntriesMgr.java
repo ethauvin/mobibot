@@ -249,7 +249,7 @@ final class EntriesMgr
 				EntryLink entry;
 				StringBuffer buff;
 				EntryComment comment;
-				final List<SyndEntry> items = new ArrayList<SyndEntry>(0);
+				final List<SyndEntry> items = new ArrayList<>(0);
 				SyndEntry item;
 				SyndContent description;
 

@@ -94,7 +94,7 @@
     <option name="myForwardDirection" value="false" />
   </component>
   <component name="DependencyValidationManager">
-    <scope name="Source" pattern="file:src/main/java/net/thauvin/erik/mobibot/*&amp;&amp;!file:src/main/java/net/thauvin/erik/mobibot/SwingWorker.java&amp;&amp;!file:src/main/java/net/thauvin/erik/mobibot/TwitterOAuth.java" />
+    <scope name="Source" pattern="file[mobibot_annotationProcessor]:java/net/thauvin/erik/mobibot/*||file[mobibot_main]:java/net/thauvin/erik/mobibot/*" />
     <option name="SKIP_IMPORT_STATEMENTS" value="false" />
   </component>
   <component name="EclipseCompilerSettings">

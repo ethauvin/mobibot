@@ -10,7 +10,8 @@ import java.io.InputStreamReader;
 
 /**
  * The <code>TwitterOAuth</code> class. <p> Go to <a href="http://twitter.com/oauth_clients/new">http://twitter.com/oauth_clients/new</a>
- * to register your bot. </p> Then execute: <p> <code>java -cp "mobibot.jar:lib/*" net.thauvin.erik.mobibot.TwitterOAuth
+ * to register your bot. </p> Then execute: <p> <code>java -cp "mobibot.jar:lib/*"
+ * net.thauvin.erik.mobibot.TwitterOAuth
  * &lt;consumerKey&gt; &lt;consumerSecret&gt;</code> </p> and follow the prompts/instructions.
  *
  * @author <a href="mailto:erik@thauvin.net">Erik C. Thauvin</a>
@@ -18,9 +19,9 @@ import java.io.InputStreamReader;
  * @created Sep 13, 2010
  * @since 1.0
  */
-public class TwitterOAuth
+public final class TwitterOAuth
 {
-	public static void main(String args[])
+	public static void main(final String[] args)
 			throws Exception
 	{
 		if (args.length == 2)
@@ -50,8 +51,7 @@ public class TwitterOAuth
 					System.out.println(
 							"Please add the following to the bot's property file:" + "\n\n" + "twitter-consumerKey="
 							+ args[0] + '\n' + "twitter-consumerSecret=" + args[1] + '\n' + "twitter-token="
-							+ accessToken.getToken() + '\n' + "twitter-tokenSecret=" + accessToken.getTokenSecret()
-					);
+							+ accessToken.getToken() + '\n' + "twitter-tokenSecret=" + accessToken.getTokenSecret());
 				}
 				catch (TwitterException te)
 				{

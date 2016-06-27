@@ -106,7 +106,7 @@ class FeedReader implements Runnable
 			{
 				item = (SyndEntryImpl) items.get(i);
 				bot.send(sender, item.getTitle());
-				bot.send(sender, TAB_INDENT + item.getLink());
+				bot.send(sender, TAB_INDENT + Utils.green(item.getLink()));
 			}
 		}
 		catch (MalformedURLException e)

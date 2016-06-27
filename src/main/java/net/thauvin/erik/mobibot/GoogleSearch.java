@@ -60,6 +60,11 @@ class GoogleSearch implements Runnable
 	private final Mobibot bot;
 
 	/**
+	 * The Google Custom Search Engine ID.
+	 */
+	private final String cseCx;
+
+	/**
 	 * The search query.
 	 */
 	private final String query;
@@ -73,12 +78,14 @@ class GoogleSearch implements Runnable
 	 * Creates a new {@link GoogleSearch} instance.
 	 *
 	 * @param bot The bot's instance.
+	 * @param cseCx The Google Custom Search Engine ID.
 	 * @param sender The nick of the person who sent the message.
 	 * @param query The Google query
 	 */
-	public GoogleSearch(final Mobibot bot, final String sender, final String query)
+	public GoogleSearch(final Mobibot bot, final String cseCx, final String sender, final String query)
 	{
 		this.bot = bot;
+		this.cseCx = cseCx;
 		this.sender = sender;
 		this.query = query;
 	}
@@ -93,7 +100,8 @@ class GoogleSearch implements Runnable
 			final String query = URLEncoder.encode(this.query, "UTF-8");
 
 			final URL url =
-					new URL("http://ajax.googleapis.com/ajax/services/search/web?start=0&rsz=small&v=1.0&q=" + query);
+					new URL("https://www.googleapis.com/customsearch/v1?key=" + bot.getGoogleApiKey() + "&cx=" + cseCx
+					        + "&q=" + query + "&filter=1&num=5&alt=json");
 			final URLConnection conn = url.openConnection();
 
 			final StringBuilder sb = new StringBuilder();
@@ -106,13 +114,13 @@ class GoogleSearch implements Runnable
 			}
 
 			final JSONObject json = new JSONObject(sb.toString());
-			final JSONArray ja = json.getJSONObject("responseData").getJSONArray("results");
+			final JSONArray ja = json.getJSONArray("items");
 
 			for (int i = 0; i < ja.length(); i++)
 			{
 				final JSONObject j = ja.getJSONObject(i);
-				bot.send(sender, Utils.unescapeXml(j.getString("titleNoFormatting")));
-				bot.send(sender, TAB_INDENT + j.getString("url"));
+				bot.send(sender, Utils.unescapeXml(j.getString("title")));
+				bot.send(sender, TAB_INDENT + Utils.green(j.getString("link")));
 			}
 
 			reader.close();

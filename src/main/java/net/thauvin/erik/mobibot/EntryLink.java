@@ -55,10 +55,10 @@ public class EntryLink implements Serializable
 	static final long serialVersionUID = 3676245542270899086L;
 
 	// The link's comments
-	private final List<EntryComment> comments = new CopyOnWriteArrayList<EntryComment>();
+	private final List<EntryComment> comments = new CopyOnWriteArrayList<>();
 
 	// The tags/categories
-	private final List<SyndCategory> tags = new CopyOnWriteArrayList<SyndCategory>();
+	private final List<SyndCategory> tags = new CopyOnWriteArrayList<>();
 
 	// The channel
 	private String channel = "";

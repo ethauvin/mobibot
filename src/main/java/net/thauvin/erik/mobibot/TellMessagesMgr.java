@@ -101,9 +101,8 @@ final class TellMessagesMgr
 	{
 		try
 		{
-			final ObjectInput input = new ObjectInputStream(new BufferedInputStream(new FileInputStream(file)));
 
-			try
+			try (ObjectInput input = new ObjectInputStream(new BufferedInputStream(new FileInputStream(file))))
 			{
 				if (logger.isDebugEnabled())
 				{
@@ -111,10 +110,6 @@ final class TellMessagesMgr
 				}
 
 				return ((List<TellMessage>) input.readObject());
-			}
-			finally
-			{
-				input.close();
 			}
 		}
 		catch (FileNotFoundException ignore)
@@ -130,7 +125,7 @@ final class TellMessagesMgr
 			logger.getLogger().error("An error occurred loading the messages queue.", e);
 		}
 
-		return new ArrayList<TellMessage>();
+		return new ArrayList<>();
 	}
 
 	/**
@@ -144,9 +139,8 @@ final class TellMessagesMgr
 	{
 		try
 		{
-			final ObjectOutput output = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(file)));
 
-			try
+			try (ObjectOutput output = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(file))))
 			{
 				if (logger.isDebugEnabled())
 				{
@@ -154,10 +148,6 @@ final class TellMessagesMgr
 				}
 
 				output.writeObject(messages);
-			}
-			finally
-			{
-				output.close();
 			}
 		}
 		catch (IOException e)

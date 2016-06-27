@@ -54,7 +54,7 @@ class WorldTime
 	/**
 	 * The countries supported by the {@link net.thauvin.erik.mobibot.Commands#TIME_CMD time} command.
 	 */
-	private static final Map<String, String> COUNTRIES_MAP = new TreeMap<String, String>();
+	private static final Map<String, String> COUNTRIES_MAP = new TreeMap<>();
 
 	/**
 	 * The date/time format for the {@link net.thauvin.erik.mobibot.Commands#TIME_CMD time} command.

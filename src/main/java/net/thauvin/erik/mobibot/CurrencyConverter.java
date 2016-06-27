@@ -40,7 +40,10 @@ import org.jdom2.input.SAXBuilder;
 import java.io.IOException;
 import java.net.URL;
 import java.text.NumberFormat;
-import java.util.*;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * Processes the {@link Commands#CURRENCY_CMD} command.
@@ -54,7 +57,7 @@ class CurrencyConverter implements Runnable
 	/**
 	 * The exchange rates.
 	 */
-	private static final Map<String, String> EXCHANGE_RATES = new TreeMap<String, String>();
+	private static final Map<String, String> EXCHANGE_RATES = new TreeMap<>();
 
 	/**
 	 * The exchange rates table URL.
