@@ -38,7 +38,6 @@ import net.thauvin.erik.semver.Version;
 import org.apache.commons.cli.*;
 import org.apache.commons.logging.impl.Log4JLogger;
 import org.apache.log4j.Level;
-import org.jibble.pircbot.Colors;
 import org.jibble.pircbot.PircBot;
 import org.jibble.pircbot.User;
 import org.jsoup.Jsoup;
@@ -268,14 +267,14 @@ public class Mobibot extends PircBot
 	private String identMsg = "";
 
 	/**
- 	 * The last player.
- 	 */
-	private String lastPlayer = ""; 
-
-	/**
 	 * The ident nick.
 	 */
 	private String identNick = "";
+
+	/**
+	 * The last player.
+	 */
+	private String lastPlayer = "";
 
 	/**
 	 * The number of days message are kept.
@@ -1365,7 +1364,7 @@ public class Mobibot extends PircBot
 				send(sender, "The op commands are:");
 				send(sender,
 				     helpIndent(Commands.CYCLE_CMD + "  " + Commands.INFO_CMD + "  " + Commands.ME_CMD + "  "
-								+ Commands.MSG_CMD + "  " + Commands.SAY_CMD + "  " + Commands.VERSION_CMD));
+				                + Commands.MSG_CMD + "  " + Commands.SAY_CMD + "  " + Commands.VERSION_CMD));
 			}
 		}
 	}
@@ -2397,8 +2396,8 @@ public class Mobibot extends PircBot
 						if (!isMessage)
 						{
 							send(nickname,
-							     Utils.bold("You") + " wanted me to remind you: " + Utils.reverseColor(message
-									     .getMessage()), true);
+							     Utils.bold("You") + " wanted me to remind you: " + Utils
+									     .reverseColor(message.getMessage()), true);
 
 							message.setIsReceived();
 							message.setIsNotified();
@@ -2409,7 +2408,8 @@ public class Mobibot extends PircBot
 					else
 					{
 						send(nickname,
-						     message.getSender() + " wanted me to tell you: " + Utils.reverseColor(message.getMessage()),
+						     message.getSender() + " wanted me to tell you: " + Utils
+								     .reverseColor(message.getMessage()),
 						     true);
 
 						message.setIsReceived();
@@ -2421,9 +2421,8 @@ public class Mobibot extends PircBot
 						.isNotified())
 				{
 					send(nickname,
-					     "Your message " + Utils.reverseColor("[ID " + message.getId() + ']')
-					     + " was sent to " + Utils.bold(message.getRecipient()) + " on " + Utils.UTC_SDF
-							     .format(message.getReceived()),
+					     "Your message " + Utils.reverseColor("[ID " + message.getId() + ']') + " was sent to " + Utils
+							     .bold(message.getRecipient()) + " on " + Utils.UTC_SDF.format(message.getReceived()),
 					     true);
 
 					message.setIsNotified();

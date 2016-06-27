@@ -90,8 +90,8 @@ class Twitter implements Runnable
 	 * @param accessTokenSecret The Twitter access token secret.
 	 * @param message The Twitter message.
 	 */
-	public Twitter(final Mobibot bot, final String sender, final String consumerKey, final String consumerSecret, final String accessToken,
-	               final String accessTokenSecret, final String message)
+	public Twitter(final Mobibot bot, final String sender, final String consumerKey, final String consumerSecret,
+	               final String accessToken, final String accessTokenSecret, final String message)
 	{
 		this.bot = bot;
 		this.consumerKey = consumerKey;

@@ -89,6 +89,18 @@ final class Utils
 	}
 
 	/**
+	 * Makes the given string bold.
+	 *
+	 * @param s The string.
+	 *
+	 * @return The bold string.
+	 */
+	public static String bold(final String s)
+	{
+		return Colors.BOLD + s + Colors.BOLD;
+	}
+
+	/**
 	 * Builds an entry's comment for display on the channel.
 	 *
 	 * @param entryIndex The entry's index.
@@ -152,18 +164,6 @@ final class Utils
 		buff.append(" ( ").append(Utils.green(entry.getLink())).append(" )");
 
 		return buff.toString();
-	}
-
-	/**
-	 * Makes the given string bold.
-	 *
-	 * @param s The string.
-	 *
-	 * @return The bold string.
-	 */
-	public static String bold(final String s)
-	{
-		return Colors.BOLD + s + Colors.BOLD;
 	}
 
 	/**
@@ -376,18 +376,6 @@ final class Utils
 			}
 		}
 		return false;
-	}
-
-	/**
-	 * Makes the given int reverse color.
-	 *
-	 * @param i The int.
-	 *
-	 * @return The reverse color string.
-	 */
-	public static String reverseColor(final int i)
-	{
-		return reverseColor(Integer.toString(i));
 	}
 
 	/**
