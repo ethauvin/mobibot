@@ -52,7 +52,8 @@ class Joke implements Runnable
 	/**
 	 * The ICNDB URL.
 	 */
-	private static final String JOKE_URL = "http://api.icndb.com/jokes/random?escape=javascript";
+	private static final String JOKE_URL =
+			"http://api.icndb.com/jokes/random?escape=javascript&exclude=[explicit]&limitTo=[nerdy]";
 
 	/**
 	 * The bot's instance.
