@@ -406,13 +406,13 @@
     </option>
   </component>
   <component name="libraryTable">
-    <library name="Gradle: com.rometools:rome-fetcher:1.6.1">
+    <library name="Gradle: com.rometools:rome-utils:1.6.1">
       <CLASSES>
-        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.rometools/rome-fetcher/1.6.1/8bd348969d209e634317bf6db3b8be17d85f7674/rome-fetcher-1.6.1.jar!/" />
+        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.rometools/rome-utils/1.6.1/b66628b06492dd8a9fa44d90d1733f843c285589/rome-utils-1.6.1.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES>
-        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.rometools/rome-fetcher/1.6.1/e412a4f83403d12bbf90370832d1649688c3fd/rome-fetcher-1.6.1-sources.jar!/" />
+        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.rometools/rome-utils/1.6.1/450c47fd73c6ec2d815059f284dfe3d613e45df/rome-utils-1.6.1-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Gradle: com.rometools:rome:1.6.1">
@@ -575,6 +575,15 @@
       <JAVADOC />
       <SOURCES>
         <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.ostermiller/utils/1.07.00/586774ee4b8409b6835621bae2186d9b54d1c36a/utils-1.07.00-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Gradle: org.slf4j:slf4j-api:1.7.16">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.slf4j/slf4j-api/1.7.16/3a6274f658487d5bfff9af3862beff6da1e7fd52/slf4j-api-1.7.16.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.slf4j/slf4j-api/1.7.16/974c5dd98f38036bd98b3a8f7bf00ee0d91adbdd/slf4j-api-1.7.16-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Gradle: org.twitter4j:twitter4j-core:4.0.4">
