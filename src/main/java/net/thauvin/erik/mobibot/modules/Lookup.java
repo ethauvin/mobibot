@@ -29,8 +29,9 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.thauvin.erik.mobibot;
+package net.thauvin.erik.mobibot.modules;
 
+import net.thauvin.erik.mobibot.Mobibot;
 import org.apache.commons.net.whois.WhoisClient;
 
 import java.io.IOException;
@@ -38,14 +39,18 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 /**
- * Processes the {@link Commands#LOOKUP_CMD} command.
+ * The Lookup module.
  *
  * @author <a href="mailto:erik@thauvin.net">Erik C. Thauvin</a>
  * @created 2014-04-26
  * @since 1.0
  */
-final class Lookup
+final public class Lookup extends AbstractModule
 {
+	/**
+	 * THe lookup command.
+	 */
+	private static final String LOOKUP_CMD = "lookup";
 
 	/**
 	 * The whois host.
@@ -53,14 +58,78 @@ final class Lookup
 	private static final String WHOIS_HOST = "whois.arin.net";
 
 	/**
-	 * Disables the default constructor.
-	 *
-	 * @throws UnsupportedOperationException If the constructor is called.
+	 * The default constructor
 	 */
-	private Lookup()
-			throws UnsupportedOperationException
+	public Lookup()
 	{
-		throw new UnsupportedOperationException("Illegal constructor call.");
+		commands.add(LOOKUP_CMD);
+	}
+
+	/**
+	 * Process a command.
+	 *
+	 * @param bot The bot's instance.
+	 * @param sender The sender.
+	 * @param args The command arguments.
+	 * @param isPrivate Set to <code>true</code> if the response should be sent as a private message.
+	 */
+	@Override
+	public void commandResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate)
+	{
+		if (args.matches("(\\S.)+(\\S)+"))
+		{
+			try
+			{
+				bot.send(bot.getChannel(), Lookup.lookup(args));
+			}
+			catch (UnknownHostException ignore)
+			{
+				if (args.matches(
+						"(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)"))
+				{
+					try
+					{
+						final String[] lines = Lookup.whois(args);
+
+						if ((lines != null) && (lines.length > 0))
+						{
+							String line;
+
+							for (final String rawLine : lines)
+							{
+								line = rawLine.trim();
+
+								if ((line.length() > 0) && (line.charAt(0) != '#'))
+								{
+									bot.send(bot.getChannel(), line);
+								}
+							}
+						}
+						else
+						{
+							bot.send(bot.getChannel(), "Unknown host.");
+						}
+					}
+					catch (IOException ioe)
+					{
+						if (bot.getLogger().isDebugEnabled())
+						{
+							bot.getLogger().debug("Unable to perform whois IP lookup: " + args, ioe);
+						}
+
+						bot.send(bot.getChannel(), "Unable to perform whois IP lookup: " + ioe.getMessage());
+					}
+				}
+				else
+				{
+					bot.send(bot.getChannel(), "Unknown host.");
+				}
+			}
+		}
+		else
+		{
+			helpResponse(bot, sender, args, true);
+		}
 	}
 
 	/**
@@ -72,7 +141,7 @@ final class Lookup
 	 *
 	 * @throws java.net.UnknownHostException If the host is unknown.
 	 */
-	public static String lookup(final String query)
+	private static String lookup(final String query)
 			throws UnknownHostException
 	{
 		final StringBuilder buffer = new StringBuilder("");
@@ -116,7 +185,7 @@ final class Lookup
 	 *
 	 * @throws java.io.IOException If a connection error occurs.
 	 */
-	public static String[] whois(final String query)
+	private static String[] whois(final String query)
 			throws IOException
 	{
 		return whois(query, WHOIS_HOST);
@@ -154,5 +223,12 @@ final class Lookup
 		}
 
 		return lines;
+	}
+
+	@Override
+	public void helpResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate)
+	{
+		bot.send(sender, "To perform a DNS lookup query:");
+		bot.send(sender, bot.helpIndent(bot.getNick() + ": " + LOOKUP_CMD + " <ip address or hostname>"));
 	}
 }

@@ -34,10 +34,6 @@ package net.thauvin.erik.mobibot;
 import org.jibble.pircbot.Colors;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.nio.channels.FileChannel;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
@@ -48,7 +44,7 @@ import java.util.Calendar;
  * @created 2014-04-26
  * @since 1.0
  */
-final class Utils
+final public class Utils
 {
 	/**
 	 * The timestamp simple date format.
@@ -58,12 +54,12 @@ final class Utils
 	/**
 	 * The ISO (YYYY-MM-DD) simple date format.
 	 */
-	static final SimpleDateFormat ISO_SDF = new SimpleDateFormat("yyyy-MM-dd");
+	public static final SimpleDateFormat ISO_SDF = new SimpleDateFormat("yyyy-MM-dd");
 
 	/**
 	 * The UTC (yyyy-MM-dd HH:mm) simple date format.
 	 */
-	static final SimpleDateFormat UTC_SDF = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+	public static final SimpleDateFormat UTC_SDF = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
 	/**
 	 * Disables the default constructor.
@@ -192,71 +188,6 @@ final class Utils
 	}
 
 	/**
-	 * Copies a file.
-	 *
-	 * @param in The source file.
-	 * @param out The destination file.
-	 *
-	 * @throws java.io.IOException If the file could not be copied.
-	 */
-	@SuppressWarnings("UnusedDeclaration")
-	public static void copyFile(final File in, final File out)
-			throws IOException
-	{
-		FileChannel inChannel = null;
-		FileChannel outChannel = null;
-		FileInputStream input = null;
-		FileOutputStream output = null;
-
-		try
-		{
-			input = new FileInputStream(in);
-			output = new FileOutputStream(out);
-
-			inChannel = input.getChannel();
-			outChannel = output.getChannel();
-
-			inChannel.transferTo(0L, inChannel.size(), outChannel);
-		}
-		finally
-		{
-			try
-			{
-				if (inChannel != null)
-				{
-					inChannel.close();
-				}
-
-				if (input != null)
-				{
-					input.close();
-				}
-			}
-			catch (Exception ignore)
-			{
-				; // Do nothing
-			}
-
-			try
-			{
-				if (outChannel != null)
-				{
-					outChannel.close();
-				}
-
-				if (output != null)
-				{
-					output.close();
-				}
-			}
-			catch (Exception ignore)
-			{
-				; // Do nothing
-			}
-		}
-	}
-
-	/**
 	 * Ensures that the given location (File/URL) has a trailing slash (<code>/</code>) to indicate a directory.
 	 *
 	 * @param location The File or URL location.
@@ -264,7 +195,7 @@ final class Utils
 	 *
 	 * @return The location ending with a slash.
 	 */
-	public static String ensureDir(final String location, final boolean isUrl)
+	static String ensureDir(final String location, final boolean isUrl)
 	{
 		if (isUrl)
 		{

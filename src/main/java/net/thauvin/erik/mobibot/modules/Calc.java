@@ -1,5 +1,5 @@
 /*
- * Dice.java
+ * Calc.java
  *
  * Copyright (c) 2004-2016, Erik C. Thauvin (erik@thauvin.net)
  * All rights reserved.
@@ -29,66 +29,70 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.thauvin.erik.mobibot;
+package net.thauvin.erik.mobibot.modules;
 
-import java.util.Random;
+import net.objecthunter.exp4j.Expression;
+import net.objecthunter.exp4j.ExpressionBuilder;
+import net.thauvin.erik.mobibot.Mobibot;
+import net.thauvin.erik.mobibot.Utils;
+
+import java.text.DecimalFormat;
 
 /**
- * Processes the {@link Commands#DICE_CMD} command.
+ * The Calc module.
  *
  * @author <a href="mailto:erik@thauvin.net">Erik C. Thauvin</a>
- * @created 2014-04-28
+ * @created 2016-07-01
  * @since 1.0
  */
-final class Dice
+public class Calc extends AbstractModule
 {
 	/**
-	 * Disables the default constructor.
-	 *
-	 * @throws UnsupportedOperationException If the constructor is called.
+	 * The Calc command.
 	 */
-	private Dice()
-			throws UnsupportedOperationException
-	{
-		throw new UnsupportedOperationException("Illegal constructor call.");
-	}
+	private static final String CALC_CMD = "calc";
 
 	/**
-	 * Rolls the dice.
-	 *
-	 * @param bot The bot's instance.
-	 * @param sender The sender's nickname.
+	 * The default constructor.
 	 */
-	public static void roll(final Mobibot bot, final String sender)
+	public Calc()
 	{
-		final Random r = new Random();
+		commands.add(CALC_CMD);
+	}
 
-		int i = r.nextInt(6) + 1;
-		int y = r.nextInt(6) + 1;
-		final int playerTotal = i + y;
-
-		bot.send(bot.getChannel(),
-		         sender + " rolled two dice: " + Utils.bold(i) + " and " + Utils.bold(y) + " for a total of " + Utils
-				         .bold(playerTotal));
-
-		i = r.nextInt(6) + 1;
-		y = r.nextInt(6) + 1;
-		final int total = i + y;
-
-		bot.action(
-				"rolled two dice: " + Utils.bold(i) + " and " + Utils.bold(y) + " for a total of " + Utils.bold(total));
-
-		if (playerTotal < total)
+	@Override
+	public void commandResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate)
+	{
+		if (Utils.isValidString(args))
 		{
-			bot.action("wins.");
-		}
-		else if (playerTotal > total)
-		{
-			bot.action("lost.");
+			final DecimalFormat decimalFormat = new DecimalFormat("#.##");
+
+			try
+			{
+				final Expression calc = new ExpressionBuilder(args).build();
+				bot.send(bot.getChannel(), args.replaceAll(" ", "") + " = " + decimalFormat.format(calc.evaluate()));
+			}
+			catch (Exception e)
+			{
+				if (bot.getLogger().isDebugEnabled())
+				{
+					bot.getLogger().debug("Unable to calculate: " + args, e);
+				}
+
+				bot.send(bot.getChannel(), "No idea. This is the kind of math I don't get.");
+			}
 		}
 		else
 		{
-			bot.action("tied.");
+			helpResponse(bot, sender, args, isPrivate);
 		}
+
+	}
+
+	@Override
+	public void helpResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate)
+	{
+		bot.send(sender, "To solve a mathematical calculation:");
+		bot.send(sender, bot.helpIndent(bot.getNick() + ": " + CALC_CMD + " <calculation>"));
 	}
 }

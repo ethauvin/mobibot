@@ -63,6 +63,7 @@ dependencies {
 
 	compile 'org.jsoup:jsoup:1.9.2'
 	compile 'com.rometools:rome:1.6.1'
+	compile 'org.slf4j:slf4j-log4j12:1.7.21'
 	compile 'org.json:json:20160212'
 	compile 'org.ostermiller:utils:1.07.00'
 

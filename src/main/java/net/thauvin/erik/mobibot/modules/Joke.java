@@ -29,8 +29,9 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.thauvin.erik.mobibot;
+package net.thauvin.erik.mobibot.modules;
 
+import net.thauvin.erik.mobibot.Mobibot;
 import org.jibble.pircbot.Colors;
 import org.json.JSONObject;
 
@@ -40,14 +41,19 @@ import java.net.URL;
 import java.net.URLConnection;
 
 /**
- * Processes the {@link Commands#JOKE_CMD} command.
+ * The Joke module.
  *
  * @author <a href="mailto:erik@thauvin.net">Erik C. Thauvin</a>
  * @created 2014-04-20
  * @since 1.0
  */
-class Joke implements Runnable
+final public class Joke extends AbstractModule
 {
+
+	/**
+	 * The joke command.
+	 */
+	private static final String JOKE_CMD = "joke";
 
 	/**
 	 * The ICNDB URL.
@@ -56,31 +62,32 @@ class Joke implements Runnable
 			"http://api.icndb.com/jokes/random?escape=javascript&exclude=[explicit]&limitTo=[nerdy]";
 
 	/**
-	 * The bot's instance.
-	 */
-	private final Mobibot bot;
-
-	/**
-	 * The nick of the person who sent the message.
-	 */
-	private final String sender;
-
-	/**
 	 * Creates a new {@link Joke} instance.
-	 *
-	 * @param bot The bot's instance.
-	 * @param sender The nick of the person who sent the message.
 	 */
-	public Joke(final Mobibot bot, final String sender)
+	public Joke()
 	{
-		this.bot = bot;
-		this.sender = sender;
+		commands.add(JOKE_CMD);
+	}
+
+	@Override
+	public void commandResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate)
+	{
+		new Thread(() -> {
+			run(bot, sender);
+		}).start();
+	}
+
+	@Override
+	public void helpResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate)
+	{
+		bot.send(sender, "To retrieve a random joke:");
+		bot.send(sender, bot.helpIndent(bot.getNick() + ": " + JOKE_CMD));
 	}
 
 	/**
 	 * Returns a random joke from <a href="http://www.icndb.com/">The Internet Chuck Norris Database</a>
 	 */
-	public final void run()
+	private void run(final Mobibot bot, final String sender)
 	{
 		try
 		{

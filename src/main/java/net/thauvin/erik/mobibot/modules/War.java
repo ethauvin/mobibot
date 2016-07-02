@@ -29,48 +29,56 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.thauvin.erik.mobibot;
+package net.thauvin.erik.mobibot.modules;
+
+import net.thauvin.erik.mobibot.Mobibot;
+import net.thauvin.erik.mobibot.Utils;
 
 import java.util.Random;
 
 /**
- * Processes the {@link Commands#WAR_CMD} command.
+ * The War module.
  *
  * @author <a href="mailto:erik@thauvin.net">Erik C. Thauvin</a>
  * @created 2014-04-28
  * @since 1.0
  */
-final class War
+final public class War extends AbstractModule
 {
 	/**
-	 * The deck of card for the {@link net.thauvin.erik.mobibot.Commands#WAR_CMD war} command.
+	 * The war command.
+	 */
+	private static final String WAR_CMD = "war";
+
+	/**
+	 * The deck of card.
 	 */
 	private static final String[] WAR_DECK =
 			new String[]{"Ace", "King", "Queen", "Jack", "10", "9", "8", "7", "6", "5", "4", "3", "2"};
 
 	/**
-	 * The suits for the deck of card for the {@link Commands#WAR_CMD war} command.
+	 * The suits for the deck of card.
 	 */
 	private static final String[] WAR_SUITS = new String[]{"Hearts", "Spades", "Diamonds", "Clubs"};
 
 	/**
-	 * Disables the default constructor.
-	 *
-	 * @throws UnsupportedOperationException If the constructor is called.
+	 * The default constructor.
 	 */
-	private War()
-			throws UnsupportedOperationException
+	public War()
 	{
-		throw new UnsupportedOperationException("Illegal constructor call.");
+		commands.add(WAR_CMD);
 	}
 
 	/**
 	 * Plays war.
 	 *
 	 * @param bot The bot's instance.
-	 * @param sender The sender's nickname.
+	 * @param sender The sender.
+	 * @param args The command arguments.
+	 * @param isPrivate Set to <code>true</code> if the response should be sent as a private message.
 	 */
-	public static void play(final Mobibot bot, final String sender)
+	@Override
+	public void commandResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate)
 	{
 		final Random r = new Random();
 
@@ -102,9 +110,12 @@ final class War
 		{
 			bot.action("wins.");
 		}
-		else
-		{
-			bot.action("tied.");
-		}
+	}
+
+	@Override
+	public void helpResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate)
+	{
+		bot.send(sender, "To play war:");
+		bot.send(sender, bot.helpIndent(bot.getNick() + ": " + WAR_CMD));
 	}
 }

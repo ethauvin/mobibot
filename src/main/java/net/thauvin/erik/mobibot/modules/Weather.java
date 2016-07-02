@@ -29,74 +29,75 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.thauvin.erik.mobibot;
+package net.thauvin.erik.mobibot.modules;
 
 import net.sf.jweather.metar.Metar;
 import net.sf.jweather.metar.SkyCondition;
 import net.sf.jweather.metar.WeatherCondition;
+import net.thauvin.erik.mobibot.Mobibot;
+import net.thauvin.erik.mobibot.Utils;
 
 import java.text.DecimalFormat;
 import java.util.Date;
 
 /**
- * Processes the {@link Commands#LOOKUP_CMD} command.
+ * The Weather module
  *
  * @author Erik C. Thauvin
  * @created Feb 7, 2004
  * @since 1.0
  */
-class Weather implements Runnable
+final public class Weather extends AbstractModule
 {
-	/**
-	 * The URL where the stations are listed.
-	 */
-	public static final String STATIONS_URL = "http://www.rap.ucar.edu/weather/surface/stations.txt";
-
 	/**
 	 * The decimal number format.
 	 */
 	private static final DecimalFormat NUMBER_FORMAT = new DecimalFormat("0.##");
 
 	/**
-	 * The bot.
+	 * The URL where the stations are listed.
 	 */
-	private final Mobibot bot;
+	private static final String STATIONS_URL = "http://www.rap.ucar.edu/weather/surface/stations.txt";
 
 	/**
-	 * The private message flag.
+	 * THe weather command.
 	 */
-	private final boolean isPrivate;
-
-	/**
-	 * The nick of the person who sent the message.
-	 */
-	private final String sender;
-
-	/**
-	 * The station ID.
-	 */
-	private final String station;
+	private static final String WEATHER_CMD = "weather";
 
 	/**
 	 * Creates a new {@link Weather} instance.
-	 *
-	 * @param bot The bot's instance.
-	 * @param sender The nick of the person who sent the message.
-	 * @param station The station ID.
-	 * @param isPrivate Set to true is the response should be send as a private message.
 	 */
-	public Weather(final Mobibot bot, final String sender, final String station, final boolean isPrivate)
+	public Weather()
 	{
-		this.bot = bot;
-		this.sender = sender;
-		this.station = station.toUpperCase();
-		this.isPrivate = isPrivate;
+		commands.add(WEATHER_CMD);
+	}
+
+	@Override
+	public void commandResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate)
+	{
+		new Thread(() -> {
+			run(bot, sender, args.toUpperCase(), isPrivate);
+		}).start();
+	}
+
+	@Override
+	public void helpResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate)
+	{
+		bot.send(sender, "To display weather information:");
+		bot.send(sender, bot.helpIndent(bot.getNick() + ": " + WEATHER_CMD + " <station id>"));
+		bot.send(sender, "For a listing of the ICAO station IDs, please visit: " + STATIONS_URL);
+	}
+
+	@Override
+	public boolean isPrivateMsgEnabled()
+	{
+		return true;
 	}
 
 	/**
 	 * Fetches the weather data from a specific station ID.
 	 */
-	public final void run()
+	private void run(final Mobibot bot, final String sender, final String station, final boolean isPrivate)
 	{
 		if (station.length() == 4)
 		{
@@ -177,6 +178,6 @@ class Weather implements Runnable
 			}
 		}
 
-		bot.helpResponse(sender, Commands.WEATHER_CMD);
+		helpResponse(bot, sender, station, isPrivate);
 	}
 }

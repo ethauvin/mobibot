@@ -29,7 +29,10 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.thauvin.erik.mobibot;
+package net.thauvin.erik.mobibot.modules;
+
+import net.thauvin.erik.mobibot.Mobibot;
+import net.thauvin.erik.mobibot.Utils;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -38,13 +41,13 @@ import java.util.TimeZone;
 import java.util.TreeMap;
 
 /**
- * The {@link Commands#TIME_CMD} command.
+ * The WorldTime module.
  *
  * @author <a href="mailto:erik@thauvin.net">Erik C. Thauvin</a>
  * @created 2014-04-27
  * @since 1.0
  */
-class WorldTime
+final public class WorldTime extends AbstractModule
 {
 	/**
 	 * The beats (Internet Time) keyword.
@@ -52,12 +55,17 @@ class WorldTime
 	private static final String BEATS_KEYWORD = ".beats";
 
 	/**
-	 * The countries supported by the {@link net.thauvin.erik.mobibot.Commands#TIME_CMD time} command.
+	 * The supported countries.
 	 */
 	private static final Map<String, String> COUNTRIES_MAP = new TreeMap<>();
 
 	/**
-	 * The date/time format for the {@link net.thauvin.erik.mobibot.Commands#TIME_CMD time} command.
+	 * The time command.
+	 */
+	private static final String TIME_CMD = "time";
+
+	/**
+	 * The date/time format.
 	 */
 	private static final SimpleDateFormat TIME_SDF =
 			new SimpleDateFormat("'The time is 'HH:mm' on 'EEEE, d MMMM yyyy' in '");
@@ -67,6 +75,8 @@ class WorldTime
 	 */
 	public WorldTime()
 	{
+		commands.add(TIME_CMD);
+
 		// Initialize the countries map
 		COUNTRIES_MAP.put("AU", "Australia/Sydney");
 		COUNTRIES_MAP.put("BE", "Europe/Brussels");
@@ -140,12 +150,13 @@ class WorldTime
 	/**
 	 * Responds with the current time in the specified timezone/country.
 	 *
-	 * @param bot The bot instance.
-	 * @param sender The nick of the person who sent the message.
-	 * @param args The time command arguments.
-	 * @param isPrivate Set to true is the response should be send as a private message.
+	 * @param bot The bot's instance.
+	 * @param sender The sender.
+	 * @param args The command arguments.
+	 * @param isPrivate Set to <code>true</code> if the response should be sent as a private message.
 	 */
-	public final void timeResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate)
+	@Override
+	public void commandResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate)
 	{
 		boolean isInvalidTz = false;
 		final String tz = (COUNTRIES_MAP.get((args.substring(args.indexOf(' ') + 1).trim().toUpperCase())));
@@ -167,7 +178,7 @@ class WorldTime
 		else
 		{
 			isInvalidTz = true;
-			response = "The supported time zones/countries are: " + COUNTRIES_MAP.keySet().toString();
+			response = "The supported time zones are: " + COUNTRIES_MAP.keySet().toString();
 		}
 
 		if (isPrivate)
@@ -185,5 +196,21 @@ class WorldTime
 				bot.send(bot.getChannel(), response);
 			}
 		}
+	}
+
+	@Override
+	public void helpResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate)
+	{
+		bot.send(sender, "To display a country's current date/time:");
+		bot.send(sender, bot.helpIndent(bot.getNick() + ": " + TIME_CMD) + " [<country code>]");
+
+		bot.send(sender, "For a listing of the supported countries:");
+		bot.send(sender, bot.helpIndent(bot.getNick() + ": " + TIME_CMD));
+	}
+
+	@Override
+	public boolean isPrivateMsgEnabled()
+	{
+		return true;
 	}
 }

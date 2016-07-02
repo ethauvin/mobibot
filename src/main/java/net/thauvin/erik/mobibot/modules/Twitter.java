@@ -29,89 +29,97 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.thauvin.erik.mobibot;
+package net.thauvin.erik.mobibot.modules;
 
+import net.thauvin.erik.mobibot.Mobibot;
+import net.thauvin.erik.mobibot.Utils;
 import twitter4j.Status;
 import twitter4j.TwitterFactory;
 import twitter4j.conf.ConfigurationBuilder;
 
 /**
- * Processes the {@link Commands#TWITTER_CMD} command.
+ * The Twitter module.
  *
  * @author <a href="mailto:erik@thauvin.net">Erik C. Thauvin</a>
  * @created Sept 10, 2008
  * @since 1.0
  */
-class Twitter implements Runnable
+final public class Twitter extends AbstractModule
 {
-	/**
-	 * The Twitter access token.
-	 */
-	private final String accessToken;
+	private final static String CONSUMER_KEY_PROP = "twitter-consumerKey";
+
+	private final static String CONSUMER_SECRET_PROP = "twitter-consumerSecret";
+
+	private final static String TOKEN_PROP = "twitter-token";
+
+	private final static String TOKEN_SECRET_PROP = "twitter-tokenSecret";
 
 	/**
-	 * The Twitter access token secret.
+	 * The twitter command.
 	 */
-	private final String accessTokenSecret;
-
-	/**
-	 * The bot.
-	 */
-	private final Mobibot bot;
-
-	/**
-	 * The Twitter consumer key.
-	 */
-	private final String consumerKey;
-
-	/**
-	 * The Twitter consumer secret.
-	 */
-	private final String consumerSecret;
-
-	/**
-	 * The Twitter message.
-	 */
-	private final String message;
-
-	/**
-	 * The nick of the person who sent the message.
-	 */
-	private final String sender;
+	private final static String TWITTER_CMD = "twitter";
 
 	/**
 	 * Creates a new {@link Twitter} instance.
-	 *
-	 * @param bot The bot's instance.
-	 * @param sender The nick of the person who sent the message.
-	 * @param consumerKey The Twitter consumer key.
-	 * @param consumerSecret The Twitter consumer secret.
-	 * @param accessToken The Twitter access token.
-	 * @param accessTokenSecret The Twitter access token secret.
-	 * @param message The Twitter message.
 	 */
-	public Twitter(final Mobibot bot, final String sender, final String consumerKey, final String consumerSecret,
-	               final String accessToken, final String accessTokenSecret, final String message)
+	public Twitter()
 	{
-		this.bot = bot;
-		this.consumerKey = consumerKey;
-		this.consumerSecret = consumerSecret;
-		this.accessToken = accessToken;
-		this.accessTokenSecret = accessTokenSecret;
-		this.message = message;
-		this.sender = sender;
+		commands.add(TWITTER_CMD);
+		properties.put(CONSUMER_SECRET_PROP, "");
+		properties.put(CONSUMER_KEY_PROP, "");
+		properties.put(TOKEN_PROP, "");
+		properties.put(TOKEN_SECRET_PROP, "");
+	}
+
+	@Override
+	public boolean isEnabled()
+	{
+		return Utils.isValidString(properties.get(CONSUMER_KEY_PROP)) && Utils
+				.isValidString(properties.get(CONSUMER_SECRET_PROP)) && Utils.isValidString(properties.get(TOKEN_PROP))
+		       && Utils.isValidString(properties.get(TOKEN_SECRET_PROP));
+	}
+
+	@Override
+	public void commandResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate)
+	{
+		if (isEnabled() && args.length() > 0)
+		{
+			new Thread(() -> {
+				run(bot, sender, args);
+			}).start();
+		}
+		else
+		{
+			helpResponse(bot, sender, args, isPrivate);
+		}
+	}
+
+	@Override
+	public void helpResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate)
+	{
+		if (isEnabled())
+		{
+			bot.send(sender, "To post to Twitter:");
+			bot.send(sender, bot.helpIndent(bot.getNick() + ": " + TWITTER_CMD + " <message>"));
+		}
+		else
+		{
+			bot.send(sender, "The Twitter posting facility is disabled.");
+		}
 	}
 
 	/**
 	 * Posts to twitter.
 	 */
-	public final void run()
+	private void run(final Mobibot bot, final String sender, final String message)
 	{
 		try
 		{
 			final ConfigurationBuilder cb = new ConfigurationBuilder();
-			cb.setDebugEnabled(true).setOAuthConsumerKey(consumerKey).setOAuthConsumerSecret(consumerSecret)
-					.setOAuthAccessToken(accessToken).setOAuthAccessTokenSecret(accessTokenSecret);
+			cb.setDebugEnabled(true).setOAuthConsumerKey(properties.get(CONSUMER_KEY_PROP))
+					.setOAuthConsumerSecret(properties.get(CONSUMER_SECRET_PROP))
+					.setOAuthAccessToken(properties.get(TOKEN_PROP))
+					.setOAuthAccessTokenSecret(properties.get(TOKEN_SECRET_PROP));
 			final TwitterFactory tf = new TwitterFactory(cb.build());
 			final twitter4j.Twitter twitter = tf.getInstance();
 

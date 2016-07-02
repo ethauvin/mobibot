@@ -29,8 +29,10 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.thauvin.erik.mobibot;
+package net.thauvin.erik.mobibot.modules;
 
+import net.thauvin.erik.mobibot.Mobibot;
+import net.thauvin.erik.mobibot.Utils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -41,67 +43,78 @@ import java.net.URLConnection;
 import java.net.URLEncoder;
 
 /**
- * Processes the {@link Commands#GOOGLE_CMD} command.
+ * The GoogleSearch module.
  *
  * @author Erik C. Thauvin
  * @created Feb 7, 2004
  * @since 1.0
  */
-class GoogleSearch implements Runnable
+final public class GoogleSearch extends AbstractModule
 {
+	/**
+	 * The Google API Key property.
+	 */
+	private static final String GOOGLE_API_KEY_PROP = "google-api-key";
+
+	/**
+	 * The google command.
+	 */
+	private static final String GOOGLE_CMD = "google";
+
+	/**
+	 * The Google Custom Search Engine ID property.
+	 */
+	private static final String GOOGLE_CSE_KEY_PROP = "google-cse-cx";
+
 	/**
 	 * The tab indent (4 spaces).
 	 */
 	private static final String TAB_INDENT = "    ";
 
 	/**
-	 * The bot.
-	 */
-	private final Mobibot bot;
-
-	/**
-	 * The Google Custom Search Engine ID.
-	 */
-	private final String cseCx;
-
-	/**
-	 * The search query.
-	 */
-	private final String query;
-
-	/**
-	 * The nick of the person who sent the message.
-	 */
-	private final String sender;
-
-	/**
 	 * Creates a new {@link GoogleSearch} instance.
-	 *
-	 * @param bot The bot's instance.
-	 * @param cseCx The Google Custom Search Engine ID.
-	 * @param sender The nick of the person who sent the message.
-	 * @param query The Google query
 	 */
-	public GoogleSearch(final Mobibot bot, final String cseCx, final String sender, final String query)
+	public GoogleSearch()
 	{
-		this.bot = bot;
-		this.cseCx = cseCx;
-		this.sender = sender;
-		this.query = query;
+		commands.add(GOOGLE_CMD);
+		properties.put(GOOGLE_API_KEY_PROP, "");
+		properties.put(GOOGLE_CSE_KEY_PROP, "");
+	}
+
+	@Override
+	public void commandResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate)
+	{
+		if (isEnabled() && args.length() > 0)
+		{
+			if (args.length() > 0)
+			{
+				new Thread(() -> {
+					run(bot, sender, args);
+				}).start();
+			}
+			else
+			{
+				helpResponse(bot, sender, args, isPrivate);
+			}
+		}
+		else
+		{
+			helpResponse(bot, sender, args, isPrivate);
+		}
 	}
 
 	/**
 	 * Searches Google.
 	 */
-	public final void run()
+	private void run(final Mobibot bot, final String sender, final String query)
 	{
 		try
 		{
-			final String query = URLEncoder.encode(this.query, "UTF-8");
+			final String q = URLEncoder.encode(query, "UTF-8");
 
 			final URL url =
-					new URL("https://www.googleapis.com/customsearch/v1?key=" + bot.getGoogleApiKey() + "&cx=" + cseCx
-					        + "&q=" + query + "&filter=1&num=5&alt=json");
+					new URL("https://www.googleapis.com/customsearch/v1?key=" + properties.get(GOOGLE_API_KEY_PROP)
+					        + "&cx=" + properties.get(GOOGLE_CSE_KEY_PROP) + "&q=" + q + "&filter=1&num=5&alt=json");
 			final URLConnection conn = url.openConnection();
 
 			final StringBuilder sb = new StringBuilder();
@@ -130,5 +143,26 @@ class GoogleSearch implements Runnable
 			bot.getLogger().warn("Unable to search in Google for: " + query, e);
 			bot.send(sender, "An error has occurred: " + e.getMessage());
 		}
+	}
+
+	@Override
+	public void helpResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate)
+	{
+		if (isEnabled())
+		{
+			bot.send(sender, "To search Google:");
+			bot.send(sender, bot.helpIndent(bot.getNick() + ": " + GOOGLE_CMD + " <query>"));
+		}
+		else
+		{
+			bot.send(sender, "The Google searching facility is disabled.");
+		}
+	}
+
+	@Override
+	public boolean isEnabled()
+	{
+		return Utils.isValidString(properties.get(GOOGLE_API_KEY_PROP)) && Utils
+				.isValidString(properties.get(GOOGLE_CSE_KEY_PROP));
 	}
 }

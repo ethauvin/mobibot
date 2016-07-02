@@ -29,61 +29,68 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.thauvin.erik.mobibot;
+package net.thauvin.erik.mobibot.modules;
 
 import com.Ostermiller.util.CSVParser;
+import net.thauvin.erik.mobibot.Mobibot;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.methods.GetMethod;
 
 import java.io.IOException;
 
 /**
- * Processes the {@link Commands#STOCK_CMD} command.
+ * The StockQuote module.
  *
  * @author Erik C. Thauvin
  * @created Feb 7, 2004
  * @since 1.0
  */
-class StockQuote implements Runnable
+final public class StockQuote extends AbstractModule
 {
+	/**
+	 * The quote command.
+	 */
+	private static final String STOCK_CMD = "stock";
+
 	/**
 	 * The Yahoo! stock quote URL.
 	 */
 	private static final String YAHOO_URL = "http://finance.yahoo.com/d/quotes.csv?&f=snl1d1t1c1oghv&e=.csv&s=";
 
 	/**
-	 * The bot.
-	 */
-	private final Mobibot bot;
-
-	/**
-	 * The nick of the person who sent the message.
-	 */
-	private final String sender;
-
-	/**
-	 * The stock symbol.
-	 */
-	private final String symbol;
-
-	/**
 	 * Creates a new {@link StockQuote} instance.
-	 *
-	 * @param bot The bot's instance.
-	 * @param sender The nick of the person who sent the message.
-	 * @param symbol The stock symbol.
 	 */
-	public StockQuote(final Mobibot bot, final String sender, final String symbol)
+	public StockQuote()
 	{
-		this.bot = bot;
-		this.sender = sender;
-		this.symbol = symbol;
+		commands.add(STOCK_CMD);
+	}
+
+	@Override
+	public void commandResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate)
+	{
+		if (args.length() > 0)
+		{
+			new Thread(() -> {
+				run(bot, sender, args);
+			}).start();
+		}
+		else
+		{
+			helpResponse(bot, sender, args, isPrivate);
+		}
+	}
+
+	@Override
+	public void helpResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate)
+	{
+		bot.send(sender, "To retrieve a stock quote:");
+		bot.send(sender, bot.helpIndent(bot.getNick() + ": " + STOCK_CMD + " <symbol[.country code]>"));
 	}
 
 	/**
 	 * Returns the specified stock quote from Yahoo!
 	 */
-	public final void run()
+	private void run(final Mobibot bot, final String sender, final String symbol)
 	{
 		try
 		{

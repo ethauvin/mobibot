@@ -32,8 +32,7 @@
 package net.thauvin.erik.mobibot;
 
 import com.rometools.rome.io.FeedException;
-import net.objecthunter.exp4j.Expression;
-import net.objecthunter.exp4j.ExpressionBuilder;
+import net.thauvin.erik.mobibot.modules.*;
 import net.thauvin.erik.semver.Version;
 import org.apache.commons.cli.*;
 import org.apache.commons.logging.impl.Log4JLogger;
@@ -44,8 +43,6 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
 import java.io.*;
-import java.net.UnknownHostException;
-import java.text.DecimalFormat;
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -67,7 +64,7 @@ public class Mobibot extends PircBot
 	/**
 	 * The empty title string.
 	 */
-	public static final String NO_TITLE = "No Title";
+	static final String NO_TITLE = "No Title";
 
 	/**
 	 * The default port.
@@ -119,14 +116,14 @@ public class Mobibot extends PircBot
 	private static final long MESSAGE_DELAY = 1000L;
 
 	/**
+	 * The modules.
+	 */
+	private static final List<AbstractModule> MODULES = new ArrayList<>(0);
+
+	/**
 	 * The serialized object file extension.
 	 */
 	private static final String SER_EXT = ".ser";
-
-	/**
-	 * Shall we play a game?
-	 */
-	private static final String SHALL_WE_PLAY_A_GAME = "Shall we play a game?";
 
 	/**
 	 * The start time.
@@ -160,11 +157,6 @@ public class Mobibot extends PircBot
 	 * The commands list.
 	 */
 	private final List<String> commandsList = new ArrayList<>();
-
-	/**
-	 * The currency converter.
-	 */
-	private final CurrencyConverter currencyConverter;
 
 	/**
 	 * The entries array.
@@ -222,11 +214,6 @@ public class Mobibot extends PircBot
 	private final List<TellMessage> tellMessages = new CopyOnWriteArrayList<>();
 
 	/**
-	 * Time command.
-	 */
-	private final WorldTime worldTime = new WorldTime();
-
-	/**
 	 * The backlogs URL.
 	 */
 	private String backLogsUrl = "";
@@ -247,16 +234,6 @@ public class Mobibot extends PircBot
 	private String feedURL = "";
 
 	/**
-	 * The Google API Key.
-	 */
-	private String googleApiKey = "";
-
-	/**
-	 * The Google Custom Search Engine ID.
-	 */
-	private String googleCseCx = "";
-
-	/**
 	 * The NickServ ident password.
 	 */
 	private String ident = "";
@@ -272,11 +249,6 @@ public class Mobibot extends PircBot
 	private String identNick = "";
 
 	/**
-	 * The last player.
-	 */
-	private String lastPlayer = "";
-
-	/**
 	 * The number of days message are kept.
 	 */
 	private int tellMaxDays = DEFAULT_TELL_MAX_DAYS;
@@ -290,26 +262,6 @@ public class Mobibot extends PircBot
 	 * Today's date.
 	 */
 	private String today = Utils.today();
-
-	/**
-	 * The Twitter consumer key.
-	 */
-	private String twitterConsumerKey = "";
-
-	/**
-	 * The Twitter consumer secret.
-	 */
-	private String twitterConsumerSecret = "";
-
-	/**
-	 * The Twitter token.
-	 */
-	private String twitterToken = "";
-
-	/**
-	 * The Twitter token secret.
-	 */
-	private String twitterTokenSecret = "";
 
 	/**
 	 * The weblog URL.
@@ -345,7 +297,6 @@ public class Mobibot extends PircBot
 
 		// Initialization
 		Utils.UTC_SDF.setTimeZone(TimeZone.getTimeZone("UTC"));
-		currencyConverter = new CurrencyConverter(this);
 
 		// Load the current entries, if any.
 		try
@@ -385,6 +336,20 @@ public class Mobibot extends PircBot
 		{
 			logger.error("An error occurred while parsing the '" + EntriesMgr.NAV_XML + "' file.", e);
 		}
+
+		// Load the modules
+		MODULES.add(new Calc());
+		MODULES.add(new CurrencyConverter());
+		MODULES.add(new Dice());
+		MODULES.add(new GoogleSearch());
+		MODULES.add(new Joke());
+		MODULES.add(new Lookup());
+		MODULES.add(new Ping());
+		MODULES.add(new StockQuote());
+		MODULES.add(new Twitter());
+		MODULES.add(new War());
+		MODULES.add(new Weather());
+		MODULES.add(new WorldTime());
 	}
 
 	/**
@@ -528,16 +493,6 @@ public class Mobibot extends PircBot
 			final String dname = p.getProperty("delicious-user");
 			final String dpwd = p.getProperty("delicious-pwd");
 
-			// Get the Twitter properties
-			final String tconsumerKey = p.getProperty("twitter-consumerKey");
-			final String tconsumerSecret = p.getProperty("twitter-consumerSecret");
-			final String ttoken = p.getProperty("twitter-token", "");
-			final String ttokenSecret = p.getProperty("twitter-tokenSecret", "");
-
-			// Get the Google properties
-			final String googleApiKey = p.getProperty("google-api-key");
-			final String googleCseCx = p.getProperty("google-cse-cx");
-
 			// Get the tell command settings
 			final int tellMaxDays = Utils.getIntProperty(p.getProperty("tell-max-days"), DEFAULT_TELL_MAX_DAYS);
 			final int tellMaxSize = Utils.getIntProperty(p.getProperty("tell-max-size"), DEFAULT_TELL_MAX_SIZE);
@@ -570,20 +525,13 @@ public class Mobibot extends PircBot
 				bot.setDeliciousAuth(dname, dpwd);
 			}
 
-			if (Utils.isValidString(tconsumerKey) && Utils.isValidString(tconsumerSecret) && Utils.isValidString(ttoken)
-			    && Utils.isValidString(ttokenSecret))
-			{
-				// Set the Twitter authentication
-				bot.setTwitterAuth(tconsumerKey, tconsumerSecret, ttoken, ttokenSecret);
-			}
-
-			if (Utils.isValidString(googleApiKey))
-			{
-				if (Utils.isValidString(googleCseCx))
+			// Load the modules properties
+			MODULES.stream().filter(AbstractModule::hasProperties).forEach(module -> {
+				for (final String s : module.getPropertyKeys())
 				{
-					bot.setGoogleAuth(googleApiKey, googleCseCx);
+					module.setProperty(s, p.getProperty(s, ""));
 				}
-			}
+			});
 
 			// Set the tags
 			bot.setTags(tags);
@@ -704,32 +652,6 @@ public class Mobibot extends PircBot
 	}
 
 	/**
-	 * Sets the Twitter consumerSecret and password..
-	 *
-	 * @param consumerKey The Twitter consumer key.
-	 * @param consumerSecret The Twitter consumer secret.
-	 * @param token The Twitter token.
-	 * @param tokenSecret The Twitter token secret.
-	 */
-	private void setTwitterAuth(final String consumerKey, final String consumerSecret, final String token,
-	                            final String tokenSecret)
-	{
-		twitterConsumerKey = consumerKey;
-		twitterConsumerSecret = consumerSecret;
-		twitterToken = token;
-		twitterTokenSecret = tokenSecret;
-	}
-
-	/**
-	 * Sets the Google authentication.
-	 */
-	private void setGoogleAuth(final String apiKey, final String cseCx)
-	{
-		this.googleApiKey = apiKey;
-		this.googleCseCx = cseCx;
-	}
-
-	/**
 	 * Sets the default tags/categories.
 	 *
 	 * @param tags The tags.
@@ -844,7 +766,7 @@ public class Mobibot extends PircBot
 	 *
 	 * @param action The action.
 	 */
-	final void action(final String action)
+	final public void action(final String action)
 	{
 		action(channel, action);
 	}
@@ -860,40 +782,6 @@ public class Mobibot extends PircBot
 		if (Utils.isValidString(channel) && Utils.isValidString(action))
 		{
 			sendAction(channel, action);
-		}
-	}
-
-	/**
-	 * Processes the {@link Commands#CALC_CMD} command.
-	 *
-	 * @param sender The nick of the person who sent the message
-	 * @param args The command arguments.
-	 * @param message The actual message.
-	 */
-	private void calcResponse(final String sender, final String args, final String message)
-	{
-		if (Utils.isValidString(args))
-		{
-			final DecimalFormat decimalFormat = new DecimalFormat("#.##");
-
-			try
-			{
-				final Expression calc = new ExpressionBuilder(args).build();
-				send(channel, args.replaceAll(" ", "") + " = " + decimalFormat.format(calc.evaluate()));
-			}
-			catch (Exception e)
-			{
-				if (logger.isDebugEnabled())
-				{
-					logger.debug("Unable to calculate: " + message, e);
-				}
-
-				send(channel, "No idea. This is the kind of math I don't get.");
-			}
-		}
-		else
-		{
-			helpResponse(sender, Commands.CALC_CMD);
 		}
 	}
 
@@ -969,16 +857,6 @@ public class Mobibot extends PircBot
 	public final String getChannel()
 	{
 		return channel;
-	}
-
-	/**
-	 * Returns the Google API Key, if any.
-	 *
-	 * @return The Google API key or <code>empty</code>.
-	 */
-	public String getGoogleApiKey()
-	{
-		return this.googleApiKey;
 	}
 
 	/**
@@ -1061,38 +939,13 @@ public class Mobibot extends PircBot
 	}
 
 	/**
-	 * Responds with the Google search results for the specified query.
-	 *
-	 * @param sender The nick of the person who sent the private message.
-	 * @param query The Google query to execute.
-	 */
-	private void googleResponse(final String sender, final String query)
-	{
-		if (isGseEnabled())
-		{
-			if (query.length() > 0)
-			{
-				new Thread(new GoogleSearch(this, googleCseCx, sender, query)).start();
-			}
-			else
-			{
-				helpResponse(sender, Commands.GOOGLE_CMD);
-			}
-		}
-		else
-		{
-			send(sender, "The Google searching facility is disabled.");
-		}
-	}
-
-	/**
 	 * Returns indented and bold help string.
 	 *
 	 * @param help The help string.
 	 *
 	 * @return The indented help string.
 	 */
-	private String helpIndent(final String help)
+	final public String helpIndent(final String help)
 	{
 		return helpIndent(help, true);
 	}
@@ -1116,11 +969,11 @@ public class Mobibot extends PircBot
 	 * @param sender The nick of the person who sent the private message.
 	 * @param topic The help topic, if any.
 	 */
-	public final void helpResponse(final String sender, final String topic)
+	private void helpResponse(final String sender, final String topic)
 	{
-		final String lcTopic = topic.toLowerCase();
+		final String lcTopic = topic.toLowerCase().trim();
 
-		if (lcTopic.endsWith(Commands.HELP_POSTING_KEYWORD))
+		if (lcTopic.equals(Commands.HELP_POSTING_KEYWORD))
 		{
 			send(sender, Utils.bold("Post a URL, by saying it on a line on its own:"));
 			send(sender, helpIndent("<url> [<title>] [" + TAGS_MARKER + "<+tag> [...]]"));
@@ -1136,145 +989,63 @@ public class Mobibot extends PircBot
 			send(sender, helpIndent(Commands.LINK_CMD + "1.1:-"));
 			send(sender, "You can also view a posting by saying its label.");
 		}
-		else if (lcTopic.endsWith(Commands.HELP_TAGS_KEYWORD))
+		else if (lcTopic.equals(Commands.HELP_TAGS_KEYWORD))
 		{
 			send(sender, Utils.bold("To categorize or tag a URL, use its label and a T:"));
 			send(sender, helpIndent(Commands.LINK_CMD + "1T:<+tag|-tag> [...]"));
 		}
-		else if (lcTopic.endsWith(Commands.VIEW_CMD))
+		else if (lcTopic.equals(Commands.VIEW_CMD))
 		{
 			send(sender, "To list or search the current URL posts:");
 			send(sender, helpIndent(getNick() + ": " + Commands.VIEW_CMD) + " [<start>] [<query>]");
 		}
-		else if (lcTopic.endsWith(channel.substring(1).toLowerCase()))
+		else if (lcTopic.equals(channel.substring(1).toLowerCase()))
 		{
 			send(sender, "To list the last 5 posts from the channel's weblog:");
 			send(sender, helpIndent(getNick() + ": " + channel.substring(1)));
 		}
-		else if (lcTopic.endsWith(Commands.GOOGLE_CMD) && isGseEnabled())
-		{
-			send(sender, "To search Google:");
-			send(sender, helpIndent(getNick() + ": " + Commands.GOOGLE_CMD + " <query>"));
-		}
-		else if (lcTopic.endsWith(Commands.TWITTER_CMD) && isTwitterEnabled())
-		{
-			send(sender, "To post to Twitter:");
-			send(sender, helpIndent(getNick() + ": " + Commands.TWITTER_CMD + " <message>"));
-		}
-		else if (lcTopic.endsWith(Commands.RECAP_CMD))
+		else if (lcTopic.equals(Commands.RECAP_CMD))
 		{
 			send(sender, "To list the last 10 public channel messages:");
 			send(sender, helpIndent(getNick() + ": " + Commands.RECAP_CMD));
 		}
-		else if (lcTopic.endsWith(Commands.CALC_CMD))
-		{
-			send(sender, "To solve a mathematical calculation:");
-			send(sender, helpIndent(getNick() + ": " + Commands.CALC_CMD + " <calculation>"));
-		}
-		else if (lcTopic.endsWith(Commands.LOOKUP_CMD))
-		{
-			send(sender, "To perform a DNS lookup query:");
-			send(sender, helpIndent(getNick() + ": " + Commands.LOOKUP_CMD + " <ip address or hostname>"));
-		}
-		else if (lcTopic.endsWith(Commands.TIME_CMD))
-		{
-			send(sender, "To display a country's current date/time:");
-			send(sender, helpIndent(getNick() + ": " + Commands.TIME_CMD) + " [<country code>]");
-
-			send(sender, "For a listing of the supported countries:");
-			send(sender, helpIndent(getNick() + ": " + Commands.TIME_CMD));
-		}
-		else if (lcTopic.endsWith(Commands.JOKE_CMD))
-		{
-			send(sender, "To retrieve a random joke:");
-			send(sender, helpIndent(getNick() + ": " + Commands.JOKE_CMD));
-		}
-		else if (lcTopic.endsWith(Commands.STOCK_CMD))
-		{
-			send(sender, "To retrieve a stock quote:");
-			send(sender, helpIndent(getNick() + ": " + Commands.STOCK_CMD + " <symbol[.country code]>"));
-		}
-		else if (lcTopic.endsWith(Commands.DICE_CMD))
-		{
-			send(sender, "To roll the dice:");
-			send(sender, helpIndent(getNick() + ": " + Commands.DICE_CMD));
-		}
-		else if (lcTopic.endsWith(Commands.WAR_CMD))
-		{
-			send(sender, "To play war:");
-			send(sender, helpIndent(getNick() + ": " + Commands.WAR_CMD));
-		}
-		else if (lcTopic.endsWith(Commands.WEATHER_CMD))
-		{
-			send(sender, "To display weather information:");
-			send(sender, helpIndent(getNick() + ": " + Commands.WEATHER_CMD + " <station id>"));
-			send(sender, "For a listing of the ICAO station IDs, please visit: " + Weather.STATIONS_URL);
-		}
-		else if (lcTopic.endsWith(Commands.USERS_CMD))
+		else if (lcTopic.equals(Commands.USERS_CMD))
 		{
 			send(sender, "To list the users present on the channel:");
 			send(sender, helpIndent(getNick() + ": " + Commands.USERS_CMD));
 		}
-		else if (lcTopic.endsWith(Commands.INFO_CMD))
+		else if (lcTopic.equals(Commands.INFO_CMD) && isOp(sender))
 		{
 			send(sender, "To view information about the bot:");
 			send(sender, helpIndent(getNick() + ": " + Commands.INFO_CMD));
 		}
-		else if (lcTopic.endsWith(Commands.CYCLE_CMD))
+		else if (lcTopic.equals(Commands.CYCLE_CMD) && isOp(sender))
 		{
-			if (isOp(sender))
-			{
-				send(sender, "To have the bot leave the channel and come back:");
-				send(sender, helpIndent("/msg " + getNick() + ' ' + Commands.CYCLE_CMD));
-			}
-		}
-		else if (lcTopic.endsWith(Commands.ME_CMD))
-		{
-			if (isOp(sender))
-			{
-				send(sender, "To have the bot perform an action:");
-				send(sender, helpIndent("/msg " + getNick() + ' ' + Commands.ME_CMD + " <action>"));
-			}
-		}
-		else if (lcTopic.endsWith(Commands.SAY_CMD))
-		{
-			if (isOp(sender))
-			{
-				send(sender, "To have the bot say something on the channel:");
-				send(sender, helpIndent("/msg " + getNick() + ' ' + Commands.SAY_CMD + " <text>"));
-			}
-		}
-		else if (lcTopic.endsWith(Commands.VERSION_CMD))
-		{
-			if (isOp(sender))
-			{
-				send(sender, "To view the version data (bot, java, etc.):");
-				send(sender, helpIndent("/msg " + getNick() + ' ' + Commands.VERSION_CMD));
-			}
-		}
-		else if (lcTopic.endsWith(Commands.MSG_CMD))
-		{
-			if (isOp(sender))
-			{
-				send(sender, "To have the bot send a private message to someone:");
-				send(sender, helpIndent("/msg " + getNick() + ' ' + Commands.MSG_CMD + " <nick> <text>"));
-			}
-		}
-		else if (lcTopic.startsWith(Commands.CURRENCY_CMD))
-		{
-			send(sender, "To convert from one currency to another:");
-			send(sender, helpIndent(getNick() + ": " + Commands.CURRENCY_CMD + " [100 USD to EUR]"));
+			send(sender, "To have the bot leave the channel and come back:");
+			send(sender, helpIndent("/msg " + getNick() + ' ' + Commands.CYCLE_CMD));
 
-			if (lcTopic.endsWith(Commands.CURRENCY_CMD))
-			{
-				send(sender, "For a listing of currency rates:");
-				send(sender,
-				     helpIndent(getNick() + ": " + Commands.CURRENCY_CMD) + ' ' + Commands.CURRENCY_RATES_KEYWORD);
-				send(sender, "For a listing of supported currencies:");
-				send(sender, helpIndent(getNick() + ": " + Commands.CURRENCY_CMD));
-			}
 		}
-		else if (lcTopic.startsWith(Commands.IGNORE_CMD))
+		else if (lcTopic.equals(Commands.ME_CMD) && isOp(sender))
+		{
+			send(sender, "To have the bot perform an action:");
+			send(sender, helpIndent("/msg " + getNick() + ' ' + Commands.ME_CMD + " <action>"));
+		}
+		else if (lcTopic.equals(Commands.SAY_CMD) && isOp(sender))
+		{
+			send(sender, "To have the bot say something on the channel:");
+			send(sender, helpIndent("/msg " + getNick() + ' ' + Commands.SAY_CMD + " <text>"));
+		}
+		else if (lcTopic.equals(Commands.VERSION_CMD) && isOp(sender))
+		{
+			send(sender, "To view the version data (bot, java, etc.):");
+			send(sender, helpIndent("/msg " + getNick() + ' ' + Commands.VERSION_CMD));
+		}
+		else if (lcTopic.equals(Commands.MSG_CMD) && isOp(sender))
+		{
+			send(sender, "To have the bot send a private message to someone:");
+			send(sender, helpIndent("/msg " + getNick() + ' ' + Commands.MSG_CMD + " <nick> <text>"));
+		}
+		else if (lcTopic.equals(Commands.IGNORE_CMD))
 		{
 			send(sender, "To check your ignore status:");
 			send(sender, helpIndent(getNick() + ": " + Commands.IGNORE_CMD));
@@ -1283,7 +1054,7 @@ public class Mobibot extends PircBot
 			send(sender, helpIndent(getNick() + ": " + Commands.IGNORE_CMD + ' ' + Commands.IGNORE_ME_KEYWORD));
 
 		}
-		else if (lcTopic.startsWith(Commands.TELL_CMD))
+		else if (lcTopic.equals(Commands.TELL_CMD))
 		{
 			send(sender, "To send a message to someone when they join the channel:");
 			send(sender, helpIndent(getNick() + ": " + Commands.TELL_CMD + " <nick> <message>"));
@@ -1295,6 +1066,19 @@ public class Mobibot extends PircBot
 		}
 		else
 		{
+
+			for (final AbstractModule module : MODULES)
+			{
+				for (final String cmd : module.getCommands())
+				{
+					if (lcTopic.equals(cmd))
+					{
+						module.helpResponse(this, sender, topic, true);
+						return;
+					}
+				}
+			}
+
 			send(sender, Utils.bold("Type a URL on " + channel + " to post it."));
 			send(sender, "For more information on a specific command, type:");
 			send(sender, helpIndent(getNick() + ": " + Commands.HELP_CMD + " <command>"));
@@ -1302,37 +1086,21 @@ public class Mobibot extends PircBot
 
 			if (commandsList.isEmpty())
 			{
-				commandsList.add(Commands.CALC_CMD);
-				commandsList.add(Commands.CURRENCY_CMD);
-				commandsList.add(Commands.DICE_CMD);
 				commandsList.add(Commands.IGNORE_CMD);
 				commandsList.add(Commands.INFO_CMD);
-				commandsList.add(Commands.JOKE_CMD);
-				commandsList.add(Commands.LOOKUP_CMD);
 				commandsList.add(channel.substring(1));
 				commandsList.add(Commands.HELP_POSTING_KEYWORD);
-				commandsList.add(Commands.RECAP_CMD);
-				commandsList.add(Commands.STOCK_CMD);
 				commandsList.add(Commands.HELP_TAGS_KEYWORD);
-				commandsList.add(Commands.TIME_CMD);
+				commandsList.add(Commands.RECAP_CMD);
 				commandsList.add(Commands.USERS_CMD);
 				commandsList.add(Commands.VIEW_CMD);
-				commandsList.add(Commands.WAR_CMD);
-				commandsList.add(Commands.WEATHER_CMD);
+
+				MODULES.stream().filter(AbstractModule::isEnabled)
+						.forEach(module -> commandsList.addAll(module.getCommands()));
 
 				if (isTellEnabled())
 				{
 					commandsList.add(Commands.TELL_CMD);
-				}
-
-				if (isTwitterEnabled())
-				{
-					commandsList.add(Commands.TWITTER_CMD);
-				}
-
-				if (isGseEnabled())
-				{
-					commandsList.add(Commands.GOOGLE_CMD);
 				}
 
 				Collections.sort(commandsList);
@@ -1350,7 +1118,7 @@ public class Mobibot extends PircBot
 				sb.append(commandsList.get(i));
 
 				// 5 commands per line or last command
-				if (sb.length() > 0 && (cmdCount == 5 || i == (commandsList.size() - 1)))
+				if (sb.length() > 0 && (cmdCount == 6 || i == (commandsList.size() - 1)))
 				{
 					send(sender, helpIndent(sb.toString()));
 
@@ -1467,16 +1235,6 @@ public class Mobibot extends PircBot
 	}
 
 	/**
-	 * Returns <code>true</code> if Google search is enabled.
-	 *
-	 * @return <code>true</code> or <code>false</code>
-	 */
-	private boolean isGseEnabled()
-	{
-		return Utils.isValidString(googleApiKey) && Utils.isValidString(googleCseCx);
-	}
-
-	/**
 	 * Determines whether the specified nick should be ignored.
 	 *
 	 * @param nick The nick.
@@ -1509,81 +1267,6 @@ public class Mobibot extends PircBot
 		}
 
 		return false;
-	}
-
-	/**
-	 * Returns <code>true</code> if twitter posting is enabled.
-	 *
-	 * @return <code>true</code> or <code>false</code>
-	 */
-	private boolean isTwitterEnabled()
-	{
-		return Utils.isValidString(twitterConsumerKey) && Utils.isValidString(twitterConsumerSecret) && Utils
-				.isValidString(twitterToken) && Utils.isValidString(twitterTokenSecret);
-	}
-
-	/**
-	 * Responds with the results of a DNS query.
-	 *
-	 * @param sender The nick of the person who sent the message
-	 * @param query The hostname or IP address.
-	 */
-	private void lookupResponse(final String sender, final String query)
-	{
-		if (query.matches("(\\S.)+(\\S)+"))
-		{
-			try
-			{
-				send(channel, Lookup.lookup(query));
-			}
-			catch (UnknownHostException ignore)
-			{
-				if (query.matches(
-						"(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)"))
-				{
-					try
-					{
-						final String[] lines = Lookup.whois(query);
-
-						if ((lines != null) && (lines.length > 0))
-						{
-							String line;
-
-							for (final String rawLine : lines)
-							{
-								line = rawLine.trim();
-
-								if ((line.length() > 0) && (line.charAt(0) != '#'))
-								{
-									send(channel, line);
-								}
-							}
-						}
-						else
-						{
-							send(channel, "Unknown host.");
-						}
-					}
-					catch (IOException ioe)
-					{
-						if (logger.isDebugEnabled())
-						{
-							logger.debug("Unable to perform whois IP lookup: " + query, ioe);
-						}
-
-						send(channel, "Unable to perform whois IP lookup: " + ioe.getMessage());
-					}
-				}
-				else
-				{
-					send(channel, "Unknown host.");
-				}
-			}
-		}
-		else
-		{
-			helpResponse(sender, Commands.LOOKUP_CMD);
-		}
 	}
 
 	@Override
@@ -1768,33 +1451,6 @@ public class Mobibot extends PircBot
 			{
 				helpResponse(sender, args);
 			}
-			// mobibot: ping
-			else if (cmd.equals(Commands.PING_CMD))
-			{
-				final String[] pings = {
-						"is barely alive.",
-						"is trying to stay awake.",
-						"has gone fishing.",
-						"is somewhere over the rainbow.",
-						"has fallen and can't get up.",
-						"is running. You better go chase it.",
-						"has just spontaneously combusted.",
-						"is talking to itself... don't interrupt. That's rude.",
-						"is bartending at an AA meeting.",
-						"is hibernating.",
-						"is saving energy: apathetic mode activated.",
-						"is busy. Go away!"
-				};
-
-				final Random r = new Random();
-
-				action(channel, pings[r.nextInt(pings.length)]);
-			}
-			// mobibot: pong
-			else if (cmd.equals(Commands.PONG_CMD))
-			{
-				send(channel, Commands.PING_CMD, true);
-			}
 			// mobibot: recap
 			else if (cmd.equals(Commands.RECAP_CMD))
 			{
@@ -1815,93 +1471,39 @@ public class Mobibot extends PircBot
 			{
 				versionResponse(sender, false);
 			}
-			// mobibot: dice
-			else if (cmd.equals(Commands.DICE_CMD))
-			{
-				if (!lastPlayer.equalsIgnoreCase(sender))
-				{
-					send(channel, SHALL_WE_PLAY_A_GAME);
-					lastPlayer = sender;
-				}
-
-				Dice.roll(this, sender);
-			}
-			// mobibot: war
-			else if (cmd.equals(Commands.WAR_CMD))
-			{
-				if (!lastPlayer.equalsIgnoreCase(sender))
-				{
-					send(channel, SHALL_WE_PLAY_A_GAME);
-					lastPlayer = sender;
-				}
-
-				War.play(this, sender);
-			}
 			// mobibot: <channel>
 			else if (cmd.equalsIgnoreCase(channel.substring(1)))
 			{
 				feedResponse(sender);
-			}
-			// mobibot: currency
-			else if (cmd.startsWith(Commands.CURRENCY_CMD))
-			{
-				currencyConverter.setQuery(sender, args);
-				new Thread(currencyConverter).start();
-			}
-			// mobibot: lookup
-			else if (cmd.startsWith(Commands.LOOKUP_CMD))
-			{
-				lookupResponse(sender, args);
 			}
 			// mobibot: view
 			else if (cmd.startsWith(Commands.VIEW_CMD))
 			{
 				viewResponse(sender, args, false);
 			}
-			// mobibot: google
-			else if (cmd.startsWith(Commands.GOOGLE_CMD) && isGseEnabled())
-			{
-				googleResponse(sender, args);
-			}
-			// mobibot: twitter
-			else if (cmd.startsWith(Commands.TWITTER_CMD) && isTwitterEnabled())
-			{
-				twitterResponse(sender, args);
-			}
-			// mobibot: stock
-			else if (cmd.startsWith(Commands.STOCK_CMD))
-			{
-				stockResponse(sender, args);
-			}
-			// mobibot: joke
-			else if (cmd.startsWith(Commands.JOKE_CMD))
-			{
-				new Thread(new Joke(this, sender)).start();
-			}
-			// mobibot: calc
-			else if (cmd.startsWith(Commands.CALC_CMD))
-			{
-				calcResponse(sender, args, message);
-			}
-			// mobibot: time
-			else if (cmd.startsWith(Commands.TIME_CMD))
-			{
-				worldTime.timeResponse(this, sender, args, false);
-			}
 			// mobibot: tell
 			else if (cmd.startsWith(Commands.TELL_CMD) && isTellEnabled())
 			{
 				tellResponse(sender, args);
 			}
-			// mobibot: weather
-			else if (cmd.startsWith(Commands.WEATHER_CMD))
-			{
-				weatherResponse(sender, args, false);
-			}
 			// mobibot: ignore
 			else if (cmd.startsWith(Commands.IGNORE_CMD))
 			{
 				ignoreResponse(sender, args);
+			}
+			// modules
+			else
+			{
+				for (final AbstractModule module : MODULES)
+				{
+					for (final String c : module.getCommands())
+					{
+						if (cmd.startsWith(c))
+						{
+							module.commandResponse(this, sender, args, false);
+						}
+					}
+				}
 			}
 		}
 		// L1:<comment>, L1:-, L1:|<title>, etc.
@@ -2172,24 +1774,18 @@ public class Mobibot extends PircBot
 		{
 			helpResponse(sender, args);
 		}
-		else if ("kill".equals(cmd))
+		else if ("kill".equals(cmd) && isOp(sender))
 		{
-			if (isOp(sender))
-			{
-				sendRawLine("QUIT : Poof!");
-				System.exit(0);
-			}
+			sendRawLine("QUIT : Poof!");
+			System.exit(0);
 		}
-		else if (cmd.equals(Commands.DIE_CMD))
+		else if (cmd.equals(Commands.DIE_CMD) && isOp(sender))
 		{
-			if (isOp(sender))
-			{
-				send(channel, sender + " has just signed my death sentence.");
-				saveEntries(true);
-				sleep(3);
-				quitServer("The Bot Is Out There!");
-				System.exit(0);
-			}
+			send(channel, sender + " has just signed my death sentence.");
+			saveEntries(true);
+			sleep(3);
+			quitServer("The Bot Is Out There!");
+			System.exit(0);
 		}
 		else if (cmd.equals(Commands.CYCLE_CMD))
 		{
@@ -2207,96 +1803,76 @@ public class Mobibot extends PircBot
 		{
 			usersResponse(sender, true);
 		}
-		else if (cmd.startsWith(Commands.ADDLOG_CMD) && (cmds.length > 1))
+		else if (cmd.equals(Commands.ADDLOG_CMD) && (cmds.length > 1) && isOp(sender))
 		{
-			if (isOp(sender))
+			// e.g. 2014-04-01
+			final File backlog = new File(logsDir + args + EntriesMgr.XML_EXT);
+			if (backlog.exists())
 			{
-				// e.g. 2014-04-01
-				final File backlog = new File(logsDir + args + EntriesMgr.XML_EXT);
-				if (backlog.exists())
-				{
-					history.add(0, args);
-					send(sender, history.toString(), true);
-				}
-				else
-				{
-					send(sender, "The specified log could not be found.");
-				}
+				history.add(0, args);
+				send(sender, history.toString(), true);
+			}
+			else
+			{
+				send(sender, "The specified log could not be found.");
 			}
 		}
-		else if (cmd.startsWith(Commands.ME_CMD))
+		else if (cmd.equals(Commands.ME_CMD) && isOp(sender))
 		{
-			if (isOp(sender))
+			if (args.length() > 1)
 			{
-				if (args.length() > 1)
-				{
-					action(args);
-				}
-				else
-				{
-					helpResponse(sender, Commands.ME_CMD);
-				}
+				action(args);
+			}
+			else
+			{
+				helpResponse(sender, Commands.ME_CMD);
 			}
 		}
-		else if (cmd.startsWith(Commands.NICK_CMD) && (cmds.length > 1))
+		else if (cmd.equals(Commands.NICK_CMD) && (cmds.length > 1))
 		{
 			if (isOp(sender))
 			{
 				changeNick(args);
 			}
 		}
-		else if (cmd.startsWith(Commands.SAY_CMD))
+		else if (cmd.equals(Commands.SAY_CMD) && isOp(sender))
 		{
-			if (isOp(sender))
+			if (cmds.length > 1)
 			{
-				if (cmds.length > 1)
-				{
-					send(channel, args, true);
-				}
-				else
-				{
-					helpResponse(sender, Commands.SAY_CMD);
-				}
+				send(channel, args, true);
+			}
+			else
+			{
+				helpResponse(sender, Commands.SAY_CMD);
 			}
 		}
-		else if (cmd.startsWith(Commands.MSG_CMD))
+		else if (cmd.equals(Commands.MSG_CMD) && isOp(sender))
 		{
-			if (isOp(sender))
+			if (cmds.length > 1)
 			{
-				if (cmds.length > 1)
-				{
-					final String[] msg = args.split(" ", 2);
+				final String[] msg = args.split(" ", 2);
 
-					if (args.length() > 2)
-					{
-						send(msg[0], msg[1], true);
-					}
-					else
-					{
-						helpResponse(sender, Commands.MSG_CMD);
-					}
+				if (args.length() > 2)
+				{
+					send(msg[0], msg[1], true);
 				}
 				else
 				{
 					helpResponse(sender, Commands.MSG_CMD);
 				}
 			}
+			else
+			{
+				helpResponse(sender, Commands.MSG_CMD);
+			}
 		}
-		else if (cmd.startsWith(Commands.VIEW_CMD))
+		else if (cmd.equals(Commands.VIEW_CMD))
 		{
 			viewResponse(sender, args, true);
 		}
-		else if (cmd.startsWith(Commands.TIME_CMD))
-		{
-			worldTime.timeResponse(this, sender, args, true);
-		}
-		else if (cmd.startsWith(Commands.TELL_CMD) && isTellEnabled())
+		else if (cmd.equals(Commands.TELL_CMD) && isTellEnabled())
 		{
 			tellResponse(sender, args);
-		}
-		else if (cmd.startsWith(Commands.WEATHER_CMD))
-		{
-			weatherResponse(sender, args, true);
 		}
 		else if (cmd.equals(Commands.INFO_CMD))
 		{
@@ -2324,6 +1900,21 @@ public class Mobibot extends PircBot
 		}
 		else
 		{
+			for (final AbstractModule module : MODULES)
+			{
+				if (module.isPrivateMsgEnabled())
+				{
+					for (final String c : module.getCommands())
+					{
+						if (cmd.equals(c))
+						{
+							module.commandResponse(this, sender, args, true);
+							return;
+						}
+					}
+				}
+			}
+
 			helpResponse(sender, "");
 		}
 	}
@@ -2499,24 +2090,6 @@ public class Mobibot extends PircBot
 	public final void send(final String sender, final String message)
 	{
 		send(sender, message, false);
-	}
-
-	/**
-	 * Responds with the specified stock quote.
-	 *
-	 * @param sender The nick of the person who sent the message.
-	 * @param symbol The stock symbol to lookup.
-	 */
-	private void stockResponse(final String sender, final String symbol)
-	{
-		if (symbol.length() > 0)
-		{
-			new Thread(new StockQuote(this, sender, symbol)).start();
-		}
-		else
-		{
-			helpResponse(sender, Commands.STOCK_CMD);
-		}
 	}
 
 	/**
@@ -2703,37 +2276,6 @@ public class Mobibot extends PircBot
 	}
 
 	/**
-	 * Posts a message to Twitter.
-	 *
-	 * @param sender The sender's nick.
-	 * @param message The message.
-	 */
-	private void twitterResponse(final String sender, final String message)
-	{
-		if (isTwitterEnabled())
-		{
-			if (message.length() > 0)
-			{
-				new Thread(new Twitter(this,
-				                       sender,
-				                       twitterConsumerKey,
-				                       twitterConsumerSecret,
-				                       twitterToken,
-				                       twitterTokenSecret,
-				                       message)).start();
-			}
-			else
-			{
-				helpResponse(sender, Commands.TWITTER_CMD);
-			}
-		}
-		else
-		{
-			send(sender, "The Twitter posting facility is disabled.");
-		}
-	}
-
-	/**
 	 * Responds with the users on a channel.
 	 *
 	 * @param sender The nick of the person who sent the message.
@@ -2884,17 +2426,5 @@ public class Mobibot extends PircBot
 		{
 			send(sender, "There is currently nothing to view. Why don't you post something?", isPrivate);
 		}
-	}
-
-	/**
-	 * Responds with weather from the specified station ID.
-	 *
-	 * @param sender The nick of the person who sent the message.
-	 * @param id The station's ID.
-	 * @param isPrivate Set to true is the response should be send as a private message.
-	 */
-	private void weatherResponse(final String sender, final String id, final boolean isPrivate)
-	{
-		new Thread(new Weather(this, sender, id, isPrivate)).start();
 	}
 }

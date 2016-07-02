@@ -29,8 +29,10 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.thauvin.erik.mobibot;
+package net.thauvin.erik.mobibot.modules;
 
+import net.thauvin.erik.mobibot.Mobibot;
+import net.thauvin.erik.mobibot.Utils;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.JDOMException;
@@ -46,14 +48,24 @@ import java.util.Map;
 import java.util.TreeMap;
 
 /**
- * Processes the {@link Commands#CURRENCY_CMD} command.
+ * The CurrentConverter module.
  *
  * @author Erik C. Thauvin
  * @created Feb 11, 2004
  * @since 1.0
  */
-class CurrencyConverter implements Runnable
+final public class CurrencyConverter extends AbstractModule
 {
+	/**
+	 * The currency command.
+	 */
+	private static final String CURRENCY_CMD = "currency";
+
+	/**
+	 * The rates keyword.
+	 */
+	private static final String CURRENCY_RATES_KEYWORD = "rates";
+
 	/**
 	 * The exchange rates.
 	 */
@@ -65,39 +77,53 @@ class CurrencyConverter implements Runnable
 	private static final String EXCHANGE_TABLE_URL = "http://www.ecb.int/stats/eurofxref/eurofxref-daily.xml";
 
 	/**
-	 * The bot.
-	 */
-	private final Mobibot bot;
-
-	/**
 	 * The last exchange rates table publication date.
 	 */
 	private String pubDate = "";
 
 	/**
-	 * The actual currency query.
-	 */
-	private String query;
-
-	/**
-	 * The nick of the person who sent the message.
-	 */
-	private String sender;
-
-	/**
 	 * Creates a new {@link CurrencyConverter} instance.
-	 *
-	 * @param bot The bot's instance.
 	 */
-	public CurrencyConverter(final Mobibot bot)
+	public CurrencyConverter()
 	{
-		this.bot = bot;
+		commands.add(CURRENCY_CMD);
+	}
+
+	@Override
+	public void commandResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate)
+	{
+		synchronized (this)
+		{
+			if (!pubDate.equals(Utils.today()))
+			{
+				EXCHANGE_RATES.clear();
+			}
+		}
+
+		new Thread(() -> {
+			run(bot, sender, args);
+		}).start();
+	}
+
+	@Override
+	public void helpResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate)
+	{
+		bot.send(sender, "To convert from one currency to another:");
+		bot.send(sender, bot.helpIndent(bot.getNick() + ": " + CURRENCY_CMD + " [100 USD to EUR]"));
+
+		if (args.endsWith(CURRENCY_CMD))
+		{
+			bot.send(sender, "For a listing of currency rates:");
+			bot.send(sender, bot.helpIndent(bot.getNick() + ": " + CURRENCY_CMD) + ' ' + CURRENCY_RATES_KEYWORD);
+			bot.send(sender, "For a listing of supported currencies:");
+			bot.send(sender, bot.helpIndent(bot.getNick() + ": " + CURRENCY_CMD));
+		}
 	}
 
 	/**
 	 * Converts the specified currencies.
 	 */
-	public final void run()
+	private void run(final Mobibot bot, final String sender, final String query)
 	{
 		if (Utils.isValidString(sender))
 		{
@@ -183,7 +209,7 @@ class CurrencyConverter implements Runnable
 							}
 						}
 					}
-					else if (query.equals(Commands.CURRENCY_RATES_KEYWORD))
+					else if (query.equals(CURRENCY_RATES_KEYWORD))
 					{
 						bot.send(sender, "Last Update: " + pubDate);
 
@@ -204,27 +230,9 @@ class CurrencyConverter implements Runnable
 			}
 			else
 			{
-				bot.helpResponse(sender, Commands.CURRENCY_CMD + ' ' + query);
+				helpResponse(bot, sender, CURRENCY_CMD + ' ' + query, true);
 				bot.send(sender, "The supported currencies are: " + EXCHANGE_RATES.keySet().toString());
 			}
-		}
-	}
-
-	/**
-	 * Sets the query.
-	 *
-	 * @param sender The nick of the person who sent the message.
-	 * @param query The currency query.
-	 */
-
-	public synchronized void setQuery(final String sender, final String query)
-	{
-		this.query = query;
-		this.sender = sender;
-
-		if (!pubDate.equals(Utils.today()))
-		{
-			EXCHANGE_RATES.clear();
 		}
 	}
 }

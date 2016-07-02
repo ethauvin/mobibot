@@ -46,21 +46,6 @@ final class Commands
 	public static final String ADDLOG_CMD = "addlog";
 
 	/**
-	 * The math command.
-	 */
-	public static final String CALC_CMD = "calc";
-
-	/**
-	 * The currency command.
-	 */
-	public static final String CURRENCY_CMD = "currency";
-
-	/**
-	 * The rates keyword.
-	 */
-	public static final String CURRENCY_RATES_KEYWORD = "rates";
-
-	/**
 	 * The cycle command.
 	 */
 	public static final String CYCLE_CMD = "cycle";
@@ -76,19 +61,9 @@ final class Commands
 	public static final String DEBUG_CMD = "debug";
 
 	/**
-	 * The dices command.
-	 */
-	public static final String DICE_CMD = "dice";
-
-	/**
 	 * The die command.
 	 */
 	public static final String DIE_CMD = "die";
-
-	/**
-	 * The Google command.
-	 */
-	public static final String GOOGLE_CMD = "google";
 
 	/**
 	 * Help command line argument.
@@ -126,19 +101,9 @@ final class Commands
 	public static final String INFO_CMD = "info";
 
 	/**
-	 * The joke command.
-	 */
-	public static final String JOKE_CMD = "joke";
-
-	/**
 	 * The link command.
 	 */
 	public static final String LINK_CMD = "L";
-
-	/**
-	 * The lookup command.
-	 */
-	public static final String LOOKUP_CMD = "lookup";
 
 	/**
 	 * The me command.
@@ -156,16 +121,6 @@ final class Commands
 	public static final String NICK_CMD = "nick";
 
 	/**
-	 * The ping command.
-	 */
-	public static final String PING_CMD = "ping";
-
-	/**
-	 * The pong command.
-	 */
-	public static final String PONG_CMD = "pong";
-
-	/**
 	 * Properties command line argument.
 	 */
 	public static final String PROPS_ARG = "properties";
@@ -181,11 +136,6 @@ final class Commands
 	public static final String SAY_CMD = "say";
 
 	/**
-	 * The stock command.
-	 */
-	public static final String STOCK_CMD = "stock";
-
-	/**
 	 * The {@link #TELL_CMD} all command.
 	 */
 	public static final String TELL_ALL_CMD = "all";
@@ -199,16 +149,6 @@ final class Commands
 	 * The {@link #TELL_CMD} delete command.
 	 */
 	public static final String TELL_DEL_CMD = "del";
-
-	/**
-	 * The time command.
-	 */
-	public static final String TIME_CMD = "time";
-
-	/**
-	 * The Twitter command.
-	 */
-	public static final String TWITTER_CMD = "twitter";
 
 	/**
 	 * The users command.
@@ -229,16 +169,6 @@ final class Commands
 	 * The view command.
 	 */
 	public static final String VIEW_CMD = "view";
-
-	/**
-	 * The war command.
-	 */
-	public static final String WAR_CMD = "war";
-
-	/**
-	 * The weather command.
-	 */
-	public static final String WEATHER_CMD = "weather";
 
 	/**
 	 * Disables the default constructor.
