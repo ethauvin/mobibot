@@ -40,7 +40,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * Managers the {@link Commands#TELL_CMD} messages.
+ * The Tell Messages Manager.
  *
  * @author <a href="mailto:erik@thauvin.net">Erik C. Thauvin</a>
  * @created 2014-04-26
@@ -67,7 +67,7 @@ final class TellMessagesMgr
 	 *
 	 * @return <code>True</code> if the queue was cleaned.
 	 */
-	public static boolean cleanTellMessages(final List<TellMessage> tellMessages, final int tellMaxDays)
+	public static boolean clean(final List<TellMessage> tellMessages, final int tellMaxDays)
 	{
 		final Calendar maxDate = Calendar.getInstance();
 		final Date today = new Date();

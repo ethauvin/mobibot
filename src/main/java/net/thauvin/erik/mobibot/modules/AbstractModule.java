@@ -1,5 +1,5 @@
 /*
- * Module.java
+ * AbstractModule.java
  *
  * Copyright (c) 2004-2016, Erik C. Thauvin (erik@thauvin.net)
  * All rights reserved.
@@ -37,7 +37,7 @@ import net.thauvin.erik.mobibot.Utils;
 import java.util.*;
 
 /**
- * The <code>Module</code> class.
+ * The <code>Module</code> abstract class.
  *
  * @author <a href="mailto:erik@thauvin.net">Erik C. Thauvin</a>
  * @created 2016-07-01

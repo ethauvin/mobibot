@@ -135,20 +135,6 @@ final class Commands
 	 */
 	public static final String SAY_CMD = "say";
 
-	/**
-	 * The {@link #TELL_CMD} all command.
-	 */
-	public static final String TELL_ALL_CMD = "all";
-
-	/**
-	 * The tell command.
-	 */
-	public static final String TELL_CMD = "tell";
-
-	/**
-	 * The {@link #TELL_CMD} delete command.
-	 */
-	public static final String TELL_DEL_CMD = "del";
 
 	/**
 	 * The users command.

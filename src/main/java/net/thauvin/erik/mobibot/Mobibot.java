@@ -44,7 +44,6 @@ import org.jsoup.nodes.Document;
 
 import java.io.*;
 import java.util.*;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Implements the #mobitopia bot.
@@ -70,17 +69,6 @@ public class Mobibot extends PircBot
 	 * The default port.
 	 */
 	private static final int DEFAULT_PORT = 6667;
-
-	/**
-	 * The default maximum number of days to keep {@link Commands#TELL_CMD} messages.
-	 */
-
-	private static final int DEFAULT_TELL_MAX_DAYS = 7;
-
-	/**
-	 * The default {@link Commands#TELL_CMD) message max queue size.
-	 */
-	private static final int DEFAULT_TELL_MAX_SIZE = 50;
 
 	/**
 	 * The info strings.
@@ -121,11 +109,6 @@ public class Mobibot extends PircBot
 	private static final List<AbstractModule> MODULES = new ArrayList<>(0);
 
 	/**
-	 * The serialized object file extension.
-	 */
-	private static final String SER_EXT = ".ser";
-
-	/**
 	 * The start time.
 	 */
 	private static final long START_TIME = System.currentTimeMillis();
@@ -147,6 +130,11 @@ public class Mobibot extends PircBot
 			"VM: " + System.getProperty("java.vm.name") + " (build " + System.getProperty("java.vm.version") + ", "
 			+ System.getProperty("java.vm.info") + ')'
 	};
+
+	/**
+	 * The tell object.
+	 */
+	private static Tell tell;
 
 	/**
 	 * The main channel.
@@ -204,16 +192,6 @@ public class Mobibot extends PircBot
 	private final List<String> recap = new ArrayList<>(0);
 
 	/**
-	 * The serialized object file.
-	 */
-	private final String serializedObject;
-
-	/**
-	 * Processes the {@link Commands#TELL_CMD} messages queue.
-	 */
-	private final List<TellMessage> tellMessages = new CopyOnWriteArrayList<>();
-
-	/**
 	 * The backlogs URL.
 	 */
 	private String backLogsUrl = "";
@@ -249,16 +227,6 @@ public class Mobibot extends PircBot
 	private String identNick = "";
 
 	/**
-	 * The number of days message are kept.
-	 */
-	private int tellMaxDays = DEFAULT_TELL_MAX_DAYS;
-
-	/**
-	 * The maximum number of  {@link Commands#TELL_CMD} messages allowed.
-	 */
-	private int tellMaxSize = DEFAULT_TELL_MAX_SIZE;
-
-	/**
 	 * Today's date.
 	 */
 	private String today = Utils.today();
@@ -290,7 +258,6 @@ public class Mobibot extends PircBot
 		ircPort = port;
 		this.channel = channel;
 		this.logsDir = logsDir;
-		this.serializedObject = logsDir + getName() + SER_EXT;
 
 		// Set the logger level
 		loggerLevel = logger.getLogger().getLevel();
@@ -493,12 +460,11 @@ public class Mobibot extends PircBot
 			final String dname = p.getProperty("delicious-user");
 			final String dpwd = p.getProperty("delicious-pwd");
 
-			// Get the tell command settings
-			final int tellMaxDays = Utils.getIntProperty(p.getProperty("tell-max-days"), DEFAULT_TELL_MAX_DAYS);
-			final int tellMaxSize = Utils.getIntProperty(p.getProperty("tell-max-size"), DEFAULT_TELL_MAX_SIZE);
-
 			// Create the bot
 			final Mobibot bot = new Mobibot(server, port, nickname, channel, logsDir);
+
+			// Get the tell command settings
+			tell = new Tell(bot, p.getProperty("tell-max-days"), p.getProperty("tell-max-size"));
 
 			// Initialize the bot
 			bot.setVerbose(true);
@@ -538,9 +504,6 @@ public class Mobibot extends PircBot
 
 			// Set the ignored nicks
 			bot.setIgnoredNicks(ignoredNicks);
-
-			// Set the tell command
-			bot.setTell(tellMaxDays, tellMaxSize);
 
 			// Save the entries
 			bot.saveEntries(true);
@@ -590,13 +553,6 @@ public class Mobibot extends PircBot
 			}
 
 			bot.joinChannel(channel);
-
-			// Load the messages queue
-			bot.tellMessages.addAll(TellMessagesMgr.load(bot.getSerializedObject(), bot.getLogger()));
-			if (bot.cleanTellMessages())
-			{
-				bot.saveTellMessages();
-			}
 		}
 	}
 
@@ -680,18 +636,6 @@ public class Mobibot extends PircBot
 	}
 
 	/**
-	 * Set the {@link Commands#TELL_CMD} parameters
-	 *
-	 * @param tellMaxDays The max number of days to hold messages for.
-	 * @param tellMaxSize The maximum number of messages to hold
-	 */
-	private void setTell(final int tellMaxDays, final int tellMaxSize)
-	{
-		this.tellMaxDays = tellMaxDays;
-		this.tellMaxSize = tellMaxSize;
-	}
-
-	/**
 	 * Saves the entries.
 	 *
 	 * @param isDayBackup Set the true if the daily backup file should also be created.
@@ -716,49 +660,6 @@ public class Mobibot extends PircBot
 		{
 			; // Do nothing
 		}
-	}
-
-	/**
-	 * Reruns the serialized object file.
-	 *
-	 * @return The file location.
-	 */
-	private String getSerializedObject()
-	{
-		return serializedObject;
-	}
-
-	/**
-	 * Returns the bot's logger.
-	 *
-	 * @return The bot's logger.
-	 */
-	public final Log4JLogger getLogger()
-	{
-		return logger;
-	}
-
-	/**
-	 * Cleans the {@link #tellMessages} messages queue.
-	 *
-	 * @return <code>True</code> if the queue was cleaned.
-	 */
-	private boolean cleanTellMessages()
-	{
-		if (logger.isDebugEnabled())
-		{
-			logger.debug("Cleaning the messages.");
-		}
-
-		return TellMessagesMgr.cleanTellMessages(tellMessages, tellMaxDays);
-	}
-
-	/**
-	 * Saves the {@link #tellMessages} messages queue.
-	 */
-	private void saveTellMessages()
-	{
-		TellMessagesMgr.save(getSerializedObject(), tellMessages, logger);
 	}
 
 	/**
@@ -870,6 +771,16 @@ public class Mobibot extends PircBot
 	}
 
 	/**
+	 * Returns the bot's logger.
+	 *
+	 * @return The bot's logger.
+	 */
+	public final Log4JLogger getLogger()
+	{
+		return logger;
+	}
+
+	/**
 	 * Returns the log directory.
 	 *
 	 * @return the log directory.
@@ -958,7 +869,7 @@ public class Mobibot extends PircBot
 	 *
 	 * @return The indented help string.
 	 */
-	private String helpIndent(final String help, final boolean isBold)
+	public String helpIndent(final String help, final boolean isBold)
 	{
 		return "        " + (isBold ? Utils.bold(help) : help);
 	}
@@ -1054,15 +965,9 @@ public class Mobibot extends PircBot
 			send(sender, helpIndent(getNick() + ": " + Commands.IGNORE_CMD + ' ' + Commands.IGNORE_ME_KEYWORD));
 
 		}
-		else if (lcTopic.equals(Commands.TELL_CMD))
+		else if (lcTopic.equals(Tell.TELL_CMD) && tell.isEnabled())
 		{
-			send(sender, "To send a message to someone when they join the channel:");
-			send(sender, helpIndent(getNick() + ": " + Commands.TELL_CMD + " <nick> <message>"));
-
-			send(sender, "To view queued and sent messages:");
-			send(sender, helpIndent(getNick() + ": " + Commands.TELL_CMD + ' ' + Commands.VIEW_CMD));
-
-			send(sender, "Messages are kept for " + Utils.bold(tellMaxDays) + " days.");
+			tell.helpResponse(sender);
 		}
 		else
 		{
@@ -1098,9 +1003,9 @@ public class Mobibot extends PircBot
 				MODULES.stream().filter(AbstractModule::isEnabled)
 						.forEach(module -> commandsList.addAll(module.getCommands()));
 
-				if (isTellEnabled())
+				if (tell.isEnabled())
 				{
-					commandsList.add(Commands.TELL_CMD);
+					commandsList.add(Tell.TELL_CMD);
 				}
 
 				Collections.sort(commandsList);
@@ -1230,7 +1135,7 @@ public class Mobibot extends PircBot
 
 		send(sender,
 		     "Uptime: " + days + " day(s) " + hours + " hour(s) " + minutes + " minute(s)  [Entries: " + entries.size()
-		     + (isTellEnabled() && isOp(sender) ? ", Messages: " + tellMessages.size() : "") + ']',
+		     + (tell.isEnabled() && isOp(sender) ? ", Messages: " + tell.size() : "") + ']',
 		     isPrivate);
 	}
 
@@ -1254,7 +1159,7 @@ public class Mobibot extends PircBot
 	 *
 	 * @return true, if the sender is an Op.
 	 */
-	private boolean isOp(final String sender)
+	public boolean isOp(final String sender)
 	{
 		final User[] users = getUsers(channel);
 
@@ -1482,9 +1387,9 @@ public class Mobibot extends PircBot
 				viewResponse(sender, args, false);
 			}
 			// mobibot: tell
-			else if (cmd.startsWith(Commands.TELL_CMD) && isTellEnabled())
+			else if (cmd.startsWith(Tell.TELL_CMD) && tell.isEnabled())
 			{
-				tellResponse(sender, args);
+				tell.response(sender, args);
 			}
 			// mobibot: ignore
 			else if (cmd.startsWith(Commands.IGNORE_CMD))
@@ -1749,7 +1654,7 @@ public class Mobibot extends PircBot
 			recap(sender, message, false);
 		}
 
-		tellSendMessages(sender, true);
+		tell.send(sender, true);
 	}
 
 	@Override
@@ -1870,9 +1775,9 @@ public class Mobibot extends PircBot
 		{
 			viewResponse(sender, args, true);
 		}
-		else if (cmd.equals(Commands.TELL_CMD) && isTellEnabled())
+		else if (cmd.equals(Tell.TELL_CMD) && tell.isEnabled())
 		{
-			tellResponse(sender, args);
+			tell.response(sender, args);
 		}
 		else if (cmd.equals(Commands.INFO_CMD))
 		{
@@ -1882,21 +1787,18 @@ public class Mobibot extends PircBot
 		{
 			versionResponse(sender, true);
 		}
-		else if (cmd.equals(Commands.DEBUG_CMD))
+		else if (cmd.equals(Commands.DEBUG_CMD) && isOp(sender))
 		{
-			if (isOp(sender))
+			if (logger.isDebugEnabled())
 			{
-				if (logger.isDebugEnabled())
-				{
-					logger.getLogger().setLevel(loggerLevel);
-				}
-				else
-				{
-					logger.getLogger().setLevel(Level.DEBUG);
-				}
-
-				send(sender, "Debug logging is " + (logger.isDebugEnabled() ? "enabled." : "disabled."), true);
+				logger.getLogger().setLevel(loggerLevel);
 			}
+			else
+			{
+				logger.getLogger().setLevel(Level.DEBUG);
+			}
+
+			send(sender, "Debug logging is " + (logger.isDebugEnabled() ? "enabled." : "disabled."), true);
 		}
 		else
 		{
@@ -1950,89 +1852,27 @@ public class Mobibot extends PircBot
 	@Override
 	protected void onJoin(final String channel, final String sender, final String login, final String hostname)
 	{
-		tellSendMessages(sender);
+		tell.send(sender);
 	}
 
 	@Override
 	protected void onNickChange(final String oldNick, final String login, final String hostname, final String newNick)
 	{
-		tellSendMessages(newNick);
+		tell.send(newNick);
 	}
 
 	/**
-	 * Checks and sends {@link Commands#TELL_CMD} messages.
+	 * Responds with the last 10 public messages.
 	 *
-	 * @param nickname The user's nickname.
+	 * @param sender The nick of the person who sent the private message.
+	 * @param isPrivate Set to true is the response should be send as a private message.
 	 */
-	private void tellSendMessages(final String nickname)
+	private void recapResponse(final String sender, final boolean isPrivate)
 	{
-		tellSendMessages(nickname, false);
-	}
-
-	/**
-	 * Checks and sends {@link Commands#TELL_CMD} messages.
-	 *
-	 * @param nickname The user's nickname.
-	 * @param isMessage The message flag.
-	 */
-	private void tellSendMessages(final String nickname, final boolean isMessage)
-	{
-		if (!nickname.equals(getNick()) && isTellEnabled())
+		for (final String recap : this.recap)
 		{
-			tellMessages.stream().filter(message -> message.isMatch(nickname)).forEach(message -> {
-				if (message.getRecipient().equalsIgnoreCase(nickname) && !message.isReceived())
-				{
-					if (message.getSender().equals(nickname))
-					{
-						if (!isMessage)
-						{
-							send(nickname,
-							     Utils.bold("You") + " wanted me to remind you: " + Utils
-									     .reverseColor(message.getMessage()), true);
-
-							message.setIsReceived();
-							message.setIsNotified();
-
-							saveTellMessages();
-						}
-					}
-					else
-					{
-						send(nickname,
-						     message.getSender() + " wanted me to tell you: " + Utils
-								     .reverseColor(message.getMessage()),
-						     true);
-
-						message.setIsReceived();
-
-						saveTellMessages();
-					}
-				}
-				else if (message.getSender().equalsIgnoreCase(nickname) && message.isReceived() && !message
-						.isNotified())
-				{
-					send(nickname,
-					     "Your message " + Utils.reverseColor("[ID " + message.getId() + ']') + " was sent to " + Utils
-							     .bold(message.getRecipient()) + " on " + Utils.UTC_SDF.format(message.getReceived()),
-					     true);
-
-					message.setIsNotified();
-
-					saveTellMessages();
-				}
-			});
+			send(sender, recap, isPrivate);
 		}
-	}
-
-	/**
-	 * Returns <code>true</code> if {@link Commands#TELL_CMD} is enabled.
-	 *
-	 * @return <code>true</code> or <code>false</code>
-	 */
-
-	private boolean isTellEnabled()
-	{
-		return tellMaxSize > 0 && tellMaxDays > 0;
 	}
 
 	/**
@@ -2068,20 +1908,6 @@ public class Mobibot extends PircBot
 	}
 
 	/**
-	 * Responds with the last 10 public messages.
-	 *
-	 * @param sender The nick of the person who sent the private message.
-	 * @param isPrivate Set to true is the response should be send as a private message.
-	 */
-	private void recapResponse(final String sender, final boolean isPrivate)
-	{
-		for (final String recap : this.recap)
-		{
-			send(sender, recap, isPrivate);
-		}
-	}
-
-	/**
 	 * Sends a private notice.
 	 *
 	 * @param sender The nick of the person who sent the message.
@@ -2090,189 +1916,6 @@ public class Mobibot extends PircBot
 	public final void send(final String sender, final String message)
 	{
 		send(sender, message, false);
-	}
-
-	/**
-	 * Processes the {@link Commands#TELL_CMD} commands.
-	 *
-	 * @param sender The sender's nick.
-	 * @param cmds The commands string.
-	 */
-	private void tellResponse(final String sender, final String cmds)
-	{
-		if (!Utils.isValidString(cmds))
-		{
-			helpResponse(sender, Commands.TELL_CMD);
-		}
-		else if (cmds.startsWith(Commands.VIEW_CMD))
-		{
-			if (isOp(sender) && cmds.equals(Commands.VIEW_CMD + ' ' + Commands.TELL_ALL_CMD))
-			{
-				if (tellMessages.size() > 0)
-				{
-					for (final TellMessage message : tellMessages)
-					{
-						send(sender,
-						     Utils.bold(message.getSender()) + " --> " + Utils.bold(message.getRecipient()) + " [ID: "
-						     + message.getId() + ", " + (message.isReceived() ? "DELIVERED" : "QUEUED") + ']',
-						     true);
-					}
-				}
-				else
-				{
-					send(sender, "There are no messages in the queue.", true);
-				}
-			}
-			else
-			{
-				boolean hasMessage = false;
-
-				for (final TellMessage message : tellMessages)
-				{
-					if (message.isMatch(sender))
-					{
-						if (!hasMessage)
-						{
-							hasMessage = true;
-							send(sender, "Here are your messages: ", true);
-						}
-
-						if (message.isReceived())
-						{
-							send(sender,
-							     Utils.bold(message.getSender()) + " --> " + Utils.bold(message.getRecipient()) + " ["
-							     + Utils.UTC_SDF.format(message.getReceived()) + ", ID: " + message.getId()
-							     + ", DELIVERED]",
-							     true);
-
-						}
-						else
-						{
-							send(sender,
-							     Utils.bold(message.getSender()) + " --> " + Utils.bold(message.getRecipient()) + " ["
-							     + Utils.UTC_SDF.format(message.getQueued()) + ", ID: " + message.getId() + ", QUEUED]",
-							     true);
-						}
-
-						send(sender, helpIndent(message.getMessage(), false), true);
-					}
-				}
-
-				if (!hasMessage)
-				{
-					send(sender, "You have no messages in the queue.", true);
-				}
-				else
-				{
-					send(sender, "To delete one or all delivered messages:");
-					send(sender,
-					     helpIndent(getNick() + ": " + Commands.TELL_CMD + ' ' + Commands.TELL_DEL_CMD + " <id|"
-					                + Commands.TELL_ALL_CMD + '>'));
-					send(sender, "Messages are kept for " + Utils.bold(tellMaxDays) + " days.");
-				}
-			}
-		}
-		else if (cmds.startsWith(Commands.TELL_DEL_CMD + ' '))
-		{
-			final String[] split = cmds.split(" ");
-
-			if (split.length == 2)
-			{
-				final String id = split[1];
-				boolean deleted = false;
-
-				if (id.equalsIgnoreCase(Commands.TELL_ALL_CMD))
-				{
-					for (final TellMessage message : tellMessages)
-					{
-						if (message.getSender().equalsIgnoreCase(sender) && message.isReceived())
-						{
-							tellMessages.remove(message);
-							deleted = true;
-						}
-					}
-
-					if (deleted)
-					{
-						saveTellMessages();
-						send(sender, "Delivered messages have been deleted.", true);
-					}
-					else
-					{
-						send(sender, "No delivered messages were found.", true);
-					}
-
-				}
-				else
-				{
-					boolean found = false;
-
-					for (final TellMessage message : tellMessages)
-					{
-						found = message.isMatchId(id);
-
-						if (found && (message.getSender().equalsIgnoreCase(sender) || isOp(sender)))
-						{
-							tellMessages.remove(message);
-
-							saveTellMessages();
-							send(sender, "Your message was deleted from the queue.", true);
-							deleted = true;
-							break;
-						}
-					}
-
-					if (!deleted)
-					{
-						if (found)
-						{
-							send(sender, "Only messages that you sent can be deleted.", true);
-						}
-						else
-						{
-							send(sender, "The specified message [ID " + id + "] could not be found.", true);
-						}
-					}
-				}
-			}
-			else
-			{
-				helpResponse(sender, Commands.TELL_CMD);
-			}
-		}
-		else
-		{
-			final String[] split = cmds.split(" ", 2);
-
-			if (split.length == 2 && (Utils.isValidString(split[1]) && split[1].contains(" ")))
-			{
-				if (tellMessages.size() < tellMaxSize)
-				{
-					final TellMessage message = new TellMessage(sender, split[0], split[1].trim());
-
-					tellMessages.add(message);
-
-					saveTellMessages();
-
-					send(sender,
-					     "Message [ID " + message.getId() + "] was queued for " + Utils.bold(message.getRecipient()),
-					     true);
-				}
-				else
-				{
-					send(sender, "Sorry, the messages queue is currently full.", true);
-				}
-			}
-			else
-			{
-				helpResponse(sender, Commands.TELL_CMD);
-			}
-		}
-
-		if (cleanTellMessages())
-		{
-			saveTellMessages();
-		}
 	}
 
 	/**
