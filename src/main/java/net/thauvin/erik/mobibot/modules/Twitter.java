@@ -74,9 +74,15 @@ final public class Twitter extends AbstractModule
 	@Override
 	public boolean isEnabled()
 	{
-		return Utils.isValidString(properties.get(CONSUMER_KEY_PROP)) && Utils
-				.isValidString(properties.get(CONSUMER_SECRET_PROP)) && Utils.isValidString(properties.get(TOKEN_PROP))
-		       && Utils.isValidString(properties.get(TOKEN_SECRET_PROP));
+		for (final String s : getPropertyKeys())
+		{
+			if (!Utils.isValidString(properties.get(s)))
+			{
+				return false;
+			}
+		}
+
+		return true;
 	}
 
 	@Override

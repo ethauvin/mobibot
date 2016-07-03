@@ -14,7 +14,7 @@ import java.util.Date;
  */
 public final class ReleaseInfo {
 	private final static String buildmeta = "002";
-	private final static Date date = new Date(1467486806272L);
+	private final static Date date = new Date(1467518031071L);
 	private final static int major = 0;
 	private final static int minor = 7;
 	private final static int patch = 0;
