@@ -13,8 +13,8 @@ import java.util.Date;
  *         Annotation Processor</a>
  */
 public final class ReleaseInfo {
-	private final static String buildmeta = "006";
-	private final static Date date = new Date(1467669326019L);
+	private final static String buildmeta = "005";
+	private final static Date date = new Date(1467669995645L);
 	private final static int major = 0;
 	private final static int minor = 7;
 	private final static int patch = 0;
