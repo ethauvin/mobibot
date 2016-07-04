@@ -47,14 +47,14 @@ import java.util.Calendar;
 final public class Utils
 {
 	/**
-	 * The timestamp simple date format.
-	 */
-	public static final SimpleDateFormat TIMESTAMP_SDF = new SimpleDateFormat("yyyyMMddHHmmss");
-
-	/**
 	 * The ISO (YYYY-MM-DD) simple date format.
 	 */
 	public static final SimpleDateFormat ISO_SDF = new SimpleDateFormat("yyyy-MM-dd");
+
+	/**
+	 * The timestamp simple date format.
+	 */
+	public static final SimpleDateFormat TIMESTAMP_SDF = new SimpleDateFormat("yyyyMMddHHmmss");
 
 	/**
 	 * The UTC (yyyy-MM-dd HH:mm) simple date format.
@@ -246,46 +246,6 @@ final public class Utils
 	}
 
 	/**
-	 * Returns the current Internet (beat) Time.
-	 *
-	 * @return The Internet Time string.
-	 */
-	public static String internetTime()
-	{
-		final Calendar gc = Calendar.getInstance();
-
-		final int offset = (gc.get(Calendar.ZONE_OFFSET) / (60 * 60 * 1000));
-		int hh = gc.get(Calendar.HOUR_OF_DAY);
-		final int mm = gc.get(Calendar.MINUTE);
-		final int ss = gc.get(Calendar.SECOND);
-
-		hh -= offset; // GMT
-		hh += 1; // BMT
-
-		long beats = Math.round(Math.floor((double) ((((hh * 3600) + (mm * 60) + ss) * 1000) / 86400)));
-
-		if (beats >= 1000)
-		{
-			beats -= (long) 1000;
-		}
-		else if (beats < 0)
-		{
-			beats += (long) 1000;
-		}
-
-		if (beats < 10)
-		{
-			return ("@00" + beats);
-		}
-		else if (beats < 100)
-		{
-			return ("@0" + beats);
-		}
-
-		return ('@' + String.valueOf(beats));
-	}
-
-	/**
 	 * Returns <code>true</code> if the given string is <em>not</em> blank or null.
 	 *
 	 * @param s The string to check.
@@ -310,12 +270,12 @@ final public class Utils
 	}
 
 	/**
- 	 * Returns the plural form of a word, if count &gt; 1.
- 	 *
- 	 * @param count The count.
- 	 * @param word The word.
- 	 * @param plural The plural word.
- 	 */
+	 * Returns the plural form of a word, if count &gt; 1.
+	 *
+	 * @param count The count.
+	 * @param word The word.
+	 * @param plural The plural word.
+	 */
 	public static String plural(final long count, final String word, final String plural)
 	{
 		if (count > 1)
@@ -326,7 +286,7 @@ final public class Utils
 		{
 			return word;
 		}
-	} 
+	}
 
 	/**
 	 * Makes the given string reverse color.

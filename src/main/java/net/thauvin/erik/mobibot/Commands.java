@@ -135,7 +135,6 @@ final class Commands
 	 */
 	public static final String SAY_CMD = "say";
 
-
 	/**
 	 * The users command.
 	 */
