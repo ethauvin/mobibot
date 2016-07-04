@@ -46,6 +46,7 @@ mainClassName = packageName + '.Mobibot'
 repositories {
 	mavenLocal()
 	mavenCentral()
+	jcenter()
 }
 
 dependencies {

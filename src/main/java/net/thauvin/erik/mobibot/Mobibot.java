@@ -934,7 +934,6 @@ public class Mobibot extends PircBot
 		{
 			send(sender, "To have the bot leave the channel and come back:");
 			send(sender, helpIndent("/msg " + getNick() + ' ' + Commands.CYCLE_CMD));
-
 		}
 		else if (lcTopic.equals(Commands.ME_CMD) && isOp(sender))
 		{
@@ -963,7 +962,6 @@ public class Mobibot extends PircBot
 
 			send(sender, "To toggle your ignore status:");
 			send(sender, helpIndent(getNick() + ": " + Commands.IGNORE_CMD + ' ' + Commands.IGNORE_ME_KEYWORD));
-
 		}
 		else if (lcTopic.equals(Tell.TELL_CMD) && tell.isEnabled())
 		{
@@ -971,7 +969,6 @@ public class Mobibot extends PircBot
 		}
 		else
 		{
-
 			for (final AbstractModule module : MODULES)
 			{
 				for (final String cmd : module.getCommands())
@@ -1149,7 +1146,6 @@ public class Mobibot extends PircBot
 	private boolean isIgnoredNick(final String nick)
 	{
 		return Utils.isValidString(nick) && ignoredNicks.contains(nick.toLowerCase());
-
 	}
 
 	/**
