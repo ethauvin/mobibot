@@ -310,6 +310,25 @@ final public class Utils
 	}
 
 	/**
+ 	 * Returns the plural form of a word, if count &gt; 1.
+ 	 *
+ 	 * @param count The count.
+ 	 * @param word The word.
+ 	 * @param plural The plural word.
+ 	 */
+	public static String plural(final long count, final String word, final String plural)
+	{
+		if (count > 1)
+		{
+			return plural;
+		}
+		else
+		{
+			return word;
+		}
+	} 
+
+	/**
 	 * Makes the given string reverse color.
 	 *
 	 * @param s The string.

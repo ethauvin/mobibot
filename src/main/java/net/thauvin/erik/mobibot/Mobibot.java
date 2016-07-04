@@ -1117,7 +1117,14 @@ public class Mobibot extends PircBot
 	{
 		for (final String info : INFO_STRS)
 		{
-			send(sender, info, isPrivate);
+			if (info.startsWith("http://"))
+			{
+				send(sender, Utils.green(info), isPrivate);				
+			}
+			else
+			{
+				send(sender, info, isPrivate);
+			}	
 		}
 
 		long timeInSeconds = (System.currentTimeMillis() - START_TIME) / 1000L;
@@ -1131,7 +1138,8 @@ public class Mobibot extends PircBot
 		final long minutes = timeInSeconds / 60L;
 
 		send(sender,
-		     "Uptime: " + days + " day(s) " + hours + " hour(s) " + minutes + " minute(s)  [Entries: " + entries.size()
+		     "Uptime: " + days + Utils.plural(days, " day ", " days ") + hours + Utils.plural(hours, " hour ", " hours ")
+			 + minutes + Utils.plural(minutes, " minute ", " minutes ") + "[Entries: " + entries.size()
 		     + (tell.isEnabled() && isOp(sender) ? ", Messages: " + tell.size() : "") + ']',
 		     isPrivate);
 	}
