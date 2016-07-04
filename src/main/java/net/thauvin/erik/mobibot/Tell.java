@@ -216,7 +216,8 @@ public class Tell
 					bot.send(sender,
 					         bot.helpIndent(bot.getNick() + ": " + TELL_CMD + ' ' + TELL_DEL_KEYWORD + " <id|"
 					                        + TELL_ALL_KEYWORD + '>'));
-					bot.send(sender, "Messages are kept for " + Utils.bold(maxDays) + Utils.plural(maxDays, " day.", " days."));
+					bot.send(sender,
+					         "Messages are kept for " + Utils.bold(maxDays) + Utils.plural(maxDays, " day.", " days."));
 				}
 			}
 		}

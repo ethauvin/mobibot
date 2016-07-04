@@ -925,7 +925,7 @@ public class Mobibot extends PircBot
 			send(sender, "To list the users present on the channel:");
 			send(sender, helpIndent(getNick() + ": " + Commands.USERS_CMD));
 		}
-		else if (lcTopic.equals(Commands.INFO_CMD) && isOp(sender))
+		else if (lcTopic.equals(Commands.INFO_CMD))
 		{
 			send(sender, "To view information about the bot:");
 			send(sender, helpIndent(getNick() + ": " + Commands.INFO_CMD));
@@ -1019,7 +1019,7 @@ public class Mobibot extends PircBot
 
 				sb.append(commandsList.get(i));
 
-				// 5 commands per line or last command
+				// 6 commands per line or last command
 				if (sb.length() > 0 && (cmdCount == 6 || i == (commandsList.size() - 1)))
 				{
 					send(sender, helpIndent(sb.toString()));
@@ -1033,8 +1033,8 @@ public class Mobibot extends PircBot
 			{
 				send(sender, "The op commands are:");
 				send(sender,
-				     helpIndent(Commands.CYCLE_CMD + "  " + Commands.INFO_CMD + "  " + Commands.ME_CMD + "  "
-				                + Commands.MSG_CMD + "  " + Commands.SAY_CMD + "  " + Commands.VERSION_CMD));
+				     helpIndent(Commands.CYCLE_CMD + "  " + Commands.ME_CMD + "  " + Commands.MSG_CMD + "  "
+				                + Commands.SAY_CMD + "  " + Commands.VERSION_CMD));
 			}
 		}
 	}
@@ -1119,29 +1119,68 @@ public class Mobibot extends PircBot
 		{
 			if (info.startsWith("http://"))
 			{
-				send(sender, Utils.green(info), isPrivate);				
+				send(sender, Utils.green(info), isPrivate);
 			}
 			else
 			{
 				send(sender, info, isPrivate);
-			}	
+			}
 		}
+
+		final StringBuilder info = new StringBuilder("Uptime: ");
 
 		long timeInSeconds = (System.currentTimeMillis() - START_TIME) / 1000L;
 
+		final long years = timeInSeconds / 31540000L;
+
+		if (years > 0)
+		{
+			info.append(years).append(Utils.plural(years, " year ", " years "));
+			timeInSeconds -= (years * 31540000L);
+		}
+
+
+		final long weeks = timeInSeconds / 604800L;
+		
+		if (weeks > 0)
+		{
+			info.append(weeks).append(Utils.plural(weeks, " week ", " weeks "));
+			timeInSeconds -= (weeks * 604800L);
+		}
+
+
 		final long days = timeInSeconds / 86400L;
-		timeInSeconds -= (days * 86400L);
+
+		if (days > 0)
+		{
+			info.append(days).append(Utils.plural(days, " day ", " days "));
+			timeInSeconds -= (days * 86400L);
+		}
+
 
 		final long hours = timeInSeconds / 3600L;
-		timeInSeconds -= (hours * 3600L);
+
+		if (hours > 0)
+		{
+			info.append(hours).append(Utils.plural(hours, " hour ", " hours "));
+			timeInSeconds -= (hours * 3600L);
+		}
+
 
 		final long minutes = timeInSeconds / 60L;
 
-		send(sender,
-		     "Uptime: " + days + Utils.plural(days, " day ", " days ") + hours + Utils.plural(hours, " hour ", " hours ")
-			 + minutes + Utils.plural(minutes, " minute ", " minutes ") + "[Entries: " + entries.size()
-		     + (tell.isEnabled() && isOp(sender) ? ", Messages: " + tell.size() : "") + ']',
-		     isPrivate);
+		info.append(minutes).append(Utils.plural(minutes, " minute ", " minutes "));
+
+		info.append("[Entries: ").append(entries.size());
+
+		if (tell.isEnabled() && isOp(sender))
+		{
+			info.append(", Messages: ").append(tell.size());
+		}
+
+		info.append(']');
+
+		send(sender, info.toString(), isPrivate);
 	}
 
 	/**

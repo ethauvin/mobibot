@@ -32,7 +32,6 @@
 package net.thauvin.erik.mobibot.modules;
 
 import net.thauvin.erik.mobibot.Mobibot;
-import net.thauvin.erik.mobibot.Utils;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -166,7 +165,7 @@ final public class WorldTime extends AbstractModule
 		{
 			if (tz.equals(BEATS_KEYWORD))
 			{
-				response = ("The current Internet Time is: " + Utils.internetTime() + ' ' + BEATS_KEYWORD);
+				response = ("The current Internet Time is: " + internetTime() + ' ' + BEATS_KEYWORD);
 			}
 			else
 			{
@@ -196,6 +195,46 @@ final public class WorldTime extends AbstractModule
 				bot.send(bot.getChannel(), response);
 			}
 		}
+	}
+
+	/**
+	 * Returns the current Internet (beat) Time.
+	 *
+	 * @return The Internet Time string.
+	 */
+	private String internetTime()
+	{
+		final Calendar gc = Calendar.getInstance();
+
+		final int offset = (gc.get(Calendar.ZONE_OFFSET) / (60 * 60 * 1000));
+		int hh = gc.get(Calendar.HOUR_OF_DAY);
+		final int mm = gc.get(Calendar.MINUTE);
+		final int ss = gc.get(Calendar.SECOND);
+
+		hh -= offset; // GMT
+		hh += 1; // BMT
+
+		long beats = Math.round(Math.floor((double) ((((hh * 3600) + (mm * 60) + ss) * 1000) / 86400)));
+
+		if (beats >= 1000)
+		{
+			beats -= (long) 1000;
+		}
+		else if (beats < 0)
+		{
+			beats += (long) 1000;
+		}
+
+		if (beats < 10)
+		{
+			return ("@00" + beats);
+		}
+		else if (beats < 100)
+		{
+			return ("@0" + beats);
+		}
+
+		return ('@' + String.valueOf(beats));
 	}
 
 	@Override

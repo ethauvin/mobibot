@@ -72,20 +72,6 @@ final public class Twitter extends AbstractModule
 	}
 
 	@Override
-	public boolean isEnabled()
-	{
-		for (final String s : getPropertyKeys())
-		{
-			if (!Utils.isValidString(properties.get(s)))
-			{
-				return false;
-			}
-		}
-
-		return true;
-	}
-
-	@Override
 	public void commandResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate)
 	{
 		if (isEnabled() && args.length() > 0)
@@ -112,6 +98,20 @@ final public class Twitter extends AbstractModule
 		{
 			bot.send(sender, "The Twitter posting facility is disabled.");
 		}
+	}
+
+	@Override
+	public boolean isEnabled()
+	{
+		for (final String s : getPropertyKeys())
+		{
+			if (!Utils.isValidString(properties.get(s)))
+			{
+				return false;
+			}
+		}
+
+		return true;
 	}
 
 	/**
