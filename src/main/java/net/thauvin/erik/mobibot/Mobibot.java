@@ -1139,15 +1139,13 @@ public class Mobibot extends PircBot
 			timeInSeconds -= (years * 31540000L);
 		}
 
-
 		final long weeks = timeInSeconds / 604800L;
-		
+
 		if (weeks > 0)
 		{
 			info.append(weeks).append(Utils.plural(weeks, " week ", " weeks "));
 			timeInSeconds -= (weeks * 604800L);
 		}
-
 
 		final long days = timeInSeconds / 86400L;
 
@@ -1157,7 +1155,6 @@ public class Mobibot extends PircBot
 			timeInSeconds -= (days * 86400L);
 		}
 
-
 		final long hours = timeInSeconds / 3600L;
 
 		if (hours > 0)
@@ -1165,7 +1162,6 @@ public class Mobibot extends PircBot
 			info.append(hours).append(Utils.plural(hours, " hour ", " hours "));
 			timeInSeconds -= (hours * 3600L);
 		}
-
 
 		final long minutes = timeInSeconds / 60L;
 
