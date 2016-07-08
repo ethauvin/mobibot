@@ -136,7 +136,7 @@ task deploy(dependsOn: ['build']) {
 }
 
 
-task release(dependsOn: ['deploy', 'wrapper']) << {
+task release(dependsOn: ['wrapper', 'clean', 'deploy']) << {
 	group = 'Publishing'
 	description = 'Releases new version.'
 	isRelease = true
