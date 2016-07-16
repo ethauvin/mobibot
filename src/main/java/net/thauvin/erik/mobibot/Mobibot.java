@@ -481,11 +481,8 @@ public class Mobibot extends PircBot
 			bot.setFeedURL(feedURL);
 			bot.setBacklogsUrl(backlogsURL);
 
-			if (Utils.isValidString(dname) && Utils.isValidString(dpwd))
-			{
-				// Set the del.icio.us authentication
-				bot.setDeliciousAuth(dname, dpwd);
-			}
+			// Set the del.icio.us authentication
+			bot.setDeliciousAuth(dname, dpwd);
 
 			// Load the modules properties
 			MODULES.stream().filter(AbstractModule::hasProperties).forEach(
@@ -611,15 +608,11 @@ public class Mobibot extends PircBot
 	 */
 	private int findDupEntry(final String link)
 	{
-		EntryLink entry;
-
 		synchronized (entries)
 		{
 			for (int i = 0; i < entries.size(); i++)
 			{
-				entry = entries.get(i);
-
-				if (link.equals(entry.getLink()))
+				if (link.equals(entries.get(i).getLink()))
 				{
 					return i;
 				}
@@ -697,17 +690,14 @@ public class Mobibot extends PircBot
 	private String getNickPattern()
 	{
 		final StringBuilder buff = new StringBuilder(0);
-		final String nick = getNick();
-		char c;
 
-		for (int i = 0; i < nick.length(); i++)
+		for (final char c : getNick().toCharArray())
 		{
-			c = nick.charAt(i);
-
 			if (Character.isLetter(c))
 			{
 				buff.append('[')
-					.append(String.valueOf(c).toLowerCase()).append(String.valueOf(c).toUpperCase())
+					.append(String.valueOf(c).toLowerCase())
+					.append(String.valueOf(c).toUpperCase())
 					.append(']');
 			}
 			else
@@ -1006,20 +996,26 @@ public class Mobibot extends PircBot
 			{
 				final String[] nicks = args.toLowerCase().split(" ");
 
-				for (String nick : nicks)
+				for (final String nick : nicks)
 				{
+					final String ignore;
+
 					if (Commands.IGNORE_ME_KEYWORD.equals(nick))
 					{
-						nick = sender.toLowerCase();
-					}
-
-					if (ignoredNicks.contains(nick))
-					{
-						ignoredNicks.remove(nick);
+						ignore = sender.toLowerCase();
 					}
 					else
 					{
-						ignoredNicks.add(nick);
+						ignore = nick;
+					}
+
+					if (ignoredNicks.contains(ignore))
+					{
+						ignoredNicks.remove(ignore);
+					}
+					else
+					{
+						ignoredNicks.add(ignore);
 					}
 				}
 			}
@@ -1032,7 +1028,7 @@ public class Mobibot extends PircBot
 	 * Responds with the bot's information.
 	 *
 	 * @param sender    The nick of the person who sent the message.
-	 * @param isPrivate Set to true is the response should be send as a private message.
+	 * @param isPrivate Set to <code>true</code> if the response should be sent as a private message.
 	 */
 	private void infoResponse(final String sender, final boolean isPrivate)
 	{
@@ -1113,7 +1109,7 @@ public class Mobibot extends PircBot
 	}
 
 	/**
-	 * Returns true is the specified sender is an Op on the {@link #channel channel}.
+	 * Returns <code>true</code> if the specified sender is an Op on the {@link #channel channel}.
 	 *
 	 * @param sender The sender.
 	 *
@@ -1807,7 +1803,7 @@ public class Mobibot extends PircBot
 	 * Responds with the last 10 public messages.
 	 *
 	 * @param sender    The nick of the person who sent the private message.
-	 * @param isPrivate Set to true is the response should be send as a private message.
+	 * @param isPrivate Set to <code>true</code> if the response should be sent as a private message.
 	 */
 	private void recapResponse(final String sender, final boolean isPrivate)
 	{
@@ -1820,7 +1816,7 @@ public class Mobibot extends PircBot
 	/**
 	 * Saves the entries.
 	 *
-	 * @param isDayBackup Set the true if the daily backup file should also be created.
+	 * @param isDayBackup Set the <code>true</code> if the daily backup file should also be created.
 	 */
 	private void saveEntries(final boolean isDayBackup)
 	{
@@ -1832,7 +1828,8 @@ public class Mobibot extends PircBot
 	 *
 	 * @param sender    The nick of the person who sent the message.
 	 * @param message   The actual message.
-	 * @param isPrivate Set to true if the response should be a private message, otherwise a notice is sent.
+	 * @param isPrivate Set to <code>true</code> if the response should be a private message, otherwise a notice is
+	 *                  sent.
 	 */
 	public final void send(final String sender, final String message, final boolean isPrivate)
 	{
@@ -1878,7 +1875,10 @@ public class Mobibot extends PircBot
 	 */
 	private void setDeliciousAuth(final String username, final String password)
 	{
-		delicious = new DeliciousPoster(username, password, ircServer);
+		if (Utils.isValidString(username) && Utils.isValidString(password))
+		{
+			delicious = new DeliciousPoster(username, password, ircServer);
+		}
 	}
 
 	/**
@@ -1955,7 +1955,7 @@ public class Mobibot extends PircBot
 	 * Responds with the users on a channel.
 	 *
 	 * @param sender    The nick of the person who sent the message.
-	 * @param isPrivate Set to <code>true</code> if the response should be send as a private message.
+	 * @param isPrivate Set to <code>true</code> if the response should be sent as a private message.
 	 */
 	private void usersResponse(final String sender, final boolean isPrivate)
 	{
@@ -1988,7 +1988,7 @@ public class Mobibot extends PircBot
 	 * Responds with the bot's version info.
 	 *
 	 * @param sender    The nick of the person who sent the message.
-	 * @param isPrivate Set to <code>true</code> if the response should be send as a private message.
+	 * @param isPrivate Set to <code>true</code> if the response should be sent as a private message.
 	 */
 	private void versionResponse(final String sender, final boolean isPrivate)
 	{
@@ -2006,7 +2006,7 @@ public class Mobibot extends PircBot
 	 *
 	 * @param sender    The nick of the person who sent the message.
 	 * @param args      The view command arguments.
-	 * @param isPrivate Set to <code>true</code> if the response should be send as a private message.
+	 * @param isPrivate Set to <code>true</code> if the response should be sent as a private message.
 	 */
 	private void viewResponse(final String sender, final String args, final boolean isPrivate)
 	{
