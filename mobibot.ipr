@@ -70,6 +70,9 @@
       <option name="fileTypeOverride" value="3" />
       <option name="addBlankAfter" value="false" />
     </LanguageOptions>
+    <LanguageOptions name="__TEMPLATE__">
+      <option name="addBlankAfter" value="false" />
+    </LanguageOptions>
   </component>
   <component name="DependencyValidationManager">
     <scope name="Source" pattern="file[mobibot]:src/generated/java//*||file[mobibot]:src/main/java//*" />
@@ -182,6 +185,12 @@
         <option name="mavenHome" value="Bundled (Maven 3)" />
       </MavenGeneralSettings>
     </option>
+  </component>
+  <component name="ProjectCodeStyleSettingsManager">
+    <option name="PER_PROJECT_SETTINGS">
+      <value />
+    </option>
+    <option name="PREFERRED_PROJECT_CODE_STYLE" value="Erik's Code Style" />
   </component>
   <component name="ProjectInspectionProfilesVisibleTreeState">
     <entry key="Project Default">
@@ -440,13 +449,13 @@
         <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/net.sourceforge.jweather/jweather/0.3.0/385ecc27f62f9d7c31de57cee468a8df58cb415e/jweather-0.3.0-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Gradle: net.thauvin.erik:semver:0.9.5-beta">
+    <library name="Gradle: net.thauvin.erik:semver:0.9.6-beta">
       <CLASSES>
-        <root url="jar://$MAVEN_REPOSITORY$/net/thauvin/erik/semver/0.9.5-beta/semver-0.9.5-beta.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/net/thauvin/erik/semver/0.9.6-beta/semver-0.9.6-beta.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES>
-        <root url="jar://$MAVEN_REPOSITORY$/net/thauvin/erik/semver/0.9.5-beta/semver-0.9.5-beta-sources.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/net/thauvin/erik/semver/0.9.6-beta/semver-0.9.6-beta-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Gradle: org.apache.velocity:velocity:1.7">
@@ -494,13 +503,22 @@
         <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.ostermiller/utils/1.07.00/586774ee4b8409b6835621bae2186d9b54d1c36a/utils-1.07.00-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Gradle: org.slf4j:slf4j-api:1.7.16">
+    <library name="Gradle: org.slf4j:slf4j-api:1.7.21">
       <CLASSES>
-        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.slf4j/slf4j-api/1.7.16/3a6274f658487d5bfff9af3862beff6da1e7fd52/slf4j-api-1.7.16.jar!/" />
+        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.slf4j/slf4j-api/1.7.21/139535a69a4239db087de9bab0bee568bf8e0b70/slf4j-api-1.7.21.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES>
-        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.slf4j/slf4j-api/1.7.16/974c5dd98f38036bd98b3a8f7bf00ee0d91adbdd/slf4j-api-1.7.16-sources.jar!/" />
+        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.slf4j/slf4j-api/1.7.21/f285ac123f201fb4b028bac556928d7cf527ef48/slf4j-api-1.7.21-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Gradle: org.slf4j:slf4j-log4j12:1.7.21">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.slf4j/slf4j-log4j12/1.7.21/7238b064d1aba20da2ac03217d700d91e02460fa/slf4j-log4j12-1.7.21.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.slf4j/slf4j-log4j12/1.7.21/16b1333786ea93d16bff6fb0f5e3b82716d1b008/slf4j-log4j12-1.7.21-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Gradle: org.twitter4j:twitter4j-core:4.0.4">

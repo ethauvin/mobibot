@@ -33,6 +33,8 @@ package net.thauvin.erik.mobibot;
 
 import del.icio.us.Delicious;
 
+import javax.swing.*;
+
 /**
  * The class to handle posts to del.icio.us.
  *
@@ -49,8 +51,8 @@ class DeliciousPoster
 	/**
 	 * Creates a new {@link DeliciousPoster} instance.
 	 *
-	 * @param username The del.icio.us user name.
-	 * @param password The del.icio.us password.
+	 * @param username  The del.icio.us user name.
+	 * @param password  The del.icio.us password.
 	 * @param ircServer The IRC server.
 	 */
 	public DeliciousPoster(final String username, final String password, final String ircServer)
@@ -66,19 +68,21 @@ class DeliciousPoster
 	 */
 	public final void addPost(final EntryLink entry)
 	{
-		final SwingWorker worker = new SwingWorker()
+		final SwingWorker<Boolean, Void> worker = new SwingWorker<Boolean, Void>()
 		{
-			public Object construct()
+			@Override
+			protected Boolean doInBackground()
+					throws Exception
 			{
 				return delicious.addPost(entry.getLink(),
-				                         entry.getTitle(),
-				                         postedBy(entry),
-				                         entry.getDeliciousTags(),
-				                         entry.getDate());
+										 entry.getTitle(),
+										 postedBy(entry),
+										 entry.getDeliciousTags(),
+										 entry.getDate());
 			}
 		};
 
-		worker.start();
+		worker.execute();
 	}
 
 	/**
@@ -102,52 +106,56 @@ class DeliciousPoster
 	{
 		final String link = entry.getLink();
 
-		final SwingWorker worker = new SwingWorker()
+		final SwingWorker<Boolean, Void> worker = new SwingWorker<Boolean, Void>()
 		{
-			public Object construct()
+			@Override
+			protected Boolean doInBackground()
+					throws Exception
 			{
 				return delicious.deletePost(link);
 			}
 		};
 
-		worker.start();
+		worker.execute();
 	}
 
 	/**
 	 * Updates a post to del.icio.us.
 	 *
 	 * @param oldUrl The old post URL.
-	 * @param entry The entry to add.
+	 * @param entry  The entry to add.
 	 */
 	public final void updatePost(final String oldUrl, final EntryLink entry)
 	{
-		final SwingWorker worker = new SwingWorker()
+		final SwingWorker<Boolean, Void> worker = new SwingWorker<Boolean, Void>()
 		{
-			public Object construct()
+			@Override
+			protected Boolean doInBackground()
+					throws Exception
 			{
 				if (!oldUrl.equals(entry.getLink()))
 				{
 					delicious.deletePost(oldUrl);
 
 					return delicious.addPost(entry.getLink(),
-					                         entry.getTitle(),
-					                         postedBy(entry),
-					                         entry.getDeliciousTags(),
-					                         entry.getDate());
+											 entry.getTitle(),
+											 postedBy(entry),
+											 entry.getDeliciousTags(),
+											 entry.getDate());
 				}
 				else
 				{
 					return delicious.addPost(entry.getLink(),
-					                         entry.getTitle(),
-					                         postedBy(entry),
-					                         entry.getDeliciousTags(),
-					                         entry.getDate(),
-					                         true,
-					                         true);
+											 entry.getTitle(),
+											 postedBy(entry),
+											 entry.getDeliciousTags(),
+											 entry.getDate(),
+											 true,
+											 true);
 				}
 			}
 		};
 
-		worker.start();
+		worker.execute();
 	}
 }

@@ -70,9 +70,7 @@ final public class StockQuote extends AbstractModule
 	{
 		if (args.length() > 0)
 		{
-			new Thread(() -> {
-				run(bot, sender, args);
-			}).start();
+			new Thread(() -> run(bot, sender, args)).start();
 		}
 		else
 		{
@@ -160,7 +158,7 @@ final public class StockQuote extends AbstractModule
 		catch (IOException e)
 		{
 			bot.getLogger().debug("Unable to retrieve stock quote for: " + symbol, e);
-			bot.send(sender, "An error has occurred: " + e.getMessage());
+			bot.send(sender, "An error has occurred retrieving a stock quote: " + e.getMessage());
 		}
 	}
 }

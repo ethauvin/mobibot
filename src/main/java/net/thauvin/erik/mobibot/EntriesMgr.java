@@ -87,21 +87,18 @@ final class EntriesMgr
 	 * @param file The file containing the backlogs.
 	 * @param history The history list.
 	 *
-	 * @throws FileNotFoundException If the file was not found.
+	 * @throws IOException If the file was not found or could not be read.
 	 * @throws FeedException If an error occurred while reading the feed.
 	 */
 	public static void loadBacklogs(final String file, final List<String> history)
-			throws FileNotFoundException, FeedException
+			throws IOException, FeedException
 	{
 		history.clear();
 
 		final SyndFeedInput input = new SyndFeedInput();
 
-		InputStreamReader reader = null;
-
-		try
+		try (final InputStreamReader reader = new InputStreamReader(new FileInputStream(new File(file))))
 		{
-			reader = new InputStreamReader(new FileInputStream(new File(file)));
 
 			final SyndFeed feed = input.build(reader);
 
@@ -112,20 +109,6 @@ final class EntriesMgr
 			{
 				item = (SyndEntryImpl) items.get(i);
 				history.add(item.getTitle());
-			}
-		}
-		finally
-		{
-			if (reader != null)
-			{
-				try
-				{
-					reader.close();
-				}
-				catch (IOException ignore)
-				{
-					; // Do nothing
-				}
 			}
 		}
 	}
@@ -139,24 +122,21 @@ final class EntriesMgr
 	 *
 	 * @return The feed's last published date.
 	 *
-	 * @throws FileNotFoundException If the file was not found.
+	 * @throws IOException If the file was not found or could not be read.
 	 * @throws FeedException If an error occurred while reading the feed.
 	 */
 	@SuppressWarnings("unchecked")
 	public static String loadEntries(final String file, final String channel, final List<EntryLink> entries)
-			throws FileNotFoundException, FeedException
+			throws IOException, FeedException
 	{
 		entries.clear();
 
 		final SyndFeedInput input = new SyndFeedInput();
 
-		String today;
-		InputStreamReader reader = null;
+		final String today;
 
-		try
+		try (InputStreamReader reader = new InputStreamReader(new FileInputStream(new File(file))))
 		{
-			reader = new InputStreamReader(new FileInputStream(new File(file)));
-
 			final SyndFeed feed = input.build(reader);
 
 			today = Utils.ISO_SDF.format(feed.getPublishedDate());
@@ -194,20 +174,6 @@ final class EntriesMgr
 				}
 
 				entries.add(entry);
-			}
-		}
-		finally
-		{
-			if (reader != null)
-			{
-				try
-				{
-					reader.close();
-				}
-				catch (IOException ignore)
-				{
-					; // Do nothing
-				}
 			}
 		}
 

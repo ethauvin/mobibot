@@ -100,9 +100,7 @@ final public class CurrencyConverter extends AbstractModule
 			}
 		}
 
-		new Thread(() -> {
-			run(bot, sender, args);
-		}).start();
+		new Thread(() -> run(bot, sender, args)).start();
 	}
 
 	@Override
@@ -148,8 +146,9 @@ final public class CurrencyConverter extends AbstractModule
 					for (final Object rawCube : cubes)
 					{
 						cube = (Element) rawCube;
-						EXCHANGE_RATES
-								.put(cube.getAttribute("currency").getValue(), cube.getAttribute("rate").getValue());
+						EXCHANGE_RATES.put(
+								cube.getAttribute("currency").getValue(),
+								cube.getAttribute("rate").getValue());
 					}
 
 					EXCHANGE_RATES.put("EUR", "1");
@@ -163,7 +162,7 @@ final public class CurrencyConverter extends AbstractModule
 				{
 					bot.getLogger().debug("Unable to fetch the exchange rates table.", e);
 					bot.send(sender,
-					         "An error has occurred while fetching the exchange rates table:  " + e.getMessage());
+							 "An error has occurred while fetching the exchange rates table:  " + e.getMessage());
 				}
 			}
 
@@ -195,16 +194,20 @@ final public class CurrencyConverter extends AbstractModule
 									final double to = Double.parseDouble(EXCHANGE_RATES.get(cmds[3].toUpperCase()));
 
 									bot.send(bot.getChannel(),
-									         NumberFormat.getCurrencyInstance(Locale.US).format(amt).substring(1) + ' '
-									         +
-									         cmds[1].toUpperCase() + " = " +
-									         NumberFormat.getCurrencyInstance(Locale.US).format((amt * to) / from)
-											         .substring(1) + ' ' + cmds[3].toUpperCase());
+											 NumberFormat.getCurrencyInstance(Locale.US).format(amt).substring(1)
+													 + ' '
+													 + cmds[1].toUpperCase()
+													 + " = "
+													 + NumberFormat.getCurrencyInstance(Locale.US)
+																   .format((amt * to) / from)
+																   .substring(1)
+													 + ' '
+													 + cmds[3].toUpperCase());
 								}
 								catch (NullPointerException ignored)
 								{
 									bot.send(sender,
-									         "The supported currencies are: " + EXCHANGE_RATES.keySet().toString());
+											 "The supported currencies are: " + EXCHANGE_RATES.keySet().toString());
 								}
 							}
 						}

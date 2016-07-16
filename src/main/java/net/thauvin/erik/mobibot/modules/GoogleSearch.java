@@ -88,9 +88,7 @@ final public class GoogleSearch extends AbstractModule
 		{
 			if (args.length() > 0)
 			{
-				new Thread(() -> {
-					run(bot, sender, args);
-				}).start();
+				new Thread(() -> run(bot, sender, args)).start();
 			}
 			else
 			{
@@ -113,35 +111,39 @@ final public class GoogleSearch extends AbstractModule
 			final String q = URLEncoder.encode(query, "UTF-8");
 
 			final URL url =
-					new URL("https://www.googleapis.com/customsearch/v1?key=" + properties.get(GOOGLE_API_KEY_PROP)
-					        + "&cx=" + properties.get(GOOGLE_CSE_KEY_PROP) + "&q=" + q + "&filter=1&num=5&alt=json");
+					new URL("https://www.googleapis.com/customsearch/v1?key="
+									+ properties.get(GOOGLE_API_KEY_PROP)
+									+ "&cx="
+									+ properties.get(GOOGLE_CSE_KEY_PROP)
+									+ "&q="
+									+ q
+									+ "&filter=1&num=5&alt=json");
 			final URLConnection conn = url.openConnection();
 
 			final StringBuilder sb = new StringBuilder();
-			final BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-
-			String line;
-			while ((line = reader.readLine()) != null)
+			try (final BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream())))
 			{
-				sb.append(line);
+				String line;
+				while ((line = reader.readLine()) != null)
+				{
+					sb.append(line);
+				}
+
+				final JSONObject json = new JSONObject(sb.toString());
+				final JSONArray ja = json.getJSONArray("items");
+
+				for (int i = 0; i < ja.length(); i++)
+				{
+					final JSONObject j = ja.getJSONObject(i);
+					bot.send(sender, Utils.unescapeXml(j.getString("title")));
+					bot.send(sender, TAB_INDENT + Utils.green(j.getString("link")));
+				}
 			}
-
-			final JSONObject json = new JSONObject(sb.toString());
-			final JSONArray ja = json.getJSONArray("items");
-
-			for (int i = 0; i < ja.length(); i++)
-			{
-				final JSONObject j = ja.getJSONObject(i);
-				bot.send(sender, Utils.unescapeXml(j.getString("title")));
-				bot.send(sender, TAB_INDENT + Utils.green(j.getString("link")));
-			}
-
-			reader.close();
 		}
 		catch (Exception e)
 		{
 			bot.getLogger().warn("Unable to search in Google for: " + query, e);
-			bot.send(sender, "An error has occurred: " + e.getMessage());
+			bot.send(sender, "An error has occurred searching in Google: " + e.getMessage());
 		}
 	}
 
@@ -162,7 +164,6 @@ final public class GoogleSearch extends AbstractModule
 	@Override
 	public boolean isEnabled()
 	{
-		return Utils.isValidString(properties.get(GOOGLE_API_KEY_PROP)) && Utils
-				.isValidString(properties.get(GOOGLE_CSE_KEY_PROP));
+		return isValidProperties();
 	}
 }

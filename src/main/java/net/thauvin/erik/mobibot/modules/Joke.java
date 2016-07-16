@@ -72,9 +72,7 @@ final public class Joke extends AbstractModule
 	@Override
 	public void commandResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate)
 	{
-		new Thread(() -> {
-			run(bot, sender);
-		}).start();
+		new Thread(() -> run(bot, sender)).start();
 	}
 
 	@Override
@@ -95,26 +93,27 @@ final public class Joke extends AbstractModule
 			final URLConnection conn = url.openConnection();
 
 			final StringBuilder sb = new StringBuilder();
-			final BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-
-			String line;
-			while ((line = reader.readLine()) != null)
+			try (final BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream())))
 			{
-				sb.append(line);
+				String line;
+				while ((line = reader.readLine()) != null)
+				{
+					sb.append(line);
+				}
+
+				final JSONObject json = new JSONObject(sb.toString());
+
+				bot.send(bot.getChannel(),
+						 Colors.CYAN
+								 + json.getJSONObject("value").get("joke").toString().replaceAll("\\'", "'")
+									   .replaceAll("\\\"", "\"")
+								 + Colors.NORMAL);
 			}
-
-			final JSONObject json = new JSONObject(sb.toString());
-
-			bot.send(bot.getChannel(),
-			         Colors.CYAN + json.getJSONObject("value").get("joke").toString().replaceAll("\\'", "'")
-					         .replaceAll("\\\"", "\"") + Colors.NORMAL);
-
-			reader.close();
 		}
 		catch (Exception e)
 		{
 			bot.getLogger().warn("Unable to retrieve random joke.", e);
-			bot.send(sender, "An error has occurred: " + e.getMessage());
+			bot.send(sender, "An error has occurred retrieving a random joke: " + e.getMessage());
 		}
 	}
 }

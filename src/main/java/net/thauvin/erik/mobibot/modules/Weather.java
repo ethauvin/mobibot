@@ -75,9 +75,7 @@ final public class Weather extends AbstractModule
 	@Override
 	public void commandResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate)
 	{
-		new Thread(() -> {
-			run(bot, sender, args.toUpperCase(), isPrivate);
-		}).start();
+		new Thread(() -> run(bot, sender, args.toUpperCase(), isPrivate)).start();
 	}
 
 	@Override
@@ -110,18 +108,26 @@ final public class Weather extends AbstractModule
 				bot.send(sender, "Station ID: " + metar.getStationID(), isPrivate);
 
 				bot.send(sender,
-				         "At: " + Utils.UTC_SDF.format(metar.getDate()) + " UTC (" + (
-						         ((new Date()).getTime() - metar.getDate().getTime()) / 1000L / 60L) + " minutes ago)",
-				         isPrivate);
+						 "At: "
+								 + Utils.UTC_SDF.format(metar.getDate())
+								 + " UTC ("
+								 + (((new Date()).getTime() - metar.getDate().getTime()) / 1000L / 60L)
+								 + " minutes ago)",
+						 isPrivate);
 
 				result = metar.getWindSpeedInMPH();
 
 				if (result != null)
 				{
 					bot.send(sender,
-					         "Wind Speed: " + result + " mph, " + metar.getWindSpeedInKnots() + " knots, " + metar
-							         .getWindSpeedInMPS() + " m/s",
-					         isPrivate);
+							 "Wind Speed: "
+									 + result
+									 + " mph, "
+									 + metar.getWindSpeedInKnots()
+									 + " knots, "
+									 + metar.getWindSpeedInMPS()
+									 + " m/s",
+							 isPrivate);
 				}
 
 				result = metar.getVisibility();
@@ -129,9 +135,11 @@ final public class Weather extends AbstractModule
 				if (result != null)
 				{
 					bot.send(sender,
-					         "Visibility: " + (metar.getVisibilityLessThan() ? "< " : "") + NUMBER_FORMAT.format(result)
-					         + " mi, " + metar.getVisibilityInKilometers() + " km",
-					         isPrivate);
+							 "Visibility: "
+									 + (metar.getVisibilityLessThan() ? "< " : "")
+									 + NUMBER_FORMAT.format(result)
+									 + " mi, " + metar.getVisibilityInKilometers() + " km",
+							 isPrivate);
 				}
 
 				result = metar.getPressure();
@@ -139,8 +147,8 @@ final public class Weather extends AbstractModule
 				if (result != null)
 				{
 					bot.send(sender,
-					         "Pressure: " + result + " Hg, " + metar.getPressureInHectoPascals() + " hPa",
-					         isPrivate);
+							 "Pressure: " + result + " Hg, " + metar.getPressureInHectoPascals() + " hPa",
+							 isPrivate);
 				}
 
 				result = metar.getTemperatureInCelsius();
@@ -148,8 +156,8 @@ final public class Weather extends AbstractModule
 				if (result != null)
 				{
 					bot.send(sender,
-					         "Temperature: " + result + " \u00B0C, " + metar.getTemperatureInFahrenheit() + " \u00B0F",
-					         isPrivate);
+							 "Temperature: " + result + " \u00B0C, " + metar.getTemperatureInFahrenheit() + " \u00B0F",
+							 isPrivate);
 				}
 
 				if (metar.getWeatherConditions() != null)

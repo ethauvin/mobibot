@@ -74,12 +74,12 @@ dependencies {
 	compile 'org.twitter4j:twitter4j-core:4.0.4'
 	compile 'net.sf.delicious-java:delicious:1.14'
 
-	compileOnly 'net.thauvin.erik:semver:0.9.5-beta'
+	compileOnly 'net.thauvin.erik:semver:0.9.6-beta'
 }
 
 annotationProcessor {
 	project.version = getVersion(isRelease)
-	library 'net.thauvin.erik:semver:0.9.5-beta'
+	library 'net.thauvin.erik:semver:0.9.6-beta'
 	processor 'net.thauvin.erik.semver.VersionProcessor'
 }
 

@@ -32,7 +32,6 @@
 package net.thauvin.erik.mobibot.modules;
 
 import net.thauvin.erik.mobibot.Mobibot;
-import net.thauvin.erik.mobibot.Utils;
 import twitter4j.Status;
 import twitter4j.TwitterFactory;
 import twitter4j.conf.ConfigurationBuilder;
@@ -76,9 +75,7 @@ final public class Twitter extends AbstractModule
 	{
 		if (isEnabled() && args.length() > 0)
 		{
-			new Thread(() -> {
-				run(bot, sender, args);
-			}).start();
+			new Thread(() -> run(bot, sender, args)).start();
 		}
 		else
 		{
@@ -103,15 +100,7 @@ final public class Twitter extends AbstractModule
 	@Override
 	public boolean isEnabled()
 	{
-		for (final String s : getPropertyKeys())
-		{
-			if (!Utils.isValidString(properties.get(s)))
-			{
-				return false;
-			}
-		}
-
-		return true;
+		return isValidProperties();
 	}
 
 	/**
@@ -122,18 +111,19 @@ final public class Twitter extends AbstractModule
 		try
 		{
 			final ConfigurationBuilder cb = new ConfigurationBuilder();
-			cb.setDebugEnabled(true).setOAuthConsumerKey(properties.get(CONSUMER_KEY_PROP))
-					.setOAuthConsumerSecret(properties.get(CONSUMER_SECRET_PROP))
-					.setOAuthAccessToken(properties.get(TOKEN_PROP))
-					.setOAuthAccessTokenSecret(properties.get(TOKEN_SECRET_PROP));
+			cb.setDebugEnabled(true)
+			  .setOAuthConsumerKey(properties.get(CONSUMER_KEY_PROP))
+			  .setOAuthConsumerSecret(properties.get(CONSUMER_SECRET_PROP))
+			  .setOAuthAccessToken(properties.get(TOKEN_PROP))
+			  .setOAuthAccessTokenSecret(properties.get(TOKEN_SECRET_PROP));
 			final TwitterFactory tf = new TwitterFactory(cb.build());
 			final twitter4j.Twitter twitter = tf.getInstance();
 
 			final Status status = twitter.updateStatus(message + " (" + sender + ')');
 
 			bot.send(sender,
-			         "You message was posted to http://twitter.com/" + twitter.getScreenName() + "/statuses/" + status
-					         .getId());
+					 "You message was posted to http://twitter.com/" + twitter.getScreenName() + "/statuses/" + status
+							 .getId());
 		}
 		catch (Exception e)
 		{

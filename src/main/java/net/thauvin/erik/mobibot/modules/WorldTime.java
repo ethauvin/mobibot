@@ -149,9 +149,9 @@ final public class WorldTime extends AbstractModule
 	/**
 	 * Responds with the current time in the specified timezone/country.
 	 *
-	 * @param bot The bot's instance.
-	 * @param sender The sender.
-	 * @param args The command arguments.
+	 * @param bot       The bot's instance.
+	 * @param sender    The sender.
+	 * @param args      The command arguments.
 	 * @param isPrivate Set to <code>true</code> if the response should be sent as a private message.
 	 */
 	@Override
@@ -171,7 +171,7 @@ final public class WorldTime extends AbstractModule
 			{
 				TIME_SDF.setTimeZone(TimeZone.getTimeZone(tz));
 				response = TIME_SDF.format(Calendar.getInstance().getTime()) + tz.substring(tz.indexOf('/') + 1)
-						.replace('_', ' ');
+																				 .replace('_', ' ');
 			}
 		}
 		else
@@ -195,6 +195,16 @@ final public class WorldTime extends AbstractModule
 				bot.send(bot.getChannel(), response);
 			}
 		}
+	}
+
+	@Override
+	public void helpResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate)
+	{
+		bot.send(sender, "To display a country's current date/time:");
+		bot.send(sender, bot.helpIndent(bot.getNick() + ": " + TIME_CMD) + " [<country code>]");
+
+		bot.send(sender, "For a listing of the supported countries:");
+		bot.send(sender, bot.helpIndent(bot.getNick() + ": " + TIME_CMD));
 	}
 
 	/**
@@ -235,16 +245,6 @@ final public class WorldTime extends AbstractModule
 		}
 
 		return ('@' + String.valueOf(beats));
-	}
-
-	@Override
-	public void helpResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate)
-	{
-		bot.send(sender, "To display a country's current date/time:");
-		bot.send(sender, bot.helpIndent(bot.getNick() + ": " + TIME_CMD) + " [<country code>]");
-
-		bot.send(sender, "For a listing of the supported countries:");
-		bot.send(sender, bot.helpIndent(bot.getNick() + ": " + TIME_CMD));
 	}
 
 	@Override
