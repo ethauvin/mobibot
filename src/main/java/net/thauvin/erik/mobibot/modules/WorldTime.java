@@ -46,210 +46,184 @@ import java.util.TreeMap;
  * @created 2014-04-27
  * @since 1.0
  */
-final public class WorldTime extends AbstractModule
-{
-	/**
-	 * The beats (Internet Time) keyword.
-	 */
-	private static final String BEATS_KEYWORD = ".beats";
+final public class WorldTime extends AbstractModule {
+    /**
+     * The beats (Internet Time) keyword.
+     */
+    private static final String BEATS_KEYWORD = ".beats";
 
-	/**
-	 * The supported countries.
-	 */
-	private static final Map<String, String> COUNTRIES_MAP = new TreeMap<>();
+    /**
+     * The supported countries.
+     */
+    private static final Map<String, String> COUNTRIES_MAP = new TreeMap<>();
 
-	/**
-	 * The time command.
-	 */
-	private static final String TIME_CMD = "time";
+    /**
+     * The time command.
+     */
+    private static final String TIME_CMD = "time";
 
-	/**
-	 * The date/time format.
-	 */
-	private static final SimpleDateFormat TIME_SDF =
-			new SimpleDateFormat("'The time is 'HH:mm' on 'EEEE, d MMMM yyyy' in '");
+    /**
+     * The date/time format.
+     */
+    private static final SimpleDateFormat TIME_SDF =
+            new SimpleDateFormat("'The time is 'HH:mm' on 'EEEE, d MMMM yyyy' in '");
 
-	/**
-	 * Creates a new {@link WorldTime} instance.
-	 */
-	public WorldTime()
-	{
-		commands.add(TIME_CMD);
+    /**
+     * Creates a new {@link WorldTime} instance.
+     */
+    public WorldTime() {
+        commands.add(TIME_CMD);
 
-		// Initialize the countries map
-		COUNTRIES_MAP.put("AU", "Australia/Sydney");
-		COUNTRIES_MAP.put("BE", "Europe/Brussels");
-		COUNTRIES_MAP.put("CA", "America/Montreal");
-		COUNTRIES_MAP.put("CDT", "America/Chicago");
-		COUNTRIES_MAP.put("CET", "CET");
-		COUNTRIES_MAP.put("CH", "Europe/Zurich");
-		COUNTRIES_MAP.put("CN", "Asia/Shanghai");
-		COUNTRIES_MAP.put("CST", "America/Chicago");
-		COUNTRIES_MAP.put("CU", "Cuba");
-		COUNTRIES_MAP.put("DE", "Europe/Berlin");
-		COUNTRIES_MAP.put("DK", "Europe/Copenhagen");
-		COUNTRIES_MAP.put("EDT", "America/New_York");
-		COUNTRIES_MAP.put("EG", "Africa/Cairo");
-		COUNTRIES_MAP.put("ER", "Africa/Asmara");
-		COUNTRIES_MAP.put("ES", "Europe/Madrid");
-		COUNTRIES_MAP.put("EST", "America/New_York");
-		COUNTRIES_MAP.put("FI", "Europe/Helsinki");
-		COUNTRIES_MAP.put("FR", "Europe/Paris");
-		COUNTRIES_MAP.put("GB", "Europe/London");
-		COUNTRIES_MAP.put("GMT", "GMT");
-		COUNTRIES_MAP.put("HK", "Asia/Hong_Kong");
-		COUNTRIES_MAP.put("HST", "HST");
-		COUNTRIES_MAP.put("IE", "Europe/Dublin");
-		COUNTRIES_MAP.put("IL", "Asia/Tel_Aviv");
-		COUNTRIES_MAP.put("IN", "Asia/Calcutta");
-		COUNTRIES_MAP.put("IR", "Asia/Tehran");
-		COUNTRIES_MAP.put("IS", "Atlantic/Reykjavik");
-		COUNTRIES_MAP.put("IT", "Europe/Rome");
-		COUNTRIES_MAP.put("JM", "Jamaica");
-		COUNTRIES_MAP.put("JP", "Asia/Tokyo");
-		COUNTRIES_MAP.put("LY", "Africa/Tripoli");
-		COUNTRIES_MAP.put("MDT", "America/Denver");
-		COUNTRIES_MAP.put("MH", "Kwajalein");
-		COUNTRIES_MAP.put("MST", "America/Denver");
-		COUNTRIES_MAP.put("MX", "America/Mexico_City");
-		COUNTRIES_MAP.put("NL", "Europe/Amsterdam");
-		COUNTRIES_MAP.put("NO", "Europe/Oslo");
-		COUNTRIES_MAP.put("NP", "Asia/Katmandu");
-		COUNTRIES_MAP.put("NZ", "Pacific/Auckland");
-		COUNTRIES_MAP.put("PDT", "America/Los_Angeles");
-		COUNTRIES_MAP.put("PK", "Asia/Karachi");
-		COUNTRIES_MAP.put("PL", "Europe/Warsaw");
-		COUNTRIES_MAP.put("PST", "America/Los_Angeles");
-		COUNTRIES_MAP.put("PT", "Europe/Lisbon");
-		COUNTRIES_MAP.put("RU", "Europe/Moscow");
-		COUNTRIES_MAP.put("SE", "Europe/Stockholm");
-		COUNTRIES_MAP.put("SG", "Asia/Singapore");
-		COUNTRIES_MAP.put("SU", "Europe/Moscow");
-		COUNTRIES_MAP.put("TH", "Asia/Bangkok");
-		COUNTRIES_MAP.put("TM", "Asia/Ashgabat");
-		COUNTRIES_MAP.put("TR", "Europe/Istanbul");
-		COUNTRIES_MAP.put("TW", "Asia/Taipei");
-		COUNTRIES_MAP.put("UK", "Europe/London");
-		COUNTRIES_MAP.put("US", "America/New_York");
-		COUNTRIES_MAP.put("UTC", "UTC");
-		COUNTRIES_MAP.put("VA", "Europe/Vatican");
-		COUNTRIES_MAP.put("VN", "Asia/Ho_Chi_Minh");
-		COUNTRIES_MAP.put("INTERNET", BEATS_KEYWORD);
-		COUNTRIES_MAP.put("BEATS", BEATS_KEYWORD);
+        // Initialize the countries map
+        COUNTRIES_MAP.put("AU", "Australia/Sydney");
+        COUNTRIES_MAP.put("BE", "Europe/Brussels");
+        COUNTRIES_MAP.put("CA", "America/Montreal");
+        COUNTRIES_MAP.put("CDT", "America/Chicago");
+        COUNTRIES_MAP.put("CET", "CET");
+        COUNTRIES_MAP.put("CH", "Europe/Zurich");
+        COUNTRIES_MAP.put("CN", "Asia/Shanghai");
+        COUNTRIES_MAP.put("CST", "America/Chicago");
+        COUNTRIES_MAP.put("CU", "Cuba");
+        COUNTRIES_MAP.put("DE", "Europe/Berlin");
+        COUNTRIES_MAP.put("DK", "Europe/Copenhagen");
+        COUNTRIES_MAP.put("EDT", "America/New_York");
+        COUNTRIES_MAP.put("EG", "Africa/Cairo");
+        COUNTRIES_MAP.put("ER", "Africa/Asmara");
+        COUNTRIES_MAP.put("ES", "Europe/Madrid");
+        COUNTRIES_MAP.put("EST", "America/New_York");
+        COUNTRIES_MAP.put("FI", "Europe/Helsinki");
+        COUNTRIES_MAP.put("FR", "Europe/Paris");
+        COUNTRIES_MAP.put("GB", "Europe/London");
+        COUNTRIES_MAP.put("GMT", "GMT");
+        COUNTRIES_MAP.put("HK", "Asia/Hong_Kong");
+        COUNTRIES_MAP.put("HST", "HST");
+        COUNTRIES_MAP.put("IE", "Europe/Dublin");
+        COUNTRIES_MAP.put("IL", "Asia/Tel_Aviv");
+        COUNTRIES_MAP.put("IN", "Asia/Calcutta");
+        COUNTRIES_MAP.put("IR", "Asia/Tehran");
+        COUNTRIES_MAP.put("IS", "Atlantic/Reykjavik");
+        COUNTRIES_MAP.put("IT", "Europe/Rome");
+        COUNTRIES_MAP.put("JM", "Jamaica");
+        COUNTRIES_MAP.put("JP", "Asia/Tokyo");
+        COUNTRIES_MAP.put("LY", "Africa/Tripoli");
+        COUNTRIES_MAP.put("MDT", "America/Denver");
+        COUNTRIES_MAP.put("MH", "Kwajalein");
+        COUNTRIES_MAP.put("MST", "America/Denver");
+        COUNTRIES_MAP.put("MX", "America/Mexico_City");
+        COUNTRIES_MAP.put("NL", "Europe/Amsterdam");
+        COUNTRIES_MAP.put("NO", "Europe/Oslo");
+        COUNTRIES_MAP.put("NP", "Asia/Katmandu");
+        COUNTRIES_MAP.put("NZ", "Pacific/Auckland");
+        COUNTRIES_MAP.put("PDT", "America/Los_Angeles");
+        COUNTRIES_MAP.put("PK", "Asia/Karachi");
+        COUNTRIES_MAP.put("PL", "Europe/Warsaw");
+        COUNTRIES_MAP.put("PST", "America/Los_Angeles");
+        COUNTRIES_MAP.put("PT", "Europe/Lisbon");
+        COUNTRIES_MAP.put("RU", "Europe/Moscow");
+        COUNTRIES_MAP.put("SE", "Europe/Stockholm");
+        COUNTRIES_MAP.put("SG", "Asia/Singapore");
+        COUNTRIES_MAP.put("SU", "Europe/Moscow");
+        COUNTRIES_MAP.put("TH", "Asia/Bangkok");
+        COUNTRIES_MAP.put("TM", "Asia/Ashgabat");
+        COUNTRIES_MAP.put("TR", "Europe/Istanbul");
+        COUNTRIES_MAP.put("TW", "Asia/Taipei");
+        COUNTRIES_MAP.put("UK", "Europe/London");
+        COUNTRIES_MAP.put("US", "America/New_York");
+        COUNTRIES_MAP.put("UTC", "UTC");
+        COUNTRIES_MAP.put("VA", "Europe/Vatican");
+        COUNTRIES_MAP.put("VN", "Asia/Ho_Chi_Minh");
+        COUNTRIES_MAP.put("INTERNET", BEATS_KEYWORD);
+        COUNTRIES_MAP.put("BEATS", BEATS_KEYWORD);
 
-		for (final String tz : TimeZone.getAvailableIDs())
-		{
-			if (!tz.contains("/") && tz.length() == 3 & !COUNTRIES_MAP.containsKey(tz))
-			{
-				COUNTRIES_MAP.put(tz, tz);
-			}
-		}
-	}
+        for (final String tz : TimeZone.getAvailableIDs()) {
+            if (!tz.contains("/") && tz.length() == 3 & !COUNTRIES_MAP.containsKey(tz)) {
+                COUNTRIES_MAP.put(tz, tz);
+            }
+        }
+    }
 
-	/**
-	 * Responds with the current time in the specified timezone/country.
-	 *
-	 * @param bot       The bot's instance.
-	 * @param sender    The sender.
-	 * @param args      The command arguments.
-	 * @param isPrivate Set to <code>true</code> if the response should be sent as a private message.
-	 */
-	@Override
-	public void commandResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate)
-	{
-		boolean isInvalidTz = false;
-		final String tz = (COUNTRIES_MAP.get((args.substring(args.indexOf(' ') + 1).trim().toUpperCase())));
-		final String response;
+    /**
+     * Responds with the current time in the specified timezone/country.
+     *
+     * @param bot       The bot's instance.
+     * @param sender    The sender.
+     * @param args      The command arguments.
+     * @param isPrivate Set to <code>true</code> if the response should be sent as a private message.
+     */
+    @Override
+    public void commandResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate) {
+        boolean isInvalidTz = false;
+        final String tz = (COUNTRIES_MAP.get((args.substring(args.indexOf(' ') + 1).trim().toUpperCase())));
+        final String response;
 
-		if (tz != null)
-		{
-			if (tz.equals(BEATS_KEYWORD))
-			{
-				response = ("The current Internet Time is: " + internetTime() + ' ' + BEATS_KEYWORD);
-			}
-			else
-			{
-				TIME_SDF.setTimeZone(TimeZone.getTimeZone(tz));
-				response = TIME_SDF.format(Calendar.getInstance().getTime()) + tz.substring(tz.indexOf('/') + 1)
-																				 .replace('_', ' ');
-			}
-		}
-		else
-		{
-			isInvalidTz = true;
-			response = "The supported time zones are: " + COUNTRIES_MAP.keySet().toString();
-		}
+        if (tz != null) {
+            if (tz.equals(BEATS_KEYWORD)) {
+                response = ("The current Internet Time is: " + internetTime() + ' ' + BEATS_KEYWORD);
+            } else {
+                TIME_SDF.setTimeZone(TimeZone.getTimeZone(tz));
+                response = TIME_SDF.format(Calendar.getInstance().getTime()) + tz.substring(tz.indexOf('/') + 1)
+                        .replace('_', ' ');
+            }
+        } else {
+            isInvalidTz = true;
+            response = "The supported time zones are: " + COUNTRIES_MAP.keySet().toString();
+        }
 
-		if (isPrivate)
-		{
-			bot.send(sender, response, true);
-		}
-		else
-		{
-			if (isInvalidTz)
-			{
-				bot.send(sender, response);
-			}
-			else
-			{
-				bot.send(bot.getChannel(), response);
-			}
-		}
-	}
+        if (isPrivate) {
+            bot.send(sender, response, true);
+        } else {
+            if (isInvalidTz) {
+                bot.send(sender, response);
+            } else {
+                bot.send(bot.getChannel(), response);
+            }
+        }
+    }
 
-	@Override
-	public void helpResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate)
-	{
-		bot.send(sender, "To display a country's current date/time:");
-		bot.send(sender, bot.helpIndent(bot.getNick() + ": " + TIME_CMD) + " [<country code>]");
+    @Override
+    public void helpResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate) {
+        bot.send(sender, "To display a country's current date/time:");
+        bot.send(sender, bot.helpIndent(bot.getNick() + ": " + TIME_CMD) + " [<country code>]");
 
-		bot.send(sender, "For a listing of the supported countries:");
-		bot.send(sender, bot.helpIndent(bot.getNick() + ": " + TIME_CMD));
-	}
+        bot.send(sender, "For a listing of the supported countries:");
+        bot.send(sender, bot.helpIndent(bot.getNick() + ": " + TIME_CMD));
+    }
 
-	/**
-	 * Returns the current Internet (beat) Time.
-	 *
-	 * @return The Internet Time string.
-	 */
-	private String internetTime()
-	{
-		final Calendar gc = Calendar.getInstance();
+    /**
+     * Returns the current Internet (beat) Time.
+     *
+     * @return The Internet Time string.
+     */
+    private String internetTime() {
+        final Calendar gc = Calendar.getInstance();
 
-		final int offset = (gc.get(Calendar.ZONE_OFFSET) / (60 * 60 * 1000));
-		int hh = gc.get(Calendar.HOUR_OF_DAY);
-		final int mm = gc.get(Calendar.MINUTE);
-		final int ss = gc.get(Calendar.SECOND);
+        final int offset = (gc.get(Calendar.ZONE_OFFSET) / (60 * 60 * 1000));
+        int hh = gc.get(Calendar.HOUR_OF_DAY);
+        final int mm = gc.get(Calendar.MINUTE);
+        final int ss = gc.get(Calendar.SECOND);
 
-		hh -= offset; // GMT
-		hh += 1; // BMT
+        hh -= offset; // GMT
+        hh += 1; // BMT
 
-		long beats = Math.round(Math.floor((double) ((((hh * 3600) + (mm * 60) + ss) * 1000) / 86400)));
+        long beats = Math.round(Math.floor((double) ((((hh * 3600) + (mm * 60) + ss) * 1000) / 86400)));
 
-		if (beats >= 1000)
-		{
-			beats -= (long) 1000;
-		}
-		else if (beats < 0)
-		{
-			beats += (long) 1000;
-		}
+        if (beats >= 1000) {
+            beats -= (long) 1000;
+        } else if (beats < 0) {
+            beats += (long) 1000;
+        }
 
-		if (beats < 10)
-		{
-			return ("@00" + beats);
-		}
-		else if (beats < 100)
-		{
-			return ("@0" + beats);
-		}
+        if (beats < 10) {
+            return ("@00" + beats);
+        } else if (beats < 100) {
+            return ("@0" + beats);
+        }
 
-		return ('@' + String.valueOf(beats));
-	}
+        return ('@' + String.valueOf(beats));
+    }
 
-	@Override
-	public boolean isPrivateMsgEnabled()
-	{
-		return true;
-	}
+    @Override
+    public boolean isPrivateMsgEnabled() {
+        return true;
+    }
 }

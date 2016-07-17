@@ -43,79 +43,70 @@ import java.util.Random;
  * @created 2014-04-28
  * @since 1.0
  */
-final public class War extends AbstractModule
-{
-	/**
-	 * The war command.
-	 */
-	private static final String WAR_CMD = "war";
+final public class War extends AbstractModule {
+    /**
+     * The war command.
+     */
+    private static final String WAR_CMD = "war";
 
-	/**
-	 * The deck of card.
-	 */
-	private static final String[] WAR_DECK =
-			new String[]{"Ace", "King", "Queen", "Jack", "10", "9", "8", "7", "6", "5", "4", "3", "2"};
+    /**
+     * The deck of card.
+     */
+    private static final String[] WAR_DECK =
+            new String[]{"Ace", "King", "Queen", "Jack", "10", "9", "8", "7", "6", "5", "4", "3", "2"};
 
-	/**
-	 * The suits for the deck of card.
-	 */
-	private static final String[] WAR_SUITS = new String[]{"Hearts", "Spades", "Diamonds", "Clubs"};
+    /**
+     * The suits for the deck of card.
+     */
+    private static final String[] WAR_SUITS = new String[]{"Hearts", "Spades", "Diamonds", "Clubs"};
 
-	/**
-	 * The default constructor.
-	 */
-	public War()
-	{
-		commands.add(WAR_CMD);
-	}
+    /**
+     * The default constructor.
+     */
+    public War() {
+        commands.add(WAR_CMD);
+    }
 
-	/**
-	 * Plays war.
-	 *
-	 * @param bot The bot's instance.
-	 * @param sender The sender.
-	 * @param args The command arguments.
-	 * @param isPrivate Set to <code>true</code> if the response should be sent as a private message.
-	 */
-	@Override
-	public void commandResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate)
-	{
-		final Random r = new Random();
+    /**
+     * Plays war.
+     *
+     * @param bot       The bot's instance.
+     * @param sender    The sender.
+     * @param args      The command arguments.
+     * @param isPrivate Set to <code>true</code> if the response should be sent as a private message.
+     */
+    @Override
+    public void commandResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate) {
+        final Random r = new Random();
 
-		int i;
-		int y;
+        int i;
+        int y;
 
-		while (true)
-		{
-			i = r.nextInt(WAR_DECK.length);
-			y = r.nextInt(WAR_DECK.length);
+        while (true) {
+            i = r.nextInt(WAR_DECK.length);
+            y = r.nextInt(WAR_DECK.length);
 
-			bot.send(bot.getChannel(),
-			         sender + " drew the " + Utils.bold(WAR_DECK[i]) + " of " + WAR_SUITS[r.nextInt(WAR_SUITS.length)]);
-			bot.action("drew the " + Utils.bold(WAR_DECK[y]) + " of " + WAR_SUITS[r.nextInt(WAR_SUITS.length)]);
+            bot.send(bot.getChannel(),
+                    sender + " drew the " + Utils.bold(WAR_DECK[i]) + " of " + WAR_SUITS[r.nextInt(WAR_SUITS.length)]);
+            bot.action("drew the " + Utils.bold(WAR_DECK[y]) + " of " + WAR_SUITS[r.nextInt(WAR_SUITS.length)]);
 
-			if (i != y)
-			{
-				break;
-			}
+            if (i != y) {
+                break;
+            }
 
-			bot.send(bot.getChannel(), "This means " + Utils.bold("WAR") + '!');
-		}
+            bot.send(bot.getChannel(), "This means " + Utils.bold("WAR") + '!');
+        }
 
-		if (i < y)
-		{
-			bot.action("lost.");
-		}
-		else if (i > y)
-		{
-			bot.action("wins.");
-		}
-	}
+        if (i < y) {
+            bot.action("lost.");
+        } else if (i > y) {
+            bot.action("wins.");
+        }
+    }
 
-	@Override
-	public void helpResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate)
-	{
-		bot.send(sender, "To play war:");
-		bot.send(sender, bot.helpIndent(bot.getNick() + ": " + WAR_CMD));
-	}
+    @Override
+    public void helpResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate) {
+        bot.send(sender, "To play war:");
+        bot.send(sender, bot.helpIndent(bot.getNick() + ": " + WAR_CMD));
+    }
 }

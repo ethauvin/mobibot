@@ -47,391 +47,348 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * @created Jan 31, 2004
  * @since 1.0
  */
-public class EntryLink implements Serializable
-{
-	/**
-	 * The serial version UID.
-	 */
-	static final long serialVersionUID = 3676245542270899086L;
+public class EntryLink implements Serializable {
+    /**
+     * The serial version UID.
+     */
+    static final long serialVersionUID = 3676245542270899086L;
 
-	// The link's comments
-	private final List<EntryComment> comments = new CopyOnWriteArrayList<>();
+    // The link's comments
+    private final List<EntryComment> comments = new CopyOnWriteArrayList<>();
 
-	// The tags/categories
-	private final List<SyndCategory> tags = new CopyOnWriteArrayList<>();
+    // The tags/categories
+    private final List<SyndCategory> tags = new CopyOnWriteArrayList<>();
 
-	// The channel
-	private String channel = "";
+    // The channel
+    private String channel = "";
 
-	// The creation date
-	private Date date = Calendar.getInstance().getTime();
+    // The creation date
+    private Date date = Calendar.getInstance().getTime();
 
-	// The link's URL
-	private String link = "";
+    // The link's URL
+    private String link = "";
 
-	// The author's login
-	private String login = "";
+    // The author's login
+    private String login = "";
 
-	// The author's nickname
-	private String nick = "";
+    // The author's nickname
+    private String nick = "";
 
-	// The link's title
-	private String title = "";
+    // The link's title
+    private String title = "";
 
-	/**
-	 * Creates a new entry.
-	 *
-	 * @param link The new entry's link.
-	 * @param title The new entry's title.
-	 * @param nick The nickname of the author of the link.
-	 * @param login The login of the author of the link.
-	 * @param channel The channel.
-	 * @param tags The entry's tags/categories.
-	 */
-	public EntryLink(final String link, final String title, final String nick, final String login, final String channel,
-	                 final String tags)
-	{
-		this.link = link;
-		this.title = title;
-		this.nick = nick;
-		this.login = login;
-		this.channel = channel;
+    /**
+     * Creates a new entry.
+     *
+     * @param link    The new entry's link.
+     * @param title   The new entry's title.
+     * @param nick    The nickname of the author of the link.
+     * @param login   The login of the author of the link.
+     * @param channel The channel.
+     * @param tags    The entry's tags/categories.
+     */
+    public EntryLink(final String link, final String title, final String nick, final String login, final String channel,
+                     final String tags) {
+        this.link = link;
+        this.title = title;
+        this.nick = nick;
+        this.login = login;
+        this.channel = channel;
 
-		setTags(tags);
-	}
+        setTags(tags);
+    }
 
-	/**
-	 * Sets the tags.
-	 *
-	 * @param tags The space-delimited tags.
-	 */
-	public final void setTags(final String tags)
-	{
-		if (tags != null)
-		{
-			final String[] parts = tags.replaceAll(", ", " ").replaceAll(",", " ").split(" ");
+    /**
+     * Creates a new entry.
+     *
+     * @param link    The new entry's link.
+     * @param title   The new entry's title.
+     * @param nick    The nickname of the author of the link.
+     * @param channel The channel.
+     * @param date    The entry date.
+     * @param tags    The entry's tags/categories.
+     */
+    public EntryLink(final String link, final String title, final String nick, final String channel, final Date date,
+                     final List<SyndCategory> tags) {
+        this.link = link;
+        this.title = title;
+        this.nick = nick;
+        this.channel = channel;
+        this.date = date;
 
-			SyndCategoryImpl tag;
-			String part;
-			char mod;
+        setTags(tags);
+    }
 
-			for (final String rawPart : parts)
-			{
-				part = rawPart.trim();
+    /**
+     * Adds a new comment.
+     *
+     * @param comment The actual comment.
+     * @param nick    The nickname of the author of the comment.
+     * @return The total number of comments for this entry.
+     */
+    public final int addComment(final String comment, final String nick) {
+        comments.add(new EntryComment(comment, nick));
 
-				if (part.length() >= 2)
-				{
-					tag = new SyndCategoryImpl();
-					tag.setName(part.substring(1).toLowerCase());
+        return (comments.size() - 1);
+    }
 
-					mod = part.charAt(0);
+    /**
+     * Deletes a specific comment.
+     *
+     * @param index The index of the comment to delete.
+     */
+    public final void deleteComment(final int index) {
+        if (index < comments.size()) {
+            comments.remove(index);
+        }
+    }
 
-					if (mod == '-')
-					{
-						// Don't remove the channel tag, if any.
-						if (!tag.getName().equals(channel.substring(1)))
-						{
-							this.tags.remove(tag);
-						}
-					}
-					else if (mod == '+')
-					{
-						if (!this.tags.contains(tag))
-						{
-							this.tags.add(tag);
-						}
-					}
-					else
-					{
-						tag.setName(part.trim().toLowerCase());
+    /**
+     * Returns the channel the link was posted on.
+     *
+     * @return The channel
+     */
+    public final String getChannel() {
+        return channel;
+    }
 
-						if (!this.tags.contains(tag))
-						{
-							this.tags.add(tag);
-						}
-					}
-				}
-			}
-		}
-	}
+    /**
+     * Sets the channel.
+     *
+     * @param channel The channel.
+     */
+    @SuppressWarnings("UnusedDeclaration")
+    public final void setChannel(final String channel) {
+        this.channel = channel;
+    }
 
-	/**
-	 * Creates a new entry.
-	 *
-	 * @param link The new entry's link.
-	 * @param title The new entry's title.
-	 * @param nick The nickname of the author of the link.
-	 * @param channel The channel.
-	 * @param date The entry date.
-	 * @param tags The entry's tags/categories.
-	 */
-	public EntryLink(final String link, final String title, final String nick, final String channel, final Date date,
-	                 final List<SyndCategory> tags)
-	{
-		this.link = link;
-		this.title = title;
-		this.nick = nick;
-		this.channel = channel;
-		this.date = date;
+    /**
+     * Returns a comment.
+     *
+     * @param index The comment's index.
+     * @return The specific comment.
+     */
+    public final EntryComment getComment(final int index) {
+        return (comments.get(index));
+    }
 
-		setTags(tags);
-	}
+    /**
+     * Returns all the comments.
+     *
+     * @return The comments.
+     */
+    public final EntryComment[] getComments() {
+        return (comments.toArray(new EntryComment[comments.size()]));
+    }
 
-	/**
-	 * Adds a new comment.
-	 *
-	 * @param comment The actual comment.
-	 * @param nick The nickname of the author of the comment.
-	 *
-	 * @return The total number of comments for this entry.
-	 */
-	public final int addComment(final String comment, final String nick)
-	{
-		comments.add(new EntryComment(comment, nick));
+    /**
+     * Returns the total number of comments.
+     *
+     * @return The count of comments.
+     */
+    public final int getCommentsCount() {
+        return comments.size();
+    }
 
-		return (comments.size() - 1);
-	}
+    /**
+     * Returns the comment's creation date.
+     *
+     * @return The date.
+     */
+    public final Date getDate() {
+        return date;
+    }
 
-	/**
-	 * Deletes a specific comment.
-	 *
-	 * @param index The index of the comment to delete.
-	 */
-	public final void deleteComment(final int index)
-	{
-		if (index < comments.size())
-		{
-			comments.remove(index);
-		}
-	}
+    /**
+     * Returns the tags formatted for del.icio.us.
+     *
+     * @return The tags as a comma-delimited string.
+     */
+    public final String getDeliciousTags() {
+        final StringBuilder tags = new StringBuilder(nick);
 
-	/**
-	 * Returns the channel the link was posted on.
-	 *
-	 * @return The channel
-	 */
-	public final String getChannel()
-	{
-		return channel;
-	}
+        for (final Object tag : this.tags) {
+            tags.append(',');
+            tags.append(((SyndCategoryImpl) tag).getName());
+        }
 
-	/**
-	 * Sets the channel.
-	 *
-	 * @param channel The channel.
-	 */
-	@SuppressWarnings("UnusedDeclaration")
-	public final void setChannel(final String channel)
-	{
-		this.channel = channel;
-	}
+        return tags.toString();
+    }
 
-	/**
-	 * Returns a comment.
-	 *
-	 * @param index The comment's index.
-	 *
-	 * @return The specific comment.
-	 */
-	public final EntryComment getComment(final int index)
-	{
-		return (comments.get(index));
-	}
+    /**
+     * Returns the comment's link.
+     *
+     * @return The link.
+     */
+    public final String getLink() {
+        return link;
+    }
 
-	/**
-	 * Returns all the comments.
-	 *
-	 * @return The comments.
-	 */
-	public final EntryComment[] getComments()
-	{
-		return (comments.toArray(new EntryComment[comments.size()]));
-	}
+    /**
+     * Sets the comment's link.
+     *
+     * @param link The new link.
+     */
+    public final void setLink(final String link) {
+        this.link = link;
+    }
 
-	/**
-	 * Returns the total number of comments.
-	 *
-	 * @return The count of comments.
-	 */
-	public final int getCommentsCount()
-	{
-		return comments.size();
-	}
+    /**
+     * Returns the comment's author login.
+     *
+     * @return The login;
+     */
+    public final String getLogin() {
+        return login;
+    }
 
-	/**
-	 * Returns the comment's creation date.
-	 *
-	 * @return The date.
-	 */
-	public final Date getDate()
-	{
-		return date;
-	}
+    /**
+     * Sets the comment's author login.
+     *
+     * @param login The new login.
+     */
+    @SuppressWarnings("UnusedDeclaration")
+    public final void setLogin(final String login) {
+        this.login = login;
+    }
 
-	/**
-	 * Returns the tags formatted for del.icio.us.
-	 *
-	 * @return The tags as a comma-delimited string.
-	 */
-	public final String getDeliciousTags()
-	{
-		final StringBuilder tags = new StringBuilder(nick);
+    /**
+     * Returns the comment's author nickname.
+     *
+     * @return The nickname.
+     */
+    public final String getNick() {
+        return nick;
+    }
 
-		for (final Object tag : this.tags)
-		{
-			tags.append(',');
-			tags.append(((SyndCategoryImpl) tag).getName());
-		}
+    /**
+     * Sets the comment's author nickname.
+     *
+     * @param nick The new nickname.
+     */
+    public final void setNick(final String nick) {
+        this.nick = nick;
+    }
 
-		return tags.toString();
-	}
+    /**
+     * Returns the tags.
+     *
+     * @return The tags.
+     */
+    public final List<SyndCategory> getTags() {
+        return tags;
+    }
 
-	/**
-	 * Returns the comment's link.
-	 *
-	 * @return The link.
-	 */
-	public final String getLink()
-	{
-		return link;
-	}
+    /**
+     * Sets the tags.
+     *
+     * @param tags The tags.
+     */
+    private void setTags(final List<SyndCategory> tags) {
+        this.tags.addAll(tags);
+    }
 
-	/**
-	 * Sets the comment's link.
-	 *
-	 * @param link The new link.
-	 */
-	public final void setLink(final String link)
-	{
-		this.link = link;
-	}
+    /**
+     * Returns the comment's title.
+     *
+     * @return The title.
+     */
+    public final String getTitle() {
+        return title;
+    }
 
-	/**
-	 * Returns the comment's author login.
-	 *
-	 * @return The login;
-	 */
-	public final String getLogin()
-	{
-		return login;
-	}
+    /**
+     * Sets the comment's title.
+     *
+     * @param title The new title.
+     */
+    public final void setTitle(final String title) {
+        this.title = title;
+    }
 
-	/**
-	 * Sets the comment's author login.
-	 *
-	 * @param login The new login.
-	 */
-	@SuppressWarnings("UnusedDeclaration")
-	public final void setLogin(final String login)
-	{
-		this.login = login;
-	}
+    /**
+     * Returns true if the entry has comments.
+     *
+     * @return true if there are comments, false otherwise.
+     */
+    public final boolean hasComments() {
+        return (!comments.isEmpty());
+    }
 
-	/**
-	 * Returns the comment's author nickname.
-	 *
-	 * @return The nickname.
-	 */
-	public final String getNick()
-	{
-		return nick;
-	}
+    /**
+     * Returns true if the entry has tags.
+     *
+     * @return true if there are tags, false otherwise.
+     */
+    public final boolean hasTags() {
+        return (!tags.isEmpty());
+    }
 
-	/**
-	 * Sets the comment's author nickname.
-	 *
-	 * @param nick The new nickname.
-	 */
-	public final void setNick(final String nick)
-	{
-		this.nick = nick;
-	}
+    /**
+     * /** Sets a comment.
+     *
+     * @param index   The comment's index.
+     * @param comment The actual comment.
+     * @param nick    The nickname of the author of the comment.
+     */
+    public final void setComment(final int index, final String comment, final String nick) {
+        if (index < comments.size()) {
+            comments.set(index, new EntryComment(comment, nick));
+        }
+    }
 
-	/**
-	 * Returns the tags.
-	 *
-	 * @return The tags.
-	 */
-	public final List<SyndCategory> getTags()
-	{
-		return tags;
-	}
+    /**
+     * Sets the tags.
+     *
+     * @param tags The space-delimited tags.
+     */
+    public final void setTags(final String tags) {
+        if (tags != null) {
+            final String[] parts = tags.replaceAll(", ", " ").replaceAll(",", " ").split(" ");
 
-	/**
-	 * Sets the tags.
-	 *
-	 * @param tags The tags.
-	 */
-	private void setTags(final List<SyndCategory> tags)
-	{
-		this.tags.addAll(tags);
-	}
+            SyndCategoryImpl tag;
+            String part;
+            char mod;
 
-	/**
-	 * Returns the comment's title.
-	 *
-	 * @return The title.
-	 */
-	public final String getTitle()
-	{
-		return title;
-	}
+            for (final String rawPart : parts) {
+                part = rawPart.trim();
 
-	/**
-	 * Sets the comment's title.
-	 *
-	 * @param title The new title.
-	 */
-	public final void setTitle(final String title)
-	{
-		this.title = title;
-	}
+                if (part.length() >= 2) {
+                    tag = new SyndCategoryImpl();
+                    tag.setName(part.substring(1).toLowerCase());
 
-	/**
-	 * Returns true if the entry has comments.
-	 *
-	 * @return true if there are comments, false otherwise.
-	 */
-	public final boolean hasComments()
-	{
-		return (!comments.isEmpty());
-	}
+                    mod = part.charAt(0);
 
-	/**
-	 * Returns true if the entry has tags.
-	 *
-	 * @return true if there are tags, false otherwise.
-	 */
-	public final boolean hasTags()
-	{
-		return (!tags.isEmpty());
-	}
+                    if (mod == '-') {
+                        // Don't remove the channel tag, if any.
+                        if (!tag.getName().equals(channel.substring(1))) {
+                            this.tags.remove(tag);
+                        }
+                    } else if (mod == '+') {
+                        if (!this.tags.contains(tag)) {
+                            this.tags.add(tag);
+                        }
+                    } else {
+                        tag.setName(part.trim().toLowerCase());
 
-	/**
-	 * /** Sets a comment.
-	 *
-	 * @param index The comment's index.
-	 * @param comment The actual comment.
-	 * @param nick The nickname of the author of the comment.
-	 */
-	public final void setComment(final int index, final String comment, final String nick)
-	{
-		if (index < comments.size())
-		{
-			comments.set(index, new EntryComment(comment, nick));
-		}
-	}
+                        if (!this.tags.contains(tag)) {
+                            this.tags.add(tag);
+                        }
+                    }
+                }
+            }
+        }
+    }
 
-	/**
-	 * Returns a string representation of the object.
-	 *
-	 * @return A string representation of the object.
-	 */
-	public final String toString()
-	{
+    /**
+     * Returns a string representation of the object.
+     *
+     * @return A string representation of the object.
+     */
+    public final String toString() {
 
-		return super.toString() + "[ channel -> '" + channel + '\'' + ", comments -> " + comments + ", date -> " + date
-		       + ", link -> '" + link + '\'' + ", login -> '" + login + '\'' + ", nick -> '" + nick + '\''
-		       + ", tags -> " + tags + ", title -> '" + title + '\'' + " ]";
-	}
+        return super.toString() + "[ channel -> '" + channel + '\'' + ", comments -> " + comments + ", date -> " + date
+                + ", link -> '" + link + '\'' + ", login -> '" + login + '\'' + ", nick -> '" + nick + '\''
+                + ", tags -> " + tags + ", title -> '" + title + '\'' + " ]";
+    }
 }

@@ -45,54 +45,43 @@ import java.text.DecimalFormat;
  * @created 2016-07-01
  * @since 1.0
  */
-public class Calc extends AbstractModule
-{
-	/**
-	 * The Calc command.
-	 */
-	private static final String CALC_CMD = "calc";
+public class Calc extends AbstractModule {
+    /**
+     * The Calc command.
+     */
+    private static final String CALC_CMD = "calc";
 
-	/**
-	 * The default constructor.
-	 */
-	public Calc()
-	{
-		commands.add(CALC_CMD);
-	}
+    /**
+     * The default constructor.
+     */
+    public Calc() {
+        commands.add(CALC_CMD);
+    }
 
-	@Override
-	public void commandResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate)
-	{
-		if (Utils.isValidString(args))
-		{
-			final DecimalFormat decimalFormat = new DecimalFormat("#.##");
+    @Override
+    public void commandResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate) {
+        if (Utils.isValidString(args)) {
+            final DecimalFormat decimalFormat = new DecimalFormat("#.##");
 
-			try
-			{
-				final Expression calc = new ExpressionBuilder(args).build();
-				bot.send(bot.getChannel(), args.replaceAll(" ", "") + " = " + decimalFormat.format(calc.evaluate()));
-			}
-			catch (Exception e)
-			{
-				if (bot.getLogger().isDebugEnabled())
-				{
-					bot.getLogger().debug("Unable to calculate: " + args, e);
-				}
+            try {
+                final Expression calc = new ExpressionBuilder(args).build();
+                bot.send(bot.getChannel(), args.replaceAll(" ", "") + " = " + decimalFormat.format(calc.evaluate()));
+            } catch (Exception e) {
+                if (bot.getLogger().isDebugEnabled()) {
+                    bot.getLogger().debug("Unable to calculate: " + args, e);
+                }
 
-				bot.send(bot.getChannel(), "No idea. This is the kind of math I don't get.");
-			}
-		}
-		else
-		{
-			helpResponse(bot, sender, args, isPrivate);
-		}
+                bot.send(bot.getChannel(), "No idea. This is the kind of math I don't get.");
+            }
+        } else {
+            helpResponse(bot, sender, args, isPrivate);
+        }
 
-	}
+    }
 
-	@Override
-	public void helpResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate)
-	{
-		bot.send(sender, "To solve a mathematical calculation:");
-		bot.send(sender, bot.helpIndent(bot.getNick() + ": " + CALC_CMD + " <calculation>"));
-	}
+    @Override
+    public void helpResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate) {
+        bot.send(sender, "To solve a mathematical calculation:");
+        bot.send(sender, bot.helpIndent(bot.getNick() + ": " + CALC_CMD + " <calculation>"));
+    }
 }

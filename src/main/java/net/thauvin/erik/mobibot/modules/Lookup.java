@@ -45,190 +45,151 @@ import java.net.UnknownHostException;
  * @created 2014-04-26
  * @since 1.0
  */
-final public class Lookup extends AbstractModule
-{
-	/**
-	 * THe lookup command.
-	 */
-	private static final String LOOKUP_CMD = "lookup";
+final public class Lookup extends AbstractModule {
+    /**
+     * THe lookup command.
+     */
+    private static final String LOOKUP_CMD = "lookup";
 
-	/**
-	 * The whois host.
-	 */
-	private static final String WHOIS_HOST = "whois.arin.net";
+    /**
+     * The whois host.
+     */
+    private static final String WHOIS_HOST = "whois.arin.net";
 
-	/**
-	 * The default constructor
-	 */
-	public Lookup()
-	{
-		commands.add(LOOKUP_CMD);
-	}
+    /**
+     * The default constructor
+     */
+    public Lookup() {
+        commands.add(LOOKUP_CMD);
+    }
 
-	/**
-	 * Process a command.
-	 *
-	 * @param bot The bot's instance.
-	 * @param sender The sender.
-	 * @param args The command arguments.
-	 * @param isPrivate Set to <code>true</code> if the response should be sent as a private message.
-	 */
-	@Override
-	public void commandResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate)
-	{
-		if (args.matches("(\\S.)+(\\S)+"))
-		{
-			try
-			{
-				bot.send(bot.getChannel(), Lookup.lookup(args));
-			}
-			catch (UnknownHostException ignore)
-			{
-				if (args.matches(
-						"(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)"))
-				{
-					try
-					{
-						final String[] lines = Lookup.whois(args);
+    /**
+     * Performs a DNS lookup on the specified query.
+     *
+     * @param query The IP address or hostname.
+     * @return The lookup query result string.
+     * @throws java.net.UnknownHostException If the host is unknown.
+     */
+    private static String lookup(final String query)
+            throws UnknownHostException {
+        final StringBuilder buffer = new StringBuilder("");
 
-						if ((lines != null) && (lines.length > 0))
-						{
-							String line;
+        final InetAddress[] results = InetAddress.getAllByName(query);
+        String hostInfo;
 
-							for (final String rawLine : lines)
-							{
-								line = rawLine.trim();
+        for (final InetAddress result : results) {
+            if (result.getHostAddress().equals(query)) {
+                hostInfo = result.getHostName();
 
-								if ((line.length() > 0) && (line.charAt(0) != '#'))
-								{
-									bot.send(bot.getChannel(), line);
-								}
-							}
-						}
-						else
-						{
-							bot.send(bot.getChannel(), "Unknown host.");
-						}
-					}
-					catch (IOException ioe)
-					{
-						if (bot.getLogger().isDebugEnabled())
-						{
-							bot.getLogger().debug("Unable to perform whois IP lookup: " + args, ioe);
-						}
+                if (hostInfo.equals(query)) {
+                    throw new UnknownHostException();
+                }
+            } else {
+                hostInfo = result.getHostAddress();
+            }
 
-						bot.send(bot.getChannel(), "Unable to perform whois IP lookup: " + ioe.getMessage());
-					}
-				}
-				else
-				{
-					bot.send(bot.getChannel(), "Unknown host.");
-				}
-			}
-		}
-		else
-		{
-			helpResponse(bot, sender, args, true);
-		}
-	}
+            if (buffer.length() > 0) {
+                buffer.append(", ");
+            }
 
-	/**
-	 * Performs a DNS lookup on the specified query.
-	 *
-	 * @param query The IP address or hostname.
-	 *
-	 * @return The lookup query result string.
-	 *
-	 * @throws java.net.UnknownHostException If the host is unknown.
-	 */
-	private static String lookup(final String query)
-			throws UnknownHostException
-	{
-		final StringBuilder buffer = new StringBuilder("");
+            buffer.append(hostInfo);
+        }
 
-		final InetAddress[] results = InetAddress.getAllByName(query);
-		String hostInfo;
+        return buffer.toString();
+    }
 
-		for (final InetAddress result : results)
-		{
-			if (result.getHostAddress().equals(query))
-			{
-				hostInfo = result.getHostName();
+    /**
+     * Performs a whois IP query.
+     *
+     * @param query The IP address.
+     * @return The IP whois data, if any.
+     * @throws java.io.IOException If a connection error occurs.
+     */
+    private static String[] whois(final String query)
+            throws IOException {
+        return whois(query, WHOIS_HOST);
+    }
 
-				if (hostInfo.equals(query))
-				{
-					throw new UnknownHostException();
-				}
-			}
-			else
-			{
-				hostInfo = result.getHostAddress();
-			}
+    /**
+     * Performs a whois IP query.
+     *
+     * @param query The IP address.
+     * @param host  The whois host.
+     * @return The IP whois data, if any.
+     * @throws java.io.IOException If a connection error occurs.
+     */
+    @SuppressWarnings("WeakerAccess, SameParameterValue")
+    public static String[] whois(final String query, final String host)
+            throws IOException {
+        final WhoisClient whois = new WhoisClient();
+        String[] lines;
 
-			if (buffer.length() > 0)
-			{
-				buffer.append(", ");
-			}
+        try {
+            whois.setDefaultTimeout(Mobibot.CONNECT_TIMEOUT);
+            whois.connect(host);
+            whois.setSoTimeout(Mobibot.CONNECT_TIMEOUT);
+            whois.setSoLinger(false, 0);
 
-			buffer.append(hostInfo);
-		}
+            lines = whois.query('-' + query).split("\n");
+        } finally {
+            whois.disconnect();
+        }
 
-		return buffer.toString();
-	}
+        return lines;
+    }
 
-	/**
-	 * Performs a whois IP query.
-	 *
-	 * @param query The IP address.
-	 *
-	 * @return The IP whois data, if any.
-	 *
-	 * @throws java.io.IOException If a connection error occurs.
-	 */
-	private static String[] whois(final String query)
-			throws IOException
-	{
-		return whois(query, WHOIS_HOST);
-	}
+    /**
+     * Process a command.
+     *
+     * @param bot       The bot's instance.
+     * @param sender    The sender.
+     * @param args      The command arguments.
+     * @param isPrivate Set to <code>true</code> if the response should be sent as a private message.
+     */
+    @Override
+    public void commandResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate) {
+        if (args.matches("(\\S.)+(\\S)+")) {
+            try {
+                bot.send(bot.getChannel(), Lookup.lookup(args));
+            } catch (UnknownHostException ignore) {
+                if (args.matches(
+                        "(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\." +
+                                "(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)")) {
+                    try {
+                        final String[] lines = Lookup.whois(args);
 
-	/**
-	 * Performs a whois IP query.
-	 *
-	 * @param query The IP address.
-	 * @param host The whois host.
-	 *
-	 * @return The IP whois data, if any.
-	 *
-	 * @throws java.io.IOException If a connection error occurs.
-	 */
-	@SuppressWarnings("WeakerAccess, SameParameterValue")
-	public static String[] whois(final String query, final String host)
-			throws IOException
-	{
-		final WhoisClient whois = new WhoisClient();
-		String[] lines;
+                        if ((lines != null) && (lines.length > 0)) {
+                            String line;
 
-		try
-		{
-			whois.setDefaultTimeout(Mobibot.CONNECT_TIMEOUT);
-			whois.connect(host);
-			whois.setSoTimeout(Mobibot.CONNECT_TIMEOUT);
-			whois.setSoLinger(false, 0);
+                            for (final String rawLine : lines) {
+                                line = rawLine.trim();
 
-			lines = whois.query('-' + query).split("\n");
-		}
-		finally
-		{
-			whois.disconnect();
-		}
+                                if ((line.length() > 0) && (line.charAt(0) != '#')) {
+                                    bot.send(bot.getChannel(), line);
+                                }
+                            }
+                        } else {
+                            bot.send(bot.getChannel(), "Unknown host.");
+                        }
+                    } catch (IOException ioe) {
+                        if (bot.getLogger().isDebugEnabled()) {
+                            bot.getLogger().debug("Unable to perform whois IP lookup: " + args, ioe);
+                        }
 
-		return lines;
-	}
+                        bot.send(bot.getChannel(), "Unable to perform whois IP lookup: " + ioe.getMessage());
+                    }
+                } else {
+                    bot.send(bot.getChannel(), "Unknown host.");
+                }
+            }
+        } else {
+            helpResponse(bot, sender, args, true);
+        }
+    }
 
-	@Override
-	public void helpResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate)
-	{
-		bot.send(sender, "To perform a DNS lookup query:");
-		bot.send(sender, bot.helpIndent(bot.getNick() + ": " + LOOKUP_CMD + " <ip address or hostname>"));
-	}
+    @Override
+    public void helpResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate) {
+        bot.send(sender, "To perform a DNS lookup query:");
+        bot.send(sender, bot.helpIndent(bot.getNick() + ": " + LOOKUP_CMD + " <ip address or hostname>"));
+    }
 }

@@ -47,73 +47,62 @@ import java.net.URLConnection;
  * @created 2014-04-20
  * @since 1.0
  */
-final public class Joke extends AbstractModule
-{
+final public class Joke extends AbstractModule {
+    /**
+     * The joke command.
+     */
+    private static final String JOKE_CMD = "joke";
 
-	/**
-	 * The joke command.
-	 */
-	private static final String JOKE_CMD = "joke";
+    /**
+     * The ICNDB URL.
+     */
+    private static final String JOKE_URL =
+            "http://api.icndb.com/jokes/random?escape=javascript&exclude=[explicit]&limitTo=[nerdy]";
 
-	/**
-	 * The ICNDB URL.
-	 */
-	private static final String JOKE_URL =
-			"http://api.icndb.com/jokes/random?escape=javascript&exclude=[explicit]&limitTo=[nerdy]";
+    /**
+     * Creates a new {@link Joke} instance.
+     */
+    public Joke() {
+        commands.add(JOKE_CMD);
+    }
 
-	/**
-	 * Creates a new {@link Joke} instance.
-	 */
-	public Joke()
-	{
-		commands.add(JOKE_CMD);
-	}
+    @Override
+    public void commandResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate) {
+        new Thread(() -> run(bot, sender)).start();
+    }
 
-	@Override
-	public void commandResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate)
-	{
-		new Thread(() -> run(bot, sender)).start();
-	}
+    @Override
+    public void helpResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate) {
+        bot.send(sender, "To retrieve a random joke:");
+        bot.send(sender, bot.helpIndent(bot.getNick() + ": " + JOKE_CMD));
+    }
 
-	@Override
-	public void helpResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate)
-	{
-		bot.send(sender, "To retrieve a random joke:");
-		bot.send(sender, bot.helpIndent(bot.getNick() + ": " + JOKE_CMD));
-	}
+    /**
+     * Returns a random joke from <a href="http://www.icndb.com/">The Internet Chuck Norris Database</a>
+     */
+    private void run(final Mobibot bot, final String sender) {
+        try {
+            final URL url = new URL(JOKE_URL);
+            final URLConnection conn = url.openConnection();
 
-	/**
-	 * Returns a random joke from <a href="http://www.icndb.com/">The Internet Chuck Norris Database</a>
-	 */
-	private void run(final Mobibot bot, final String sender)
-	{
-		try
-		{
-			final URL url = new URL(JOKE_URL);
-			final URLConnection conn = url.openConnection();
+            final StringBuilder sb = new StringBuilder();
+            try (final BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()))) {
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    sb.append(line);
+                }
 
-			final StringBuilder sb = new StringBuilder();
-			try (final BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream())))
-			{
-				String line;
-				while ((line = reader.readLine()) != null)
-				{
-					sb.append(line);
-				}
+                final JSONObject json = new JSONObject(sb.toString());
 
-				final JSONObject json = new JSONObject(sb.toString());
-
-				bot.send(bot.getChannel(),
-						 Colors.CYAN
-								 + json.getJSONObject("value").get("joke").toString().replaceAll("\\'", "'")
-									   .replaceAll("\\\"", "\"")
-								 + Colors.NORMAL);
-			}
-		}
-		catch (Exception e)
-		{
-			bot.getLogger().warn("Unable to retrieve random joke.", e);
-			bot.send(sender, "An error has occurred retrieving a random joke: " + e.getMessage());
-		}
-	}
+                bot.send(bot.getChannel(),
+                        Colors.CYAN
+                                + json.getJSONObject("value").get("joke").toString().replaceAll("\\'", "'")
+                                .replaceAll("\\\"", "\"")
+                                + Colors.NORMAL);
+            }
+        } catch (Exception e) {
+            bot.getLogger().warn("Unable to retrieve random joke.", e);
+            bot.send(sender, "An error has occurred retrieving a random joke: " + e.getMessage());
+        }
+    }
 }

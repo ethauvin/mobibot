@@ -43,118 +43,105 @@ import java.util.*;
  * @created 2016-07-01
  * @since 1.0
  */
-public abstract class AbstractModule
-{
+public abstract class AbstractModule {
+    final List<String> commands = new ArrayList<>();
+    final Map<String, String> properties = new HashMap<>();
 
-	final List<String> commands = new ArrayList<>();
+    /**
+     * Responds to a command.
+     *
+     * @param bot       The bot's instance.
+     * @param sender    The sender.
+     * @param args      The command arguments.
+     * @param isPrivate Set to <code>true</code> if the response should be sent as a private message.
+     */
+    public abstract void commandResponse(final Mobibot bot,
+                                         final String sender,
+                                         final String args,
+                                         final boolean isPrivate);
 
-	final Map<String, String> properties = new HashMap<>();
+    /**
+     * Returns the module's commands, if any.
+     *
+     * @return The commands.
+     */
+    public List<String> getCommands() {
+        return commands;
+    }
 
-	/**
-	 * Responds to a command.
-	 *
-	 * @param bot       The bot's instance.
-	 * @param sender    The sender.
-	 * @param args      The command arguments.
-	 * @param isPrivate Set to <code>true</code> if the response should be sent as a private message.
-	 */
-	public abstract void commandResponse(final Mobibot bot,
-										 final String sender,
-										 final String args,
-										 final boolean isPrivate);
+    /**
+     * Returns the module's property keys.
+     *
+     * @return The keys.
+     */
+    public Set<String> getPropertyKeys() {
+        return properties.keySet();
+    }
 
-	/**
-	 * Returns the module's commands, if any.
-	 *
-	 * @return The commands.
-	 */
-	public List<String> getCommands()
-	{
-		return commands;
-	}
+    /**
+     * Returns <code>true</code> if the module has properties.
+     *
+     * @return <code>true</code> or <code>false</code> .
+     */
+    public boolean hasProperties() {
+        return !properties.isEmpty();
+    }
 
-	/**
-	 * Returns the module's property keys.
-	 *
-	 * @return The keys.
-	 */
-	public Set<String> getPropertyKeys()
-	{
-		return properties.keySet();
-	}
+    /**
+     * Responds with the module's help.
+     *
+     * @param bot       The bot's instance.
+     * @param sender    The sender.
+     * @param args      The help arguments.
+     * @param isPrivate Set to <code>true</code> if the response should be sent as a private message.
+     */
+    public abstract void helpResponse(final Mobibot bot,
+                                      final String sender,
+                                      final String args,
+                                      final boolean isPrivate);
 
-	/**
-	 * Returns <code>true</code> if the module has properties.
-	 *
-	 * @return <code>true</code> or <code>false</code> .
-	 */
-	public boolean hasProperties()
-	{
-		return !properties.isEmpty();
-	}
+    /**
+     * Returns <code>true</code> if the module is enabled.
+     *
+     * @return <code>true</code> or <code>false</code>
+     */
+    public boolean isEnabled() {
+        return true;
+    }
 
-	/**
-	 * Responds with the module's help.
-	 *
-	 * @param bot       The bot's instance.
-	 * @param sender    The sender.
-	 * @param args      The help arguments.
-	 * @param isPrivate Set to <code>true</code> if the response should be sent as a private message.
-	 */
-	public abstract void helpResponse(final Mobibot bot,
-									  final String sender,
-									  final String args,
-									  final boolean isPrivate);
+    /**
+     * Returns <codde>true</codde> if the module responds to private messages.
+     *
+     * @return <code>true</code> or <code>false</code>
+     */
+    public boolean isPrivateMsgEnabled() {
+        return false;
+    }
 
-	/**
-	 * Returns <code>true</code> if the module is enabled.
-	 *
-	 * @return <code>true</code> or <code>false</code>
-	 */
-	public boolean isEnabled()
-	{
-		return true;
-	}
+    /**
+     * Ensures that all properties have values.
+     *
+     * @return <code>true</code> if the properties are valid, <code>false</code> otherwise.
+     */
+    public boolean isValidProperties() {
+        for (final String s : getPropertyKeys()) {
+            if (!Utils.isValidString(properties.get(s))) {
+                return false;
+            }
+        }
 
-	/**
-	 * Returns <codde>true</codde> if the module responds to private messages.
-	 *
-	 * @return <code>true</code> or <code>false</code>
-	 */
-	public boolean isPrivateMsgEnabled()
-	{
-		return false;
-	}
+        return true;
+    }
 
-	/**
-	 * Ensures that all properties have values.
-	 *
-	 * @return <code>true</code> if the properties are valid, <code>false</code> otherwise.
-	 */
-	public boolean isValidProperties()
-	{
-		for (final String s : getPropertyKeys())
-		{
-			if (!Utils.isValidString(properties.get(s)))
-			{
-				return false;
-			}
-		}
-
-		return true;
-	}
-
-	/**
-	 * Sets a property key and value.
-	 *
-	 * @param key   The key.
-	 * @param value The value.
-	 */
-	public void setProperty(final String key, final String value)
-	{
-		if (Utils.isValidString(key))
-		{
-			properties.put(key, value);
-		}
-	}
+    /**
+     * Sets a property key and value.
+     *
+     * @param key   The key.
+     * @param value The value.
+     */
+    public void setProperty(final String key, final String value) {
+        if (Utils.isValidString(key)) {
+            properties.put(key, value);
+        }
+    }
 }

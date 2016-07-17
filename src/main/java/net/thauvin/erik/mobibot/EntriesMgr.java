@@ -48,310 +48,270 @@ import java.util.List;
  * @created 2014-04-28
  * @since 1.0
  */
-final class EntriesMgr
-{
-	/**
-	 * The name of the file containing the current entries.
-	 */
-	public static final String CURRENT_XML = "current.xml";
+final class EntriesMgr {
+    /**
+     * The name of the file containing the current entries.
+     */
+    public static final String CURRENT_XML = "current.xml";
 
-	/**
-	 * The name of the file containing the backlog entries.
-	 */
-	public static final String NAV_XML = "nav.xml";
+    /**
+     * The name of the file containing the backlog entries.
+     */
+    public static final String NAV_XML = "nav.xml";
 
-	/**
-	 * The .xml extension
-	 */
-	public static final String XML_EXT = ".xml";
+    /**
+     * The .xml extension
+     */
+    public static final String XML_EXT = ".xml";
 
-	/**
-	 * The maximum number of backlogs to keep.
-	 */
-	private static final int MAX_BACKLOGS = 10;
+    /**
+     * The maximum number of backlogs to keep.
+     */
+    private static final int MAX_BACKLOGS = 10;
 
-	/**
-	 * Disables the default constructor.
-	 *
-	 * @throws UnsupportedOperationException If the constructor is called.
-	 */
-	private EntriesMgr()
-			throws UnsupportedOperationException
-	{
-		throw new UnsupportedOperationException("Illegal constructor call.");
-	}
+    /**
+     * Disables the default constructor.
+     *
+     * @throws UnsupportedOperationException If the constructor is called.
+     */
+    private EntriesMgr()
+            throws UnsupportedOperationException {
+        throw new UnsupportedOperationException("Illegal constructor call.");
+    }
 
-	/**
-	 * Loads the backlogs.
-	 *
-	 * @param file The file containing the backlogs.
-	 * @param history The history list.
-	 *
-	 * @throws IOException If the file was not found or could not be read.
-	 * @throws FeedException If an error occurred while reading the feed.
-	 */
-	public static void loadBacklogs(final String file, final List<String> history)
-			throws IOException, FeedException
-	{
-		history.clear();
+    /**
+     * Loads the backlogs.
+     *
+     * @param file    The file containing the backlogs.
+     * @param history The history list.
+     * @throws IOException   If the file was not found or could not be read.
+     * @throws FeedException If an error occurred while reading the feed.
+     */
+    public static void loadBacklogs(final String file, final List<String> history)
+            throws IOException, FeedException {
+        history.clear();
 
-		final SyndFeedInput input = new SyndFeedInput();
+        final SyndFeedInput input = new SyndFeedInput();
 
-		try (final InputStreamReader reader = new InputStreamReader(new FileInputStream(new File(file))))
-		{
+        try (final InputStreamReader reader = new InputStreamReader(new FileInputStream(new File(file)))) {
 
-			final SyndFeed feed = input.build(reader);
+            final SyndFeed feed = input.build(reader);
 
-			final List items = feed.getEntries();
-			SyndEntry item;
+            final List items = feed.getEntries();
+            SyndEntry item;
 
-			for (int i = items.size() - 1; i >= 0; i--)
-			{
-				item = (SyndEntryImpl) items.get(i);
-				history.add(item.getTitle());
-			}
-		}
-	}
+            for (int i = items.size() - 1; i >= 0; i--) {
+                item = (SyndEntryImpl) items.get(i);
+                history.add(item.getTitle());
+            }
+        }
+    }
 
-	/**
-	 * Loads the current entries.
-	 *
-	 * @param file The file containing the current entries.
-	 * @param channel The channel
-	 * @param entries The entries.
-	 *
-	 * @return The feed's last published date.
-	 *
-	 * @throws IOException If the file was not found or could not be read.
-	 * @throws FeedException If an error occurred while reading the feed.
-	 */
-	@SuppressWarnings("unchecked")
-	public static String loadEntries(final String file, final String channel, final List<EntryLink> entries)
-			throws IOException, FeedException
-	{
-		entries.clear();
+    /**
+     * Loads the current entries.
+     *
+     * @param file    The file containing the current entries.
+     * @param channel The channel
+     * @param entries The entries.
+     * @return The feed's last published date.
+     * @throws IOException   If the file was not found or could not be read.
+     * @throws FeedException If an error occurred while reading the feed.
+     */
+    @SuppressWarnings("unchecked")
+    public static String loadEntries(final String file, final String channel, final List<EntryLink> entries)
+            throws IOException, FeedException {
+        entries.clear();
 
-		final SyndFeedInput input = new SyndFeedInput();
+        final SyndFeedInput input = new SyndFeedInput();
 
-		final String today;
+        final String today;
 
-		try (InputStreamReader reader = new InputStreamReader(new FileInputStream(new File(file))))
-		{
-			final SyndFeed feed = input.build(reader);
+        try (InputStreamReader reader = new InputStreamReader(new FileInputStream(new File(file)))) {
+            final SyndFeed feed = input.build(reader);
 
-			today = Utils.ISO_SDF.format(feed.getPublishedDate());
+            today = Utils.ISO_SDF.format(feed.getPublishedDate());
 
-			final List items = feed.getEntries();
-			SyndEntry item;
-			SyndContent description;
-			String[] comments;
-			String author;
-			EntryLink entry;
+            final List items = feed.getEntries();
+            SyndEntry item;
+            SyndContent description;
+            String[] comments;
+            String author;
+            EntryLink entry;
 
-			for (int i = items.size() - 1; i >= 0; i--)
-			{
-				item = (SyndEntryImpl) items.get(i);
-				author = item.getAuthor()
-						.substring(item.getAuthor().lastIndexOf('(') + 1, item.getAuthor().length() - 1);
-				entry = new EntryLink(item.getLink(),
-				                      item.getTitle(),
-				                      author,
-				                      channel,
-				                      item.getPublishedDate(),
-				                      item.getCategories());
-				description = item.getDescription();
-				comments = description.getValue().split("<br/>");
+            for (int i = items.size() - 1; i >= 0; i--) {
+                item = (SyndEntryImpl) items.get(i);
+                author = item.getAuthor()
+                        .substring(item.getAuthor().lastIndexOf('(') + 1, item.getAuthor().length() - 1);
+                entry = new EntryLink(item.getLink(),
+                        item.getTitle(),
+                        author,
+                        channel,
+                        item.getPublishedDate(),
+                        item.getCategories());
+                description = item.getDescription();
+                comments = description.getValue().split("<br/>");
 
-				int split;
-				for (final String comment : comments)
-				{
-					split = comment.indexOf(": ");
+                int split;
+                for (final String comment : comments) {
+                    split = comment.indexOf(": ");
 
-					if (split != -1)
-					{
-						entry.addComment(comment.substring(split + 2).trim(), comment.substring(0, split).trim());
-					}
-				}
+                    if (split != -1) {
+                        entry.addComment(comment.substring(split + 2).trim(), comment.substring(0, split).trim());
+                    }
+                }
 
-				entries.add(entry);
-			}
-		}
+                entries.add(entry);
+            }
+        }
 
-		return today;
-	}
+        return today;
+    }
 
-	/**
-	 * Saves the entries.
-	 *
-	 * @param bot The bot object.
-	 * @param entries The entries array.
-	 * @param history The history array.
-	 * @param isDayBackup Set the true if the daily backup file should also be created.
-	 */
-	public static void saveEntries(final Mobibot bot, final List<EntryLink> entries, final List<String> history,
-	                               final boolean isDayBackup)
-	{
-		if (bot.getLogger().isDebugEnabled())
-		{
-			bot.getLogger().debug("Saving the feeds...");
-		}
+    /**
+     * Saves the entries.
+     *
+     * @param bot         The bot object.
+     * @param entries     The entries array.
+     * @param history     The history array.
+     * @param isDayBackup Set the true if the daily backup file should also be created.
+     */
+    public static void saveEntries(final Mobibot bot, final List<EntryLink> entries, final List<String> history,
+                                   final boolean isDayBackup) {
+        if (bot.getLogger().isDebugEnabled()) {
+            bot.getLogger().debug("Saving the feeds...");
+        }
 
-		if (Utils.isValidString(bot.getLogsDir()) && Utils.isValidString(bot.getWeblogUrl()))
-		{
-			FileWriter fw = null;
+        if (Utils.isValidString(bot.getLogsDir()) && Utils.isValidString(bot.getWeblogUrl())) {
+            FileWriter fw = null;
 
-			try
-			{
-				fw = new FileWriter(new File(bot.getLogsDir() + CURRENT_XML));
+            try {
+                fw = new FileWriter(new File(bot.getLogsDir() + CURRENT_XML));
 
-				SyndFeed rss = new SyndFeedImpl();
-				rss.setFeedType("rss_2.0");
-				rss.setTitle(bot.getChannel() + " IRC Links");
-				rss.setDescription("Links from " + bot.getIrcServer() + " on " + bot.getChannel());
-				rss.setLink(bot.getWeblogUrl());
-				rss.setPublishedDate(Calendar.getInstance().getTime());
-				rss.setLanguage("en");
+                SyndFeed rss = new SyndFeedImpl();
+                rss.setFeedType("rss_2.0");
+                rss.setTitle(bot.getChannel() + " IRC Links");
+                rss.setDescription("Links from " + bot.getIrcServer() + " on " + bot.getChannel());
+                rss.setLink(bot.getWeblogUrl());
+                rss.setPublishedDate(Calendar.getInstance().getTime());
+                rss.setLanguage("en");
 
-				EntryLink entry;
-				StringBuffer buff;
-				EntryComment comment;
-				final List<SyndEntry> items = new ArrayList<>(0);
-				SyndEntry item;
-				SyndContent description;
+                EntryLink entry;
+                StringBuffer buff;
+                EntryComment comment;
+                final List<SyndEntry> items = new ArrayList<>(0);
+                SyndEntry item;
+                SyndContent description;
 
-				for (int i = (entries.size() - 1); i >= 0; --i)
-				{
-					entry = entries.get(i);
+                for (int i = (entries.size() - 1); i >= 0; --i) {
+                    entry = entries.get(i);
 
-					buff = new StringBuffer(
-							"Posted by <b>" + entry.getNick() + "</b> on <a href=\"irc://" + bot.getIrcServer() + '/'
-							+ entry.getChannel() + "\"><b>" + entry.getChannel() + "</b></a>");
+                    buff = new StringBuffer(
+                            "Posted by <b>" + entry.getNick() + "</b> on <a href=\"irc://" + bot.getIrcServer() + '/'
+                                    + entry.getChannel() + "\"><b>" + entry.getChannel() + "</b></a>");
 
-					if (entry.getCommentsCount() > 0)
-					{
-						buff.append(" <br/><br/>");
+                    if (entry.getCommentsCount() > 0) {
+                        buff.append(" <br/><br/>");
 
-						final EntryComment[] comments = entry.getComments();
+                        final EntryComment[] comments = entry.getComments();
 
-						for (int j = 0; j < comments.length; j++)
-						{
-							comment = comments[j];
+                        for (int j = 0; j < comments.length; j++) {
+                            comment = comments[j];
 
-							if (j > 0)
-							{
-								buff.append(" <br/>");
-							}
+                            if (j > 0) {
+                                buff.append(" <br/>");
+                            }
 
-							buff.append(comment.getNick()).append(": ").append(comment.getComment());
-						}
-					}
+                            buff.append(comment.getNick()).append(": ").append(comment.getComment());
+                        }
+                    }
 
-					item = new SyndEntryImpl();
-					item.setLink(entry.getLink());
-					description = new SyndContentImpl();
-					description.setValue(buff.toString());
-					item.setDescription(description);
-					item.setTitle(entry.getTitle());
-					item.setPublishedDate(entry.getDate());
-					item.setAuthor(
-							bot.getChannel().substring(1) + '@' + bot.getIrcServer() + " (" + entry.getNick() + ')');
-					item.setCategories(entry.getTags());
+                    item = new SyndEntryImpl();
+                    item.setLink(entry.getLink());
+                    description = new SyndContentImpl();
+                    description.setValue(buff.toString());
+                    item.setDescription(description);
+                    item.setTitle(entry.getTitle());
+                    item.setPublishedDate(entry.getDate());
+                    item.setAuthor(
+                            bot.getChannel().substring(1) + '@' + bot.getIrcServer() + " (" + entry.getNick() + ')');
+                    item.setCategories(entry.getTags());
 
-					items.add(item);
-				}
+                    items.add(item);
+                }
 
-				rss.setEntries(items);
+                rss.setEntries(items);
 
-				if (bot.getLogger().isDebugEnabled())
-				{
-					bot.getLogger().debug("Writing the entries feed.");
-				}
+                if (bot.getLogger().isDebugEnabled()) {
+                    bot.getLogger().debug("Writing the entries feed.");
+                }
 
-				final SyndFeedOutput output = new SyndFeedOutput();
-				output.output(rss, fw);
-				fw.close();
+                final SyndFeedOutput output = new SyndFeedOutput();
+                output.output(rss, fw);
+                fw.close();
 
-				fw = new FileWriter(new File(bot.getLogsDir() + bot.getToday() + XML_EXT));
-				output.output(rss, fw);
+                fw = new FileWriter(new File(bot.getLogsDir() + bot.getToday() + XML_EXT));
+                output.output(rss, fw);
 
-				if (isDayBackup)
-				{
-					if (Utils.isValidString(bot.getBacklogsUrl()))
-					{
-						if (history.indexOf(bot.getToday()) == -1)
-						{
-							history.add(bot.getToday());
+                if (isDayBackup) {
+                    if (Utils.isValidString(bot.getBacklogsUrl())) {
+                        if (history.indexOf(bot.getToday()) == -1) {
+                            history.add(bot.getToday());
 
-							while (history.size() > MAX_BACKLOGS)
-							{
-								history.remove(0);
-							}
-						}
+                            while (history.size() > MAX_BACKLOGS) {
+                                history.remove(0);
+                            }
+                        }
 
-						fw.close();
-						fw = new FileWriter(new File(bot.getLogsDir() + NAV_XML));
-						rss = new SyndFeedImpl();
-						rss.setFeedType("rss_2.0");
-						rss.setTitle(bot.getChannel() + " IRC Links Backlogs");
-						rss.setDescription("Backlogs of Links from " + bot.getIrcServer() + " on " + bot.getChannel());
-						rss.setLink(bot.getBacklogsUrl());
-						rss.setPublishedDate(Calendar.getInstance().getTime());
+                        fw.close();
+                        fw = new FileWriter(new File(bot.getLogsDir() + NAV_XML));
+                        rss = new SyndFeedImpl();
+                        rss.setFeedType("rss_2.0");
+                        rss.setTitle(bot.getChannel() + " IRC Links Backlogs");
+                        rss.setDescription("Backlogs of Links from " + bot.getIrcServer() + " on " + bot.getChannel());
+                        rss.setLink(bot.getBacklogsUrl());
+                        rss.setPublishedDate(Calendar.getInstance().getTime());
 
-						String date;
-						items.clear();
+                        String date;
+                        items.clear();
 
-						for (int i = (history.size() - 1); i >= 0; --i)
-						{
-							date = history.get(i);
+                        for (int i = (history.size() - 1); i >= 0; --i) {
+                            date = history.get(i);
 
-							item = new SyndEntryImpl();
-							item.setLink(bot.getBacklogsUrl() + date + ".xml");
-							item.setTitle(date);
-							description = new SyndContentImpl();
-							description.setValue("Links for " + date);
-							item.setDescription(description);
+                            item = new SyndEntryImpl();
+                            item.setLink(bot.getBacklogsUrl() + date + ".xml");
+                            item.setTitle(date);
+                            description = new SyndContentImpl();
+                            description.setValue("Links for " + date);
+                            item.setDescription(description);
 
-							items.add(item);
-						}
+                            items.add(item);
+                        }
 
-						rss.setEntries(items);
+                        rss.setEntries(items);
 
-						if (bot.getLogger().isDebugEnabled())
-						{
-							bot.getLogger().debug("Writing the backlog feed.");
-						}
+                        if (bot.getLogger().isDebugEnabled()) {
+                            bot.getLogger().debug("Writing the backlog feed.");
+                        }
 
-						output.output(rss, fw);
-					}
-					else
-					{
-						bot.getLogger().warn("Unable to generate the backlogs feed. No property configured.");
-					}
-				}
-			}
-			catch (Exception e)
-			{
-				bot.getLogger().warn("Unable to generate the entries feed.", e);
-			}
-			finally
-			{
-				try
-				{
-					if (fw != null)
-					{
-						fw.close();
-					}
-				}
-				catch (Exception ignore)
-				{
-					; // Do nothing
-				}
-			}
-		}
-		else
-		{
-			bot.getLogger()
-					.warn("Unable to generate the entries feed. At least one of the required property is missing.");
-		}
-	}
+                        output.output(rss, fw);
+                    } else {
+                        bot.getLogger().warn("Unable to generate the backlogs feed. No property configured.");
+                    }
+                }
+            } catch (Exception e) {
+                bot.getLogger().warn("Unable to generate the entries feed.", e);
+            } finally {
+                try {
+                    if (fw != null) {
+                        fw.close();
+                    }
+                } catch (Exception ignore) {
+                    ; // Do nothing
+                }
+            }
+        } else {
+            bot.getLogger()
+                    .warn("Unable to generate the entries feed. At least one of the required property is missing.");
+        }
+    }
 }

@@ -38,131 +38,129 @@ package net.thauvin.erik.mobibot;
  * @created 2014-04-26
  * @since 1.0
  */
-final class Commands
-{
-	/**
-	 * The add (back)log command.
-	 */
-	public static final String ADDLOG_CMD = "addlog";
+final class Commands {
+    /**
+     * The add (back)log command.
+     */
+    public static final String ADDLOG_CMD = "addlog";
 
-	/**
-	 * The cycle command.
-	 */
-	public static final String CYCLE_CMD = "cycle";
+    /**
+     * The cycle command.
+     */
+    public static final String CYCLE_CMD = "cycle";
 
-	/**
-	 * Debug command line argument.
-	 */
-	public static final String DEBUG_ARG = "debug";
+    /**
+     * Debug command line argument.
+     */
+    public static final String DEBUG_ARG = "debug";
 
-	/**
-	 * The debug command.
-	 */
-	public static final String DEBUG_CMD = "debug";
+    /**
+     * The debug command.
+     */
+    public static final String DEBUG_CMD = "debug";
 
-	/**
-	 * The die command.
-	 */
-	public static final String DIE_CMD = "die";
+    /**
+     * The die command.
+     */
+    public static final String DIE_CMD = "die";
 
-	/**
-	 * Help command line argument.
-	 */
-	public static final String HELP_ARG = "help";
+    /**
+     * Help command line argument.
+     */
+    public static final String HELP_ARG = "help";
 
-	/**
-	 * The help command.
-	 */
-	public static final String HELP_CMD = "help";
+    /**
+     * The help command.
+     */
+    public static final String HELP_CMD = "help";
 
-	/**
-	 * The help on posting keyword.
-	 */
-	public static final String HELP_POSTING_KEYWORD = "posting";
+    /**
+     * The help on posting keyword.
+     */
+    public static final String HELP_POSTING_KEYWORD = "posting";
 
-	/**
-	 * The help on tags keyword.
-	 */
-	public static final String HELP_TAGS_KEYWORD = "tags";
+    /**
+     * The help on tags keyword.
+     */
+    public static final String HELP_TAGS_KEYWORD = "tags";
 
-	/**
-	 * The ignore command.
-	 */
-	public static final String IGNORE_CMD = "ignore";
+    /**
+     * The ignore command.
+     */
+    public static final String IGNORE_CMD = "ignore";
 
-	/**
-	 * The ignore <code>me</code> keyword.
-	 */
-	public static final String IGNORE_ME_KEYWORD = "me";
+    /**
+     * The ignore <code>me</code> keyword.
+     */
+    public static final String IGNORE_ME_KEYWORD = "me";
 
-	/**
-	 * The info command.
-	 */
-	public static final String INFO_CMD = "info";
+    /**
+     * The info command.
+     */
+    public static final String INFO_CMD = "info";
 
-	/**
-	 * The link command.
-	 */
-	public static final String LINK_CMD = "L";
+    /**
+     * The link command.
+     */
+    public static final String LINK_CMD = "L";
 
-	/**
-	 * The me command.
-	 */
-	public static final String ME_CMD = "me";
+    /**
+     * The me command.
+     */
+    public static final String ME_CMD = "me";
 
-	/**
-	 * The msg command.
-	 */
-	public static final String MSG_CMD = "msg";
+    /**
+     * The msg command.
+     */
+    public static final String MSG_CMD = "msg";
 
-	/**
-	 * The nick command.
-	 */
-	public static final String NICK_CMD = "nick";
+    /**
+     * The nick command.
+     */
+    public static final String NICK_CMD = "nick";
 
-	/**
-	 * Properties command line argument.
-	 */
-	public static final String PROPS_ARG = "properties";
+    /**
+     * Properties command line argument.
+     */
+    public static final String PROPS_ARG = "properties";
 
-	/**
-	 * The recap command.
-	 */
-	public static final String RECAP_CMD = "recap";
+    /**
+     * The recap command.
+     */
+    public static final String RECAP_CMD = "recap";
 
-	/**
-	 * The say command.
-	 */
-	public static final String SAY_CMD = "say";
+    /**
+     * The say command.
+     */
+    public static final String SAY_CMD = "say";
 
-	/**
-	 * The users command.
-	 */
-	public static final String USERS_CMD = "users";
+    /**
+     * The users command.
+     */
+    public static final String USERS_CMD = "users";
 
-	/**
-	 * Properties version line argument.
-	 */
-	public static final String VERSION_ARG = "version";
+    /**
+     * Properties version line argument.
+     */
+    public static final String VERSION_ARG = "version";
 
-	/**
-	 * The version command.
-	 */
-	public static final String VERSION_CMD = "version";
+    /**
+     * The version command.
+     */
+    public static final String VERSION_CMD = "version";
 
-	/**
-	 * The view command.
-	 */
-	public static final String VIEW_CMD = "view";
+    /**
+     * The view command.
+     */
+    public static final String VIEW_CMD = "view";
 
-	/**
-	 * Disables the default constructor.
-	 *
-	 * @throws UnsupportedOperationException If the constructor is called.
-	 */
-	private Commands()
-			throws UnsupportedOperationException
-	{
-		throw new UnsupportedOperationException("Illegal constructor call.");
-	}
+    /**
+     * Disables the default constructor.
+     *
+     * @throws UnsupportedOperationException If the constructor is called.
+     */
+    private Commands()
+            throws UnsupportedOperationException {
+        throw new UnsupportedOperationException("Illegal constructor call.");
+    }
 }

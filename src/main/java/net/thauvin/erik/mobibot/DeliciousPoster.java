@@ -42,120 +42,103 @@ import javax.swing.*;
  * @created Mar 5, 2005
  * @since 1.0
  */
-class DeliciousPoster
-{
-	private final Delicious delicious;
+class DeliciousPoster {
+    private final Delicious delicious;
+    private final String ircServer;
 
-	private final String ircServer;
+    /**
+     * Creates a new {@link DeliciousPoster} instance.
+     *
+     * @param username  The del.icio.us user name.
+     * @param password  The del.icio.us password.
+     * @param ircServer The IRC server.
+     */
+    public DeliciousPoster(final String username, final String password, final String ircServer) {
+        delicious = new Delicious(username, password);
+        this.ircServer = ircServer;
+    }
 
-	/**
-	 * Creates a new {@link DeliciousPoster} instance.
-	 *
-	 * @param username  The del.icio.us user name.
-	 * @param password  The del.icio.us password.
-	 * @param ircServer The IRC server.
-	 */
-	public DeliciousPoster(final String username, final String password, final String ircServer)
-	{
-		delicious = new Delicious(username, password);
-		this.ircServer = ircServer;
-	}
+    /**
+     * Adds a post to del.icio.us.
+     *
+     * @param entry The entry to add.
+     */
+    public final void addPost(final EntryLink entry) {
+        final SwingWorker<Boolean, Void> worker = new SwingWorker<Boolean, Void>() {
+            @Override
+            protected Boolean doInBackground()
+                    throws Exception {
+                return delicious.addPost(entry.getLink(),
+                        entry.getTitle(),
+                        postedBy(entry),
+                        entry.getDeliciousTags(),
+                        entry.getDate());
+            }
+        };
 
-	/**
-	 * Adds a post to del.icio.us.
-	 *
-	 * @param entry The entry to add.
-	 */
-	public final void addPost(final EntryLink entry)
-	{
-		final SwingWorker<Boolean, Void> worker = new SwingWorker<Boolean, Void>()
-		{
-			@Override
-			protected Boolean doInBackground()
-					throws Exception
-			{
-				return delicious.addPost(entry.getLink(),
-										 entry.getTitle(),
-										 postedBy(entry),
-										 entry.getDeliciousTags(),
-										 entry.getDate());
-			}
-		};
+        worker.execute();
+    }
 
-		worker.execute();
-	}
+    /**
+     * Deletes a post to del.icio.us.
+     *
+     * @param entry The entry to delete.
+     */
+    public final void deletePost(final EntryLink entry) {
+        final String link = entry.getLink();
 
-	/**
-	 * Returns he del.icio.us extended attribution line.
-	 *
-	 * @param entry The entry.
-	 *
-	 * @return The extended attribution line.
-	 */
-	private String postedBy(final EntryLink entry)
-	{
-		return "Posted by " + entry.getNick() + " on " + entry.getChannel() + " (" + ircServer + ')';
-	}
+        final SwingWorker<Boolean, Void> worker = new SwingWorker<Boolean, Void>() {
+            @Override
+            protected Boolean doInBackground()
+                    throws Exception {
+                return delicious.deletePost(link);
+            }
+        };
 
-	/**
-	 * Deletes a post to del.icio.us.
-	 *
-	 * @param entry The entry to delete.
-	 */
-	public final void deletePost(final EntryLink entry)
-	{
-		final String link = entry.getLink();
+        worker.execute();
+    }
 
-		final SwingWorker<Boolean, Void> worker = new SwingWorker<Boolean, Void>()
-		{
-			@Override
-			protected Boolean doInBackground()
-					throws Exception
-			{
-				return delicious.deletePost(link);
-			}
-		};
+    /**
+     * Returns he del.icio.us extended attribution line.
+     *
+     * @param entry The entry.
+     * @return The extended attribution line.
+     */
+    private String postedBy(final EntryLink entry) {
+        return "Posted by " + entry.getNick() + " on " + entry.getChannel() + " (" + ircServer + ')';
+    }
 
-		worker.execute();
-	}
+    /**
+     * Updates a post to del.icio.us.
+     *
+     * @param oldUrl The old post URL.
+     * @param entry  The entry to add.
+     */
+    public final void updatePost(final String oldUrl, final EntryLink entry) {
+        final SwingWorker<Boolean, Void> worker = new SwingWorker<Boolean, Void>() {
+            @Override
+            protected Boolean doInBackground()
+                    throws Exception {
+                if (!oldUrl.equals(entry.getLink())) {
+                    delicious.deletePost(oldUrl);
 
-	/**
-	 * Updates a post to del.icio.us.
-	 *
-	 * @param oldUrl The old post URL.
-	 * @param entry  The entry to add.
-	 */
-	public final void updatePost(final String oldUrl, final EntryLink entry)
-	{
-		final SwingWorker<Boolean, Void> worker = new SwingWorker<Boolean, Void>()
-		{
-			@Override
-			protected Boolean doInBackground()
-					throws Exception
-			{
-				if (!oldUrl.equals(entry.getLink()))
-				{
-					delicious.deletePost(oldUrl);
+                    return delicious.addPost(entry.getLink(),
+                            entry.getTitle(),
+                            postedBy(entry),
+                            entry.getDeliciousTags(),
+                            entry.getDate());
+                } else {
+                    return delicious.addPost(entry.getLink(),
+                            entry.getTitle(),
+                            postedBy(entry),
+                            entry.getDeliciousTags(),
+                            entry.getDate(),
+                            true,
+                            true);
+                }
+            }
+        };
 
-					return delicious.addPost(entry.getLink(),
-											 entry.getTitle(),
-											 postedBy(entry),
-											 entry.getDeliciousTags(),
-											 entry.getDate());
-				}
-				else
-				{
-					return delicious.addPost(entry.getLink(),
-											 entry.getTitle(),
-											 postedBy(entry),
-											 entry.getDeliciousTags(),
-											 entry.getDate(),
-											 true,
-											 true);
-				}
-			}
-		};
-
-		worker.execute();
-	}
+        worker.execute();
+    }
 }

@@ -42,92 +42,83 @@ import java.util.Date;
  * @created Jan 31, 2004
  * @since 1.0
  */
-public class EntryComment implements Serializable
-{
-	/**
-	 * The serial version UID.
-	 */
-	static final long serialVersionUID = 6957415292233553224L;
+public class EntryComment implements Serializable {
+    /**
+     * The serial version UID.
+     */
+    static final long serialVersionUID = 6957415292233553224L;
 
-	/**
-	 * The creation date.
-	 */
-	private final Date date = Calendar.getInstance().getTime();
+    /**
+     * The creation date.
+     */
+    private final Date date = Calendar.getInstance().getTime();
 
-	private String comment = "";
+    private String comment = "";
+    private String nick = "";
 
-	private String nick = "";
+    /**
+     * Creates a new comment.
+     *
+     * @param comment The new comment.
+     * @param nick    The nickname of the comment's author.
+     */
+    public EntryComment(final String comment, final String nick) {
+        this.comment = comment;
+        this.nick = nick;
+    }
 
-	/**
-	 * Creates a new comment.
-	 *
-	 * @param comment The new comment.
-	 * @param nick The nickname of the comment's author.
-	 */
-	public EntryComment(final String comment, final String nick)
-	{
-		this.comment = comment;
-		this.nick = nick;
-	}
+    /**
+     * Creates a new comment.
+     */
+    @SuppressWarnings("UnusedDeclaration")
+    protected EntryComment() {
+        ; // Required for serialization.
+    }
 
-	/**
-	 * Creates a new comment.
-	 */
-	@SuppressWarnings("UnusedDeclaration")
-	protected EntryComment()
-	{
-		; // Required for serialization.
-	}
+    /**
+     * Returns the comment.
+     *
+     * @return The comment.
+     */
+    public final String getComment() {
+        return comment;
+    }
 
-	/**
-	 * Returns the comment.
-	 *
-	 * @return The comment.
-	 */
-	public final String getComment()
-	{
-		return comment;
-	}
+    /**
+     * Sets the comment.
+     *
+     * @param comment The actual comment.
+     */
+    @SuppressWarnings("UnusedDeclaration")
+    public final void setComment(final String comment) {
+        this.comment = comment;
+    }
 
-	/**
-	 * Sets the comment.
-	 *
-	 * @param comment The actual comment.
-	 */
-	@SuppressWarnings("UnusedDeclaration")
-	public final void setComment(final String comment)
-	{
-		this.comment = comment;
-	}
+    /**
+     * Returns the comment's creation date.
+     *
+     * @return The date.
+     */
+    @SuppressWarnings("UnusedDeclaration")
+    public final Date getDate() {
+        return date;
+    }
 
-	/**
-	 * Returns the comment's creation date.
-	 *
-	 * @return The date.
-	 */
-	@SuppressWarnings("UnusedDeclaration")
-	public final Date getDate()
-	{
-		return date;
-	}
+    /**
+     * Returns the nickname of the author of the comment.
+     *
+     * @return The nickname.
+     */
+    public final String getNick() {
+        return nick;
+    }
 
-	/**
-	 * Returns the nickname of the author of the comment.
-	 *
-	 * @return The nickname.
-	 */
-	public final String getNick()
-	{
-		return nick;
-	}
-
-	/**
-	 * Sets the nickname of the author of the comment.
-	 *
-	 * @param nick The new nickname.
-	 */
-	public final void setNick(final String nick)
-	{
-		this.nick = nick;
-	}
+    /**
+     * Sets the nickname of the author of the comment.
+     *
+     * @param nick The new nickname.
+     */
+    public final void setNick(final String nick) {
+        this.nick = nick;
+    }
 }

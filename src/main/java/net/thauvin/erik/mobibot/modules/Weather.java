@@ -47,145 +47,127 @@ import java.util.Date;
  * @created Feb 7, 2004
  * @since 1.0
  */
-final public class Weather extends AbstractModule
-{
-	/**
-	 * The decimal number format.
-	 */
-	private static final DecimalFormat NUMBER_FORMAT = new DecimalFormat("0.##");
+final public class Weather extends AbstractModule {
+    /**
+     * The decimal number format.
+     */
+    private static final DecimalFormat NUMBER_FORMAT = new DecimalFormat("0.##");
 
-	/**
-	 * The URL where the stations are listed.
-	 */
-	private static final String STATIONS_URL = "http://www.rap.ucar.edu/weather/surface/stations.txt";
+    /**
+     * The URL where the stations are listed.
+     */
+    private static final String STATIONS_URL = "http://www.rap.ucar.edu/weather/surface/stations.txt";
 
-	/**
-	 * THe weather command.
-	 */
-	private static final String WEATHER_CMD = "weather";
+    /**
+     * THe weather command.
+     */
+    private static final String WEATHER_CMD = "weather";
 
-	/**
-	 * Creates a new {@link Weather} instance.
-	 */
-	public Weather()
-	{
-		commands.add(WEATHER_CMD);
-	}
+    /**
+     * Creates a new {@link Weather} instance.
+     */
+    public Weather() {
+        commands.add(WEATHER_CMD);
+    }
 
-	@Override
-	public void commandResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate)
-	{
-		new Thread(() -> run(bot, sender, args.toUpperCase(), isPrivate)).start();
-	}
+    @Override
+    public void commandResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate) {
+        new Thread(() -> run(bot, sender, args.toUpperCase(), isPrivate)).start();
+    }
 
-	@Override
-	public void helpResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate)
-	{
-		bot.send(sender, "To display weather information:");
-		bot.send(sender, bot.helpIndent(bot.getNick() + ": " + WEATHER_CMD + " <station id>"));
-		bot.send(sender, "For a listing of the ICAO station IDs, please visit: " + STATIONS_URL);
-	}
+    @Override
+    public void helpResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate) {
+        bot.send(sender, "To display weather information:");
+        bot.send(sender, bot.helpIndent(bot.getNick() + ": " + WEATHER_CMD + " <station id>"));
+        bot.send(sender, "For a listing of the ICAO station IDs, please visit: " + STATIONS_URL);
+    }
 
-	@Override
-	public boolean isPrivateMsgEnabled()
-	{
-		return true;
-	}
+    @Override
+    public boolean isPrivateMsgEnabled() {
+        return true;
+    }
 
-	/**
-	 * Fetches the weather data from a specific station ID.
-	 */
-	private void run(final Mobibot bot, final String sender, final String station, final boolean isPrivate)
-	{
-		if (station.length() == 4)
-		{
-			final Metar metar = net.sf.jweather.Weather.getMetar(station);
+    /**
+     * Fetches the weather data from a specific station ID.
+     */
+    private void run(final Mobibot bot, final String sender, final String station, final boolean isPrivate) {
+        if (station.length() == 4) {
+            final Metar metar = net.sf.jweather.Weather.getMetar(station);
 
-			if (metar != null)
-			{
-				Float result;
+            if (metar != null) {
+                Float result;
 
-				bot.send(sender, "Station ID: " + metar.getStationID(), isPrivate);
+                bot.send(sender, "Station ID: " + metar.getStationID(), isPrivate);
 
-				bot.send(sender,
-						 "At: "
-								 + Utils.UTC_SDF.format(metar.getDate())
-								 + " UTC ("
-								 + (((new Date()).getTime() - metar.getDate().getTime()) / 1000L / 60L)
-								 + " minutes ago)",
-						 isPrivate);
+                bot.send(sender,
+                        "At: "
+                                + Utils.UTC_SDF.format(metar.getDate())
+                                + " UTC ("
+                                + (((new Date()).getTime() - metar.getDate().getTime()) / 1000L / 60L)
+                                + " minutes ago)",
+                        isPrivate);
 
-				result = metar.getWindSpeedInMPH();
+                result = metar.getWindSpeedInMPH();
 
-				if (result != null)
-				{
-					bot.send(sender,
-							 "Wind Speed: "
-									 + result
-									 + " mph, "
-									 + metar.getWindSpeedInKnots()
-									 + " knots, "
-									 + metar.getWindSpeedInMPS()
-									 + " m/s",
-							 isPrivate);
-				}
+                if (result != null) {
+                    bot.send(sender,
+                            "Wind Speed: "
+                                    + result
+                                    + " mph, "
+                                    + metar.getWindSpeedInKnots()
+                                    + " knots, "
+                                    + metar.getWindSpeedInMPS()
+                                    + " m/s",
+                            isPrivate);
+                }
 
-				result = metar.getVisibility();
+                result = metar.getVisibility();
 
-				if (result != null)
-				{
-					bot.send(sender,
-							 "Visibility: "
-									 + (metar.getVisibilityLessThan() ? "< " : "")
-									 + NUMBER_FORMAT.format(result)
-									 + " mi, " + metar.getVisibilityInKilometers() + " km",
-							 isPrivate);
-				}
+                if (result != null) {
+                    bot.send(sender,
+                            "Visibility: "
+                                    + (metar.getVisibilityLessThan() ? "< " : "")
+                                    + NUMBER_FORMAT.format(result)
+                                    + " mi, " + metar.getVisibilityInKilometers() + " km",
+                            isPrivate);
+                }
 
-				result = metar.getPressure();
+                result = metar.getPressure();
 
-				if (result != null)
-				{
-					bot.send(sender,
-							 "Pressure: " + result + " Hg, " + metar.getPressureInHectoPascals() + " hPa",
-							 isPrivate);
-				}
+                if (result != null) {
+                    bot.send(sender,
+                            "Pressure: " + result + " Hg, " + metar.getPressureInHectoPascals() + " hPa",
+                            isPrivate);
+                }
 
-				result = metar.getTemperatureInCelsius();
+                result = metar.getTemperatureInCelsius();
 
-				if (result != null)
-				{
-					bot.send(sender,
-							 "Temperature: " + result + " \u00B0C, " + metar.getTemperatureInFahrenheit() + " \u00B0F",
-							 isPrivate);
-				}
+                if (result != null) {
+                    bot.send(sender,
+                            "Temperature: " + result + " \u00B0C, " + metar.getTemperatureInFahrenheit() + " \u00B0F",
+                            isPrivate);
+                }
 
-				if (metar.getWeatherConditions() != null)
-				{
-					for (final Object weatherCondition : metar.getWeatherConditions())
-					{
-						bot.send(sender, ((WeatherCondition) weatherCondition).getNaturalLanguageString(), isPrivate);
-					}
-				}
+                if (metar.getWeatherConditions() != null) {
+                    for (final Object weatherCondition : metar.getWeatherConditions()) {
+                        bot.send(sender, ((WeatherCondition) weatherCondition).getNaturalLanguageString(), isPrivate);
+                    }
+                }
 
-				if (metar.getSkyConditions() != null)
-				{
-					for (final Object skyCondition : metar.getSkyConditions())
-					{
-						bot.send(sender, ((SkyCondition) skyCondition).getNaturalLanguageString(), isPrivate);
-					}
-				}
+                if (metar.getSkyConditions() != null) {
+                    for (final Object skyCondition : metar.getSkyConditions()) {
+                        bot.send(sender, ((SkyCondition) skyCondition).getNaturalLanguageString(), isPrivate);
+                    }
+                }
 
-				return;
-			}
-			else
-			{
-				bot.send(sender, "Invalid Station ID. Please try again.", isPrivate);
+                return;
+            } else {
+                bot.send(sender, "Invalid Station ID. Please try again.", isPrivate);
 
-				return;
-			}
-		}
+                return;
+            }
+        }
 
-		helpResponse(bot, sender, station, isPrivate);
-	}
+        helpResponse(bot, sender, station, isPrivate);
+    }
 }

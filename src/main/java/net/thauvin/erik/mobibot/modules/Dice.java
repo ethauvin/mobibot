@@ -43,73 +43,63 @@ import java.util.Random;
  * @created 2014-04-28
  * @since 1.0
  */
-final public class Dice extends AbstractModule
-{
-	/**
-	 * The dice command.
-	 */
-	private final String DICE_CMD = "dice";
+final public class Dice extends AbstractModule {
+    /**
+     * The dice command.
+     */
+    private final String DICE_CMD = "dice";
 
-	/**
-	 * The default constructor.
-	 */
-	public Dice()
-	{
-		commands.add(DICE_CMD);
-	}
+    /**
+     * The default constructor.
+     */
+    public Dice() {
+        commands.add(DICE_CMD);
+    }
 
-	/**
-	 * Rolls the dice.
-	 *
-	 * @param bot The bot's instance.
-	 * @param sender The sender.
-	 * @param args The command arguments.
-	 * @param isPrivate Set to <code>true</code> if the response should be sent as a private message.
-	 */
-	@Override
-	public void commandResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate)
-	{
-		final Random r = new Random();
+    /**
+     * Rolls the dice.
+     *
+     * @param bot       The bot's instance.
+     * @param sender    The sender.
+     * @param args      The command arguments.
+     * @param isPrivate Set to <code>true</code> if the response should be sent as a private message.
+     */
+    @Override
+    public void commandResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate) {
+        final Random r = new Random();
 
-		int i = r.nextInt(6) + 1;
-		int y = r.nextInt(6) + 1;
-		final int playerTotal = i + y;
+        int i = r.nextInt(6) + 1;
+        int y = r.nextInt(6) + 1;
+        final int playerTotal = i + y;
 
-		bot.send(bot.getChannel(),
-		         sender + " rolled two dice: " + Utils.bold(i) + " and " + Utils.bold(y) + " for a total of " + Utils
-				         .bold(playerTotal));
+        bot.send(bot.getChannel(),
+                sender + " rolled two dice: " + Utils.bold(i) + " and " + Utils.bold(y) + " for a total of " + Utils
+                        .bold(playerTotal));
 
-		i = r.nextInt(6) + 1;
-		y = r.nextInt(6) + 1;
-		final int total = i + y;
+        i = r.nextInt(6) + 1;
+        y = r.nextInt(6) + 1;
+        final int total = i + y;
 
-		bot.action(
-				"rolled two dice: " + Utils.bold(i) + " and " + Utils.bold(y) + " for a total of " + Utils.bold(total));
+        bot.action(
+                "rolled two dice: " + Utils.bold(i) + " and " + Utils.bold(y) + " for a total of " + Utils.bold(total));
 
-		if (playerTotal < total)
-		{
-			bot.action("wins.");
-		}
-		else if (playerTotal > total)
-		{
-			bot.action("lost.");
-		}
-		else
-		{
-			bot.action("tied.");
-		}
-	}
+        if (playerTotal < total) {
+            bot.action("wins.");
+        } else if (playerTotal > total) {
+            bot.action("lost.");
+        } else {
+            bot.action("tied.");
+        }
+    }
 
-	@Override
-	public void helpResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate)
-	{
-		bot.send(sender, "To roll the dice:");
-		bot.send(sender, bot.helpIndent(bot.getNick() + ": " + DICE_CMD));
-	}
+    @Override
+    public void helpResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate) {
+        bot.send(sender, "To roll the dice:");
+        bot.send(sender, bot.helpIndent(bot.getNick() + ": " + DICE_CMD));
+    }
 
-	@Override
-	public boolean isEnabled()
-	{
-		return true;
-	}
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
 }

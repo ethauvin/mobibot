@@ -42,162 +42,138 @@ import java.util.Date;
  * @created 2014-04-24
  * @since 1.0
  */
-public class TellMessage implements Serializable
-{
-	private static final long serialVersionUID = 1L;
+public class TellMessage implements Serializable {
+    private static final long serialVersionUID = 1L;
+    private final String id;
+    private final String message;
+    final private Date queued;
+    private final String recipient;
+    private final String sender;
+    private boolean isNotified;
+    private boolean isReceived;
+    private Date received;
 
-	private final String id;
+    /**
+     * Create a new message.
+     *
+     * @param sender    The sender's nick.
+     * @param recipient The recipient's nick.
+     * @param message   The message.
+     */
+    public TellMessage(final String sender, final String recipient, final String message) {
+        this.sender = sender;
+        this.recipient = recipient;
+        this.message = message;
 
-	private final String message;
+        this.queued = Calendar.getInstance().getTime();
+        this.id = Utils.TIMESTAMP_SDF.format(this.queued);
 
-	final private Date queued;
+    }
 
-	private final String recipient;
+    /**
+     * Returns the message id.
+     *
+     * @return The message id.
+     */
+    public String getId() {
+        return id;
+    }
 
-	private final String sender;
+    /**
+     * Returns the message text.
+     *
+     * @return The text of the message.
+     */
+    public String getMessage() {
+        return message;
+    }
 
-	private boolean isNotified;
+    /**
+     * Returns the state of the queue flag.
+     *
+     * @return <code>true</code> if the message is queued.
+     */
+    public Date getQueued() {
+        return queued;
+    }
 
-	private boolean isReceived;
+    /**
+     * Returns the state of the received flag.
+     *
+     * @return <code>true</code> if the message has been received.
+     */
+    public Date getReceived() {
+        return received;
+    }
 
-	private Date received;
+    /**
+     * Returns the message's recipient.
+     *
+     * @return The recipient of the message.
+     */
+    public String getRecipient() {
+        return recipient;
+    }
 
-	/**
-	 * Create a new message.
-	 *
-	 * @param sender The sender's nick.
-	 * @param recipient The recipient's nick.
-	 * @param message The message.
-	 */
-	public TellMessage(final String sender, final String recipient, final String message)
-	{
-		this.sender = sender;
-		this.recipient = recipient;
-		this.message = message;
+    /**
+     * Returns the message's sender.
+     *
+     * @return The sender of the message.
+     */
+    public String getSender() {
+        return sender;
+    }
 
-		this.queued = Calendar.getInstance().getTime();
-		this.id = Utils.TIMESTAMP_SDF.format(this.queued);
+    /**
+     * Matches the message sender or recipient.
+     *
+     * @param nick The nickname to match with.
+     * @return <code>true</code> if the nickname matches.
+     */
+    public boolean isMatch(final String nick) {
+        return (sender.equalsIgnoreCase(nick) || recipient.equalsIgnoreCase(nick));
+    }
 
-	}
+    /**
+     * Match the message ID.
+     *
+     * @param id The ID to match with.
+     * @return <code>true</code> if the id matches.
+     */
+    public boolean isMatchId(final String id) {
+        return this.id.equals(id);
+    }
 
-	/**
-	 * Returns the message id.
-	 *
-	 * @return The message id.
-	 */
-	public String getId()
-	{
-		return id;
-	}
+    /**
+     * Returns the notification flag state.
+     *
+     * @return <code>true</code> if the sender has been notified.
+     */
+    public boolean isNotified() {
+        return isNotified;
+    }
 
-	/**
-	 * Returns the message text.
-	 *
-	 * @return The text of the message.
-	 */
-	public String getMessage()
-	{
-		return message;
-	}
+    /**
+     * Returns the received flag state.
+     *
+     * @return <code>true</code> if the message was received.
+     */
+    public boolean isReceived() {
+        return isReceived;
+    }
 
-	/**
-	 * Returns the state of the queue flag.
-	 *
-	 * @return <code>true</code> if the message is queued.
-	 */
-	public Date getQueued()
-	{
-		return queued;
-	}
+    /**
+     * Sets the notified flag.
+     */
+    public void setIsNotified() {
+        isNotified = true;
+    }
 
-	/**
-	 * Returns the state of the received flag.
-	 *
-	 * @return <code>true</code> if the message has been received.
-	 */
-	public Date getReceived()
-	{
-		return received;
-	}
-
-	/**
-	 * Returns the message's recipient.
-	 *
-	 * @return The recipient of the message.
-	 */
-	public String getRecipient()
-	{
-		return recipient;
-	}
-
-	/**
-	 * Returns the message's sender.
-	 *
-	 * @return The sender of the message.
-	 */
-	public String getSender()
-	{
-		return sender;
-	}
-
-	/**
-	 * Matches the message sender or recipient.
-	 *
-	 * @param nick The nickname to match with.
-	 *
-	 * @return <code>true</code> if the nickname matches.
-	 */
-	public boolean isMatch(final String nick)
-	{
-		return (sender.equalsIgnoreCase(nick) || recipient.equalsIgnoreCase(nick));
-	}
-
-	/**
-	 * Match the message ID.
-	 *
-	 * @param id The ID to match with.
-	 *
-	 * @return <code>true</code> if the id matches.
-	 */
-	public boolean isMatchId(final String id)
-	{
-		return this.id.equals(id);
-	}
-
-	/**
-	 * Returns the notification flag state.
-	 *
-	 * @return <code>true</code> if the sender has been notified.
-	 */
-	public boolean isNotified()
-	{
-		return isNotified;
-	}
-
-	/**
-	 * Returns the received flag state.
-	 *
-	 * @return <code>true</code> if the message was received.
-	 */
-	public boolean isReceived()
-	{
-		return isReceived;
-	}
-
-	/**
-	 * Sets the notified flag.
-	 */
-	public void setIsNotified()
-	{
-		isNotified = true;
-	}
-
-	/**
-	 * Sets the received flag.
-	 */
-	public void setIsReceived()
-	{
-		received = Calendar.getInstance().getTime();
-		isReceived = true;
-	}
+    /**
+     * Sets the received flag.
+     */
+    public void setIsReceived() {
+        received = Calendar.getInstance().getTime();
+        isReceived = true;
+    }
 }

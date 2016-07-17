@@ -43,92 +43,74 @@ import twitter4j.conf.ConfigurationBuilder;
  * @created Sept 10, 2008
  * @since 1.0
  */
-final public class Twitter extends AbstractModule
-{
-	private final static String CONSUMER_KEY_PROP = "twitter-consumerKey";
+final public class Twitter extends AbstractModule {
+    private final static String CONSUMER_KEY_PROP = "twitter-consumerKey";
+    private final static String CONSUMER_SECRET_PROP = "twitter-consumerSecret";
+    private final static String TOKEN_PROP = "twitter-token";
+    private final static String TOKEN_SECRET_PROP = "twitter-tokenSecret";
 
-	private final static String CONSUMER_SECRET_PROP = "twitter-consumerSecret";
+    /**
+     * The twitter command.
+     */
+    private final static String TWITTER_CMD = "twitter";
 
-	private final static String TOKEN_PROP = "twitter-token";
+    /**
+     * Creates a new {@link Twitter} instance.
+     */
+    public Twitter() {
+        commands.add(TWITTER_CMD);
+        properties.put(CONSUMER_SECRET_PROP, "");
+        properties.put(CONSUMER_KEY_PROP, "");
+        properties.put(TOKEN_PROP, "");
+        properties.put(TOKEN_SECRET_PROP, "");
+    }
 
-	private final static String TOKEN_SECRET_PROP = "twitter-tokenSecret";
+    @Override
+    public void commandResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate) {
+        if (isEnabled() && args.length() > 0) {
+            new Thread(() -> run(bot, sender, args)).start();
+        } else {
+            helpResponse(bot, sender, args, isPrivate);
+        }
+    }
 
-	/**
-	 * The twitter command.
-	 */
-	private final static String TWITTER_CMD = "twitter";
+    @Override
+    public void helpResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate) {
+        if (isEnabled()) {
+            bot.send(sender, "To post to Twitter:");
+            bot.send(sender, bot.helpIndent(bot.getNick() + ": " + TWITTER_CMD + " <message>"));
+        } else {
+            bot.send(sender, "The Twitter posting facility is disabled.");
+        }
+    }
 
-	/**
-	 * Creates a new {@link Twitter} instance.
-	 */
-	public Twitter()
-	{
-		commands.add(TWITTER_CMD);
-		properties.put(CONSUMER_SECRET_PROP, "");
-		properties.put(CONSUMER_KEY_PROP, "");
-		properties.put(TOKEN_PROP, "");
-		properties.put(TOKEN_SECRET_PROP, "");
-	}
+    @Override
+    public boolean isEnabled() {
+        return isValidProperties();
+    }
 
-	@Override
-	public void commandResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate)
-	{
-		if (isEnabled() && args.length() > 0)
-		{
-			new Thread(() -> run(bot, sender, args)).start();
-		}
-		else
-		{
-			helpResponse(bot, sender, args, isPrivate);
-		}
-	}
+    /**
+     * Posts to twitter.
+     */
+    private void run(final Mobibot bot, final String sender, final String message) {
+        try {
+            final ConfigurationBuilder cb = new ConfigurationBuilder();
+            cb.setDebugEnabled(true)
+                    .setOAuthConsumerKey(properties.get(CONSUMER_KEY_PROP))
+                    .setOAuthConsumerSecret(properties.get(CONSUMER_SECRET_PROP))
+                    .setOAuthAccessToken(properties.get(TOKEN_PROP))
+                    .setOAuthAccessTokenSecret(properties.get(TOKEN_SECRET_PROP));
+            final TwitterFactory tf = new TwitterFactory(cb.build());
+            final twitter4j.Twitter twitter = tf.getInstance();
 
-	@Override
-	public void helpResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate)
-	{
-		if (isEnabled())
-		{
-			bot.send(sender, "To post to Twitter:");
-			bot.send(sender, bot.helpIndent(bot.getNick() + ": " + TWITTER_CMD + " <message>"));
-		}
-		else
-		{
-			bot.send(sender, "The Twitter posting facility is disabled.");
-		}
-	}
+            final Status status = twitter.updateStatus(message + " (" + sender + ')');
 
-	@Override
-	public boolean isEnabled()
-	{
-		return isValidProperties();
-	}
-
-	/**
-	 * Posts to twitter.
-	 */
-	private void run(final Mobibot bot, final String sender, final String message)
-	{
-		try
-		{
-			final ConfigurationBuilder cb = new ConfigurationBuilder();
-			cb.setDebugEnabled(true)
-			  .setOAuthConsumerKey(properties.get(CONSUMER_KEY_PROP))
-			  .setOAuthConsumerSecret(properties.get(CONSUMER_SECRET_PROP))
-			  .setOAuthAccessToken(properties.get(TOKEN_PROP))
-			  .setOAuthAccessTokenSecret(properties.get(TOKEN_SECRET_PROP));
-			final TwitterFactory tf = new TwitterFactory(cb.build());
-			final twitter4j.Twitter twitter = tf.getInstance();
-
-			final Status status = twitter.updateStatus(message + " (" + sender + ')');
-
-			bot.send(sender,
-					 "You message was posted to http://twitter.com/" + twitter.getScreenName() + "/statuses/" + status
-							 .getId());
-		}
-		catch (Exception e)
-		{
-			bot.getLogger().warn("Unable to post to Twitter: " + message, e);
-			bot.send(sender, "An error has occurred: " + e.getMessage());
-		}
-	}
+            bot.send(sender,
+                    "You message was posted to http://twitter.com/" + twitter.getScreenName() + "/statuses/" + status
+                            .getId());
+        } catch (Exception e) {
+            bot.getLogger().warn("Unable to post to Twitter: " + message, e);
+            bot.send(sender, "An error has occurred: " + e.getMessage());
+        }
+    }
 }

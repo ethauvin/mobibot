@@ -46,113 +46,90 @@ import java.util.List;
  * @created 2014-04-26
  * @since 1.0
  */
-final class TellMessagesMgr
-{
-	/**
-	 * Disables the default constructor.
-	 *
-	 * @throws UnsupportedOperationException If the constructor is called.
-	 */
-	private TellMessagesMgr()
-			throws UnsupportedOperationException
-	{
-		throw new UnsupportedOperationException("Illegal constructor call.");
-	}
+final class TellMessagesMgr {
+    /**
+     * Disables the default constructor.
+     *
+     * @throws UnsupportedOperationException If the constructor is called.
+     */
+    private TellMessagesMgr()
+            throws UnsupportedOperationException {
+        throw new UnsupportedOperationException("Illegal constructor call.");
+    }
 
-	/**
-	 * Cleans the messages queue
-	 *
-	 * @param tellMessages The messages list.
-	 * @param tellMaxDays The maximum number of days to keep messages for.
-	 *
-	 * @return <code>True</code> if the queue was cleaned.
-	 */
-	public static boolean clean(final List<TellMessage> tellMessages, final int tellMaxDays)
-	{
-		final Calendar maxDate = Calendar.getInstance();
-		final Date today = new Date();
-		boolean cleaned = false;
+    /**
+     * Cleans the messages queue
+     *
+     * @param tellMessages The messages list.
+     * @param tellMaxDays  The maximum number of days to keep messages for.
+     * @return <code>True</code> if the queue was cleaned.
+     */
+    public static boolean clean(final List<TellMessage> tellMessages, final int tellMaxDays) {
+        final Calendar maxDate = Calendar.getInstance();
+        final Date today = new Date();
+        boolean cleaned = false;
 
-		for (final TellMessage message : tellMessages)
-		{
-			maxDate.setTime(message.getQueued());
-			maxDate.add(Calendar.DATE, tellMaxDays);
+        for (final TellMessage message : tellMessages) {
+            maxDate.setTime(message.getQueued());
+            maxDate.add(Calendar.DATE, tellMaxDays);
 
-			if (maxDate.getTime().before(today))
-			{
-				tellMessages.remove(message);
-				cleaned = true;
-			}
-		}
+            if (maxDate.getTime().before(today)) {
+                tellMessages.remove(message);
+                cleaned = true;
+            }
+        }
 
-		return cleaned;
-	}
+        return cleaned;
+    }
 
-	/**
-	 * Loads the messages.
-	 *
-	 * @param file The serialized objects file.
-	 * @param logger The logger.
-	 *
-	 * @return The {@link net.thauvin.erik.mobibot.TellMessage} array.
-	 */
-	@SuppressWarnings("unchecked")
-	public static List<TellMessage> load(final String file, final Log4JLogger logger)
-	{
-		try
-		{
+    /**
+     * Loads the messages.
+     *
+     * @param file   The serialized objects file.
+     * @param logger The logger.
+     * @return The {@link net.thauvin.erik.mobibot.TellMessage} array.
+     */
+    @SuppressWarnings("unchecked")
+    public static List<TellMessage> load(final String file, final Log4JLogger logger) {
+        try {
 
-			try (ObjectInput input = new ObjectInputStream(new BufferedInputStream(new FileInputStream(file))))
-			{
-				if (logger.isDebugEnabled())
-				{
-					logger.debug("Loading the messages.");
-				}
+            try (ObjectInput input = new ObjectInputStream(new BufferedInputStream(new FileInputStream(file)))) {
+                if (logger.isDebugEnabled()) {
+                    logger.debug("Loading the messages.");
+                }
 
-				return ((List<TellMessage>) input.readObject());
-			}
-		}
-		catch (FileNotFoundException ignore)
-		{
-			; // Do nothing.
-		}
-		catch (IOException e)
-		{
-			logger.error("An IO error occurred loading the messages queue.", e);
-		}
-		catch (Exception e)
-		{
-			logger.getLogger().error("An error occurred loading the messages queue.", e);
-		}
+                return ((List<TellMessage>) input.readObject());
+            }
+        } catch (FileNotFoundException ignore) {
+            ; // Do nothing.
+        } catch (IOException e) {
+            logger.error("An IO error occurred loading the messages queue.", e);
+        } catch (Exception e) {
+            logger.getLogger().error("An error occurred loading the messages queue.", e);
+        }
 
-		return new ArrayList<>();
-	}
+        return new ArrayList<>();
+    }
 
-	/**
-	 * Saves the messages.
-	 *
-	 * @param file The serialized objects file.
-	 * @param messages The {@link net.thauvin.erik.mobibot.TellMessage} array.
-	 * @param logger The logger.
-	 */
-	public static void save(final String file, final List<TellMessage> messages, final Log4JLogger logger)
-	{
-		try
-		{
+    /**
+     * Saves the messages.
+     *
+     * @param file     The serialized objects file.
+     * @param messages The {@link net.thauvin.erik.mobibot.TellMessage} array.
+     * @param logger   The logger.
+     */
+    public static void save(final String file, final List<TellMessage> messages, final Log4JLogger logger) {
+        try {
 
-			try (ObjectOutput output = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(file))))
-			{
-				if (logger.isDebugEnabled())
-				{
-					logger.debug("Saving the messages.");
-				}
+            try (ObjectOutput output = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(file)))) {
+                if (logger.isDebugEnabled()) {
+                    logger.debug("Saving the messages.");
+                }
 
-				output.writeObject(messages);
-			}
-		}
-		catch (IOException e)
-		{
-			logger.error("Unable to save messages queue.", e);
-		}
-	}
+                output.writeObject(messages);
+            }
+        } catch (IOException e) {
+            logger.error("Unable to save messages queue.", e);
+        }
+    }
 }

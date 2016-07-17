@@ -49,121 +49,100 @@ import java.net.URLEncoder;
  * @created Feb 7, 2004
  * @since 1.0
  */
-final public class GoogleSearch extends AbstractModule
-{
-	/**
-	 * The Google API Key property.
-	 */
-	private static final String GOOGLE_API_KEY_PROP = "google-api-key";
+final public class GoogleSearch extends AbstractModule {
+    /**
+     * The Google API Key property.
+     */
+    private static final String GOOGLE_API_KEY_PROP = "google-api-key";
 
-	/**
-	 * The google command.
-	 */
-	private static final String GOOGLE_CMD = "google";
+    /**
+     * The google command.
+     */
+    private static final String GOOGLE_CMD = "google";
 
-	/**
-	 * The Google Custom Search Engine ID property.
-	 */
-	private static final String GOOGLE_CSE_KEY_PROP = "google-cse-cx";
+    /**
+     * The Google Custom Search Engine ID property.
+     */
+    private static final String GOOGLE_CSE_KEY_PROP = "google-cse-cx";
 
-	/**
-	 * The tab indent (4 spaces).
-	 */
-	private static final String TAB_INDENT = "    ";
+    /**
+     * The tab indent (4 spaces).
+     */
+    private static final String TAB_INDENT = "    ";
 
-	/**
-	 * Creates a new {@link GoogleSearch} instance.
-	 */
-	public GoogleSearch()
-	{
-		commands.add(GOOGLE_CMD);
-		properties.put(GOOGLE_API_KEY_PROP, "");
-		properties.put(GOOGLE_CSE_KEY_PROP, "");
-	}
+    /**
+     * Creates a new {@link GoogleSearch} instance.
+     */
+    public GoogleSearch() {
+        commands.add(GOOGLE_CMD);
+        properties.put(GOOGLE_API_KEY_PROP, "");
+        properties.put(GOOGLE_CSE_KEY_PROP, "");
+    }
 
-	@Override
-	public void commandResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate)
-	{
-		if (isEnabled() && args.length() > 0)
-		{
-			if (args.length() > 0)
-			{
-				new Thread(() -> run(bot, sender, args)).start();
-			}
-			else
-			{
-				helpResponse(bot, sender, args, isPrivate);
-			}
-		}
-		else
-		{
-			helpResponse(bot, sender, args, isPrivate);
-		}
-	}
+    @Override
+    public void commandResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate) {
+        if (isEnabled() && args.length() > 0) {
+            if (args.length() > 0) {
+                new Thread(() -> run(bot, sender, args)).start();
+            } else {
+                helpResponse(bot, sender, args, isPrivate);
+            }
+        } else {
+            helpResponse(bot, sender, args, isPrivate);
+        }
+    }
 
-	/**
-	 * Searches Google.
-	 */
-	private void run(final Mobibot bot, final String sender, final String query)
-	{
-		try
-		{
-			final String q = URLEncoder.encode(query, "UTF-8");
+    @Override
+    public void helpResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate) {
+        if (isEnabled()) {
+            bot.send(sender, "To search Google:");
+            bot.send(sender, bot.helpIndent(bot.getNick() + ": " + GOOGLE_CMD + " <query>"));
+        } else {
+            bot.send(sender, "The Google searching facility is disabled.");
+        }
+    }
 
-			final URL url =
-					new URL("https://www.googleapis.com/customsearch/v1?key="
-									+ properties.get(GOOGLE_API_KEY_PROP)
-									+ "&cx="
-									+ properties.get(GOOGLE_CSE_KEY_PROP)
-									+ "&q="
-									+ q
-									+ "&filter=1&num=5&alt=json");
-			final URLConnection conn = url.openConnection();
+    @Override
+    public boolean isEnabled() {
+        return isValidProperties();
+    }
 
-			final StringBuilder sb = new StringBuilder();
-			try (final BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream())))
-			{
-				String line;
-				while ((line = reader.readLine()) != null)
-				{
-					sb.append(line);
-				}
+    /**
+     * Searches Google.
+     */
+    private void run(final Mobibot bot, final String sender, final String query) {
+        try {
+            final String q = URLEncoder.encode(query, "UTF-8");
 
-				final JSONObject json = new JSONObject(sb.toString());
-				final JSONArray ja = json.getJSONArray("items");
+            final URL url =
+                    new URL("https://www.googleapis.com/customsearch/v1?key="
+                            + properties.get(GOOGLE_API_KEY_PROP)
+                            + "&cx="
+                            + properties.get(GOOGLE_CSE_KEY_PROP)
+                            + "&q="
+                            + q
+                            + "&filter=1&num=5&alt=json");
+            final URLConnection conn = url.openConnection();
 
-				for (int i = 0; i < ja.length(); i++)
-				{
-					final JSONObject j = ja.getJSONObject(i);
-					bot.send(sender, Utils.unescapeXml(j.getString("title")));
-					bot.send(sender, TAB_INDENT + Utils.green(j.getString("link")));
-				}
-			}
-		}
-		catch (Exception e)
-		{
-			bot.getLogger().warn("Unable to search in Google for: " + query, e);
-			bot.send(sender, "An error has occurred searching in Google: " + e.getMessage());
-		}
-	}
+            final StringBuilder sb = new StringBuilder();
+            try (final BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()))) {
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    sb.append(line);
+                }
 
-	@Override
-	public void helpResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate)
-	{
-		if (isEnabled())
-		{
-			bot.send(sender, "To search Google:");
-			bot.send(sender, bot.helpIndent(bot.getNick() + ": " + GOOGLE_CMD + " <query>"));
-		}
-		else
-		{
-			bot.send(sender, "The Google searching facility is disabled.");
-		}
-	}
+                final JSONObject json = new JSONObject(sb.toString());
+                final JSONArray ja = json.getJSONArray("items");
 
-	@Override
-	public boolean isEnabled()
-	{
-		return isValidProperties();
-	}
+                for (int i = 0; i < ja.length(); i++) {
+                    final JSONObject j = ja.getJSONObject(i);
+                    bot.send(sender, Utils.unescapeXml(j.getString("title")));
+                    bot.send(sender, TAB_INDENT + Utils.green(j.getString("link")));
+                }
+            }
+        } catch (Exception e) {
+            bot.getLogger().warn("Unable to search in Google for: " + query, e);
+            bot.send(sender, "An error has occurred searching in Google: " + e.getMessage());
+        }
+    }
 }
