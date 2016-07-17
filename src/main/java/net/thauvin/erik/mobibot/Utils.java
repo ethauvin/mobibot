@@ -34,30 +34,19 @@ package net.thauvin.erik.mobibot;
 import org.jibble.pircbot.Colors;
 
 import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 
 /**
  * Miscellaneous utilities class.
  *
- * @author <a href="mailto:erik@thauvin.net">Erik C. Thauvin</a>
+ * @author <a href="mailto:erik@thauvin.net" target="_blank">Erik C. Thauvin</a>
  * @created 2014-04-26
  * @since 1.0
  */
 final public class Utils {
-    /**
-     * The ISO (YYYY-MM-DD) simple date format.
-     */
-    public static final SimpleDateFormat ISO_SDF = new SimpleDateFormat("yyyy-MM-dd");
-    /**
-     * The timestamp simple date format.
-     */
-    public static final SimpleDateFormat TIMESTAMP_SDF = new SimpleDateFormat("yyyyMMddHHmmss");
-    /**
-     * The UTC (yyyy-MM-dd HH:mm) simple date format.
-     */
-    public static final SimpleDateFormat UTC_SDF = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-
     /**
      * Disables the default constructor.
      *
@@ -226,11 +215,32 @@ final public class Utils {
     }
 
     /**
+     * Returns the specified date as an ISO local date string.
+     *
+     * @param date The date.
+     * @return The date in {@link DateTimeFormatter#ISO_LOCAL_DATE} format.
+     */
+    public static String isoLocalDate(final Date date) {
+        return isoLocalDate(LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault()));
+    }
+
+    /**
+     * Returns the specified date as an ISO local date string.
+     *
+     * @param date The date.
+     * @return The date in {@link DateTimeFormatter#ISO_LOCAL_DATE} format.
+     */
+    public static String isoLocalDate(final LocalDateTime date) {
+        return date.format(DateTimeFormatter.ISO_LOCAL_DATE);
+    }
+
+    /**
      * Returns the plural form of a word, if count &gt; 1.
      *
      * @param count  The count.
      * @param word   The word.
      * @param plural The plural word.
+     * @return The plural string.
      */
     public static String plural(final long count, final String word, final String plural) {
         if (count > 1) {
@@ -253,10 +263,10 @@ final public class Utils {
     /**
      * Returns today's date.
      *
-     * @return Today's date in {@link #ISO_SDF ISO} format.
+     * @return Today's date in {@link DateTimeFormatter#ISO_LOCAL_DATE} format.
      */
     public static String today() {
-        return ISO_SDF.format(Calendar.getInstance().getTime());
+        return isoLocalDate(LocalDateTime.now());
     }
 
     /**
@@ -275,4 +285,25 @@ final public class Utils {
 
         return s;
     }
+
+    /**
+     * Returns the specified date formatted as <code>yyyy-MM-dd HH:mm</code>
+     *
+     * @param date The date.
+     * @return The fromatted date.
+     */
+    public static String utcDateTime(final Date date) {
+        return utcDateTime(LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault()));
+    }
+
+    /**
+     * Returns the specified date formatted as <code>yyyy-MM-dd HH:mm</code>
+     *
+     * @param date The date.
+     * @return The fromatted date.
+     */
+    public static String utcDateTime(final LocalDateTime date) {
+        return date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+    }
+
 }

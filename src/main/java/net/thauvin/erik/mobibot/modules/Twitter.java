@@ -39,20 +39,21 @@ import twitter4j.conf.ConfigurationBuilder;
 /**
  * The Twitter module.
  *
- * @author <a href="mailto:erik@thauvin.net">Erik C. Thauvin</a>
+ * @author <a href="mailto:erik@thauvin.net" target="_blank">Erik C. Thauvin</a>
  * @created Sept 10, 2008
  * @since 1.0
  */
 final public class Twitter extends AbstractModule {
+    /**
+     * The twitter command.
+     */
+    public final static String TWITTER_CMD = "twitter";
+
+    // The property keys.
     private final static String CONSUMER_KEY_PROP = "twitter-consumerKey";
     private final static String CONSUMER_SECRET_PROP = "twitter-consumerSecret";
     private final static String TOKEN_PROP = "twitter-token";
     private final static String TOKEN_SECRET_PROP = "twitter-tokenSecret";
-
-    /**
-     * The twitter command.
-     */
-    private final static String TWITTER_CMD = "twitter";
 
     /**
      * Creates a new {@link Twitter} instance.

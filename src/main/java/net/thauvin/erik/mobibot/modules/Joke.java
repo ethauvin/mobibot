@@ -43,7 +43,7 @@ import java.net.URLConnection;
 /**
  * The Joke module.
  *
- * @author <a href="mailto:erik@thauvin.net">Erik C. Thauvin</a>
+ * @author <a href="mailto:erik@thauvin.net" target="_blank">Erik C. Thauvin</a>
  * @created 2014-04-20
  * @since 1.0
  */
@@ -51,11 +51,9 @@ final public class Joke extends AbstractModule {
     /**
      * The joke command.
      */
-    private static final String JOKE_CMD = "joke";
+    public static final String JOKE_CMD = "joke";
 
-    /**
-     * The ICNDB URL.
-     */
+    // The ICNDB URL.
     private static final String JOKE_URL =
             "http://api.icndb.com/jokes/random?escape=javascript&exclude=[explicit]&limitTo=[nerdy]";
 

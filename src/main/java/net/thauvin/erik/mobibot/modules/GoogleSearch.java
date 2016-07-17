@@ -45,29 +45,22 @@ import java.net.URLEncoder;
 /**
  * The GoogleSearch module.
  *
- * @author Erik C. Thauvin
+ * @author <a href="mailto:erik@thauvin.net" target="_blank">Erik C. Thauvin</a>
  * @created Feb 7, 2004
  * @since 1.0
  */
 final public class GoogleSearch extends AbstractModule {
     /**
-     * The Google API Key property.
-     */
-    private static final String GOOGLE_API_KEY_PROP = "google-api-key";
-
-    /**
      * The google command.
      */
-    private static final String GOOGLE_CMD = "google";
+    public static final String GOOGLE_CMD = "google";
 
-    /**
-     * The Google Custom Search Engine ID property.
-     */
+    // The Google API Key property.
+    private static final String GOOGLE_API_KEY_PROP = "google-api-key";
+    // The Google Custom Search Engine ID property.
     private static final String GOOGLE_CSE_KEY_PROP = "google-cse-cx";
 
-    /**
-     * The tab indent (4 spaces).
-     */
+    // The tab indent (4 spaces).
     private static final String TAB_INDENT = "    ";
 
     /**
@@ -82,11 +75,7 @@ final public class GoogleSearch extends AbstractModule {
     @Override
     public void commandResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate) {
         if (isEnabled() && args.length() > 0) {
-            if (args.length() > 0) {
-                new Thread(() -> run(bot, sender, args)).start();
-            } else {
-                helpResponse(bot, sender, args, isPrivate);
-            }
+            new Thread(() -> run(bot, sender, args)).start();
         } else {
             helpResponse(bot, sender, args, isPrivate);
         }

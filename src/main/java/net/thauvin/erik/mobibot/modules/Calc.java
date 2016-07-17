@@ -41,7 +41,7 @@ import java.text.DecimalFormat;
 /**
  * The Calc module.
  *
- * @author <a href="mailto:erik@thauvin.net">Erik C. Thauvin</a>
+ * @author <a href="mailto:erik@thauvin.net" target="_blank">Erik C. Thauvin</a>
  * @created 2016-07-01
  * @since 1.0
  */
@@ -49,7 +49,7 @@ public class Calc extends AbstractModule {
     /**
      * The Calc command.
      */
-    private static final String CALC_CMD = "calc";
+    public static final String CALC_CMD = "calc";
 
     /**
      * The default constructor.

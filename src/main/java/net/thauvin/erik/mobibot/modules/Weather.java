@@ -49,19 +49,15 @@ import java.util.Date;
  */
 final public class Weather extends AbstractModule {
     /**
-     * The decimal number format.
+     * The weather command.
      */
+    public static final String WEATHER_CMD = "weather";
+
+    // The decimal number format.
     private static final DecimalFormat NUMBER_FORMAT = new DecimalFormat("0.##");
 
-    /**
-     * The URL where the stations are listed.
-     */
+    // The URL where the stations are listed.
     private static final String STATIONS_URL = "http://www.rap.ucar.edu/weather/surface/stations.txt";
-
-    /**
-     * THe weather command.
-     */
-    private static final String WEATHER_CMD = "weather";
 
     /**
      * Creates a new {@link Weather} instance.
@@ -101,7 +97,7 @@ final public class Weather extends AbstractModule {
 
                 bot.send(sender,
                         "At: "
-                                + Utils.UTC_SDF.format(metar.getDate())
+                                + Utils.utcDateTime(metar.getDate())
                                 + " UTC ("
                                 + (((new Date()).getTime() - metar.getDate().getTime()) / 1000L / 60L)
                                 + " minutes ago)",

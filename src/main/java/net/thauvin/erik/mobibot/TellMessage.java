@@ -32,26 +32,27 @@
 package net.thauvin.erik.mobibot;
 
 import java.io.Serializable;
-import java.util.Calendar;
-import java.util.Date;
+import java.time.Clock;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 /**
  * The <code>TellMessage</code> class.
  *
- * @author <a href="mailto:erik@thauvin.net">Erik C. Thauvin</a>
+ * @author <a href="mailto:erik@thauvin.net" target="_blank">Erik C. Thauvin</a>
  * @created 2014-04-24
  * @since 1.0
  */
 public class TellMessage implements Serializable {
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 2L;
     private final String id;
     private final String message;
-    final private Date queued;
+    final private LocalDateTime queued;
     private final String recipient;
     private final String sender;
     private boolean isNotified;
     private boolean isReceived;
-    private Date received;
+    private LocalDateTime received;
 
     /**
      * Create a new message.
@@ -65,9 +66,8 @@ public class TellMessage implements Serializable {
         this.recipient = recipient;
         this.message = message;
 
-        this.queued = Calendar.getInstance().getTime();
-        this.id = Utils.TIMESTAMP_SDF.format(this.queued);
-
+        this.queued = LocalDateTime.now(Clock.systemUTC());
+        this.id = this.queued.format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
     }
 
     /**
@@ -93,7 +93,7 @@ public class TellMessage implements Serializable {
      *
      * @return <code>true</code> if the message is queued.
      */
-    public Date getQueued() {
+    public LocalDateTime getQueued() {
         return queued;
     }
 
@@ -102,7 +102,7 @@ public class TellMessage implements Serializable {
      *
      * @return <code>true</code> if the message has been received.
      */
-    public Date getReceived() {
+    public LocalDateTime getReceived() {
         return received;
     }
 
@@ -173,7 +173,7 @@ public class TellMessage implements Serializable {
      * Sets the received flag.
      */
     public void setIsReceived() {
-        received = Calendar.getInstance().getTime();
+        received = LocalDateTime.now(Clock.systemUTC());
         isReceived = true;
     }
 }

@@ -34,15 +34,15 @@ package net.thauvin.erik.mobibot;
 import org.apache.commons.logging.impl.Log4JLogger;
 
 import java.io.*;
+import java.time.Clock;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 /**
  * The Tell Messages Manager.
  *
- * @author <a href="mailto:erik@thauvin.net">Erik C. Thauvin</a>
+ * @author <a href="mailto:erik@thauvin.net" target="_blank">Erik C. Thauvin</a>
  * @created 2014-04-26
  * @since 1.0
  */
@@ -65,15 +65,12 @@ final class TellMessagesMgr {
      * @return <code>True</code> if the queue was cleaned.
      */
     public static boolean clean(final List<TellMessage> tellMessages, final int tellMaxDays) {
-        final Calendar maxDate = Calendar.getInstance();
-        final Date today = new Date();
+        final LocalDateTime today = LocalDateTime.now(Clock.systemUTC());
         boolean cleaned = false;
 
         for (final TellMessage message : tellMessages) {
-            maxDate.setTime(message.getQueued());
-            maxDate.add(Calendar.DATE, tellMaxDays);
-
-            if (maxDate.getTime().before(today)) {
+            final LocalDateTime maxDate = message.getQueued().plusDays(tellMaxDays);
+            if (maxDate.isBefore(today)) {
                 tellMessages.remove(message);
                 cleaned = true;
             }

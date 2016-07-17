@@ -37,7 +37,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 /**
  * The <code>Tell</code> command.
  *
- * @author <a href="mailto:erik@thauvin.net">Erik C. Thauvin</a>
+ * @author <a href="mailto:erik@thauvin.net" target="_blank">Erik C. Thauvin</a>
  * @created 2016-07-02
  * @since 1.0
  */
@@ -57,44 +57,28 @@ public class Tell {
      */
     public static final String TELL_DEL_KEYWORD = "del";
 
-    /**
-     * The default maximum number of days to keep messages.
-     */
+    // The default maximum number of days to keep messages.
     private static final int DEFAULT_TELL_MAX_DAYS = 7;
 
-    /**
-     * The default message max queue size.
-     */
+    // The default message max queue size.
     private static final int DEFAULT_TELL_MAX_SIZE = 50;
 
-    /**
-     * The serialized object file extension.
-     */
+    // The serialized object file extension.
     private static final String SER_EXT = ".ser";
 
-    /**
-     * The bot instance.
-     */
+    // The bot instance.
     final private Mobibot bot;
 
-    /**
-     * The maximum number of days to keep messages.
-     */
+    // The maximum number of days to keep messages.
     final private int maxDays;
 
-    /**
-     * The message maximum queue size.
-     */
+    // The message maximum queue size.
     final private int maxSize;
 
-    /**
-     * The messages queue.
-     */
+    // The messages queue.
     private final List<TellMessage> messages = new CopyOnWriteArrayList<>();
 
-    /**
-     * The serialized object file.
-     */
+    // The serialized object file.
     private final String serializedObject;
 
     public Tell(final Mobibot bot, final String maxDays, final String maxSize) {
@@ -114,7 +98,7 @@ public class Tell {
     /**
      * Cleans the messages queue.
      *
-     * @return <code>True</code> if the queue was cleaned.
+     * @return <code>true</code> if the queue was cleaned.
      */
     private boolean clean() {
         if (bot.getLogger().isDebugEnabled()) {
@@ -182,14 +166,14 @@ public class Tell {
                         if (message.isReceived()) {
                             bot.send(sender,
                                     Utils.bold(message.getSender()) + " --> " + Utils.bold(message.getRecipient())
-                                            + " [" + Utils.UTC_SDF.format(message.getReceived()) + ", ID: "
+                                            + " [" + Utils.utcDateTime(message.getReceived()) + ", ID: "
                                             + message.getId() + ", DELIVERED]",
                                     true);
 
                         } else {
                             bot.send(sender,
                                     Utils.bold(message.getSender()) + " --> " + Utils.bold(message.getRecipient())
-                                            + " [" + Utils.UTC_SDF.format(message.getQueued()) + ", ID: "
+                                            + " [" + Utils.utcDateTime(message.getQueued()) + ", ID: "
                                             + message.getId() + ", QUEUED]",
                                     true);
                         }
@@ -326,7 +310,7 @@ public class Tell {
                                     "Your message "
                                             + Utils.reverseColor("[ID " + message.getId() + ']') + " was sent to "
                                             + Utils.bold(message.getRecipient()) + " on "
-                                            + Utils.UTC_SDF.format(message.getReceived()),
+                                            + Utils.utcDateTime(message.getReceived()),
                                     true);
 
                             message.setIsNotified();

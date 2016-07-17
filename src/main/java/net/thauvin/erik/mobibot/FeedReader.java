@@ -44,34 +44,24 @@ import java.util.List;
 /**
  * Reads a RSS feed.
  *
- * @author Erik C. Thauvin
+ * @author <a href="mailto:erik@thauvin.net" target="_blank">Erik C. Thauvin</a>
  * @created Feb 1, 2004
  * @since 1.0
  */
 class FeedReader implements Runnable {
-    /**
-     * The maximum number of feed items to display.
-     */
+    // The maximum number of feed items to display.
     private static final int MAX_ITEMS = 5;
 
-    /**
-     * The tab indent (4 spaces).
-     */
+    // The tab indent (4 spaces).
     private static final String TAB_INDENT = "    ";
 
-    /**
-     * The bot.
-     */
+    // The bot.
     private final Mobibot bot;
 
-    /**
-     * The nick of the person who sent the message.
-     */
+    // The nick of the person who sent the message.
     private final String sender;
 
-    /**
-     * The URL to fetch.
-     */
+    // The URL to fetch.
     private final String url;
 
     /**

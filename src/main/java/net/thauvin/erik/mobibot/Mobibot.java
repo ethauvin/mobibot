@@ -43,12 +43,14 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
 import java.io.*;
+import java.time.Clock;
+import java.time.LocalDateTime;
 import java.util.*;
 
 /**
  * Implements the #mobitopia bot.
  *
- * @author Erik C. Thauvin
+ * @author <a href="mailto:erik@thauvin.net" target="_blank">Erik C. Thauvin</a>
  * @created Jan 31, 2004
  * @since 1.0
  */
@@ -59,72 +61,48 @@ public class Mobibot extends PircBot {
      */
     public static final int CONNECT_TIMEOUT = 5000;
 
-    /**
-     * The empty title string.
-     */
+    // The empty title string.
     static final String NO_TITLE = "No Title";
 
-    /**
-     * The default port.
-     */
+    // The default port.
     private static final int DEFAULT_PORT = 6667;
 
-    /**
-     * The info strings.
-     */
+    // The info strings.
     private static final String[] INFO_STRS = {
             ReleaseInfo.getProject() + " v" + ReleaseInfo.getVersion() + " by Erik C. Thauvin (erik@thauvin.net)",
             "http://www.mobitopia.org/mobibot/"
     };
 
-    /**
-     * The link match string.
-     */
+    // The link match string.
     private static final String LINK_MATCH = "^[hH][tT][tT][pP](|[sS])://.*";
 
-    /**
-     * The default maximum number of entries to display.
-     */
+    // The default maximum number of entries to display.
     private static final int MAX_ENTRIES = 8;
 
-    /**
-     * The default maximum recap entries.
-     */
+    // The default maximum recap entries.
     private static final int MAX_RECAP = 10;
 
-    /**
-     * The maximum number of times the bot will try to reconnect, if disconnected.
-     */
+    // The maximum number of times the bot will try to reconnect, if disconnected.
     private static final int MAX_RECONNECT = 10;
 
-    /**
-     * The number of milliseconds to delay between consecutive messages.
-     */
+    // The number of milliseconds to delay between consecutive messages.
     private static final long MESSAGE_DELAY = 1000L;
 
-    /**
-     * The modules.
-     */
+    // The modules.
     private static final List<AbstractModule> MODULES = new ArrayList<>(0);
 
-    /**
-     * The start time.
-     */
+    // The start time.
     private static final long START_TIME = System.currentTimeMillis();
 
-    /**
-     * The tags/categories marker.
-     */
+    // The tags/categories marker.
     private static final String TAGS_MARKER = "tags:";
 
-    /**
-     * The version strings.
-     */
+    // The version strings.
     private static final String[] VERSION_STRS = {
             "Version: "
                     + ReleaseInfo.getVersion()
                     + " ("
-                    + Utils.ISO_SDF.format(ReleaseInfo.getBuildDate()) + ')',
+                    + Utils.isoLocalDate(ReleaseInfo.getBuildDate()) + ')',
             "Platform: "
                     + System.getProperty("os.name")
                     + " ("
@@ -147,109 +125,67 @@ public class Mobibot extends PircBot {
                     + ')'
     };
 
-    /**
-     * The tell object.
-     */
+    // The tell object.
     private static Tell tell;
 
-    /**
-     * The main channel.
-     */
+    // The main channel.
     private final String channel;
 
-    /**
-     * The commands list.
-     */
+    // The commands list.
     private final List<String> commandsList = new ArrayList<>();
 
-    /**
-     * The entries array.
-     */
+    // The entries array.
     private final List<EntryLink> entries = new ArrayList<>(0);
 
-    /**
-     * The history/backlogs array.
-     */
+    // The history/backlogs array.
     private final List<String> history = new ArrayList<>(0);
 
-    /**
-     * The ignored nicks array.
-     */
+    // The ignored nicks array.
     private final List<String> ignoredNicks = new ArrayList<>(0);
 
-    /**
-     * The IRC port.
-     */
+    // The IRC port.
     private final int ircPort;
 
-    /**
-     * The IRC server.
-     */
+    // The IRC server.
     private final String ircServer;
 
-    /**
-     * The logger.
-     */
+    // The logger.
     private final Log4JLogger logger = new Log4JLogger(Mobibot.class.getPackage().getName());
 
-    /**
-     * The logger default level.
-     */
+    // The logger default level.
     private final Level loggerLevel;
 
-    /**
-     * The log directory.
-     */
+    // The log directory.
     private final String logsDir;
 
-    /**
-     * The recap array.
-     */
+    // The recap array.
     private final List<String> recap = new ArrayList<>(0);
 
-    /**
-     * The backlogs URL.
-     */
+    // The backlogs URL.
     private String backLogsUrl = "";
 
-    /**
-     * The default tags/categories.
-     */
+    // The default tags/categories.
     private String defaultTags = "";
 
-    /**
-     * The del.icio.us posts handler.
-     */
+    // The del.icio.us posts handler.
     private DeliciousPoster delicious = null;
 
-    /**
-     * The feed URL.
-     */
+    // The feed URL.
     private String feedURL = "";
 
-    /**
-     * The ident message.
-     */
+    // The ident message.
     private String identMsg = "";
 
-    /**
-     * The ident nick.
-     */
+    // The ident nick.
     private String identNick = "";
 
-    /**
-     * The NickServ ident password.
-     */
+    // The NickServ ident password.
     private String identPwd = "";
 
-    /**
-     * Today's date.
-     */
+    // Today's date.
     private String today = Utils.today();
 
-    /**
-     * The weblog URL.
-     */
+    // The weblog URL.
     private String weblogUrl = "";
 
     /**
@@ -279,9 +215,6 @@ public class Mobibot extends PircBot {
 
         // Set the logger level
         loggerLevel = logger.getLogger().getLevel();
-
-        // Initialization
-        Utils.UTC_SDF.setTimeZone(TimeZone.getTimeZone("UTC"));
 
         // Load the current entries, if any.
         try {
@@ -1600,7 +1533,7 @@ public class Mobibot extends PircBot {
      * @param isAction Set to <code>true</code> if the message is an action.
      */
     private void storeRecap(final String sender, final String message, final boolean isAction) {
-        recap.add(Utils.UTC_SDF.format(Calendar.getInstance().getTime()) + " -> " + sender + (isAction ? " " : ": ")
+        recap.add(Utils.utcDateTime(LocalDateTime.now(Clock.systemUTC())) + " -> " + sender + (isAction ? " " : ": ")
                 + message);
 
         if (recap.size() > MAX_RECAP) {

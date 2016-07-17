@@ -39,25 +39,21 @@ import java.util.Random;
 /**
  * The War module.
  *
- * @author <a href="mailto:erik@thauvin.net">Erik C. Thauvin</a>
+ * @author <a href="mailto:erik@thauvin.net" target="_blank">Erik C. Thauvin</a>
  * @created 2014-04-28
  * @since 1.0
  */
 final public class War extends AbstractModule {
     /**
-     * The war command.
+     * The war command
      */
-    private static final String WAR_CMD = "war";
+    public static final String WAR_CMD = "war";
 
-    /**
-     * The deck of card.
-     */
+    // The deck of card.
     private static final String[] WAR_DECK =
             new String[]{"Ace", "King", "Queen", "Jack", "10", "9", "8", "7", "6", "5", "4", "3", "2"};
 
-    /**
-     * The suits for the deck of card.
-     */
+    // The suits for the deck of card.
     private static final String[] WAR_SUITS = new String[]{"Hearts", "Spades", "Diamonds", "Clubs"};
 
     /**

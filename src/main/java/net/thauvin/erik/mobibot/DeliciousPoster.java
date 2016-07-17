@@ -38,7 +38,7 @@ import javax.swing.*;
 /**
  * The class to handle posts to del.icio.us.
  *
- * @author Erik C. Thauvin
+ * @author <a href="mailto:erik@thauvin.net" target="_blank">Erik C. Thauvin</a>
  * @created Mar 5, 2005
  * @since 1.0
  */

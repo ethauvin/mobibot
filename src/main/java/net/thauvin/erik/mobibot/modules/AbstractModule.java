@@ -39,7 +39,7 @@ import java.util.*;
 /**
  * The <code>Module</code> abstract class.
  *
- * @author <a href="mailto:erik@thauvin.net">Erik C. Thauvin</a>
+ * @author <a href="mailto:erik@thauvin.net" target="_blank">Erik C. Thauvin</a>
  * @created 2016-07-01
  * @since 1.0
  */
@@ -110,7 +110,7 @@ public abstract class AbstractModule {
     }
 
     /**
-     * Returns <codde>true</codde> if the module responds to private messages.
+     * Returns <code>true</code> if the module responds to private messages.
      *
      * @return <code>true</code> or <code>false</code>
      */

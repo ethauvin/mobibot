@@ -41,7 +41,7 @@ import java.io.IOException;
 /**
  * The StockQuote module.
  *
- * @author Erik C. Thauvin
+ * @author <a href="mailto:erik@thauvin.net" target="_blank">Erik C. Thauvin</a>
  * @created Feb 7, 2004
  * @since 1.0
  */
@@ -49,11 +49,9 @@ final public class StockQuote extends AbstractModule {
     /**
      * The quote command.
      */
-    private static final String STOCK_CMD = "stock";
+    public static final String STOCK_CMD = "stock";
 
-    /**
-     * The Yahoo! stock quote URL.
-     */
+    // The Yahoo! stock quote URL.
     private static final String YAHOO_URL = "http://finance.yahoo.com/d/quotes.csv?&f=snl1d1t1c1oghv&e=.csv&s=";
 
     /**

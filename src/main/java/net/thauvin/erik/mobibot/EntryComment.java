@@ -38,19 +38,15 @@ import java.util.Date;
 /**
  * The class used to store comments associated to a specific entry.
  *
- * @author Erik C. Thauvin
+ * @author <a href="mailto:erik@thauvin.net" target="_blank">Erik C. Thauvin</a>
  * @created Jan 31, 2004
  * @since 1.0
  */
 public class EntryComment implements Serializable {
-    /**
-     * The serial version UID.
-     */
+    // The serial version UID.
     static final long serialVersionUID = 6957415292233553224L;
 
-    /**
-     * The creation date.
-     */
+    // The creation date.
     private final Date date = Calendar.getInstance().getTime();
 
     private String comment = "";

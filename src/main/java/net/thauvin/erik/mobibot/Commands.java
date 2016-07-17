@@ -34,11 +34,11 @@ package net.thauvin.erik.mobibot;
 /**
  * The <code>commands</code>, <code>keywords</code> and <code>arguments</code>.
  *
- * @author <a href="mailto:erik@thauvin.net">Erik C. Thauvin</a>
+ * @author <a href="mailto:erik@thauvin.net" target="_blank">Erik C. Thauvin</a>
  * @created 2014-04-26
  * @since 1.0
  */
-final class Commands {
+final public class Commands {
     /**
      * The add (back)log command.
      */

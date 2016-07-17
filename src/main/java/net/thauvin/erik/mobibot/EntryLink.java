@@ -43,14 +43,12 @@ import java.util.concurrent.CopyOnWriteArrayList;
 /**
  * The class used to store link entries.
  *
- * @author Erik C. Thauvin
+ * @author <a href="mailto:erik@thauvin.net" target="_blank">Erik C. Thauvin</a>
  * @created Jan 31, 2004
  * @since 1.0
  */
 public class EntryLink implements Serializable {
-    /**
-     * The serial version UID.
-     */
+    // The serial version UID.
     static final long serialVersionUID = 3676245542270899086L;
 
     // The link's comments
@@ -282,10 +280,44 @@ public class EntryLink implements Serializable {
     /**
      * Sets the tags.
      *
-     * @param tags The tags.
+     * @param tags The space-delimited tags.
      */
-    private void setTags(final List<SyndCategory> tags) {
-        this.tags.addAll(tags);
+    public final void setTags(final String tags) {
+        if (tags != null) {
+            final String[] parts = tags.replaceAll(", ", " ").replaceAll(",", " ").split(" ");
+
+            SyndCategoryImpl tag;
+            String part;
+            char mod;
+
+            for (final String rawPart : parts) {
+                part = rawPart.trim();
+
+                if (part.length() >= 2) {
+                    tag = new SyndCategoryImpl();
+                    tag.setName(part.substring(1).toLowerCase());
+
+                    mod = part.charAt(0);
+
+                    if (mod == '-') {
+                        // Don't remove the channel tag, if any.
+                        if (!tag.getName().equals(channel.substring(1))) {
+                            this.tags.remove(tag);
+                        }
+                    } else if (mod == '+') {
+                        if (!this.tags.contains(tag)) {
+                            this.tags.add(tag);
+                        }
+                    } else {
+                        tag.setName(part.trim().toLowerCase());
+
+                        if (!this.tags.contains(tag)) {
+                            this.tags.add(tag);
+                        }
+                    }
+                }
+            }
+        }
     }
 
     /**
@@ -340,44 +372,10 @@ public class EntryLink implements Serializable {
     /**
      * Sets the tags.
      *
-     * @param tags The space-delimited tags.
+     * @param tags The tags.
      */
-    public final void setTags(final String tags) {
-        if (tags != null) {
-            final String[] parts = tags.replaceAll(", ", " ").replaceAll(",", " ").split(" ");
-
-            SyndCategoryImpl tag;
-            String part;
-            char mod;
-
-            for (final String rawPart : parts) {
-                part = rawPart.trim();
-
-                if (part.length() >= 2) {
-                    tag = new SyndCategoryImpl();
-                    tag.setName(part.substring(1).toLowerCase());
-
-                    mod = part.charAt(0);
-
-                    if (mod == '-') {
-                        // Don't remove the channel tag, if any.
-                        if (!tag.getName().equals(channel.substring(1))) {
-                            this.tags.remove(tag);
-                        }
-                    } else if (mod == '+') {
-                        if (!this.tags.contains(tag)) {
-                            this.tags.add(tag);
-                        }
-                    } else {
-                        tag.setName(part.trim().toLowerCase());
-
-                        if (!this.tags.contains(tag)) {
-                            this.tags.add(tag);
-                        }
-                    }
-                }
-            }
-        }
+    private void setTags(final List<SyndCategory> tags) {
+        this.tags.addAll(tags);
     }
 
     /**

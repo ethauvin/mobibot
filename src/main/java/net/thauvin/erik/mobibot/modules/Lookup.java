@@ -41,19 +41,17 @@ import java.net.UnknownHostException;
 /**
  * The Lookup module.
  *
- * @author <a href="mailto:erik@thauvin.net">Erik C. Thauvin</a>
+ * @author <a href="mailto:erik@thauvin.net" target="_blank">Erik C. Thauvin</a>
  * @created 2014-04-26
  * @since 1.0
  */
 final public class Lookup extends AbstractModule {
     /**
-     * THe lookup command.
+     * The lookup command.
      */
-    private static final String LOOKUP_CMD = "lookup";
+    public static final String LOOKUP_CMD = "lookup";
 
-    /**
-     * The whois host.
-     */
+    // The whois host.
     private static final String WHOIS_HOST = "whois.arin.net";
 
     /**

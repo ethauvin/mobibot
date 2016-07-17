@@ -50,7 +50,7 @@ import java.util.TreeMap;
 /**
  * The CurrentConverter module.
  *
- * @author Erik C. Thauvin
+ * @author <a href="mailto:erik@thauvin.net" target="_blank">Erik C. Thauvin</a>
  * @created Feb 11, 2004
  * @since 1.0
  */
@@ -58,26 +58,20 @@ final public class CurrencyConverter extends AbstractModule {
     /**
      * The currency command.
      */
-    private static final String CURRENCY_CMD = "currency";
+    public static final String CURRENCY_CMD = "currency";
 
     /**
      * The rates keyword.
      */
-    private static final String CURRENCY_RATES_KEYWORD = "rates";
+    public static final String CURRENCY_RATES_KEYWORD = "rates";
 
-    /**
-     * The exchange rates.
-     */
+    // The exchange rates.
     private static final Map<String, String> EXCHANGE_RATES = new TreeMap<>();
 
-    /**
-     * The exchange rates table URL.
-     */
+    // The exchange rates table URL.
     private static final String EXCHANGE_TABLE_URL = "http://www.ecb.int/stats/eurofxref/eurofxref-daily.xml";
 
-    /**
-     * The last exchange rates table publication date.
-     */
+    // The last exchange rates table publication date.
     private static String pubDate = "";
 
     /**

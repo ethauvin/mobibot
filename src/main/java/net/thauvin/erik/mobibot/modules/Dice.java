@@ -39,7 +39,7 @@ import java.util.Random;
 /**
  * The Dice module.
  *
- * @author <a href="mailto:erik@thauvin.net">Erik C. Thauvin</a>
+ * @author <a href="mailto:erik@thauvin.net" target="_blank">Erik C. Thauvin</a>
  * @created 2014-04-28
  * @since 1.0
  */
@@ -47,7 +47,7 @@ final public class Dice extends AbstractModule {
     /**
      * The dice command.
      */
-    private final String DICE_CMD = "dice";
+    public static final String DICE_CMD = "dice";
 
     /**
      * The default constructor.

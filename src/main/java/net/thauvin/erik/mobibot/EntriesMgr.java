@@ -44,7 +44,7 @@ import java.util.List;
 /**
  * Manages the feed entries.
  *
- * @author <a href="mailto:erik@thauvin.net">Erik C. Thauvin</a>
+ * @author <a href="mailto:erik@thauvin.net" target="_blank">Erik C. Thauvin</a>
  * @created 2014-04-28
  * @since 1.0
  */
@@ -64,9 +64,7 @@ final class EntriesMgr {
      */
     public static final String XML_EXT = ".xml";
 
-    /**
-     * The maximum number of backlogs to keep.
-     */
+    // The maximum number of backlogs to keep.
     private static final int MAX_BACKLOGS = 10;
 
     /**
@@ -129,7 +127,7 @@ final class EntriesMgr {
         try (InputStreamReader reader = new InputStreamReader(new FileInputStream(new File(file)))) {
             final SyndFeed feed = input.build(reader);
 
-            today = Utils.ISO_SDF.format(feed.getPublishedDate());
+            today = Utils.isoLocalDate(feed.getPublishedDate());
 
             final List items = feed.getEntries();
             SyndEntry item;

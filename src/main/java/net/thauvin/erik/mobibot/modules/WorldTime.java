@@ -34,6 +34,9 @@ package net.thauvin.erik.mobibot.modules;
 import net.thauvin.erik.mobibot.Mobibot;
 
 import java.text.SimpleDateFormat;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.temporal.ChronoField;
 import java.util.Calendar;
 import java.util.Map;
 import java.util.TimeZone;
@@ -42,29 +45,23 @@ import java.util.TreeMap;
 /**
  * The WorldTime module.
  *
- * @author <a href="mailto:erik@thauvin.net">Erik C. Thauvin</a>
+ * @author <a href="mailto:erik@thauvin.net" target="_blank">Erik C. Thauvin</a>
  * @created 2014-04-27
  * @since 1.0
  */
 final public class WorldTime extends AbstractModule {
     /**
-     * The beats (Internet Time) keyword.
-     */
-    private static final String BEATS_KEYWORD = ".beats";
-
-    /**
-     * The supported countries.
-     */
-    private static final Map<String, String> COUNTRIES_MAP = new TreeMap<>();
-
-    /**
      * The time command.
      */
-    private static final String TIME_CMD = "time";
+    public static final String TIME_CMD = "time";
 
-    /**
-     * The date/time format.
-     */
+    // The beats (Internet Time) keyword.
+    private static final String BEATS_KEYWORD = ".beats";
+
+    // The supported countries.
+    private static final Map<String, String> COUNTRIES_MAP = new TreeMap<>();
+
+    // The date/time format.
     private static final SimpleDateFormat TIME_SDF =
             new SimpleDateFormat("'The time is 'HH:mm' on 'EEEE, d MMMM yyyy' in '");
 
@@ -136,7 +133,7 @@ final public class WorldTime extends AbstractModule {
         COUNTRIES_MAP.put("BEATS", BEATS_KEYWORD);
 
         for (final String tz : TimeZone.getAvailableIDs()) {
-            if (!tz.contains("/") && tz.length() == 3 & !COUNTRIES_MAP.containsKey(tz)) {
+            if (!tz.contains("/") && tz.length() == 3 && !COUNTRIES_MAP.containsKey(tz)) {
                 COUNTRIES_MAP.put(tz, tz);
             }
         }
@@ -161,8 +158,8 @@ final public class WorldTime extends AbstractModule {
                 response = ("The current Internet Time is: " + internetTime() + ' ' + BEATS_KEYWORD);
             } else {
                 TIME_SDF.setTimeZone(TimeZone.getTimeZone(tz));
-                response = TIME_SDF.format(Calendar.getInstance().getTime()) + tz.substring(tz.indexOf('/') + 1)
-                        .replace('_', ' ');
+                response = TIME_SDF.format(Calendar.getInstance().getTime())
+                        + tz.substring(tz.indexOf('/') + 1).replace('_', ' ');
             }
         } else {
             isInvalidTz = true;
@@ -195,31 +192,10 @@ final public class WorldTime extends AbstractModule {
      * @return The Internet Time string.
      */
     private String internetTime() {
-        final Calendar gc = Calendar.getInstance();
-
-        final int offset = (gc.get(Calendar.ZONE_OFFSET) / (60 * 60 * 1000));
-        int hh = gc.get(Calendar.HOUR_OF_DAY);
-        final int mm = gc.get(Calendar.MINUTE);
-        final int ss = gc.get(Calendar.SECOND);
-
-        hh -= offset; // GMT
-        hh += 1; // BMT
-
-        long beats = Math.round(Math.floor((double) ((((hh * 3600) + (mm * 60) + ss) * 1000) / 86400)));
-
-        if (beats >= 1000) {
-            beats -= (long) 1000;
-        } else if (beats < 0) {
-            beats += (long) 1000;
-        }
-
-        if (beats < 10) {
-            return ("@00" + beats);
-        } else if (beats < 100) {
-            return ("@0" + beats);
-        }
-
-        return ('@' + String.valueOf(beats));
+        final ZonedDateTime zdt = ZonedDateTime.now(ZoneId.of("UTC+01:00"));
+        final int beats = (int) ((zdt.get(ChronoField.SECOND_OF_MINUTE) + (zdt.get(ChronoField.MINUTE_OF_HOUR) * 60)
+                + (zdt.get(ChronoField.HOUR_OF_DAY) * 3600)) / 86.4);
+        return String.format("%c%03d", '@', beats);
     }
 
     @Override

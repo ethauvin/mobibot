@@ -40,14 +40,17 @@ import java.util.Random;
 /**
  * The Ping module.
  *
- * @author <a href="mailto:erik@thauvin.net">Erik C. Thauvin</a>
+ * @author <a href="mailto:erik@thauvin.net" target="_blank">Erik C. Thauvin</a>
  * @created 2016-07-02
  * @since 1.0
  */
 public class Ping extends AbstractModule {
     /**
-     * The ping responses.
+     * The ping command.
      */
+    public static final String PING_CMD = "ping";
+
+    // The ping responses.
     private static final List<String> PINGS =
             Arrays.asList(
                     "is barely alive.",
@@ -62,11 +65,6 @@ public class Ping extends AbstractModule {
                     "is hibernating.",
                     "is saving energy: apathetic mode activated.",
                     "is busy. Go away!");
-
-    /**
-     * The ping command.
-     */
-    private static final String PING_CMD = "ping";
 
     /**
      * The default constructor.
