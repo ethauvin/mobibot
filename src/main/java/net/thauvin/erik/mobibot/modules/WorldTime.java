@@ -33,13 +33,11 @@ package net.thauvin.erik.mobibot.modules;
 
 import net.thauvin.erik.mobibot.Mobibot;
 
-import java.text.SimpleDateFormat;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoField;
-import java.util.Calendar;
 import java.util.Map;
-import java.util.TimeZone;
 import java.util.TreeMap;
 
 /**
@@ -61,10 +59,6 @@ final public class WorldTime extends AbstractModule {
     // The supported countries.
     private static final Map<String, String> COUNTRIES_MAP = new TreeMap<>();
 
-    // The date/time format.
-    private static final SimpleDateFormat TIME_SDF =
-            new SimpleDateFormat("'The time is 'HH:mm' on 'EEEE, d MMMM yyyy' in '");
-
     /**
      * Creates a new {@link WorldTime} instance.
      */
@@ -72,8 +66,15 @@ final public class WorldTime extends AbstractModule {
         commands.add(TIME_CMD);
 
         // Initialize the countries map
+        COUNTRIES_MAP.put("AE", "Asia/Dubai");
+        COUNTRIES_MAP.put("AF", "Asia/Kabul");
+        COUNTRIES_MAP.put("AQ", "Antarctica/South_Pole");
+        COUNTRIES_MAP.put("AT", "Europe/Vienna");
         COUNTRIES_MAP.put("AU", "Australia/Sydney");
+        COUNTRIES_MAP.put("AKST", "America/Anchorage");
+        COUNTRIES_MAP.put("AKDT", "America/Anchorage");
         COUNTRIES_MAP.put("BE", "Europe/Brussels");
+        COUNTRIES_MAP.put("BR", "America/Sao_Paulo");
         COUNTRIES_MAP.put("CA", "America/Montreal");
         COUNTRIES_MAP.put("CDT", "America/Chicago");
         COUNTRIES_MAP.put("CET", "CET");
@@ -92,19 +93,23 @@ final public class WorldTime extends AbstractModule {
         COUNTRIES_MAP.put("FR", "Europe/Paris");
         COUNTRIES_MAP.put("GB", "Europe/London");
         COUNTRIES_MAP.put("GMT", "GMT");
+        COUNTRIES_MAP.put("GR", "Europe/Athens");
         COUNTRIES_MAP.put("HK", "Asia/Hong_Kong");
-        COUNTRIES_MAP.put("HST", "HST");
+        COUNTRIES_MAP.put("HST", "Pacific/Honolulu");
         COUNTRIES_MAP.put("IE", "Europe/Dublin");
         COUNTRIES_MAP.put("IL", "Asia/Tel_Aviv");
-        COUNTRIES_MAP.put("IN", "Asia/Calcutta");
+        COUNTRIES_MAP.put("IN", "Asia/Kolkata");
+        COUNTRIES_MAP.put("IQ", "Asia/Baghdad");
         COUNTRIES_MAP.put("IR", "Asia/Tehran");
         COUNTRIES_MAP.put("IS", "Atlantic/Reykjavik");
         COUNTRIES_MAP.put("IT", "Europe/Rome");
         COUNTRIES_MAP.put("JM", "Jamaica");
         COUNTRIES_MAP.put("JP", "Asia/Tokyo");
         COUNTRIES_MAP.put("LY", "Africa/Tripoli");
+        COUNTRIES_MAP.put("MA", "Africa/Casablanca");
         COUNTRIES_MAP.put("MDT", "America/Denver");
         COUNTRIES_MAP.put("MH", "Kwajalein");
+        COUNTRIES_MAP.put("MQ", "America/Martinique");
         COUNTRIES_MAP.put("MST", "America/Denver");
         COUNTRIES_MAP.put("MX", "America/Mexico_City");
         COUNTRIES_MAP.put("NL", "Europe/Amsterdam");
@@ -112,31 +117,34 @@ final public class WorldTime extends AbstractModule {
         COUNTRIES_MAP.put("NP", "Asia/Katmandu");
         COUNTRIES_MAP.put("NZ", "Pacific/Auckland");
         COUNTRIES_MAP.put("PDT", "America/Los_Angeles");
+        COUNTRIES_MAP.put("PH", "Asia/Manila");
         COUNTRIES_MAP.put("PK", "Asia/Karachi");
         COUNTRIES_MAP.put("PL", "Europe/Warsaw");
         COUNTRIES_MAP.put("PST", "America/Los_Angeles");
         COUNTRIES_MAP.put("PT", "Europe/Lisbon");
+        COUNTRIES_MAP.put("PR", "America/Puerto_Rico");
         COUNTRIES_MAP.put("RU", "Europe/Moscow");
         COUNTRIES_MAP.put("SE", "Europe/Stockholm");
         COUNTRIES_MAP.put("SG", "Asia/Singapore");
-        COUNTRIES_MAP.put("SU", "Europe/Moscow");
         COUNTRIES_MAP.put("TH", "Asia/Bangkok");
         COUNTRIES_MAP.put("TM", "Asia/Ashgabat");
+        COUNTRIES_MAP.put("TN", "Africa/Tunis");
         COUNTRIES_MAP.put("TR", "Europe/Istanbul");
         COUNTRIES_MAP.put("TW", "Asia/Taipei");
         COUNTRIES_MAP.put("UK", "Europe/London");
         COUNTRIES_MAP.put("US", "America/New_York");
         COUNTRIES_MAP.put("UTC", "UTC");
         COUNTRIES_MAP.put("VA", "Europe/Vatican");
+        COUNTRIES_MAP.put("VE", "America/Caracas");
         COUNTRIES_MAP.put("VN", "Asia/Ho_Chi_Minh");
+        COUNTRIES_MAP.put("ZA", "Africa/Johannesburg");
+        COUNTRIES_MAP.put("ZULU", "Zulu");
         COUNTRIES_MAP.put("INTERNET", BEATS_KEYWORD);
         COUNTRIES_MAP.put("BEATS", BEATS_KEYWORD);
 
-        for (final String tz : TimeZone.getAvailableIDs()) {
-            if (!tz.contains("/") && tz.length() == 3 && !COUNTRIES_MAP.containsKey(tz)) {
-                COUNTRIES_MAP.put(tz, tz);
-            }
-        }
+        ZoneId.getAvailableZoneIds().stream().filter(
+                tz -> !tz.contains("/") && tz.length() == 3 && !COUNTRIES_MAP.containsKey(tz)).forEach(
+                tz -> COUNTRIES_MAP.put(tz, tz));
     }
 
     /**
@@ -157,13 +165,13 @@ final public class WorldTime extends AbstractModule {
             if (tz.equals(BEATS_KEYWORD)) {
                 response = ("The current Internet Time is: " + internetTime() + ' ' + BEATS_KEYWORD);
             } else {
-                TIME_SDF.setTimeZone(TimeZone.getTimeZone(tz));
-                response = TIME_SDF.format(Calendar.getInstance().getTime())
+                response = ZonedDateTime.now().withZoneSameInstant(ZoneId.of(tz)).format(
+                        DateTimeFormatter.ofPattern("'The time is 'HH:mm' on 'EEEE, d MMMM yyyy' in '"))
                         + tz.substring(tz.indexOf('/') + 1).replace('_', ' ');
             }
         } else {
             isInvalidTz = true;
-            response = "The supported time zones are: " + COUNTRIES_MAP.keySet().toString();
+            response = "The supported countries/zones are: " + COUNTRIES_MAP.keySet().toString();
         }
 
         if (isPrivate) {

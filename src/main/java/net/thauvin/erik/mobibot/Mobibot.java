@@ -1042,7 +1042,7 @@ public class Mobibot extends PircBot {
                     }
                 } else {
                     final EntryLink entry = entries.get(dupIndex);
-                    send(sender, "Duplicate >> " + Utils.buildLink(dupIndex, entry));
+                    send(sender, Utils.bold("Duplicate") + " >> " + Utils.buildLink(dupIndex, entry));
                 }
             }
         }
