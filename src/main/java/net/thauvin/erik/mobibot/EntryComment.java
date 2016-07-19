@@ -32,8 +32,7 @@
 package net.thauvin.erik.mobibot;
 
 import java.io.Serializable;
-import java.util.Calendar;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 /**
  * The class used to store comments associated to a specific entry.
@@ -47,7 +46,7 @@ public class EntryComment implements Serializable {
     static final long serialVersionUID = 6957415292233553224L;
 
     // The creation date.
-    private final Date date = Calendar.getInstance().getTime();
+    private final LocalDateTime date = LocalDateTime.now();
 
     private String comment = "";
     private String nick = "";
@@ -96,7 +95,7 @@ public class EntryComment implements Serializable {
      * @return The date.
      */
     @SuppressWarnings("UnusedDeclaration")
-    public final Date getDate() {
+    public final LocalDateTime getDate() {
         return date;
     }
 

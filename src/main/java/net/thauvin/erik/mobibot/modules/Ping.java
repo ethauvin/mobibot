@@ -73,6 +73,9 @@ public class Ping extends AbstractModule {
         commands.add(PING_CMD);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void commandResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate) {
         final Random r = new Random();
@@ -80,6 +83,9 @@ public class Ping extends AbstractModule {
         bot.action(PINGS.get(r.nextInt(PINGS.size())));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void helpResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate) {
         bot.send(sender, "To ping the bot:");

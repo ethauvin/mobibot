@@ -173,7 +173,9 @@ final class EntriesMgr {
      * @param history     The history array.
      * @param isDayBackup Set the true if the daily backup file should also be created.
      */
-    public static void saveEntries(final Mobibot bot, final List<EntryLink> entries, final List<String> history,
+    public static void saveEntries(final Mobibot bot,
+                                   final List<EntryLink> entries,
+                                   final List<String> history,
                                    final boolean isDayBackup) {
         if (bot.getLogger().isDebugEnabled()) {
             bot.getLogger().debug("Saving the feeds...");

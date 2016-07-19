@@ -904,6 +904,9 @@ public class Mobibot extends PircBot {
         return false;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected final void onAction(final String sender,
                                   final String login,
@@ -915,6 +918,9 @@ public class Mobibot extends PircBot {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected final void onDisconnect() {
         if (Utils.isValidString(weblogUrl)) {
@@ -956,11 +962,17 @@ public class Mobibot extends PircBot {
         joinChannel(channel);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void onJoin(final String channel, final String sender, final String login, final String hostname) {
         tell.send(sender);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected final void onMessage(final String channel,
                                    final String sender,
@@ -1298,11 +1310,17 @@ public class Mobibot extends PircBot {
         tell.send(sender, true);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void onNickChange(final String oldNick, final String login, final String hostname, final String newNick) {
         tell.send(newNick);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected final void onPrivateMessage(final String sender,
                                           final String login,

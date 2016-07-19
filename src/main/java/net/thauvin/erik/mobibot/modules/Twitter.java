@@ -66,6 +66,9 @@ final public class Twitter extends AbstractModule {
         properties.put(TOKEN_SECRET_PROP, "");
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void commandResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate) {
         if (isEnabled() && args.length() > 0) {
@@ -75,6 +78,9 @@ final public class Twitter extends AbstractModule {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void helpResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate) {
         if (isEnabled()) {
@@ -85,6 +91,9 @@ final public class Twitter extends AbstractModule {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean isEnabled() {
         return isValidProperties();

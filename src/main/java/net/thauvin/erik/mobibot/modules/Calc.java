@@ -58,6 +58,9 @@ public class Calc extends AbstractModule {
         commands.add(CALC_CMD);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void commandResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate) {
         if (Utils.isValidString(args)) {
@@ -79,6 +82,9 @@ public class Calc extends AbstractModule {
 
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void helpResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate) {
         bot.send(sender, "To solve a mathematical calculation:");

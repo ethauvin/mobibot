@@ -100,6 +100,9 @@ final public class War extends AbstractModule {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void helpResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate) {
         bot.send(sender, "To play war:");

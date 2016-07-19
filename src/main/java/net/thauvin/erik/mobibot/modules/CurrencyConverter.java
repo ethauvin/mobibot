@@ -81,6 +81,9 @@ final public class CurrencyConverter extends AbstractModule {
         commands.add(CURRENCY_CMD);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void commandResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate) {
         synchronized (this) {
@@ -92,6 +95,9 @@ final public class CurrencyConverter extends AbstractModule {
         new Thread(() -> run(bot, sender, args)).start();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void helpResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate) {
         bot.send(sender, "To convert from one currency to another:");

@@ -61,6 +61,9 @@ final public class StockQuote extends AbstractModule {
         commands.add(STOCK_CMD);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void commandResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate) {
         if (args.length() > 0) {
@@ -70,6 +73,9 @@ final public class StockQuote extends AbstractModule {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void helpResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate) {
         bot.send(sender, "To retrieve a stock quote:");

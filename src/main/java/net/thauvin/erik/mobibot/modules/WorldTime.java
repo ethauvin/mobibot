@@ -185,6 +185,9 @@ final public class WorldTime extends AbstractModule {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void helpResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate) {
         bot.send(sender, "To display a country's current date/time:");
@@ -206,6 +209,9 @@ final public class WorldTime extends AbstractModule {
         return String.format("%c%03d", '@', beats);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean isPrivateMsgEnabled() {
         return true;

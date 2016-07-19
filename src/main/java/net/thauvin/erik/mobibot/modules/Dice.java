@@ -92,12 +92,18 @@ final public class Dice extends AbstractModule {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void helpResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate) {
         bot.send(sender, "To roll the dice:");
         bot.send(sender, bot.helpIndent(bot.getNick() + ": " + DICE_CMD));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean isEnabled() {
         return true;

@@ -64,11 +64,17 @@ final public class Joke extends AbstractModule {
         commands.add(JOKE_CMD);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void commandResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate) {
         new Thread(() -> run(bot, sender)).start();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void helpResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate) {
         bot.send(sender, "To retrieve a random joke:");

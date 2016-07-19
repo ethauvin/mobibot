@@ -72,6 +72,9 @@ final public class GoogleSearch extends AbstractModule {
         properties.put(GOOGLE_CSE_KEY_PROP, "");
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void commandResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate) {
         if (isEnabled() && args.length() > 0) {
@@ -81,6 +84,9 @@ final public class GoogleSearch extends AbstractModule {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void helpResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate) {
         if (isEnabled()) {
@@ -91,6 +97,9 @@ final public class GoogleSearch extends AbstractModule {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean isEnabled() {
         return isValidProperties();

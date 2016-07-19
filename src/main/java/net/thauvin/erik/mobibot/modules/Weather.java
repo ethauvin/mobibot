@@ -66,11 +66,17 @@ final public class Weather extends AbstractModule {
         commands.add(WEATHER_CMD);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void commandResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate) {
         new Thread(() -> run(bot, sender, args.toUpperCase(), isPrivate)).start();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void helpResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate) {
         bot.send(sender, "To display weather information:");
@@ -78,6 +84,9 @@ final public class Weather extends AbstractModule {
         bot.send(sender, "For a listing of the ICAO station IDs, please visit: " + STATIONS_URL);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean isPrivateMsgEnabled() {
         return true;

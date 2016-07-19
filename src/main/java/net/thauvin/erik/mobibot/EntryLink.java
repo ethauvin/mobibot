@@ -85,7 +85,11 @@ public class EntryLink implements Serializable {
      * @param channel The channel.
      * @param tags    The entry's tags/categories.
      */
-    public EntryLink(final String link, final String title, final String nick, final String login, final String channel,
+    public EntryLink(final String link,
+                     final String title,
+                     final String nick,
+                     final String login,
+                     final String channel,
                      final String tags) {
         this.link = link;
         this.title = title;
@@ -106,7 +110,11 @@ public class EntryLink implements Serializable {
      * @param date    The entry date.
      * @param tags    The entry's tags/categories.
      */
-    public EntryLink(final String link, final String title, final String nick, final String channel, final Date date,
+    public EntryLink(final String link,
+                     final String title,
+                     final String nick,
+                     final String channel,
+                     final Date date,
                      final List<SyndCategory> tags) {
         this.link = link;
         this.title = title;
@@ -280,44 +288,10 @@ public class EntryLink implements Serializable {
     /**
      * Sets the tags.
      *
-     * @param tags The space-delimited tags.
+     * @param tags The tags.
      */
-    public final void setTags(final String tags) {
-        if (tags != null) {
-            final String[] parts = tags.replaceAll(", ", " ").replaceAll(",", " ").split(" ");
-
-            SyndCategoryImpl tag;
-            String part;
-            char mod;
-
-            for (final String rawPart : parts) {
-                part = rawPart.trim();
-
-                if (part.length() >= 2) {
-                    tag = new SyndCategoryImpl();
-                    tag.setName(part.substring(1).toLowerCase());
-
-                    mod = part.charAt(0);
-
-                    if (mod == '-') {
-                        // Don't remove the channel tag, if any.
-                        if (!tag.getName().equals(channel.substring(1))) {
-                            this.tags.remove(tag);
-                        }
-                    } else if (mod == '+') {
-                        if (!this.tags.contains(tag)) {
-                            this.tags.add(tag);
-                        }
-                    } else {
-                        tag.setName(part.trim().toLowerCase());
-
-                        if (!this.tags.contains(tag)) {
-                            this.tags.add(tag);
-                        }
-                    }
-                }
-            }
-        }
+    private void setTags(final List<SyndCategory> tags) {
+        this.tags.addAll(tags);
     }
 
     /**
@@ -372,10 +346,44 @@ public class EntryLink implements Serializable {
     /**
      * Sets the tags.
      *
-     * @param tags The tags.
+     * @param tags The space-delimited tags.
      */
-    private void setTags(final List<SyndCategory> tags) {
-        this.tags.addAll(tags);
+    public final void setTags(final String tags) {
+        if (tags != null) {
+            final String[] parts = tags.replaceAll(", ", " ").replaceAll(",", " ").split(" ");
+
+            SyndCategoryImpl tag;
+            String part;
+            char mod;
+
+            for (final String rawPart : parts) {
+                part = rawPart.trim();
+
+                if (part.length() >= 2) {
+                    tag = new SyndCategoryImpl();
+                    tag.setName(part.substring(1).toLowerCase());
+
+                    mod = part.charAt(0);
+
+                    if (mod == '-') {
+                        // Don't remove the channel tag, if any.
+                        if (!tag.getName().equals(channel.substring(1))) {
+                            this.tags.remove(tag);
+                        }
+                    } else if (mod == '+') {
+                        if (!this.tags.contains(tag)) {
+                            this.tags.add(tag);
+                        }
+                    } else {
+                        tag.setName(part.trim().toLowerCase());
+
+                        if (!this.tags.contains(tag)) {
+                            this.tags.add(tag);
+                        }
+                    }
+                }
+            }
+        }
     }
 
     /**
