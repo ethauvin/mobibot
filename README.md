@@ -1,4 +1,4 @@
-[![License (3-Clause BSD)](https://img.shields.io/badge/license-BSD%203--Clause-blue.svg?style=flat-square)](http://opensource.org/licenses/BSD-3-Clause)[![Build Status](https://travis-ci.org/ethauvin/mobibot.svg?branch=master)](https://travis-ci.org/ethauvin/mobibot)
+[![License (3-Clause BSD)](https://img.shields.io/badge/license-BSD%203--Clause-blue.svg?style=flat-square)](http://opensource.org/licenses/BSD-3-Clause) [![Build Status](https://travis-ci.org/ethauvin/mobibot.svg?branch=master)](https://travis-ci.org/ethauvin/mobibot)
 
 Some very basic instructions:
 
