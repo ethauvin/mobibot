@@ -73,7 +73,7 @@ dependencies {
     compile 'net.sf.delicious-java:delicious:1.14'
 
     compile files('lib/owm-japis-2.5.0.5.jar')
-    
+
     compileOnly 'net.thauvin.erik:semver:0.9.6-beta'
 }
 
@@ -142,6 +142,6 @@ task release(dependsOn: ['wrapper', 'clean', 'deploy']) {
     doLast {
         group = 'Publishing'
         description = 'Releases new version.'
-        isRelease = true  
+        isRelease = true
     }
 }

@@ -5,9 +5,9 @@ Some very basic instructions:
 ```
     { clone with git or download the ZIP }
     git clone git://github.com/ethauvin/mobibot.git
-    
+
     cd mobibot
-    
+
     { build with gradle }
     ./gradlew
 
@@ -15,7 +15,7 @@ Some very basic instructions:
 
     { configure the properties }
     vi *.properties
-    
+
     { help }
     java -jar mobibot.jar -h
 
