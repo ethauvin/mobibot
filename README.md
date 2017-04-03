@@ -4,7 +4,7 @@ Some very basic instructions:
 
 ```
     { clone with git or download the ZIP }
-    git clone git://github.com/ethauvin/mobibot.git
+    git clone https://github.com/ethauvin/mobibot.git
 
     cd mobibot
 
