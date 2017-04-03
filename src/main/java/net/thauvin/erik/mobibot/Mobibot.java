@@ -1,7 +1,7 @@
 /*
  * Mobibot.java
  *
- * Copyright (c) 2004-2016, Erik C. Thauvin (erik@thauvin.net)
+ * Copyright (c) 2004-2017, Erik C. Thauvin (erik@thauvin.net)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -254,7 +254,7 @@ public class Mobibot extends PircBot {
         MODULES.add(new StockQuote());
         MODULES.add(new Twitter());
         MODULES.add(new War());
-        MODULES.add(new Weather());
+        MODULES.add(new Weather2());
         MODULES.add(new WorldTime());
     }
 
