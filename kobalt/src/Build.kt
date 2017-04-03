@@ -50,23 +50,25 @@ val p = project {
 
             compile("commons-codec:commons-codec:1.10")
             compile("commons-logging:commons-logging:1.2")
-            compile("commons-net:commons-net:3.5")
-            compile("commons-cli:commons-cli:1.3.1")
+            compile("commons-net:commons-net:3.6")
+            compile("commons-cli:commons-cli:1.4")
             compile("commons-httpclient:commons-httpclient:3.1")
 
             compile("oro:oro:2.0.8")
 
-            compile("org.jsoup:jsoup:1.9.2")
-            compile("com.rometools:rome:1.6.1")
-            compile("org.slf4j:slf4j-log4j12:1.7.21")
-            compile("org.json:json:20160212")
+            compile("org.jsoup:jsoup:1.10.2")
+            compile("com.rometools:rome:1.7.1")
+            compile("org.slf4j:slf4j-log4j12:1.7.25")
+            compile("org.json:json:20160810")
             compile("org.ostermiller:utils:1.07.00")
 
             compile("net.sourceforge.jweather:jweather:jar:0.3.0")
-            compile("net.objecthunter:exp4j:0.4.7")
+            compile("net.objecthunter:exp4j:0.4.8")
 
-            compile("org.twitter4j:twitter4j-core:4.0.4")
+            compile("org.twitter4j:twitter4j-core:4.0.6")
             compile("net.sf.delicious-java:delicious:1.14")
+
+            compile(file("lib/owm-japis-2.5.0.5.jar"))
 
             apt(processorJar)
             compile(processorJar)
