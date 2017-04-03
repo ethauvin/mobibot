@@ -13,9 +13,9 @@ import java.time.*;
  *         Annotation Processor</a>
  */
 public final class ReleaseInfo {
-    private final static String buildmeta = "010";
+    private final static String buildmeta = "014";
     private final static LocalDateTime date =
-            LocalDateTime.ofInstant(Instant.ofEpochMilli(1491181046873L), ZoneId.systemDefault());
+            LocalDateTime.ofInstant(Instant.ofEpochMilli(1491184254508L), ZoneId.systemDefault());
     private final static int major = 0;
     private final static int minor = 7;
     private final static int patch = 0;

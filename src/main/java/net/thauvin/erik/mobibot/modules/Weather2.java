@@ -149,6 +149,8 @@ public class Weather2 extends AbstractModule {
                             bot.send(sender, condition.toString(), isPrivate);
                         }
 
+                        bot.send(sender, Utils.green("https://openweathermap.org/city/" + cwd.getCityCode()), isPrivate);
+
                         return;
                     }
 
@@ -167,6 +169,6 @@ public class Weather2 extends AbstractModule {
 
     private String wind(final Float w) {
         final double kmh = w * 1.60934;
-        return Math.round(kmh) + " km/h, " + Math.round(w) + " mph";
+        return Math.round(w) + " mph, " + Math.round(kmh) + " km/h";
     }
 }
