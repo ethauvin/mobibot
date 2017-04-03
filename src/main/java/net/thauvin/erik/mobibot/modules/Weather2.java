@@ -88,7 +88,7 @@ public class Weather2 extends AbstractModule {
         bot.send(sender, "To display weather information:");
         bot.send(sender, bot.helpIndent(bot.getNick() + ": " + WEATHER_CMD + " <city> [, <country code>]"));
         bot.send(sender, "For example:");
-        bot.send(sender, bot.helpIndent(bot.getNick() + ": " + WEATHER_CMD + "paris, fr"));
+        bot.send(sender, bot.helpIndent(bot.getNick() + ": " + WEATHER_CMD + " paris, fr"));
         bot.send(sender, "The default ISO 3166 country code is " + Utils.bold("US")
             + ". Zip codes are supported in the US.");
     }
