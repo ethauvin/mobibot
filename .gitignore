@@ -4,9 +4,10 @@
 **/.idea/tasks.xml
 **/.idea/workspace.xml
 *.iws
-.DS_Store
 .classpath
+.DS_Store
 .gradle
+.kobalt
 .nb-gradle
 .project
 .settings
@@ -16,6 +17,7 @@
 /dist
 /fetcher.properties
 /gen
+/gradle.properties
 /local.properties
 /log4j.properties
 /logs
@@ -23,8 +25,10 @@
 /out
 /proguard-project.txt
 /project.properties
+/target
 /test-output
 /weather.log
 CVS
-Thumbs.db
 ehthumbs.db
+kobaltBuild
+Thumbs.db
