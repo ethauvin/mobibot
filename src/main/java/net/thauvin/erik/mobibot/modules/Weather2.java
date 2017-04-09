@@ -102,7 +102,7 @@ public class Weather2 extends AbstractModule {
     }
 
     /**
-     * Fetches the weather data from a specific country.
+     * Fetches the weather data from a specific city.
      */
     private void run(final Mobibot bot, final String sender, final String args, final boolean isPrivate) {
         final OpenWeatherMap owm = new OpenWeatherMap(properties.get(OWM_API_KEY_PROP));
