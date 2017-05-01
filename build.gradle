@@ -12,6 +12,7 @@ defaultTasks 'deploy'
 def packageName = 'net.thauvin.erik.mobibot'
 def deployDir = 'deploy'
 def isRelease = 'release' in gradle.startParameter.taskNames
+def semverJar = 'net.thauvin.erik:semver:0.9.7'
 
 def getVersion(isIncrement = false) {
     def propsFile = 'version.properties'
@@ -66,7 +67,6 @@ dependencies {
     compile 'org.json:json:20160810'
     compile 'org.ostermiller:utils:1.07.00'
 
-    compile 'net.sourceforge.jweather:jweather:0.3.0@jar'
     compile 'net.objecthunter:exp4j:0.4.8'
 
     compile 'org.twitter4j:twitter4j-core:4.0.6'
@@ -74,12 +74,12 @@ dependencies {
 
     compile files('lib/owm-japis-2.5.0.5.jar')
 
-    compileOnly 'net.thauvin.erik:semver:0.9.6-beta'
+    compileOnly semverJar
 }
 
 annotationProcessor {
     project.version = getVersion(isRelease)
-    library 'net.thauvin.erik:semver:0.9.6-beta'
+    library semverJar
     processor 'net.thauvin.erik.semver.VersionProcessor'
 }
 
@@ -121,7 +121,7 @@ task copyToDeploy(type: Copy) {
 }
 
 task copyToDeployLib(type: Copy) {
-    from configurations.runtime
+    from configurations.compile
     into deployDir + '/lib'
 }
 
