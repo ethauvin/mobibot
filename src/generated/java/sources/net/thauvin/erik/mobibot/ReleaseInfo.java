@@ -13,19 +13,19 @@ import java.time.*;
  *         Annotation Processor</a>
  */
 public final class ReleaseInfo {
-	private final static String DEFAULT_PRERELEASE_PREFIX = "-";
-	private final static String DEFAULT_BUILDMETA_PREFIX = "+";
+    public final static String PRERELEASE_PREFIX = "-";
+    public final static String BUILDMETA_PREFIX = "+";
 
-    public final static String project = "mobibot";
-    public final static LocalDateTime buildDate =
-            LocalDateTime.ofInstant(Instant.ofEpochMilli(1492880264977L), ZoneId.systemDefault());
-    public final static int major = 0;
-    public final static int minor = 7;
-    public final static int patch = 1;
-    public final static String preRelease = "beta";
-    public final static String buildMeta = "018";
+    public final static String PROJECT = "mobibot";
+    public final static LocalDateTime BUILDDATE =
+            LocalDateTime.ofInstant(Instant.ofEpochMilli(1493616818868L), ZoneId.systemDefault());
+    public final static int MAJOR = 0;
+    public final static int MINOR = 7;
+    public final static int PATCH = 1;
+    public final static String PRERELEASE = "beta";
+    public final static String BUILDMETA = "018";
 
-    /**
+   /**
      * The full version string.
      * <p>
      * Formatted as:
@@ -41,9 +41,9 @@ public final class ReleaseInfo {
      * <li><code>1.0.0-alpha+001</code></li>
      * </ul>
      */
-    public final static String version = Integer.toString(major) + '.'
-            + Integer.toString(minor) + '.'
-            + Integer.toString(patch)
+    public final static String VERSION = Integer.toString(MAJOR) + '.'
+            + Integer.toString(MINOR) + '.'
+            + Integer.toString(PATCH)
             + preReleaseWithPrefix() + buildMetaWithPrefix();
 
     /**
@@ -57,12 +57,12 @@ public final class ReleaseInfo {
     }
 
     /**
-     * Returns the build metadata with default prefix.
+     * Returns the build metadata with {@value #BUILDMETA_PREFIX} prefix.
      *
      * @return The build metadata, if any.
      */
     public static String buildMetaWithPrefix() {
-        return buildMetaWithPrefix(DEFAULT_PRERELEASE_PREFIX);
+        return buildMetaWithPrefix(BUILDMETA_PREFIX);
     }
 
     /**
@@ -72,20 +72,20 @@ public final class ReleaseInfo {
      * @return The build metadata, if any.
      */
     public static String buildMetaWithPrefix(final String prefix) {
-        if (buildMeta.length() > 0 && prefix.length() > 0) {
-            return prefix + buildMeta;
+        if (BUILDMETA.length() > 0 && prefix.length() > 0) {
+            return prefix + BUILDMETA;
         } else {
-            return buildMeta;
+            return BUILDMETA;
         }
     }
 
     /**
-     * Returns the pre-release version with default prefix.
+     * Returns the pre-release version with {@value #PRERELEASE_PREFIX} prefix.
      *
      * @return The pre-release version, if any.
      */
     public static String preReleaseWithPrefix() {
-        return preReleaseWithPrefix(DEFAULT_PRERELEASE_PREFIX);
+        return preReleaseWithPrefix(PRERELEASE_PREFIX);
     }
 
     /**
@@ -95,10 +95,10 @@ public final class ReleaseInfo {
      * @return The pre-release version, if any.
      */
     public static String preReleaseWithPrefix(final String prefix) {
-        if (preRelease.length() > 0 && prefix.length() > 0) {
-            return prefix + preRelease;
+        if (PRERELEASE.length() > 0 && prefix.length() > 0) {
+            return prefix + PRERELEASE;
         } else {
-            return preRelease;
+            return PRERELEASE;
         }
     }
 }

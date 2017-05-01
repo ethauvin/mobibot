@@ -69,7 +69,7 @@ public class Mobibot extends PircBot {
 
     // The info strings.
     private static final String[] INFO_STRS = {
-            ReleaseInfo.project + " v" + ReleaseInfo.version + " by Erik C. Thauvin (erik@thauvin.net)",
+            ReleaseInfo.PROJECT + " v" + ReleaseInfo.VERSION + " by Erik C. Thauvin (erik@thauvin.net)",
             "http://www.mobitopia.org/mobibot/"
     };
 
@@ -100,9 +100,9 @@ public class Mobibot extends PircBot {
     // The version strings.
     private static final String[] VERSION_STRS = {
             "Version: "
-                    + ReleaseInfo.version
+                    + ReleaseInfo.VERSION
                     + " ("
-                    + Utils.isoLocalDate(ReleaseInfo.buildDate) + ')',
+                    + Utils.isoLocalDate(ReleaseInfo.BUILDDATE) + ')',
             "Platform: "
                     + System.getProperty("os.name")
                     + " ("
