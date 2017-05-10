@@ -5,6 +5,7 @@ import com.beust.kobalt.misc.KobaltLogger
 import com.beust.kobalt.misc.log
 import com.beust.kobalt.plugin.application.application
 import com.beust.kobalt.plugin.apt.apt
+import com.beust.kobalt.plugin.java.javadoc
 import com.beust.kobalt.plugin.packaging.assemble
 import com.beust.kobalt.plugin.packaging.install
 import com.beust.kobalt.plugin.publish.autoGitTag
@@ -13,7 +14,6 @@ import java.io.FileInputStream
 import java.util.*
 
 val bs = buildScript {
-    repos(file("K:/maven/repository"))
 }
 
 val mainClassName = "net.thauvin.erik.mobibot.Mobibot"
@@ -47,7 +47,7 @@ val p = project {
 
     version = versionFor()
 
-    val processorJar = "net.thauvin.erik:semver:0.9.7"
+    val processorJar = "net.thauvin.erik:semver:1.0.0"
     val lib = "lib"
 
     dependencies {
@@ -110,14 +110,20 @@ val p = project {
     }
 
     install {
-        target = deploy
         include(from("kobaltBuild/libs"), to(target), glob("**/*"))
         include(from("properties"), to(target), glob("**/*.properties"))
         collect(compileDependencies)
-            .filter { !it.file.name.startsWith("junit") }
-            .forEach {
-                copy(from(it.file.absolutePath), to("$target/$lib"))
-        }
+                .filter { !it.file.name.startsWith("junit") }
+                .forEach {
+                    copy(from(it.file.absolutePath), to("$target/$lib"))
+                }
+    }
+
+    javadoc {
+        title = project.name + ' ' + project.version
+        tags("created")
+        author = true
+        links("http://www.jibble.org/javadocs/pircbot/", "http://docs.oracle.com/javase/8/docs/api/")
     }
 }
 

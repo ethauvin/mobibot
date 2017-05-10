@@ -12,7 +12,7 @@ defaultTasks 'deploy'
 def packageName = 'net.thauvin.erik.mobibot'
 def deployDir = 'deploy'
 def isRelease = 'release' in gradle.startParameter.taskNames
-def semverJar = 'net.thauvin.erik:semver:0.9.7'
+def semverJar = 'net.thauvin.erik:semver:1.0.0'
 
 def getVersion(isIncrement = false) {
     def propsFile = 'version.properties'
