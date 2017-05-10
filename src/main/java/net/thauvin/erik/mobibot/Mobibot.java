@@ -50,7 +50,7 @@ import java.util.*;
 /**
  * Implements the #mobitopia bot.
  *
- * @author <a href="mailto:erik@thauvin.net" target="_blank">Erik C. Thauvin</a>
+ * @author <a href="http://erik.thauvin.net/" target="_blank">Erik C. Thauvin</a>
  * @created Jan 31, 2004
  * @since 1.0
  */

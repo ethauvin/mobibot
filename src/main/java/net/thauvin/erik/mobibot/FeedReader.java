@@ -1,7 +1,7 @@
 /*
  * FeedReader.java
  *
- * Copyright (c) 2004-2016, Erik C. Thauvin (erik@thauvin.net)
+ * Copyright (c) 2004-2017, Erik C. Thauvin (erik@thauvin.net)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -44,7 +44,7 @@ import java.util.List;
 /**
  * Reads a RSS feed.
  *
- * @author <a href="mailto:erik@thauvin.net" target="_blank">Erik C. Thauvin</a>
+ * @author <a href="http://erik.thauvin.net/" target="_blank">Erik C. Thauvin</a>
  * @created Feb 1, 2004
  * @since 1.0
  */

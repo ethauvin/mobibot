@@ -39,9 +39,9 @@ import net.thauvin.erik.mobibot.Utils;
 import java.io.IOException;
 
 /**
- * The <code>Weather2</code> class.
+ * The <code>Weather2</code> module.
  *
- * @author <a href="mailto:erik@thauvin.net" target="_blank">Erik C. Thauvin</a>
+ * @author <a href="http://erik.thauvin.net/" target="_blank">Erik C. Thauvin</a>
  * @created 2017-04-02
  * @since 1.0
  */
@@ -56,7 +56,7 @@ public class Weather2 extends AbstractModule {
     private static final String OWM_API_KEY_PROP = "owm-api-key";
 
     /**
-     * Creates a new {@link Weather} instance.
+     * Creates a new {@link Weather2} instance.
      */
     public Weather2() {
         commands.add(WEATHER_CMD);
