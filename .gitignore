@@ -4,6 +4,7 @@
 **/.idea/tasks.xml
 **/.idea/workspace.xml
 *.iws
+*.sublime-*
 .classpath
 .DS_Store
 .gradle
@@ -31,4 +32,5 @@
 CVS
 ehthumbs.db
 kobaltBuild
+kobaltw-test
 Thumbs.db
