@@ -32,6 +32,7 @@
 package net.thauvin.erik.mobibot;
 
 import com.rometools.rome.io.FeedException;
+import del.icio.us.DeliciousConstants;
 import net.thauvin.erik.mobibot.modules.*;
 import net.thauvin.erik.semver.Version;
 import org.apache.commons.cli.*;
@@ -70,7 +71,7 @@ public class Mobibot extends PircBot {
     // The info strings.
     private static final String[] INFO_STRS = {
             ReleaseInfo.PROJECT + " v" + ReleaseInfo.VERSION + " by Erik C. Thauvin (erik@thauvin.net)",
-            "http://www.mobitopia.org/mobibot/"
+            "https://www.mobitopia.org/mobibot/"
     };
 
     // The link match string.
@@ -358,6 +359,7 @@ public class Mobibot extends PircBot {
             // Get the del.icio.us properties
             final String dname = p.getProperty("delicious-user");
             final String dpwd = p.getProperty("delicious-pwd");
+            final String dapi = p.getProperty("declicious-api-endpoint", DeliciousConstants.API_ENDPOINT);
 
             // Create the bot
             final Mobibot bot = new Mobibot(server, port, nickname, channel, logsDir);
@@ -379,7 +381,7 @@ public class Mobibot extends PircBot {
             bot.setBacklogsUrl(backlogsURL);
 
             // Set the del.icio.us authentication
-            bot.setDeliciousAuth(dname, dpwd);
+            bot.setDeliciousAuth(dapi, dname, dpwd);
 
             // Load the modules properties
             MODULES.stream().filter(AbstractModule::hasProperties).forEach(
@@ -1492,12 +1494,13 @@ public class Mobibot extends PircBot {
     /**
      * Sets the del.icio.us authentication.
      *
+     * @param apiEndPoint The API end point.
      * @param username The del.icio.us user name.
      * @param password The del.icio.us password.
      */
-    private void setDeliciousAuth(final String username, final String password) {
+    private void setDeliciousAuth(final String apiEndPoint, final String username, final String password) {
         if (Utils.isValidString(username) && Utils.isValidString(password)) {
-            delicious = new DeliciousPoster(username, password, ircServer);
+            delicious = new DeliciousPoster(apiEndPoint, username, password, ircServer);
         }
     }
 

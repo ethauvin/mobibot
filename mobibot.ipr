@@ -163,7 +163,7 @@
         <option name="autoDownloadKobalt" value="true" />
         <option name="downloadSources" value="false" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
-        <option name="kobaltHome" value="$USER_HOME$/.kobalt/wrapper/dist/kobalt-1.0.83" />
+        <option name="kobaltHome" value="$USER_HOME$/.kobalt/wrapper/dist/kobalt-1.0.86" />
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
@@ -429,13 +429,13 @@
         <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/net.sf.delicious-java/delicious/1.14/af3389b4f23bb9ac23552bff5ae6ed917df36192/delicious-1.14-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Gradle: net.thauvin.erik:semver:0.9.7">
+    <library name="Gradle: net.thauvin.erik:semver:1.0.0">
       <CLASSES>
-        <root url="jar://$MAVEN_REPOSITORY$/net/thauvin/erik/semver/0.9.7/semver-0.9.7.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/net/thauvin/erik/semver/1.0.0/semver-1.0.0.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES>
-        <root url="jar://$MAVEN_REPOSITORY$/net/thauvin/erik/semver/0.9.7/semver-0.9.7-sources.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/net/thauvin/erik/semver/1.0.0/semver-1.0.0-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Gradle: org.jdom:jdom2:2.0.6">

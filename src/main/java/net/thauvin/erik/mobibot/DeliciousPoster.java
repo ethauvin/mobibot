@@ -49,12 +49,13 @@ class DeliciousPoster {
     /**
      * Creates a new {@link DeliciousPoster} instance.
      *
+     * @param apiEndPoint The API end point.
      * @param username  The del.icio.us user name.
      * @param password  The del.icio.us password.
      * @param ircServer The IRC server.
      */
-    public DeliciousPoster(final String username, final String password, final String ircServer) {
-        delicious = new Delicious(username, password);
+    public DeliciousPoster(final String apiEndPoint, final String username, final String password, final String ircServer) {
+        delicious = new Delicious(username, password, apiEndPoint);
         this.ircServer = ircServer;
     }
 

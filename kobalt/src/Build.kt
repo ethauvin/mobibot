@@ -110,6 +110,7 @@ val p = project {
     }
 
     install {
+        target = deploy
         include(from("kobaltBuild/libs"), to(target), glob("**/*"))
         include(from("properties"), to(target), glob("**/*.properties"))
         collect(compileDependencies)

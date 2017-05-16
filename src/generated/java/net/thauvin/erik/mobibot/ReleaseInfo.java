@@ -18,12 +18,12 @@ public final class ReleaseInfo {
 
     public final static String PROJECT = "mobibot";
     public final static LocalDateTime BUILDDATE =
-            LocalDateTime.ofInstant(Instant.ofEpochMilli(1493879846880L), ZoneId.systemDefault());
+            LocalDateTime.ofInstant(Instant.ofEpochMilli(1494906988487L), ZoneId.systemDefault());
     public final static int MAJOR = 0;
     public final static int MINOR = 7;
     public final static int PATCH = 1;
     public final static String PRERELEASE = "beta";
-    public final static String BUILDMETA = "018";
+    public final static String BUILDMETA = "020";
 
    /**
      * The full version string.
