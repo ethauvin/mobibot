@@ -1,5 +1,5 @@
 /*
- * DeliciousPoster.java
+ * Pinboard.java
  *
  * Copyright (c) 2004-2017, Erik C. Thauvin (erik@thauvin.net)
  * All rights reserved.
@@ -31,32 +31,46 @@
  */
 package net.thauvin.erik.mobibot;
 
-import del.icio.us.Delicious;
+import net.thauvin.erik.pinboard.PinboardPoster;
 
 import javax.swing.*;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
+import java.util.logging.ConsoleHandler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
- * The class to handle posts to del.icio.us.
+ * The class to handle posts to pinbard.in.
  *
  * @author <a href="http://erik.thauvin.net/" target="_blank">Erik C. Thauvin</a>
- * @created Mar 5, 2005
+ * @created 2017-05-17
  * @since 1.0
  */
-class DeliciousPoster {
-    private final Delicious delicious;
+class Pinboard {
     private final String ircServer;
+    private final PinboardPoster pinboard;
 
     /**
-     * Creates a new {@link DeliciousPoster} instance.
+     * Creates a new {@link Pinboard} instance.
      *
-     * @param apiEndPoint The API end point.
-     * @param username  The del.icio.us user name.
-     * @param password  The del.icio.us password.
+     * @param bot       The bot's instance.
+     * @param apiToken  The API end point.
      * @param ircServer The IRC server.
      */
-    public DeliciousPoster(final String apiEndPoint, final String username, final String password, final String ircServer) {
-        delicious = new Delicious(username, password, apiEndPoint);
+    public Pinboard(final Mobibot bot, final String apiToken, final String ircServer) {
+        pinboard = new PinboardPoster(apiToken);
         this.ircServer = ircServer;
+
+        if (bot.getLogger().isDebugEnabled()) {
+            final ConsoleHandler consoleHandler = new ConsoleHandler();
+            consoleHandler.setLevel(Level.FINE);
+            final Logger logger = pinboard.getLogger();
+            logger.addHandler(consoleHandler);
+            logger.setLevel(Level.FINE);
+        }
     }
 
     /**
@@ -69,11 +83,11 @@ class DeliciousPoster {
             @Override
             protected Boolean doInBackground()
                     throws Exception {
-                return delicious.addPost(entry.getLink(),
+                return pinboard.addPin(entry.getLink(),
                         entry.getTitle(),
                         postedBy(entry),
-                        entry.getDeliciousTags(),
-                        entry.getDate());
+                        entry.getPinboardTags(),
+                        formatDate(entry.getDate()));
             }
         };
 
@@ -92,11 +106,21 @@ class DeliciousPoster {
             @Override
             protected Boolean doInBackground()
                     throws Exception {
-                return delicious.deletePost(link);
+                return pinboard.deletePin(link);
             }
         };
 
         worker.execute();
+    }
+
+    /**
+     * Format a date to a UTC timestamp.
+     *
+     * @param date The date.
+     * @return The date in {@link DateTimeFormatter#ISO_INSTANT} format.
+     */
+    private String formatDate(final Date date) {
+        return ZonedDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault()).format(DateTimeFormatter.ISO_INSTANT);
     }
 
     /**
@@ -121,19 +145,19 @@ class DeliciousPoster {
             protected Boolean doInBackground()
                     throws Exception {
                 if (!oldUrl.equals(entry.getLink())) {
-                    delicious.deletePost(oldUrl);
+                    pinboard.deletePin(oldUrl);
 
-                    return delicious.addPost(entry.getLink(),
+                    return pinboard.addPin(entry.getLink(),
                             entry.getTitle(),
                             postedBy(entry),
-                            entry.getDeliciousTags(),
-                            entry.getDate());
+                            entry.getPinboardTags(),
+                            formatDate(entry.getDate()));
                 } else {
-                    return delicious.addPost(entry.getLink(),
+                    return pinboard.addPin(entry.getLink(),
                             entry.getTitle(),
                             postedBy(entry),
-                            entry.getDeliciousTags(),
-                            entry.getDate(),
+                            entry.getPinboardTags(),
+                            formatDate(entry.getDate()),
                             true,
                             true);
                 }

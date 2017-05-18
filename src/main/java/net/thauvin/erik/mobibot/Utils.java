@@ -140,7 +140,7 @@ final public class Utils {
      * @return The entry's tags.
      */
     static String buildTags(final int entryIndex, final EntryLink entry) {
-        return (Commands.LINK_CMD + (entryIndex + 1) + "T: " + entry.getDeliciousTags().replaceAll(",", ", "));
+        return (Commands.LINK_CMD + (entryIndex + 1) + "T: " + entry.getPinboardTags().replaceAll(",", ", "));
     }
 
     /**

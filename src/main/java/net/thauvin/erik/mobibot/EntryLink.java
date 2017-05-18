@@ -206,11 +206,11 @@ public class EntryLink implements Serializable {
     }
 
     /**
-     * Returns the tags formatted for del.icio.us.
+     * Returns the tags formatted for pinboard.in
      *
      * @return The tags as a comma-delimited string.
      */
-    public final String getDeliciousTags() {
+    public final String getPinboardTags() {
         final StringBuilder tags = new StringBuilder(nick);
 
         for (final Object tag : this.tags) {

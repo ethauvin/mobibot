@@ -32,7 +32,6 @@
 package net.thauvin.erik.mobibot;
 
 import com.rometools.rome.io.FeedException;
-import del.icio.us.DeliciousConstants;
 import net.thauvin.erik.mobibot.modules.*;
 import net.thauvin.erik.semver.Version;
 import org.apache.commons.cli.*;
@@ -167,22 +166,16 @@ public class Mobibot extends PircBot {
 
     // The default tags/categories.
     private String defaultTags = "";
-
-    // The del.icio.us posts handler.
-    private DeliciousPoster delicious = null;
-
     // The feed URL.
     private String feedURL = "";
-
     // The ident message.
     private String identMsg = "";
-
     // The ident nick.
     private String identNick = "";
-
     // The NickServ ident password.
     private String identPwd = "";
-
+    // The pinboard posts handler.
+    private Pinboard pinboard = null;
     // Today's date.
     private String today = Utils.today();
 
@@ -356,10 +349,8 @@ public class Mobibot extends PircBot {
             final String identPwd = p.getProperty("ident", "");
             final String tags = p.getProperty("tags", "");
 
-            // Get the del.icio.us properties
-            final String dname = p.getProperty("delicious-user");
-            final String dpwd = p.getProperty("delicious-pwd");
-            final String dapi = p.getProperty("declicious-api-endpoint", DeliciousConstants.API_ENDPOINT);
+            // Get the pinboard properties
+            final String pinApiToken = p.getProperty("pinboard-api-token");
 
             // Create the bot
             final Mobibot bot = new Mobibot(server, port, nickname, channel, logsDir);
@@ -380,8 +371,8 @@ public class Mobibot extends PircBot {
             bot.setFeedURL(feedURL);
             bot.setBacklogsUrl(backlogsURL);
 
-            // Set the del.icio.us authentication
-            bot.setDeliciousAuth(dapi, dname, dpwd);
+            // Set the pinboard authentication
+            bot.setPinboardAuth(pinApiToken);
 
             // Load the modules properties
             MODULES.stream().filter(AbstractModule::hasProperties).forEach(
@@ -1044,8 +1035,8 @@ public class Mobibot extends PircBot {
                     final EntryLink entry = entries.get(index);
                     send(channel, Utils.buildLink(index, entry));
 
-                    if (delicious != null) {
-                        delicious.addPost(entry);
+                    if (pinboard != null) {
+                        pinboard.addPost(entry);
                     }
 
                     saveEntries(isBackup);
@@ -1152,8 +1143,8 @@ public class Mobibot extends PircBot {
                         final EntryLink entry = entries.get(index);
 
                         if (entry.getLogin().equals(login) || isOp(sender)) {
-                            if (delicious != null) {
-                                delicious.deletePost(entry);
+                            if (pinboard != null) {
+                                pinboard.deletePost(entry);
                             }
 
                             entries.remove(index);
@@ -1169,8 +1160,8 @@ public class Mobibot extends PircBot {
                             final EntryLink entry = entries.get(index);
                             entry.setTitle(cmd.substring(1).trim());
 
-                            if (delicious != null) {
-                                delicious.updatePost(entry.getLink(), entry);
+                            if (pinboard != null) {
+                                pinboard.updatePost(entry.getLink(), entry);
                             }
 
                             send(channel, Utils.buildLink(index, entry));
@@ -1189,8 +1180,8 @@ public class Mobibot extends PircBot {
 
                                 entry.setLink(link);
 
-                                if (delicious != null) {
-                                    delicious.updatePost(oldLink, entry);
+                                if (pinboard != null) {
+                                    pinboard.updatePost(oldLink, entry);
                                 }
 
                                 send(channel, Utils.buildLink(index, entry));
@@ -1239,8 +1230,8 @@ public class Mobibot extends PircBot {
                     if (entry.getLogin().equals(login) || isOp(sender)) {
                         entry.setTags(cmd);
 
-                        if (delicious != null) {
-                            delicious.updatePost(entry.getLink(), entry);
+                        if (pinboard != null) {
+                            pinboard.updatePost(entry.getLink(), entry);
                         }
 
                         send(channel, Utils.buildTags(index, entry));
@@ -1439,7 +1430,7 @@ public class Mobibot extends PircBot {
     private void recapResponse(final String sender, final boolean isPrivate) {
         if (this.recap.size() > 0) {
             for (final String recap : this.recap) {
-                 send(sender, recap, isPrivate);
+                send(sender, recap, isPrivate);
             }
         } else {
             send(sender, "Sorry, nothing to recap.", true);
@@ -1492,19 +1483,6 @@ public class Mobibot extends PircBot {
     }
 
     /**
-     * Sets the del.icio.us authentication.
-     *
-     * @param apiEndPoint The API end point.
-     * @param username The del.icio.us user name.
-     * @param password The del.icio.us password.
-     */
-    private void setDeliciousAuth(final String apiEndPoint, final String username, final String password) {
-        if (Utils.isValidString(username) && Utils.isValidString(password)) {
-            delicious = new DeliciousPoster(apiEndPoint, username, password, ircServer);
-        }
-    }
-
-    /**
      * Sets the feed URL.
      *
      * @param feedURL The feed URL.
@@ -1538,6 +1516,17 @@ public class Mobibot extends PircBot {
             while (st.hasMoreTokens()) {
                 ignoredNicks.add(st.nextToken().trim().toLowerCase());
             }
+        }
+    }
+
+    /**
+     * Sets the pinboard authentication.
+     *
+     * @param apiToken The API token
+     */
+    private void setPinboardAuth(final String apiToken) {
+        if (Utils.isValidString(apiToken)) {
+            pinboard = new Pinboard(this, apiToken, ircServer);
         }
     }
 

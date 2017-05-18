@@ -14,6 +14,7 @@ import java.io.FileInputStream
 import java.util.*
 
 val bs = buildScript {
+    repos(localMaven())
 }
 
 val mainClassName = "net.thauvin.erik.mobibot.Mobibot"
@@ -72,7 +73,7 @@ val p = project {
         compile("net.objecthunter:exp4j:0.4.8")
 
         compile("org.twitter4j:twitter4j-core:4.0.6")
-        compile("net.sf.delicious-java:delicious:1.14")
+        compile("net.thauvin.erik:pinboard-poster:0.9.1")
 
         compile(file("lib/owm-japis-2.5.0.5.jar"))
 
