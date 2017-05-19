@@ -15,6 +15,7 @@ import java.util.*
 
 val bs = buildScript {
     repos(localMaven())
+    plugins("net.thauvin.erik:kobalt-versioneye:")
 }
 
 val mainClassName = "net.thauvin.erik.mobibot.Mobibot"
@@ -52,29 +53,27 @@ val p = project {
     val lib = "lib"
 
     dependencies {
-        compile("log4j:log4j:jar:1.2.17")
-
         compile("pircbot:pircbot:1.5.0")
 
-        //compile("commons-codec:commons-codec:1.10")
-        compile("commons-logging:commons-logging:1.2")
-        compile("commons-net:commons-net:3.6")
+        compile("org.apache.logging.log4j:log4j-api:2.8.2")
+        compile("org.apache.logging.log4j:log4j-core:2.8.2")
+
         compile("commons-cli:commons-cli:1.4")
+
+        compile("commons-net:commons-net:3.6")
         compile("com.squareup.okhttp3:okhttp:3.8.0")
 
-        compile("oro:oro:2.0.8")
+        compile("com.rometools:rome:1.7.3", "org.apache.logging.log4j:log4j-slf4j-impl:jar:2.8.2")
 
-        compile("org.jsoup:jsoup:1.10.2")
-        compile("com.rometools:rome:1.7.3")
-        compile("org.slf4j:slf4j-log4j12:1.7.25")
         compile("org.json:json:20170516")
         compile("org.ostermiller:utils:1.07.00")
-
+        compile("org.jsoup:jsoup:1.10.2")
         compile("net.objecthunter:exp4j:0.4.8")
 
         compile("org.twitter4j:twitter4j-core:4.0.6")
         compile("net.thauvin.erik:pinboard-poster:0.9.1")
 
+        // https://bitbucket.org/akapribot/owm-japis/
         compile(file("lib/owm-japis-2.5.0.5.jar"))
 
         apt(processorJar)
@@ -98,7 +97,6 @@ val p = project {
                 attributes("Main-Class", mainClassName)
                 attributes("Class-Path",
                         collect(compileDependencies)
-                                .filter { !it.file.name.startsWith("junit") }
                                 .map { it.file.name }
                                 .joinToString(" ./$lib/", prefix = ". ./$lib/"))
             }
@@ -113,9 +111,8 @@ val p = project {
     install {
         target = deploy
         include(from("kobaltBuild/libs"), to(target), glob("**/*"))
-        include(from("properties"), to(target), glob("**/*.properties"))
+        include(from("properties"), to(target), glob("**/*"))
         collect(compileDependencies)
-                .filter { !it.file.name.startsWith("junit") }
                 .forEach {
                     copy(from(it.file.absolutePath), to("$target/$lib"))
                 }

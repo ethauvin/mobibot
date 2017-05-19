@@ -14,7 +14,7 @@ Some very basic instructions:
     cd deploy
 
     { configure the properties }
-    vi *.properties
+    vi *.properties *.xml
 
     { help }
     java -jar mobibot.jar -h

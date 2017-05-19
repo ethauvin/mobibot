@@ -20,7 +20,7 @@
 /gen
 /gradle.properties
 /local.properties
-/log4j.properties
+/log4j2.xml
 /logs
 /mobibot.properties
 /out

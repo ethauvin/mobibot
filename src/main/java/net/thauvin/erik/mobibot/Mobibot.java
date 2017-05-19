@@ -35,8 +35,10 @@ import com.rometools.rome.io.FeedException;
 import net.thauvin.erik.mobibot.modules.*;
 import net.thauvin.erik.semver.Version;
 import org.apache.commons.cli.*;
-import org.apache.commons.logging.impl.Log4JLogger;
-import org.apache.log4j.Level;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.core.config.Configurator;
 import org.jibble.pircbot.PircBot;
 import org.jibble.pircbot.User;
 import org.jsoup.Jsoup;
@@ -150,7 +152,7 @@ public class Mobibot extends PircBot {
     private final String ircServer;
 
     // The logger.
-    private final Log4JLogger logger = new Log4JLogger(Mobibot.class.getPackage().getName());
+    private final Logger logger = LogManager.getLogger(Mobibot.class);
 
     // The logger default level.
     private final Level loggerLevel;
@@ -208,7 +210,7 @@ public class Mobibot extends PircBot {
         this.logsDir = logsDir;
 
         // Set the logger level
-        loggerLevel = logger.getLogger().getLevel();
+        loggerLevel = logger.getLevel();
 
         // Load the current entries, if any.
         try {
@@ -527,7 +529,7 @@ public class Mobibot extends PircBot {
      *
      * @return The bot's logger.
      */
-    public final Log4JLogger getLogger() {
+    public final Logger getLogger() {
         return logger;
     }
 
@@ -1399,9 +1401,10 @@ public class Mobibot extends PircBot {
             versionResponse(sender, true);
         } else if (cmd.equals(Commands.DEBUG_CMD) && isOp(sender)) {
             if (logger.isDebugEnabled()) {
-                logger.getLogger().setLevel(loggerLevel);
+                Configurator.setLevel(logger.getName(), loggerLevel);
             } else {
-                logger.getLogger().setLevel(Level.DEBUG);
+                Configurator.setLevel(logger.getName(), Level.DEBUG);
+
             }
 
             send(sender, "Debug logging is " + (logger.isDebugEnabled() ? "enabled." : "disabled."), true);

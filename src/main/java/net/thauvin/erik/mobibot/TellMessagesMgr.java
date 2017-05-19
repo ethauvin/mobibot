@@ -31,7 +31,7 @@
  */
 package net.thauvin.erik.mobibot;
 
-import org.apache.commons.logging.impl.Log4JLogger;
+import org.apache.logging.log4j.Logger;
 
 import java.io.*;
 import java.time.Clock;
@@ -87,7 +87,7 @@ final class TellMessagesMgr {
      * @return The {@link net.thauvin.erik.mobibot.TellMessage} array.
      */
     @SuppressWarnings("unchecked")
-    public static List<TellMessage> load(final String file, final Log4JLogger logger) {
+    public static List<TellMessage> load(final String file, final Logger logger) {
         try {
 
             try (ObjectInput input = new ObjectInputStream(new BufferedInputStream(new FileInputStream(file)))) {
@@ -115,7 +115,7 @@ final class TellMessagesMgr {
      * @param messages The {@link net.thauvin.erik.mobibot.TellMessage} array.
      * @param logger   The logger.
      */
-    public static void save(final String file, final List<TellMessage> messages, final Log4JLogger logger) {
+    public static void save(final String file, final List<TellMessage> messages, final Logger logger) {
         try {
 
             try (ObjectOutput output = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(file)))) {
