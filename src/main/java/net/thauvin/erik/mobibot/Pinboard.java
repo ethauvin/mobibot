@@ -74,7 +74,7 @@ class Pinboard {
     }
 
     /**
-     * Adds a post to del.icio.us.
+     * Adds a post to pinboard.in.
      *
      * @param entry The entry to add.
      */
@@ -95,7 +95,7 @@ class Pinboard {
     }
 
     /**
-     * Deletes a post to del.icio.us.
+     * Deletes a post to pinboard.in.
      *
      * @param entry The entry to delete.
      */
@@ -124,7 +124,7 @@ class Pinboard {
     }
 
     /**
-     * Returns he del.icio.us extended attribution line.
+     * Returns he pinboard.in extended attribution line.
      *
      * @param entry The entry.
      * @return The extended attribution line.
@@ -134,7 +134,7 @@ class Pinboard {
     }
 
     /**
-     * Updates a post to del.icio.us.
+     * Updates a post to pinboard.in.
      *
      * @param oldUrl The old post URL.
      * @param entry  The entry to add.

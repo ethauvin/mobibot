@@ -102,7 +102,7 @@ final class TellMessagesMgr {
         } catch (IOException e) {
             logger.error("An IO error occurred loading the messages queue.", e);
         } catch (Exception e) {
-            logger.getLogger().error("An error occurred loading the messages queue.", e);
+            logger.error("An error occurred loading the messages queue.", e);
         }
 
         return new ArrayList<>();
