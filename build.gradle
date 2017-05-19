@@ -53,18 +53,18 @@ dependencies {
 
     compile 'pircbot:pircbot:1.5.0'
 
-    compile 'commons-codec:commons-codec:1.10'
+    //compile 'commons-codec:commons-codec:1.10'
     compile 'commons-logging:commons-logging:1.2'
     compile 'commons-net:commons-net:3.6'
     compile 'commons-cli:commons-cli:1.4'
-    compile 'commons-httpclient:commons-httpclient:3.1'
+    compile 'com.squareup.okhttp3:okhttp:3.8.0'
 
     compile 'oro:oro:2.0.8'
 
     compile 'org.jsoup:jsoup:1.10.2'
-    compile 'com.rometools:rome:1.7.1'
+    compile 'com.rometools:rome:1.7.3'
     compile 'org.slf4j:slf4j-log4j12:1.7.25'
-    compile 'org.json:json:20160810'
+    compile 'org.json:json:20170516'
     compile 'org.ostermiller:utils:1.07.00'
 
     compile 'net.objecthunter:exp4j:0.4.8'

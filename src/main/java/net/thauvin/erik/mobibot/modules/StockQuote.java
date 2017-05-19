@@ -33,8 +33,9 @@ package net.thauvin.erik.mobibot.modules;
 
 import com.Ostermiller.util.CSVParser;
 import net.thauvin.erik.mobibot.Mobibot;
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.methods.GetMethod;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 import java.io.IOException;
 
@@ -87,14 +88,12 @@ final public class StockQuote extends AbstractModule {
      */
     private void run(final Mobibot bot, final String sender, final String symbol) {
         try {
-            final HttpClient client = new HttpClient();
-            client.getHttpConnectionManager().getParams().setConnectionTimeout(Mobibot.CONNECT_TIMEOUT);
-            client.getHttpConnectionManager().getParams().setSoTimeout(Mobibot.CONNECT_TIMEOUT);
 
-            final GetMethod getMethod = new GetMethod(YAHOO_URL + symbol.toUpperCase());
-            client.executeMethod(getMethod);
+            final OkHttpClient client = new OkHttpClient();
+            final Request request = new Request.Builder().url(YAHOO_URL + symbol.toUpperCase()).build();
+            final Response response = client.newCall(request).execute();
 
-            final String[][] lines = CSVParser.parse(getMethod.getResponseBodyAsString());
+            final String[][] lines = CSVParser.parse(response.body().string());
 
             if (lines.length > 0) {
                 final String[] quote = lines[0];
@@ -133,7 +132,7 @@ final public class StockQuote extends AbstractModule {
             } else {
                 bot.send(sender, "No data returned.");
             }
-        } catch (IOException e) {
+        } catch (NullPointerException | IOException e) {
             bot.getLogger().debug("Unable to retrieve stock quote for: " + symbol, e);
             bot.send(sender, "An error has occurred retrieving a stock quote: " + e.getMessage());
         }
