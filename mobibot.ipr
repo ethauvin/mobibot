@@ -38,13 +38,13 @@
       <property name="caretWidth" class="java.lang.Integer" />
     </properties>
   </component>
-  <component name="CopyrightManager" default="">
+  <component name="CopyrightManager">
     <copyright>
-      <option name="myName" value="Copyright" />
       <option name="notice" value="&amp;#36;file.fileName&#10;&#10;Copyright (c) 2004-&amp;#36;today.year, Erik C. Thauvin (erik@thauvin.net)&#10;All rights reserved.&#10;&#10;Redistribution and use in source and binary forms, with or without&#10;modification, are permitted provided that the following conditions are met:&#10;&#10;  Redistributions of source code must retain the above copyright notice, this&#10;  list of conditions and the following disclaimer.&#10;&#10;  Redistributions in binary form must reproduce the above copyright notice,&#10;  this list of conditions and the following disclaimer in the documentation&#10;  and/or other materials provided with the distribution.&#10;&#10;  Neither the name of this project nor the names of its contributors may be&#10;  used to endorse or promote products derived from this software without&#10;  specific prior written permission.&#10;&#10;THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot;&#10;AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE&#10;IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE&#10;DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE&#10;FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL&#10;DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR&#10;SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER&#10;CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,&#10;OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE&#10;OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE." />
+      <option name="myName" value="Copyright" />
     </copyright>
     <module2copyright>
-      <element module="Copyright" copyright="Copyright" />
+      <element module="Source" copyright="Copyright" />
     </module2copyright>
     <LanguageOptions name="JAVA">
       <option name="fileTypeOverride" value="3" />
@@ -55,8 +55,7 @@
     </LanguageOptions>
   </component>
   <component name="DependencyValidationManager">
-    <scope name="Source" pattern="file[mobibot]:src/generated/java//*||file[mobibot]:src/main/java//*" />
-    <scope name="Copyright" pattern="file[mobibot]:src/main/java//*&amp;&amp;!file:src/main/java/net/thauvin/erik/mobibot/SwingWorker.java&amp;&amp;!file:src/main/java/net/thauvin/erik/mobibot/TwitterOAuth.java" />
+    <scope name="Source" pattern="(file[mobibot]:src/generated/java//*.java||file[mobibot]:src/main/java//*.java||file[mobibot]:src/test/java//*.java)&amp;&amp;!file[mobibot]:src/main/java/net/thauvin/erik/mobibot/TwitterOAuth.java" />
   </component>
   <component name="Encoding">
     <file url="PROJECT" charset="UTF-8" />
@@ -330,6 +329,15 @@
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
   </component>
   <component name="libraryTable">
+    <library name="Gradle: com.beust:jcommander:1.64">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.beust/jcommander/1.64/456a985ac9b12d34820e4d5de063b2c2fc43ed5a/jcommander-1.64.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.beust/jcommander/1.64/1b16adc28aca77f62a61f31380f84961c9c3570d/jcommander-1.64-sources.jar!/" />
+      </SOURCES>
+    </library>
     <library name="Gradle: com.github.spullara.mustache.java:compiler:0.9.4">
       <CLASSES>
         <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.spullara.mustache.java/compiler/0.9.4/1d1fab03f31a75018fc30ec248859a5c89cd342f/compiler-0.9.4.jar!/" />
@@ -447,6 +455,15 @@
         <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-slf4j-impl/2.8.2/c5f494286f220ba330c6eabccf10740458ef1fab/log4j-slf4j-impl-2.8.2-sources.jar!/" />
       </SOURCES>
     </library>
+    <library name="Gradle: org.assertj:assertj-core:3.8.0">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.assertj/assertj-core/3.8.0/b209d90ff2e279bee3e02547ee7b11349c52d0e3/assertj-core-3.8.0.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.assertj/assertj-core/3.8.0/85dab3e124fb391b10196df9bfdb43640deabb09/assertj-core-3.8.0-sources.jar!/" />
+      </SOURCES>
+    </library>
     <library name="Gradle: org.jdom:jdom2:2.0.6">
       <CLASSES>
         <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jdom/jdom2/2.0.6/6f14738ec2e9dd0011e343717fa624a10f8aab64/jdom2-2.0.6.jar!/" />
@@ -510,6 +527,15 @@
         <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.slf4j/slf4j-api/1.7.24/9f1cecd7c757ad5dde29453d43315228bb0a7c7e/slf4j-api-1.7.24-sources.jar!/" />
       </SOURCES>
     </library>
+    <library name="Gradle: org.testng:testng:6.11">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.testng/testng/6.11/1fdd5e22f50b14f6d846163456e8c9a7657626fb/testng-6.11.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.testng/testng/6.11/77da7afb24d57b640d9803593a6222c7de12dd4e/testng-6.11-sources.jar!/" />
+      </SOURCES>
+    </library>
     <library name="Gradle: org.twitter4j:twitter4j-core:4.0.6">
       <CLASSES>
         <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.twitter4j/twitter4j-core/4.0.6/f3722af4568b96ee66739267e13211b8b66ac7d4/twitter4j-core-4.0.6.jar!/" />
@@ -517,6 +543,15 @@
       <JAVADOC />
       <SOURCES>
         <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.twitter4j/twitter4j-core/4.0.6/5a3a910793c3510a3e25cea3c51672bb88124527/twitter4j-core-4.0.6-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Gradle: org.yaml:snakeyaml:1.17">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.yaml/snakeyaml/1.17/7a27ea250c5130b2922b86dea63cbb1cc10a660c/snakeyaml-1.17.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.yaml/snakeyaml/1.17/63577e87886c76228db9f8a2c50ea43cde5072eb/snakeyaml-1.17-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Gradle: pircbot:pircbot:1.5.0">

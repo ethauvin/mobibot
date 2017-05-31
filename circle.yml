@@ -1,0 +1,11 @@
+machine:
+  java:
+    version: oraclejdk8
+
+dependencies:
+  override:
+     - chmod +x gradlew
+
+test:
+  post:
+    - cp -r build/reports/* $CIRCLE_TEST_REPORTS/
