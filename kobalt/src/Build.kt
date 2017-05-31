@@ -9,6 +9,7 @@ import com.beust.kobalt.plugin.java.javadoc
 import com.beust.kobalt.plugin.packaging.assemble
 import com.beust.kobalt.plugin.packaging.install
 import com.beust.kobalt.plugin.publish.autoGitTag
+import net.thauvin.erik.kobalt.plugin.versioneye.versionEye
 import java.io.File
 import java.io.FileInputStream
 import java.util.*
@@ -80,6 +81,11 @@ val p = project {
         compileOnly(processorJar)
     }
 
+    dependenciesTest {
+        compile("org.testng:testng:6.11")
+        compile("org.assertj:assertj-core:3.8.0")
+    }
+
     apt {
         outputDir = "../src/generated/java/"
     }
@@ -123,6 +129,11 @@ val p = project {
         tags("created")
         author = true
         links("http://www.jibble.org/javadocs/pircbot/", "http://docs.oracle.com/javase/8/docs/api/")
+    }
+
+    versionEye {
+        org = "thauvin"
+        team = "Owners"
     }
 }
 

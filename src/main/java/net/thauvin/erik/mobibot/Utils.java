@@ -144,6 +144,16 @@ final public class Utils {
     }
 
     /**
+     * Capitalize a string.
+     *
+     * @param s The string.
+     * @return The capitalized string.
+     */
+    public static String capitalize(final String s) {
+        return s.substring(0, 1).toUpperCase() + s.substring(1);
+    }
+
+    /**
      * Ensures that the given location (File/URL) has a trailing slash (<code>/</code>) to indicate a directory.
      *
      * @param location The File or URL location.
@@ -169,7 +179,7 @@ final public class Utils {
     /**
      * Returns a property as an int.
      *
-     * @param property The port property value.
+     * @param property The property value.
      * @param def      The default property value.
      * @return The port or default value if invalid.
      */
@@ -300,7 +310,7 @@ final public class Utils {
      * Returns the specified date formatted as <code>yyyy-MM-dd HH:mm</code>
      *
      * @param date The date.
-     * @return The fromatted date.
+     * @return The formatted date.
      */
     public static String utcDateTime(final LocalDateTime date) {
         return date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));

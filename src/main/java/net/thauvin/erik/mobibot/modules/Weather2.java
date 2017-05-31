@@ -63,10 +63,6 @@ public class Weather2 extends AbstractModule {
         properties.put(OWM_API_KEY_PROP, "");
     }
 
-    private String capitalize(final String s) {
-        return s.substring(0, 1).toUpperCase() + s.substring(1);
-    }
-
     /**
      * {@inheritDoc}
      */
@@ -147,7 +143,7 @@ public class Weather2 extends AbstractModule {
                                 if (i != 0) {
                                     condition.append(", ").append(w.getWeatherDescription());
                                 } else {
-                                    condition.append(capitalize(w.getWeatherDescription()));
+                                    condition.append(Utils.capitalize(w.getWeatherDescription()));
                                 }
                             }
                             bot.send(sender, condition.toString(), isPrivate);

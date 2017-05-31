@@ -74,6 +74,13 @@ dependencies {
     compile files('lib/owm-japis-2.5.0.5.jar')
 
     compileOnly semverJar
+
+    testCompile 'org.testng:testng:6.11'
+    testCompile 'org.assertj:assertj-core:3.8.0'
+}
+
+test {
+    useTestNG()
 }
 
 annotationProcessor {
