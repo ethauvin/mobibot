@@ -49,6 +49,9 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @since 1.0
  */
 public class UtilsTest {
+    static final String ASCII =
+            " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~";
+
     final Calendar cal = Calendar.getInstance();
     final LocalDateTime localDateTime =
             LocalDateTime.of(1952, 2, 17, 12, 30, 0);
@@ -62,20 +65,20 @@ public class UtilsTest {
     @Test
     public void testBold() throws Exception {
         assertThat(Utils.bold(1)).as("bold(1)").isEqualTo(Colors.BOLD + "1" + Colors.BOLD);
-        assertThat(Utils.bold("test")).as("bold(test").isEqualTo(Colors.BOLD + "test" + Colors.BOLD);
+        assertThat(Utils.bold(ASCII)).as("bold(ascii").isEqualTo(Colors.BOLD + ASCII + Colors.BOLD);
     }
 
     @Test
     public void testCapitalize() throws Exception {
-        assertThat(Utils.capitalize("test")).isEqualTo("Test");
+        assertThat(Utils.capitalize("this is a test.")).isEqualTo("This is a test.");
     }
 
     @Test
     public void testEnsureDir() throws Exception {
-        assertThat(Utils.ensureDir("test", false)).as("ensureDir(test, false)")
-                .isEqualTo("test" + File.separatorChar);
-        assertThat(Utils.ensureDir("http://erik.thauvin.net", true))
-                .as("ensureDir(erik.thauvin.net, true)").isEqualTo("http://erik.thauvin.net/");
+        assertThat(Utils.ensureDir("dir", false)).as("ensureDir(dir, false)")
+                .isEqualTo("dir" + File.separatorChar);
+        assertThat(Utils.ensureDir("https://erik.thauvin.net", true))
+                .as("ensureDir(erik.thauvin.net, true)").isEqualTo("https://erik.thauvin.net/");
     }
 
     @Test
@@ -86,12 +89,12 @@ public class UtilsTest {
 
     @Test
     public void testGreen() throws Exception {
-        assertThat(Utils.green("test")).isEqualTo(Colors.DARK_GREEN + "test" + Colors.NORMAL);
+        assertThat(Utils.green(ASCII)).isEqualTo(Colors.DARK_GREEN + ASCII + Colors.NORMAL);
     }
 
     @Test
     public void testIsValidString() throws Exception {
-        assertThat(Utils.isValidString("test")).as("isValidString(test)").isTrue();
+        assertThat(Utils.isValidString(ASCII)).as("isValidString(ascii)").isTrue();
         assertThat(Utils.isValidString("")).as("isValidString(empty)").isFalse();
         assertThat(Utils.isValidString("    ")).as("isValidString(   )").isFalse();
         assertThat(Utils.isValidString("  \t ")).as("isValidString(tab)").isFalse();
@@ -106,15 +109,18 @@ public class UtilsTest {
 
     @Test
     public void testPlural() throws Exception {
-        assertThat(Utils.plural(1, "test", "tests")).as("plural(1, test, tests)")
-                .isEqualTo("test");
-        assertThat(Utils.plural(2, "test", "tests")).as("plural(2, test, tests)")
-                .isEqualTo("tests");
+        final String week = "week";
+        final String weeks = "weeks";
+
+        assertThat(Utils.plural(-1, week, weeks)).as("plural(-1)").isEqualTo(week);
+        assertThat(Utils.plural(0, week, weeks)).as("plural(0)").isEqualTo(week);
+        assertThat(Utils.plural(1, week, weeks)).as("plural(1)").isEqualTo(week);
+        assertThat(Utils.plural(2, week, weeks)).as("plural(2)").isEqualTo(weeks);
     }
 
     @Test
     public void testReverseColor() throws Exception {
-        assertThat(Utils.reverseColor("test")).isEqualTo(Colors.REVERSE + "test" + Colors.REVERSE);
+        assertThat(Utils.reverseColor(ASCII)).isEqualTo(Colors.REVERSE + ASCII + Colors.REVERSE);
     }
 
     @Test
