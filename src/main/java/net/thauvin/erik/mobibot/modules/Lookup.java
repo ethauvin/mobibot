@@ -51,8 +51,10 @@ final public class Lookup extends AbstractModule {
      */
     public static final String LOOKUP_CMD = "lookup";
 
-    // The whois host.
-    private static final String WHOIS_HOST = "whois.arin.net";
+    /**
+     * The whois default host.
+     */
+    public static final String WHOIS_HOST = "whois.arin.net";
 
     /**
      * The default constructor
@@ -68,7 +70,7 @@ final public class Lookup extends AbstractModule {
      * @return The lookup query result string.
      * @throws java.net.UnknownHostException If the host is unknown.
      */
-    private static String lookup(final String query)
+    public static String lookup(final String query)
             throws UnknownHostException {
         final StringBuilder buffer = new StringBuilder("");
 
@@ -120,7 +122,7 @@ final public class Lookup extends AbstractModule {
     public static String[] whois(final String query, final String host)
             throws IOException {
         final WhoisClient whois = new WhoisClient();
-        String[] lines;
+        final String[] lines;
 
         try {
             whois.setDefaultTimeout(Mobibot.CONNECT_TIMEOUT);
@@ -128,7 +130,11 @@ final public class Lookup extends AbstractModule {
             whois.setSoTimeout(Mobibot.CONNECT_TIMEOUT);
             whois.setSoLinger(false, 0);
 
-            lines = whois.query('-' + query).split("\n");
+            if (host.equals(WHOIS_HOST)) {
+                lines = whois.query("n - " + query).split("\n");
+            } else {
+                lines = whois.query(query).split("\n");
+            }
         } finally {
             whois.disconnect();
         }
