@@ -34,7 +34,7 @@ package net.thauvin.erik.mobibot;
 /**
  * The <code>commands</code>, <code>keywords</code> and <code>arguments</code>.
  *
- * @author <a href="http://erik.thauvin.net/" target="_blank">Erik C. Thauvin</a>
+ * @author <a href="https://erik.thauvin.net" target="_blank">Erik C. Thauvin</a>
  * @created 2014-04-26
  * @since 1.0
  */

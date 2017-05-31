@@ -45,7 +45,7 @@ import java.util.logging.Logger;
 /**
  * The class to handle posts to pinbard.in.
  *
- * @author <a href="http://erik.thauvin.net/" target="_blank">Erik C. Thauvin</a>
+ * @author <a href="https://erik.thauvin.net" target="_blank">Erik C. Thauvin</a>
  * @created 2017-05-17
  * @since 1.0
  */

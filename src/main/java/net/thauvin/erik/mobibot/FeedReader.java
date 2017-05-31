@@ -44,7 +44,7 @@ import java.util.List;
 /**
  * Reads a RSS feed.
  *
- * @author <a href="http://erik.thauvin.net/" target="_blank">Erik C. Thauvin</a>
+ * @author <a href="https://erik.thauvin.net" target="_blank">Erik C. Thauvin</a>
  * @created Feb 1, 2004
  * @since 1.0
  */

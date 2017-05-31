@@ -39,7 +39,7 @@ import java.util.*;
 /**
  * The <code>Module</code> abstract class.
  *
- * @author <a href="http://erik.thauvin.net/" target="_blank">Erik C. Thauvin</a>
+ * @author <a href="https://erik.thauvin.net" target="_blank">Erik C. Thauvin</a>
  * @created 2016-07-01
  * @since 1.0
  */

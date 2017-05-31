@@ -21,7 +21,7 @@ import java.io.InputStreamReader;
  * </p>
  * and follow the prompts/instructions.
  *
- * @author <a href="http://erik.thauvin.net/" target="_blank">Erik C. Thauvin</a>
+ * @author <a href="https://erik.thauvin.net" target="_blank">Erik C. Thauvin</a>
  * @author <a href="http://twitter4j.org/en/code-examples.html#oauth" target="_blank">Twitter4J</a>
  * @created Sep 13, 2010
  * @since 1.0

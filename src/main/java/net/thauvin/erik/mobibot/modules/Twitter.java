@@ -39,7 +39,7 @@ import twitter4j.conf.ConfigurationBuilder;
 /**
  * The Twitter module.
  *
- * @author <a href="http://erik.thauvin.net/" target="_blank">Erik C. Thauvin</a>
+ * @author <a href="https://erik.thauvin.net" target="_blank">Erik C. Thauvin</a>
  * @created Sept 10, 2008
  * @since 1.0
  */

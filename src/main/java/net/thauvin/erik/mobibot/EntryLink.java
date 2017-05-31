@@ -43,7 +43,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 /**
  * The class used to store link entries.
  *
- * @author <a href="http://erik.thauvin.net/" target="_blank">Erik C. Thauvin</a>
+ * @author <a href="https://erik.thauvin.net" target="_blank">Erik C. Thauvin</a>
  * @created Jan 31, 2004
  * @since 1.0
  */

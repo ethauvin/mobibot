@@ -42,7 +42,7 @@ import java.io.IOException;
 /**
  * The StockQuote module.
  *
- * @author <a href="http://erik.thauvin.net/" target="_blank">Erik C. Thauvin</a>
+ * @author <a href="https://erik.thauvin.net" target="_blank">Erik C. Thauvin</a>
  * @created Feb 7, 2004
  * @since 1.0
  */
@@ -88,7 +88,6 @@ final public class StockQuote extends AbstractModule {
      */
     private void run(final Mobibot bot, final String sender, final String symbol) {
         try {
-
             final OkHttpClient client = new OkHttpClient();
             final Request request = new Request.Builder().url(YAHOO_URL + symbol.toUpperCase()).build();
             final Response response = client.newCall(request).execute();

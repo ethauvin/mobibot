@@ -39,7 +39,7 @@ import java.time.format.DateTimeFormatter;
 /**
  * The <code>TellMessage</code> class.
  *
- * @author <a href="http://erik.thauvin.net/" target="_blank">Erik C. Thauvin</a>
+ * @author <a href="https://erik.thauvin.net" target="_blank">Erik C. Thauvin</a>
  * @created 2014-04-24
  * @since 1.0
  */

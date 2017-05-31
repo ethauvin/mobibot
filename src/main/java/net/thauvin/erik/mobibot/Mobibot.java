@@ -52,7 +52,7 @@ import java.util.*;
 /**
  * Implements the #mobitopia bot.
  *
- * @author <a href="http://erik.thauvin.net/" target="_blank">Erik C. Thauvin</a>
+ * @author <a href="https://erik.thauvin.net" target="_blank">Erik C. Thauvin</a>
  * @created Jan 31, 2004
  * @since 1.0
  */
@@ -817,7 +817,7 @@ public class Mobibot extends PircBot {
      */
     private void infoResponse(final String sender, final boolean isPrivate) {
         for (final String info : INFO_STRS) {
-            if (info.startsWith("http://")) {
+            if (info.startsWith("https://")) {
                 send(sender, Utils.green(info), isPrivate);
             } else {
                 send(sender, info, isPrivate);

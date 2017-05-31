@@ -43,7 +43,7 @@ import java.net.URLConnection;
 /**
  * The Joke module.
  *
- * @author <a href="http://erik.thauvin.net/" target="_blank">Erik C. Thauvin</a>
+ * @author <a href="https://erik.thauvin.net" target="_blank">Erik C. Thauvin</a>
  * @created 2014-04-20
  * @since 1.0
  */

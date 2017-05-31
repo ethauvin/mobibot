@@ -50,7 +50,7 @@ import java.util.TreeMap;
 /**
  * The CurrentConverter module.
  *
- * @author <a href="http://erik.thauvin.net/" target="_blank">Erik C. Thauvin</a>
+ * @author <a href="https://erik.thauvin.net" target="_blank">Erik C. Thauvin</a>
  * @created Feb 11, 2004
  * @since 1.0
  */
