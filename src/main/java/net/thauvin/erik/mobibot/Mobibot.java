@@ -63,11 +63,16 @@ public class Mobibot extends PircBot {
      */
     public static final int CONNECT_TIMEOUT = 5000;
 
-    // The empty title string.
-    static final String NO_TITLE = "No Title";
+    /**
+     * The empty title string.
+     */
+    public static final String NO_TITLE = "No Title";
 
     // The default port.
     private static final int DEFAULT_PORT = 6667;
+
+    // The default server.
+    private static final String DEFAULT_SERVER = "irc.freenode.net";
 
     // The info strings.
     private static final String[] INFO_STRS = {
@@ -129,22 +134,16 @@ public class Mobibot extends PircBot {
 
     // The tell object.
     private static Tell tell;
-
-    // The main channel.
-    private final String channel;
-
     // The commands list.
     private final List<String> commandsList = new ArrayList<>();
-
     // The entries array.
     private final List<EntryLink> entries = new ArrayList<>(0);
-
     // The history/backlogs array.
     private final List<String> history = new ArrayList<>(0);
-
     // The ignored nicks array.
     private final List<String> ignoredNicks = new ArrayList<>(0);
-
+    // The main channel.
+    private final String ircChannel;
     // The IRC port.
     private final int ircPort;
 
@@ -168,16 +167,22 @@ public class Mobibot extends PircBot {
 
     // The default tags/categories.
     private String defaultTags = "";
+
     // The feed URL.
     private String feedURL = "";
+
     // The ident message.
     private String identMsg = "";
+
     // The ident nick.
     private String identNick = "";
+
     // The NickServ ident password.
     private String identPwd = "";
+
     // The pinboard posts handler.
     private Pinboard pinboard = null;
+
     // Today's date.
     private String today = Utils.today();
 
@@ -187,34 +192,29 @@ public class Mobibot extends PircBot {
     /**
      * Creates a new {@link Mobibot} instance.
      *
-     * @param server   The server.
-     * @param port     The port.
-     * @param nickname The nickname.
-     * @param channel  The channel.
-     * @param logsDir  The logs directory.
+     * @param channel     The irc channel.
+     * @param nickname    The bot's nickname.
+     * @param logsDirPath The path to the logs directory.
+     * @param p           The bot's properties.
      */
     @SuppressWarnings("WeakerAccess")
-    public Mobibot(final String server,
-                   final int port,
-                   final String nickname,
-                   final String channel,
-                   final String logsDir) {
+    public Mobibot(final String nickname, final String channel, final String logsDirPath, final Properties p) {
         System.getProperties().setProperty("sun.net.client.defaultConnectTimeout", String.valueOf(CONNECT_TIMEOUT));
         System.getProperties().setProperty("sun.net.client.defaultReadTimeout", String.valueOf(CONNECT_TIMEOUT));
 
         setName(nickname);
 
-        ircServer = server;
-        ircPort = port;
-        this.channel = channel;
-        this.logsDir = logsDir;
+        ircServer = p.getProperty("server", DEFAULT_SERVER);
+        ircPort = Utils.getIntProperty(p.getProperty("port"), DEFAULT_PORT);
+        ircChannel = channel;
+        logsDir = logsDirPath;
 
         // Set the logger level
         loggerLevel = logger.getLevel();
 
         // Load the current entries, if any.
         try {
-            today = EntriesMgr.loadEntries(this.logsDir + EntriesMgr.CURRENT_XML, this.channel, entries);
+            today = EntriesMgr.loadEntries(logsDir + EntriesMgr.CURRENT_XML, ircChannel, entries);
 
             if (logger.isDebugEnabled()) {
                 logger.debug("Last feed: " + today);
@@ -232,12 +232,29 @@ public class Mobibot extends PircBot {
 
         // Load the backlogs, if any.
         try {
-            EntriesMgr.loadBacklogs(this.logsDir + EntriesMgr.NAV_XML, history);
+            EntriesMgr.loadBacklogs(logsDir + EntriesMgr.NAV_XML, history);
         } catch (IOException ignore) {
             ; // Do nothing.
         } catch (FeedException e) {
             logger.error("An error occurred while parsing the '" + EntriesMgr.NAV_XML + "' file.", e);
         }
+
+        // Initialize the bot
+        setVerbose(true);
+        setAutoNickChange(true);
+        setLogin(p.getProperty("login", getName()));
+        setVersion(p.getProperty("weblog", ""));
+        setMessageDelay(MESSAGE_DELAY);
+        setIdentity(p.getProperty("ident", ""), p.getProperty("ident-nick", ""),
+                p.getProperty("ident-msg", ""));
+
+        // Set the URLs
+        setWeblogUrl(getVersion());
+        setFeedURL(p.getProperty("feed", ""));
+        setBacklogsUrl(Utils.ensureDir(p.getProperty("backlogs", weblogUrl), true));
+
+        // Set the pinboard authentication
+        setPinboardAuth(p.getProperty("pinboard-api-token"));
 
         // Load the modules
         MODULES.add(new Calc());
@@ -252,6 +269,26 @@ public class Mobibot extends PircBot {
         MODULES.add(new War());
         MODULES.add(new Weather2());
         MODULES.add(new WorldTime());
+
+        // Load the modules properties
+        MODULES.stream().filter(AbstractModule::hasProperties).forEach(
+                module -> {
+                    for (final String s : module.getPropertyKeys()) {
+                        module.setProperty(s, p.getProperty(s, ""));
+                    }
+                });
+
+        // Get the tell command settings
+        tell = new Tell(this, p.getProperty("tell-max-days"), p.getProperty("tell-max-size"));
+
+        // Set the tags
+        setTags(p.getProperty("tags", ""));
+
+        // Set the ignored nicks
+        setIgnoredNicks(p.getProperty("ignore", ""));
+
+        // Save the entries
+        saveEntries(true);
     }
 
     /**
@@ -306,15 +343,12 @@ public class Mobibot extends PircBot {
                 System.exit(1);
             }
 
-            // Get the main properties
-            final String channel = p.getProperty("channel");
-            final String server = p.getProperty("server");
-            final int port = Utils.getIntProperty(p.getProperty("port"), DEFAULT_PORT);
             final String nickname = p.getProperty("nick", Mobibot.class.getName().toLowerCase());
+            final String channel = p.getProperty("channel");
             final String logsDir = Utils.ensureDir(p.getProperty("logs", "."), false);
 
+            // Redirect the stdout and stderr
             if (!line.hasOption(Commands.DEBUG_ARG.charAt(0))) {
-                // Redirect the stdout and stderr
                 PrintStream stdout = null;
 
                 try {
@@ -329,7 +363,8 @@ public class Mobibot extends PircBot {
                 PrintStream stderr = null;
 
                 try {
-                    stderr = new PrintStream(new FileOutputStream(logsDir + nickname + ".err", true));
+                    stderr = new PrintStream(
+                            new FileOutputStream(logsDir + nickname + ".err", true));
                 } catch (IOException e) {
                     System.err.println("Unable to open error (stderr) log file.");
                     e.printStackTrace(System.err);
@@ -340,86 +375,11 @@ public class Mobibot extends PircBot {
                 System.setErr(stderr);
             }
 
-            // Get the bot's properties
-            final String login = p.getProperty("login", nickname);
-            final String weblogURL = p.getProperty("weblog", "");
-            final String feedURL = p.getProperty("feed", "");
-            final String backlogsURL = Utils.ensureDir(p.getProperty("backlogs", weblogURL), true);
-            final String ignoredNicks = p.getProperty("ignore", "");
-            final String identNick = p.getProperty("ident-nick", "");
-            final String identMsg = p.getProperty("ident-msg", "");
-            final String identPwd = p.getProperty("ident", "");
-            final String tags = p.getProperty("tags", "");
-
-            // Get the pinboard properties
-            final String pinApiToken = p.getProperty("pinboard-api-token");
-
             // Create the bot
-            final Mobibot bot = new Mobibot(server, port, nickname, channel, logsDir);
-
-            // Get the tell command settings
-            tell = new Tell(bot, p.getProperty("tell-max-days"), p.getProperty("tell-max-size"));
-
-            // Initialize the bot
-            bot.setVerbose(true);
-            bot.setAutoNickChange(true);
-            bot.setLogin(login);
-            bot.setVersion(weblogURL);
-            bot.setMessageDelay(MESSAGE_DELAY);
-            bot.setIdentity(identPwd, identNick, identMsg);
-
-            // Set the URLs
-            bot.setWeblogUrl(weblogURL);
-            bot.setFeedURL(feedURL);
-            bot.setBacklogsUrl(backlogsURL);
-
-            // Set the pinboard authentication
-            bot.setPinboardAuth(pinApiToken);
-
-            // Load the modules properties
-            MODULES.stream().filter(AbstractModule::hasProperties).forEach(
-                    module -> {
-                        for (final String s : module.getPropertyKeys()) {
-                            module.setProperty(s, p.getProperty(s, ""));
-                        }
-                    });
-
-            // Set the tags
-            bot.setTags(tags);
-
-            // Set the ignored nicks
-            bot.setIgnoredNicks(ignoredNicks);
-
-            // Save the entries
-            bot.saveEntries(true);
+            final Mobibot bot = new Mobibot(nickname, channel, logsDir, p);
 
             // Connect
-            try {
-                bot.connect(server, port);
-            } catch (Exception e) {
-                int retries = 0;
-
-                while ((retries++ < MAX_RECONNECT) && !bot.isConnected()) {
-                    sleep(10);
-
-                    try {
-                        bot.connect(server, port);
-                    } catch (Exception ignore) {
-                        if (retries == MAX_RECONNECT) {
-                            System.err.println(
-                                    "Unable to connect to " + server + " after " + MAX_RECONNECT + " retries.");
-                            e.printStackTrace(System.err);
-                            System.exit(1);
-                        }
-                    }
-                }
-            }
-
-            bot.setVersion(INFO_STRS[0]);
-
-            bot.identify();
-
-            bot.joinChannel(channel);
+            bot.connect();
         }
     }
 
@@ -442,7 +402,7 @@ public class Mobibot extends PircBot {
      * @param action The action.
      */
     final public void action(final String action) {
-        action(channel, action);
+        action(ircChannel, action);
     }
 
     /**
@@ -455,6 +415,42 @@ public class Mobibot extends PircBot {
         if (Utils.isValidString(channel) && Utils.isValidString(action)) {
             sendAction(channel, action);
         }
+    }
+
+    /**
+     * Connects to the server and joins the channel.
+     */
+    public final void connect() {
+        try {
+            connect(ircServer, ircPort);
+        } catch (Exception e) {
+            int retries = 0;
+
+            while ((retries++ < MAX_RECONNECT) && !isConnected()) {
+                sleep(10);
+
+                try {
+                    connect(ircServer, ircPort);
+                } catch (Exception ex) {
+                    if (retries == MAX_RECONNECT) {
+                        if (logger.isDebugEnabled()) {
+                            logger.debug(
+                                    "Unable to reconnect to " + ircServer + " after " + MAX_RECONNECT + " retries.",
+                                    ex);
+                        }
+
+                        e.printStackTrace(System.err);
+                        System.exit(1);
+                    }
+                }
+            }
+        }
+
+        setVersion(INFO_STRS[0]);
+
+        identify();
+
+        joinChannel();
     }
 
     /**
@@ -494,16 +490,16 @@ public class Mobibot extends PircBot {
      * @return The backlogs URL.
      */
     public final String getBacklogsUrl() {
-        return this.backLogsUrl;
+        return backLogsUrl;
     }
 
     /**
      * Sets the backlogs URL.
      *
-     * @param backLogsUrl The backlogs URL.
+     * @param url The backlogs URL.
      */
-    private void setBacklogsUrl(final String backLogsUrl) {
-        this.backLogsUrl = backLogsUrl;
+    private void setBacklogsUrl(final String url) {
+        backLogsUrl = url;
     }
 
     /**
@@ -512,7 +508,7 @@ public class Mobibot extends PircBot {
      * @return The current channel.
      */
     public final String getChannel() {
-        return channel;
+        return ircChannel;
     }
 
     /**
@@ -521,7 +517,7 @@ public class Mobibot extends PircBot {
      * @return The irc server.
      */
     public final String getIrcServer() {
-        return this.ircServer;
+        return ircServer;
     }
 
     /**
@@ -539,7 +535,7 @@ public class Mobibot extends PircBot {
      * @return the log directory.
      */
     public final String getLogsDir() {
-        return this.logsDir;
+        return logsDir;
     }
 
     /**
@@ -570,7 +566,7 @@ public class Mobibot extends PircBot {
      * @return Today's date.
      */
     public String getToday() {
-        return this.today;
+        return today;
     }
 
     /**
@@ -579,16 +575,16 @@ public class Mobibot extends PircBot {
      * @return The weblog URL.
      */
     public final String getWeblogUrl() {
-        return this.weblogUrl;
+        return weblogUrl;
     }
 
     /**
      * Sets the weblog URL.
      *
-     * @param weblogUrl The weblog URL.
+     * @param url The weblog URL.
      */
-    private void setWeblogUrl(final String weblogUrl) {
-        this.weblogUrl = weblogUrl;
+    private void setWeblogUrl(final String url) {
+        weblogUrl = url;
     }
 
     /**
@@ -641,9 +637,9 @@ public class Mobibot extends PircBot {
         } else if (lcTopic.equals(Commands.VIEW_CMD)) {
             send(sender, "To list or search the current URL posts:");
             send(sender, helpIndent(getNick() + ": " + Commands.VIEW_CMD) + " [<start>] [<query>]");
-        } else if (lcTopic.equals(channel.substring(1).toLowerCase())) {
+        } else if (lcTopic.equals(ircChannel.substring(1).toLowerCase())) {
             send(sender, "To list the last 5 posts from the channel's weblog:");
-            send(sender, helpIndent(getNick() + ": " + channel.substring(1)));
+            send(sender, helpIndent(getNick() + ": " + ircChannel.substring(1)));
         } else if (lcTopic.equals(Commands.RECAP_CMD)) {
             send(sender, "To list the last 10 public channel messages:");
             send(sender, helpIndent(getNick() + ": " + Commands.RECAP_CMD));
@@ -686,7 +682,7 @@ public class Mobibot extends PircBot {
                 }
             }
 
-            send(sender, Utils.bold("Type a URL on " + channel + " to post it."));
+            send(sender, Utils.bold("Type a URL on " + ircChannel + " to post it."));
             send(sender, "For more information on a specific command, type:");
             send(sender, helpIndent(getNick() + ": " + Commands.HELP_CMD + " <command>"));
             send(sender, "The commands are:");
@@ -694,7 +690,7 @@ public class Mobibot extends PircBot {
             if (commandsList.isEmpty()) {
                 commandsList.add(Commands.IGNORE_CMD);
                 commandsList.add(Commands.INFO_CMD);
-                commandsList.add(channel.substring(1));
+                commandsList.add(ircChannel.substring(1));
                 commandsList.add(Commands.HELP_POSTING_KEYWORD);
                 commandsList.add(Commands.HELP_TAGS_KEYWORD);
                 commandsList.add(Commands.RECAP_CMD);
@@ -882,13 +878,13 @@ public class Mobibot extends PircBot {
     }
 
     /**
-     * Returns <code>true</code> if the specified sender is an Op on the {@link #channel channel}.
+     * Returns <code>true</code> if the specified sender is an Op on the {@link #ircChannel channel}.
      *
      * @param sender The sender.
      * @return true, if the sender is an Op.
      */
     public boolean isOp(final String sender) {
-        final User[] users = getUsers(channel);
+        final User[] users = getUsers(ircChannel);
 
         for (final User user : users) {
             if (user.getNick().equals(sender)) {
@@ -900,6 +896,13 @@ public class Mobibot extends PircBot {
     }
 
     /**
+     * Joins the bot's channel.
+     */
+    public final void joinChannel() {
+        joinChannel(ircChannel);
+    }
+
+    /**
      * {@inheritDoc}
      */
     @Override
@@ -908,7 +911,7 @@ public class Mobibot extends PircBot {
                                   final String hostname,
                                   final String target,
                                   final String action) {
-        if (target.equals(channel)) {
+        if (target.equals(ircChannel)) {
             storeRecap(sender, action, true);
         }
     }
@@ -924,37 +927,7 @@ public class Mobibot extends PircBot {
 
         sleep(5);
 
-        // Connect
-        try {
-            connect(ircServer, ircPort);
-        } catch (Exception e) {
-            int retries = 0;
-
-            while ((retries++ < MAX_RECONNECT) && !isConnected()) {
-                sleep(10);
-
-                try {
-                    connect(ircServer, ircPort);
-                } catch (Exception ex) {
-                    if (retries == MAX_RECONNECT) {
-                        if (logger.isDebugEnabled()) {
-                            logger.debug(
-                                    "Unable to reconnect to " + ircServer + " after " + MAX_RECONNECT + " retries.",
-                                    ex);
-                        }
-
-                        e.printStackTrace(System.err);
-                        System.exit(1);
-                    }
-                }
-            }
-        }
-
-        setVersion(INFO_STRS[0]);
-
-        identify();
-
-        joinChannel(channel);
+        connect();
     }
 
     /**
@@ -1339,17 +1312,17 @@ public class Mobibot extends PircBot {
             sendRawLine("QUIT : Poof!");
             System.exit(0);
         } else if (cmd.equals(Commands.DIE_CMD) && isOp(sender)) {
-            send(channel, sender + " has just signed my death sentence.");
+            send(ircChannel, sender + " has just signed my death sentence.");
             saveEntries(true);
             sleep(3);
             quitServer("The Bot Is Out There!");
             System.exit(0);
         } else if (cmd.equals(Commands.CYCLE_CMD)) {
-            send(channel, sender + " has just asked me to leave. I'll be back!");
+            send(ircChannel, sender + " has just asked me to leave. I'll be back!");
             sleep(0);
-            partChannel(channel);
+            partChannel(ircChannel);
             sleep(10);
-            joinChannel(channel);
+            joinChannel(ircChannel);
         } else if (cmd.equals(Commands.RECAP_CMD)) {
             recapResponse(sender, true);
         } else if (cmd.equals(Commands.USERS_CMD)) {
@@ -1369,13 +1342,11 @@ public class Mobibot extends PircBot {
             } else {
                 helpResponse(sender, Commands.ME_CMD);
             }
-        } else if (cmd.equals(Commands.NICK_CMD) && (cmds.length > 1)) {
-            if (isOp(sender)) {
-                changeNick(args);
-            }
+        } else if (cmd.equals(Commands.NICK_CMD) && (cmds.length > 1) && isOp(sender)) {
+            changeNick(args);
         } else if (cmd.equals(Commands.SAY_CMD) && isOp(sender)) {
             if (cmds.length > 1) {
-                send(channel, args, true);
+                send(ircChannel, args, true);
             } else {
                 helpResponse(sender, Commands.SAY_CMD);
             }
@@ -1431,8 +1402,8 @@ public class Mobibot extends PircBot {
      * @param isPrivate Set to <code>true</code> if the response should be sent as a private message.
      */
     private void recapResponse(final String sender, final boolean isPrivate) {
-        if (this.recap.size() > 0) {
-            for (final String recap : this.recap) {
+        if (recap.size() > 0) {
+            for (final String recap : recap) {
                 send(sender, recap, isPrivate);
             }
         } else {
@@ -1497,14 +1468,14 @@ public class Mobibot extends PircBot {
     /**
      * Sets the bot's identification.
      *
-     * @param identPwd  The password for NickServ, if any.
-     * @param identNick The ident nick name.
-     * @param identMsg  The ident message.
+     * @param pwd  The password for NickServ, if any.
+     * @param nick The ident nick name.
+     * @param msg  The ident message.
      */
-    private void setIdentity(final String identPwd, final String identNick, final String identMsg) {
-        this.identPwd = identPwd;
-        this.identNick = identNick;
-        this.identMsg = identMsg;
+    private void setIdentity(final String pwd, final String nick, final String msg) {
+        identPwd = pwd;
+        identNick = nick;
+        identMsg = msg;
     }
 
     /**
@@ -1565,7 +1536,7 @@ public class Mobibot extends PircBot {
      * @param isPrivate Set to <code>true</code> if the response should be sent as a private message.
      */
     private void usersResponse(final String sender, final boolean isPrivate) {
-        final User[] users = getUsers(channel);
+        final User[] users = getUsers(ircChannel);
         final String[] nicks = new String[users.length];
 
         for (int i = 0; i < users.length; i++) {
