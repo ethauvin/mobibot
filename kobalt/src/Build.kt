@@ -50,11 +50,12 @@ val p = project {
 
     version = versionFor()
 
-    val processorJar = "net.thauvin.erik:semver:1.0.0"
+    val processorJar = "net.thauvin.erik:semver:1.0.1"
     val lib = "lib"
 
     dependencies {
         compile("pircbot:pircbot:1.5.0")
+        //compileOnly("pircbot:pircbot::sources:1.5.0")
 
         compile("org.apache.logging.log4j:log4j-api:2.8.2")
         compile("org.apache.logging.log4j:log4j-core:2.8.2")
@@ -62,13 +63,13 @@ val p = project {
         compile("commons-cli:commons-cli:1.4")
 
         compile("commons-net:commons-net:3.6")
-        compile("com.squareup.okhttp3:okhttp:3.8.0")
+        compile("com.squareup.okhttp3:okhttp:3.8.1")
 
         compile("com.rometools:rome:1.7.3", "org.apache.logging.log4j:log4j-slf4j-impl:jar:2.8.2")
 
         compile("org.json:json:20170516")
         compile("org.ostermiller:utils:1.07.00")
-        compile("org.jsoup:jsoup:1.10.2")
+        compile("org.jsoup:jsoup:1.10.3")
         compile("net.objecthunter:exp4j:0.4.8")
 
         compile("org.twitter4j:twitter4j-core:4.0.6")
