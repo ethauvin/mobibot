@@ -63,10 +63,8 @@ public class Mobibot extends PircBot {
      */
     public static final int CONNECT_TIMEOUT = 5000;
 
-    /**
-     * The empty title string.
-     */
-    public static final String NO_TITLE = "No Title";
+    // The empty title string.
+    static final String NO_TITLE = "No Title";
 
     // The default port.
     private static final int DEFAULT_PORT = 6667;

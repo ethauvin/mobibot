@@ -60,7 +60,7 @@ dependencies {
     compile 'commons-net:commons-net:3.6'
     compile 'com.squareup.okhttp3:okhttp:3.8.1'
 
-    compile 'com.rometools:rome:1.7.3'
+    compile 'com.rometools:rome:1.7.4'
     compile 'org.apache.logging.log4j:log4j-slf4j-impl:2.8.2'
 
     compile 'org.json:json:20170516'

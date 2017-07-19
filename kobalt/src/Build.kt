@@ -57,15 +57,14 @@ val p = project {
         compile("pircbot:pircbot:1.5.0")
         //compileOnly("pircbot:pircbot::sources:1.5.0")
 
-        compile("org.apache.logging.log4j:log4j-api:2.8.2")
-        compile("org.apache.logging.log4j:log4j-core:2.8.2")
+        compile("org.apache.logging.log4j:log4j-api:2.8.2",
+            "org.apache.logging.log4j:log4j-core:2.8.2",
+            "org.apache.logging.log4j:log4j-slf4j-impl:jar:2.8.2")
 
-        compile("commons-cli:commons-cli:1.4")
-
-        compile("commons-net:commons-net:3.6")
+        compile("commons-cli:commons-cli:1.4", "commons-net:commons-net:3.6")
         compile("com.squareup.okhttp3:okhttp:3.8.1")
 
-        compile("com.rometools:rome:1.7.3", "org.apache.logging.log4j:log4j-slf4j-impl:jar:2.8.2")
+        compile("com.rometools:rome:1.7.4")
 
         compile("org.json:json:20170516")
         compile("org.ostermiller:utils:1.07.00")
