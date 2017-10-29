@@ -57,16 +57,16 @@ val p = project {
         compile("pircbot:pircbot:1.5.0")
         //compileOnly("pircbot:pircbot::sources:1.5.0")
 
-        compile("org.apache.logging.log4j:log4j-api:2.8.2",
-            "org.apache.logging.log4j:log4j-core:2.8.2",
-            "org.apache.logging.log4j:log4j-slf4j-impl:jar:2.8.2")
+        compile("org.apache.logging.log4j:log4j-api:2.9.1",
+            "org.apache.logging.log4j:log4j-core:2.9.1",
+            "org.apache.logging.log4j:log4j-slf4j-impl:jar:2.9.1")
 
         compile("commons-cli:commons-cli:1.4", "commons-net:commons-net:3.6")
-        compile("com.squareup.okhttp3:okhttp:3.8.1")
+        compile("com.squareup.okhttp3:okhttp:3.9.0")
 
-        compile("com.rometools:rome:1.7.4")
+        compile("com.rometools:rome:1.8.0")
 
-        compile("org.json:json:20170516")
+        compile("org.json:json:20171018")
         compile("org.ostermiller:utils:1.07.00")
         compile("org.jsoup:jsoup:1.10.3")
         compile("net.objecthunter:exp4j:0.4.8")
@@ -82,8 +82,8 @@ val p = project {
     }
 
     dependenciesTest {
-        compile("org.testng:testng:6.11")
-        compile("org.assertj:assertj-core:3.8.0")
+        compile("org.testng:testng:6.12")
+        compile("org.assertj:assertj-core:3.9.0")
     }
 
     apt {
