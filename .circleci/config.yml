@@ -32,4 +32,6 @@ jobs:
           command: ./gradlew test
 
       - store_test_results:
-          path: build/reports/
+          path: build/reports
+      - store_artifacts:
+          path: build/reports
