@@ -19,7 +19,7 @@ jobs:
           - gradle-dependencies-
 
       - run:
-          name: Gradle dependencies
+          name: Gradle Dependencies
           command: ./gradlew dependencies
 
       - save_cache:
@@ -32,10 +32,10 @@ jobs:
           command: ./gradlew test
 
       - run:
-          name: Save test results
+          name: Save Test Results
           command: |
             mkdir -p ~/test/
-            find . -type f -regex ".*/build/test-results/test/.*xml" -exec cp {} ~/junit/ \;
+            find . -type f -regex "build/test-results/test/.*xml" -exec cp {} ~/junit/ \;
           when: always
       - store_test_results:
           path: ~/test
