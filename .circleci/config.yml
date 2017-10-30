@@ -23,13 +23,12 @@ jobs:
           command: ./gradlew dependencies
 
       - save_cache:
-          paths:
-            - ~/.m2
+          paths: ~/.m2
           key: gradle-dependencies-{{ checksum "build.gradle" }}
 
       - run:
-          name: Run Tests
-          command: ./gradlew test
+          name: Run All Checks
+          command: ./gradlew check
 
       - run:
           name: Save Test Results
