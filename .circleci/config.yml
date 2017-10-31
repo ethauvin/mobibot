@@ -30,13 +30,8 @@ jobs:
           name: Run All Checks
           command: ./gradlew check
 
-      - run:
-          name: Save Test Results
-          command: |
-            mkdir -p ~/test
-            cp -a build/reports/tests/test/. ~/test
-          when: always
-      - store_test_results:
-          path: ~/test
       - store_artifacts:
-          path: ~/test
+          path: build/reports/
+          destination: reports
+      - store_test_results:
+          path: build/reports/tests/test
