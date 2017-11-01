@@ -83,7 +83,7 @@ val p = project {
 
     dependenciesTest {
         compile("org.testng:testng:6.12")
-        compile("org.assertj:assertj-core:3.9.0")
+        compile("org.assertj:assertj-core:3.8.0")
     }
 
     apt {
