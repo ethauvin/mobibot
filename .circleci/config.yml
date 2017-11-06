@@ -1,6 +1,6 @@
 version: 2
 jobs:
-  build:
+  checkout_code:
     docker:
       - image: circleci/openjdk:8-jdk
 
@@ -12,6 +12,11 @@ jobs:
 
     steps:
       - checkout
+
+  build_gradle:
+    working_directory: ~/repo
+
+    steps:
       - restore_cache:
           keys:
           - gradle-dependencies-{{ checksum "build.gradle" }}
@@ -35,3 +40,44 @@ jobs:
           destination: reports
       - store_test_results:
           path: build/reports/
+
+  build_kobalt:
+    working_directory: ~/repo
+
+    steps:
+      - restore_cache:
+          keys:
+          - kobalt-dependencies-{{ checksum "kobalt/src/Build.kt" }}
+          # fallback to using the latest cache if no exact match is found
+          - kobalt-dependencies-
+
+      - run:
+          name: Check Versions
+          command: ./kobaltw checkVersions
+
+      - save_cache:
+          paths: ~/.kobalt
+          key: kobalt-dependencies-{{ checksum "kobalt/src/Build.kt" }}
+
+      - run:
+          name: Assemble & Test
+          command: ./kobaltw assemble test
+
+      - store_artifacts:
+          path: kobaltBuild/test-output/
+          destination: test-output
+      - store_test_results:
+          path: kobaltBuild/test-output/
+
+workflows:
+  version: 2
+  build_gradle_and_kobalt:
+    jobs:
+      - checkout_code
+      - build_gradle
+        requires:
+          - checkout_code
+
+      - build_kobalt
+        requires:
+          - checkout_code
