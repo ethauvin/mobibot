@@ -6,15 +6,15 @@ jobs:
 
     working_directory: ~/repo
 
-    environment:
-      JVM_OPTS: -Xmx3200m
-      TERM: dumb
-
     steps:
       - checkout
 
-  build_gradle:
+  build:
     working_directory: ~/repo
+
+    environment:
+      JVM_OPTS: -Xmx3200m
+      TERM: dumb
 
     steps:
       - restore_cache:
@@ -43,6 +43,10 @@ jobs:
 
   build_kobalt:
     working_directory: ~/repo
+
+    environment:
+      JVM_OPTS: -Xmx3200m
+      TERM: dumb
 
     steps:
       - restore_cache:
@@ -74,7 +78,7 @@ workflows:
   build_gradle_and_kobalt:
     jobs:
       - checkout_code
-      - build_gradle
+      - build
         requires:
           - checkout_code
 
