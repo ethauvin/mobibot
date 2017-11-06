@@ -162,7 +162,7 @@
         <option name="autoDownloadKobalt" value="true" />
         <option name="downloadSources" value="false" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
-        <option name="kobaltHome" value="$USER_HOME$/.kobalt/wrapper/dist/kobalt-1.0.87" />
+        <option name="kobaltHome" value="$USER_HOME$/.kobalt/wrapper/dist/kobalt-1.0.90" />
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
@@ -171,9 +171,6 @@
         <option name="profiles" value="" />
       </KobaltProjectSettings>
     </option>
-  </component>
-  <component name="KotlinCommonCompilerArguments">
-    <option name="coroutinesWarn" value="false" />
   </component>
   <component name="MavenImportPreferences">
     <option name="generalSettings">
