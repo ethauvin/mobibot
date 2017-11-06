@@ -1,4 +1,5 @@
-version: 2
+version: 2.0
+
 jobs:
   checkout_code:
     docker:
@@ -9,7 +10,7 @@ jobs:
     steps:
       - checkout
 
-  build:
+  build_gradle:
     working_directory: ~/repo
 
     environment:
@@ -78,7 +79,7 @@ workflows:
   build_gradle_and_kobalt:
     jobs:
       - checkout_code
-      - build
+      - build_gradle
         requires:
           - checkout_code
 
