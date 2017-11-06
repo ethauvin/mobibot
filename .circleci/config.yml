@@ -1,23 +1,19 @@
+defaults: &defaults
+  working_directory: ~/repo
+  docker:
+    - image: circleci/openjdk:8-jdk
+  environment:
+    JVM_OPTS: -Xmx3200m
+    TERM: dumb
+
 version: 2.0
 
 jobs:
-  checkout_code:
-    docker:
-      - image: circleci/openjdk:8-jdk
-
-    working_directory: ~/repo
+  build_gradle:
+    <<: *defaults
 
     steps:
       - checkout
-
-  build_gradle:
-    working_directory: ~/repo
-
-    environment:
-      JVM_OPTS: -Xmx3200m
-      TERM: dumb
-
-    steps:
       - restore_cache:
           keys:
           - gradle-dependencies-{{ checksum "build.gradle" }}
@@ -43,13 +39,10 @@ jobs:
           path: build/reports/
 
   build_kobalt:
-    working_directory: ~/repo
-
-    environment:
-      JVM_OPTS: -Xmx3200m
-      TERM: dumb
+    <<: *defaults
 
     steps:
+      - checkout
       - restore_cache:
           keys:
           - kobalt-dependencies-{{ checksum "kobalt/src/Build.kt" }}
@@ -78,11 +71,5 @@ workflows:
   version: 2
   build_gradle_and_kobalt:
     jobs:
-      - checkout_code
       - build_gradle
-        requires:
-          - checkout_code
-
       - build_kobalt
-        requires:
-          - checkout_code
