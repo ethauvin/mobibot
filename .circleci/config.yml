@@ -106,8 +106,10 @@ jobs:
 
 workflows:
   version: 2
-  build_jdk8:
+  build_gradle:
     jobs:
       - build_gradle
-      - build_kobalt
       - build_gradle_jdk9
+  build_kobalt:
+    jobs:
+      - build_kobalt
