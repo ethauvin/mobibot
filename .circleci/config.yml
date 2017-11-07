@@ -106,10 +106,10 @@ jobs:
 
 workflows:
   version: 2
-  build_gradle:
+  gradle:
     jobs:
       - build_gradle
       - build_gradle_jdk9
-  build_kobalt:
+  kobalt:
     jobs:
       - build_kobalt
