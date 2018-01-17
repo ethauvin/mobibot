@@ -162,7 +162,7 @@
         <option name="autoDownloadKobalt" value="true" />
         <option name="downloadSources" value="false" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
-        <option name="kobaltHome" value="$USER_HOME$/.kobalt/wrapper/dist/kobalt-1.0.90" />
+        <option name="kobaltHome" value="$USER_HOME$/.kobalt/wrapper/dist/kobalt-1.0.100" />
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
@@ -178,6 +178,9 @@
         <option name="mavenHome" value="Bundled (Maven 3)" />
       </MavenGeneralSettings>
     </option>
+  </component>
+  <component name="ProjectCodeStyleConfiguration">
+    <option name="PREFERRED_PROJECT_CODE_STYLE" value="Erik's Code Style" />
   </component>
   <component name="ProjectCodeStyleSettingsManager">
     <option name="PER_PROJECT_SETTINGS">
@@ -326,13 +329,13 @@
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
   </component>
   <component name="libraryTable">
-    <library name="Gradle: com.beust:jcommander:1.64">
+    <library name="Gradle: com.beust:jcommander:1.72">
       <CLASSES>
-        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.beust/jcommander/1.64/456a985ac9b12d34820e4d5de063b2c2fc43ed5a/jcommander-1.64.jar!/" />
+        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.beust/jcommander/1.72/6375e521c1e11d6563d4f25a07ce124ccf8cd171/jcommander-1.72.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES>
-        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.beust/jcommander/1.64/1b16adc28aca77f62a61f31380f84961c9c3570d/jcommander-1.64-sources.jar!/" />
+        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.beust/jcommander/1.72/7ef123d5dfb6f839b41265648ff1be34982d50f8/jcommander-1.72-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Gradle: com.github.spullara.mustache.java:compiler:0.9.4">
@@ -344,31 +347,31 @@
         <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.spullara.mustache.java/compiler/0.9.4/599674a480f9940ff5e25b375c6f59d14d8a4bfa/compiler-0.9.4-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Gradle: com.rometools:rome-utils:1.7.3">
+    <library name="Gradle: com.rometools:rome-utils:1.9.0">
       <CLASSES>
-        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.rometools/rome-utils/1.7.3/53e57b41a8f3440ca808bd5f246cb70ba6dcc67a/rome-utils-1.7.3.jar!/" />
+        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.rometools/rome-utils/1.9.0/9f2291327c641cd78d3111d50e9b03022f6c1090/rome-utils-1.9.0.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES>
-        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.rometools/rome-utils/1.7.3/451e50a658f7ca5d59faa68715428093397751f5/rome-utils-1.7.3-sources.jar!/" />
+        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.rometools/rome-utils/1.9.0/905649e08280147d3655b51454c76e99ed4f54b1/rome-utils-1.9.0-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Gradle: com.rometools:rome:1.7.3">
+    <library name="Gradle: com.rometools:rome:1.9.0">
       <CLASSES>
-        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.rometools/rome/1.7.3/18d04e4c24025077bacc5e4f2ca0fd48587f56e8/rome-1.7.3.jar!/" />
+        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.rometools/rome/1.9.0/4546a79a6fb470c5235806c877d9438140f3bb61/rome-1.9.0.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES>
-        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.rometools/rome/1.7.3/d30dbef2c5e08f388157dc4cf7d9c55faa37e929/rome-1.7.3-sources.jar!/" />
+        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.rometools/rome/1.9.0/b54fdebe24f1df782e714c20e238619a8bdbee71/rome-1.9.0-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Gradle: com.squareup.okhttp3:okhttp:3.8.0">
+    <library name="Gradle: com.squareup.okhttp3:okhttp:3.9.1">
       <CLASSES>
-        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.squareup.okhttp3/okhttp/3.8.0/5a11f020cce2d11eb71ba916700600e18c4547e7/okhttp-3.8.0.jar!/" />
+        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.squareup.okhttp3/okhttp/3.9.1/84b4b7d1c4a238e7899972b7446c250691e65f1f/okhttp-3.9.1.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES>
-        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.squareup.okhttp3/okhttp/3.8.0/db21293949e200f08d5325e8a8eefdcc9134b752/okhttp-3.8.0-sources.jar!/" />
+        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.squareup.okhttp3/okhttp/3.9.1/7539531ecf9b6e082fcab195f0835d4f69ead95e/okhttp-3.9.1-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Gradle: com.squareup.okio:okio:1.13.0">
@@ -407,58 +410,58 @@
         <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/net.objecthunter/exp4j/0.4.8/8d86f148ff1f0d5b624eae9bb0882198ab5cd07/exp4j-0.4.8-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Gradle: net.thauvin.erik:pinboard-poster:0.9.1">
+    <library name="Gradle: net.thauvin.erik:pinboard-poster:0.9.3">
       <CLASSES>
-        <root url="jar://$MAVEN_REPOSITORY$/net/thauvin/erik/pinboard-poster/0.9.1/pinboard-poster-0.9.1.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/net/thauvin/erik/pinboard-poster/0.9.3/pinboard-poster-0.9.3.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES>
-        <root url="jar://$MAVEN_REPOSITORY$/net/thauvin/erik/pinboard-poster/0.9.1/pinboard-poster-0.9.1-sources.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/net/thauvin/erik/pinboard-poster/0.9.3/pinboard-poster-0.9.3-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Gradle: net.thauvin.erik:semver:1.0.0">
+    <library name="Gradle: net.thauvin.erik:semver:1.0.1">
       <CLASSES>
-        <root url="jar://$MAVEN_REPOSITORY$/net/thauvin/erik/semver/1.0.0/semver-1.0.0.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/net/thauvin/erik/semver/1.0.1/semver-1.0.1.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES>
-        <root url="jar://$MAVEN_REPOSITORY$/net/thauvin/erik/semver/1.0.0/semver-1.0.0-sources.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/net/thauvin/erik/semver/1.0.1/semver-1.0.1-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Gradle: org.apache.logging.log4j:log4j-api:2.8.2">
+    <library name="Gradle: org.apache.logging.log4j:log4j-api:2.10.0">
       <CLASSES>
-        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-api/2.8.2/e590eeb783348ce8ddef205b82127f9084d82bf3/log4j-api-2.8.2.jar!/" />
+        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-api/2.10.0/fec5797a55b786184a537abd39c3fa1449d752d6/log4j-api-2.10.0.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES>
-        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-api/2.8.2/459702eacc545a5478627fe879cec6e004c00f3a/log4j-api-2.8.2-sources.jar!/" />
+        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-api/2.10.0/fd42afa6acbfb3801accec744106ee28b9342567/log4j-api-2.10.0-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Gradle: org.apache.logging.log4j:log4j-core:2.8.2">
+    <library name="Gradle: org.apache.logging.log4j:log4j-core:2.10.0">
       <CLASSES>
-        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-core/2.8.2/979fc0cf8460302e4ffbfe38c1b66a99450b0bb7/log4j-core-2.8.2.jar!/" />
+        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-core/2.10.0/c90b597163cd28ab6d9687edd53db601b6ea75a1/log4j-core-2.10.0.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES>
-        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-core/2.8.2/4693b08b8d9abe152417b9564bb7a68d82630180/log4j-core-2.8.2-sources.jar!/" />
+        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-core/2.10.0/a2041b29bc3e761fba750c0df933cd48f76f5b3a/log4j-core-2.10.0-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Gradle: org.apache.logging.log4j:log4j-slf4j-impl:2.8.2">
+    <library name="Gradle: org.apache.logging.log4j:log4j-slf4j-impl:2.10.0">
       <CLASSES>
-        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-slf4j-impl/2.8.2/36bc2a99b86be26ccdc51fe288458dc712d280c1/log4j-slf4j-impl-2.8.2.jar!/" />
+        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-slf4j-impl/2.10.0/8e4e0a30736175e31c7f714d95032c1734cfbdea/log4j-slf4j-impl-2.10.0.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES>
-        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-slf4j-impl/2.8.2/c5f494286f220ba330c6eabccf10740458ef1fab/log4j-slf4j-impl-2.8.2-sources.jar!/" />
+        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-slf4j-impl/2.10.0/51e9adc49fcb32d961c66170c9b4b092ee809d9c/log4j-slf4j-impl-2.10.0-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Gradle: org.assertj:assertj-core:3.8.0">
+    <library name="Gradle: org.assertj:assertj-core:3.9.0">
       <CLASSES>
-        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.assertj/assertj-core/3.8.0/b209d90ff2e279bee3e02547ee7b11349c52d0e3/assertj-core-3.8.0.jar!/" />
+        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.assertj/assertj-core/3.9.0/de324a44efe19b9222d2218f7ac3102d728497d8/assertj-core-3.9.0.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES>
-        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.assertj/assertj-core/3.8.0/85dab3e124fb391b10196df9bfdb43640deabb09/assertj-core-3.8.0-sources.jar!/" />
+        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.assertj/assertj-core/3.9.0/7eefa834515f5adb0a14713b9c3cf9aa565530d8/assertj-core-3.9.0-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Gradle: org.jdom:jdom2:2.0.6">
@@ -470,13 +473,13 @@
         <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jdom/jdom2/2.0.6/3dcf8ba7582eeac3b67ed5155ee3659e16c8dadc/jdom2-2.0.6-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Gradle: org.jetbrains.kotlin:kotlin-stdlib:1.1.2-3">
+    <library name="Gradle: org.jetbrains.kotlin:kotlin-stdlib:1.1.51">
       <CLASSES>
-        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/1.1.2-3/552a40eb47669b78f0f194d526cb21b3aa1f8319/kotlin-stdlib-1.1.2-3.jar!/" />
+        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/1.1.51/e34fe80c9714240525f665113dd3749415515655/kotlin-stdlib-1.1.51.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES>
-        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/1.1.2-3/7502cd343c8990a77aabb7cf41bd7e9f186c06cc/kotlin-stdlib-1.1.2-3-sources.jar!/" />
+        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/1.1.51/b44aed5fe16fe27bb75488a2274d435e875fdb44/kotlin-stdlib-1.1.51-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Gradle: org.jetbrains:annotations:13.0">
@@ -488,22 +491,22 @@
         <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains/annotations/13.0/5991ca87ef1fb5544943d9abc5a9a37583fabe03/annotations-13.0-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Gradle: org.json:json:20170516">
+    <library name="Gradle: org.json:json:20171018">
       <CLASSES>
-        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.json/json/20170516/949abe1460757b8dc9902c562f83e49675444572/json-20170516.jar!/" />
+        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.json/json/20171018/36ced462c97f0845b4a7b266a25cebe95d18baa3/json-20171018.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES>
-        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.json/json/20170516/6d919271d0ac012fb5706abd62fd3aff0f78ed95/json-20170516-sources.jar!/" />
+        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.json/json/20171018/b4a63d74bc32f012342173c1a1da6fbe90065d69/json-20171018-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Gradle: org.jsoup:jsoup:1.10.2">
+    <library name="Gradle: org.jsoup:jsoup:1.11.2">
       <CLASSES>
-        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jsoup/jsoup/1.10.2/33ee82e324f4b1e40167f3dc5e01234a1c5cab61/jsoup-1.10.2.jar!/" />
+        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jsoup/jsoup/1.11.2/e3eeb8a0b4ce1db246059a41e353cd7413dad226/jsoup-1.11.2.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES>
-        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jsoup/jsoup/1.10.2/705a50ce237c266feaa279797712cb6bb6c1f34d/jsoup-1.10.2-sources.jar!/" />
+        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jsoup/jsoup/1.11.2/f0f1f0d1ceb2cd515c98649d9ad6b8b9814899b2/jsoup-1.11.2-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Gradle: org.ostermiller:utils:1.07.00">
@@ -515,22 +518,22 @@
         <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.ostermiller/utils/1.07.00/586774ee4b8409b6835621bae2186d9b54d1c36a/utils-1.07.00-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Gradle: org.slf4j:slf4j-api:1.7.24">
+    <library name="Gradle: org.slf4j:slf4j-api:1.8.0-alpha2">
       <CLASSES>
-        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.slf4j/slf4j-api/1.7.24/3f6b4bd4f8dbe8d4bea06d107a3826469b85c3e9/slf4j-api-1.7.24.jar!/" />
+        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.slf4j/slf4j-api/1.8.0-alpha2/34fa1d87256bbdb376ae7f6fa7e479610cd07dce/slf4j-api-1.8.0-alpha2.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES>
-        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.slf4j/slf4j-api/1.7.24/9f1cecd7c757ad5dde29453d43315228bb0a7c7e/slf4j-api-1.7.24-sources.jar!/" />
+        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.slf4j/slf4j-api/1.8.0-alpha2/5818a2c13c12c71c2861315d90888104a875f438/slf4j-api-1.8.0-alpha2-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Gradle: org.testng:testng:6.11">
+    <library name="Gradle: org.testng:testng:6.13.1">
       <CLASSES>
-        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.testng/testng/6.11/1fdd5e22f50b14f6d846163456e8c9a7657626fb/testng-6.11.jar!/" />
+        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.testng/testng/6.13.1/2495393a0b4b7d7a4b49ea1f8516376f70f482c/testng-6.13.1.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES>
-        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.testng/testng/6.11/77da7afb24d57b640d9803593a6222c7de12dd4e/testng-6.11-sources.jar!/" />
+        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.testng/testng/6.13.1/a2b77dfee647263d2c1010215441bfa3e28c4b9c/testng-6.13.1-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Gradle: org.twitter4j:twitter4j-core:4.0.6">
@@ -542,18 +545,18 @@
         <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.twitter4j/twitter4j-core/4.0.6/5a3a910793c3510a3e25cea3c51672bb88124527/twitter4j-core-4.0.6-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Gradle: org.yaml:snakeyaml:1.17">
-      <CLASSES>
-        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.yaml/snakeyaml/1.17/7a27ea250c5130b2922b86dea63cbb1cc10a660c/snakeyaml-1.17.jar!/" />
-      </CLASSES>
-      <JAVADOC />
-      <SOURCES>
-        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.yaml/snakeyaml/1.17/63577e87886c76228db9f8a2c50ea43cde5072eb/snakeyaml-1.17-sources.jar!/" />
-      </SOURCES>
-    </library>
     <library name="Gradle: pircbot:pircbot:1.5.0">
       <CLASSES>
         <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/pircbot/pircbot/1.5.0/7a9dd235e6e81db733212202cc4067b5625650cf/pircbot-1.5.0.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/pircbot/pircbot/1.5.0/cc27715d1c9c8246beb6a33ea099a9ca5d4e5da1/pircbot-1.5.0-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Gradle: pircbot:pircbot:1.5.0:sources">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/pircbot/pircbot/1.5.0/cc27715d1c9c8246beb6a33ea099a9ca5d4e5da1/pircbot-1.5.0-sources.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES>
