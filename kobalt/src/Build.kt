@@ -9,14 +9,14 @@ import com.beust.kobalt.plugin.java.javadoc
 import com.beust.kobalt.plugin.packaging.assemble
 import com.beust.kobalt.plugin.packaging.install
 import com.beust.kobalt.plugin.publish.autoGitTag
-import net.thauvin.erik.kobalt.plugin.versioneye.versionEye
+import net.thauvin.erik.kobalt.plugin.pom2xml.pom2xml
 import java.io.File
 import java.io.FileInputStream
 import java.util.*
 
 val bs = buildScript {
     repos(localMaven())
-    plugins("net.thauvin.erik:kobalt-versioneye:")
+    plugins("net.thauvin.erik:kobalt-pom2xml:")
 }
 
 val mainClassName = "net.thauvin.erik.mobibot.Mobibot"
@@ -131,9 +131,8 @@ val p = project {
         links("http://www.jibble.org/javadocs/pircbot/", "http://docs.oracle.com/javase/8/docs/api/")
     }
 
-    versionEye {
-        org = "thauvin"
-        team = "Owners"
+    pom2xml {
+
     }
 }
 
