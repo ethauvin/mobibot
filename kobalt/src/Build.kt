@@ -57,22 +57,22 @@ val p = project {
         compile("pircbot:pircbot:1.5.0")
         //compileOnly("pircbot:pircbot::sources:1.5.0")
 
-        compile("org.apache.logging.log4j:log4j-api:2.9.1",
-            "org.apache.logging.log4j:log4j-core:2.9.1",
-            "org.apache.logging.log4j:log4j-slf4j-impl:jar:2.9.1")
+        compile("org.apache.logging.log4j:log4j-api:2.10.0",
+            "org.apache.logging.log4j:log4j-core:2.10.0",
+            "org.apache.logging.log4j:log4j-slf4j-impl:jar:2.10.0")
 
         compile("commons-cli:commons-cli:1.4", "commons-net:commons-net:3.6")
-        compile("com.squareup.okhttp3:okhttp:3.9.0")
+        compile("com.squareup.okhttp3:okhttp:3.9.1")
 
-        compile("com.rometools:rome:1.8.0")
+        compile("com.rometools:rome:1.9.0")
 
         compile("org.json:json:20171018")
         compile("org.ostermiller:utils:1.07.00")
-        compile("org.jsoup:jsoup:1.10.3")
+        compile("org.jsoup:jsoup:1.11.2")
         compile("net.objecthunter:exp4j:0.4.8")
 
         compile("org.twitter4j:twitter4j-core:4.0.6")
-        compile("net.thauvin.erik:pinboard-poster:0.9.1")
+        compile("net.thauvin.erik:pinboard-poster:0.9.3")
 
         // https://bitbucket.org/akapribot/owm-japis/
         compile(file("lib/owm-japis-2.5.0.5.jar"))
@@ -82,8 +82,8 @@ val p = project {
     }
 
     dependenciesTest {
-        compile("org.testng:testng:6.12")
-        compile("org.assertj:assertj-core:3.8.0")
+        compile("org.testng:testng:6.13.1")
+        compile("org.assertj:assertj-core:3.9.0")
     }
 
     apt {

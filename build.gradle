@@ -9,18 +9,18 @@ apply plugin: 'application'
 
 defaultTasks 'deploy'
 
-def packageName = 'net.thauvin.erik.mobibot'
-def deployDir = 'deploy'
+final def packageName = 'net.thauvin.erik.mobibot'
+final def deployDir = 'deploy'
 def isRelease = 'release' in gradle.startParameter.taskNames
-def semverJar = 'net.thauvin.erik:semver:1.0.1'
+final def semverJar = 'net.thauvin.erik:semver:1.0.1'
 
 def getVersion(isIncrement = false) {
-    def propsFile = 'version.properties'
-    def majorKey = 'version.major'
-    def minorKey = 'version.minor'
-    def patchKey = 'version.patch'
-    def metaKey = 'version.buildmeta'
-    def preKey = 'version.prerelease'
+    final def propsFile = 'version.properties'
+    final def majorKey = 'version.major'
+    final def minorKey = 'version.minor'
+    final def patchKey = 'version.patch'
+    final def metaKey = 'version.buildmeta'
+    final def preKey = 'version.prerelease'
     if (isIncrement) {
         ant.propertyfile(file: propsFile) {
             entry(key: patchKey,
@@ -30,9 +30,9 @@ def getVersion(isIncrement = false) {
         }
     }
     def p = new Properties()
-    file(propsFile).withInputStream { stream -> p.load(stream) }
-    def metadata = p.getProperty(metaKey, '')
-    def prerelease = p.getProperty(preKey, '')
+    file(propsFile).withInputStream { final stream -> p.load(stream) }
+    final def metadata = p.getProperty(metaKey, '')
+    final def prerelease = p.getProperty(preKey, '')
     return (p.getProperty(majorKey, '1') + '.' + p.getProperty(minorKey, '0') + '.' + p.getProperty(patchKey, '0') +
             (prerelease.length() > 0 ? '-' + prerelease : '') + (metadata.length() > 0 ? '+' + metadata : ''))
 }
@@ -52,32 +52,32 @@ dependencies {
     compile 'pircbot:pircbot:1.5.0'
     compileOnly 'pircbot:pircbot:1.5.0:sources'
 
-    compile 'org.apache.logging.log4j:log4j-api:2.9.1'
-    compile 'org.apache.logging.log4j:log4j-core:2.9.1'
-    compile 'org.apache.logging.log4j:log4j-slf4j-impl:2.9.1'
+    compile 'org.apache.logging.log4j:log4j-api:2.10.0'
+    compile 'org.apache.logging.log4j:log4j-core:2.10.0'
+    compile 'org.apache.logging.log4j:log4j-slf4j-impl:2.10.0'
 
     compile 'commons-cli:commons-cli:1.4'
 
     compile 'commons-net:commons-net:3.6'
-    compile 'com.squareup.okhttp3:okhttp:3.9.0'
+    compile 'com.squareup.okhttp3:okhttp:3.9.1'
 
-    compile 'com.rometools:rome:1.8.0'
+    compile 'com.rometools:rome:1.9.0'
 
     compile 'org.json:json:20171018'
     compile 'org.ostermiller:utils:1.07.00'
-    compile 'org.jsoup:jsoup:1.10.3'
+    compile 'org.jsoup:jsoup:1.11.2'
     compile 'net.objecthunter:exp4j:0.4.8'
 
     compile 'org.twitter4j:twitter4j-core:4.0.6'
-    compile 'net.thauvin.erik:pinboard-poster:0.9.1'
+    compile 'net.thauvin.erik:pinboard-poster:0.9.3'
 
     // https://bitbucket.org/akapribot/owm-japis
     compile files('lib/owm-japis-2.5.0.5.jar')
 
     compileOnly semverJar
 
-    testCompile 'org.testng:testng:6.12'
-    testCompile 'org.assertj:assertj-core:3.8.0'
+    testCompile 'org.testng:testng:6.13.1'
+    testCompile 'org.assertj:assertj-core:3.9.0'
 }
 
 test {
