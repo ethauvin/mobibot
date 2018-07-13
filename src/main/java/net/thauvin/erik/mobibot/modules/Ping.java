@@ -33,9 +33,9 @@ package net.thauvin.erik.mobibot.modules;
 
 import net.thauvin.erik.mobibot.Mobibot;
 
+import java.security.SecureRandom;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Random;
 
 /**
  * The Ping module.
@@ -52,19 +52,19 @@ public class Ping extends AbstractModule {
 
     // The ping responses.
     private static final List<String> PINGS =
-            Arrays.asList(
-                    "is barely alive.",
-                    "is trying to stay awake.",
-                    "has gone fishing.",
-                    "is somewhere over the rainbow.",
-                    "has fallen and can't get up.",
-                    "is running. You better go chase it.",
-                    "has just spontaneously combusted.",
-                    "is talking to itself... don't interrupt. That's rude.",
-                    "is bartending at an AA meeting.",
-                    "is hibernating.",
-                    "is saving energy: apathetic mode activated.",
-                    "is busy. Go away!");
+        Arrays.asList(
+            "is barely alive.",
+            "is trying to stay awake.",
+            "has gone fishing.",
+            "is somewhere over the rainbow.",
+            "has fallen and can't get up.",
+            "is running. You better go chase it.",
+            "has just spontaneously combusted.",
+            "is talking to itself... don't interrupt. That's rude.",
+            "is bartending at an AA meeting.",
+            "is hibernating.",
+            "is saving energy: apathetic mode activated.",
+            "is busy. Go away!");
 
     /**
      * The default constructor.
@@ -78,7 +78,7 @@ public class Ping extends AbstractModule {
      */
     @Override
     public void commandResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate) {
-        final Random r = new Random();
+        final SecureRandom r = new SecureRandom();
 
         bot.action(PINGS.get(r.nextInt(PINGS.size())));
     }

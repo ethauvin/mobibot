@@ -39,6 +39,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.charset.StandardCharsets;
 
 /**
  * The Joke module.
@@ -55,7 +56,7 @@ final public class Joke extends AbstractModule {
 
     // The ICNDB URL.
     private static final String JOKE_URL =
-            "http://api.icndb.com/jokes/random?escape=javascript&exclude=[explicit]&limitTo=[nerdy]";
+        "http://api.icndb.com/jokes/random?escape=javascript&exclude=[explicit]&limitTo=[nerdy]";
 
     /**
      * Creates a new {@link Joke} instance.
@@ -90,7 +91,8 @@ final public class Joke extends AbstractModule {
             final URLConnection conn = url.openConnection();
 
             final StringBuilder sb = new StringBuilder();
-            try (final BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()))) {
+            try (final BufferedReader reader =
+                     new BufferedReader(new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8))) {
                 String line;
                 while ((line = reader.readLine()) != null) {
                     sb.append(line);
@@ -99,10 +101,10 @@ final public class Joke extends AbstractModule {
                 final JSONObject json = new JSONObject(sb.toString());
 
                 bot.send(bot.getChannel(),
-                        Colors.CYAN
-                                + json.getJSONObject("value").get("joke").toString().replaceAll("\\'", "'")
-                                .replaceAll("\\\"", "\"")
-                                + Colors.NORMAL);
+                    Colors.CYAN
+                        + json.getJSONObject("value").get("joke").toString().replaceAll("\\'", "'")
+                        .replaceAll("\\\"", "\"")
+                        + Colors.NORMAL);
             }
         } catch (Exception e) {
             bot.getLogger().warn("Unable to retrieve random joke.", e);

@@ -34,7 +34,7 @@ package net.thauvin.erik.mobibot.modules;
 import net.thauvin.erik.mobibot.Mobibot;
 import net.thauvin.erik.mobibot.Utils;
 
-import java.util.Random;
+import java.security.SecureRandom;
 
 /**
  * The Dice module.
@@ -66,22 +66,22 @@ final public class Dice extends AbstractModule {
      */
     @Override
     public void commandResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate) {
-        final Random r = new Random();
+        final SecureRandom r = new SecureRandom();
 
         int i = r.nextInt(6) + 1;
         int y = r.nextInt(6) + 1;
         final int playerTotal = i + y;
 
         bot.send(bot.getChannel(),
-                sender + " rolled two dice: " + Utils.bold(i) + " and " + Utils.bold(y) + " for a total of " + Utils
-                        .bold(playerTotal));
+            sender + " rolled two dice: " + Utils.bold(i) + " and " + Utils.bold(y) + " for a total of " + Utils
+                .bold(playerTotal));
 
         i = r.nextInt(6) + 1;
         y = r.nextInt(6) + 1;
         final int total = i + y;
 
         bot.action(
-                "rolled two dice: " + Utils.bold(i) + " and " + Utils.bold(y) + " for a total of " + Utils.bold(total));
+            "rolled two dice: " + Utils.bold(i) + " and " + Utils.bold(y) + " for a total of " + Utils.bold(total));
 
         if (playerTotal < total) {
             bot.action("wins.");
