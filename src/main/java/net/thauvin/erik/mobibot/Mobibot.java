@@ -32,6 +32,7 @@
 package net.thauvin.erik.mobibot;
 
 import com.rometools.rome.io.FeedException;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import net.thauvin.erik.mobibot.modules.*;
 import net.thauvin.erik.semver.Version;
 import org.apache.commons.cli.*;
@@ -294,15 +295,16 @@ public class Mobibot extends PircBot {
      *
      * @param args The command line arguments.
      */
+    @SuppressFBWarnings(value = {"INFORMATION_EXPOSURE_THROUGH_AN_ERROR_MESSAGE", "DM_DEFAULT_ENCODING"})
     public static void main(final String[] args) {
         // Setup the command line options
         final Options options = new Options();
         options.addOption(Commands.HELP_ARG.substring(0, 1), Commands.HELP_ARG, false, "print this help message");
         options.addOption(Commands.DEBUG_ARG.substring(0, 1), Commands.DEBUG_ARG, false,
-                "print debug & logging data directly to the console");
+            "print debug & logging data directly to the console");
         options.addOption(Option.builder(
-                Commands.PROPS_ARG.substring(0, 1)).hasArg().argName("file").desc("use " + "alternate properties file")
-                .longOpt(Commands.PROPS_ARG).build());
+            Commands.PROPS_ARG.substring(0, 1)).hasArg().argName("file").desc("use " + "alternate properties file")
+            .longOpt(Commands.PROPS_ARG).build());
         options.addOption(Commands.VERSION_ARG.substring(0, 1), Commands.VERSION_ARG, false, "print version info");
 
         // Parse the command line
@@ -418,6 +420,7 @@ public class Mobibot extends PircBot {
     /**
      * Connects to the server and joins the channel.
      */
+    @SuppressFBWarnings(value = {"DM_EXIT", "INFORMATION_EXPOSURE_THROUGH_AN_ERROR_MESSAGE"})
     public final void connect() {
         try {
             connect(ircServer, ircPort);
@@ -1287,6 +1290,7 @@ public class Mobibot extends PircBot {
     /**
      * {@inheritDoc}
      */
+    @SuppressFBWarnings(value = "DM_EXIT", justification = "Yes, we want to bail out.")
     @Override
     protected final void onPrivateMessage(final String sender,
                                           final String login,

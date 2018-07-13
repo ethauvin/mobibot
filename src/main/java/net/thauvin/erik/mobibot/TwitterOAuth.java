@@ -1,5 +1,6 @@
 package net.thauvin.erik.mobibot;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
 import twitter4j.auth.AccessToken;
@@ -27,8 +28,9 @@ import java.io.InputStreamReader;
  * @since 1.0
  */
 public final class TwitterOAuth {
+    @SuppressFBWarnings(value = "DM_DEFAULT_ENCODING")
     public static void main(final String[] args)
-            throws Exception {
+        throws Exception {
         if (args.length == 2) {
             final twitter4j.Twitter twitter = new TwitterFactory().getInstance();
             twitter.setOAuthConsumer(args[0], args[1]);

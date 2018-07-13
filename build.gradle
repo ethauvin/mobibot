@@ -1,47 +1,27 @@
 plugins {
-    id "com.ewerk.gradle.plugins.annotation-processor" version "1.0.4"
+    id 'java'
+    id 'idea'
+    id 'application'
     id "com.github.ben-manes.versions" version "0.20.0"
-    id "org.owasp.dependencycheck" version  "3.2.1"
+    id "org.owasp.dependencycheck" version "3.2.1"
+    id "net.thauvin.erik.gradle.semver" version "0.9.6-beta"
+    id "com.github.spotbugs" version "1.6.2"
 }
 
-apply plugin: 'java'
-apply plugin: 'idea'
-apply plugin: 'application'
+
+import com.github.spotbugs.SpotBugsTask
 
 defaultTasks 'deploy'
 
 final def packageName = 'net.thauvin.erik.mobibot'
 final def deployDir = 'deploy'
 def isRelease = 'release' in gradle.startParameter.taskNames
-final def semverJar = 'net.thauvin.erik:semver:1.0.1'
-
-def getVersion(isIncrement = false) {
-    final def propsFile = 'version.properties'
-    final def majorKey = 'version.major'
-    final def minorKey = 'version.minor'
-    final def patchKey = 'version.patch'
-    final def metaKey = 'version.buildmeta'
-    final def preKey = 'version.prerelease'
-    if (isIncrement) {
-        ant.propertyfile(file: propsFile) {
-            entry(key: patchKey,
-                    type: 'int',
-                    default: '-1',
-                    operation: '+')
-        }
-    }
-    def p = new Properties()
-    file(propsFile).withInputStream { final stream -> p.load(stream) }
-    final def metadata = p.getProperty(metaKey, '')
-    final def prerelease = p.getProperty(preKey, '')
-    return (p.getProperty(majorKey, '1') + '.' + p.getProperty(minorKey, '0') + '.' + p.getProperty(patchKey, '0') +
-            (prerelease.length() > 0 ? '-' + prerelease : '') + (metadata.length() > 0 ? '+' + metadata : ''))
-}
-
-version = getVersion()
+final def semverProcessor = "net.thauvin.erik:semver:1.1.0-beta"
 
 mainClassName = packageName + '.Mobibot'
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+
+compileJava.options.annotationProcessorGeneratedSourcesDirectory = file("${projectDir}/src/generated")
 
 repositories {
     mavenLocal()
@@ -50,6 +30,9 @@ repositories {
 }
 
 dependencies {
+    annotationProcessor semverProcessor
+    compileOnly semverProcessor
+
     compile 'pircbot:pircbot:1.5.0'
     compileOnly 'pircbot:pircbot:1.5.0:sources'
 
@@ -62,7 +45,7 @@ dependencies {
     compile 'commons-net:commons-net:3.6'
     compile 'com.squareup.okhttp3:okhttp:3.10.0'
 
-    compile 'com.rometools:rome:1.10.0'
+    compile 'com.rometools:rome:1.11.0'
 
     compile 'org.json:json:20180130'
     compile 'org.ostermiller:utils:1.07.00'
@@ -75,24 +58,27 @@ dependencies {
     // https://bitbucket.org/akapribot/owm-japis
     compile files('lib/owm-japis-2.5.0.5.jar')
 
-    compileOnly semverJar
-
     testCompile 'org.testng:testng:6.14.3'
     testCompile 'org.assertj:assertj-core:3.10.0'
+
+    spotbugsPlugins 'com.h3xstream.findsecbugs:findsecbugs-plugin:1.8.0'
+    compileOnly 'com.github.spotbugs:spotbugs-annotations:3.1.5'
 }
 
 test {
     useTestNG()
 }
 
-annotationProcessor {
-    project.version = getVersion(isRelease)
-    library semverJar
-    processor 'net.thauvin.erik.semver.VersionProcessor'
+tasks.withType(SpotBugsTask) {
+    reports {
+        xml.enabled = false
+        html.enabled = true
+    }
+    excludeFilter = file("$projectDir/config/spotbugs/excludeFilter.xml")
 }
 
 compileJava {
-    options.compilerArgs << '-proc:none' << '-Xlint:unchecked' << '-Xlint:deprecation'
+    options.compilerArgs << '-Xlint:unchecked' << '-Xlint:deprecation'
 }
 
 javadoc {
@@ -139,11 +125,7 @@ task deploy(dependsOn: ['build']) {
     mustRunAfter clean
 }
 
-
 task release(dependsOn: ['wrapper', 'clean', 'deploy']) {
-    doLast {
-        group = 'Publishing'
-        description = 'Releases new version.'
-        isRelease = true
-    }
+    group = 'Publishing'
+    description = 'Releases new version.'
 }

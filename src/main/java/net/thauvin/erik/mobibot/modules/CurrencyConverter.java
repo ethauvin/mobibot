@@ -31,6 +31,7 @@
  */
 package net.thauvin.erik.mobibot.modules;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import net.thauvin.erik.mobibot.Mobibot;
 import net.thauvin.erik.mobibot.Utils;
 import org.jdom2.Document;
@@ -114,6 +115,7 @@ final public class CurrencyConverter extends AbstractModule {
     /**
      * Converts the specified currencies.
      */
+    @SuppressFBWarnings(value = "REDOS")
     private void run(final Mobibot bot, final String sender, final String query) {
         if (Utils.isValidString(sender)) {
             if (EXCHANGE_RATES.isEmpty()) {
