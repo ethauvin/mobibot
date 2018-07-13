@@ -120,7 +120,7 @@ public class EntryLink implements Serializable {
         this.title = title;
         this.nick = nick;
         this.channel = channel;
-        this.date = date;
+        this.date = new Date(date.getTime());
 
         setTags(tags);
     }
@@ -202,23 +202,7 @@ public class EntryLink implements Serializable {
      * @return The date.
      */
     public final Date getDate() {
-        return date;
-    }
-
-    /**
-     * Returns the tags formatted for pinboard.in
-     *
-     * @return The tags as a comma-delimited string.
-     */
-    public final String getPinboardTags() {
-        final StringBuilder tags = new StringBuilder(nick);
-
-        for (final Object tag : this.tags) {
-            tags.append(',');
-            tags.append(((SyndCategoryImpl) tag).getName());
-        }
-
-        return tags.toString();
+        return new Date(date.getTime());
     }
 
     /**
@@ -277,6 +261,22 @@ public class EntryLink implements Serializable {
     }
 
     /**
+     * Returns the tags formatted for pinboard.in
+     *
+     * @return The tags as a comma-delimited string.
+     */
+    public final String getPinboardTags() {
+        final StringBuilder tags = new StringBuilder(nick);
+
+        for (final Object tag : this.tags) {
+            tags.append(',');
+            tags.append(((SyndCategoryImpl) tag).getName());
+        }
+
+        return tags.toString();
+    }
+
+    /**
      * Returns the tags.
      *
      * @return The tags.
@@ -288,10 +288,44 @@ public class EntryLink implements Serializable {
     /**
      * Sets the tags.
      *
-     * @param tags The tags.
+     * @param tags The space-delimited tags.
      */
-    private void setTags(final List<SyndCategory> tags) {
-        this.tags.addAll(tags);
+    public final void setTags(final String tags) {
+        if (tags != null) {
+            final String[] parts = tags.replaceAll(", ", " ").replaceAll(",", " ").split(" ");
+
+            SyndCategoryImpl tag;
+            String part;
+            char mod;
+
+            for (final String rawPart : parts) {
+                part = rawPart.trim();
+
+                if (part.length() >= 2) {
+                    tag = new SyndCategoryImpl();
+                    tag.setName(part.substring(1).toLowerCase());
+
+                    mod = part.charAt(0);
+
+                    if (mod == '-') {
+                        // Don't remove the channel tag, if any.
+                        if (!tag.getName().equals(channel.substring(1))) {
+                            this.tags.remove(tag);
+                        }
+                    } else if (mod == '+') {
+                        if (!this.tags.contains(tag)) {
+                            this.tags.add(tag);
+                        }
+                    } else {
+                        tag.setName(part.trim().toLowerCase());
+
+                        if (!this.tags.contains(tag)) {
+                            this.tags.add(tag);
+                        }
+                    }
+                }
+            }
+        }
     }
 
     /**
@@ -346,44 +380,10 @@ public class EntryLink implements Serializable {
     /**
      * Sets the tags.
      *
-     * @param tags The space-delimited tags.
+     * @param tags The tags.
      */
-    public final void setTags(final String tags) {
-        if (tags != null) {
-            final String[] parts = tags.replaceAll(", ", " ").replaceAll(",", " ").split(" ");
-
-            SyndCategoryImpl tag;
-            String part;
-            char mod;
-
-            for (final String rawPart : parts) {
-                part = rawPart.trim();
-
-                if (part.length() >= 2) {
-                    tag = new SyndCategoryImpl();
-                    tag.setName(part.substring(1).toLowerCase());
-
-                    mod = part.charAt(0);
-
-                    if (mod == '-') {
-                        // Don't remove the channel tag, if any.
-                        if (!tag.getName().equals(channel.substring(1))) {
-                            this.tags.remove(tag);
-                        }
-                    } else if (mod == '+') {
-                        if (!this.tags.contains(tag)) {
-                            this.tags.add(tag);
-                        }
-                    } else {
-                        tag.setName(part.trim().toLowerCase());
-
-                        if (!this.tags.contains(tag)) {
-                            this.tags.add(tag);
-                        }
-                    }
-                }
-            }
-        }
+    private void setTags(final List<SyndCategory> tags) {
+        this.tags.addAll(tags);
     }
 
     /**
@@ -394,7 +394,7 @@ public class EntryLink implements Serializable {
     public final String toString() {
 
         return super.toString() + "[ channel -> '" + channel + '\'' + ", comments -> " + comments + ", date -> " + date
-                + ", link -> '" + link + '\'' + ", login -> '" + login + '\'' + ", nick -> '" + nick + '\''
-                + ", tags -> " + tags + ", title -> '" + title + '\'' + " ]";
+            + ", link -> '" + link + '\'' + ", login -> '" + login + '\'' + ", nick -> '" + nick + '\''
+            + ", tags -> " + tags + ", title -> '" + title + '\'' + " ]";
     }
 }

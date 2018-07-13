@@ -50,11 +50,11 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 public class UtilsTest {
     static final String ASCII =
-            " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~";
+        " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~";
 
     final Calendar cal = Calendar.getInstance();
     final LocalDateTime localDateTime =
-            LocalDateTime.of(1952, 2, 17, 12, 30, 0);
+        LocalDateTime.of(1952, 2, 17, 12, 30, 0);
 
     @BeforeClass
     public void setUp() {
@@ -76,9 +76,9 @@ public class UtilsTest {
     @Test
     public void testEnsureDir() throws Exception {
         assertThat(Utils.ensureDir("dir", false)).as("ensureDir(dir, false)")
-                .isEqualTo("dir" + File.separatorChar);
+            .isEqualTo("dir" + File.separatorChar);
         assertThat(Utils.ensureDir("https://erik.thauvin.net", true))
-                .as("ensureDir(erik.thauvin.net, true)").isEqualTo("https://erik.thauvin.net/");
+            .as("ensureDir(erik.thauvin.net, true)").isEqualTo("https://erik.thauvin.net/");
     }
 
     @Test
@@ -131,13 +131,13 @@ public class UtilsTest {
     @Test
     public void testUnescapeXml() throws Exception {
         assertThat(Utils.unescapeXml("&lt;a name=&quot;test &amp; &apos;&#39;&quot;&gt;"))
-                .isEqualTo("<a name=\"test & ''\">");
+            .isEqualTo("<a name=\"test & ''\">");
     }
 
     @Test
     public void testUtcDateTime() throws Exception {
         assertThat(Utils.utcDateTime(cal.getTime())).as("utcDateTime(date)").isEqualTo("1952-02-17 12:30");
         assertThat(Utils.utcDateTime(localDateTime)).as("utcDateTime(localDate)")
-                .isEqualTo("1952-02-17 12:30");
+            .isEqualTo("1952-02-17 12:30");
     }
 }

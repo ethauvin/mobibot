@@ -71,7 +71,7 @@ final public class Lookup extends AbstractModule {
      * @throws java.net.UnknownHostException If the host is unknown.
      */
     public static String lookup(final String query)
-            throws UnknownHostException {
+        throws UnknownHostException {
         final StringBuilder buffer = new StringBuilder("");
 
         final InetAddress[] results = InetAddress.getAllByName(query);
@@ -106,7 +106,7 @@ final public class Lookup extends AbstractModule {
      * @throws java.io.IOException If a connection error occurs.
      */
     private static String[] whois(final String query)
-            throws IOException {
+        throws IOException {
         return whois(query, WHOIS_HOST);
     }
 
@@ -118,9 +118,9 @@ final public class Lookup extends AbstractModule {
      * @return The IP whois data, if any.
      * @throws java.io.IOException If a connection error occurs.
      */
-    @SuppressWarnings("WeakerAccess, SameParameterValue")
+    @SuppressWarnings("SameParameterValue")
     public static String[] whois(final String query, final String host)
-            throws IOException {
+        throws IOException {
         final WhoisClient whois = new WhoisClient();
         final String[] lines;
 
@@ -157,8 +157,8 @@ final public class Lookup extends AbstractModule {
                 bot.send(bot.getChannel(), Lookup.lookup(args));
             } catch (UnknownHostException ignore) {
                 if (args.matches(
-                        "(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\." +
-                                "(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)")) {
+                    "(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\." +
+                        "(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)")) {
                     try {
                         final String[] lines = Lookup.whois(args);
 

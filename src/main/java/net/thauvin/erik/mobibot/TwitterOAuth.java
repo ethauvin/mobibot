@@ -43,17 +43,17 @@ public final class TwitterOAuth {
                 System.out.print("Enter the PIN (if available) or just hit enter.[PIN]:");
                 final String pin = br.readLine();
                 try {
-                    if (pin.length() > 0) {
+                    if (pin != null && pin.length() > 0) {
                         accessToken = twitter.getOAuthAccessToken(requestToken, pin);
                     } else {
                         accessToken = twitter.getOAuthAccessToken();
                     }
 
                     System.out.println(
-                            "Please add the following to the bot's property file:" + "\n\n" + "twitter-consumerKey="
-                                    + args[0] + '\n' + "twitter-consumerSecret=" + args[1] + '\n' + "twitter-token="
-                                    + accessToken.getToken() + '\n' + "twitter-tokenSecret=" + accessToken
-                                    .getTokenSecret());
+                        "Please add the following to the bot's property file:" + "\n\n" + "twitter-consumerKey="
+                            + args[0] + '\n' + "twitter-consumerSecret=" + args[1] + '\n' + "twitter-token="
+                            + accessToken.getToken() + '\n' + "twitter-tokenSecret=" + accessToken
+                            .getTokenSecret());
                 } catch (TwitterException te) {
                     if (401 == te.getStatusCode()) {
                         System.out.println("Unable to get the access token.");

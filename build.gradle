@@ -21,7 +21,7 @@ final def semverProcessor = "net.thauvin.erik:semver:1.1.0-beta"
 mainClassName = packageName + '.Mobibot'
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
-compileJava.options.annotationProcessorGeneratedSourcesDirectory = file("${projectDir}/src/generated")
+compileJava.options.annotationProcessorGeneratedSourcesDirectory = file("${projectDir}/src/generated/java")
 
 repositories {
     mavenLocal()

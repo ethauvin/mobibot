@@ -53,7 +53,7 @@ final class TellMessagesMgr {
      * @throws UnsupportedOperationException If the constructor is called.
      */
     private TellMessagesMgr()
-            throws UnsupportedOperationException {
+        throws UnsupportedOperationException {
         throw new UnsupportedOperationException("Illegal constructor call.");
     }
 

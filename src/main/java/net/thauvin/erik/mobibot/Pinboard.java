@@ -82,12 +82,12 @@ class Pinboard {
         final SwingWorker<Boolean, Void> worker = new SwingWorker<Boolean, Void>() {
             @Override
             protected Boolean doInBackground()
-                    throws Exception {
+                throws Exception {
                 return pinboard.addPin(entry.getLink(),
-                        entry.getTitle(),
-                        postedBy(entry),
-                        entry.getPinboardTags(),
-                        formatDate(entry.getDate()));
+                    entry.getTitle(),
+                    postedBy(entry),
+                    entry.getPinboardTags(),
+                    formatDate(entry.getDate()));
             }
         };
 
@@ -105,7 +105,7 @@ class Pinboard {
         final SwingWorker<Boolean, Void> worker = new SwingWorker<Boolean, Void>() {
             @Override
             protected Boolean doInBackground()
-                    throws Exception {
+                throws Exception {
                 return pinboard.deletePin(link);
             }
         };
@@ -143,23 +143,23 @@ class Pinboard {
         final SwingWorker<Boolean, Void> worker = new SwingWorker<Boolean, Void>() {
             @Override
             protected Boolean doInBackground()
-                    throws Exception {
+                throws Exception {
                 if (!oldUrl.equals(entry.getLink())) {
                     pinboard.deletePin(oldUrl);
 
                     return pinboard.addPin(entry.getLink(),
-                            entry.getTitle(),
-                            postedBy(entry),
-                            entry.getPinboardTags(),
-                            formatDate(entry.getDate()));
+                        entry.getTitle(),
+                        postedBy(entry),
+                        entry.getPinboardTags(),
+                        formatDate(entry.getDate()));
                 } else {
                     return pinboard.addPin(entry.getLink(),
-                            entry.getTitle(),
-                            postedBy(entry),
-                            entry.getPinboardTags(),
-                            formatDate(entry.getDate()),
-                            true,
-                            true);
+                        entry.getTitle(),
+                        postedBy(entry),
+                        entry.getPinboardTags(),
+                        formatDate(entry.getDate()),
+                        true,
+                        true);
                 }
             }
         };

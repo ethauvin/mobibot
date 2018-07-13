@@ -53,7 +53,7 @@ final public class Utils {
      * @throws UnsupportedOperationException If the constructor is called.
      */
     private Utils()
-            throws UnsupportedOperationException {
+        throws UnsupportedOperationException {
         throw new UnsupportedOperationException("Illegal constructor call.");
     }
 
@@ -87,7 +87,7 @@ final public class Utils {
      */
     static String buildComment(final int entryIndex, final int commentIndex, final EntryComment comment) {
         return (Commands.LINK_CMD + (entryIndex + 1) + '.' + (commentIndex + 1) + ": [" + comment.getNick() + "] "
-                + comment.getComment());
+            + comment.getComment());
     }
 
     /**

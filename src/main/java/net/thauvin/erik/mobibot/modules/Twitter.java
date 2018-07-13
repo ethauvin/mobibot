@@ -106,18 +106,18 @@ final public class Twitter extends AbstractModule {
         try {
             final ConfigurationBuilder cb = new ConfigurationBuilder();
             cb.setDebugEnabled(true)
-                    .setOAuthConsumerKey(properties.get(CONSUMER_KEY_PROP))
-                    .setOAuthConsumerSecret(properties.get(CONSUMER_SECRET_PROP))
-                    .setOAuthAccessToken(properties.get(TOKEN_PROP))
-                    .setOAuthAccessTokenSecret(properties.get(TOKEN_SECRET_PROP));
+                .setOAuthConsumerKey(properties.get(CONSUMER_KEY_PROP))
+                .setOAuthConsumerSecret(properties.get(CONSUMER_SECRET_PROP))
+                .setOAuthAccessToken(properties.get(TOKEN_PROP))
+                .setOAuthAccessTokenSecret(properties.get(TOKEN_SECRET_PROP));
             final TwitterFactory tf = new TwitterFactory(cb.build());
             final twitter4j.Twitter twitter = tf.getInstance();
 
             final Status status = twitter.updateStatus(message + " (" + sender + ')');
 
             bot.send(sender,
-                    "You message was posted to http://twitter.com/" + twitter.getScreenName() + "/statuses/" + status
-                            .getId());
+                "You message was posted to http://twitter.com/" + twitter.getScreenName() + "/statuses/" + status
+                    .getId());
         } catch (Exception e) {
             bot.getLogger().warn("Unable to post to Twitter: " + message, e);
             bot.send(sender, "An error has occurred: " + e.getMessage());

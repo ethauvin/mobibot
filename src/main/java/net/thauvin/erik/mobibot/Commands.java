@@ -160,7 +160,7 @@ final public class Commands {
      * @throws UnsupportedOperationException If the constructor is called.
      */
     private Commands()
-            throws UnsupportedOperationException {
+        throws UnsupportedOperationException {
         throw new UnsupportedOperationException("Illegal constructor call.");
     }
 }

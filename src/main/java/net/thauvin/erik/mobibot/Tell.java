@@ -146,9 +146,9 @@ public class Tell {
                 if (messages.size() > 0) {
                     for (final TellMessage message : messages) {
                         bot.send(sender, Utils.bold(message.getSender()) + " --> " + Utils.bold(message.getRecipient())
-                                        + " [ID: " + message.getId() + ", "
-                                        + (message.isReceived() ? "DELIVERED" : "QUEUED") + ']',
-                                true);
+                                + " [ID: " + message.getId() + ", "
+                                + (message.isReceived() ? "DELIVERED" : "QUEUED") + ']',
+                            true);
                     }
                 } else {
                     bot.send(sender, "There are no messages in the queue.", true);
@@ -165,17 +165,17 @@ public class Tell {
 
                         if (message.isReceived()) {
                             bot.send(sender,
-                                    Utils.bold(message.getSender()) + " --> " + Utils.bold(message.getRecipient())
-                                            + " [" + Utils.utcDateTime(message.getReceived()) + ", ID: "
-                                            + message.getId() + ", DELIVERED]",
-                                    true);
+                                Utils.bold(message.getSender()) + " --> " + Utils.bold(message.getRecipient())
+                                    + " [" + Utils.utcDateTime(message.getReceived()) + ", ID: "
+                                    + message.getId() + ", DELIVERED]",
+                                true);
 
                         } else {
                             bot.send(sender,
-                                    Utils.bold(message.getSender()) + " --> " + Utils.bold(message.getRecipient())
-                                            + " [" + Utils.utcDateTime(message.getQueued()) + ", ID: "
-                                            + message.getId() + ", QUEUED]",
-                                    true);
+                                Utils.bold(message.getSender()) + " --> " + Utils.bold(message.getRecipient())
+                                    + " [" + Utils.utcDateTime(message.getQueued()) + ", ID: "
+                                    + message.getId() + ", QUEUED]",
+                                true);
                         }
 
                         bot.send(sender, bot.helpIndent(message.getMessage(), false), true);
@@ -187,10 +187,10 @@ public class Tell {
                 } else {
                     bot.send(sender, "To delete one or all delivered messages:");
                     bot.send(sender,
-                            bot.helpIndent(bot.getNick() + ": " + TELL_CMD + ' ' + TELL_DEL_KEYWORD + " <id|"
-                                    + TELL_ALL_KEYWORD + '>'));
+                        bot.helpIndent(bot.getNick() + ": " + TELL_CMD + ' ' + TELL_DEL_KEYWORD + " <id|"
+                            + TELL_ALL_KEYWORD + '>'));
                     bot.send(sender, "Messages are kept for " + Utils.bold(maxDays)
-                            + Utils.plural(maxDays, " day.", " days."));
+                        + Utils.plural(maxDays, " day.", " days."));
                 }
             }
         } else if (cmds.startsWith(TELL_DEL_KEYWORD + ' ')) {
@@ -254,7 +254,7 @@ public class Tell {
                     save();
 
                     bot.send(sender, "Message [ID " + message.getId() + "] was queued for "
-                            + Utils.bold(message.getRecipient()), true);
+                        + Utils.bold(message.getRecipient()), true);
                 } else {
                     bot.send(sender, "Sorry, the messages queue is currently full.", true);
                 }
@@ -282,42 +282,42 @@ public class Tell {
     public void send(final String nickname, final boolean isMessage) {
         if (!nickname.equals(bot.getNick()) && isEnabled()) {
             messages.stream().filter(message -> message.isMatch(nickname)).forEach(
-                    message -> {
-                        if (message.getRecipient().equalsIgnoreCase(nickname) && !message.isReceived()) {
-                            if (message.getSender().equals(nickname)) {
-                                if (!isMessage) {
-                                    bot.send(nickname, Utils.bold("You") + " wanted me to remind you: "
-                                                    + Utils.reverseColor(message.getMessage()),
-                                            true);
-
-                                    message.setIsReceived();
-                                    message.setIsNotified();
-
-                                    save();
-                                }
-                            } else {
-                                bot.send(nickname, message.getSender() + " wanted me to tell you: "
-                                                + Utils.reverseColor(message.getMessage()),
-                                        true);
+                message -> {
+                    if (message.getRecipient().equalsIgnoreCase(nickname) && !message.isReceived()) {
+                        if (message.getSender().equals(nickname)) {
+                            if (!isMessage) {
+                                bot.send(nickname, Utils.bold("You") + " wanted me to remind you: "
+                                        + Utils.reverseColor(message.getMessage()),
+                                    true);
 
                                 message.setIsReceived();
+                                message.setIsNotified();
 
                                 save();
                             }
-                        } else if (message.getSender().equalsIgnoreCase(nickname) && message.isReceived()
-                                && !message.isNotified()) {
-                            bot.send(nickname,
-                                    "Your message "
-                                            + Utils.reverseColor("[ID " + message.getId() + ']') + " was sent to "
-                                            + Utils.bold(message.getRecipient()) + " on "
-                                            + Utils.utcDateTime(message.getReceived()),
-                                    true);
+                        } else {
+                            bot.send(nickname, message.getSender() + " wanted me to tell you: "
+                                    + Utils.reverseColor(message.getMessage()),
+                                true);
 
-                            message.setIsNotified();
+                            message.setIsReceived();
 
                             save();
                         }
-                    });
+                    } else if (message.getSender().equalsIgnoreCase(nickname) && message.isReceived()
+                        && !message.isNotified()) {
+                        bot.send(nickname,
+                            "Your message "
+                                + Utils.reverseColor("[ID " + message.getId() + ']') + " was sent to "
+                                + Utils.bold(message.getRecipient()) + " on "
+                                + Utils.utcDateTime(message.getReceived()),
+                            true);
+
+                        message.setIsNotified();
+
+                        save();
+                    }
+                });
         }
     }
 

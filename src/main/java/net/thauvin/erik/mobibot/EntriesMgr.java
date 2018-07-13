@@ -74,7 +74,7 @@ final class EntriesMgr {
      * @throws UnsupportedOperationException If the constructor is called.
      */
     private EntriesMgr()
-            throws UnsupportedOperationException {
+        throws UnsupportedOperationException {
         throw new UnsupportedOperationException("Illegal constructor call.");
     }
 
@@ -141,13 +141,13 @@ final class EntriesMgr {
             for (int i = items.size() - 1; i >= 0; i--) {
                 item = (SyndEntryImpl) items.get(i);
                 author = item.getAuthor()
-                        .substring(item.getAuthor().lastIndexOf('(') + 1, item.getAuthor().length() - 1);
+                    .substring(item.getAuthor().lastIndexOf('(') + 1, item.getAuthor().length() - 1);
                 entry = new EntryLink(item.getLink(),
-                        item.getTitle(),
-                        author,
-                        channel,
-                        item.getPublishedDate(),
-                        item.getCategories());
+                    item.getTitle(),
+                    author,
+                    channel,
+                    item.getPublishedDate(),
+                    item.getCategories());
                 description = item.getDescription();
                 comments = description.getValue().split("<br/>");
 
@@ -209,8 +209,8 @@ final class EntriesMgr {
                     entry = entries.get(i);
 
                     buff = new StringBuffer(
-                            "Posted by <b>" + entry.getNick() + "</b> on <a href=\"irc://" + bot.getIrcServer() + '/'
-                                    + entry.getChannel() + "\"><b>" + entry.getChannel() + "</b></a>");
+                        "Posted by <b>" + entry.getNick() + "</b> on <a href=\"irc://" + bot.getIrcServer() + '/'
+                            + entry.getChannel() + "\"><b>" + entry.getChannel() + "</b></a>");
 
                     if (entry.getCommentsCount() > 0) {
                         buff.append(" <br/><br/>");
@@ -236,7 +236,7 @@ final class EntriesMgr {
                     item.setTitle(entry.getTitle());
                     item.setPublishedDate(entry.getDate());
                     item.setAuthor(
-                            bot.getChannel().substring(1) + '@' + bot.getIrcServer() + " (" + entry.getNick() + ')');
+                        bot.getChannel().substring(1) + '@' + bot.getIrcServer() + " (" + entry.getNick() + ')');
                     item.setCategories(entry.getTags());
 
                     items.add(item);
@@ -304,7 +304,7 @@ final class EntriesMgr {
                         bot.getLogger().warn("Unable to generate the backlogs feed. No property configured.");
                     }
                 }
-            } catch (Exception e) {
+            } catch (FeedException | IOException e) {
                 bot.getLogger().warn("Unable to generate the entries feed.", e);
             } finally {
                 try {
@@ -317,7 +317,7 @@ final class EntriesMgr {
             }
         } else {
             bot.getLogger()
-                    .warn("Unable to generate the entries feed. At least one of the required property is missing.");
+                .warn("Unable to generate the entries feed. At least one of the required property is missing.");
         }
     }
 }

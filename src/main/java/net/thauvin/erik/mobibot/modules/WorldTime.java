@@ -143,8 +143,8 @@ final public class WorldTime extends AbstractModule {
         COUNTRIES_MAP.put("BEATS", BEATS_KEYWORD);
 
         ZoneId.getAvailableZoneIds().stream().filter(
-                tz -> !tz.contains("/") && tz.length() == 3 && !COUNTRIES_MAP.containsKey(tz)).forEach(
-                tz -> COUNTRIES_MAP.put(tz, tz));
+            tz -> !tz.contains("/") && tz.length() == 3 && !COUNTRIES_MAP.containsKey(tz)).forEach(
+            tz -> COUNTRIES_MAP.put(tz, tz));
     }
 
     /**
@@ -166,8 +166,8 @@ final public class WorldTime extends AbstractModule {
                 response = ("The current Internet Time is: " + internetTime() + ' ' + BEATS_KEYWORD);
             } else {
                 response = ZonedDateTime.now().withZoneSameInstant(ZoneId.of(tz)).format(
-                        DateTimeFormatter.ofPattern("'The time is 'HH:mm' on 'EEEE, d MMMM yyyy' in '"))
-                        + tz.substring(tz.indexOf('/') + 1).replace('_', ' ');
+                    DateTimeFormatter.ofPattern("'The time is 'HH:mm' on 'EEEE, d MMMM yyyy' in '"))
+                    + tz.substring(tz.indexOf('/') + 1).replace('_', ' ');
             }
         } else {
             isInvalidTz = true;
@@ -205,7 +205,7 @@ final public class WorldTime extends AbstractModule {
     private String internetTime() {
         final ZonedDateTime zdt = ZonedDateTime.now(ZoneId.of("UTC+01:00"));
         final int beats = (int) ((zdt.get(ChronoField.SECOND_OF_MINUTE) + (zdt.get(ChronoField.MINUTE_OF_HOUR) * 60)
-                + (zdt.get(ChronoField.HOUR_OF_DAY) * 3600)) / 86.4);
+            + (zdt.get(ChronoField.HOUR_OF_DAY) * 3600)) / 86.4);
         return String.format("%c%03d", '@', beats);
     }
 
