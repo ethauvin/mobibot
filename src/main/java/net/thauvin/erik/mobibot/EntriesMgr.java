@@ -37,6 +37,7 @@ import com.rometools.rome.io.SyndFeedInput;
 import com.rometools.rome.io.SyndFeedOutput;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -86,12 +87,13 @@ final class EntriesMgr {
      * @throws FeedException If an error occurred while reading the feed.
      */
     public static void loadBacklogs(final String file, final List<String> history)
-            throws IOException, FeedException {
+        throws IOException, FeedException {
         history.clear();
 
         final SyndFeedInput input = new SyndFeedInput();
 
-        try (final InputStreamReader reader = new InputStreamReader(new FileInputStream(new File(file)))) {
+        try (final InputStreamReader reader =
+                 new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8)) {
 
             final SyndFeed feed = input.build(reader);
 
@@ -117,14 +119,14 @@ final class EntriesMgr {
      */
     @SuppressWarnings("unchecked")
     public static String loadEntries(final String file, final String channel, final List<EntryLink> entries)
-            throws IOException, FeedException {
+        throws IOException, FeedException {
         entries.clear();
 
         final SyndFeedInput input = new SyndFeedInput();
 
         final String today;
 
-        try (InputStreamReader reader = new InputStreamReader(new FileInputStream(new File(file)))) {
+        try (InputStreamReader reader = new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8)) {
             final SyndFeed feed = input.build(reader);
 
             today = Utils.isoLocalDate(feed.getPublishedDate());
@@ -182,10 +184,11 @@ final class EntriesMgr {
         }
 
         if (Utils.isValidString(bot.getLogsDir()) && Utils.isValidString(bot.getWeblogUrl())) {
-            FileWriter fw = null;
+            Writer fw = null;
 
             try {
-                fw = new FileWriter(new File(bot.getLogsDir() + CURRENT_XML));
+                fw = new OutputStreamWriter(
+                    new FileOutputStream(bot.getLogsDir() + CURRENT_XML), StandardCharsets.UTF_8);
 
                 SyndFeed rss = new SyndFeedImpl();
                 rss.setFeedType("rss_2.0");
@@ -249,7 +252,9 @@ final class EntriesMgr {
                 output.output(rss, fw);
                 fw.close();
 
-                fw = new FileWriter(new File(bot.getLogsDir() + bot.getToday() + XML_EXT));
+                fw = new OutputStreamWriter(
+                    new FileOutputStream(
+                        bot.getLogsDir() + bot.getToday() + XML_EXT), StandardCharsets.UTF_8);
                 output.output(rss, fw);
 
                 if (isDayBackup) {
@@ -263,7 +268,8 @@ final class EntriesMgr {
                         }
 
                         fw.close();
-                        fw = new FileWriter(new File(bot.getLogsDir() + NAV_XML));
+                        fw = new OutputStreamWriter(
+                            new FileOutputStream(bot.getLogsDir() + NAV_XML), StandardCharsets.UTF_8);
                         rss = new SyndFeedImpl();
                         rss.setFeedType("rss_2.0");
                         rss.setTitle(bot.getChannel() + " IRC Links Backlogs");

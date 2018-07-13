@@ -31,6 +31,7 @@
  */
 package net.thauvin.erik.mobibot.modules;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import net.thauvin.erik.mobibot.Mobibot;
 import net.thauvin.erik.mobibot.Utils;
 import org.json.JSONArray;
@@ -41,6 +42,7 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 /**
  * The GoogleSearch module.
@@ -108,22 +110,24 @@ final public class GoogleSearch extends AbstractModule {
     /**
      * Searches Google.
      */
+    @SuppressFBWarnings(value = "URLCONNECTION_SSRF_FD")
     private void run(final Mobibot bot, final String sender, final String query) {
         try {
             final String q = URLEncoder.encode(query, "UTF-8");
 
             final URL url =
-                    new URL("https://www.googleapis.com/customsearch/v1?key="
-                            + properties.get(GOOGLE_API_KEY_PROP)
-                            + "&cx="
-                            + properties.get(GOOGLE_CSE_KEY_PROP)
-                            + "&q="
-                            + q
-                            + "&filter=1&num=5&alt=json");
+                new URL("https://www.googleapis.com/customsearch/v1?key="
+                    + properties.get(GOOGLE_API_KEY_PROP)
+                    + "&cx="
+                    + properties.get(GOOGLE_CSE_KEY_PROP)
+                    + "&q="
+                    + q
+                    + "&filter=1&num=5&alt=json");
             final URLConnection conn = url.openConnection();
 
             final StringBuilder sb = new StringBuilder();
-            try (final BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()))) {
+            try (final BufferedReader reader =
+                     new BufferedReader(new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8))) {
                 String line;
                 while ((line = reader.readLine()) != null) {
                     sb.append(line);
