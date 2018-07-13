@@ -33,6 +33,8 @@ package net.thauvin.erik.mobibot.modules;
 
 import org.testng.annotations.Test;
 
+import java.util.Arrays;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
@@ -46,13 +48,14 @@ public class LookupTest {
     @Test
     public void testLookup() throws Exception {
         final String result = Lookup.lookup("erik.thauvin.net");
-        assertThat(result).as("lookup(erik.thauvin.net)").contains("104.31.77.12");
+        assertThat(result).as("lookup(erik.thauvin.net/104.31.77.12)").contains("104.31.77.12");
     }
 
     @Test
     public void testWhois() throws Exception {
         final String[] result = Lookup.whois("17.178.96.59", Lookup.WHOIS_HOST);
-        assertThat(result).as("whois(17.178.96.59)")
-                .contains("Apple Inc. APPLE-WWNET (NET-17-0-0-0-1) 17.0.0.0 - 17.255.255.255");
+
+        assertThat(Arrays.asList(result).stream().anyMatch(m -> m.contains("Apple Inc.")))
+            .as("whois(17.178.96.59/Apple Inc.").isTrue();
     }
 }
