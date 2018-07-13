@@ -34,7 +34,7 @@ package net.thauvin.erik.mobibot.modules;
 import net.thauvin.erik.mobibot.Mobibot;
 import net.thauvin.erik.mobibot.Utils;
 
-import java.util.Random;
+import java.security.SecureRandom;
 
 /**
  * The War module.
@@ -51,7 +51,7 @@ final public class War extends AbstractModule {
 
     // The deck of card.
     private static final String[] WAR_DECK =
-            new String[]{"Ace", "King", "Queen", "Jack", "10", "9", "8", "7", "6", "5", "4", "3", "2"};
+        new String[]{"Ace", "King", "Queen", "Jack", "10", "9", "8", "7", "6", "5", "4", "3", "2"};
 
     // The suits for the deck of card.
     private static final String[] WAR_SUITS = new String[]{"Hearts", "Spades", "Diamonds", "Clubs"};
@@ -73,7 +73,7 @@ final public class War extends AbstractModule {
      */
     @Override
     public void commandResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate) {
-        final Random r = new Random();
+        final SecureRandom r = new SecureRandom();
 
         int i;
         int y;
@@ -83,7 +83,7 @@ final public class War extends AbstractModule {
             y = r.nextInt(WAR_DECK.length);
 
             bot.send(bot.getChannel(),
-                    sender + " drew the " + Utils.bold(WAR_DECK[i]) + " of " + WAR_SUITS[r.nextInt(WAR_SUITS.length)]);
+                sender + " drew the " + Utils.bold(WAR_DECK[i]) + " of " + WAR_SUITS[r.nextInt(WAR_SUITS.length)]);
             bot.action("drew the " + Utils.bold(WAR_DECK[y]) + " of " + WAR_SUITS[r.nextInt(WAR_SUITS.length)]);
 
             if (i != y) {
