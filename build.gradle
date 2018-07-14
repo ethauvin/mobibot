@@ -73,7 +73,7 @@ tasks.withType(SpotBugsTask) {
         xml.enabled = false
         html.enabled = true
     }
-    excludeFilter = file("$projectDir/config/spotbugs/excludeFilter.xml")
+    excludeFilter = file("config/spotbugs/excludeFilter.xml")
 }
 
 compileJava {
