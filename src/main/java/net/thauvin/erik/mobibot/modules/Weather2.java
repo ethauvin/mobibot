@@ -80,6 +80,17 @@ public class Weather2 extends AbstractModule {
         return Math.round(d) + " \u00B0F, " + Math.round(c) + " \u00B0C";
     }
 
+    private OWM.Country getCountry(String countryCode) {
+        for (OWM.Country c : OWM.Country.values()) {
+            if (c.name().equalsIgnoreCase(countryCode)) {
+                return c;
+            }
+
+        }
+
+        return OWM.Country.UNITED_STATES;
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -90,7 +101,7 @@ public class Weather2 extends AbstractModule {
         bot.send(sender, "For example:");
         bot.send(sender, bot.helpIndent(bot.getNick() + ": " + WEATHER_CMD + " paris, fr"));
         bot.send(sender, "The default ISO 3166 country code is " + Utils.bold("US")
-            + ". Zip codes are supported in the US.");
+            + ". Zip codes are supported in most countries.");
     }
 
     /**
@@ -122,7 +133,7 @@ public class Weather2 extends AbstractModule {
                 try {
                     final CurrentWeather cwd;
                     if (city.matches("\\d+")) {
-                        cwd = owm.currentWeatherByZipCode(Integer.parseInt(city), OWM.Country.UNITED_STATES);
+                        cwd = owm.currentWeatherByZipCode(Integer.parseInt(city), getCountry(country));
                     } else {
                         cwd = owm.currentWeatherByCityName(city, getCountry(country));
                     }
@@ -183,16 +194,5 @@ public class Weather2 extends AbstractModule {
     private String wind(final Double w) {
         final double kmh = w * 1.60934;
         return Math.round(w) + " mph, " + Math.round(kmh) + " km/h";
-    }
-
-    private OWM.Country getCountry(String countryCode) {
-        for (OWM.Country c : OWM.Country.values()) {
-            if (c.name().equalsIgnoreCase(countryCode)) {
-                return c;
-            }
-
-        }
-
-        return OWM.Country.UNITED_STATES;
     }
 }
