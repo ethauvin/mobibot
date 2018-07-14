@@ -11,4 +11,10 @@
         </Or>
         <Confidence value="2"/>
     </Match>
+    <Match>
+        <Class name="net.thauvin.erik.mobibot.Mobibot"/>
+        <Method name="main"/>
+        <Bug pattern="PATH_TRAVERSAL_OUT"/>
+        <Confidence value="1"/>
+    </Match>
 </FindBugsFilter>
