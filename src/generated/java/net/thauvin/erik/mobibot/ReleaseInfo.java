@@ -4,26 +4,28 @@
  */
 package net.thauvin.erik.mobibot;
 
-import java.util.Date;
+import java.time.*;
 
 /**
  * Provides semantic version information.
  *
- * @author <a href="https://github.com/ethauvin/semver">Semantic Version Annotation Processor</a>
+ * @author <a href="https://github.com/ethauvin/semver">Semantic Version
+ *         Annotation Processor</a>
  */
 public final class ReleaseInfo {
     public final static String PRERELEASE_PREFIX = "-";
     public final static String BUILDMETA_PREFIX = "+";
 
-    public final static String PROJECT = "";
-    public final static Date BUILDDATE = new Date(1531467929376L);
+    public final static String PROJECT = "mobibot";
+    public final static LocalDateTime BUILDDATE =
+            LocalDateTime.ofInstant(Instant.ofEpochMilli(1531553255553L), ZoneId.systemDefault());
     public final static int MAJOR = 0;
     public final static int MINOR = 7;
     public final static int PATCH = 3;
     public final static String PRERELEASE = "beta";
-    public final static String BUILDMETA = "1";
+    public final static String BUILDMETA = "006";
 
-    /**
+   /**
      * The full version string.
      * <p>
      * Formatted as:
