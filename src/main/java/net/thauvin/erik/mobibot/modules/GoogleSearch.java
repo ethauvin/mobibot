@@ -110,7 +110,7 @@ final public class GoogleSearch extends AbstractModule {
     /**
      * Searches Google.
      */
-    @SuppressFBWarnings(value = "URLCONNECTION_SSRF_FD")
+    @SuppressFBWarnings(value = {"URLCONNECTION_SSRF_FD", "REC_CATCH_EXCEPTION"})
     private void run(final Mobibot bot, final String sender, final String query) {
         try {
             final String q = URLEncoder.encode(query, "UTF-8");
