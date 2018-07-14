@@ -62,9 +62,9 @@ val p = project {
             "org.apache.logging.log4j:log4j-slf4j-impl:jar:2.11.0")
 
         compile("commons-cli:commons-cli:1.4", "commons-net:commons-net:3.6")
-        compile("com.squareup.okhttp3:okhttp:3.10.0")
+        compile("com.squareup.okhttp3:okhttp:3.11.0")
 
-        compile("com.rometools:rome:1.10.0")
+        compile("com.rometools:rome:1.11.0")
 
         compile("org.json:json:20180130")
         compile("org.ostermiller:utils:1.07.00")
@@ -74,11 +74,12 @@ val p = project {
         compile("org.twitter4j:twitter4j-core:4.0.6")
         compile("net.thauvin.erik:pinboard-poster:1.0.0")
 
-        // https://bitbucket.org/akapribot/owm-japis/
-        compile(file("lib/owm-japis-2.5.0.5.jar"))
+        compile("net.aksingh:owm-japis:2.5.2.2")
 
         apt(processorJar)
         compileOnly(processorJar)
+
+        compileOnly("com.github.spotbugs:spotbugs-annotations:3.1.5")
     }
 
     dependenciesTest {
