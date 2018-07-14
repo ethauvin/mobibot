@@ -31,12 +31,16 @@
  */
 package net.thauvin.erik.mobibot.modules;
 
-import net.aksingh.owmjapis.CurrentWeather;
-import net.aksingh.owmjapis.OpenWeatherMap;
+import net.aksingh.owmjapis.api.APIException;
+import net.aksingh.owmjapis.core.OWM;
+import net.aksingh.owmjapis.model.CurrentWeather;
+import net.aksingh.owmjapis.model.param.Main;
+import net.aksingh.owmjapis.model.param.Weather;
+import net.aksingh.owmjapis.model.param.Wind;
 import net.thauvin.erik.mobibot.Mobibot;
 import net.thauvin.erik.mobibot.Utils;
 
-import java.io.IOException;
+import java.util.List;
 
 /**
  * The <code>Weather2</code> module.
@@ -71,9 +75,9 @@ public class Weather2 extends AbstractModule {
         new Thread(() -> run(bot, sender, args.toUpperCase(), isPrivate)).start();
     }
 
-    private String fAndC(final Float f) {
-        final Float c = (f - 32) * 5 / 9;
-        return Math.round(f) + " \u00B0F, " + Math.round(c) + " \u00B0C";
+    private String fAndC(final Double d) {
+        final Double c = (d - 32) * 5 / 9;
+        return Math.round(d) + " \u00B0F, " + Math.round(c) + " \u00B0C";
     }
 
     /**
@@ -101,7 +105,8 @@ public class Weather2 extends AbstractModule {
      * Fetches the weather data from a specific city.
      */
     private void run(final Mobibot bot, final String sender, final String args, final boolean isPrivate) {
-        final OpenWeatherMap owm = new OpenWeatherMap(properties.get(OWM_API_KEY_PROP));
+        final OWM owm = new OWM(properties.get(OWM_API_KEY_PROP));
+        owm.setUnit(OWM.Unit.IMPERIAL);
         if (Utils.isValidString(args)) {
             final String[] argv = args.split(",");
 
@@ -115,46 +120,54 @@ public class Weather2 extends AbstractModule {
                 }
 
                 try {
-                    final CurrentWeather cwd = owm.currentWeatherByCityName(city, country);
+                    final CurrentWeather cwd;
+                    if (city.matches("\\d+")) {
+                        cwd = owm.currentWeatherByZipCode(Integer.parseInt(city), OWM.Country.UNITED_STATES);
+                    } else {
+                        cwd = owm.currentWeatherByCityName(city, getCountry(country));
+                    }
                     if (cwd.hasCityName()) {
                         bot.send(sender, "City: " + cwd.getCityName() + " [" + country + "]", isPrivate);
 
-                        final CurrentWeather.Main main = cwd.getMainInstance();
-                        if (main.hasTemperature()) {
-                            bot.send(sender, "Temperature: " + fAndC(main.getTemperature()), isPrivate);
-                        }
+                        final Main main = cwd.getMainData();
+                        if (main != null) {
+                            if (main.hasTemp()) {
+                                bot.send(sender, "Temperature: " + fAndC(main.getTemp()), isPrivate);
+                            }
 
-                        if (main.hasHumidity()) {
-                            bot.send(sender, "Humidity: " + Math.round(main.getHumidity()) + "%", isPrivate);
-                        }
-
-                        if (cwd.hasWindInstance()) {
-                            final CurrentWeather.Wind w = cwd.getWindInstance();
-                            if (w.hasWindSpeed()) {
-                                bot.send(sender, "Wind: " + wind(w.getWindSpeed()), isPrivate);
+                            if (main.hasHumidity()) {
+                                bot.send(sender, "Humidity: " + Math.round(main.getHumidity()) + "%", isPrivate);
                             }
                         }
 
-                        if (cwd.hasWeatherInstance()) {
-                            CurrentWeather.Weather w;
+                        if (cwd.hasWindData()) {
+                            final Wind w = cwd.getWindData();
+                            if (w != null && w.hasSpeed()) {
+                                bot.send(sender, "Wind: " + wind(w.getSpeed()), isPrivate);
+                            }
+                        }
+
+                        if (cwd.hasWeatherList()) {
                             final StringBuilder condition = new StringBuilder("Condition: ");
-                            for (int i = 0; i < cwd.getWeatherCount(); i++) {
-                                w = cwd.getWeatherInstance(i);
-                                if (i != 0) {
-                                    condition.append(", ").append(w.getWeatherDescription());
-                                } else {
-                                    condition.append(Utils.capitalize(w.getWeatherDescription()));
+                            final List<Weather> list = cwd.getWeatherList();
+                            if (list != null) {
+                                for (Weather w : list) {
+                                    if (condition.indexOf(",") == -1) {
+                                        condition.append(Utils.capitalize(w.getDescription()));
+                                    } else {
+                                        condition.append(", ").append(w.getDescription());
+                                    }
                                 }
+                                bot.send(sender, condition.toString(), isPrivate);
                             }
-                            bot.send(sender, condition.toString(), isPrivate);
                         }
 
-                        bot.send(sender, Utils.green("https://openweathermap.org/city/" + cwd.getCityCode()), isPrivate);
+                        bot.send(sender, Utils.green("https://openweathermap.org/city/" + cwd.getCityId()), isPrivate);
 
                         return;
                     }
 
-                } catch (IOException e) {
+                } catch (APIException | NullPointerException e) {
                     if (bot.getLogger().isDebugEnabled()) {
                         bot.getLogger().debug("Unable to perform weather lookup: " + args, e);
                     }
@@ -167,8 +180,19 @@ public class Weather2 extends AbstractModule {
         helpResponse(bot, sender, args, isPrivate);
     }
 
-    private String wind(final Float w) {
+    private String wind(final Double w) {
         final double kmh = w * 1.60934;
         return Math.round(w) + " mph, " + Math.round(kmh) + " km/h";
+    }
+
+    private OWM.Country getCountry(String countryCode) {
+        for (OWM.Country c : OWM.Country.values()) {
+            if (c.name().equalsIgnoreCase(countryCode)) {
+                return c;
+            }
+
+        }
+
+        return OWM.Country.UNITED_STATES;
     }
 }
