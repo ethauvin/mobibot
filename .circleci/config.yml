@@ -90,7 +90,7 @@ workflows:
   version: 2
   gradle:
         jobs:
-        - build_gradle
+        - build_gradle_jdk8
         - build_gradle_jdk9
         - build_gradle_jdk10
   kobalt:
