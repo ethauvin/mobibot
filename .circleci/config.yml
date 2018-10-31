@@ -30,6 +30,14 @@ defaults_gradle: &defaults_gradle
 version: 2.0
 
 jobs:
+  build_gradle_jdk11:
+    <<: *defaults
+
+    docker:
+      - image: circleci/openjdk:11-jdk
+
+    <<: *defaults_gradle
+
   build_gradle_jdk10:
     <<: *defaults
 
