@@ -9,6 +9,6 @@ before_install:
 
 after_success:
   - |
-      if [ "$TRAVIS_TEST_RESULT" == 0 ] && [ "$TRAVIS_JDK_VERSION" == oraclejdk8 ]; then
+      if [ "${TRAVIS_PULL_REQUEST}" != "false" ] && [ "$TRAVIS_JDK_VERSION" == oraclejdk8 ]; then
           ./gradlew sonarqube -Dsonar.login=${SONAR_TOKEN} -Dsonar.organization=${SONAR_GITHUB}
       fi
