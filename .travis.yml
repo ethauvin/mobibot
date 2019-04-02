@@ -1,9 +1,4 @@
 language: java
-dist: trusty
-
-addons:
-  sonarcloud:
-    organization: "ethauvin-github"
 
 jdk:
   - oraclejdk8
@@ -15,5 +10,5 @@ before_install:
 after_success:
   - |
       if [ "$TRAVIS_TEST_RESULT" == 0 ] && [ "$TRAVIS_JDK_VERSION" == oraclejdk8 ]; then
-          ./gradlew sonarqube -Dsonar.login=${SONAR_TOKEN}
+          ./gradlew sonarqube -Dsonar.login=${SONAR_TOKEN} -Dsonar.organization=${SONAR_GITHUB}
       fi
