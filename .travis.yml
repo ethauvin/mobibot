@@ -1,5 +1,9 @@
 language: java
 
+addons:
+  sonarcloud:
+    organization: "ethauvin-github"
+
 jdk:
   - oraclejdk8
   - openjdk12
@@ -9,9 +13,6 @@ before_install:
 
 after_success:
   - |
-      if [ "${TRAVIS_PULL_REQUEST}" != "false" ] && [ "$TRAVIS_JDK_VERSION" == oraclejdk8 ]; then
-        ./gradlew sonarqube \
-          -Dsonar.github.pullRequest=${TRAVIS_PULL_REQUEST} \
-          -Dsonar.github.oauth=${SONAR_GITHUB} \
-          -Dsonar.login=${SONAR_TOKEN}
+      if [ "${TRAVIS_TEST_RESULT}" == 0 ] && [ "$TRAVIS_JDK_VERSION" == oraclejdk8 ]; then
+        ./gradlew sonarqube
       fi

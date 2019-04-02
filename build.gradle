@@ -69,6 +69,7 @@ test {
 }
 
 compileJava {
+    dependsOn('incrementBuildMeta')
     options.compilerArgs << '-Xlint:unchecked' << '-Xlint:deprecation'
 }
 
@@ -99,8 +100,10 @@ incrementBuildMeta {
     }
 }
 
-compileJava {
-    dependsOn('incrementBuildMeta')
+sonarqube {
+    properties {
+        property "sonar.projectKey", "ethauvin_mobibot"
+    }
 }
 
 tasks.withType(SpotBugsTask) {
