@@ -5,15 +5,15 @@ addons:
   sonarcloud:
     organization: "ethauvin-github"
 
-script:
-  - |
-      if [ "$TRAVIS_TEST_RESULT" == 0 ] && [ "$TRAVIS_JDK_VERSION" == oraclejdk8 ]; then
-          sonar-scanner
-      fi
-
 jdk:
   - oraclejdk8
   - openjdk12
 
 before_install:
   - chmod +x gradlew
+
+after_install:
+  - |
+      if [ "$TRAVIS_TEST_RESULT" == 0 ] && [ "$TRAVIS_JDK_VERSION" == oraclejdk8 ]; then
+          sonar-scanner
+      fi
