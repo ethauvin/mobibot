@@ -6,7 +6,10 @@ addons:
     organization: "ethauvin-github"
 
 script:
-  - sonar-scanner
+  - |
+      if [ "$TRAVIS_TEST_RESULT" == 0 ] && [ "$TRAVIS_JDK_VERSION" == oraclejdk8 ]; then
+          sonar-scanner
+      fi
 
 jdk:
   - oraclejdk8
