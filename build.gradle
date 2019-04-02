@@ -2,10 +2,10 @@ plugins {
     id 'java'
     id 'idea'
     id 'application'
-    id "com.github.ben-manes.versions" version "0.20.0"
-    id "org.owasp.dependencycheck" version "3.3.4"
-    id "net.thauvin.erik.gradle.semver" version "0.9.8-beta"
-    id "com.github.spotbugs" version "1.6.5"
+    id "com.github.ben-manes.versions" version "0.21.0"
+    id "net.thauvin.erik.gradle.semver" version "0.9.9-beta"
+    id "com.github.spotbugs" version "1.7.1"
+    id "org.sonarqube" version "2.7"
 }
 
 
@@ -33,47 +33,39 @@ dependencies {
     annotationProcessor semverProcessor
     compileOnly semverProcessor
 
-    compile 'pircbot:pircbot:1.5.0'
+    implementation 'pircbot:pircbot:1.5.0'
     compileOnly 'pircbot:pircbot:1.5.0:sources'
 
-    compile 'org.apache.logging.log4j:log4j-api:2.11.1'
-    compile 'org.apache.logging.log4j:log4j-core:2.11.1'
-    compile 'org.apache.logging.log4j:log4j-slf4j-impl:2.11.1'
+    implementation 'org.apache.logging.log4j:log4j-api:2.11.2'
+    implementation 'org.apache.logging.log4j:log4j-core:2.11.2'
+    implementation 'org.apache.logging.log4j:log4j-slf4j-impl:2.11.2'
 
-    compile 'commons-cli:commons-cli:1.4'
+    implementation 'commons-cli:commons-cli:1.4'
 
-    compile 'commons-net:commons-net:3.6'
-    compile 'com.squareup.okhttp3:okhttp:3.11.0'
+    implementation 'commons-net:commons-net:3.6'
+    implementation 'com.squareup.okhttp3:okhttp:3.14.0'
 
-    compile 'com.rometools:rome:1.11.1'
+    implementation 'com.rometools:rome:1.12.0'
 
-    compile 'org.json:json:20180813'
-    compile 'org.ostermiller:utils:1.07.00'
-    compile 'org.jsoup:jsoup:1.11.3'
-    compile 'net.objecthunter:exp4j:0.4.8'
+    implementation 'org.json:json:20180813'
+    implementation 'org.ostermiller:utils:1.07.00'
+    implementation 'org.jsoup:jsoup:1.11.3'
+    implementation 'net.objecthunter:exp4j:0.4.8'
 
-    compile 'org.twitter4j:twitter4j-core:4.0.7'
-    compile 'net.thauvin.erik:pinboard-poster:1.0.0'
+    implementation 'org.twitter4j:twitter4j-core:4.0.7'
+    implementation 'net.thauvin.erik:pinboard-poster:1.0.0'
 
-    compile 'net.aksingh:owm-japis:2.5.2.3'
+    implementation 'net.aksingh:owm-japis:2.5.2.3'
 
-    testCompile 'org.testng:testng:6.14.3'
-    testCompile 'org.assertj:assertj-core:3.11.1'
+    testImplementation 'org.testng:testng:6.14.3'
+    testImplementation 'org.assertj:assertj-core:3.12.2'
 
     //spotbugsPlugins 'com.h3xstream.findsecbugs:findsecbugs-plugin:1.8.0'
-    compileOnly 'com.github.spotbugs:spotbugs-annotations:3.1.8'
+    compileOnly 'com.github.spotbugs:spotbugs-annotations:3.1.11'
 }
 
 test {
     useTestNG()
-}
-
-tasks.withType(SpotBugsTask) {
-    reports {
-        xml.enabled = false
-        html.enabled = true
-    }
-    excludeFilter = file("$projectDir/config/spotbugs/excludeFilter.xml")
 }
 
 compileJava {
@@ -101,6 +93,24 @@ run {
     args '--v'
 }
 
+incrementBuildMeta {
+    doFirst {
+        buildMeta = sprintf("%03d", (buildMeta as Integer) + 1)
+    }
+}
+
+compileJava {
+    dependsOn('incrementBuildMeta')
+}
+
+tasks.withType(SpotBugsTask) {
+    reports {
+        xml.enabled = false
+        html.enabled = true
+    }
+    excludeFilter = file("$projectDir/config/spotbugs/excludeFilter.xml")
+}
+
 task copyToDeploy(type: Copy) {
     from('properties')
     from jar
@@ -122,16 +132,6 @@ task deploy(dependsOn: ['build']) {
         file(deployDir + '/logs').mkdir()
     }
     mustRunAfter clean
-}
-
-incrementBuildMeta {
-    doFirst {
-        buildMeta = sprintf("%03d", (buildMeta as Integer) + 1)
-    }
-}
-
-compileJava {
-    dependsOn('incrementBuildMeta')
 }
 
 task release(dependsOn: ['wrapper', 'clean', 'deploy']) {
