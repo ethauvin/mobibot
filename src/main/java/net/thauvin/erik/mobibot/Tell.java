@@ -67,13 +67,13 @@ public class Tell {
     private static final String SER_EXT = ".ser";
 
     // The bot instance.
-    final private Mobibot bot;
+    private final Mobibot bot;
 
     // The maximum number of days to keep messages.
-    final private int maxDays;
+    private final int maxDays;
 
     // The message maximum queue size.
-    final private int maxSize;
+    private final int maxSize;
 
     // The messages queue.
     private final List<TellMessage> messages = new CopyOnWriteArrayList<>();
@@ -139,13 +139,14 @@ public class Tell {
      * @param cmds   The commands string.
      */
     public void response(final String sender, final String cmds) {
+        final String arrow = " --> ";
         if (!Utils.isValidString(cmds)) {
             helpResponse(sender);
         } else if (cmds.startsWith(Commands.VIEW_CMD)) {
             if (bot.isOp(sender) && cmds.equals(Commands.VIEW_CMD + ' ' + TELL_ALL_KEYWORD)) {
-                if (messages.size() > 0) {
+                if (messages.isEmpty()) {
                     for (final TellMessage message : messages) {
-                        bot.send(sender, Utils.bold(message.getSender()) + " --> " + Utils.bold(message.getRecipient())
+                        bot.send(sender, Utils.bold(message.getSender()) + arrow + Utils.bold(message.getRecipient())
                                 + " [ID: " + message.getId() + ", "
                                 + (message.isReceived() ? "DELIVERED" : "QUEUED") + ']',
                             true);
@@ -165,14 +166,14 @@ public class Tell {
 
                         if (message.isReceived()) {
                             bot.send(sender,
-                                Utils.bold(message.getSender()) + " --> " + Utils.bold(message.getRecipient())
+                                Utils.bold(message.getSender()) + arrow + Utils.bold(message.getRecipient())
                                     + " [" + Utils.utcDateTime(message.getReceived()) + ", ID: "
                                     + message.getId() + ", DELIVERED]",
                                 true);
 
                         } else {
                             bot.send(sender,
-                                Utils.bold(message.getSender()) + " --> " + Utils.bold(message.getRecipient())
+                                Utils.bold(message.getSender()) + arrow + Utils.bold(message.getRecipient())
                                     + " [" + Utils.utcDateTime(message.getQueued()) + ", ID: "
                                     + message.getId() + ", QUEUED]",
                                 true);

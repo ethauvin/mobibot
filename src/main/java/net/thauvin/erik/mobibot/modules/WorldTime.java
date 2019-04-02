@@ -47,7 +47,7 @@ import java.util.TreeMap;
  * @created 2014-04-27
  * @since 1.0
  */
-final public class WorldTime extends AbstractModule {
+public final class WorldTime extends AbstractModule {
     /**
      * The time command.
      */

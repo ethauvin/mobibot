@@ -46,14 +46,13 @@ import java.util.Date;
  * @created 2014-04-26
  * @since 1.0
  */
-final public class Utils {
+public final class Utils {
     /**
      * Disables the default constructor.
      *
      * @throws UnsupportedOperationException If the constructor is called.
      */
-    private Utils()
-        throws UnsupportedOperationException {
+    private Utils() {
         throw new UnsupportedOperationException("Illegal constructor call.");
     }
 

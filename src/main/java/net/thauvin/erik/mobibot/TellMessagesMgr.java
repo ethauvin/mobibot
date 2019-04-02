@@ -52,8 +52,7 @@ final class TellMessagesMgr {
      *
      * @throws UnsupportedOperationException If the constructor is called.
      */
-    private TellMessagesMgr()
-        throws UnsupportedOperationException {
+    private TellMessagesMgr()  {
         throw new UnsupportedOperationException("Illegal constructor call.");
     }
 
@@ -98,7 +97,7 @@ final class TellMessagesMgr {
                 return ((List<TellMessage>) input.readObject());
             }
         } catch (FileNotFoundException ignore) {
-            ; // Do nothing.
+            // Do nothing.
         } catch (IOException e) {
             logger.error("An IO error occurred loading the messages queue.", e);
         } catch (Exception e) {

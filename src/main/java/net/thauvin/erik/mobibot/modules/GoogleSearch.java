@@ -51,7 +51,7 @@ import java.nio.charset.StandardCharsets;
  * @created Feb 7, 2004
  * @since 1.0
  */
-final public class GoogleSearch extends AbstractModule {
+public final class GoogleSearch extends AbstractModule {
     /**
      * The google command.
      */

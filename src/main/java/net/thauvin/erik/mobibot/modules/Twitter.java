@@ -43,17 +43,17 @@ import twitter4j.conf.ConfigurationBuilder;
  * @created Sept 10, 2008
  * @since 1.0
  */
-final public class Twitter extends AbstractModule {
+public final class Twitter extends AbstractModule {
     /**
      * The twitter command.
      */
-    public final static String TWITTER_CMD = "twitter";
+    public static final String TWITTER_CMD = "twitter";
 
     // The property keys.
-    private final static String CONSUMER_KEY_PROP = "twitter-consumerKey";
-    private final static String CONSUMER_SECRET_PROP = "twitter-consumerSecret";
-    private final static String TOKEN_PROP = "twitter-token";
-    private final static String TOKEN_SECRET_PROP = "twitter-tokenSecret";
+    private static final String CONSUMER_KEY_PROP = "twitter-consumerKey";
+    private static final String CONSUMER_SECRET_PROP = "twitter-consumerSecret";
+    private static final String TOKEN_PROP = "twitter-token";
+    private static final String TOKEN_SECRET_PROP = "twitter-tokenSecret";
 
     /**
      * Creates a new {@link Twitter} instance.

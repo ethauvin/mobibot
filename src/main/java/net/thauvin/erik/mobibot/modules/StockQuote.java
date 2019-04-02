@@ -46,7 +46,7 @@ import java.io.IOException;
  * @created Feb 7, 2004
  * @since 1.0
  */
-final public class StockQuote extends AbstractModule {
+public final class StockQuote extends AbstractModule {
     /**
      * The quote command.
      */

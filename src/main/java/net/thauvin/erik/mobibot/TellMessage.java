@@ -47,7 +47,7 @@ public class TellMessage implements Serializable {
     private static final long serialVersionUID = 2L;
     private final String id;
     private final String message;
-    final private LocalDateTime queued;
+    private final LocalDateTime queued;
     private final String recipient;
     private final String sender;
     private boolean isNotified;

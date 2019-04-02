@@ -57,6 +57,7 @@ import java.util.*;
  * @created Jan 31, 2004
  * @since 1.0
  */
+@SuppressWarnings("WeakerAccess")
 @Version(properties = "version.properties", className = "ReleaseInfo")
 public class Mobibot extends PircBot {
     /**
@@ -182,7 +183,6 @@ public class Mobibot extends PircBot {
      * @param logsDirPath The path to the logs directory.
      * @param p           The bot's properties.
      */
-    @SuppressWarnings("WeakerAccess")
     public Mobibot(final String nickname, final String channel, final String logsDirPath, final Properties p) {
         System.getProperties().setProperty("sun.net.client.defaultConnectTimeout", String.valueOf(CONNECT_TIMEOUT));
         System.getProperties().setProperty("sun.net.client.defaultReadTimeout", String.valueOf(CONNECT_TIMEOUT));
@@ -210,7 +210,7 @@ public class Mobibot extends PircBot {
                 today = Utils.today();
             }
         } catch (IOException ignore) {
-            ; // Do nothing.
+            // Do nothing.
         } catch (FeedException e) {
             logger.error("An error occurred while parsing the '" + EntriesMgr.CURRENT_XML + "' file.", e);
         }
@@ -219,7 +219,7 @@ public class Mobibot extends PircBot {
         try {
             EntriesMgr.loadBacklogs(logsDir + EntriesMgr.NAV_XML, history);
         } catch (IOException ignore) {
-            ; // Do nothing.
+            // Do nothing.
         } catch (FeedException e) {
             logger.error("An error occurred while parsing the '" + EntriesMgr.NAV_XML + "' file.", e);
         }
@@ -335,30 +335,24 @@ public class Mobibot extends PircBot {
 
             // Redirect the stdout and stderr
             if (!line.hasOption(Commands.DEBUG_ARG.charAt(0))) {
-                PrintStream stdout = null;
-
-                try {
-                    stdout = new PrintStream(new FileOutputStream(
-                        logsDir + channel.substring(1) + '.' + Utils.today() + ".log", true));
+                try (final PrintStream stdout = new PrintStream(new FileOutputStream(
+                    logsDir + channel.substring(1) + '.' + Utils.today() + ".log", true))) {
+                    System.setOut(stdout);
                 } catch (IOException e) {
                     System.err.println("Unable to open output (stdout) log file.");
                     e.printStackTrace(System.err);
                     System.exit(1);
                 }
 
-                PrintStream stderr = null;
 
-                try {
-                    stderr = new PrintStream(
-                        new FileOutputStream(logsDir + nickname + ".err", true));
+                try (final PrintStream stderr = new PrintStream(
+                    new FileOutputStream(logsDir + nickname + ".err", true))) {
+                    System.setErr(stderr);
                 } catch (IOException e) {
                     System.err.println("Unable to open error (stderr) log file.");
                     e.printStackTrace(System.err);
                     System.exit(1);
                 }
-
-                System.setOut(stdout);
-                System.setErr(stderr);
             }
 
             // Create the bot
@@ -378,7 +372,7 @@ public class Mobibot extends PircBot {
         try {
             Thread.sleep((long) (secs * 1000));
         } catch (InterruptedException ignore) {
-            ; // Do nothing
+            // Do nothing.
         }
     }
 
@@ -387,7 +381,7 @@ public class Mobibot extends PircBot {
      *
      * @param action The action.
      */
-    final public void action(final String action) {
+    public final void action(final String action) {
         action(ircChannel, action);
     }
 
@@ -580,7 +574,7 @@ public class Mobibot extends PircBot {
      * @param help The help string.
      * @return The indented help string.
      */
-    final public String helpIndent(final String help) {
+    public final String helpIndent(final String help) {
         return helpIndent(help, true);
     }
 
@@ -624,7 +618,7 @@ public class Mobibot extends PircBot {
         } else if (lcTopic.equals(Commands.VIEW_CMD)) {
             send(sender, "To list or search the current URL posts:");
             send(sender, helpIndent(getNick() + ": " + Commands.VIEW_CMD) + " [<start>] [<query>]");
-        } else if (lcTopic.equals(ircChannel.substring(1).toLowerCase())) {
+        } else if (lcTopic.equalsIgnoreCase(ircChannel.substring(1))) {
             send(sender, "To list the last 5 posts from the channel's weblog:");
             send(sender, helpIndent(getNick() + ": " + ircChannel.substring(1)));
         } else if (lcTopic.equals(Commands.RECAP_CMD)) {
@@ -1390,9 +1384,9 @@ public class Mobibot extends PircBot {
      * @param isPrivate Set to <code>true</code> if the response should be sent as a private message.
      */
     private void recapResponse(final String sender, final boolean isPrivate) {
-        if (recap.size() > 0) {
-            for (final String recap : recap) {
-                send(sender, recap, isPrivate);
+        if (recap.isEmpty()) {
+            for (final String r : recap) {
+                send(sender, r, isPrivate);
             }
         } else {
             send(sender, "Sorry, nothing to recap.", true);
@@ -1574,7 +1568,7 @@ public class Mobibot extends PircBot {
             final int max = entries.size();
             int i = 0;
 
-            if (!(lcArgs.length() > 0) && (max > MAX_ENTRIES)) {
+            if ((lcArgs.length() <= 0) && (max > MAX_ENTRIES)) {
                 i = max - MAX_ENTRIES;
             }
 
@@ -1598,7 +1592,7 @@ public class Mobibot extends PircBot {
                         i = 0;
                     }
                 } catch (NumberFormatException ignore) {
-                    ; // Do nothing
+                    // Do nothing.
                 }
             }
 

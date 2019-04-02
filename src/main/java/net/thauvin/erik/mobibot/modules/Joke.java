@@ -48,7 +48,7 @@ import java.nio.charset.StandardCharsets;
  * @created 2014-04-20
  * @since 1.0
  */
-final public class Joke extends AbstractModule {
+public final class Joke extends AbstractModule {
     /**
      * The joke command.
      */

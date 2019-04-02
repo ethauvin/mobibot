@@ -38,7 +38,7 @@ package net.thauvin.erik.mobibot;
  * @created 2014-04-26
  * @since 1.0
  */
-final public class Commands {
+public final class Commands {
     /**
      * The add (back)log command.
      */
@@ -159,8 +159,7 @@ final public class Commands {
      *
      * @throws UnsupportedOperationException If the constructor is called.
      */
-    private Commands()
-        throws UnsupportedOperationException {
+    private Commands() {
         throw new UnsupportedOperationException("Illegal constructor call.");
     }
 }

@@ -43,7 +43,7 @@ import java.security.SecureRandom;
  * @created 2014-04-28
  * @since 1.0
  */
-final public class Dice extends AbstractModule {
+public final class Dice extends AbstractModule {
     /**
      * The dice command.
      */

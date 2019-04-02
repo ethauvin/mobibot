@@ -43,7 +43,7 @@ import java.security.SecureRandom;
  * @created 2014-04-28
  * @since 1.0
  */
-final public class War extends AbstractModule {
+public final class War extends AbstractModule {
     /**
      * The war command
      */
@@ -95,7 +95,7 @@ final public class War extends AbstractModule {
 
         if (i < y) {
             bot.action("lost.");
-        } else if (i > y) {
+        } else {
             bot.action("wins.");
         }
     }

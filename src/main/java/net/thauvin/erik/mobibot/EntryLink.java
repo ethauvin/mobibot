@@ -266,14 +266,14 @@ public class EntryLink implements Serializable {
      * @return The tags as a comma-delimited string.
      */
     public final String getPinboardTags() {
-        final StringBuilder tags = new StringBuilder(nick);
+        final StringBuilder pinboardTags = new StringBuilder(nick);
 
-        for (final Object tag : this.tags) {
-            tags.append(',');
-            tags.append(((SyndCategoryImpl) tag).getName());
+        for (final SyndCategory tag : tags) {
+            pinboardTags.append(',');
+            pinboardTags.append(tag.getName());
         }
 
-        return tags.toString();
+        return pinboardTags.toString();
     }
 
     /**

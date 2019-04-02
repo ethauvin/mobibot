@@ -55,7 +55,7 @@ import java.util.TreeMap;
  * @created Feb 11, 2004
  * @since 1.0
  */
-final public class CurrencyConverter extends AbstractModule {
+public final class CurrencyConverter extends AbstractModule {
     /**
      * The currency command.
      */
@@ -73,7 +73,7 @@ final public class CurrencyConverter extends AbstractModule {
     private static final String EXCHANGE_TABLE_URL = "http://www.ecb.int/stats/eurofxref/eurofxref-daily.xml";
 
     // The last exchange rates table publication date.
-    private static String pubDate = "";
+    private String pubDate = "";
 
     /**
      * Creates a new {@link CurrencyConverter} instance.

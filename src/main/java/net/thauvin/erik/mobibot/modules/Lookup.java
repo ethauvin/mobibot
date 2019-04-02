@@ -45,7 +45,7 @@ import java.net.UnknownHostException;
  * @created 2014-04-26
  * @since 1.0
  */
-final public class Lookup extends AbstractModule {
+public final class Lookup extends AbstractModule {
     /**
      * The lookup command.
      */

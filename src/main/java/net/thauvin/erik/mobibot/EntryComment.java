@@ -67,7 +67,7 @@ public class EntryComment implements Serializable {
      */
     @SuppressWarnings("UnusedDeclaration")
     protected EntryComment() {
-        ; // Required for serialization.
+        // Required for serialization.
     }
 
     /**
