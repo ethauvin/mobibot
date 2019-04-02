@@ -12,8 +12,8 @@ jdk:
 before_install:
   - chmod +x gradlew
 
-after_install:
+after_success:
   - |
       if [ "$TRAVIS_TEST_RESULT" == 0 ] && [ "$TRAVIS_JDK_VERSION" == oraclejdk8 ]; then
-          sonar-scanner
+          ./gradlew sonarqube -Dsonar.login=${SONAR_TOKEN}
       fi
