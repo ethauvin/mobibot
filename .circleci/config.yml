@@ -46,44 +46,10 @@ jobs:
 
     <<: *defaults_gradle
 
-  build_kobalt:
-    <<: *defaults
-
-    docker:
-      - image: circleci/openjdk:8-jdk
-
-    steps:
-      - checkout
-      - restore_cache:
-          keys:
-          - kobalt-dependencies-{{ checksum "kobalt/src/Build.kt" }}
-          # fallback to using the latest cache if no exact match is found
-          - kobalt-dependencies-
-
-      - run:
-          name: Check Versions
-          command: ./kobaltw checkVersions
-
-      - save_cache:
-          paths: ~/.kobalt
-          key: kobalt-dependencies-{{ checksum "kobalt/src/Build.kt" }}
-
-      - run:
-          name: Assemble & Test
-          command: ./kobaltw assemble test
-
-      - store_artifacts:
-          path: kobaltBuild/test-output/
-          destination: test-output
-      - store_test_results:
-          path: kobaltBuild/test-output/
-
 workflows:
   version: 2
   gradle:
         jobs:
         - build_gradle_jdk8
         - build_gradle_jdk12
-  kobalt:
-        jobs:
-        - build_kobalt
+
