@@ -1,11 +1,13 @@
 plugins {
-    id 'java'
-    id 'idea'
     id 'application'
+    id 'idea'
+    id 'jacoco'
+    id 'java'
     id "com.github.ben-manes.versions" version "0.21.0"
-    id "net.thauvin.erik.gradle.semver" version "0.9.9-beta"
     id "com.github.spotbugs" version "1.7.1"
+    id "net.thauvin.erik.gradle.semver" version "0.9.9-beta"
     id "org.sonarqube" version "2.7"
+    id "com.github.johnrengelman.shadow" version "5.0.0"
 }
 
 
@@ -80,9 +82,11 @@ javadoc {
 }
 
 jar {
-    manifest.attributes('Main-Class': mainClassName,
-            'Class-Path': '. ./lib/' + configurations.compile.collect { it.getName() }.join(' ./lib/'))
+    manifest.attributes('Main-Class': mainClassName)
+}
 
+shadowJar {
+    classifier = null
     version = null
 }
 
@@ -106,6 +110,12 @@ sonarqube {
     }
 }
 
+jacocoTestReport {
+    reports {
+        html.enabled true
+    }
+}
+
 tasks.withType(SpotBugsTask) {
     reports {
         xml.enabled = false
@@ -116,13 +126,8 @@ tasks.withType(SpotBugsTask) {
 
 task copyToDeploy(type: Copy) {
     from('properties')
-    from jar
+    from shadowJar
     into deployDir
-}
-
-task copyToDeployLib(type: Copy) {
-    from configurations.compile
-    into deployDir + '/lib'
 }
 
 task deploy(dependsOn: ['build']) {
@@ -130,7 +135,6 @@ task deploy(dependsOn: ['build']) {
     group = 'Publishing'
     outputs.dir deployDir
     inputs.files copyToDeploy
-    inputs.files copyToDeployLib
     doLast {
         file(deployDir + '/logs').mkdir()
     }
