@@ -43,7 +43,7 @@ import twitter4j.conf.ConfigurationBuilder;
  * @created Sept 10, 2008
  * @since 1.0
  */
-public final class Twitter extends AbstractModule {
+public final class Twitter extends ThreadedModule {
     /**
      * The twitter command.
      */
@@ -70,18 +70,6 @@ public final class Twitter extends AbstractModule {
      * {@inheritDoc}
      */
     @Override
-    public void commandResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate) {
-        if (isEnabled() && args.length() > 0) {
-            new Thread(() -> run(bot, sender, args)).start();
-        } else {
-            helpResponse(bot, sender, args, isPrivate);
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public void helpResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate) {
         if (isEnabled()) {
             bot.send(sender, "To post to Twitter:");
@@ -92,17 +80,10 @@ public final class Twitter extends AbstractModule {
     }
 
     /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean isEnabled() {
-        return isValidProperties();
-    }
-
-    /**
      * Posts to twitter.
      */
-    private void run(final Mobibot bot, final String sender, final String message) {
+    @Override
+    void run(final Mobibot bot, final String sender, final String message) {
         try {
             final ConfigurationBuilder cb = new ConfigurationBuilder();
             cb.setDebugEnabled(true)

@@ -51,7 +51,7 @@ import java.nio.charset.StandardCharsets;
  * @created Feb 7, 2004
  * @since 1.0
  */
-public final class GoogleSearch extends AbstractModule {
+public final class GoogleSearch extends ThreadedModule {
     /**
      * The google command.
      */
@@ -78,18 +78,6 @@ public final class GoogleSearch extends AbstractModule {
      * {@inheritDoc}
      */
     @Override
-    public void commandResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate) {
-        if (isEnabled() && args.length() > 0) {
-            new Thread(() -> run(bot, sender, args)).start();
-        } else {
-            helpResponse(bot, sender, args, isPrivate);
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public void helpResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate) {
         if (isEnabled()) {
             bot.send(sender, "To search Google:");
@@ -98,20 +86,12 @@ public final class GoogleSearch extends AbstractModule {
             bot.send(sender, "The Google searching facility is disabled.");
         }
     }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean isEnabled() {
-        return isValidProperties();
-    }
-
+    
     /**
      * Searches Google.
      */
     @SuppressFBWarnings(value = {"URLCONNECTION_SSRF_FD", "REC_CATCH_EXCEPTION"})
-    private void run(final Mobibot bot, final String sender, final String query) {
+    void run(final Mobibot bot, final String sender, final String query) {
         try {
             final String q = URLEncoder.encode(query, "UTF-8");
 
