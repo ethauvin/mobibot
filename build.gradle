@@ -113,6 +113,7 @@ sonarqube {
 jacocoTestReport {
     reports {
         html.enabled true
+        xml.enabled = true
     }
 }
 
@@ -144,4 +145,8 @@ task deploy(dependsOn: ['build']) {
 task release(dependsOn: ['wrapper', 'clean', 'deploy']) {
     group = 'Publishing'
     description = 'Releases new version.'
+}
+
+tasks.sonarqube {
+    dependsOn("jacocoTestReport")
 }
