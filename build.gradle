@@ -99,6 +99,8 @@ incrementBuildMeta {
     doFirst {
         if (!System.getenv('CI')) {
             buildMeta = sprintf("%03d", (buildMeta as Integer) + 1)
+        } else {
+            println "No increment on CIs."
         }
     }
 }
