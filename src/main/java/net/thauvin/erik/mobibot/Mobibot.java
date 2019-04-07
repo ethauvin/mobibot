@@ -335,8 +335,9 @@ public class Mobibot extends PircBot {
 
             // Redirect the stdout and stderr
             if (!line.hasOption(Commands.DEBUG_ARG.charAt(0))) {
-                try (final PrintStream stdout = new PrintStream(new FileOutputStream(
-                    logsDir + channel.substring(1) + '.' + Utils.today() + ".log", true))) {
+                try {
+                    final PrintStream stdout = new PrintStream(new FileOutputStream(
+                        logsDir + channel.substring(1) + '.' + Utils.today() + ".log", true));
                     System.setOut(stdout);
                 } catch (IOException e) {
                     System.err.println("Unable to open output (stdout) log file.");
@@ -344,9 +345,9 @@ public class Mobibot extends PircBot {
                     System.exit(1);
                 }
 
-
-                try (final PrintStream stderr = new PrintStream(
-                    new FileOutputStream(logsDir + nickname + ".err", true))) {
+                try {
+                    final PrintStream stderr = new PrintStream(
+                        new FileOutputStream(logsDir + nickname + ".err", true));
                     System.setErr(stderr);
                 } catch (IOException e) {
                     System.err.println("Unable to open error (stderr) log file.");
