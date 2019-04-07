@@ -42,9 +42,9 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @created 2019-04-07
  * @since 1.0
  */
-public class CurrencyConvertTest {
+public class CurrentConverterTest {
     @Test
-    public void testLookupImpl() {
+    public void testCurrencyConvertererImpl() {
         AbstractModuleTest.testAbstractModule(new CurrencyConverter());
     }
 
