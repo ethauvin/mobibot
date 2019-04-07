@@ -59,27 +59,33 @@ public class Calc extends AbstractModule {
     }
 
     /**
+     * Calculate.
+     *
+     * @param query The query.
+     * @return The calculation result.
+     */
+    public static String calc(final String query) {
+        final DecimalFormat decimalFormat = new DecimalFormat("#.##");
+
+        try {
+            final Expression calc = new ExpressionBuilder(query).build();
+            return query.replaceAll(" ", "") + " = " + decimalFormat.format(calc.evaluate());
+        } catch (Exception e) {
+            return "No idea. This is the kind of math I don't get.";
+        }
+    }
+
+    /**
      * {@inheritDoc}
      */
     @Override
     public void commandResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate) {
         if (Utils.isValidString(args)) {
-            final DecimalFormat decimalFormat = new DecimalFormat("#.##");
+            bot.send(bot.getChannel(), calc(args));
 
-            try {
-                final Expression calc = new ExpressionBuilder(args).build();
-                bot.send(bot.getChannel(), args.replaceAll(" ", "") + " = " + decimalFormat.format(calc.evaluate()));
-            } catch (Exception e) {
-                if (bot.getLogger().isDebugEnabled()) {
-                    bot.getLogger().debug("Unable to calculate: " + args, e);
-                }
-
-                bot.send(bot.getChannel(), "No idea. This is the kind of math I don't get.");
-            }
         } else {
             helpResponse(bot, sender, args, isPrivate);
         }
-
     }
 
     /**
