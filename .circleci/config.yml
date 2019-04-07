@@ -3,6 +3,7 @@ defaults: &defaults
   environment:
     JVM_OPTS: -Xmx3200m
     TERM: dumb
+    CI: true
 
 defaults_gradle: &defaults_gradle
   steps:

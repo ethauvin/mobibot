@@ -97,7 +97,9 @@ run {
 
 incrementBuildMeta {
     doFirst {
-        buildMeta = sprintf("%03d", (buildMeta as Integer) + 1)
+        if (!System.getenv('CI')) {
+            buildMeta = sprintf("%03d", (buildMeta as Integer) + 1)
+        }
     }
 }
 

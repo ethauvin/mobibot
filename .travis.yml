@@ -1,5 +1,12 @@
 language: java
 
+env:
+  global:
+    - CI=true
+
+install:
+  - git fetch --unshallow --tags
+
 addons:
   sonarcloud:
     organization: "ethauvin-github"
