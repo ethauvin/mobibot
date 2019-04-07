@@ -1385,7 +1385,7 @@ public class Mobibot extends PircBot {
      * @param isPrivate Set to <code>true</code> if the response should be sent as a private message.
      */
     private void recapResponse(final String sender, final boolean isPrivate) {
-        if (recap.isEmpty()) {
+        if (!recap.isEmpty()) {
             for (final String r : recap) {
                 send(sender, r, isPrivate);
             }
