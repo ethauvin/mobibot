@@ -32,6 +32,9 @@
 package net.thauvin.erik.mobibot.modules;
 
 import net.thauvin.erik.mobibot.Mobibot;
+import net.thauvin.erik.mobibot.msg.ErrorMessage;
+import net.thauvin.erik.mobibot.msg.Message;
+import net.thauvin.erik.mobibot.msg.PublicMessage;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -48,23 +51,17 @@ import java.util.TreeMap;
  * @since 1.0
  */
 public final class WorldTime extends AbstractModule {
+    // The beats (Internet Time) keyword.
+    private static final String BEATS_KEYWORD = ".beats";
+    // The supported countries.
+    private static final Map<String, String> COUNTRIES_MAP = new TreeMap<>();
+    
     /**
      * The time command.
      */
-    public static final String TIME_CMD = "time";
+    private static final String TIME_CMD = "time";
 
-    // The beats (Internet Time) keyword.
-    private static final String BEATS_KEYWORD = ".beats";
-
-    // The supported countries.
-    private static final Map<String, String> COUNTRIES_MAP = new TreeMap<>();
-
-    /**
-     * Creates a new {@link WorldTime} instance.
-     */
-    public WorldTime() {
-        commands.add(TIME_CMD);
-
+    static {
         // Initialize the countries map
         COUNTRIES_MAP.put("AE", "Asia/Dubai");
         COUNTRIES_MAP.put("AF", "Asia/Kabul");
@@ -141,10 +138,48 @@ public final class WorldTime extends AbstractModule {
         COUNTRIES_MAP.put("ZULU", "Zulu");
         COUNTRIES_MAP.put("INTERNET", BEATS_KEYWORD);
         COUNTRIES_MAP.put("BEATS", BEATS_KEYWORD);
-
+        
         ZoneId.getAvailableZoneIds().stream().filter(
             tz -> !tz.contains("/") && tz.length() == 3 && !COUNTRIES_MAP.containsKey(tz)).forEach(
             tz -> COUNTRIES_MAP.put(tz, tz));
+    }
+
+    /**
+     * Creates a new {@link WorldTime} instance.
+     */
+    public WorldTime() {
+        commands.add(TIME_CMD);
+    }
+
+    /**
+     * Returns the current Internet (beat) Time.
+     *
+     * @return The Internet Time string.
+     */
+    private static String internetTime() {
+        final ZonedDateTime zdt = ZonedDateTime.now(ZoneId.of("UTC+01:00"));
+        final int beats = (int) ((zdt.get(ChronoField.SECOND_OF_MINUTE) + (zdt.get(ChronoField.MINUTE_OF_HOUR) * 60)
+            + (zdt.get(ChronoField.HOUR_OF_DAY) * 3600)) / 86.4);
+        return String.format("%c%03d", '@', beats);
+    }
+
+    static Message worldTime(String query) {
+        final String tz = (COUNTRIES_MAP.get((query.substring(query.indexOf(' ') + 1).trim().toUpperCase())));
+        final String response;
+
+        if (tz != null) {
+            if (tz.equals(BEATS_KEYWORD)) {
+                response = ("The current Internet Time is: " + internetTime() + ' ' + BEATS_KEYWORD);
+            } else {
+                response = ZonedDateTime.now().withZoneSameInstant(ZoneId.of(tz)).format(
+                    DateTimeFormatter.ofPattern("'The time is 'HH:mm' on 'EEEE, d MMMM yyyy' in '"))
+                    + tz.substring(tz.indexOf('/') + 1).replace('_', ' ');
+            }
+        } else {
+            return new ErrorMessage("The supported countries/zones are: " + COUNTRIES_MAP.keySet().toString());
+        }
+
+        return new PublicMessage(response);
     }
 
     /**
@@ -157,30 +192,15 @@ public final class WorldTime extends AbstractModule {
      */
     @Override
     public void commandResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate) {
-        boolean isInvalidTz = false;
-        final String tz = (COUNTRIES_MAP.get((args.substring(args.indexOf(' ') + 1).trim().toUpperCase())));
-        final String response;
-
-        if (tz != null) {
-            if (tz.equals(BEATS_KEYWORD)) {
-                response = ("The current Internet Time is: " + internetTime() + ' ' + BEATS_KEYWORD);
-            } else {
-                response = ZonedDateTime.now().withZoneSameInstant(ZoneId.of(tz)).format(
-                    DateTimeFormatter.ofPattern("'The time is 'HH:mm' on 'EEEE, d MMMM yyyy' in '"))
-                    + tz.substring(tz.indexOf('/') + 1).replace('_', ' ');
-            }
-        } else {
-            isInvalidTz = true;
-            response = "The supported countries/zones are: " + COUNTRIES_MAP.keySet().toString();
-        }
+        final Message msg = worldTime(args);
 
         if (isPrivate) {
-            bot.send(sender, response, true);
+            bot.send(sender, msg.getMessage(), true);
         } else {
-            if (isInvalidTz) {
-                bot.send(sender, response);
+            if (msg.isError()) {
+                bot.send(sender, msg.getMessage());
             } else {
-                bot.send(bot.getChannel(), response);
+                bot.send(bot.getChannel(), msg.getMessage());
             }
         }
     }
@@ -195,18 +215,6 @@ public final class WorldTime extends AbstractModule {
 
         bot.send(sender, "For a listing of the supported countries:");
         bot.send(sender, bot.helpIndent(bot.getNick() + ": " + TIME_CMD));
-    }
-
-    /**
-     * Returns the current Internet (beat) Time.
-     *
-     * @return The Internet Time string.
-     */
-    private String internetTime() {
-        final ZonedDateTime zdt = ZonedDateTime.now(ZoneId.of("UTC+01:00"));
-        final int beats = (int) ((zdt.get(ChronoField.SECOND_OF_MINUTE) + (zdt.get(ChronoField.MINUTE_OF_HOUR) * 60)
-            + (zdt.get(ChronoField.HOUR_OF_DAY) * 3600)) / 86.4);
-        return String.format("%c%03d", '@', beats);
     }
 
     /**
