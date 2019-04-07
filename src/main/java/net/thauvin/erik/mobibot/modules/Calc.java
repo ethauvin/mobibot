@@ -49,7 +49,7 @@ public class Calc extends AbstractModule {
     /**
      * The Calc command.
      */
-    public static final String CALC_CMD = "calc";
+    private static final String CALC_CMD = "calc";
 
     /**
      * The default constructor.
@@ -64,7 +64,7 @@ public class Calc extends AbstractModule {
      * @param query The query.
      * @return The calculation result.
      */
-    public static String calc(final String query) {
+    static String calc(final String query) {
         final DecimalFormat decimalFormat = new DecimalFormat("#.##");
 
         try {

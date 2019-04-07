@@ -1,5 +1,5 @@
 /*
- * CalcTest.java
+ * AbstractModuleTest.java
  *
  * Copyright (c) 2004-2019, Erik C. Thauvin (erik@thauvin.net)
  * All rights reserved.
@@ -31,28 +31,28 @@
  */
 package net.thauvin.erik.mobibot.modules;
 
-import org.testng.annotations.Test;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
- * The <code>CalcTest</code> class.
+ * The <code>AbstractModuleTest</code> class.
  *
  * @author <a href="https://erik.thauvin.net/" target="_blank">Erik C. Thauvin</a>
  * @created 2019-04-07
  * @since 1.0
  */
-public class CalcTest {
-    @Test
-    public void testCalcImpl() {
-        AbstractModuleTest.testAbstractModule(new Calc());
-    }
-    
-    @Test
-    public void testCalc() {
-        assertThat(Calc.calc("1 + 1")).as("calc(1+1)").isEqualTo("1+1 = 2");
-        assertThat(Calc.calc("1 -3")).as("calc(1 -3)").isEqualTo("1-3 = -2");
-        assertThat(Calc.calc("pi+π+e+φ")).as("calc(pi+π+e+φ)").isEqualTo("pi+π+e+φ = 10.62");
-        assertThat(Calc.calc("one + one")).as("calc(one + one)").startsWith("No idea.");
+final class AbstractModuleTest {
+    static void testAbstractModule(AbstractModule module) {
+        final String name = module.getClass().getName();
+        assertThat(module.isEnabled()).as(name + ": enabled").isTrue();
+        assertThat(module.getCommands().size()).as(name + ": commands > 0").isGreaterThan(0);
+        if (!module.hasProperties()) {
+            assertThat(module.getPropertyKeys().size()).as(name + ": no properties").isEqualTo(0);
+            module.setProperty("test", "test");
+            module.setProperty("", "invalid");
+        }
+        assertThat(module.getPropertyKeys().size()).as(name + ": properties > 0").isGreaterThan(0);
+        assertThat(module.isValidProperties()).as(name + ": isValidProperties()").isTrue();
+        module.setProperty("invalid", "");
+        assertThat(module.isValidProperties()).as(name + ": invalid properties").isFalse();
     }
 }

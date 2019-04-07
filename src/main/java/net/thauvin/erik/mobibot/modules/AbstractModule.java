@@ -123,7 +123,7 @@ public abstract class AbstractModule {
      *
      * @return <code>true</code> if the properties are valid, <code>false</code> otherwise.
      */
-    public boolean isValidProperties() {
+    boolean isValidProperties() {
         for (final String s : getPropertyKeys()) {
             if (!Utils.isValidString(properties.get(s))) {
                 return false;

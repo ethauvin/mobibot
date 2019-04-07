@@ -46,6 +46,11 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 public class LookupTest {
     @Test
+    public void testLookupImpl() {
+        AbstractModuleTest.testAbstractModule(new Lookup());
+    }
+
+    @Test
     public void testLookup() throws Exception {
         final String result = Lookup.lookup("erik.thauvin.net");
         assertThat(result).as("lookup(erik.thauvin.net/104.31.77.12)").contains("104.31.77.12");

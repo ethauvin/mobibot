@@ -47,14 +47,12 @@ import java.net.UnknownHostException;
  */
 public final class Lookup extends AbstractModule {
     /**
-     * The lookup command.
-     */
-    public static final String LOOKUP_CMD = "lookup";
-
-    /**
      * The whois default host.
      */
-    public static final String WHOIS_HOST = "whois.arin.net";
+    static final String WHOIS_HOST = "whois.arin.net";
+
+    // The lookup command.
+    private static final String LOOKUP_CMD = "lookup";
 
     /**
      * The default constructor
@@ -72,7 +70,7 @@ public final class Lookup extends AbstractModule {
      */
     public static String lookup(final String query)
         throws UnknownHostException {
-        final StringBuilder buffer = new StringBuilder("");
+        final StringBuilder buffer = new StringBuilder();
 
         final InetAddress[] results = InetAddress.getAllByName(query);
         String hostInfo;
