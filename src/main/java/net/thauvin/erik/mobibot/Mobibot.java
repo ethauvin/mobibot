@@ -844,7 +844,7 @@ public class Mobibot extends PircBot {
             info.append(", Messages: ").append(tell.size());
         }
 
-        info.append(']');
+        info.append(", Recap: ").append(recap.size()).append(']');
 
         send(sender, info.toString(), isPrivate);
     }
