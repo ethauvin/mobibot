@@ -1,7 +1,7 @@
 /*
  * UtilsTest.java
  *
- * Copyright (c) 2004-2018, Erik C. Thauvin (erik@thauvin.net)
+ * Copyright (c) 2004-2019, Erik C. Thauvin (erik@thauvin.net)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -60,7 +60,6 @@ public class UtilsTest {
     public void setUp() {
         cal.set(1952, Calendar.FEBRUARY, 17, 12, 30, 0);
     }
-
 
     @Test
     public void testBold() throws Exception {
