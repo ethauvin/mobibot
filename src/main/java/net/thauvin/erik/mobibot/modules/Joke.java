@@ -32,6 +32,8 @@
 package net.thauvin.erik.mobibot.modules;
 
 import net.thauvin.erik.mobibot.Mobibot;
+import net.thauvin.erik.mobibot.msg.Message;
+import net.thauvin.erik.mobibot.msg.PublicMessage;
 import org.jibble.pircbot.Colors;
 import org.json.JSONObject;
 
@@ -66,6 +68,37 @@ public final class Joke extends AbstractModule {
     }
 
     /**
+     * Retrieves a random joke.
+     *
+     * @return The new joke.
+     */
+    static Message randomJoke() throws ModuleException {
+        try {
+            final URL url = new URL(JOKE_URL);
+            final URLConnection conn = url.openConnection();
+
+            final StringBuilder sb = new StringBuilder();
+            try (final BufferedReader reader =
+                     new BufferedReader(new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8))) {
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    sb.append(line);
+                }
+
+                final JSONObject json = new JSONObject(sb.toString());
+
+                return new PublicMessage(
+                    Colors.CYAN
+                        + json.getJSONObject("value").get("joke").toString().replaceAll("\\'", "'")
+                        .replaceAll("\\\"", "\"")
+                        + Colors.NORMAL);
+            }
+        } catch (Exception e) {
+            throw new ModuleException("An error has occurred retrieving a random joke.", e);
+        }
+    }
+
+    /**
      * {@inheritDoc}
      */
     @Override
@@ -87,28 +120,10 @@ public final class Joke extends AbstractModule {
      */
     private void run(final Mobibot bot, final String sender) {
         try {
-            final URL url = new URL(JOKE_URL);
-            final URLConnection conn = url.openConnection();
-
-            final StringBuilder sb = new StringBuilder();
-            try (final BufferedReader reader =
-                     new BufferedReader(new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8))) {
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    sb.append(line);
-                }
-
-                final JSONObject json = new JSONObject(sb.toString());
-
-                bot.send(bot.getChannel(),
-                    Colors.CYAN
-                        + json.getJSONObject("value").get("joke").toString().replaceAll("\\'", "'")
-                        .replaceAll("\\\"", "\"")
-                        + Colors.NORMAL);
-            }
-        } catch (Exception e) {
-            bot.getLogger().warn("Unable to retrieve random joke.", e);
-            bot.send(sender, "An error has occurred retrieving a random joke: " + e.getMessage());
+            randomJoke();
+        } catch (ModuleException e) {
+            bot.getLogger().warn(e.getMessage(), e);
+            bot.send(sender, e.getMessage());
         }
     }
 }
