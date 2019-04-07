@@ -1,5 +1,5 @@
 /*
- * CurrencyConvertTest.java
+ * ModuleException.java
  *
  * Copyright (c) 2004-2019, Erik C. Thauvin (erik@thauvin.net)
  * All rights reserved.
@@ -31,32 +31,45 @@
  */
 package net.thauvin.erik.mobibot.modules;
 
-import org.testng.annotations.Test;
-
-import static org.assertj.core.api.Assertions.assertThat;
-
 /**
- * The <code>CurrencyConvertTest</code> class.
+ * The <code>ModuleExcepetion</code> class.
  *
  * @author <a href="https://erik.thauvin.net/" target="_blank">Erik C. Thauvin</a>
  * @created 2019-04-07
  * @since 1.0
  */
-public class CurrencyConvertTest {
-    @Test
-    public void testLookupImpl() {
-        AbstractModuleTest.testAbstractModule(new CurrencyConverter());
+public class ModuleException extends Exception {
+    private static final long serialVersionUID = -3036774290621088107L;
+
+    private final String query;
+
+    ModuleException(String query, String message) {
+        super(message);
+        this.query = query;
+
     }
 
-    @Test
-    public void testConvertCurrency() throws ModuleException {
-        assertThat(CurrencyConverter.converyCurrency("100 USD to EUR").getMessage())
-            .as("100 USD to EUR").startsWith("100.00 USD = ");
-        assertThat(CurrencyConverter.converyCurrency("100 BLA to USD").isError())
-            .as("100 BLA to USD").isTrue();
-        assertThat(CurrencyConverter.converyCurrency(CurrencyConverter.CURRENCY_RATES_KEYWORD).isPrivate())
-            .as(CurrencyConverter.CURRENCY_RATES_KEYWORD + " is private").isTrue();
-        assertThat(CurrencyConverter.converyCurrency(CurrencyConverter.CURRENCY_RATES_KEYWORD).getMessage())
-            .as(CurrencyConverter.CURRENCY_RATES_KEYWORD).contains("USD: ");
+    ModuleException(String query, Throwable cause) {
+        super(cause);
+        this.query = query;
+    }
+
+    ModuleException(String query, String message, Throwable cause) {
+        super(message, cause);
+        this.query = query;
+    }
+
+    ModuleException(String message) {
+        super(message);
+        query = "";
+    }
+
+    ModuleException(Throwable cause) {
+        super(cause);
+        query = "";
+    }
+
+    public String getQuery() {
+        return query;
     }
 }

@@ -32,7 +32,8 @@
 package net.thauvin.erik.mobibot.modules;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-import net.thauvin.erik.mobibot.*;
+import net.thauvin.erik.mobibot.Mobibot;
+import net.thauvin.erik.mobibot.Utils;
 import net.thauvin.erik.mobibot.msg.ErrorMessage;
 import net.thauvin.erik.mobibot.msg.Message;
 import net.thauvin.erik.mobibot.msg.PrivateMessage;
@@ -83,7 +84,7 @@ public final class CurrencyConverter extends AbstractModule {
         commands.add(CURRENCY_CMD);
     }
 
-    static Message converyCurrency(String query) {
+    static Message converyCurrency(String query) throws ModuleException {
         if (EXCHANGE_RATES.isEmpty()) {
             try {
                 final SAXBuilder builder = new SAXBuilder();
@@ -109,10 +110,10 @@ public final class CurrencyConverter extends AbstractModule {
 
                 EXCHANGE_RATES.put("EUR", "1");
             } catch (JDOMException e) {
-                return new ErrorMessage("An error has occurred while parsing the exchange rates table.");
+                throw new ModuleException(query, "An error has occurred while parsing the exchange rates table.", e);
             } catch (IOException e) {
-                return new ErrorMessage(
-                    "An error has occurred while fetching the exchange rates table:  " + e.getMessage());
+                throw new ModuleException(
+                    query, "An error has occurred while fetching the exchange rates table.", e);
             }
         }
 
@@ -199,11 +200,16 @@ public final class CurrencyConverter extends AbstractModule {
     private void run(final Mobibot bot, final String sender, final String query) {
         if (Utils.isValidString(sender) && Utils.isValidString(query)) {
             if (query.matches("\\d+([,\\d]+)?(\\.\\d+)? [a-zA-Z]{3}+ to [a-zA-Z]{3}+")) {
-                final Message msg = converyCurrency(query.substring(query.indexOf(' ')));
-                if (msg.isError()) {
-                    helpResponse(bot, sender, CURRENCY_CMD + ' ' + query, true);
+                try {
+                    final Message msg = converyCurrency(query.substring(query.indexOf(' ')));
+                    if (msg.isError()) {
+                        helpResponse(bot, sender, CURRENCY_CMD + ' ' + query, true);
+                    }
+                    bot.send(msg.isPrivate() ? sender : bot.getChannel(), msg.getMessage());
+                } catch (ModuleException e)  {
+                    bot.getLogger().debug(e.getMessage(), e);
+                    bot.send(sender, e.getMessage());
                 }
-                bot.send(msg.isPrivate() ? sender : bot.getChannel(), msg.getMessage());
             } else {
                 helpResponse(bot, sender, CURRENCY_CMD + ' ' + query, true);
             }
