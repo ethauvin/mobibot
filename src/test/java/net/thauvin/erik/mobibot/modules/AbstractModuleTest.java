@@ -43,6 +43,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 final class AbstractModuleTest {
     static void testAbstractModule(AbstractModule module) {
         final String name = module.getClass().getName();
+        
         assertThat(module.isEnabled()).as(name + ": enabled").isTrue();
         assertThat(module.getCommands().size()).as(name + ": commands > 0").isGreaterThan(0);
         if (!module.hasProperties()) {
@@ -50,8 +51,9 @@ final class AbstractModuleTest {
             module.setProperty("test", "test");
             module.setProperty("", "invalid");
         }
+
         assertThat(module.getPropertyKeys().size()).as(name + ": properties > 0").isGreaterThan(0);
-        assertThat(module.isValidProperties()).as(name + ": isValidProperties()").isTrue();
+
         module.setProperty("invalid", "");
         assertThat(module.isValidProperties()).as(name + ": invalid properties").isFalse();
     }
