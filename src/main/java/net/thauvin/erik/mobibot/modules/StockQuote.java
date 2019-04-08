@@ -31,13 +31,20 @@
  */
 package net.thauvin.erik.mobibot.modules;
 
-import com.Ostermiller.util.CSVParser;
 import net.thauvin.erik.mobibot.Mobibot;
+import net.thauvin.erik.mobibot.Utils;
+import net.thauvin.erik.mobibot.msg.ErrorMessage;
+import net.thauvin.erik.mobibot.msg.Message;
+import net.thauvin.erik.mobibot.msg.PrivateMessage;
+import net.thauvin.erik.mobibot.msg.PublicMessage;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * The StockQuote module.
@@ -47,19 +54,86 @@ import java.io.IOException;
  * @since 1.0
  */
 public final class StockQuote extends AbstractModule {
+
+    static final String ALPHAVANTAGE_API_KEY_PROP = "alphavantage-api-key";
+
+    // The Alpha Advantage URL.
+    private static final String ALAPHADVANTAGE_URL = "https://www.alphavantage.co/query?function=GLOBAL_QUOTE";
+
     /**
      * The quote command.
      */
-    public static final String STOCK_CMD = "stock";
-
-    // The Yahoo! stock quote URL.
-    private static final String YAHOO_URL = "http://finance.yahoo.com/d/quotes.csv?&f=snl1d1t1c1oghv&e=.csv&s=";
+    private static final String STOCK_CMD = "stock";
 
     /**
      * Creates a new {@link StockQuote} instance.
      */
     public StockQuote() {
         commands.add(STOCK_CMD);
+        properties.put(ALPHAVANTAGE_API_KEY_PROP, "");
+    }
+
+
+    /**
+     * Get a stock quote.
+     *
+     * @param symbol The stock symbol.
+     * @return The stock quote.
+     * @throws ModuleException If an errors occurs.
+     */
+    static ArrayList<Message> getQuote(String symbol, String apiKey) throws ModuleException {
+        final String debugMessage = "getQuote(" + symbol + ')';
+        final ArrayList<Message> messages = new ArrayList<>();
+        final OkHttpClient client = new OkHttpClient();
+        final Request request =
+            new Request.Builder().url(ALAPHADVANTAGE_URL + "&symbol=" + symbol + "&apikey=" + apiKey).build();
+
+        try {
+            final Response response = client.newCall(request).execute();
+            final JSONObject json = new JSONObject(response.body().string());
+
+            try {
+                final String info = json.getString("Information");
+                if (!info.isEmpty()) {
+                    throw new ModuleException(debugMessage, Utils.unescapeXml(info));
+                }
+            } catch (JSONException ignore) {
+                // Do nothing.
+            }
+
+            try {
+                final String error = json.getString("Error Message");
+                if (!error.isEmpty()) {
+                    throw new ModuleException(debugMessage, Utils.unescapeXml(error));
+                }
+            } catch (JSONException ignore) {
+                  // Do nothing.
+            }
+
+            final JSONObject quote = json.getJSONObject("Global Quote");
+            
+            if (quote.isEmpty()) {
+                messages.add(new ErrorMessage("Invalid symbol."));
+                return messages;
+            }
+
+            messages.add(
+                new PublicMessage("Symbol: " + Utils.unescapeXml(quote.getString("01. symbol"))));
+            messages.add(new PublicMessage("    Price:     " + Utils.unescapeXml(quote.getString("05. price"))));
+            messages.add(new PublicMessage("    Previous:  "
+                + Utils.unescapeXml(quote.getString("08. previous close"))));
+            messages.add(new PrivateMessage("    Open:      " + Utils.unescapeXml(quote.getString("02. open"))));
+            messages.add(new PrivateMessage("    High:      " + Utils.unescapeXml(quote.getString("03. high"))));
+            messages.add(new PrivateMessage("    Low:       " + Utils.unescapeXml(quote.getString("04. low"))));
+            messages.add(new PrivateMessage("    Volume:    " + Utils.unescapeXml(quote.getString("06. volume"))));
+            messages.add(new PrivateMessage("    Latest:    "
+                + Utils.unescapeXml(quote.getString("07. latest trading day"))));
+            messages.add(new PrivateMessage("    Change:    " + Utils.unescapeXml(quote.getString("09. change"))
+                + " [" + Utils.unescapeXml(quote.getString("10. change percent")) + ']'));
+        } catch (IOException e) {
+            throw new ModuleException(debugMessage, "An error has occurred retrieving a stock quote.", e);
+        }
+        return messages;
     }
 
     /**
@@ -80,60 +154,27 @@ public final class StockQuote extends AbstractModule {
     @Override
     public void helpResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate) {
         bot.send(sender, "To retrieve a stock quote:");
-        bot.send(sender, bot.helpIndent(bot.getNick() + ": " + STOCK_CMD + " <symbol[.country code]>"));
+        bot.send(sender, bot.helpIndent(bot.getNick() + ": " + STOCK_CMD + " <symbol>"));
     }
 
     /**
-     * Returns the specified stock quote from Yahoo!
+     * Returns the specified stock quote from Alpha Advantage.
      */
     private void run(final Mobibot bot, final String sender, final String symbol) {
         try {
-            final OkHttpClient client = new OkHttpClient();
-            final Request request = new Request.Builder().url(YAHOO_URL + symbol.toUpperCase()).build();
-            final Response response = client.newCall(request).execute();
-
-            final String[][] lines = CSVParser.parse(response.body().string());
-
-            if (lines.length > 0) {
-                final String[] quote = lines[0];
-
-                if (quote.length > 0) {
-                    if ((quote.length > 3) && (!"N/A".equalsIgnoreCase(quote[3]))) {
-                        bot.send(bot.getChannel(), "Symbol: " + quote[0] + " [" + quote[1] + ']');
-
-                        if (quote.length > 5) {
-                            bot.send(bot.getChannel(), "Last Trade: " + quote[2] + " (" + quote[5] + ')');
-                        } else {
-                            bot.send(bot.getChannel(), "Last Trade: " + quote[2]);
-                        }
-
-                        if (quote.length > 4) {
-                            bot.send(sender, "Time: " + quote[3] + ' ' + quote[4]);
-                        }
-
-                        if (quote.length > 6 && !"N/A".equalsIgnoreCase(quote[6])) {
-                            bot.send(sender, "Open: " + quote[6]);
-                        }
-
-                        if (quote.length > 7 && !"N/A".equalsIgnoreCase(quote[7]) && !"N/A".equalsIgnoreCase(quote[8])) {
-                            bot.send(sender, "Day's Range: " + quote[7] + " - " + quote[8]);
-                        }
-
-                        if (quote.length > 9 && !"0".equalsIgnoreCase(quote[9])) {
-                            bot.send(sender, "Volume: " + quote[9]);
-                        }
-                    } else {
-                        bot.send(sender, "Invalid ticker symbol.");
-                    }
+            final ArrayList<Message> messages =
+                getQuote(symbol, properties.get(ALPHAVANTAGE_API_KEY_PROP));
+            for (Message msg : messages) {
+                if (msg.isPrivate() || msg.isError()) {
+                    bot.send(sender, msg.getMessage());
                 } else {
-                    bot.send(sender, "No values returned.");
+                    bot.send(bot.getChannel(), msg.getMessage());
                 }
-            } else {
-                bot.send(sender, "No data returned.");
             }
-        } catch (NullPointerException | IOException e) {
-            bot.getLogger().debug("Unable to retrieve stock quote for: " + symbol, e);
-            bot.send(sender, "An error has occurred retrieving a stock quote: " + e.getMessage());
+
+        } catch (ModuleException e) {
+            bot.getLogger().warn(e.getDebugMessage(), e);
+            bot.send(sender, "An error has occurred retrieving a stock quote.");
         }
     }
 }
