@@ -41,6 +41,6 @@ package net.thauvin.erik.mobibot.msg;
 public class PublicMessage extends Message {
     public PublicMessage(String message) {
         this.setMessage(message);
-        this.setPrivate(false);
+        this.setNotice(false);
     }
 }

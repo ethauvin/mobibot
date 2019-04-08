@@ -35,7 +35,7 @@ import net.thauvin.erik.mobibot.Mobibot;
 import net.thauvin.erik.mobibot.Utils;
 import net.thauvin.erik.mobibot.msg.ErrorMessage;
 import net.thauvin.erik.mobibot.msg.Message;
-import net.thauvin.erik.mobibot.msg.PrivateMessage;
+import net.thauvin.erik.mobibot.msg.NoticeMessage;
 import net.thauvin.erik.mobibot.msg.PublicMessage;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -107,11 +107,11 @@ public final class StockQuote extends AbstractModule {
                     throw new ModuleException(debugMessage, Utils.unescapeXml(error));
                 }
             } catch (JSONException ignore) {
-                  // Do nothing.
+                // Do nothing.
             }
 
             final JSONObject quote = json.getJSONObject("Global Quote");
-            
+
             if (quote.isEmpty()) {
                 messages.add(new ErrorMessage("Invalid symbol."));
                 return messages;
@@ -122,13 +122,13 @@ public final class StockQuote extends AbstractModule {
             messages.add(new PublicMessage("    Price:     " + Utils.unescapeXml(quote.getString("05. price"))));
             messages.add(new PublicMessage("    Previous:  "
                 + Utils.unescapeXml(quote.getString("08. previous close"))));
-            messages.add(new PrivateMessage("    Open:      " + Utils.unescapeXml(quote.getString("02. open"))));
-            messages.add(new PrivateMessage("    High:      " + Utils.unescapeXml(quote.getString("03. high"))));
-            messages.add(new PrivateMessage("    Low:       " + Utils.unescapeXml(quote.getString("04. low"))));
-            messages.add(new PrivateMessage("    Volume:    " + Utils.unescapeXml(quote.getString("06. volume"))));
-            messages.add(new PrivateMessage("    Latest:    "
+            messages.add(new NoticeMessage("    Open:      " + Utils.unescapeXml(quote.getString("02. open"))));
+            messages.add(new NoticeMessage("    High:      " + Utils.unescapeXml(quote.getString("03. high"))));
+            messages.add(new NoticeMessage("    Low:       " + Utils.unescapeXml(quote.getString("04. low"))));
+            messages.add(new NoticeMessage("    Volume:    " + Utils.unescapeXml(quote.getString("06. volume"))));
+            messages.add(new NoticeMessage("    Latest:    "
                 + Utils.unescapeXml(quote.getString("07. latest trading day"))));
-            messages.add(new PrivateMessage("    Change:    " + Utils.unescapeXml(quote.getString("09. change"))
+            messages.add(new NoticeMessage("    Change:    " + Utils.unescapeXml(quote.getString("09. change"))
                 + " [" + Utils.unescapeXml(quote.getString("10. change percent")) + ']'));
         } catch (IOException e) {
             throw new ModuleException(debugMessage, "An error has occurred retrieving a stock quote.", e);
@@ -165,11 +165,7 @@ public final class StockQuote extends AbstractModule {
             final ArrayList<Message> messages =
                 getQuote(symbol, properties.get(ALPHAVANTAGE_API_KEY_PROP));
             for (Message msg : messages) {
-                if (msg.isPrivate() || msg.isError()) {
-                    bot.send(sender, msg.getMessage());
-                } else {
-                    bot.send(bot.getChannel(), msg.getMessage());
-                }
+                bot.send(msg.isNoticeOrError() ? sender : bot.getChannel(), msg.getMessage());
             }
 
         } catch (ModuleException e) {

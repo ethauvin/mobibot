@@ -57,8 +57,8 @@ public class CurrentConverterTest {
     public void testConvertCurrency() throws ModuleException {
         assertThat(CurrencyConverter.convertCurrency("100 USD to EUR").getMessage())
             .as("100 USD to EUR").startsWith("100.00 USD = ");
-        assertThat(CurrencyConverter.convertCurrency(CurrencyConverter.CURRENCY_RATES_KEYWORD).isPrivate())
-            .as(CurrencyConverter.CURRENCY_RATES_KEYWORD + " is private").isTrue();
+        assertThat(CurrencyConverter.convertCurrency(CurrencyConverter.CURRENCY_RATES_KEYWORD).isNotice())
+            .as(CurrencyConverter.CURRENCY_RATES_KEYWORD + " is notice").isTrue();
         assertThat(CurrencyConverter.convertCurrency(CurrencyConverter.CURRENCY_RATES_KEYWORD).getMessage())
             .as(CurrencyConverter.CURRENCY_RATES_KEYWORD).contains("USD: ");
     }

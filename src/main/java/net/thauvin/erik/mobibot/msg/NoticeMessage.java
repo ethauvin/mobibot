@@ -32,15 +32,15 @@
 package net.thauvin.erik.mobibot.msg;
 
 /**
- * The <code>PrivateMessage</code> class.
+ * The <code>NoticeMessage</code> class.
  *
  * @author <a href="https://erik.thauvin.net/" target="_blank">Erik C. Thauvin</a>
  * @created 2019-04-07
  * @since 1.0
  */
-public class PrivateMessage extends Message {
-    public PrivateMessage(String message) {
+public class NoticeMessage extends Message {
+    public NoticeMessage(String message) {
         this.setMessage(message);
-        this.setPrivate(true);
+        this.setNotice(true);
     }
 }

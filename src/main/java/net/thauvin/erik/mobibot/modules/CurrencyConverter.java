@@ -36,7 +36,7 @@ import net.thauvin.erik.mobibot.Mobibot;
 import net.thauvin.erik.mobibot.Utils;
 import net.thauvin.erik.mobibot.msg.ErrorMessage;
 import net.thauvin.erik.mobibot.msg.Message;
-import net.thauvin.erik.mobibot.msg.PrivateMessage;
+import net.thauvin.erik.mobibot.msg.NoticeMessage;
 import net.thauvin.erik.mobibot.msg.PublicMessage;
 import org.jdom2.Document;
 import org.jdom2.Element;
@@ -157,7 +157,7 @@ public final class CurrencyConverter extends AbstractModule {
                     i++;
                 }
 
-                return new PrivateMessage(buff.toString());
+                return new NoticeMessage(buff.toString());
             }
         }
         return new ErrorMessage("The supported currencies are: " + EXCHANGE_RATES.keySet().toString());
@@ -205,7 +205,7 @@ public final class CurrencyConverter extends AbstractModule {
                     if (msg.isError()) {
                         helpResponse(bot, sender, CURRENCY_CMD + ' ' + query, true);
                     }
-                    bot.send(msg.isPrivate() ? sender : bot.getChannel(), msg.getMessage());
+                    bot.send(msg.isNotice() ? sender : bot.getChannel(), msg.getMessage());
                 } catch (ModuleException e) {
                     bot.getLogger().warn(e.getDebugMessage(), e);
                     bot.send(sender, e.getMessage());

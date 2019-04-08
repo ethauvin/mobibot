@@ -40,7 +40,7 @@ package net.thauvin.erik.mobibot.msg;
  */
 public class Message {
     private boolean isError;
-    private boolean isPrivate;
+    private boolean isNotice;
     private String msg = "";
 
     /**
@@ -53,12 +53,12 @@ public class Message {
     /**
      * Creates a new message.
      *
-     * @param message   The message.
-     * @param isPrivate The private flag.
+     * @param message  The message.
+     * @param isNotice The notice flag.
      */
-    public Message(String message, boolean isPrivate, boolean isError) {
+    public Message(String message, boolean isNotice, boolean isError) {
         msg = message;
-        this.isPrivate = isPrivate;
+        this.isNotice = isNotice;
         this.isError = isError;
     }
 
@@ -99,20 +99,29 @@ public class Message {
     }
 
     /**
-     * Returns the private message flag.
+     * Returns the message notice flag.
      *
-     * @return The private flag.
+     * @return The notice flag.
      */
-    public boolean isPrivate() {
-        return isPrivate;
+    public boolean isNotice() {
+        return isNotice;
     }
 
     /**
-     * Set the private message flag.
+     * Set the message notice flag.
      *
-     * @param isPrivate The private flag.
+     * @param isNotice The notice flag.
      */
-    public void setPrivate(boolean isPrivate) {
-        this.isPrivate = isPrivate;
+    public void setNotice(boolean isNotice) {
+        this.isNotice = isNotice;
+    }
+
+    /**
+     * Returns <code>true</code> if the message is an error or a notice.
+     *
+     * @return <code>true</code> or <code>false</code>
+     */
+    public boolean isNoticeOrError() {
+        return (isNotice || isError);
     }
 }
