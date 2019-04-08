@@ -48,15 +48,18 @@ public class CurrentConverterTest {
         AbstractModuleTest.testAbstractModule(new CurrencyConverter());
     }
 
+    @Test(expectedExceptions = ModuleException.class)
+    public void testException() throws ModuleException {
+        CurrencyConverter.convertCurrency("100 BLA to USD");
+    }
+
     @Test
     public void testConvertCurrency() throws ModuleException {
-        assertThat(CurrencyConverter.converyCurrency("100 USD to EUR").getMessage())
+        assertThat(CurrencyConverter.convertCurrency("100 USD to EUR").getMessage())
             .as("100 USD to EUR").startsWith("100.00 USD = ");
-        assertThat(CurrencyConverter.converyCurrency("100 BLA to USD").isError())
-            .as("100 BLA to USD").isTrue();
-        assertThat(CurrencyConverter.converyCurrency(CurrencyConverter.CURRENCY_RATES_KEYWORD).isPrivate())
+        assertThat(CurrencyConverter.convertCurrency(CurrencyConverter.CURRENCY_RATES_KEYWORD).isPrivate())
             .as(CurrencyConverter.CURRENCY_RATES_KEYWORD + " is private").isTrue();
-        assertThat(CurrencyConverter.converyCurrency(CurrencyConverter.CURRENCY_RATES_KEYWORD).getMessage())
+        assertThat(CurrencyConverter.convertCurrency(CurrencyConverter.CURRENCY_RATES_KEYWORD).getMessage())
             .as(CurrencyConverter.CURRENCY_RATES_KEYWORD).contains("USD: ");
     }
 }

@@ -84,7 +84,7 @@ public final class CurrencyConverter extends AbstractModule {
         commands.add(CURRENCY_CMD);
     }
 
-    static Message converyCurrency(String query) throws ModuleException {
+    static Message convertCurrency(String query) throws ModuleException {
         if (EXCHANGE_RATES.isEmpty()) {
             try {
                 final SAXBuilder builder = new SAXBuilder();
@@ -201,7 +201,7 @@ public final class CurrencyConverter extends AbstractModule {
         if (Utils.isValidString(sender) && Utils.isValidString(query)) {
             if (query.matches("\\d+([,\\d]+)?(\\.\\d+)? [a-zA-Z]{3}+ to [a-zA-Z]{3}+")) {
                 try {
-                    final Message msg = converyCurrency(query.substring(query.indexOf(' ')));
+                    final Message msg = convertCurrency(query);
                     if (msg.isError()) {
                         helpResponse(bot, sender, CURRENCY_CMD + ' ' + query, true);
                     }
