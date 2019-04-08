@@ -141,9 +141,9 @@ public final class CurrencyConverter extends AbstractModule {
                                 .substring(1)
                                 + ' '
                                 + cmds[3].toUpperCase());
-                    } catch (NullPointerException ignored) {
-                        return new ErrorMessage(
-                            "The supported currencies are: " + EXCHANGE_RATES.keySet().toString());
+                    } catch (Exception e) {
+                        throw new ModuleException("convertCurrency(" + query + ')',
+                            "The supported currencies are: " + EXCHANGE_RATES.keySet().toString(), e);
                     }
                 }
             } else if (query.equals(CURRENCY_RATES_KEYWORD)) {
@@ -206,8 +206,8 @@ public final class CurrencyConverter extends AbstractModule {
                         helpResponse(bot, sender, CURRENCY_CMD + ' ' + query, true);
                     }
                     bot.send(msg.isPrivate() ? sender : bot.getChannel(), msg.getMessage());
-                } catch (ModuleException e)  {
-                    bot.getLogger().debug(e.getMessage(), e);
+                } catch (ModuleException e) {
+                    bot.getLogger().warn(e.getDebugMessage(), e);
                     bot.send(sender, e.getMessage());
                 }
             } else {

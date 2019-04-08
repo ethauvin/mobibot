@@ -122,7 +122,7 @@ public final class Joke extends AbstractModule {
         try {
             randomJoke();
         } catch (ModuleException e) {
-            bot.getLogger().warn(e.getMessage(), e);
+            bot.getLogger().warn(e.getDebugMessage(), e);
             bot.send(sender, e.getMessage());
         }
     }

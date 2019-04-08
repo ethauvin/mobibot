@@ -32,44 +32,45 @@
 package net.thauvin.erik.mobibot.modules;
 
 /**
- * The <code>ModuleExcepetion</code> class.
+ * The <code>ModuleException</code> class.
  *
  * @author <a href="https://erik.thauvin.net/" target="_blank">Erik C. Thauvin</a>
  * @created 2019-04-07
  * @since 1.0
  */
-public class ModuleException extends Exception {
+class ModuleException extends Exception {
     private static final long serialVersionUID = -3036774290621088107L;
+    private final String debugMessage;
 
-    private final String query;
-
-    ModuleException(String query, String message) {
-        super(message);
-        this.query = query;
-
-    }
-
-    ModuleException(String query, Throwable cause) {
-        super(cause);
-        this.query = query;
-    }
-
-    ModuleException(String query, String message, Throwable cause) {
+    /**
+     * Creates a new exception.
+     *
+     * @param debugMessage The debug message.
+     * @param message      The exception message.
+     * @param cause        The cause.
+     */
+    ModuleException(String debugMessage, String message, Throwable cause) {
         super(message, cause);
-        this.query = query;
+        this.debugMessage = debugMessage;
     }
 
-    ModuleException(String message) {
+    /**
+     * Creates a new exception.
+     *
+     * @param debugMessage The debug message.
+     * @param message      The exception message.
+     */
+    ModuleException(String debugMessage, String message) {
         super(message);
-        query = "";
+        this.debugMessage = debugMessage;
     }
 
-    ModuleException(Throwable cause) {
-        super(cause);
-        query = "";
-    }
-
-    public String getQuery() {
-        return query;
+    /**
+     * Returns the debug message.
+     *
+     * @return The debug message.
+     */
+    String getDebugMessage() {
+        return debugMessage;
     }
 }
