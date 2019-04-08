@@ -48,10 +48,10 @@ public class Ping extends AbstractModule {
     /**
      * The ping command.
      */
-    public static final String PING_CMD = "ping";
+    private static final String PING_CMD = "ping";
 
     // The ping responses.
-    private static final List<String> PINGS =
+    static final List<String> PINGS =
         Arrays.asList(
             "is barely alive.",
             "is trying to stay awake.",
@@ -79,7 +79,6 @@ public class Ping extends AbstractModule {
     @Override
     public void commandResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate) {
         final SecureRandom r = new SecureRandom();
-
         bot.action(PINGS.get(r.nextInt(PINGS.size())));
     }
 
