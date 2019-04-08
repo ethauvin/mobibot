@@ -88,13 +88,11 @@ public final class Joke extends AbstractModule {
                 final JSONObject json = new JSONObject(sb.toString());
 
                 return new PublicMessage(
-                    Colors.CYAN
-                        + json.getJSONObject("value").get("joke").toString().replaceAll("\\'", "'")
-                        .replaceAll("\\\"", "\"")
-                        + Colors.NORMAL);
+                    json.getJSONObject("value").get("joke").toString().replaceAll("\\'", "'")
+                        .replaceAll("\\\"", "\""));
             }
         } catch (Exception e) {
-            throw new ModuleException("An error has occurred retrieving a random joke.", e);
+            throw new ModuleException("randomJoke()", "An error has occurred retrieving a random joke.", e);
         }
     }
 
@@ -120,7 +118,7 @@ public final class Joke extends AbstractModule {
      */
     private void run(final Mobibot bot, final String sender) {
         try {
-            randomJoke();
+            bot.send(bot.getChannel(), Colors.CYAN + randomJoke().getMessage() + Colors.NORMAL);
         } catch (ModuleException e) {
             bot.getLogger().warn(e.getDebugMessage(), e);
             bot.send(sender, e.getMessage());
