@@ -49,7 +49,6 @@ dependencies {
     compile 'com.rometools:rome:1.12.0'
 
     compile 'org.json:json:20180813'
-    compile 'org.ostermiller:utils:1.07.00'
     compile 'org.jsoup:jsoup:1.11.3'
     compile 'net.objecthunter:exp4j:0.4.8'
 
