@@ -52,13 +52,12 @@ import java.nio.charset.StandardCharsets;
  * @since 1.0
  */
 public final class GoogleSearch extends ThreadedModule {
-    /**
-     * The google command.
-     */
-    public static final String GOOGLE_CMD = "google";
-
     // The Google API Key property.
     private static final String GOOGLE_API_KEY_PROP = "google-api-key";
+
+    // The Google command
+    private static final String GOOGLE_CMD = "google";
+
     // The Google Custom Search Engine ID property.
     private static final String GOOGLE_CSE_KEY_PROP = "google-cse-cx";
 
@@ -86,14 +85,14 @@ public final class GoogleSearch extends ThreadedModule {
             bot.send(sender, "The Google searching facility is disabled.");
         }
     }
-    
+
     /**
      * Searches Google.
      */
     @SuppressFBWarnings(value = {"URLCONNECTION_SSRF_FD", "REC_CATCH_EXCEPTION"})
     void run(final Mobibot bot, final String sender, final String query) {
         try {
-            final String q = URLEncoder.encode(query, "UTF-8");
+            final String q = URLEncoder.encode(query, StandardCharsets.UTF_8.toString());
 
             final URL url =
                 new URL("https://www.googleapis.com/customsearch/v1?key="
