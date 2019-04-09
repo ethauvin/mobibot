@@ -144,7 +144,7 @@ public class Tell {
             helpResponse(sender);
         } else if (cmds.startsWith(Commands.VIEW_CMD)) {
             if (bot.isOp(sender) && cmds.equals(Commands.VIEW_CMD + ' ' + TELL_ALL_KEYWORD)) {
-                if (messages.isEmpty()) {
+                if (!messages.isEmpty()) {
                     for (final TellMessage message : messages) {
                         bot.send(sender, Utils.bold(message.getSender()) + arrow + Utils.bold(message.getRecipient())
                                 + " [ID: " + message.getId() + ", "

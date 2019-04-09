@@ -89,7 +89,7 @@ final class TellMessagesMgr {
     public static List<TellMessage> load(final String file, final Logger logger) {
         try {
 
-            try (ObjectInput input = new ObjectInputStream(new BufferedInputStream(new FileInputStream(file)))) {
+            try (final ObjectInput input = new ObjectInputStream(new BufferedInputStream(new FileInputStream(file)))) {
                 if (logger.isDebugEnabled()) {
                     logger.debug("Loading the messages.");
                 }
@@ -117,7 +117,7 @@ final class TellMessagesMgr {
     public static void save(final String file, final List<TellMessage> messages, final Logger logger) {
         try {
 
-            try (ObjectOutput output = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(file)))) {
+            try (final ObjectOutput output = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(file)))) {
                 if (logger.isDebugEnabled()) {
                     logger.debug("Saving the messages.");
                 }

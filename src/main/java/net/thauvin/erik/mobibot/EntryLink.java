@@ -58,22 +58,22 @@ public class EntryLink implements Serializable {
     private final List<SyndCategory> tags = new CopyOnWriteArrayList<>();
 
     // The channel
-    private String channel = "";
+    private String channel;
 
     // The creation date
     private Date date = Calendar.getInstance().getTime();
 
     // The link's URL
-    private String link = "";
+    private String link;
 
     // The author's login
     private String login = "";
 
     // The author's nickname
-    private String nick = "";
+    private String nick;
 
     // The link's title
-    private String title = "";
+    private String title;
 
     /**
      * Creates a new entry.
@@ -184,7 +184,7 @@ public class EntryLink implements Serializable {
      * @return The comments.
      */
     public final EntryComment[] getComments() {
-        return (comments.toArray(new EntryComment[comments.size()]));
+        return (comments.toArray(new EntryComment[0]));
     }
 
     /**

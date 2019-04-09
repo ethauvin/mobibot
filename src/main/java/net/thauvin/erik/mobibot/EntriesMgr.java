@@ -125,7 +125,7 @@ final class EntriesMgr {
 
         final String today;
 
-        try (InputStreamReader reader = new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8)) {
+        try (final InputStreamReader reader = new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8)) {
             final SyndFeed feed = input.build(reader);
 
             today = Utils.isoLocalDate(feed.getPublishedDate());
