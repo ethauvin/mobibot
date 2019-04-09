@@ -34,13 +34,7 @@ package net.thauvin.erik.mobibot.modules;
 import net.thauvin.erik.mobibot.msg.Message;
 import org.testng.annotations.Test;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Properties;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -53,25 +47,23 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 public class StockQuoteTest {
     @Test
-    public void testGetQuote() throws ModuleException, IOException {
-        String apiKey = System.getenv("ALPHA_ADVANTAGE");
-        if (apiKey == null) {
-            final Path localProps = Paths.get("local.properties");
-            if (Files.exists(localProps)) {
-                try (final InputStream stream = Files.newInputStream(localProps)) {
-                    final Properties p = new Properties();
-                    p.load(stream);
-                    apiKey = p.getProperty(StockQuote.ALPHAVANTAGE_API_KEY_PROP);
-                }
+    public void testGetQuote() throws ModuleException {
+        final String apiKey = LocalProperties.getProperty(StockQuote.ALPHAVANTAGE_API_KEY_PROP);
+        try {
+            ArrayList<Message> messages = StockQuote.getQuote("AAPL", apiKey);
+            assertThat(messages).as("response not empty").isNotEmpty();
+            assertThat(messages.get(0).getMessage()).as("same stock symbol").contains("AAPL");
+
+            messages = StockQuote.getQuote("012", apiKey);
+            assertThat(messages.get(0).isError()).as("invalid symbol error").isTrue();
+        } catch (ModuleException e) {
+            // Avoid displaying api keys in CI logs.
+            if ("true".equals(System.getenv("CI"))) {
+                throw new ModuleException(e.getDebugMessage(), e.getSanitizedMessage());
+            } else {
+                throw e;
             }
         }
-
-        ArrayList<Message> messages = StockQuote.getQuote("AAPL", apiKey);
-        assertThat(messages).as("response not empty").isNotEmpty();
-        assertThat(messages.get(0).getMessage()).as("same stock symbol").contains("AAPL");
-
-        messages = StockQuote.getQuote("012", apiKey);
-        assertThat(messages.get(0).isError()).as("invalid symbol error").isTrue();
     }
 
     @Test

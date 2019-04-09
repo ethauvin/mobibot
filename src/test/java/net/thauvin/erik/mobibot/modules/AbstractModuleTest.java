@@ -43,8 +43,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 final class AbstractModuleTest {
     static void testAbstractModule(AbstractModule module) {
         final String name = module.getClass().getName();
-        
-        assertThat(module.isEnabled()).as(name + ": enabled").isTrue();
+
+        assertThat(module.isEnabled()).as(name + ": enabled").isNotEqualTo(module.hasProperties());
         assertThat(module.getCommands().size()).as(name + ": commands > 0").isGreaterThan(0);
         if (!module.hasProperties()) {
             assertThat(module.getPropertyKeys().size()).as(name + ": no properties").isEqualTo(0);
