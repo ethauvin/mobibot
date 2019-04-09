@@ -60,7 +60,7 @@ public class LookupTest {
     public void testWhois() throws Exception {
         final String[] result = Lookup.whois("17.178.96.59", Lookup.WHOIS_HOST);
 
-        assertThat(Arrays.asList(result).stream().anyMatch(m -> m.contains("Apple Inc.")))
+        assertThat(Arrays.stream(result).anyMatch(m -> m.contains("Apple Inc.")))
             .as("whois(17.178.96.59/Apple Inc.").isTrue();
     }
 }

@@ -45,7 +45,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @created 2019-04-07
  * @since 1.0
  */
-public class StockQuoteTest {
+public class StockQuoteTest extends LocalProperties {
     @Test
     public void testGetQuote() throws ModuleException {
         final String apiKey = LocalProperties.getProperty(StockQuote.ALPHAVANTAGE_API_KEY_PROP);
@@ -56,6 +56,21 @@ public class StockQuoteTest {
 
             messages = StockQuote.getQuote("012", apiKey);
             assertThat(messages.get(0).isError()).as("invalid symbol error").isTrue();
+
+            try {
+                StockQuote.getQuote("test", "");
+            } catch (Exception e) {
+                assertThat(e).as("no API key").isInstanceOf(ModuleException.class);
+                assertThat(e).as("no API key exception has no cause").hasNoCause();
+            }
+
+            try {
+                StockQuote.getQuote("", "apikey");
+            } catch (Exception e) {
+                assertThat(e).as("no symbol").isInstanceOf(ModuleException.class);
+                assertThat(e).as("no symbol exception has no cause").hasNoCause();
+            }
+
         } catch (ModuleException e) {
             // Avoid displaying api keys in CI logs.
             if ("true".equals(System.getenv("CI"))) {

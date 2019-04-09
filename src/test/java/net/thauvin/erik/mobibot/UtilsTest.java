@@ -62,18 +62,31 @@ public class UtilsTest {
     }
 
     @Test
-    public void testBold() throws Exception {
+    public void testBold() {
         assertThat(Utils.bold(1)).as("bold(1)").isEqualTo(Colors.BOLD + "1" + Colors.BOLD);
         assertThat(Utils.bold(ASCII)).as("bold(ascii").isEqualTo(Colors.BOLD + ASCII + Colors.BOLD);
     }
 
     @Test
-    public void testCapitalize() throws Exception {
+    public void testCapitalize() {
         assertThat(Utils.capitalize("this is a test.")).isEqualTo("This is a test.");
     }
 
     @Test
-    public void testEnsureDir() throws Exception {
+    public void testColorize() {
+        assertThat(Utils.colorize(ASCII, Colors.REVERSE)).as("reverse")
+            .isEqualTo(Colors.REVERSE + ASCII + Colors.REVERSE);
+        assertThat(Utils.colorize(ASCII, Colors.RED)).as("red")
+            .isEqualTo(Colors.RED + ASCII + Colors.NORMAL);
+    }
+
+    @Test
+    public void testCyan() {
+        assertThat(Utils.cyan(ASCII)).isEqualTo(Colors.CYAN + ASCII + Colors.NORMAL);
+    }
+
+    @Test
+    public void testEnsureDir() {
         assertThat(Utils.ensureDir("dir", false)).as("ensureDir(dir, false)")
             .isEqualTo("dir" + File.separatorChar);
         assertThat(Utils.ensureDir("https://erik.thauvin.net", true))
@@ -81,18 +94,18 @@ public class UtilsTest {
     }
 
     @Test
-    public void testGetIntProperty() throws Exception {
+    public void testGetIntProperty() {
         assertThat(Utils.getIntProperty("10", 1)).as("getIntProperty(10, 1)").isEqualTo(10);
         assertThat(Utils.getIntProperty("a", 1)).as("getIntProperty(a, 1)").isEqualTo(1);
     }
 
     @Test
-    public void testGreen() throws Exception {
+    public void testGreen() {
         assertThat(Utils.green(ASCII)).isEqualTo(Colors.DARK_GREEN + ASCII + Colors.NORMAL);
     }
 
     @Test
-    public void testIsValidString() throws Exception {
+    public void testIsValidString() {
         assertThat(Utils.isValidString(ASCII)).as("isValidString(ascii)").isTrue();
         assertThat(Utils.isValidString("")).as("isValidString(empty)").isFalse();
         assertThat(Utils.isValidString("    ")).as("isValidString(   )").isFalse();
@@ -101,13 +114,13 @@ public class UtilsTest {
     }
 
     @Test
-    public void testIsoLocalDate() throws Exception {
+    public void testIsoLocalDate() {
         assertThat(Utils.isoLocalDate(cal.getTime())).as("isoLocalDate(date)").isEqualTo("1952-02-17");
         assertThat(Utils.isoLocalDate(localDateTime)).as("isoLocalDate(localDate)").isEqualTo("1952-02-17");
     }
 
     @Test
-    public void testPlural() throws Exception {
+    public void testPlural() {
         final String week = "week";
         final String weeks = "weeks";
 
@@ -118,23 +131,23 @@ public class UtilsTest {
     }
 
     @Test
-    public void testReverseColor() throws Exception {
+    public void testReverseColor() {
         assertThat(Utils.reverseColor(ASCII)).isEqualTo(Colors.REVERSE + ASCII + Colors.REVERSE);
     }
 
     @Test
-    public void testToday() throws Exception {
+    public void testToday() {
         assertThat(Utils.today()).isEqualTo(Utils.isoLocalDate(LocalDateTime.now()));
     }
 
     @Test
-    public void testUnescapeXml() throws Exception {
+    public void testUnescapeXml() {
         assertThat(Utils.unescapeXml("&lt;a name=&quot;test &amp; &apos;&#39;&quot;&gt;"))
             .isEqualTo("<a name=\"test & ''\">");
     }
 
     @Test
-    public void testUtcDateTime() throws Exception {
+    public void testUtcDateTime() {
         assertThat(Utils.utcDateTime(cal.getTime())).as("utcDateTime(date)").isEqualTo("1952-02-17 12:30");
         assertThat(Utils.utcDateTime(localDateTime)).as("utcDateTime(localDate)")
             .isEqualTo("1952-02-17 12:30");

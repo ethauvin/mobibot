@@ -1,5 +1,5 @@
 /*
- * LocalProperties.java
+ * properties.java
  *
  * Copyright (c) 2004-2019, Erik C. Thauvin (erik@thauvin.net)
  * All rights reserved.
@@ -41,37 +41,37 @@ import java.nio.file.Paths;
 import java.util.Properties;
 
 /**
- * The <code>LocalProperties</code> class.
+ * The <code>properties</code> class.
  *
  * @author <a href="https://erik.thauvin.net/" target="_blank">Erik C. Thauvin</a>
  * @created 2019-04-08
  * @since 1.0
  */
 class LocalProperties {
-    private static Properties localProperties = new Properties();
+    private static final Properties localProps = new Properties();
 
     static String getProperty(final String key) {
-        if (localProperties.containsKey(key)) {
-            return localProperties.getProperty(key);
+        if (localProps.containsKey(key)) {
+            return localProps.getProperty(key);
         } else {
             final String env = System.getenv(keyToEnv(key));
             if (env != null) {
-                localProperties.setProperty(key, env);
+                localProps.setProperty(key, env);
             }
             return env;
         }
     }
 
-    private static String keyToEnv(String key) {
+    private static String keyToEnv(final String key) {
         return key.replaceAll("-", "_").toUpperCase();
     }
 
-    @BeforeSuite
-    static void loadLocalProperties() {
-        final Path localProps = Paths.get("local.properties");
-        if (Files.exists(localProps)) {
-            try (final InputStream stream = Files.newInputStream(localProps)) {
-                localProperties.load(stream);
+    @BeforeSuite(alwaysRun = true)
+    public void loadProperties() {
+        final Path localPath = Paths.get("local.properties");
+        if (Files.exists(localPath)) {
+            try (final InputStream stream = Files.newInputStream(localPath)) {
+                localProps.load(stream);
             } catch (IOException ignore) {
                 // Do nothing
             }

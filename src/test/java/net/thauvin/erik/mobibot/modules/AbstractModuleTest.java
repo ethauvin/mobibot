@@ -41,7 +41,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @since 1.0
  */
 final class AbstractModuleTest {
-    static void testAbstractModule(AbstractModule module) {
+    static void testAbstractModule(final AbstractModule module) {
         final String name = module.getClass().getName();
 
         assertThat(module.isEnabled()).as(name + ": enabled").isNotEqualTo(module.hasProperties());

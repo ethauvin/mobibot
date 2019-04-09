@@ -48,7 +48,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 public class ModuleExceptionTest {
     @DataProvider(name = "dp")
-    Object[][] createData(Method m) {
+    Object[][] createData(final Method m) {
         System.out.println(m.getName());  // print test method name
         return new Object[][]{new Object[]{new ModuleException("debugMessage", "message",
             new IOException("Secret URL http://foo.com?apiKey=sec&userID=me"))},
@@ -57,17 +57,17 @@ public class ModuleExceptionTest {
     }
 
     @Test(dataProvider = "dp")
-    final void testGetDebugMessage(ModuleException e) {
+    final void testGetDebugMessage(final ModuleException e) {
         assertThat(e.getDebugMessage()).as("get debug message").isEqualTo("debugMessage");
     }
 
     @Test(dataProvider = "dp")
-    final void testGetMessage(ModuleException e) {
+    final void testGetMessage(final ModuleException e) {
         assertThat(e.getMessage()).as("get message").isEqualTo("message");
     }
 
     @Test(dataProvider = "dp")
-    final void testGetStanitizedMessage(ModuleException e) {
+    final void testGetStanitizedMessage(final ModuleException e) {
         if (e.hasCause()) {
             assertThat(e.getSanitizedMessage()).as("get sanitzed url")
                 .contains("http://foo.com?apiKey=[3]&userID=[2]");
