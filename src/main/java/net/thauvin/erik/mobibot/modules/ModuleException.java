@@ -51,11 +51,21 @@ class ModuleException extends Exception {
     /**
      * Creates a new exception.
      *
+     * @param message The exception message.
+     */
+    ModuleException(final String message) {
+        super(message);
+        this.debugMessage = message;
+    }
+
+    /**
+     * Creates a new exception.
+     *
      * @param debugMessage The debug message.
      * @param message      The exception message.
      * @param cause        The cause.
      */
-    ModuleException(String debugMessage, String message, Throwable cause) {
+    ModuleException(final String debugMessage, final String message, final Throwable cause) {
         super(message, cause);
         this.debugMessage = debugMessage;
     }
@@ -66,7 +76,7 @@ class ModuleException extends Exception {
      * @param debugMessage The debug message.
      * @param message      The exception message.
      */
-    ModuleException(String debugMessage, String message) {
+    ModuleException(final String debugMessage, final String message) {
         super(message);
         this.debugMessage = debugMessage;
     }
