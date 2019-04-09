@@ -44,15 +44,11 @@ import java.security.SecureRandom;
  * @since 1.0
  */
 public final class War extends AbstractModule {
-    /**
-     * The war command
-     */
-    public static final String WAR_CMD = "war";
-
+    // The war command
+    private static final String WAR_CMD = "war";
     // The deck of card.
     private static final String[] WAR_DECK =
         new String[]{"Ace", "King", "Queen", "Jack", "10", "9", "8", "7", "6", "5", "4", "3", "2"};
-
     // The suits for the deck of card.
     private static final String[] WAR_SUITS = new String[]{"Hearts", "Spades", "Diamonds", "Clubs"};
 

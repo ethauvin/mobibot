@@ -50,14 +50,10 @@ import java.util.List;
  * @since 1.0
  */
 public class Weather2 extends AbstractModule {
-
-    /**
-     * The weather command.
-     */
-    public static final String WEATHER_CMD = "weather";
-
     // The OpenWeatherMap API Key property.
     private static final String OWM_API_KEY_PROP = "owm-api-key";
+    // The weather command.
+    private static final String WEATHER_CMD = "weather";
 
     /**
      * Creates a new {@link Weather2} instance.
@@ -76,7 +72,7 @@ public class Weather2 extends AbstractModule {
     }
 
     private String fAndC(final Double d) {
-        final Double c = (d - 32) * 5 / 9;
+        final double c = (d - 32) * 5 / 9;
         return Math.round(d) + " \u00B0F, " + Math.round(c) + " \u00B0C";
     }
 
@@ -102,14 +98,6 @@ public class Weather2 extends AbstractModule {
         bot.send(sender, bot.helpIndent(bot.getNick() + ": " + WEATHER_CMD + " paris, fr"));
         bot.send(sender, "The default ISO 3166 country code is " + Utils.bold("US")
             + ". Zip codes are supported in most countries.");
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean isEnabled() {
-        return isValidProperties();
     }
 
     /**
@@ -146,7 +134,7 @@ public class Weather2 extends AbstractModule {
                                 bot.send(sender, "Temperature: " + fAndC(main.getTemp()), isPrivate);
                             }
 
-                            if (main.hasHumidity()) {
+                            if (main.hasHumidity() && (main.getHumidity() != null)) {
                                 bot.send(sender, "Humidity: " + Math.round(main.getHumidity()) + "%", isPrivate);
                             }
                         }

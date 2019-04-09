@@ -54,15 +54,14 @@ import java.util.ArrayList;
  * @since 1.0
  */
 public final class StockQuote extends AbstractModule {
-
+    /**
+     * The Alpha Advantage property key.
+     */
     static final String ALPHAVANTAGE_API_KEY_PROP = "alphavantage-api-key";
 
     // The Alpha Advantage URL.
     private static final String ALAPHADVANTAGE_URL = "https://www.alphavantage.co/query?function=GLOBAL_QUOTE";
-
-    /**
-     * The quote command.
-     */
+    // The quote command.
     private static final String STOCK_CMD = "stock";
 
     /**
@@ -72,7 +71,6 @@ public final class StockQuote extends AbstractModule {
         commands.add(STOCK_CMD);
         properties.put(ALPHAVANTAGE_API_KEY_PROP, "");
     }
-
 
     /**
      * Get a stock quote.
@@ -90,46 +88,56 @@ public final class StockQuote extends AbstractModule {
 
         try {
             final Response response = client.newCall(request).execute();
-            final JSONObject json = new JSONObject(response.body().string());
+            if (response.body() != null) {
+                final JSONObject json = new JSONObject(response.body().string());
 
-            try {
-                final String info = json.getString("Information");
-                if (!info.isEmpty()) {
-                    throw new ModuleException(debugMessage, Utils.unescapeXml(info));
+                try {
+                    final String info = json.getString("Information");
+                    if (!info.isEmpty()) {
+                        throw new ModuleException(debugMessage, Utils.unescapeXml(info));
+                    }
+                } catch (JSONException ignore) {
+                    // Do nothing.
                 }
-            } catch (JSONException ignore) {
-                // Do nothing.
-            }
 
-            try {
-                final String error = json.getString("Error Message");
-                if (!error.isEmpty()) {
-                    throw new ModuleException(debugMessage, Utils.unescapeXml(error));
+                try {
+                    final String error = json.getString("Error Message");
+                    if (!error.isEmpty()) {
+                        throw new ModuleException(debugMessage, Utils.unescapeXml(error));
+                    }
+                } catch (JSONException ignore) {
+                    // Do nothing.
                 }
-            } catch (JSONException ignore) {
-                // Do nothing.
+
+                final JSONObject quote = json.getJSONObject("Global Quote");
+
+                if (quote.isEmpty()) {
+                    messages.add(new ErrorMessage("Invalid symbol."));
+                    return messages;
+                }
+
+                messages.add(
+                    new PublicMessage("Symbol: " + Utils.unescapeXml(quote.getString("01. symbol"))));
+                messages.add(
+                    new PublicMessage("    Price:     " + Utils.unescapeXml(quote.getString("05. price"))));
+                messages.add(
+                    new PublicMessage("    Previous:  "
+                        + Utils.unescapeXml(quote.getString("08. previous close"))));
+                messages.add(
+                    new NoticeMessage("    Open:      " + Utils.unescapeXml(quote.getString("02. open"))));
+                messages.add(
+                    new NoticeMessage("    High:      " + Utils.unescapeXml(quote.getString("03. high"))));
+                messages.add(
+                    new NoticeMessage("    Low:       " + Utils.unescapeXml(quote.getString("04. low"))));
+                messages.add(
+                    new NoticeMessage("    Volume:    " + Utils.unescapeXml(quote.getString("06. volume"))));
+                messages.add(
+                    new NoticeMessage("    Latest:    "
+                        + Utils.unescapeXml(quote.getString("07. latest trading day"))));
+                messages.add(
+                    new NoticeMessage("    Change:    " + Utils.unescapeXml(quote.getString("09. change"))
+                        + " [" + Utils.unescapeXml(quote.getString("10. change percent")) + ']'));
             }
-
-            final JSONObject quote = json.getJSONObject("Global Quote");
-
-            if (quote.isEmpty()) {
-                messages.add(new ErrorMessage("Invalid symbol."));
-                return messages;
-            }
-
-            messages.add(
-                new PublicMessage("Symbol: " + Utils.unescapeXml(quote.getString("01. symbol"))));
-            messages.add(new PublicMessage("    Price:     " + Utils.unescapeXml(quote.getString("05. price"))));
-            messages.add(new PublicMessage("    Previous:  "
-                + Utils.unescapeXml(quote.getString("08. previous close"))));
-            messages.add(new NoticeMessage("    Open:      " + Utils.unescapeXml(quote.getString("02. open"))));
-            messages.add(new NoticeMessage("    High:      " + Utils.unescapeXml(quote.getString("03. high"))));
-            messages.add(new NoticeMessage("    Low:       " + Utils.unescapeXml(quote.getString("04. low"))));
-            messages.add(new NoticeMessage("    Volume:    " + Utils.unescapeXml(quote.getString("06. volume"))));
-            messages.add(new NoticeMessage("    Latest:    "
-                + Utils.unescapeXml(quote.getString("07. latest trading day"))));
-            messages.add(new NoticeMessage("    Change:    " + Utils.unescapeXml(quote.getString("09. change"))
-                + " [" + Utils.unescapeXml(quote.getString("10. change percent")) + ']'));
         } catch (IOException e) {
             throw new ModuleException(debugMessage, "An error has occurred retrieving a stock quote.", e);
         }
@@ -165,7 +173,7 @@ public final class StockQuote extends AbstractModule {
             final ArrayList<Message> messages =
                 getQuote(symbol, properties.get(ALPHAVANTAGE_API_KEY_PROP));
             for (Message msg : messages) {
-                bot.send(msg.isNoticeOrError() ? sender : bot.getChannel(), msg.getMessage());
+                bot.send(msg.isNotice() ? sender : bot.getChannel(), msg.getMessage());
             }
 
         } catch (ModuleException e) {

@@ -54,15 +54,7 @@ public abstract class ThreadedModule extends AbstractModule {
     }
 
     /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean isEnabled() {
-        return isValidProperties();
-    }
-
-    /**
-     * Run the thread.
+     * Runs the thread.
      */
     abstract void run(Mobibot bot, String sender, String args);
 }
