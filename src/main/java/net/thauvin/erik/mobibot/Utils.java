@@ -153,6 +153,16 @@ public final class Utils {
     }
 
     /**
+     * Meks the given string cyan
+     *
+     * @param s The string.
+     * @return The cyan string.
+     */
+    public static String cyan(final String s) {
+        return Colors.CYAN + s + Colors.NORMAL;
+    }
+
+    /**
      * Ensures that the given location (File/URL) has a trailing slash (<code>/</code>) to indicate a directory.
      *
      * @param location The File or URL location.
@@ -198,7 +208,7 @@ public final class Utils {
      * Makes the given string green.
      *
      * @param s The string.
-     * @return The bold string.
+     * @return The green string.
      */
     public static String green(final String s) {
         return Colors.DARK_GREEN + s + Colors.NORMAL;
