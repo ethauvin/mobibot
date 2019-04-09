@@ -106,7 +106,11 @@ public abstract class AbstractModule {
      * @return <code>true</code> or <code>false</code>
      */
     public boolean isEnabled() {
-        return true;
+        if (hasProperties()) {
+            return isValidProperties();
+        } else {
+            return true;
+        }
     }
 
     /**

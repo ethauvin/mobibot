@@ -44,10 +44,8 @@ import java.security.SecureRandom;
  * @since 1.0
  */
 public final class Dice extends AbstractModule {
-    /**
-     * The dice command.
-     */
-    public static final String DICE_CMD = "dice";
+    // The dice command.
+    private static final String DICE_CMD = "dice";
 
     /**
      * The default constructor.
@@ -99,13 +97,5 @@ public final class Dice extends AbstractModule {
     public void helpResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate) {
         bot.send(sender, "To roll the dice:");
         bot.send(sender, bot.helpIndent(bot.getNick() + ": " + DICE_CMD));
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean isEnabled() {
-        return true;
     }
 }
