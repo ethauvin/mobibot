@@ -34,15 +34,19 @@ package net.thauvin.erik.mobibot.modules;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import net.thauvin.erik.mobibot.Mobibot;
 import net.thauvin.erik.mobibot.Utils;
+import net.thauvin.erik.mobibot.msg.Message;
+import net.thauvin.erik.mobibot.msg.NoticeMessage;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 
 /**
  * The GoogleSearch module.
@@ -53,14 +57,11 @@ import java.nio.charset.StandardCharsets;
  */
 public final class GoogleSearch extends ThreadedModule {
     // The Google API Key property.
-    private static final String GOOGLE_API_KEY_PROP = "google-api-key";
-
+    static final String GOOGLE_API_KEY_PROP = "google-api-key";
+    // The Google Custom Search Engine ID property.
+    static final String GOOGLE_CSE_KEY_PROP = "google-cse-cx";
     // The Google command
     private static final String GOOGLE_CMD = "google";
-
-    // The Google Custom Search Engine ID property.
-    private static final String GOOGLE_CSE_KEY_PROP = "google-cse-cx";
-
     // The tab indent (4 spaces).
     private static final String TAB_INDENT = "    ";
 
@@ -74,31 +75,24 @@ public final class GoogleSearch extends ThreadedModule {
     }
 
     /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void helpResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate) {
-        if (isEnabled()) {
-            bot.send(sender, "To search Google:");
-            bot.send(sender, bot.helpIndent(bot.getNick() + ": " + GOOGLE_CMD + " <query>"));
-        } else {
-            bot.send(sender, "The Google searching facility is disabled.");
-        }
-    }
-
-    /**
-     * Searches Google.
+     * Performs a search on Google.
+     *
+     * @param query  The search query.
+     * @param apiKey The Google API key.
+     *               The Google CSE key.
+     * @param cseKey The Google search results.
      */
     @SuppressFBWarnings(value = {"URLCONNECTION_SSRF_FD", "REC_CATCH_EXCEPTION"})
-    void run(final Mobibot bot, final String sender, final String query) {
+    static ArrayList<Message> searchGoogle(String query, String apiKey, String cseKey) throws ModuleException {
+        final ArrayList<Message> results = new ArrayList<>();
         try {
             final String q = URLEncoder.encode(query, StandardCharsets.UTF_8.toString());
 
             final URL url =
                 new URL("https://www.googleapis.com/customsearch/v1?key="
-                    + properties.get(GOOGLE_API_KEY_PROP)
+                    + apiKey
                     + "&cx="
-                    + properties.get(GOOGLE_CSE_KEY_PROP)
+                    + cseKey
                     + "&q="
                     + q
                     + "&filter=1&num=5&alt=json");
@@ -117,13 +111,50 @@ public final class GoogleSearch extends ThreadedModule {
 
                 for (int i = 0; i < ja.length(); i++) {
                     final JSONObject j = ja.getJSONObject(i);
-                    bot.send(sender, Utils.unescapeXml(j.getString("title")));
-                    bot.send(sender, TAB_INDENT + Utils.green(j.getString("link")));
+                    results.add(new NoticeMessage(Utils.unescapeXml(j.getString("title"))));
+                    results.add(new NoticeMessage(j.getString("link")));
                 }
             }
-        } catch (Exception e) {
-            bot.getLogger().warn("Unable to search in Google for: " + query, e);
-            bot.send(sender, "An error has occurred searching in Google: " + e.getMessage());
+        } catch (IOException e) {
+            throw new ModuleException("searchGoogle(" + query + ')', "An error has occurred searching Google.", e);
+        }
+
+        return results;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void helpResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate) {
+        if (isEnabled()) {
+            bot.send(sender, "To search Google:");
+            bot.send(sender, bot.helpIndent(bot.getNick() + ": " + GOOGLE_CMD + " <query>"));
+        } else {
+            bot.send(sender, "The Google searching facility is disabled.");
+        }
+    }
+
+    /**
+     * Searches Google.
+     */
+    void run(final Mobibot bot, final String sender, final String query) {
+        try {
+            final ArrayList<Message> results = searchGoogle(query, properties.get(GOOGLE_API_KEY_PROP),
+                properties.get(GOOGLE_CSE_KEY_PROP));
+
+            int i = 0;
+            for (Message msg : results) {
+                if (i % 2 == 0) {
+                    bot.send(sender, Utils.green(TAB_INDENT + msg.getMessage()));
+                } else {
+                    bot.send(sender, msg.getMessage());
+                }
+                i++;
+            }
+        } catch (ModuleException e) {
+            bot.getLogger().warn(e.getDebugMessage(), e);
+            bot.send(sender, e.getMessage());
         }
     }
 }
