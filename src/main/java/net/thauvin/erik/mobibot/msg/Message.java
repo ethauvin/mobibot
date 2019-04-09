@@ -115,13 +115,4 @@ public class Message {
     public void setNotice(boolean isNotice) {
         this.isNotice = isNotice;
     }
-
-    /**
-     * Returns <code>true</code> if the message is an error or a notice.
-     *
-     * @return <code>true</code> or <code>false</code>
-     */
-    public boolean isNoticeOrError() {
-        return (isNotice || isError);
-    }
 }

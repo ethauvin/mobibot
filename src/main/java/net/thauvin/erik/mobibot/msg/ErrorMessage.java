@@ -42,5 +42,6 @@ public class ErrorMessage extends Message {
     public ErrorMessage(String message) {
         this.setMessage(message);
         this.setError(true);
+        this.setNotice(true);
     }
 }
