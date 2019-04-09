@@ -73,7 +73,7 @@ public final class Utils {
      * @return The bold string.
      */
     public static String bold(final String s) {
-        return Colors.BOLD + s + Colors.BOLD;
+        return  colorize(s, Colors.BOLD);
     }
 
     /**
@@ -153,13 +153,27 @@ public final class Utils {
     }
 
     /**
+     * Colorize a string.
+     *
+     * @param s     The string.
+     * @param color The color.
+     * @return The colorized string.
+     */
+    public static String colorize(final String s, final String color) {
+        if (color.equals(Colors.BOLD) || color.equals(Colors.REVERSE)) {
+            return color + s + color;
+        }
+        return color + s + Colors.NORMAL;
+    }
+
+    /**
      * Meks the given string cyan
      *
      * @param s The string.
      * @return The cyan string.
      */
     public static String cyan(final String s) {
-        return Colors.CYAN + s + Colors.NORMAL;
+        return colorize(s, Colors.CYAN);
     }
 
     /**
@@ -211,7 +225,7 @@ public final class Utils {
      * @return The green string.
      */
     public static String green(final String s) {
-        return Colors.DARK_GREEN + s + Colors.NORMAL;
+        return colorize(s, Colors.DARK_GREEN);
     }
 
     /**
@@ -276,7 +290,7 @@ public final class Utils {
      * @return The reverse color string.
      */
     public static String reverseColor(final String s) {
-        return Colors.REVERSE + s + Colors.REVERSE;
+        return colorize(s, Colors.REVERSE);
     }
 
     /**
