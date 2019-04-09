@@ -45,7 +45,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @created 2019-04-08
  * @since 1.0
  */
-public class GoogleSearchTest {
+public class GoogleSearchTest extends LocalProperties {
     @Test
     public void testGoogleSearchImpl() {
         AbstractModuleTest.testAbstractModule(new GoogleSearch());
@@ -63,6 +63,27 @@ public class GoogleSearchTest {
             messages = GoogleSearch.searchGoogle("aapl", apiKey, cseKey);
             assertThat(messages).as("aapl results not empty").isNotEmpty();
             assertThat(messages.get(0).getMessage()).as("found apple").containsIgnoringCase("apple");
+
+            try {
+                GoogleSearch.searchGoogle("test", "", "apiKey");
+            } catch (Exception e) {
+                assertThat(e).as("no API key").isInstanceOf(ModuleException.class);
+                assertThat(e).as("no API key exception has no cause").hasNoCause();
+            }
+
+            try {
+                GoogleSearch.searchGoogle("test", "apiKey", "");
+            } catch (Exception e) {
+                assertThat(e).as("no CSE API key").isInstanceOf(ModuleException.class);
+                assertThat(e).as("no CSE API key exception has no cause").hasNoCause();
+            }
+
+            try {
+                GoogleSearch.searchGoogle("", "apikey", "apiKey");
+            } catch (Exception e) {
+                assertThat(e).as("no query").isInstanceOf(ModuleException.class);
+                assertThat(e).as("no query exception has no cause").hasNoCause();
+            }
         } catch (ModuleException e) {
             // Avoid displaying api keys in CI logs.
             if ("true".equals(System.getenv("CI"))) {

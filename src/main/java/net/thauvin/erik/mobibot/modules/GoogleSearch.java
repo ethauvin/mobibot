@@ -83,43 +83,52 @@ public final class GoogleSearch extends ThreadedModule {
      * @param cseKey The Google search results.
      */
     @SuppressFBWarnings(value = {"URLCONNECTION_SSRF_FD", "REC_CATCH_EXCEPTION"})
-    static ArrayList<Message> searchGoogle(String query, String apiKey, String cseKey) throws ModuleException {
-        final ArrayList<Message> results = new ArrayList<>();
-        try {
-            final String q = URLEncoder.encode(query, StandardCharsets.UTF_8.toString());
-
-            final URL url =
-                new URL("https://www.googleapis.com/customsearch/v1?key="
-                    + apiKey
-                    + "&cx="
-                    + cseKey
-                    + "&q="
-                    + q
-                    + "&filter=1&num=5&alt=json");
-            final URLConnection conn = url.openConnection();
-
-            final StringBuilder sb = new StringBuilder();
-            try (final BufferedReader reader =
-                     new BufferedReader(new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8))) {
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    sb.append(line);
-                }
-
-                final JSONObject json = new JSONObject(sb.toString());
-                final JSONArray ja = json.getJSONArray("items");
-
-                for (int i = 0; i < ja.length(); i++) {
-                    final JSONObject j = ja.getJSONObject(i);
-                    results.add(new NoticeMessage(Utils.unescapeXml(j.getString("title"))));
-                    results.add(new NoticeMessage(j.getString("link")));
-                }
-            }
-        } catch (IOException e) {
-            throw new ModuleException("searchGoogle(" + query + ')', "An error has occurred searching Google.", e);
+    static ArrayList<Message> searchGoogle(final String query, final String apiKey, final String cseKey)
+        throws ModuleException {
+        if (!Utils.isValidString(apiKey) || !Utils.isValidString(cseKey)) {
+            throw new ModuleException(Utils.capitalize(GOOGLE_CMD) + " is disabled. The API keys are missing.");
         }
 
-        return results;
+        if (Utils.isValidString(query)) {
+            final ArrayList<Message> results = new ArrayList<>();
+            try {
+                final String q = URLEncoder.encode(query, StandardCharsets.UTF_8.toString());
+
+                final URL url =
+                    new URL("https://www.googleapis.com/customsearch/v1?key="
+                        + apiKey
+                        + "&cx="
+                        + cseKey
+                        + "&q="
+                        + q
+                        + "&filter=1&num=5&alt=json");
+                final URLConnection conn = url.openConnection();
+
+                final StringBuilder sb = new StringBuilder();
+                try (final BufferedReader reader =
+                         new BufferedReader(new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8))) {
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        sb.append(line);
+                    }
+
+                    final JSONObject json = new JSONObject(sb.toString());
+                    final JSONArray ja = json.getJSONArray("items");
+
+                    for (int i = 0; i < ja.length(); i++) {
+                        final JSONObject j = ja.getJSONObject(i);
+                        results.add(new NoticeMessage(Utils.unescapeXml(j.getString("title"))));
+                        results.add(new NoticeMessage(j.getString("link")));
+                    }
+                }
+            } catch (IOException e) {
+                throw new ModuleException("searchGoogle(" + query + ')', "An error has occurred searching Google.", e);
+            }
+
+            return results;
+        } else {
+            throw new ModuleException("Invalid query.");
+        }
     }
 
     /**
@@ -131,7 +140,7 @@ public final class GoogleSearch extends ThreadedModule {
             bot.send(sender, "To search Google:");
             bot.send(sender, bot.helpIndent(bot.getNick() + ": " + GOOGLE_CMD + " <query>"));
         } else {
-            bot.send(sender, "The Google searching facility is disabled.");
+            bot.send(sender, "The Google search module is disabled.");
         }
     }
 
@@ -139,22 +148,26 @@ public final class GoogleSearch extends ThreadedModule {
      * Searches Google.
      */
     void run(final Mobibot bot, final String sender, final String query) {
-        try {
-            final ArrayList<Message> results = searchGoogle(query, properties.get(GOOGLE_API_KEY_PROP),
-                properties.get(GOOGLE_CSE_KEY_PROP));
+        if (Utils.isValidString(query)) {
+            try {
+                final ArrayList<Message> results = searchGoogle(query, properties.get(GOOGLE_API_KEY_PROP),
+                    properties.get(GOOGLE_CSE_KEY_PROP));
 
-            int i = 0;
-            for (Message msg : results) {
-                if (i % 2 == 0) {
-                    bot.send(sender, Utils.green(TAB_INDENT + msg.getMessage()));
-                } else {
-                    bot.send(sender, msg.getMessage());
+                int i = 0;
+                for (final Message msg : results) {
+                    if (i % 2 == 0) {
+                        bot.send(sender, Utils.green(TAB_INDENT + msg.getMessage()));
+                    } else {
+                        bot.send(sender, msg.getMessage());
+                    }
+                    i++;
                 }
-                i++;
+            } catch (ModuleException e) {
+                bot.getLogger().warn(e.getDebugMessage(), e);
+                bot.send(sender, e.getMessage());
             }
-        } catch (ModuleException e) {
-            bot.getLogger().warn(e.getDebugMessage(), e);
-            bot.send(sender, e.getMessage());
+        } else {
+            helpResponse(bot, sender, query, true);
         }
     }
 }
