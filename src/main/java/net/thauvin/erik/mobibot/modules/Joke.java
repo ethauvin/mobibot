@@ -50,7 +50,7 @@ import java.nio.charset.StandardCharsets;
  * @created 2014-04-20
  * @since 1.0
  */
-public final class Joke extends AbstractModule {
+public final class Joke extends ThreadedModule {
     // The ICNDB URL.
     private static final String JOKE_URL =
         "http://api.icndb.com/jokes/random?escape=javascript&exclude=[explicit]&limitTo=[nerdy]";
@@ -98,14 +98,6 @@ public final class Joke extends AbstractModule {
      * {@inheritDoc}
      */
     @Override
-    public void commandResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate) {
-        new Thread(() -> run(bot, sender)).start();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public void helpResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate) {
         bot.send(sender, "To retrieve a random joke:");
         bot.send(sender, bot.helpIndent(bot.getNick() + ": " + JOKE_CMD));
@@ -114,7 +106,7 @@ public final class Joke extends AbstractModule {
     /**
      * Returns a random joke from <a href="http://www.icndb.com/">The Internet Chuck Norris Database</a>
      */
-    private void run(final Mobibot bot, final String sender) {
+    void run(final Mobibot bot, final String sender, String arg) {
         try {
             bot.send(bot.getChannel(), Utils.cyan(randomJoke().getMessage()));
         } catch (ModuleException e) {

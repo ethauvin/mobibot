@@ -53,7 +53,7 @@ import java.util.ArrayList;
  * @created Feb 7, 2004
  * @since 1.0
  */
-public final class StockQuote extends AbstractModule {
+public final class StockQuote extends ThreadedModule {
     /**
      * The Alpha Advantage property key.
      */
@@ -79,81 +79,78 @@ public final class StockQuote extends AbstractModule {
      * @return The stock quote.
      * @throws ModuleException If an errors occurs.
      */
-    static ArrayList<Message> getQuote(String symbol, String apiKey) throws ModuleException {
-        final String debugMessage = "getQuote(" + symbol + ')';
-        final ArrayList<Message> messages = new ArrayList<>();
-        final OkHttpClient client = new OkHttpClient();
-        final Request request =
-            new Request.Builder().url(ALAPHADVANTAGE_URL + "&symbol=" + symbol + "&apikey=" + apiKey).build();
+    static ArrayList<Message> getQuote(final String symbol, final String apiKey) throws ModuleException {
+        if (!Utils.isValidString(apiKey)) {
+            throw new ModuleException(Utils.capitalize(STOCK_CMD) + " is disabled. The API key is missing.");
+        }
 
-        try {
-            final Response response = client.newCall(request).execute();
-            if (response.body() != null) {
-                final JSONObject json = new JSONObject(response.body().string());
+        if (Utils.isValidString(symbol)) {
+            final String debugMessage = "getQuote(" + symbol + ')';
+            final ArrayList<Message> messages = new ArrayList<>();
+            final OkHttpClient client = new OkHttpClient();
+            final Request request =
+                new Request.Builder().url(ALAPHADVANTAGE_URL + "&symbol=" + symbol + "&apikey=" + apiKey).build();
 
-                try {
-                    final String info = json.getString("Information");
-                    if (!info.isEmpty()) {
-                        throw new ModuleException(debugMessage, Utils.unescapeXml(info));
+            try {
+                final Response response = client.newCall(request).execute();
+                if (response.body() != null) {
+                    final JSONObject json = new JSONObject(response.body().string());
+
+                    try {
+                        final String info = json.getString("Information");
+                        if (!info.isEmpty()) {
+                            throw new ModuleException(debugMessage, Utils.unescapeXml(info));
+                        }
+                    } catch (JSONException ignore) {
+                        // Do nothing.
                     }
-                } catch (JSONException ignore) {
-                    // Do nothing.
-                }
 
-                try {
-                    final String error = json.getString("Error Message");
-                    if (!error.isEmpty()) {
-                        throw new ModuleException(debugMessage, Utils.unescapeXml(error));
+                    try {
+                        final String error = json.getString("Error Message");
+                        if (!error.isEmpty()) {
+                            throw new ModuleException(debugMessage, Utils.unescapeXml(error));
+                        }
+                    } catch (JSONException ignore) {
+                        // Do nothing.
                     }
-                } catch (JSONException ignore) {
-                    // Do nothing.
+
+                    final JSONObject quote = json.getJSONObject("Global Quote");
+
+                    if (quote.isEmpty()) {
+                        messages.add(new ErrorMessage("Invalid symbol."));
+                        return messages;
+                    }
+
+                    messages.add(
+                        new PublicMessage("Symbol: " + Utils.unescapeXml(quote.getString("01. symbol"))));
+                    messages.add(
+                        new PublicMessage("    Price:     " + Utils.unescapeXml(quote.getString("05. price"))));
+                    messages.add(
+                        new PublicMessage("    Previous:  "
+                            + Utils.unescapeXml(quote.getString("08. previous close"))));
+                    messages.add(
+                        new NoticeMessage("    Open:      " + Utils.unescapeXml(quote.getString("02. open"))));
+                    messages.add(
+                        new NoticeMessage("    High:      " + Utils.unescapeXml(quote.getString("03. high"))));
+                    messages.add(
+                        new NoticeMessage("    Low:       " + Utils.unescapeXml(quote.getString("04. low"))));
+                    messages.add(
+                        new NoticeMessage("    Volume:    " + Utils.unescapeXml(quote.getString("06. volume"))));
+                    messages.add(
+                        new NoticeMessage("    Latest:    "
+                            + Utils.unescapeXml(quote.getString("07. latest trading day"))));
+                    messages.add(
+                        new NoticeMessage("    Change:    " + Utils.unescapeXml(quote.getString("09. change"))
+                            + " [" + Utils.unescapeXml(quote.getString("10. change percent")) + ']'));
                 }
-
-                final JSONObject quote = json.getJSONObject("Global Quote");
-
-                if (quote.isEmpty()) {
-                    messages.add(new ErrorMessage("Invalid symbol."));
-                    return messages;
-                }
-
-                messages.add(
-                    new PublicMessage("Symbol: " + Utils.unescapeXml(quote.getString("01. symbol"))));
-                messages.add(
-                    new PublicMessage("    Price:     " + Utils.unescapeXml(quote.getString("05. price"))));
-                messages.add(
-                    new PublicMessage("    Previous:  "
-                        + Utils.unescapeXml(quote.getString("08. previous close"))));
-                messages.add(
-                    new NoticeMessage("    Open:      " + Utils.unescapeXml(quote.getString("02. open"))));
-                messages.add(
-                    new NoticeMessage("    High:      " + Utils.unescapeXml(quote.getString("03. high"))));
-                messages.add(
-                    new NoticeMessage("    Low:       " + Utils.unescapeXml(quote.getString("04. low"))));
-                messages.add(
-                    new NoticeMessage("    Volume:    " + Utils.unescapeXml(quote.getString("06. volume"))));
-                messages.add(
-                    new NoticeMessage("    Latest:    "
-                        + Utils.unescapeXml(quote.getString("07. latest trading day"))));
-                messages.add(
-                    new NoticeMessage("    Change:    " + Utils.unescapeXml(quote.getString("09. change"))
-                        + " [" + Utils.unescapeXml(quote.getString("10. change percent")) + ']'));
+            } catch (IOException e) {
+                throw new ModuleException(debugMessage, "An error has occurred retrieving a stock quote.", e);
             }
-        } catch (IOException e) {
-            throw new ModuleException(debugMessage, "An error has occurred retrieving a stock quote.", e);
-        }
-        return messages;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void commandResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate) {
-        if (args.length() > 0) {
-            new Thread(() -> run(bot, sender, args)).start();
+            return messages;
         } else {
-            helpResponse(bot, sender, args, isPrivate);
+            throw new ModuleException("Invalid symbol.");
         }
+
     }
 
     /**
@@ -168,17 +165,19 @@ public final class StockQuote extends AbstractModule {
     /**
      * Returns the specified stock quote from Alpha Advantage.
      */
-    private void run(final Mobibot bot, final String sender, final String symbol) {
-        try {
-            final ArrayList<Message> messages =
-                getQuote(symbol, properties.get(ALPHAVANTAGE_API_KEY_PROP));
-            for (Message msg : messages) {
-                bot.send(msg.isNotice() ? sender : bot.getChannel(), msg.getMessage());
+    void run(final Mobibot bot, final String sender, final String symbol) {
+        if (Utils.isValidString(symbol)) {
+            try {
+                final ArrayList<Message> messages = getQuote(symbol, properties.get(ALPHAVANTAGE_API_KEY_PROP));
+                for (final Message msg : messages) {
+                    bot.send(msg.isNotice() ? sender : bot.getChannel(), msg.getMessage());
+                }
+            } catch (ModuleException e) {
+                bot.getLogger().warn(e.getDebugMessage(), e);
+                bot.send(bot.getChannel(), e.getMessage());
             }
-
-        } catch (ModuleException e) {
-            bot.getLogger().warn(e.getDebugMessage(), e);
-            bot.send(sender, "An error has occurred retrieving a stock quote.");
+        } else {
+            helpResponse(bot, sender, symbol, true);
         }
     }
 }

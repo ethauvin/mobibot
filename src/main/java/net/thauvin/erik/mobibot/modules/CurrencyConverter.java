@@ -59,7 +59,7 @@ import java.util.TreeMap;
  * @created Feb 11, 2004
  * @since 1.0
  */
-public final class CurrencyConverter extends AbstractModule {
+public final class CurrencyConverter extends ThreadedModule {
     // The rates keyword.
     static final String CURRENCY_RATES_KEYWORD = "rates";
     // The currency command.
@@ -78,7 +78,7 @@ public final class CurrencyConverter extends AbstractModule {
         commands.add(CURRENCY_CMD);
     }
 
-    static Message convertCurrency(String query) throws ModuleException {
+    static Message convertCurrency(final String query) throws ModuleException {
         if (EXCHANGE_RATES.isEmpty()) {
             try {
                 final SAXBuilder builder = new SAXBuilder();
@@ -168,7 +168,7 @@ public final class CurrencyConverter extends AbstractModule {
             }
         }
 
-        new Thread(() -> run(bot, sender, args)).start();
+        super.commandResponse(bot, sender, args, isPrivate);
     }
 
     /**
@@ -191,7 +191,7 @@ public final class CurrencyConverter extends AbstractModule {
      * Converts the specified currencies.
      */
     @SuppressFBWarnings(value = "REDOS")
-    private void run(final Mobibot bot, final String sender, final String query) {
+    void run(final Mobibot bot, final String sender, final String query) {
         if (Utils.isValidString(sender) && Utils.isValidString(query)) {
             if (query.matches("\\d+([,\\d]+)?(\\.\\d+)? [a-zA-Z]{3}+ to [a-zA-Z]{3}+")) {
                 try {

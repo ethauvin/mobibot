@@ -163,7 +163,7 @@ public final class WorldTime extends AbstractModule {
         return String.format("%c%03d", '@', beats);
     }
 
-    static Message worldTime(String query) {
+    static Message worldTime(final String query) {
         final String tz = (COUNTRIES_MAP.get((query.substring(query.indexOf(' ') + 1).trim().toUpperCase())));
         final String response;
 
