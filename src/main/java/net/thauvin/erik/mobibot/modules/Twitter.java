@@ -44,16 +44,13 @@ import twitter4j.conf.ConfigurationBuilder;
  * @since 1.0
  */
 public final class Twitter extends ThreadedModule {
-    /**
-     * The twitter command.
-     */
-    public static final String TWITTER_CMD = "twitter";
-
     // The property keys.
     private static final String CONSUMER_KEY_PROP = "twitter-consumerKey";
     private static final String CONSUMER_SECRET_PROP = "twitter-consumerSecret";
     private static final String TOKEN_PROP = "twitter-token";
     private static final String TOKEN_SECRET_PROP = "twitter-tokenSecret";
+    // The twitter command.
+    private static final String TWITTER_CMD = "twitter";
 
     /**
      * Creates a new {@link Twitter} instance.

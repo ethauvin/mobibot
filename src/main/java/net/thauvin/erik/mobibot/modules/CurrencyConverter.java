@@ -60,20 +60,14 @@ import java.util.TreeMap;
  * @since 1.0
  */
 public final class CurrencyConverter extends AbstractModule {
-    /**
-     * The rates keyword.
-     */
+    // The rates keyword.
     static final String CURRENCY_RATES_KEYWORD = "rates";
-
     // The currency command.
     private static final String CURRENCY_CMD = "currency";
-
     // The exchange rates.
     private static final Map<String, String> EXCHANGE_RATES = new TreeMap<>();
-
     // The exchange rates table URL.
     private static final String EXCHANGE_TABLE_URL = "https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml";
-
     // The last exchange rates table publication date.
     private static String pubDate = "";
 
@@ -203,7 +197,7 @@ public final class CurrencyConverter extends AbstractModule {
                 try {
                     final Message msg = convertCurrency(query);
                     if (msg.isError()) {
-                        helpResponse(bot, sender, CURRENCY_CMD + ' ' + query, true);
+                        helpResponse(bot, sender, CURRENCY_CMD + ' ' + query, false);
                     }
                     bot.send(msg.isNotice() ? sender : bot.getChannel(), msg.getMessage());
                 } catch (ModuleException e) {

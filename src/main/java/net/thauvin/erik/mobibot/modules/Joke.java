@@ -32,9 +32,9 @@
 package net.thauvin.erik.mobibot.modules;
 
 import net.thauvin.erik.mobibot.Mobibot;
+import net.thauvin.erik.mobibot.Utils;
 import net.thauvin.erik.mobibot.msg.Message;
 import net.thauvin.erik.mobibot.msg.PublicMessage;
-import org.jibble.pircbot.Colors;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -51,14 +51,11 @@ import java.nio.charset.StandardCharsets;
  * @since 1.0
  */
 public final class Joke extends AbstractModule {
-    /**
-     * The joke command.
-     */
-    public static final String JOKE_CMD = "joke";
-
     // The ICNDB URL.
     private static final String JOKE_URL =
         "http://api.icndb.com/jokes/random?escape=javascript&exclude=[explicit]&limitTo=[nerdy]";
+    // The joke command.
+    private static final String JOKE_CMD = "joke";
 
     /**
      * Creates a new {@link Joke} instance.
@@ -87,6 +84,7 @@ public final class Joke extends AbstractModule {
 
                 final JSONObject json = new JSONObject(sb.toString());
 
+                //noinspection RegExpRedundantEscape
                 return new PublicMessage(
                     json.getJSONObject("value").get("joke").toString().replaceAll("\\'", "'")
                         .replaceAll("\\\"", "\""));
@@ -118,7 +116,7 @@ public final class Joke extends AbstractModule {
      */
     private void run(final Mobibot bot, final String sender) {
         try {
-            bot.send(bot.getChannel(), Colors.CYAN + randomJoke().getMessage() + Colors.NORMAL);
+            bot.send(bot.getChannel(), Utils.cyan(randomJoke().getMessage()));
         } catch (ModuleException e) {
             bot.getLogger().warn(e.getDebugMessage(), e);
             bot.send(sender, e.getMessage());
