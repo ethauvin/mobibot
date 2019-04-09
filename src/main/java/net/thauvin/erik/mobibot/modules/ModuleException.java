@@ -31,6 +31,11 @@
  */
 package net.thauvin.erik.mobibot.modules;
 
+import okhttp3.HttpUrl;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 /**
  * The <code>ModuleException</code> class.
  *
@@ -41,6 +46,7 @@ package net.thauvin.erik.mobibot.modules;
 class ModuleException extends Exception {
     private static final long serialVersionUID = -3036774290621088107L;
     private final String debugMessage;
+    private final Pattern urlPattern = Pattern.compile("(https?://\\S+)");
 
     /**
      * Creates a new exception.
@@ -72,5 +78,44 @@ class ModuleException extends Exception {
      */
     String getDebugMessage() {
         return debugMessage;
+    }
+
+    /**
+     * Return the sanitized (URL query parameters are replaced by char count) message.
+     *
+     * @return The sanitized message.
+     */
+    String getSanitizedMessage() {
+        if (hasCause()) {
+            final String causeMessage = getCause().getMessage();
+            final Matcher matcher = urlPattern.matcher(causeMessage);
+            if (matcher.find()) {
+                final HttpUrl url = HttpUrl.parse(matcher.group());
+                if ((url != null) && (matcher.group().contains("?")) && (url.querySize() > 0)) {
+                    final StringBuilder query = new StringBuilder();
+                    for (int i = 0, size = url.querySize(); i < size; i++) {
+                        if (query.length() > 0) {
+                            query.append("&");
+                        }
+                        query.append(url.queryParameterName(i)).append('=')
+                            .append('[').append(url.queryParameterValue(i).length()).append(']');
+                    }
+                    return getDebugMessage() + "\nCaused by: " + getCause().getClass().getName() + ": "
+                        + causeMessage.replace(matcher.group(),
+                        matcher.group().substring(0, matcher.group().indexOf('?') + 1) + query);
+                }
+            }
+        }
+
+        return getMessage();
+    }
+
+    /**
+     * Return <code>true</code> if the exception has a cause.
+     *
+     * @return <code>true</code> or <code>false</code>
+     */
+    boolean hasCause() {
+        return getCause() != null;
     }
 }
