@@ -153,6 +153,8 @@ public class Mobibot extends PircBot {
     private final String logsDir;
     // The recap array.
     private final List<String> recap = new ArrayList<>(0);
+    // The tell object.
+    private final Tell tell;
     // The backlogs URL.
     private String backLogsUrl = "";
     // The default tags/categories.
@@ -167,8 +169,6 @@ public class Mobibot extends PircBot {
     private String identPwd = "";
     // The pinboard posts handler.
     private Pinboard pinboard = null;
-    // The tell object.
-    private Tell tell;
     // Today's date.
     private String today = Utils.today();
 
@@ -1406,7 +1406,7 @@ public class Mobibot extends PircBot {
     /**
      * Sends a private message or notice.
      *
-     * @param sender    The nick of the person who sent the message.
+     * @param sender    The channel or nick of the person who sent the message.
      * @param message   The actual message.
      * @param isPrivate Set to <code>true</code> if the response should be a private message, otherwise a notice is
      *                  sent.
@@ -1430,14 +1430,26 @@ public class Mobibot extends PircBot {
     }
 
     /**
-     * Sends a private notice.
+     * Sends a message.
      *
-     * @param sender  The nick of the person who sent the message.
+     * @param who     The channel or nick of the person who sent the message.
      * @param message The actual message.
      */
-    public final void send(final String sender, final String message) {
-        send(sender, message, false);
+    public final void send(final String who, final String message) {
+        send(who, message, false);
     }
+
+    /**
+     * Sends a message.
+     *
+     * @param who     The channel or nick of the person who sent the message.
+     * @param message The actual message.
+     * @param color   The message's color.
+     */
+    public final void send(final String who, final String message, final String color) {
+        send(who, Utils.colorize(message, color), false);
+    }
+
 
     /**
      * Sets the feed URL.
