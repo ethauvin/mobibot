@@ -31,6 +31,8 @@
  */
 package net.thauvin.erik.mobibot.msg;
 
+import org.jibble.pircbot.Colors;
+
 /**
  * The <code>Message</code> class.
  *
@@ -39,6 +41,7 @@ package net.thauvin.erik.mobibot.msg;
  * @since 1.0
  */
 public class Message {
+    private String color = Colors.NORMAL;
     private boolean isError;
     private boolean isNotice;
     private String msg = "";
@@ -55,11 +58,46 @@ public class Message {
      *
      * @param message  The message.
      * @param isNotice The notice flag.
+     * @param isError  The error flag.
      */
-    public Message(String message, boolean isNotice, boolean isError) {
+    public Message(final String message, final boolean isNotice, final boolean isError) {
         msg = message;
         this.isNotice = isNotice;
         this.isError = isError;
+    }
+
+
+    /**
+     * Creates a new message.
+     *
+     * @param message  The message.
+     * @param isNotice The notice flag.
+     * @param isError  The error flag
+     * @param color    The color.
+     */
+    public Message(final String message, final boolean isNotice, final boolean isError, final String color) {
+        msg = message;
+        this.isNotice = isNotice;
+        this.isError = isError;
+        this.color = color;
+    }
+
+    /**
+     * Returns the color.
+     *
+     * @return The color,
+     */
+    public String getColor() {
+        return color;
+    }
+
+    /**
+     * Set the color
+     *
+     * @param color The new color.
+     */
+    public void setColor(final String color) {
+        this.color = color;
     }
 
     /**
@@ -76,7 +114,7 @@ public class Message {
      *
      * @param message The new message.
      */
-    public void setMessage(String message) {
+    public void setMessage(final String message) {
         msg = message;
     }
 
@@ -94,7 +132,7 @@ public class Message {
      *
      * @param error The error flag.
      */
-    public void setError(boolean error) {
+    public void setError(final boolean error) {
         isError = error;
     }
 
@@ -112,7 +150,7 @@ public class Message {
      *
      * @param isNotice The notice flag.
      */
-    public void setNotice(boolean isNotice) {
+    public void setNotice(final boolean isNotice) {
         this.isNotice = isNotice;
     }
 }

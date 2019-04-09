@@ -39,8 +39,14 @@ package net.thauvin.erik.mobibot.msg;
  * @since 1.0
  */
 public class NoticeMessage extends Message {
-    public NoticeMessage(String message) {
+    public NoticeMessage(final String message) {
         this.setMessage(message);
         this.setNotice(true);
+    }
+
+    public NoticeMessage(final String message, final String color) {
+        this.setMessage(message);
+        this.setNotice(true);
+        this.setColor(color);
     }
 }

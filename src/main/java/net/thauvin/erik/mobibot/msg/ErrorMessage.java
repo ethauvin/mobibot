@@ -39,9 +39,15 @@ package net.thauvin.erik.mobibot.msg;
  * @since 1.0
  */
 public class ErrorMessage extends Message {
-    public ErrorMessage(String message) {
+    public ErrorMessage(final String message) {
         this.setMessage(message);
         this.setError(true);
         this.setNotice(true);
+    }
+    public ErrorMessage(final String message, final String color) {
+        this.setMessage(message);
+        this.setError(true);
+        this.setNotice(true);
+        this.setColor(color);
     }
 }
