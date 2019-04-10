@@ -51,11 +51,11 @@ import java.nio.charset.StandardCharsets;
  * @since 1.0
  */
 public final class Joke extends ThreadedModule {
+    // The joke command.
+    private static final String JOKE_CMD = "joke";
     // The ICNDB URL.
     private static final String JOKE_URL =
         "http://api.icndb.com/jokes/random?escape=javascript&exclude=[explicit]&limitTo=[nerdy]";
-    // The joke command.
-    private static final String JOKE_CMD = "joke";
 
     /**
      * Creates a new {@link Joke} instance.
@@ -92,6 +92,14 @@ public final class Joke extends ThreadedModule {
         } catch (Exception e) {
             throw new ModuleException("randomJoke()", "An error has occurred retrieving a random joke.", e);
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void commandResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate) {
+        new Thread(() -> run(bot, sender, args)).start();
     }
 
     /**
