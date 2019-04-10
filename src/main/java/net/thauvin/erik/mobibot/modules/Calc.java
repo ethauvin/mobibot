@@ -81,7 +81,7 @@ public class Calc extends AbstractModule {
     @Override
     public void commandResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate) {
         if (Utils.isValidString(args)) {
-            bot.send(bot.getChannel(), calc(args));
+            bot.send(calc(args));
 
         } else {
             helpResponse(bot, sender, args, isPrivate);

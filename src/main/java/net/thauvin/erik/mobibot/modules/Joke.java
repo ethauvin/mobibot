@@ -108,7 +108,7 @@ public final class Joke extends ThreadedModule {
      */
     void run(final Mobibot bot, final String sender, String arg) {
         try {
-            bot.send(bot.getChannel(), Utils.cyan(randomJoke().getMessage()));
+            bot.send(Utils.cyan(randomJoke().getMessage()));
         } catch (ModuleException e) {
             bot.getLogger().warn(e.getDebugMessage(), e);
             bot.send(sender, e.getMessage());

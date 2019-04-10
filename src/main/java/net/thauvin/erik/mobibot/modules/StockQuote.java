@@ -170,11 +170,11 @@ public final class StockQuote extends ThreadedModule {
             try {
                 final ArrayList<Message> messages = getQuote(symbol, properties.get(ALPHAVANTAGE_API_KEY_PROP));
                 for (final Message msg : messages) {
-                    bot.send(msg.isNotice() ? sender : bot.getChannel(), msg.getMessage());
+                    bot.send(sender, msg);
                 }
             } catch (ModuleException e) {
                 bot.getLogger().warn(e.getDebugMessage(), e);
-                bot.send(bot.getChannel(), e.getMessage());
+                bot.send(e.getMessage());
             }
         } else {
             helpResponse(bot, sender, symbol, true);

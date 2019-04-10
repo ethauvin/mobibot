@@ -199,7 +199,7 @@ public final class CurrencyConverter extends ThreadedModule {
                     if (msg.isError()) {
                         helpResponse(bot, sender, CURRENCY_CMD + ' ' + query, false);
                     }
-                    bot.send(msg.isNotice() ? sender : bot.getChannel(), msg.getMessage());
+                    bot.send(sender, msg);
                 } catch (ModuleException e) {
                     bot.getLogger().warn(e.getDebugMessage(), e);
                     bot.send(sender, e.getMessage());

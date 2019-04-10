@@ -200,7 +200,7 @@ public final class WorldTime extends AbstractModule {
             if (msg.isError()) {
                 bot.send(sender, msg.getMessage());
             } else {
-                bot.send(bot.getChannel(), msg.getMessage());
+                bot.send(msg.getMessage());
             }
         }
     }

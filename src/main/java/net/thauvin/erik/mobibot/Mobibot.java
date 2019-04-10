@@ -34,12 +34,14 @@ package net.thauvin.erik.mobibot;
 import com.rometools.rome.io.FeedException;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import net.thauvin.erik.mobibot.modules.*;
+import net.thauvin.erik.mobibot.msg.Message;
 import net.thauvin.erik.semver.Version;
 import org.apache.commons.cli.*;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.config.Configurator;
+import org.jibble.pircbot.Colors;
 import org.jibble.pircbot.PircBot;
 import org.jibble.pircbot.User;
 import org.jsoup.Jsoup;
@@ -796,7 +798,7 @@ public class Mobibot extends PircBot {
     private void infoResponse(final String sender, final boolean isPrivate) {
         for (final String info : INFO_STRS) {
             if (info.startsWith("https://")) {
-                send(sender, Utils.green(info), isPrivate);
+                send(sender, info, Colors.DARK_GREEN, isPrivate);
             } else {
                 send(sender, info, isPrivate);
             }
@@ -1430,19 +1432,53 @@ public class Mobibot extends PircBot {
     }
 
     /**
+     * Sends a notice to the channel.
+     *
+     * @param notice The notice message.
+     */
+    public final void send(final String notice) {
+        send(getChannel(), notice);
+
+    }
+
+    /**
      * Sends a message.
      *
-     * @param who     The channel or nick of the person who sent the message.
+     * @param who     The channel or nick of the person who sent the command.
      * @param message The actual message.
      */
     public final void send(final String who, final String message) {
         send(who, message, false);
     }
 
+
     /**
      * Sends a message.
      *
-     * @param who     The channel or nick of the person who sent the message.
+     * @param who     The channel or nick of the person who sent the command.
+     * @param message The message.
+     */
+    public final void send(final String who, final Message message) {
+        send(message.isNotice() ? who : getChannel(), message.getMessage(), message.getColor(), message.isPrivate());
+    }
+
+    /**
+     * Sends a message.
+     *
+     * @param who       The channel or nick of the person who sent the command.
+     * @param message   The actual message.
+     * @param color     The message's color.
+     * @param isPrivate The private flag.
+     */
+    public final void send(final String who, final String message, final String color, boolean isPrivate) {
+        send(who, Utils.colorize(message, color), isPrivate);
+    }
+
+
+    /**
+     * Sends a message.
+     *
+     * @param who     The channel or nick of the person who sent the command.
      * @param message The actual message.
      * @param color   The message's color.
      */

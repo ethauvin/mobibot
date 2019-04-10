@@ -197,12 +197,12 @@ public class Weather2 extends ThreadedModule {
                     helpResponse(bot, sender, args, true);
                 } else {
                     for (final Message msg : messages) {
-                        bot.send(msg.isNotice() ? bot.getChannel() : sender, msg.getMessage(), msg.getColor());
+                        bot.send(sender, msg);
                     }
                 }
             } catch (ModuleException e) {
                 bot.getLogger().debug(e.getDebugMessage(), e);
-                bot.send(bot.getChannel(), e.getMessage());
+                bot.send(e.getMessage());
             }
         } else {
             helpResponse(bot, sender, args, true);

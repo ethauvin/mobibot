@@ -60,7 +60,7 @@ class Pinboard {
      * @param apiToken  The API end point.
      * @param ircServer The IRC server.
      */
-    public Pinboard(final Mobibot bot, final String apiToken, final String ircServer) {
+    Pinboard(final Mobibot bot, final String apiToken, final String ircServer) {
         pinboard = new PinboardPoster(apiToken);
         this.ircServer = ircServer;
 
@@ -78,11 +78,10 @@ class Pinboard {
      *
      * @param entry The entry to add.
      */
-    public final void addPost(final EntryLink entry) {
+    final void addPost(final EntryLink entry) {
         final SwingWorker<Boolean, Void> worker = new SwingWorker<Boolean, Void>() {
             @Override
-            protected Boolean doInBackground()
-                throws Exception {
+            protected Boolean doInBackground() {
                 return pinboard.addPin(entry.getLink(),
                     entry.getTitle(),
                     postedBy(entry),
@@ -99,13 +98,12 @@ class Pinboard {
      *
      * @param entry The entry to delete.
      */
-    public final void deletePost(final EntryLink entry) {
+    final void deletePost(final EntryLink entry) {
         final String link = entry.getLink();
 
         final SwingWorker<Boolean, Void> worker = new SwingWorker<Boolean, Void>() {
             @Override
-            protected Boolean doInBackground()
-                throws Exception {
+            protected Boolean doInBackground() {
                 return pinboard.deletePin(link);
             }
         };
@@ -139,11 +137,10 @@ class Pinboard {
      * @param oldUrl The old post URL.
      * @param entry  The entry to add.
      */
-    public final void updatePost(final String oldUrl, final EntryLink entry) {
+    final void updatePost(final String oldUrl, final EntryLink entry) {
         final SwingWorker<Boolean, Void> worker = new SwingWorker<Boolean, Void>() {
             @Override
-            protected Boolean doInBackground()
-                throws Exception {
+            protected Boolean doInBackground() {
                 if (!oldUrl.equals(entry.getLink())) {
                     pinboard.deletePin(oldUrl);
 

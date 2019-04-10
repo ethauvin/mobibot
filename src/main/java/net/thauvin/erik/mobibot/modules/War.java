@@ -86,7 +86,7 @@ public final class War extends AbstractModule {
                 break;
             }
 
-            bot.send(bot.getChannel(), "This means " + Utils.bold("WAR") + '!');
+            bot.send("This means " + Utils.bold("WAR") + '!');
         }
 
         if (i < y) {

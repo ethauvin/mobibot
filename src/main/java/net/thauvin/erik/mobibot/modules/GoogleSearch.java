@@ -36,6 +36,7 @@ import net.thauvin.erik.mobibot.Mobibot;
 import net.thauvin.erik.mobibot.Utils;
 import net.thauvin.erik.mobibot.msg.Message;
 import net.thauvin.erik.mobibot.msg.NoticeMessage;
+import org.jibble.pircbot.Colors;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -118,7 +119,8 @@ public final class GoogleSearch extends ThreadedModule {
                     for (int i = 0; i < ja.length(); i++) {
                         final JSONObject j = ja.getJSONObject(i);
                         results.add(new NoticeMessage(Utils.unescapeXml(j.getString("title"))));
-                        results.add(new NoticeMessage(j.getString("link")));
+                        results.add(
+                            new NoticeMessage(TAB_INDENT + j.getString("link"), Colors.DARK_GREEN));
                     }
                 }
             } catch (IOException e) {
@@ -152,15 +154,8 @@ public final class GoogleSearch extends ThreadedModule {
             try {
                 final ArrayList<Message> results = searchGoogle(query, properties.get(GOOGLE_API_KEY_PROP),
                     properties.get(GOOGLE_CSE_KEY_PROP));
-
-                int i = 0;
                 for (final Message msg : results) {
-                    if (i % 2 == 0) {
-                        bot.send(sender, Utils.green(TAB_INDENT + msg.getMessage()));
-                    } else {
-                        bot.send(sender, msg.getMessage());
-                    }
-                    i++;
+                    bot.send(sender, msg);
                 }
             } catch (ModuleException e) {
                 bot.getLogger().warn(e.getDebugMessage(), e);
