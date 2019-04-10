@@ -117,23 +117,23 @@ public class Weather2 extends ThreadedModule {
                         cwd = owm.currentWeatherByCityName(city, getCountry(country));
                     }
                     if (cwd.hasCityName()) {
-                        messages.add(new NoticeMessage("City: " + cwd.getCityName() + " [" + country + "]"));
+                        messages.add(new PublicMessage("City: " + cwd.getCityName() + " [" + country + "]"));
 
                         final Main main = cwd.getMainData();
                         if (main != null) {
                             if (main.hasTemp()) {
-                                messages.add(new NoticeMessage("Temperature: " + fAndC(main.getTemp())));
+                                messages.add(new PublicMessage("Temperature: " + fAndC(main.getTemp())));
                             }
 
                             if (main.hasHumidity() && (main.getHumidity() != null)) {
-                                messages.add(new PublicMessage("Humidity: " + Math.round(main.getHumidity()) + "%"));
+                                messages.add(new NoticeMessage("Humidity: " + Math.round(main.getHumidity()) + "%"));
                             }
                         }
 
                         if (cwd.hasWindData()) {
                             final Wind w = cwd.getWindData();
                             if (w != null && w.hasSpeed()) {
-                                messages.add(new PublicMessage("Wind: " + wind(w.getSpeed())));
+                                messages.add(new NoticeMessage("Wind: " + wind(w.getSpeed())));
                             }
                         }
 
@@ -148,7 +148,7 @@ public class Weather2 extends ThreadedModule {
                                         condition.append(", ").append(w.getDescription());
                                     }
                                 }
-                                messages.add(new PublicMessage(condition.toString()));
+                                messages.add(new NoticeMessage(condition.toString()));
                             }
                         }
                         messages.add(new NoticeMessage("https://openweathermap.org/city/"
