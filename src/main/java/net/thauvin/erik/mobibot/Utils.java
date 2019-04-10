@@ -159,10 +159,13 @@ public final class Utils {
      * @param color The color.
      * @return The colorized string.
      */
-    public static String colorize(final String s, final String color) {
-        if (color.equals(Colors.BOLD) || color.equals(Colors.REVERSE)) {
+    static String colorize(final String s, final String color) {
+        if (!Utils.isValidString(color) || color.equals(Colors.NORMAL)) {
+            return s;
+        } else if (color.equals(Colors.BOLD) || color.equals(Colors.REVERSE)) {
             return color + s + color;
         }
+
         return color + s + Colors.NORMAL;
     }
 
