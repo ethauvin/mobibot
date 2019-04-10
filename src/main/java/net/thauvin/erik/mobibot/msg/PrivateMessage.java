@@ -1,5 +1,5 @@
 /*
- * PublicMessage.java
+ * PrivateMessage.java
  *
  * Copyright (c) 2004-2019, Erik C. Thauvin (erik@thauvin.net)
  * All rights reserved.
@@ -32,18 +32,18 @@
 package net.thauvin.erik.mobibot.msg;
 
 /**
- * The <code>PublicMessage</code> class.
+ * The <code>PrivateMessage</code> class.
  *
  * @author <a href="https://erik.thauvin.net/" target="_blank">Erik C. Thauvin</a>
- * @created 2019-04-07
+ * @created 2019-04-09
  * @since 1.0
  */
-public class PublicMessage extends Message {
-    public PublicMessage(final String message) {
+public class PrivateMessage extends Message {
+    public PrivateMessage(final String message) {
         this.setMessage(message);
     }
 
-    public PublicMessage(final String message, final String color) {
+    public PrivateMessage(final String message, final String color) {
         this.setMessage(message);
         this.setColor(color);
     }

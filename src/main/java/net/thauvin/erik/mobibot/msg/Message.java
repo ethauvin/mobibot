@@ -44,6 +44,7 @@ public class Message {
     private String color = Colors.NORMAL;
     private boolean isError;
     private boolean isNotice;
+    private boolean isPrivate;
     private String msg = "";
 
     /**
@@ -56,36 +57,44 @@ public class Message {
     /**
      * Creates a new message.
      *
-     * @param message  The message.
-     * @param isNotice The notice flag.
-     * @param isError  The error flag.
+     * @param message   The message.
+     * @param isNotice  The notice flag.
+     * @param isError   The error flag.
+     * @param isPrivate The Private message
      */
-    public Message(final String message, final boolean isNotice, final boolean isError) {
+    public Message(final String message, final boolean isNotice, final boolean isError, final boolean isPrivate) {
         msg = message;
         this.isNotice = isNotice;
         this.isError = isError;
+        this.isPrivate = isPrivate;
     }
 
 
     /**
      * Creates a new message.
      *
-     * @param message  The message.
-     * @param isNotice The notice flag.
-     * @param isError  The error flag
-     * @param color    The color.
+     * @param message   The message.
+     * @param isNotice  The notice flag.
+     * @param isError   The error flag.
+     * @param isPrivate The Private message
+     * @param color     The color.
      */
-    public Message(final String message, final boolean isNotice, final boolean isError, final String color) {
+    public Message(final String message,
+                   final boolean isNotice,
+                   final boolean isError,
+                   final boolean isPrivate,
+                   final String color) {
         msg = message;
         this.isNotice = isNotice;
         this.isError = isError;
+        this.isPrivate = isPrivate;
         this.color = color;
     }
 
     /**
-     * Returns the color.
+     * Returns the message color.
      *
-     * @return The color,
+     * @return The color.
      */
     public String getColor() {
         return color;
@@ -119,7 +128,7 @@ public class Message {
     }
 
     /**
-     * Returns the error flag.
+     * Returns the message error flag.
      *
      * @return The error flag.
      */
@@ -128,7 +137,7 @@ public class Message {
     }
 
     /**
-     * Sets the error flag.
+     * Sets the message error flag.
      *
      * @param error The error flag.
      */
@@ -146,11 +155,29 @@ public class Message {
     }
 
     /**
-     * Set the message notice flag.
+     * Sets the message notice flag.
      *
      * @param isNotice The notice flag.
      */
     public void setNotice(final boolean isNotice) {
         this.isNotice = isNotice;
+    }
+
+    /**
+     * Returns the message private flag.
+     *
+     * @return The private flag.
+     */
+    public boolean isPrivate() {
+        return isPrivate;
+    }
+
+    /**
+     * Sets the message private flag.
+     *
+     * @param aPrivate The private flag.
+     */
+    public void setPrivate(boolean aPrivate) {
+        isPrivate = aPrivate;
     }
 }
