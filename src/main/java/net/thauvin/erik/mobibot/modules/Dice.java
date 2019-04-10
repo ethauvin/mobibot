@@ -71,8 +71,8 @@ public final class Dice extends AbstractModule {
         final int playerTotal = i + y;
 
         bot.send(bot.getChannel(),
-            sender + " rolled two dice: " + Utils.bold(i) + " and " + Utils.bold(y) + " for a total of " + Utils
-                .bold(playerTotal));
+            sender + " rolled two dice: " + Utils.bold(i) + " and " + Utils.bold(y) + " for a total of "
+                + Utils.bold(playerTotal));
 
         i = r.nextInt(6) + 1;
         y = r.nextInt(6) + 1;

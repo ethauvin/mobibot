@@ -116,25 +116,24 @@ public final class Lookup extends AbstractModule {
      * @return The IP whois data, if any.
      * @throws java.io.IOException If a connection error occurs.
      */
-    @SuppressWarnings("SameParameterValue")
     public static String[] whois(final String query, final String host)
         throws IOException {
-        final WhoisClient whois = new WhoisClient();
+        final WhoisClient whoisClient = new WhoisClient();
         final String[] lines;
 
         try {
-            whois.setDefaultTimeout(Mobibot.CONNECT_TIMEOUT);
-            whois.connect(host);
-            whois.setSoTimeout(Mobibot.CONNECT_TIMEOUT);
-            whois.setSoLinger(false, 0);
+            whoisClient.setDefaultTimeout(Mobibot.CONNECT_TIMEOUT);
+            whoisClient.connect(host);
+            whoisClient.setSoTimeout(Mobibot.CONNECT_TIMEOUT);
+            whoisClient.setSoLinger(false, 0);
 
             if (host.equals(WHOIS_HOST)) {
-                lines = whois.query("n - " + query).split("\n");
+                lines = whoisClient.query("n - " + query).split("\n");
             } else {
-                lines = whois.query(query).split("\n");
+                lines = whoisClient.query(query).split("\n");
             }
         } finally {
-            whois.disconnect();
+            whoisClient.disconnect();
         }
 
         return lines;
@@ -152,7 +151,7 @@ public final class Lookup extends AbstractModule {
     public void commandResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate) {
         if (args.matches("(\\S.)+(\\S)+")) {
             try {
-                bot.send(bot.getChannel(), Lookup.lookup(args));
+                bot.send(Lookup.lookup(args));
             } catch (UnknownHostException ignore) {
                 if (args.matches(
                     "(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\." +
@@ -167,21 +166,21 @@ public final class Lookup extends AbstractModule {
                                 line = rawLine.trim();
 
                                 if ((line.length() > 0) && (line.charAt(0) != '#')) {
-                                    bot.send(bot.getChannel(), line);
+                                    bot.send(line);
                                 }
                             }
                         } else {
-                            bot.send(bot.getChannel(), "Unknown host.");
+                            bot.send("Unknown host.");
                         }
                     } catch (IOException ioe) {
                         if (bot.getLogger().isDebugEnabled()) {
                             bot.getLogger().debug("Unable to perform whois IP lookup: " + args, ioe);
                         }
 
-                        bot.send(bot.getChannel(), "Unable to perform whois IP lookup: " + ioe.getMessage());
+                        bot.send("Unable to perform whois IP lookup: " + ioe.getMessage());
                     }
                 } else {
-                    bot.send(bot.getChannel(), "Unknown host.");
+                    bot.send("Unknown host.");
                 }
             }
         } else {
