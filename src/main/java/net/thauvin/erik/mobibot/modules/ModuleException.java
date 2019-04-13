@@ -101,14 +101,11 @@ class ModuleException extends Exception {
             final Matcher matcher = urlPattern.matcher(causeMessage);
             if (matcher.find()) {
                 final HttpUrl url = HttpUrl.parse(matcher.group());
-                if ((url != null) && (matcher.group().contains("?")) && (url.querySize() > 0)) {
+                if ((url != null) && (matcher.group().contains("?"))) {
                     final StringBuilder query = new StringBuilder();
                     for (int i = 0, size = url.querySize(); i < size; i++) {
-                        if (query.length() > 0) {
-                            query.append("&");
-                        }
-                        query.append(url.queryParameterName(i)).append('=')
-                            .append('[').append(url.queryParameterValue(i).length()).append(']');
+                        query.append(url.queryParameterName(i)).append('=').append('[')
+                            .append(url.queryParameterValue(i).length()).append(']').append('&');
                     }
                     return getDebugMessage() + "\nCaused by: " + getCause().getClass().getName() + ": "
                         + causeMessage.replace(matcher.group(),
@@ -116,7 +113,6 @@ class ModuleException extends Exception {
                 }
             }
         }
-
         return getMessage();
     }
 
