@@ -46,7 +46,7 @@ import java.util.regex.Pattern;
 class ModuleException extends Exception {
     private static final long serialVersionUID = -3036774290621088107L;
     private final String debugMessage;
-    private final Pattern urlPattern = Pattern.compile("(https?://\\S+)");
+    private final Pattern urlPattern = Pattern.compile("(https?://\\S+)(\\?\\S+)");
 
     /**
      * Creates a new exception.
@@ -100,20 +100,20 @@ class ModuleException extends Exception {
             final String causeMessage = getCause().getMessage();
             final Matcher matcher = urlPattern.matcher(causeMessage);
             if (matcher.find()) {
-                final HttpUrl url = HttpUrl.parse(matcher.group());
-                if ((url != null) && (matcher.group().contains("?"))) {
-                    final StringBuilder query = new StringBuilder();
+                final HttpUrl url = HttpUrl.parse(matcher.group(1)+matcher.group(2));
+                if (url != null){
+                    final StringBuilder query = new StringBuilder("?");
                     for (int i = 0, size = url.querySize(); i < size; i++) {
+                        if (i > 0) query.append('&');
                         query.append(url.queryParameterName(i)).append('=').append('[')
-                            .append(url.queryParameterValue(i).length()).append(']').append('&');
+                            .append(url.queryParameterValue(i).length()).append(']');
                     }
                     return getDebugMessage() + "\nCaused by: " + getCause().getClass().getName() + ": "
-                        + causeMessage.replace(matcher.group(),
-                        matcher.group().substring(0, matcher.group().indexOf('?') + 1) + query);
+                        + causeMessage.replace(matcher.group(2), query);
                 }
             }
         }
-        return getMessage();
+        return getDebugMessage() + "\nCaused by: " + getCause().getClass().getName() + ": " + getCause().getMessage();
     }
 
     /**
