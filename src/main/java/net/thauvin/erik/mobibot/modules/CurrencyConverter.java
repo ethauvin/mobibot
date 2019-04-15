@@ -60,8 +60,11 @@ import java.util.TreeMap;
  * @since 1.0
  */
 public final class CurrencyConverter extends ThreadedModule {
-    // The rates keyword.
+    /**
+     * The rates keyword.
+     */
     static final String CURRENCY_RATES_KEYWORD = "rates";
+
     // The currency command.
     private static final String CURRENCY_CMD = "currency";
     // The exchange rates.

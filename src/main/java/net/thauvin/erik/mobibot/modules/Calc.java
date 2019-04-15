@@ -46,9 +46,7 @@ import java.text.DecimalFormat;
  * @since 1.0
  */
 public class Calc extends AbstractModule {
-    /**
-     * The Calc command.
-     */
+    // The Calc command.
     private static final String CALC_CMD = "calc";
 
     /**
