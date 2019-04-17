@@ -1,5 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="CheckStyle-IDEA">
+    <option name="configuration">
+      <map>
+        <entry key="active-configuration" value="LOCAL_FILE:$PROJECT_DIR$/config/checkstyle/checkstyle.xml:Erik's Checks" />
+        <entry key="checkstyle-version" value="8.19" />
+        <entry key="copy-libs" value="true" />
+        <entry key="location-0" value="BUNDLED:(bundled):Sun Checks" />
+        <entry key="location-1" value="BUNDLED:(bundled):Google Checks" />
+        <entry key="location-2" value="LOCAL_FILE:$PROJECT_DIR$/config/checkstyle/checkstyle.xml:Erik's Checks" />
+        <entry key="scan-before-checkin" value="false" />
+        <entry key="scanscope" value="JavaOnlyWithTests" />
+        <entry key="suppress-errors" value="false" />
+      </map>
+    </option>
+  </component>
   <component name="ClientPropertiesManager">
     <properties class="javax.swing.AbstractButton">
       <property name="hideActionText" class="java.lang.Boolean" />
@@ -47,7 +62,6 @@
       <element module="Source" copyright="Copyright" />
     </module2copyright>
     <LanguageOptions name="JAVA">
-      <option name="fileTypeOverride" value="3" />
       <option name="addBlankAfter" value="false" />
     </LanguageOptions>
     <LanguageOptions name="__TEMPLATE__">
@@ -55,7 +69,7 @@
     </LanguageOptions>
   </component>
   <component name="DependencyValidationManager">
-    <scope name="Source" pattern="(file[mobibot]:src/generated/java//*.java||file[mobibot]:src/main/java//*.java||file[mobibot]:src/test/java//*.java)&amp;&amp;!file[mobibot]:src/main/java/net/thauvin/erik/mobibot/TwitterOAuth.java" />
+    <scope name="Copryight" pattern="(file[mobibot]:src/generated/java//*.java||file[mobibot]:src/main/java//*.java||file[mobibot]:src/test/java//*.java)&amp;&amp;!file[mobibot]:src/main/java/net/thauvin/erik/mobibot/TwitterOAuth.java" />
   </component>
   <component name="Encoding">
     <file url="PROJECT" charset="UTF-8" />

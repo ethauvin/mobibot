@@ -29,6 +29,7 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
 package net.thauvin.erik.mobibot.modules;
 
 import net.thauvin.erik.mobibot.Mobibot;
@@ -55,7 +56,7 @@ public final class Lookup extends AbstractModule {
     private static final String LOOKUP_CMD = "lookup";
 
     /**
-     * The default constructor
+     * The default constructor.
      */
     public Lookup() {
         commands.add(LOOKUP_CMD);
@@ -154,8 +155,8 @@ public final class Lookup extends AbstractModule {
                 bot.send(Lookup.lookup(args));
             } catch (UnknownHostException ignore) {
                 if (args.matches(
-                    "(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\." +
-                        "(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)")) {
+                    "(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\."
+                        + "(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)")) {
                     try {
                         final String[] lines = Lookup.whois(args);
 

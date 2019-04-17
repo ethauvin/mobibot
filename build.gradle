@@ -1,4 +1,5 @@
 plugins {
+    id 'checkstyle'
     id 'application'
     id 'idea'
     id 'jacoco'
@@ -126,6 +127,13 @@ tasks.withType(SpotBugsTask) {
         html.enabled = true
     }
     excludeFilter = file("$projectDir/config/spotbugs/excludeFilter.xml")
+}
+
+tasks.withType(Checkstyle) {
+    reports {
+        xml.enabled = false
+        html.enabled = true
+    }
 }
 
 task copyToDeploy(type: Copy) {

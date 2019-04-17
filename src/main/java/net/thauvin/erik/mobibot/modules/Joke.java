@@ -29,6 +29,7 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
 package net.thauvin.erik.mobibot.modules;
 
 import net.thauvin.erik.mobibot.Mobibot;
@@ -112,7 +113,7 @@ public final class Joke extends ThreadedModule {
     }
 
     /**
-     * Returns a random joke from <a href="http://www.icndb.com/">The Internet Chuck Norris Database</a>
+     * Returns a random joke from <a href="http://www.icndb.com/">The Internet Chuck Norris Database</a>.
      */
     void run(final Mobibot bot, final String sender, String arg) {
         try {

@@ -29,6 +29,7 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
 package net.thauvin.erik.mobibot;
 
 import org.jibble.pircbot.Colors;
@@ -170,7 +171,7 @@ public final class Utils {
     }
 
     /**
-     * Meks the given string cyan
+     * Meks the given string cyan.
      *
      * @param s The string.
      * @return The cyan string.
@@ -323,7 +324,7 @@ public final class Utils {
     }
 
     /**
-     * Returns the specified date formatted as <code>yyyy-MM-dd HH:mm</code>
+     * Returns the specified date formatted as <code>yyyy-MM-dd HH:mm</code>.
      *
      * @param date The date.
      * @return The fromatted date.
@@ -333,7 +334,7 @@ public final class Utils {
     }
 
     /**
-     * Returns the specified date formatted as <code>yyyy-MM-dd HH:mm</code>
+     * Returns the specified date formatted as <code>yyyy-MM-dd HH:mm</code>.
      *
      * @param date The date.
      * @return The formatted date.

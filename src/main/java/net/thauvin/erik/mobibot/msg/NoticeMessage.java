@@ -29,6 +29,7 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
 package net.thauvin.erik.mobibot.msg;
 
 /**
@@ -39,11 +40,22 @@ package net.thauvin.erik.mobibot.msg;
  * @since 1.0
  */
 public class NoticeMessage extends Message {
+    /**
+     * Creates a new notice.
+     *
+     * @param message The notice's message.
+     */
     public NoticeMessage(final String message) {
         this.setMessage(message);
         this.setNotice(true);
     }
 
+    /**
+     * Create a new notice.
+     *
+     * @param message The ntoice's message.
+     * @param color   The color.
+     */
     public NoticeMessage(final String message, final String color) {
         this.setMessage(message);
         this.setNotice(true);

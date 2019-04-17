@@ -29,6 +29,7 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
 package net.thauvin.erik.mobibot.msg;
 
 import org.jibble.pircbot.Colors;
@@ -101,7 +102,7 @@ public class Message {
     }
 
     /**
-     * Set the color
+     * Set the color.
      *
      * @param color The new color.
      */
@@ -175,9 +176,9 @@ public class Message {
     /**
      * Sets the message private flag.
      *
-     * @param aPrivate The private flag.
+     * @param isPrivate The private flag.
      */
-    public void setPrivate(boolean aPrivate) {
-        isPrivate = aPrivate;
+    public void setPrivate(boolean isPrivate) {
+        this.isPrivate = isPrivate;
     }
 }

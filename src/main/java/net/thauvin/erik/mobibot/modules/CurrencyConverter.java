@@ -29,6 +29,7 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
 package net.thauvin.erik.mobibot.modules;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
@@ -149,7 +150,9 @@ public final class CurrencyConverter extends ThreadedModule {
 
                 int i = 0;
                 for (final Map.Entry<String, String> rate : EXCHANGE_RATES.entrySet()) {
-                    if (i > 0) buff.append(", ");
+                    if (i > 0) {
+                        buff.append(", ");
+                    }
                     buff.append(rate.getKey()).append(": ").append(rate.getValue());
                     i++;
                 }

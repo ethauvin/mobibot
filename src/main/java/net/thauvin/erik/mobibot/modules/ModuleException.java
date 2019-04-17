@@ -29,6 +29,7 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
 package net.thauvin.erik.mobibot.modules;
 
 import okhttp3.HttpUrl;
@@ -100,11 +101,13 @@ class ModuleException extends Exception {
             final String causeMessage = getCause().getMessage();
             final Matcher matcher = urlPattern.matcher(causeMessage);
             if (matcher.find()) {
-                final HttpUrl url = HttpUrl.parse(matcher.group(1)+matcher.group(2));
-                if (url != null){
+                final HttpUrl url = HttpUrl.parse(matcher.group(1) + matcher.group(2));
+                if (url != null) {
                     final StringBuilder query = new StringBuilder("?");
                     for (int i = 0, size = url.querySize(); i < size; i++) {
-                        if (i > 0) query.append('&');
+                        if (i > 0) {
+                            query.append('&');
+                        }
                         query.append(url.queryParameterName(i)).append('=').append('[')
                             .append(url.queryParameterValue(i).length()).append(']');
                     }

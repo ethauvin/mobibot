@@ -29,6 +29,7 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
 package net.thauvin.erik.mobibot.modules;
 
 import net.thauvin.erik.mobibot.Mobibot;
@@ -55,7 +56,7 @@ public final class WorldTime extends AbstractModule {
     private static final String BEATS_KEYWORD = ".beats";
     // The supported countries.
     private static final Map<String, String> COUNTRIES_MAP = new TreeMap<>();
-    
+
     /**
      * The time command.
      */
@@ -138,10 +139,10 @@ public final class WorldTime extends AbstractModule {
         COUNTRIES_MAP.put("ZULU", "Zulu");
         COUNTRIES_MAP.put("INTERNET", BEATS_KEYWORD);
         COUNTRIES_MAP.put("BEATS", BEATS_KEYWORD);
-        
-        ZoneId.getAvailableZoneIds().stream().filter(
-            tz -> !tz.contains("/") && tz.length() == 3 && !COUNTRIES_MAP.containsKey(tz)).forEach(
-            tz -> COUNTRIES_MAP.put(tz, tz));
+
+        ZoneId.getAvailableZoneIds().stream().filter(tz ->
+            !tz.contains("/") && tz.length() == 3 && !COUNTRIES_MAP.containsKey(tz)).forEach(tz ->
+            COUNTRIES_MAP.put(tz, tz));
     }
 
     /**

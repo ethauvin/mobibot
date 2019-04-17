@@ -17,7 +17,7 @@ import java.io.InputStreamReader;
  * Then execute:
  * <p>
  * <code>
- * java -cp "mobibot.jar:lib/*"net.thauvin.erik.mobibot.TwitterOAuth &lt;consumerKey&gt; &lt;consumerSecret&gt;
+ * java -cp "mobibot.jar:lib/*" net.thauvin.erik.mobibot.TwitterOAuth &lt;consumerKey&gt; &lt;consumerSecret&gt;
  * </code>
  * </p>
  * and follow the prompts/instructions.
@@ -28,6 +28,11 @@ import java.io.InputStreamReader;
  * @since 1.0
  */
 public final class TwitterOAuth {
+    /**
+     * Twitter OAuth Client Registration.
+     *
+     * @param args The consumerKey and consumerSecret should be passed as arguments.
+     */
     @SuppressFBWarnings(value = "DM_DEFAULT_ENCODING")
     public static void main(final String[] args)
         throws Exception {

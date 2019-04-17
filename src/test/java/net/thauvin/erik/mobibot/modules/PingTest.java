@@ -29,11 +29,13 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
 package net.thauvin.erik.mobibot.modules;
 
 import org.testng.annotations.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+
 /**
  * The <code>PingTest</code> class.
  *
@@ -49,6 +51,6 @@ public class PingTest {
 
     @Test
     public void testPingsArray() {
-       assertThat(Ping.PINGS).as("Pings array is not empty.").isNotEmpty();
+        assertThat(Ping.PINGS).as("Pings array is not empty.").isNotEmpty();
     }
 }

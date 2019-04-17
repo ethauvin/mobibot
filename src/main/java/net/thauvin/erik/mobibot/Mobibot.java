@@ -29,14 +29,33 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
 package net.thauvin.erik.mobibot;
 
 import com.rometools.rome.io.FeedException;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-import net.thauvin.erik.mobibot.modules.*;
+import net.thauvin.erik.mobibot.modules.AbstractModule;
+import net.thauvin.erik.mobibot.modules.Calc;
+import net.thauvin.erik.mobibot.modules.CurrencyConverter;
+import net.thauvin.erik.mobibot.modules.Dice;
+import net.thauvin.erik.mobibot.modules.GoogleSearch;
+import net.thauvin.erik.mobibot.modules.Joke;
+import net.thauvin.erik.mobibot.modules.Lookup;
+import net.thauvin.erik.mobibot.modules.Ping;
+import net.thauvin.erik.mobibot.modules.StockQuote;
+import net.thauvin.erik.mobibot.modules.Twitter;
+import net.thauvin.erik.mobibot.modules.War;
+import net.thauvin.erik.mobibot.modules.Weather2;
+import net.thauvin.erik.mobibot.modules.WorldTime;
 import net.thauvin.erik.mobibot.msg.Message;
 import net.thauvin.erik.semver.Version;
-import org.apache.commons.cli.*;
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.DefaultParser;
+import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.Option;
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.ParseException;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -47,10 +66,20 @@ import org.jibble.pircbot.User;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.PrintStream;
 import java.time.Clock;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Properties;
+import java.util.StringTokenizer;
 
 /**
  * Implements the #mobitopia bot.
@@ -162,7 +191,7 @@ public class Mobibot extends PircBot {
     // The default tags/categories.
     private String defaultTags = "";
     // The feed URL.
-    private String feedURL = "";
+    private String feedUrl = "";
     // The ident message.
     private String identMsg = "";
     // The ident nick.
@@ -237,7 +266,7 @@ public class Mobibot extends PircBot {
 
         // Set the URLs
         setWeblogUrl(getVersion());
-        setFeedURL(p.getProperty("feed", ""));
+        setFeedUrl(p.getProperty("feed", ""));
         setBacklogsUrl(Utils.ensureDir(p.getProperty("backlogs", weblogUrl), true));
 
         // Set the pinboard authentication
@@ -443,8 +472,8 @@ public class Mobibot extends PircBot {
      * @param sender The nick of the person who sent the private message.
      */
     private void feedResponse(final String sender) {
-        if (Utils.isValidString(feedURL)) {
-            new Thread(new FeedReader(this, sender, feedURL)).start();
+        if (Utils.isValidString(feedUrl)) {
+            new Thread(new FeedReader(this, sender, feedUrl)).start();
         } else {
             send(sender, "There is no weblog setup for this channel.");
         }
@@ -1009,9 +1038,7 @@ public class Mobibot extends PircBot {
                     send(sender, Utils.bold("Duplicate") + " >> " + Utils.buildLink(dupIndex, entry));
                 }
             }
-        }
-        // mobibot: <command>
-        else if (message.matches(getNickPattern() + ":.*")) {
+        } else if (message.matches(getNickPattern() + ":.*")) { // mobibot: <command>
             isCommand = true;
 
             final String[] cmds = message.substring(message.indexOf(':') + 1).trim().split(" ", 2);
@@ -1023,45 +1050,27 @@ public class Mobibot extends PircBot {
                 args = cmds[1].trim();
             }
 
-            // mobibot: help
-            if (cmd.startsWith(Commands.HELP_CMD)) {
+
+            if (cmd.startsWith(Commands.HELP_CMD)) { // mobibot: help
                 helpResponse(sender, args);
-            }
-            // mobibot: recap
-            else if (cmd.equals(Commands.RECAP_CMD)) {
+            } else if (cmd.equals(Commands.RECAP_CMD)) { // mobibot: recap
                 recapResponse(sender, false);
-            }
-            // mobibot: users
-            else if (cmd.equals(Commands.USERS_CMD)) {
+            } else if (cmd.equals(Commands.USERS_CMD)) { // mobibot: users
                 usersResponse(sender, false);
-            }
-            // mobibot: info
-            else if (cmd.equals(Commands.INFO_CMD)) {
+            } else if (cmd.equals(Commands.INFO_CMD)) { // mobibot: info
                 infoResponse(sender, false);
-            }
-            // mobbiot: version
-            else if (cmd.equals(Commands.VERSION_CMD)) {
+            } else if (cmd.equals(Commands.VERSION_CMD)) { // mobbiot: version
                 versionResponse(sender, false);
-            }
-            // mobibot: <channel>
-            else if (cmd.equalsIgnoreCase(channel.substring(1))) {
+            } else if (cmd.equalsIgnoreCase(channel.substring(1))) { // mobibot: <channel>
                 feedResponse(sender);
-            }
-            // mobibot: view
-            else if (cmd.startsWith(Commands.VIEW_CMD)) {
+            } else if (cmd.startsWith(Commands.VIEW_CMD)) { // mobibot: view
                 viewResponse(sender, args, false);
-            }
-            // mobibot: tell
-            else if (cmd.startsWith(Tell.TELL_CMD) && tell.isEnabled()) {
+            } else if (cmd.startsWith(Tell.TELL_CMD) && tell.isEnabled()) { // mobibot: tell
                 tell.response(sender, args);
-            }
-            // mobibot: ignore
-            else if (cmd.startsWith(Commands.IGNORE_CMD)) {
+            } else if (cmd.startsWith(Commands.IGNORE_CMD)) { // mobibot: ignore
                 ignoreResponse(sender, args);
-            }
-            // modules
-            else {
-                for (final AbstractModule module : MODULES) {
+            } else {
+                for (final AbstractModule module : MODULES) { // modules
                     for (final String c : module.getCommands()) {
                         if (cmd.startsWith(c)) {
                             module.commandResponse(this, sender, args, false);
@@ -1069,9 +1078,7 @@ public class Mobibot extends PircBot {
                     }
                 }
             }
-        }
-        // L1:<comment>, L1:-, L1:|<title>, etc.
-        else if (message.matches(Commands.LINK_CMD + "[0-9]+:.*")) {
+        } else if (message.matches(Commands.LINK_CMD + "[0-9]+:.*")) { // L1:<comment>, L1:-, L1:|<title>, etc.
             isCommand = true;
 
             final String[] cmds = message.substring(1).split(":", 2);
@@ -1112,9 +1119,7 @@ public class Mobibot extends PircBot {
                         } else {
                             send(sender, "Please ask a channel op to remove this entry for you.");
                         }
-                    }
-                    // L1:|<title>
-                    else if (cmd.charAt(0) == '|') {
+                    } else if (cmd.charAt(0) == '|') { // L1:|<title>
                         if (cmd.length() > 1) {
                             final EntryLink entry = entries.get(index);
                             entry.setTitle(cmd.substring(1).trim());
@@ -1126,9 +1131,7 @@ public class Mobibot extends PircBot {
                             send(channel, Utils.buildLink(index, entry));
                             saveEntries(false);
                         }
-                    }
-                    // L1:=<url>
-                    else if (cmd.charAt(0) == '=') {
+                    } else if (cmd.charAt(0) == '=') { // L1:=<url>
                         final EntryLink entry = entries.get(index);
 
                         if (entry.getLogin().equals(login) || isOp(sender)) {
@@ -1149,9 +1152,7 @@ public class Mobibot extends PircBot {
                         } else {
                             send(sender, "Please ask a channel op to change this link for you.");
                         }
-                    }
-                    // L1:?<author>
-                    else if (cmd.charAt(0) == '?') {
+                    } else if (cmd.charAt(0) == '?') { // L1:?<author>
                         if (isOp(sender)) {
                             if (cmd.length() > 1) {
                                 final EntryLink entry = entries.get(index);
@@ -1172,9 +1173,7 @@ public class Mobibot extends PircBot {
                     }
                 }
             }
-        }
-        // L1T:<+-tag>
-        else if (message.matches(Commands.LINK_CMD + "[0-9]+T:.*")) {
+        } else if (message.matches(Commands.LINK_CMD + "[0-9]+T:.*")) { // L1T:<+-tag>
             isCommand = true;
 
             final String[] cmds = message.substring(1).split("T:", 2);
@@ -1206,9 +1205,7 @@ public class Mobibot extends PircBot {
                     }
                 }
             }
-        }
-        // L1.1:<command>
-        else if (message.matches(Commands.LINK_CMD + "[0-9]+\\.[0-9]+:.*")) {
+        } else if (message.matches(Commands.LINK_CMD + "[0-9]+\\.[0-9]+:.*")) { // L1.1:<command>
             isCommand = true;
 
             final String[] cmds = message.substring(1).split("[.:]", 3);
@@ -1225,15 +1222,11 @@ public class Mobibot extends PircBot {
                     if (cmd.length() == 0) {
                         final EntryComment comment = entry.getComment(cindex);
                         send(channel, Utils.buildComment(index, cindex, comment));
-                    }
-                    // L1.1:-
-                    else if ("-".equals(cmd)) {
+                    } else if ("-".equals(cmd)) { // L1.1:-
                         entry.deleteComment(cindex);
                         send(channel, "Comment " + Commands.LINK_CMD + (index + 1) + '.' + (cindex + 1) + " removed.");
                         saveEntries(false);
-                    }
-                    // L1.1:?<author>
-                    else if (cmd.charAt(0) == '?') {
+                    } else if (cmd.charAt(0) == '?') { // L1.1:?<author>
                         if (isOp(sender)) {
                             if (cmd.length() > 1) {
                                 final EntryComment comment = entry.getComment(cindex);
@@ -1490,10 +1483,10 @@ public class Mobibot extends PircBot {
     /**
      * Sets the feed URL.
      *
-     * @param feedURL The feed URL.
+     * @param feedUrl The feed URL.
      */
-    private void setFeedURL(final String feedURL) {
-        this.feedURL = feedURL;
+    private void setFeedUrl(final String feedUrl) {
+        this.feedUrl = feedUrl;
     }
 
     /**
@@ -1652,9 +1645,9 @@ public class Mobibot extends PircBot {
                 entry = entries.get(i);
 
                 if (lcArgs.length() > 0) {
-                    if ((entry.getLink().toLowerCase().contains(lcArgs)) ||
-                        (entry.getTitle().toLowerCase().contains(lcArgs)) ||
-                        (entry.getNick().toLowerCase().contains(lcArgs))) {
+                    if ((entry.getLink().toLowerCase().contains(lcArgs))
+                        || (entry.getTitle().toLowerCase().contains(lcArgs))
+                        || (entry.getNick().toLowerCase().contains(lcArgs))) {
                         if (sent > MAX_ENTRIES) {
                             send(sender,
                                 "To view more, try: " + Utils

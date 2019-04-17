@@ -29,6 +29,7 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
 package net.thauvin.erik.mobibot;
 
 import java.util.List;
@@ -81,6 +82,13 @@ public class Tell {
     // The serialized object file.
     private final String serializedObject;
 
+    /**
+     * Creates a new instance.
+     *
+     * @param bot     The bot.
+     * @param maxDays Max days.
+     * @param maxSize Max size.
+     */
     public Tell(final Mobibot bot, final String maxDays, final String maxSize) {
         this.bot = bot;
         this.maxDays = Utils.getIntProperty(maxDays, DEFAULT_TELL_MAX_DAYS);
@@ -264,7 +272,9 @@ public class Tell {
             }
         }
 
-        if (clean()) save();
+        if (clean()) {
+            save();
+        }
     }
 
     /**

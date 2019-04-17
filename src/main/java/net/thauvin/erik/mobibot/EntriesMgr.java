@@ -29,14 +29,25 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
 package net.thauvin.erik.mobibot;
 
-import com.rometools.rome.feed.synd.*;
+import com.rometools.rome.feed.synd.SyndContent;
+import com.rometools.rome.feed.synd.SyndContentImpl;
+import com.rometools.rome.feed.synd.SyndEntry;
+import com.rometools.rome.feed.synd.SyndEntryImpl;
+import com.rometools.rome.feed.synd.SyndFeed;
+import com.rometools.rome.feed.synd.SyndFeedImpl;
 import com.rometools.rome.io.FeedException;
 import com.rometools.rome.io.SyndFeedInput;
 import com.rometools.rome.io.SyndFeedOutput;
 
-import java.io.*;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -125,7 +136,8 @@ final class EntriesMgr {
 
         final String today;
 
-        try (final InputStreamReader reader = new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8)) {
+        try (final InputStreamReader reader = new InputStreamReader(
+            new FileInputStream(file), StandardCharsets.UTF_8)) {
             final SyndFeed feed = input.build(reader);
 
             today = Utils.isoLocalDate(feed.getPublishedDate());
@@ -263,13 +275,14 @@ final class EntriesMgr {
                                 history.remove(0);
                             }
                         }
-                        
+
                         try (final Writer fw = new OutputStreamWriter(
                             new FileOutputStream(bot.getLogsDir() + NAV_XML), StandardCharsets.UTF_8)) {
                             rss = new SyndFeedImpl();
                             rss.setFeedType("rss_2.0");
                             rss.setTitle(bot.getChannel() + " IRC Links Backlogs");
-                            rss.setDescription("Backlogs of Links from " + bot.getIrcServer() + " on " + bot.getChannel());
+                            rss.setDescription("Backlogs of Links from " + bot.getIrcServer() + " on "
+                                + bot.getChannel());
                             rss.setLink(bot.getBacklogsUrl());
                             rss.setPublishedDate(Calendar.getInstance().getTime());
 

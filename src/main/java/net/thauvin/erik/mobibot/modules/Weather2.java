@@ -29,6 +29,7 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
 package net.thauvin.erik.mobibot.modules;
 
 import net.aksingh.owmjapis.api.APIException;
@@ -72,7 +73,8 @@ public class Weather2 extends ThreadedModule {
         properties.put(OWM_API_KEY_PROP, "");
     }
 
-    private static String fAndC(final Double d) {
+    @SuppressWarnings("AvoidEscapedUnicodeCharacters")
+    private static String getTemps(final Double d) {
         final double c = (d - 32) * 5 / 9;
         return Math.round(d) + " \u00B0F, " + Math.round(c) + " \u00B0C";
     }
@@ -122,7 +124,7 @@ public class Weather2 extends ThreadedModule {
                         final Main main = cwd.getMainData();
                         if (main != null) {
                             if (main.hasTemp()) {
-                                messages.add(new PublicMessage("Temperature: " + fAndC(main.getTemp())));
+                                messages.add(new PublicMessage("Temperature: " + getTemps(main.getTemp())));
                             }
 
                             if (main.hasHumidity() && (main.getHumidity() != null)) {

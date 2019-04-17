@@ -29,6 +29,7 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
 package net.thauvin.erik.mobibot;
 
 import com.rometools.rome.feed.synd.SyndCategory;
@@ -329,6 +330,15 @@ public class EntryLink implements Serializable {
     }
 
     /**
+     * Sets the tags.
+     *
+     * @param tags The tags.
+     */
+    private void setTags(final List<SyndCategory> tags) {
+        this.tags.addAll(tags);
+    }
+
+    /**
      * Returns the comment's title.
      *
      * @return The title.
@@ -375,15 +385,6 @@ public class EntryLink implements Serializable {
         if (index < comments.size()) {
             comments.set(index, new EntryComment(comment, nick));
         }
-    }
-
-    /**
-     * Sets the tags.
-     *
-     * @param tags The tags.
-     */
-    private void setTags(final List<SyndCategory> tags) {
-        this.tags.addAll(tags);
     }
 
     /**
