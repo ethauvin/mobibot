@@ -20,15 +20,7 @@ public final class {{className}} {
     public final static int PATCH = {{patch}};
     public final static String PRERELEASE = "{{preRelease}}";
     public final static String BUILDMETA = "{{buildMeta}}";
-
-    /**
-     * The full semantic version string.
-     */
-    public final static String VERSION = Integer.toString(MAJOR) + '.'
-            + Integer.toString(MINOR) + '.'
-            + Integer.toString(PATCH)
-            + ((!PRERELEASE.isEmpty()) ? "-" + PRERELEASE : "")
-            + ((!BUILDMETA.isEmpty()) ? "+" + BUILDMETA : "");
+    public final static String VERSION = "{{version}}";
 
     /**
      * Disables the default constructor.
