@@ -652,7 +652,7 @@ public class Mobibot extends PircBot {
     private void helpResponse(final String sender, final String topic) {
         final String lcTopic = topic.toLowerCase().trim();
 
-        if (lcTopic.equals(Commands.HELP_POSTING_KEYWORD)) {
+        if (Commands.HELP_POSTING_KEYWORD.equals(lcTopic)) {
             send(sender, Utils.bold("Post a URL, by saying it on a line on its own:"));
             send(sender, helpIndent("<url> [<title>] [" + TAGS_MARKER + "<+tag> [...]]"));
             send(sender, "I will reply with a label, for example: " + Utils.bold(Commands.LINK_CMD + '1'));
@@ -666,45 +666,46 @@ public class Mobibot extends PircBot {
             send(sender, "To delete a comment, use its label and a minus sign: ");
             send(sender, helpIndent(Commands.LINK_CMD + "1.1:-"));
             send(sender, "You can also view a posting by saying its label.");
-        } else if (lcTopic.equals(Commands.HELP_TAGS_KEYWORD)) {
+        } else if (Commands.HELP_TAGS_KEYWORD.equals(lcTopic)) {
             send(sender, Utils.bold("To categorize or tag a URL, use its label and a T:"));
             send(sender, helpIndent(Commands.LINK_CMD + "1T:<+tag|-tag> [...]"));
-        } else if (lcTopic.equals(Commands.VIEW_CMD)) {
+        } else if (Commands.VIEW_CMD.equals(lcTopic)) {
             send(sender, "To list or search the current URL posts:");
             send(sender, helpIndent(getNick() + ": " + Commands.VIEW_CMD) + " [<start>] [<query>]");
         } else if (lcTopic.equalsIgnoreCase(getChannelName())) {
             send(sender, "To list the last 5 posts from the channel's weblog:");
             send(sender, helpIndent(getNick() + ": " + getChannelName()));
+        } else if (Commands.RECAP_CMD.equals(lcTopic)) {
             send(sender, "To list the last 10 public channel messages:");
             send(sender, helpIndent(getNick() + ": " + Commands.RECAP_CMD));
-        } else if (lcTopic.equals(Commands.USERS_CMD)) {
+        } else if (Commands.USERS_CMD.equals(lcTopic)) {
             send(sender, "To list the users present on the channel:");
             send(sender, helpIndent(getNick() + ": " + Commands.USERS_CMD));
-        } else if (lcTopic.equals(Commands.INFO_CMD)) {
+        } else if (Commands.INFO_CMD.equals(lcTopic)) {
             send(sender, "To view information about the bot:");
             send(sender, helpIndent(getNick() + ": " + Commands.INFO_CMD));
-        } else if (lcTopic.equals(Commands.CYCLE_CMD) && isOp(sender)) {
+        } else if (Commands.CYCLE_CMD.equals(lcTopic) && isOp(sender)) {
             send(sender, "To have the bot leave the channel and come back:");
             send(sender, helpIndent("/msg " + getNick() + ' ' + Commands.CYCLE_CMD));
-        } else if (lcTopic.equals(Commands.ME_CMD) && isOp(sender)) {
+        } else if (Commands.ME_CMD.equals(lcTopic) && isOp(sender)) {
             send(sender, "To have the bot perform an action:");
             send(sender, helpIndent("/msg " + getNick() + ' ' + Commands.ME_CMD + " <action>"));
-        } else if (lcTopic.equals(Commands.SAY_CMD) && isOp(sender)) {
+        } else if (Commands.SAY_CMD.equals(lcTopic) && isOp(sender)) {
             send(sender, "To have the bot say something on the channel:");
             send(sender, helpIndent("/msg " + getNick() + ' ' + Commands.SAY_CMD + " <text>"));
-        } else if (lcTopic.equals(Commands.VERSION_CMD) && isOp(sender)) {
+        } else if (Commands.VERSION_CMD.equals(lcTopic) && isOp(sender)) {
             send(sender, "To view the version data (bot, java, etc.):");
             send(sender, helpIndent("/msg " + getNick() + ' ' + Commands.VERSION_CMD));
-        } else if (lcTopic.equals(Commands.MSG_CMD) && isOp(sender)) {
+        } else if (Commands.MSG_CMD.equals(lcTopic) && isOp(sender)) {
             send(sender, "To have the bot send a private message to someone:");
             send(sender, helpIndent("/msg " + getNick() + ' ' + Commands.MSG_CMD + " <nick> <text>"));
-        } else if (lcTopic.equals(Commands.IGNORE_CMD)) {
+        } else if (Commands.IGNORE_CMD.equals(lcTopic)) {
             send(sender, "To check your ignore status:");
             send(sender, helpIndent(getNick() + ": " + Commands.IGNORE_CMD));
 
             send(sender, "To toggle your ignore status:");
             send(sender, helpIndent(getNick() + ": " + Commands.IGNORE_CMD + ' ' + Commands.IGNORE_ME_KEYWORD));
-        } else if (lcTopic.equals(Tell.TELL_CMD) && tell.isEnabled()) {
+        } else if (Tell.TELL_CMD.equals(lcTopic) && tell.isEnabled()) {
             tell.helpResponse(sender);
         } else {
             for (final AbstractModule module : MODULES) {
@@ -1060,15 +1061,15 @@ public class Mobibot extends PircBot {
 
             if (cmd.startsWith(Commands.HELP_CMD)) { // mobibot: help
                 helpResponse(sender, args);
-            } else if (cmd.equals(Commands.RECAP_CMD)) { // mobibot: recap
+            } else if (Commands.RECAP_CMD.equals(cmd)) { // mobibot: recap
                 recapResponse(sender, false);
-            } else if (cmd.equals(Commands.USERS_CMD)) { // mobibot: users
+            } else if (Commands.USERS_CMD.equals(cmd)) { // mobibot: users
                 usersResponse(sender, false);
-            } else if (cmd.equals(Commands.INFO_CMD)) { // mobibot: info
+            } else if (Commands.INFO_CMD.equals(cmd)) { // mobibot: info
                 infoResponse(sender, false);
-            } else if (cmd.equals(Commands.VERSION_CMD)) { // mobbiot: version
+            } else if (Commands.VERSION_CMD.equals(cmd)) { // mobbiot: version
                 versionResponse(sender, false);
-            } else if (cmd.equalsIgnoreCase(channel.substring(1))) { // mobibot: <channel>
+            } else if (cmd.equalsIgnoreCase(getChannelName())) { // mobibot: <channel>
                 feedResponse(sender);
             } else if (cmd.startsWith(Commands.VIEW_CMD)) { // mobibot: view
                 viewResponse(sender, args, false);
@@ -1288,23 +1289,23 @@ public class Mobibot extends PircBot {
         } else if ("kill".equals(cmd) && isOp(sender)) {
             sendRawLine("QUIT : Poof!");
             System.exit(0);
-        } else if (cmd.equals(Commands.DIE_CMD) && isOp(sender)) {
+        } else if (Commands.DIE_CMD.equals(cmd) && isOp(sender)) {
             send(ircChannel, sender + " has just signed my death sentence.");
             saveEntries(true);
             sleep(3);
             quitServer("The Bot Is Out There!");
             System.exit(0);
-        } else if (cmd.equals(Commands.CYCLE_CMD)) {
+        } else if (Commands.CYCLE_CMD.equals(cmd)) {
             send(ircChannel, sender + " has just asked me to leave. I'll be back!");
             sleep(0);
             partChannel(ircChannel);
             sleep(10);
             joinChannel(ircChannel);
-        } else if (cmd.equals(Commands.RECAP_CMD)) {
+        } else if (Commands.RECAP_CMD.equals(cmd)) {
             recapResponse(sender, true);
-        } else if (cmd.equals(Commands.USERS_CMD)) {
+        } else if (Commands.USERS_CMD.equals(cmd)) {
             usersResponse(sender, true);
-        } else if (cmd.equals(Commands.ADDLOG_CMD) && (cmds.length > 1) && isOp(sender)) {
+        } else if ((cmds.length > 1) && isOp(sender) && Commands.ADDLOG_CMD.equals(cmd)) {
             // e.g. 2014-04-01
             final File backlog = new File(logsDir + args + EntriesMgr.XML_EXT);
             if (backlog.exists()) {
@@ -1313,21 +1314,21 @@ public class Mobibot extends PircBot {
             } else {
                 send(sender, "The specified log could not be found.");
             }
-        } else if (cmd.equals(Commands.ME_CMD) && isOp(sender)) {
+        } else if (Commands.ME_CMD.equals(cmd) && isOp(sender)) {
             if (args.length() > 1) {
                 action(args);
             } else {
                 helpResponse(sender, Commands.ME_CMD);
             }
-        } else if (cmd.equals(Commands.NICK_CMD) && (cmds.length > 1) && isOp(sender)) {
+        } else if ((cmds.length > 1) && isOp(sender) && Commands.NICK_CMD.equals(cmd)) {
             changeNick(args);
-        } else if (cmd.equals(Commands.SAY_CMD) && isOp(sender)) {
+        } else if (Commands.SAY_CMD.equals(cmd) && isOp(sender)) {
             if (cmds.length > 1) {
                 send(ircChannel, args, true);
             } else {
                 helpResponse(sender, Commands.SAY_CMD);
             }
-        } else if (cmd.equals(Commands.MSG_CMD) && isOp(sender)) {
+        } else if (Commands.MSG_CMD.equals(cmd) && isOp(sender)) {
             if (cmds.length > 1) {
                 final String[] msg = args.split(" ", 2);
 
@@ -1339,15 +1340,15 @@ public class Mobibot extends PircBot {
             } else {
                 helpResponse(sender, Commands.MSG_CMD);
             }
-        } else if (cmd.equals(Commands.VIEW_CMD)) {
+        } else if (Commands.VIEW_CMD.equals(cmd)) {
             viewResponse(sender, args, true);
-        } else if (cmd.equals(Tell.TELL_CMD) && tell.isEnabled()) {
+        } else if (Tell.TELL_CMD.equals(cmd) && tell.isEnabled()) {
             tell.response(sender, args);
-        } else if (cmd.equals(Commands.INFO_CMD)) {
+        } else if (Commands.INFO_CMD.equals(cmd)) {
             infoResponse(sender, true);
-        } else if (cmd.equals(Commands.VERSION_CMD)) {
+        } else if (Commands.VERSION_CMD.equals(cmd)) {
             versionResponse(sender, true);
-        } else if (cmd.equals(Commands.DEBUG_CMD) && isOp(sender)) {
+        } else if (Commands.DEBUG_CMD.equals(cmd) && isOp(sender)) {
             if (logger.isDebugEnabled()) {
                 Configurator.setLevel(logger.getName(), loggerLevel);
             } else {
