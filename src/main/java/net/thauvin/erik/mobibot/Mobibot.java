@@ -85,8 +85,10 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Properties;
+import java.util.Set;
 import java.util.StringTokenizer;
 
 /**
@@ -170,7 +172,7 @@ public class Mobibot extends PircBot {
     // The history/backlogs array.
     private final List<String> history = new ArrayList<>(0);
     // The ignored nicks array.
-    private final List<String> ignoredNicks = new ArrayList<>(0);
+    private final Set<String> ignoredNicks = new HashSet<>(0);
     // The main channel.
     private final String ircChannel;
     // The IRC port.
@@ -785,20 +787,16 @@ public class Mobibot extends PircBot {
         if (!isOp(sender)) {
             final String nick = sender.toLowerCase();
             final boolean isMe = args.toLowerCase().startsWith(Commands.IGNORE_ME_KEYWORD);
-
-            if (ignoredNicks.contains(nick)) {
-                if (isMe) {
-                    ignoredNicks.remove(nick);
-
+            if (isMe) {
+                if (ignoredNicks.remove(nick)) {
                     send(sender, "You are no longer ignored.");
                 } else {
-                    send(sender, "You are currently ignored.");
+                    ignoredNicks.add(nick);
+                    send(sender, "You are now ignored.");
                 }
             } else {
-                if (isMe) {
-                    ignoredNicks.add(nick);
-
-                    send(sender, "You are now ignored.");
+                if (ignoredNicks.contains(nick)) {
+                    send(sender, "You are currently ignored.");
                 } else {
                     send(sender, "You are not currently ignored.");
                 }
@@ -816,9 +814,7 @@ public class Mobibot extends PircBot {
                         ignore = nick;
                     }
 
-                    if (ignoredNicks.contains(ignore)) {
-                        ignoredNicks.remove(ignore);
-                    } else {
+                    if (!ignoredNicks.remove(ignore)) {
                         ignoredNicks.add(ignore);
                     }
                 }
