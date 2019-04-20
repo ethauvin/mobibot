@@ -324,7 +324,8 @@ public class Mobibot extends PircBot {
      *
      * @param args The command line arguments.
      */
-    @SuppressFBWarnings(value = {"INFORMATION_EXPOSURE_THROUGH_AN_ERROR_MESSAGE", "DM_DEFAULT_ENCODING"})
+    @SuppressFBWarnings({"INFORMATION_EXPOSURE_THROUGH_AN_ERROR_MESSAGE", "DM_DEFAULT_ENCODING",
+        "IOI_USE_OF_FILE_STREAM_CONSTRUCTORS"})
     public static void main(final String[] args) {
         // Setup the command line options
         final Options options = new Options();
@@ -523,7 +524,7 @@ public class Mobibot extends PircBot {
      *
      * @param url The backlogs URL.
      */
-    private void setBacklogsUrl(final String url) {
+    final void setBacklogsUrl(final String url) {
         backLogsUrl = url;
     }
 
@@ -618,7 +619,7 @@ public class Mobibot extends PircBot {
      *
      * @param url The weblog URL.
      */
-    private void setWeblogUrl(final String url) {
+    final void setWeblogUrl(final String url) {
         weblogUrl = url;
     }
 
@@ -938,7 +939,8 @@ public class Mobibot extends PircBot {
                         getName() + ReleaseInfo.VERSION + " has joined " + ircChannel,
                         true);
                 } catch (ModuleException e) {
-                    logger.warn(e.getMessage(), e);
+                    logger.warn(
+                        "Failed to notify " + twitterHandle + " of joining " + ircChannel + " on Twitter.", e);
                 }
             }).start();
         }
@@ -961,6 +963,7 @@ public class Mobibot extends PircBot {
     /**
      * {@inheritDoc}
      */
+    @SuppressFBWarnings(value = "CC_CYCLOMATIC_COMPLEXITY", justification = "Working on it.")
     @Override
     protected final void onMessage(final String channel,
                                    final String sender,
@@ -1266,7 +1269,7 @@ public class Mobibot extends PircBot {
     /**
      * {@inheritDoc}
      */
-    @SuppressFBWarnings(value = "DM_EXIT", justification = "Yes, we want to bail out.")
+    @SuppressFBWarnings(value = {"DM_EXIT", "CC_CYCLOMATIC_COMPLEXITY"}, justification = "Yes, we want to bail out.")
     @Override
     protected final void onPrivateMessage(final String sender,
                                           final String login,
@@ -1424,7 +1427,7 @@ public class Mobibot extends PircBot {
      *
      * @param isDayBackup Set the <code>true</code> if the daily backup file should also be created.
      */
-    private void saveEntries(final boolean isDayBackup) {
+    final void saveEntries(final boolean isDayBackup) {
         EntriesMgr.saveEntries(this, entries, history, isDayBackup);
     }
 
@@ -1493,7 +1496,7 @@ public class Mobibot extends PircBot {
      * @param color     The message's color.
      * @param isPrivate The private flag.
      */
-    public final void send(final String who, final String message, final String color, boolean isPrivate) {
+    public final void send(final String who, final String message, final String color, final boolean isPrivate) {
         send(who, Utils.colorize(message, color), isPrivate);
     }
 
@@ -1515,7 +1518,7 @@ public class Mobibot extends PircBot {
      *
      * @param feedUrl The feed URL.
      */
-    private void setFeedUrl(final String feedUrl) {
+    final void setFeedUrl(final String feedUrl) {
         this.feedUrl = feedUrl;
     }
 
@@ -1526,7 +1529,7 @@ public class Mobibot extends PircBot {
      * @param nick The ident nick name.
      * @param msg  The ident message.
      */
-    private void setIdentity(final String pwd, final String nick, final String msg) {
+    final void setIdentity(final String pwd, final String nick, final String msg) {
         identPwd = pwd;
         identNick = nick;
         identMsg = msg;
@@ -1537,7 +1540,7 @@ public class Mobibot extends PircBot {
      *
      * @param nicks The nicks to ignore
      */
-    private void setIgnoredNicks(final String nicks) {
+    final void setIgnoredNicks(final String nicks) {
         if (Utils.isValidString(nicks)) {
             final StringTokenizer st = new StringTokenizer(nicks, ",");
 
@@ -1552,7 +1555,7 @@ public class Mobibot extends PircBot {
      *
      * @param apiToken The API token
      */
-    private void setPinboardAuth(final String apiToken) {
+    final void setPinboardAuth(final String apiToken) {
         if (Utils.isValidString(apiToken)) {
             pinboard = new Pinboard(this, apiToken, ircServer);
         }
@@ -1563,7 +1566,7 @@ public class Mobibot extends PircBot {
      *
      * @param tags The tags.
      */
-    private void setTags(final String tags) {
+    final void setTags(final String tags) {
         defaultTags = tags;
     }
 
