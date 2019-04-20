@@ -41,16 +41,17 @@ import com.rometools.rome.feed.synd.SyndFeedImpl;
 import com.rometools.rome.io.FeedException;
 import com.rometools.rome.io.SyndFeedInput;
 import com.rometools.rome.io.SyndFeedOutput;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import net.thauvin.erik.mobibot.Mobibot;
 import net.thauvin.erik.mobibot.Utils;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -105,15 +106,15 @@ public final class EntriesMgr {
         final SyndFeedInput input = new SyndFeedInput();
 
         try (final InputStreamReader reader =
-                 new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8)) {
+                 new InputStreamReader(Files.newInputStream(Paths.get(file)), StandardCharsets.UTF_8)) {
 
             final SyndFeed feed = input.build(reader);
 
-            final List items = feed.getEntries();
+            final List<SyndEntry> items = feed.getEntries();
             SyndEntry item;
 
             for (int i = items.size() - 1; i >= 0; i--) {
-                item = (SyndEntryImpl) items.get(i);
+                item = items.get(i);
                 history.add(item.getTitle());
             }
         }
@@ -139,12 +140,12 @@ public final class EntriesMgr {
         final String today;
 
         try (final InputStreamReader reader = new InputStreamReader(
-            new FileInputStream(file), StandardCharsets.UTF_8)) {
+            Files.newInputStream(Paths.get(file)), StandardCharsets.UTF_8)) {
             final SyndFeed feed = input.build(reader);
 
             today = Utils.isoLocalDate(feed.getPublishedDate());
 
-            final List items = feed.getEntries();
+            final List<SyndEntry> items = feed.getEntries();
             SyndEntry item;
             SyndContent description;
             String[] comments;
@@ -152,7 +153,7 @@ public final class EntriesMgr {
             EntryLink entry;
 
             for (int i = items.size() - 1; i >= 0; i--) {
-                item = (SyndEntryImpl) items.get(i);
+                item = items.get(i);
                 author = item.getAuthor()
                     .substring(item.getAuthor().lastIndexOf('(') + 1, item.getAuthor().length() - 1);
                 entry = new EntryLink(item.getLink(),
@@ -188,6 +189,7 @@ public final class EntriesMgr {
      * @param history     The history array.
      * @param isDayBackup Set the true if the daily backup file should also be created.
      */
+    @SuppressFBWarnings(value = "CE_CLASS_ENVY", justification = "Yes, it does.")
     public static void saveEntries(final Mobibot bot,
                                    final List<EntryLink> entries,
                                    final List<String> history,
@@ -204,7 +206,7 @@ public final class EntriesMgr {
                 SyndEntry item;
                 SyndContent description;
                 try (final Writer fw = new OutputStreamWriter(
-                    new FileOutputStream(bot.getLogsDir() + CURRENT_XML), StandardCharsets.UTF_8)) {
+                    Files.newOutputStream(Paths.get(bot.getLogsDir() + CURRENT_XML)), StandardCharsets.UTF_8)) {
                     rss.setFeedType("rss_2.0");
                     rss.setTitle(bot.getChannel() + " IRC Links");
                     rss.setDescription("Links from " + bot.getIrcServer() + " on " + bot.getChannel());
@@ -263,8 +265,8 @@ public final class EntriesMgr {
                 }
 
                 try (final Writer fw = new OutputStreamWriter(
-                    new FileOutputStream(
-                        bot.getLogsDir() + bot.getToday() + XML_EXT), StandardCharsets.UTF_8)) {
+                    Files.newOutputStream(Paths.get(
+                        bot.getLogsDir() + bot.getToday() + XML_EXT)), StandardCharsets.UTF_8)) {
                     output.output(rss, fw);
                 }
 
@@ -279,7 +281,7 @@ public final class EntriesMgr {
                         }
 
                         try (final Writer fw = new OutputStreamWriter(
-                            new FileOutputStream(bot.getLogsDir() + NAV_XML), StandardCharsets.UTF_8)) {
+                            Files.newOutputStream(Paths.get(bot.getLogsDir() + NAV_XML)), StandardCharsets.UTF_8)) {
                             rss = new SyndFeedImpl();
                             rss.setFeedType("rss_2.0");
                             rss.setTitle(bot.getChannel() + " IRC Links Backlogs");

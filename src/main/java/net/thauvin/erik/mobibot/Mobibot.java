@@ -73,11 +73,13 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -354,8 +356,8 @@ public class Mobibot extends PircBot {
         } else {
             final Properties p = new Properties();
 
-            try (final FileInputStream fis = new FileInputStream(
-                line.getOptionValue(Commands.PROPS_ARG.charAt(0), "./mobibot.properties"))) {
+            try (final InputStream fis = Files.newInputStream(Paths.get(
+                line.getOptionValue(Commands.PROPS_ARG.charAt(0), "./mobibot.properties")))) {
                 // Load the properties files
                 p.load(fis);
             } catch (FileNotFoundException e) {

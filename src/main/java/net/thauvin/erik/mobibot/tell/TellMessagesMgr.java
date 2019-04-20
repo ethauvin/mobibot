@@ -36,14 +36,14 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -90,7 +90,8 @@ final class TellMessagesMgr {
     public static List<TellMessage> load(final String file, final Logger logger) {
         try {
 
-            try (final ObjectInput input = new ObjectInputStream(new BufferedInputStream(new FileInputStream(file)))) {
+            try (final ObjectInput input = new ObjectInputStream(
+                new BufferedInputStream(Files.newInputStream(Paths.get(file))))) {
                 if (logger.isDebugEnabled()) {
                     logger.debug("Loading the messages.");
                 }
@@ -119,7 +120,7 @@ final class TellMessagesMgr {
         try {
 
             try (final ObjectOutput output = new ObjectOutputStream(
-                new BufferedOutputStream(new FileOutputStream(file)))) {
+                new BufferedOutputStream(Files.newOutputStream(Paths.get(file))))) {
                 if (logger.isDebugEnabled()) {
                     logger.debug("Saving the messages.");
                 }
