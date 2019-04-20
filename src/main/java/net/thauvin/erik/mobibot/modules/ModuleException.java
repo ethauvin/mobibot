@@ -44,7 +44,7 @@ import java.util.regex.Pattern;
  * @created 2019-04-07
  * @since 1.0
  */
-class ModuleException extends Exception {
+public class ModuleException extends Exception {
     private static final long serialVersionUID = -3036774290621088107L;
     private final String debugMessage;
     private final Pattern urlPattern = Pattern.compile("(https?://\\S+)(\\?\\S+)");

@@ -50,11 +50,11 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @since 1.0
  */
 public class UtilsTest {
-    static final String ASCII =
+    private static final String ASCII =
         " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~";
 
-    final Calendar cal = Calendar.getInstance();
-    final LocalDateTime localDateTime =
+    private final Calendar cal = Calendar.getInstance();
+    private final LocalDateTime localDateTime =
         LocalDateTime.of(1952, 2, 17, 12, 30, 0);
 
     @BeforeClass

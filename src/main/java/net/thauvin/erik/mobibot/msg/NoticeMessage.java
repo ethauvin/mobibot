@@ -1,5 +1,5 @@
 /*
- * PrivateMessage.java
+ * NoticeMessage.java
  *
  * Copyright (c) 2004-2019, Erik C. Thauvin (erik@thauvin.net)
  * All rights reserved.
@@ -53,7 +53,7 @@ public class NoticeMessage extends Message {
     /**
      * Create a new notice.
      *
-     * @param message The ntoice's message.
+     * @param message The notice's message.
      * @param color   The color.
      */
     public NoticeMessage(final String message, final String color) {

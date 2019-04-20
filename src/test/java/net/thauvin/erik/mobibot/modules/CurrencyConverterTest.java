@@ -1,5 +1,5 @@
 /*
- * CurrencyConvertTest.java
+ * CurrencyConverterTest.java
  *
  * Copyright (c) 2004-2019, Erik C. Thauvin (erik@thauvin.net)
  * All rights reserved.
