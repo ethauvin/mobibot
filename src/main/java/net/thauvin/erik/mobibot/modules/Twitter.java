@@ -33,6 +33,9 @@
 package net.thauvin.erik.mobibot.modules;
 
 import net.thauvin.erik.mobibot.Mobibot;
+import net.thauvin.erik.mobibot.msg.Message;
+import net.thauvin.erik.mobibot.msg.NoticeMessage;
+import twitter4j.DirectMessage;
 import twitter4j.Status;
 import twitter4j.TwitterFactory;
 import twitter4j.conf.ConfigurationBuilder;
@@ -46,10 +49,10 @@ import twitter4j.conf.ConfigurationBuilder;
  */
 public final class Twitter extends ThreadedModule {
     // The property keys.
-    private static final String CONSUMER_KEY_PROP = "twitter-consumerKey";
-    private static final String CONSUMER_SECRET_PROP = "twitter-consumerSecret";
-    private static final String TOKEN_PROP = "twitter-token";
-    private static final String TOKEN_SECRET_PROP = "twitter-tokenSecret";
+    static final String CONSUMER_KEY_PROP = "twitter-consumerKey";
+    static final String CONSUMER_SECRET_PROP = "twitter-consumerSecret";
+    static final String TOKEN_PROP = "twitter-token";
+    static final String TOKEN_SECRET_PROP = "twitter-tokenSecret";
     // The twitter command.
     private static final String TWITTER_CMD = "twitter";
 
@@ -62,6 +65,50 @@ public final class Twitter extends ThreadedModule {
         properties.put(CONSUMER_KEY_PROP, "");
         properties.put(TOKEN_PROP, "");
         properties.put(TOKEN_SECRET_PROP, "");
+    }
+
+    /**
+     * Post on Twitter.
+     *
+     * @param consumerKey    The consumer key.
+     * @param consumerSecret The consumer secret.
+     * @param token          The token.
+     * @param tokenSecret    The token secret.
+     * @param handle         The Twitter handle (dm) or nickname.
+     * @param message        The message to post.
+     * @param isDm           The direct message flag.
+     * @return The {@link Message} to send back.
+     * @throws ModuleException If an error occurs while posting.
+     */
+    static Message twitterPost(final String consumerKey,
+                               final String consumerSecret,
+                               final String token,
+                               final String tokenSecret,
+                               final String handle,
+                               final String message,
+                               final boolean isDm) throws ModuleException {
+        try {
+            final ConfigurationBuilder cb = new ConfigurationBuilder();
+            cb.setDebugEnabled(true)
+                .setOAuthConsumerKey(consumerKey)
+                .setOAuthConsumerSecret(consumerSecret)
+                .setOAuthAccessToken(token)
+                .setOAuthAccessTokenSecret(tokenSecret);
+
+            final TwitterFactory tf = new TwitterFactory(cb.build());
+            final twitter4j.Twitter twitter = tf.getInstance();
+
+            if (!isDm) {
+                final Status status = twitter.updateStatus(message + " (" + handle + ')');
+                return new NoticeMessage("You message was posted to http://twitter.com/" + twitter.getScreenName()
+                    + "/statuses/" + status.getId());
+            } else {
+                final DirectMessage dm = twitter.sendDirectMessage(handle, message);
+                return new NoticeMessage(dm.getText());
+            }
+        } catch (Exception e) {
+            throw new ModuleException("twitterPost(" + message + ")", "An error has occurred: " + e.getMessage(), e);
+        }
     }
 
     /**
@@ -78,28 +125,34 @@ public final class Twitter extends ThreadedModule {
     }
 
     /**
+     * Post on Twitter.
+     *
+     * @param handle  The Twitter handle (dm) or nickname.
+     * @param message The message to post.
+     * @param isDm    The direct message flag.
+     * @return The {@link Message} to send back.
+     * @throws ModuleException If an error occurs while posting.
+     */
+    public Message post(final String handle, final String message, final boolean isDm) throws ModuleException {
+        return twitterPost(properties.get(CONSUMER_KEY_PROP),
+            properties.get(CONSUMER_SECRET_PROP),
+            properties.get(TOKEN_PROP),
+            properties.get(TOKEN_SECRET_PROP),
+            handle,
+            message,
+            isDm);
+    }
+
+    /**
      * Posts to twitter.
      */
     @Override
     void run(final Mobibot bot, final String sender, final String message) {
         try {
-            final ConfigurationBuilder cb = new ConfigurationBuilder();
-            cb.setDebugEnabled(true)
-                .setOAuthConsumerKey(properties.get(CONSUMER_KEY_PROP))
-                .setOAuthConsumerSecret(properties.get(CONSUMER_SECRET_PROP))
-                .setOAuthAccessToken(properties.get(TOKEN_PROP))
-                .setOAuthAccessTokenSecret(properties.get(TOKEN_SECRET_PROP));
-            final TwitterFactory tf = new TwitterFactory(cb.build());
-            final twitter4j.Twitter twitter = tf.getInstance();
-
-            final Status status = twitter.updateStatus(message + " (" + sender + ')');
-
-            bot.send(sender,
-                "You message was posted to http://twitter.com/" + twitter.getScreenName() + "/statuses/" + status
-                    .getId());
-        } catch (Exception e) {
-            bot.getLogger().warn("Unable to post to Twitter: " + message, e);
-            bot.send(sender, "An error has occurred: " + e.getMessage());
+            bot.send(sender, post(sender, message, false).getMessage());
+        } catch (ModuleException e) {
+            bot.getLogger().warn(e.getDebugMessage(), e);
+            bot.send(sender, e.getMessage());
         }
     }
 }

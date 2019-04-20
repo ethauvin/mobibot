@@ -287,7 +287,11 @@ public class Mobibot extends PircBot {
         MODULES.add(new Lookup());
         MODULES.add(new Ping());
         MODULES.add(new StockQuote());
-        MODULES.add(new Twitter());
+
+        twitterModule = new Twitter();
+        MODULES.add(twitterModule);
+        twitterHandle = p.getProperty(Constants.TWITTER_HANDLE_PROP, "");
+
         MODULES.add(new War());
         MODULES.add(new Weather2());
         MODULES.add(new WorldTime());
@@ -919,19 +923,18 @@ public class Mobibot extends PircBot {
      */
     public final void joinChannel() {
         joinChannel(ircChannel);
-    }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected final void onAction(final String sender,
-                                  final String login,
-                                  final String hostname,
-                                  final String target,
-                                  final String action) {
-        if (target.equals(ircChannel)) {
-            storeRecap(sender, action, true);
+        if (twitterModule.isEnabled() && Utils.isValidString(twitterHandle)) {
+            new Thread(() -> {
+                try {
+                    twitterModule.post(
+                        twitterHandle,
+                        getName() + ReleaseInfo.VERSION + " has joined " + ircChannel,
+                        true);
+                } catch (ModuleException e) {
+                    logger.warn(e.getMessage(), e);
+                }
+            }).start();
         }
     }
 
