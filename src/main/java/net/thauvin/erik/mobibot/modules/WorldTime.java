@@ -32,6 +32,7 @@
 
 package net.thauvin.erik.mobibot.modules;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import net.thauvin.erik.mobibot.Mobibot;
 import net.thauvin.erik.mobibot.msg.ErrorMessage;
 import net.thauvin.erik.mobibot.msg.Message;
@@ -41,6 +42,7 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoField;
+import java.util.Collections;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -55,7 +57,7 @@ public final class WorldTime extends AbstractModule {
     // The beats (Internet Time) keyword.
     private static final String BEATS_KEYWORD = ".beats";
     // The supported countries.
-    private static final Map<String, String> COUNTRIES_MAP = new TreeMap<>();
+    private static final Map<String, String> COUNTRIES_MAP;
 
     /**
      * The time command.
@@ -64,85 +66,88 @@ public final class WorldTime extends AbstractModule {
 
     static {
         // Initialize the countries map
-        COUNTRIES_MAP.put("AE", "Asia/Dubai");
-        COUNTRIES_MAP.put("AF", "Asia/Kabul");
-        COUNTRIES_MAP.put("AQ", "Antarctica/South_Pole");
-        COUNTRIES_MAP.put("AT", "Europe/Vienna");
-        COUNTRIES_MAP.put("AU", "Australia/Sydney");
-        COUNTRIES_MAP.put("AKST", "America/Anchorage");
-        COUNTRIES_MAP.put("AKDT", "America/Anchorage");
-        COUNTRIES_MAP.put("BE", "Europe/Brussels");
-        COUNTRIES_MAP.put("BR", "America/Sao_Paulo");
-        COUNTRIES_MAP.put("CA", "America/Montreal");
-        COUNTRIES_MAP.put("CDT", "America/Chicago");
-        COUNTRIES_MAP.put("CET", "CET");
-        COUNTRIES_MAP.put("CH", "Europe/Zurich");
-        COUNTRIES_MAP.put("CN", "Asia/Shanghai");
-        COUNTRIES_MAP.put("CST", "America/Chicago");
-        COUNTRIES_MAP.put("CU", "Cuba");
-        COUNTRIES_MAP.put("DE", "Europe/Berlin");
-        COUNTRIES_MAP.put("DK", "Europe/Copenhagen");
-        COUNTRIES_MAP.put("EDT", "America/New_York");
-        COUNTRIES_MAP.put("EG", "Africa/Cairo");
-        COUNTRIES_MAP.put("ER", "Africa/Asmara");
-        COUNTRIES_MAP.put("ES", "Europe/Madrid");
-        COUNTRIES_MAP.put("EST", "America/New_York");
-        COUNTRIES_MAP.put("FI", "Europe/Helsinki");
-        COUNTRIES_MAP.put("FR", "Europe/Paris");
-        COUNTRIES_MAP.put("GB", "Europe/London");
-        COUNTRIES_MAP.put("GMT", "GMT");
-        COUNTRIES_MAP.put("GR", "Europe/Athens");
-        COUNTRIES_MAP.put("HK", "Asia/Hong_Kong");
-        COUNTRIES_MAP.put("HST", "Pacific/Honolulu");
-        COUNTRIES_MAP.put("IE", "Europe/Dublin");
-        COUNTRIES_MAP.put("IL", "Asia/Tel_Aviv");
-        COUNTRIES_MAP.put("IN", "Asia/Kolkata");
-        COUNTRIES_MAP.put("IQ", "Asia/Baghdad");
-        COUNTRIES_MAP.put("IR", "Asia/Tehran");
-        COUNTRIES_MAP.put("IS", "Atlantic/Reykjavik");
-        COUNTRIES_MAP.put("IT", "Europe/Rome");
-        COUNTRIES_MAP.put("JM", "Jamaica");
-        COUNTRIES_MAP.put("JP", "Asia/Tokyo");
-        COUNTRIES_MAP.put("LY", "Africa/Tripoli");
-        COUNTRIES_MAP.put("MA", "Africa/Casablanca");
-        COUNTRIES_MAP.put("MDT", "America/Denver");
-        COUNTRIES_MAP.put("MH", "Kwajalein");
-        COUNTRIES_MAP.put("MQ", "America/Martinique");
-        COUNTRIES_MAP.put("MST", "America/Denver");
-        COUNTRIES_MAP.put("MX", "America/Mexico_City");
-        COUNTRIES_MAP.put("NL", "Europe/Amsterdam");
-        COUNTRIES_MAP.put("NO", "Europe/Oslo");
-        COUNTRIES_MAP.put("NP", "Asia/Katmandu");
-        COUNTRIES_MAP.put("NZ", "Pacific/Auckland");
-        COUNTRIES_MAP.put("PDT", "America/Los_Angeles");
-        COUNTRIES_MAP.put("PH", "Asia/Manila");
-        COUNTRIES_MAP.put("PK", "Asia/Karachi");
-        COUNTRIES_MAP.put("PL", "Europe/Warsaw");
-        COUNTRIES_MAP.put("PST", "America/Los_Angeles");
-        COUNTRIES_MAP.put("PT", "Europe/Lisbon");
-        COUNTRIES_MAP.put("PR", "America/Puerto_Rico");
-        COUNTRIES_MAP.put("RU", "Europe/Moscow");
-        COUNTRIES_MAP.put("SE", "Europe/Stockholm");
-        COUNTRIES_MAP.put("SG", "Asia/Singapore");
-        COUNTRIES_MAP.put("TH", "Asia/Bangkok");
-        COUNTRIES_MAP.put("TM", "Asia/Ashgabat");
-        COUNTRIES_MAP.put("TN", "Africa/Tunis");
-        COUNTRIES_MAP.put("TR", "Europe/Istanbul");
-        COUNTRIES_MAP.put("TW", "Asia/Taipei");
-        COUNTRIES_MAP.put("UK", "Europe/London");
-        COUNTRIES_MAP.put("US", "America/New_York");
-        COUNTRIES_MAP.put("UTC", "UTC");
-        COUNTRIES_MAP.put("VA", "Europe/Vatican");
-        COUNTRIES_MAP.put("VE", "America/Caracas");
-        COUNTRIES_MAP.put("VN", "Asia/Ho_Chi_Minh");
-        COUNTRIES_MAP.put("ZA", "Africa/Johannesburg");
-        COUNTRIES_MAP.put("ZULU", "Zulu");
-        COUNTRIES_MAP.put("INTERNET", BEATS_KEYWORD);
-        COUNTRIES_MAP.put("BEATS", BEATS_KEYWORD);
+        final Map<String, String> countries = new TreeMap<>();
+        countries.put("AE", "Asia/Dubai");
+        countries.put("AF", "Asia/Kabul");
+        countries.put("AQ", "Antarctica/South_Pole");
+        countries.put("AT", "Europe/Vienna");
+        countries.put("AU", "Australia/Sydney");
+        countries.put("AKST", "America/Anchorage");
+        countries.put("AKDT", "America/Anchorage");
+        countries.put("BE", "Europe/Brussels");
+        countries.put("BR", "America/Sao_Paulo");
+        countries.put("CA", "America/Montreal");
+        countries.put("CDT", "America/Chicago");
+        countries.put("CET", "CET");
+        countries.put("CH", "Europe/Zurich");
+        countries.put("CN", "Asia/Shanghai");
+        countries.put("CST", "America/Chicago");
+        countries.put("CU", "Cuba");
+        countries.put("DE", "Europe/Berlin");
+        countries.put("DK", "Europe/Copenhagen");
+        countries.put("EDT", "America/New_York");
+        countries.put("EG", "Africa/Cairo");
+        countries.put("ER", "Africa/Asmara");
+        countries.put("ES", "Europe/Madrid");
+        countries.put("EST", "America/New_York");
+        countries.put("FI", "Europe/Helsinki");
+        countries.put("FR", "Europe/Paris");
+        countries.put("GB", "Europe/London");
+        countries.put("GMT", "GMT");
+        countries.put("GR", "Europe/Athens");
+        countries.put("HK", "Asia/Hong_Kong");
+        countries.put("HST", "Pacific/Honolulu");
+        countries.put("IE", "Europe/Dublin");
+        countries.put("IL", "Asia/Tel_Aviv");
+        countries.put("IN", "Asia/Kolkata");
+        countries.put("IQ", "Asia/Baghdad");
+        countries.put("IR", "Asia/Tehran");
+        countries.put("IS", "Atlantic/Reykjavik");
+        countries.put("IT", "Europe/Rome");
+        countries.put("JM", "Jamaica");
+        countries.put("JP", "Asia/Tokyo");
+        countries.put("LY", "Africa/Tripoli");
+        countries.put("MA", "Africa/Casablanca");
+        countries.put("MDT", "America/Denver");
+        countries.put("MH", "Kwajalein");
+        countries.put("MQ", "America/Martinique");
+        countries.put("MST", "America/Denver");
+        countries.put("MX", "America/Mexico_City");
+        countries.put("NL", "Europe/Amsterdam");
+        countries.put("NO", "Europe/Oslo");
+        countries.put("NP", "Asia/Katmandu");
+        countries.put("NZ", "Pacific/Auckland");
+        countries.put("PDT", "America/Los_Angeles");
+        countries.put("PH", "Asia/Manila");
+        countries.put("PK", "Asia/Karachi");
+        countries.put("PL", "Europe/Warsaw");
+        countries.put("PST", "America/Los_Angeles");
+        countries.put("PT", "Europe/Lisbon");
+        countries.put("PR", "America/Puerto_Rico");
+        countries.put("RU", "Europe/Moscow");
+        countries.put("SE", "Europe/Stockholm");
+        countries.put("SG", "Asia/Singapore");
+        countries.put("TH", "Asia/Bangkok");
+        countries.put("TM", "Asia/Ashgabat");
+        countries.put("TN", "Africa/Tunis");
+        countries.put("TR", "Europe/Istanbul");
+        countries.put("TW", "Asia/Taipei");
+        countries.put("UK", "Europe/London");
+        countries.put("US", "America/New_York");
+        countries.put("UTC", "UTC");
+        countries.put("VA", "Europe/Vatican");
+        countries.put("VE", "America/Caracas");
+        countries.put("VN", "Asia/Ho_Chi_Minh");
+        countries.put("ZA", "Africa/Johannesburg");
+        countries.put("ZULU", "Zulu");
+        countries.put("INTERNET", BEATS_KEYWORD);
+        countries.put("BEATS", BEATS_KEYWORD);
 
         ZoneId.getAvailableZoneIds().stream().filter(tz ->
-            !tz.contains("/") && tz.length() == 3 && !COUNTRIES_MAP.containsKey(tz)).forEach(tz ->
-            COUNTRIES_MAP.put(tz, tz));
+            !tz.contains("/") && tz.length() == 3 && !countries.containsKey(tz)).forEach(tz ->
+            countries.put(tz, tz));
+
+        COUNTRIES_MAP = Collections.unmodifiableMap(countries);
     }
 
     /**
@@ -175,12 +180,13 @@ public final class WorldTime extends AbstractModule {
      * @param query The query.
      * @return The {@link Message} containing the world time.
      */
+    @SuppressFBWarnings(value = "STT_STRING_PARSING_A_FIELD")
     static Message worldTime(final String query) {
         final String tz = (COUNTRIES_MAP.get((query.substring(query.indexOf(' ') + 1).trim().toUpperCase())));
         final String response;
 
         if (tz != null) {
-            if (tz.equals(BEATS_KEYWORD)) {
+            if (BEATS_KEYWORD.equals(tz)) {
                 response = ("The current Internet Time is: " + internetTime() + ' ' + BEATS_KEYWORD);
             } else {
                 response = ZonedDateTime.now().withZoneSameInstant(ZoneId.of(tz)).format(
