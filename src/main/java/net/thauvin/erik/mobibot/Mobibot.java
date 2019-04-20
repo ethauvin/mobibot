@@ -537,6 +537,16 @@ public class Mobibot extends PircBot {
     }
 
     /**
+     * Returns the current channel name.
+     *
+     * @return The current channel name.
+     */
+    @SuppressFBWarnings("STT_STRING_PARSING_A_FIELD")
+    public final String getChannelName() {
+        return ircChannel.substring(1);
+    }
+
+    /**
      * Returns the irc server.
      *
      * @return The irc server.
@@ -662,10 +672,9 @@ public class Mobibot extends PircBot {
         } else if (lcTopic.equals(Commands.VIEW_CMD)) {
             send(sender, "To list or search the current URL posts:");
             send(sender, helpIndent(getNick() + ": " + Commands.VIEW_CMD) + " [<start>] [<query>]");
-        } else if (lcTopic.equalsIgnoreCase(ircChannel.substring(1))) {
+        } else if (lcTopic.equalsIgnoreCase(getChannelName())) {
             send(sender, "To list the last 5 posts from the channel's weblog:");
-            send(sender, helpIndent(getNick() + ": " + ircChannel.substring(1)));
-        } else if (lcTopic.equals(Commands.RECAP_CMD)) {
+            send(sender, helpIndent(getNick() + ": " + getChannelName()));
             send(sender, "To list the last 10 public channel messages:");
             send(sender, helpIndent(getNick() + ": " + Commands.RECAP_CMD));
         } else if (lcTopic.equals(Commands.USERS_CMD)) {
@@ -715,7 +724,7 @@ public class Mobibot extends PircBot {
             if (commandsList.isEmpty()) {
                 commandsList.add(Commands.IGNORE_CMD);
                 commandsList.add(Commands.INFO_CMD);
-                commandsList.add(ircChannel.substring(1));
+                commandsList.add(getChannelName());
                 commandsList.add(Commands.HELP_POSTING_KEYWORD);
                 commandsList.add(Commands.HELP_TAGS_KEYWORD);
                 commandsList.add(Commands.RECAP_CMD);
