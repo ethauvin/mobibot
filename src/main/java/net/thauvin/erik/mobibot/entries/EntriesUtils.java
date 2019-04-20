@@ -34,6 +34,7 @@ package net.thauvin.erik.mobibot.entries;
 
 import net.thauvin.erik.mobibot.Commands;
 import net.thauvin.erik.mobibot.Constants;
+import net.thauvin.erik.mobibot.Utils;
 
 /**
  * The <code>Utils</code> class.
@@ -97,10 +98,10 @@ public final class EntriesUtils {
         if (Constants.NO_TITLE.equals(entry.getTitle())) {
             buff.append(entry.getTitle());
         } else {
-            buff.append(net.thauvin.erik.mobibot.Utils.bold(entry.getTitle()));
+            buff.append(Utils.bold(entry.getTitle()));
         }
 
-        buff.append(" ( ").append(net.thauvin.erik.mobibot.Utils.green(entry.getLink())).append(" )");
+        buff.append(" ( ").append(Utils.green(entry.getLink())).append(" )");
 
         return buff.toString();
     }
