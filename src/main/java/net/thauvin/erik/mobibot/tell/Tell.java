@@ -30,7 +30,11 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package net.thauvin.erik.mobibot;
+package net.thauvin.erik.mobibot.tell;
+
+import net.thauvin.erik.mobibot.Commands;
+import net.thauvin.erik.mobibot.Mobibot;
+import net.thauvin.erik.mobibot.Utils;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;

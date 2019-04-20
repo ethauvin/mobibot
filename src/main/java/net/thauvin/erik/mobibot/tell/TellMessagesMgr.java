@@ -30,7 +30,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package net.thauvin.erik.mobibot;
+package net.thauvin.erik.mobibot.tell;
 
 import org.apache.logging.log4j.Logger;
 
@@ -93,7 +93,7 @@ final class TellMessagesMgr {
      *
      * @param file   The serialized objects file.
      * @param logger The logger.
-     * @return The {@link net.thauvin.erik.mobibot.TellMessage} array.
+     * @return The {@link TellMessage} array.
      */
     @SuppressWarnings("unchecked")
     public static List<TellMessage> load(final String file, final Logger logger) {
@@ -121,7 +121,7 @@ final class TellMessagesMgr {
      * Saves the messages.
      *
      * @param file     The serialized objects file.
-     * @param messages The {@link net.thauvin.erik.mobibot.TellMessage} array.
+     * @param messages The {@link TellMessage} array.
      * @param logger   The logger.
      */
     public static void save(final String file, final List<TellMessage> messages, final Logger logger) {

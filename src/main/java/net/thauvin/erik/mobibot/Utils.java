@@ -74,73 +74,7 @@ public final class Utils {
      * @return The bold string.
      */
     public static String bold(final String s) {
-        return  colorize(s, Colors.BOLD);
-    }
-
-    /**
-     * Builds an entry's comment for display on the channel.
-     *
-     * @param entryIndex   The entry's index.
-     * @param commentIndex The comment's index.
-     * @param comment      The {@link net.thauvin.erik.mobibot.EntryComment comment} object.
-     * @return The entry's comment.
-     */
-    static String buildComment(final int entryIndex, final int commentIndex, final EntryComment comment) {
-        return (Commands.LINK_CMD + (entryIndex + 1) + '.' + (commentIndex + 1) + ": [" + comment.getNick() + "] "
-            + comment.getComment());
-    }
-
-    /**
-     * Builds an entry's link for display on the channel.
-     *
-     * @param index The entry's index.
-     * @param entry The {@link net.thauvin.erik.mobibot.EntryLink entry} object.
-     * @return The entry's link.
-     * @see #buildLink(int, net.thauvin.erik.mobibot.EntryLink, boolean)
-     */
-    static String buildLink(final int index, final EntryLink entry) {
-        return buildLink(index, entry, false);
-    }
-
-    /**
-     * Builds an entry's link for display on the channel.
-     *
-     * @param index  The entry's index.
-     * @param entry  The {@link net.thauvin.erik.mobibot.EntryLink entry} object.
-     * @param isView Set to true to display the number of comments.
-     * @return The entry's link.
-     */
-    static String buildLink(final int index, final EntryLink entry, final boolean isView) {
-        final StringBuilder buff = new StringBuilder(Commands.LINK_CMD + (index + 1) + ": ");
-
-        buff.append('[').append(entry.getNick()).append(']');
-
-        if (isView && entry.hasComments()) {
-            buff.append("[+").append(entry.getCommentsCount()).append(']');
-        }
-
-        buff.append(' ');
-
-        if (Mobibot.NO_TITLE.equals(entry.getTitle())) {
-            buff.append(entry.getTitle());
-        } else {
-            buff.append(bold(entry.getTitle()));
-        }
-
-        buff.append(" ( ").append(Utils.green(entry.getLink())).append(" )");
-
-        return buff.toString();
-    }
-
-    /**
-     * Build an entry's tags/categories for display on the channel.
-     *
-     * @param entryIndex The entry's index.
-     * @param entry      The {@link net.thauvin.erik.mobibot.EntryLink entry} object.
-     * @return The entry's tags.
-     */
-    static String buildTags(final int entryIndex, final EntryLink entry) {
-        return (Commands.LINK_CMD + (entryIndex + 1) + "T: " + entry.getPinboardTags().replaceAll(",", ", "));
+        return colorize(s, Colors.BOLD);
     }
 
     /**

@@ -34,6 +34,10 @@ package net.thauvin.erik.mobibot;
 
 import com.rometools.rome.io.FeedException;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import net.thauvin.erik.mobibot.entries.EntriesMgr;
+import net.thauvin.erik.mobibot.entries.EntriesUtils;
+import net.thauvin.erik.mobibot.entries.EntryComment;
+import net.thauvin.erik.mobibot.entries.EntryLink;
 import net.thauvin.erik.mobibot.modules.AbstractModule;
 import net.thauvin.erik.mobibot.modules.Calc;
 import net.thauvin.erik.mobibot.modules.CurrencyConverter;
@@ -41,6 +45,7 @@ import net.thauvin.erik.mobibot.modules.Dice;
 import net.thauvin.erik.mobibot.modules.GoogleSearch;
 import net.thauvin.erik.mobibot.modules.Joke;
 import net.thauvin.erik.mobibot.modules.Lookup;
+import net.thauvin.erik.mobibot.modules.ModuleException;
 import net.thauvin.erik.mobibot.modules.Ping;
 import net.thauvin.erik.mobibot.modules.StockQuote;
 import net.thauvin.erik.mobibot.modules.Twitter;
@@ -48,6 +53,7 @@ import net.thauvin.erik.mobibot.modules.War;
 import net.thauvin.erik.mobibot.modules.Weather2;
 import net.thauvin.erik.mobibot.modules.WorldTime;
 import net.thauvin.erik.mobibot.msg.Message;
+import net.thauvin.erik.mobibot.tell.Tell;
 import net.thauvin.erik.semver.Version;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -95,9 +101,6 @@ public class Mobibot extends PircBot {
      * The connect/read timeout in ms.
      */
     public static final int CONNECT_TIMEOUT = 5000;
-
-    // The empty title string.
-    static final String NO_TITLE = "No Title";
 
     // The default port.
     private static final int DEFAULT_PORT = 6667;
@@ -186,6 +189,10 @@ public class Mobibot extends PircBot {
     private final List<String> recap = new ArrayList<>(0);
     // The tell object.
     private final Tell tell;
+    // The Twitter handle for channel join notifications.
+    private final String twitterHandle;
+    // The Twitter module.
+    private final Twitter twitterModule;
     // The backlogs URL.
     private String backLogsUrl = "";
     // The default tags/categories.
@@ -202,7 +209,6 @@ public class Mobibot extends PircBot {
     private Pinboard pinboard = null;
     // Today's date.
     private String today = Utils.today();
-
     // The weblog URL.
     private String weblogUrl = "";
 
@@ -947,14 +953,6 @@ public class Mobibot extends PircBot {
      * {@inheritDoc}
      */
     @Override
-    protected void onJoin(final String channel, final String sender, final String login, final String hostname) {
-        tell.send(sender);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     protected final void onMessage(final String channel,
                                    final String sender,
                                    final String login,
@@ -988,7 +986,7 @@ public class Mobibot extends PircBot {
                     }
 
                     final StringBuilder tags = new StringBuilder(defaultTags);
-                    String title = NO_TITLE;
+                    String title = Constants.NO_TITLE;
 
                     if (cmds.length == 2) {
                         final String[] data = cmds[1].trim().split(TAGS_MARKER, 2);
@@ -1004,7 +1002,7 @@ public class Mobibot extends PircBot {
                         }
                     }
 
-                    if (NO_TITLE.equals(title)) {
+                    if (Constants.NO_TITLE.equals(title)) {
                         try {
                             final Document html = Jsoup.connect(link).userAgent("Mozilla").get();
                             final String htmlTitle = html.title();
@@ -1021,7 +1019,7 @@ public class Mobibot extends PircBot {
 
                     final int index = entries.size() - 1;
                     final EntryLink entry = entries.get(index);
-                    send(channel, Utils.buildLink(index, entry));
+                    send(channel, EntriesUtils.buildLink(index, entry));
 
                     if (pinboard != null) {
                         pinboard.addPost(entry);
@@ -1029,13 +1027,14 @@ public class Mobibot extends PircBot {
 
                     saveEntries(isBackup);
 
-                    if (NO_TITLE.equals(entry.getTitle())) {
+                    if (Constants.NO_TITLE.equals(entry.getTitle())) {
                         send(sender, "Please specify a title, by typing:", true);
                         send(sender, helpIndent(Commands.LINK_CMD + (index + 1) + ":|This is the title"), true);
                     }
                 } else {
                     final EntryLink entry = entries.get(dupIndex);
-                    send(sender, Utils.bold("Duplicate") + " >> " + Utils.buildLink(dupIndex, entry));
+                    send(sender, Utils.bold("Duplicate") + " >> "
+                        + EntriesUtils.buildLink(dupIndex, entry));
                 }
             }
         } else if (message.matches(getNickPattern() + ":.*")) { // mobibot: <command>
@@ -1090,17 +1089,17 @@ public class Mobibot extends PircBot {
 
                 if (cmd.length() == 0) {
                     final EntryLink entry = entries.get(index);
-                    send(channel, Utils.buildLink(index, entry));
+                    send(channel, EntriesUtils.buildLink(index, entry));
 
                     if (entry.hasTags()) {
-                        send(channel, Utils.buildTags(index, entry));
+                        send(channel, EntriesUtils.buildTags(index, entry));
                     }
 
                     if (entry.hasComments()) {
                         final EntryComment[] comments = entry.getComments();
 
                         for (int i = 0; i < comments.length; i++) {
-                            send(channel, Utils.buildComment(index, i, comments[i]));
+                            send(channel, EntriesUtils.buildComment(index, i, comments[i]));
                         }
                     }
                 } else {
@@ -1128,7 +1127,7 @@ public class Mobibot extends PircBot {
                                 pinboard.updatePost(entry.getLink(), entry);
                             }
 
-                            send(channel, Utils.buildLink(index, entry));
+                            send(channel, EntriesUtils.buildLink(index, entry));
                             saveEntries(false);
                         }
                     } else if (cmd.charAt(0) == '=') { // L1:=<url>
@@ -1146,7 +1145,7 @@ public class Mobibot extends PircBot {
                                     pinboard.updatePost(oldLink, entry);
                                 }
 
-                                send(channel, Utils.buildLink(index, entry));
+                                send(channel, EntriesUtils.buildLink(index, entry));
                                 saveEntries(false);
                             }
                         } else {
@@ -1157,7 +1156,7 @@ public class Mobibot extends PircBot {
                             if (cmd.length() > 1) {
                                 final EntryLink entry = entries.get(index);
                                 entry.setNick(cmd.substring(1));
-                                send(channel, Utils.buildLink(index, entry));
+                                send(channel, EntriesUtils.buildLink(index, entry));
                                 saveEntries(false);
                             }
                         } else {
@@ -1168,7 +1167,7 @@ public class Mobibot extends PircBot {
                         final int cindex = entry.addComment(cmd, sender);
 
                         final EntryComment comment = entry.getComment(cindex);
-                        send(sender, Utils.buildComment(index, cindex, comment));
+                        send(sender, EntriesUtils.buildComment(index, cindex, comment));
                         saveEntries(false);
                     }
                 }
@@ -1192,14 +1191,14 @@ public class Mobibot extends PircBot {
                             pinboard.updatePost(entry.getLink(), entry);
                         }
 
-                        send(channel, Utils.buildTags(index, entry));
+                        send(channel, EntriesUtils.buildTags(index, entry));
                         saveEntries(false);
                     } else {
                         send(sender, "Please ask a channel op to change the tags for you.");
                     }
                 } else {
                     if (entry.hasTags()) {
-                        send(channel, Utils.buildTags(index, entry));
+                        send(channel, EntriesUtils.buildTags(index, entry));
                     } else {
                         send(sender, "The entry has no tags. Why don't add some?");
                     }
@@ -1221,7 +1220,7 @@ public class Mobibot extends PircBot {
                     // L1.1:
                     if (cmd.length() == 0) {
                         final EntryComment comment = entry.getComment(cindex);
-                        send(channel, Utils.buildComment(index, cindex, comment));
+                        send(channel, EntriesUtils.buildComment(index, cindex, comment));
                     } else if ("-".equals(cmd)) { // L1.1:-
                         entry.deleteComment(cindex);
                         send(channel, "Comment " + Commands.LINK_CMD + (index + 1) + '.' + (cindex + 1) + " removed.");
@@ -1231,7 +1230,7 @@ public class Mobibot extends PircBot {
                             if (cmd.length() > 1) {
                                 final EntryComment comment = entry.getComment(cindex);
                                 comment.setNick(cmd.substring(1));
-                                send(channel, Utils.buildComment(index, cindex, comment));
+                                send(channel, EntriesUtils.buildComment(index, cindex, comment));
                                 saveEntries(false);
                             }
                         } else {
@@ -1241,7 +1240,7 @@ public class Mobibot extends PircBot {
                         entry.setComment(cindex, cmd, sender);
 
                         final EntryComment comment = entry.getComment(cindex);
-                        send(sender, Utils.buildComment(index, cindex, comment));
+                        send(sender, EntriesUtils.buildComment(index, cindex, comment));
                         saveEntries(false);
                     }
                 }
@@ -1253,14 +1252,6 @@ public class Mobibot extends PircBot {
         }
 
         tell.send(sender, true);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void onNickChange(final String oldNick, final String login, final String hostname, final String newNick) {
-        tell.send(newNick);
     }
 
     /**
@@ -1371,6 +1362,36 @@ public class Mobibot extends PircBot {
 
             helpResponse(sender, "");
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected final void onAction(final String sender,
+                                  final String login,
+                                  final String hostname,
+                                  final String target,
+                                  final String action) {
+        if (target.equals(ircChannel)) {
+            storeRecap(sender, action, true);
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void onJoin(final String channel, final String sender, final String login, final String hostname) {
+        tell.send(sender);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void onNickChange(final String oldNick, final String login, final String hostname, final String newNick) {
+        tell.send(newNick);
     }
 
     /**
@@ -1657,7 +1678,7 @@ public class Mobibot extends PircBot {
                             break;
                         }
 
-                        send(sender, Utils.buildLink(i, entry, true), isPrivate);
+                        send(sender, EntriesUtils.buildLink(i, entry, true), isPrivate);
                         sent++;
                     }
                 } else {
@@ -1670,7 +1691,7 @@ public class Mobibot extends PircBot {
                         break;
                     }
 
-                    send(sender, Utils.buildLink(i, entry, true), isPrivate);
+                    send(sender, EntriesUtils.buildLink(i, entry, true), isPrivate);
                     sent++;
                 }
             }

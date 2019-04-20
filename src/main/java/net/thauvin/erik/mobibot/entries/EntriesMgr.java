@@ -30,7 +30,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package net.thauvin.erik.mobibot;
+package net.thauvin.erik.mobibot.entries;
 
 import com.rometools.rome.feed.synd.SyndContent;
 import com.rometools.rome.feed.synd.SyndContentImpl;
@@ -41,6 +41,8 @@ import com.rometools.rome.feed.synd.SyndFeedImpl;
 import com.rometools.rome.io.FeedException;
 import com.rometools.rome.io.SyndFeedInput;
 import com.rometools.rome.io.SyndFeedOutput;
+import net.thauvin.erik.mobibot.Mobibot;
+import net.thauvin.erik.mobibot.Utils;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -60,7 +62,7 @@ import java.util.List;
  * @created 2014-04-28
  * @since 1.0
  */
-final class EntriesMgr {
+public final class EntriesMgr {
     /**
      * The name of the file containing the current entries.
      */
