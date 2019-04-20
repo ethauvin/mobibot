@@ -129,7 +129,7 @@ public final class Lookup extends AbstractModule {
             whoisClient.setSoTimeout(Constants.CONNECT_TIMEOUT);
             whoisClient.setSoLinger(false, 0);
 
-            if (host.equals(WHOIS_HOST)) {
+            if (WHOIS_HOST.equals(host)) {
                 lines = whoisClient.query("n - " + query).split("\n");
             } else {
                 lines = whoisClient.query(query).split("\n");
