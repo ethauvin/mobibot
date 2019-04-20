@@ -81,8 +81,9 @@ public final class GoogleSearch extends ThreadedModule {
      *
      * @param query  The search query.
      * @param apiKey The Google API key.
-     *               The Google CSE key.
-     * @param cseKey The Google search results.
+     * @param cseKey The Google CSE key.
+     * @return The {@link Message} array containing the search results.
+     * @throws ModuleException If an error occurs while searching.
      */
     @SuppressFBWarnings(value = {"URLCONNECTION_SSRF_FD", "REC_CATCH_EXCEPTION"})
     static ArrayList<Message> searchGoogle(final String query, final String apiKey, final String cseKey)

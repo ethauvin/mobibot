@@ -58,7 +58,9 @@ public class Calc extends AbstractModule {
     }
 
     /**
-     * Calculate.
+     * Performs a calculation.
+     *
+     * <p>1 + 1 * 2</p>
      *
      * @param query The query.
      * @return The calculation result.

@@ -68,7 +68,7 @@ public final class Twitter extends ThreadedModule {
     }
 
     /**
-     * Post on Twitter.
+     * Posts on Twitter.
      *
      * @param consumerKey    The consumer key.
      * @param consumerSecret The consumer secret.
@@ -77,7 +77,7 @@ public final class Twitter extends ThreadedModule {
      * @param handle         The Twitter handle (dm) or nickname.
      * @param message        The message to post.
      * @param isDm           The direct message flag.
-     * @return The {@link Message} to send back.
+     * @return The confirmation {@link Message}.
      * @throws ModuleException If an error occurs while posting.
      */
     static Message twitterPost(final String consumerKey,
@@ -125,7 +125,7 @@ public final class Twitter extends ThreadedModule {
     }
 
     /**
-     * Post on Twitter.
+     * Posts on Twitter.
      *
      * @param handle  The Twitter handle (dm) or nickname.
      * @param message The message to post.

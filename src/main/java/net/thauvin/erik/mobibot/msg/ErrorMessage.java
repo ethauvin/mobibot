@@ -57,6 +57,7 @@ public class ErrorMessage extends Message {
      * @param message The message.
      * @param color   The message color.
      */
+    @SuppressWarnings("unused")
     public ErrorMessage(final String message, final String color) {
         this.setMessage(message);
         this.setError(true);

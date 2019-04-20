@@ -68,7 +68,8 @@ public final class Joke extends ThreadedModule {
     /**
      * Retrieves a random joke.
      *
-     * @return The new joke.
+     * @return The {@link Message} containing the new joke.
+     * @throws ModuleException If an error occurs while retrieving a new joke.
      */
     static Message randomJoke() throws ModuleException {
         try {
@@ -104,15 +105,6 @@ public final class Joke extends ThreadedModule {
     }
 
     /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void helpResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate) {
-        bot.send(sender, "To retrieve a random joke:");
-        bot.send(sender, bot.helpIndent(bot.getNick() + ": " + JOKE_CMD));
-    }
-
-    /**
      * Returns a random joke from <a href="http://www.icndb.com/">The Internet Chuck Norris Database</a>.
      */
     void run(final Mobibot bot, final String sender, String arg) {
@@ -122,5 +114,14 @@ public final class Joke extends ThreadedModule {
             bot.getLogger().warn(e.getDebugMessage(), e);
             bot.send(sender, e.getMessage());
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void helpResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate) {
+        bot.send(sender, "To retrieve a random joke:");
+        bot.send(sender, bot.helpIndent(bot.getNick() + ": " + JOKE_CMD));
     }
 }

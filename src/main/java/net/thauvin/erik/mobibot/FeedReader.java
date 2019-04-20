@@ -72,7 +72,7 @@ class FeedReader implements Runnable {
      * @param sender The nick of the person who sent the message.
      * @param url    The URL to fetch.
      */
-    public FeedReader(final Mobibot bot, final String sender, final String url) {
+    FeedReader(final Mobibot bot, final String sender, final String url) {
         this.bot = bot;
         this.sender = sender;
         this.url = url;

@@ -73,7 +73,7 @@ final class TellMessagesMgr {
      * @param tellMaxDays  The maximum number of days to keep messages for.
      * @return <code>True</code> if the queue was cleaned.
      */
-    public static boolean clean(final List<TellMessage> tellMessages, final int tellMaxDays) {
+    static boolean clean(final List<TellMessage> tellMessages, final int tellMaxDays) {
         final LocalDateTime today = LocalDateTime.now(Clock.systemUTC());
         boolean cleaned = false;
 

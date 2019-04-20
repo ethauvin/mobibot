@@ -62,7 +62,7 @@ public class TellMessage implements Serializable {
      * @param recipient The recipient's nick.
      * @param message   The message.
      */
-    public TellMessage(final String sender, final String recipient, final String message) {
+    TellMessage(final String sender, final String recipient, final String message) {
         this.sender = sender;
         this.recipient = recipient;
         this.message = message;
@@ -94,7 +94,7 @@ public class TellMessage implements Serializable {
      *
      * @return <code>true</code> if the message is queued.
      */
-    public LocalDateTime getQueued() {
+    LocalDateTime getQueued() {
         return queued;
     }
 
@@ -112,7 +112,7 @@ public class TellMessage implements Serializable {
      *
      * @return The recipient of the message.
      */
-    public String getRecipient() {
+    String getRecipient() {
         return recipient;
     }
 
@@ -131,7 +131,7 @@ public class TellMessage implements Serializable {
      * @param nick The nickname to match with.
      * @return <code>true</code> if the nickname matches.
      */
-    public boolean isMatch(final String nick) {
+    boolean isMatch(final String nick) {
         return (sender.equalsIgnoreCase(nick) || recipient.equalsIgnoreCase(nick));
     }
 
@@ -141,7 +141,7 @@ public class TellMessage implements Serializable {
      * @param id The ID to match with.
      * @return <code>true</code> if the id matches.
      */
-    public boolean isMatchId(final String id) {
+    boolean isMatchId(final String id) {
         return this.id.equals(id);
     }
 
@@ -150,7 +150,7 @@ public class TellMessage implements Serializable {
      *
      * @return <code>true</code> if the sender has been notified.
      */
-    public boolean isNotified() {
+    boolean isNotified() {
         return isNotified;
     }
 
@@ -166,14 +166,14 @@ public class TellMessage implements Serializable {
     /**
      * Sets the notified flag.
      */
-    public void setIsNotified() {
+    void setIsNotified() {
         isNotified = true;
     }
 
     /**
      * Sets the received flag.
      */
-    public void setIsReceived() {
+    void setIsReceived() {
         received = LocalDateTime.now(Clock.systemUTC());
         isReceived = true;
     }

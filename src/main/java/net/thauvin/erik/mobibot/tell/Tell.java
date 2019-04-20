@@ -48,41 +48,29 @@ import java.util.concurrent.CopyOnWriteArrayList;
  */
 public class Tell {
     /**
-     * The all keyword.
-     */
-    public static final String TELL_ALL_KEYWORD = "all";
-
-    /**
      * The tell command.
      */
     public static final String TELL_CMD = "tell";
 
-    /**
-     * The delete command.
-     */
-    public static final String TELL_DEL_KEYWORD = "del";
-
     // The default maximum number of days to keep messages.
     private static final int DEFAULT_TELL_MAX_DAYS = 7;
-
     // The default message max queue size.
     private static final int DEFAULT_TELL_MAX_SIZE = 50;
-
     // The serialized object file extension.
     private static final String SER_EXT = ".ser";
+    // The all keyword.
+    private static final String TELL_ALL_KEYWORD = "all";
+    //T he delete command.
+    private static final String TELL_DEL_KEYWORD = "del";
 
     // The bot instance.
     private final Mobibot bot;
-
     // The maximum number of days to keep messages.
     private final int maxDays;
-
     // The message maximum queue size.
     private final int maxSize;
-
     // The messages queue.
     private final List<TellMessage> messages = new CopyOnWriteArrayList<>();
-
     // The serialized object file.
     private final String serializedObject;
 

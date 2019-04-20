@@ -74,10 +74,10 @@ public final class StockQuote extends ThreadedModule {
     }
 
     /**
-     * Get a stock quote.
+     * Retrieves a stock quote.
      *
      * @param symbol The stock symbol.
-     * @return The stock quote.
+     * @return The {@link Message} array containing the stock quote.
      * @throws ModuleException If an errors occurs.
      */
     static ArrayList<Message> getQuote(final String symbol, final String apiKey) throws ModuleException {

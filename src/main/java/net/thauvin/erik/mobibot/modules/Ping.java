@@ -51,7 +51,9 @@ public class Ping extends AbstractModule {
      */
     private static final String PING_CMD = "ping";
 
-    // The ping responses.
+    /**
+     * The ping responses.
+     */
     static final List<String> PINGS =
         Arrays.asList(
             "is barely alive.",

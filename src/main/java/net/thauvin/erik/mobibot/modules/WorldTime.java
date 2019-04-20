@@ -164,6 +164,17 @@ public final class WorldTime extends AbstractModule {
         return String.format("%c%03d", '@', beats);
     }
 
+    /**
+     * Returns the world time.
+     *
+     * <ul>
+     * <li>PST</li>
+     * <li>BEATS</li>
+     * </ul>
+     *
+     * @param query The query.
+     * @return The {@link Message} containing the world time.
+     */
     static Message worldTime(final String query) {
         final String tz = (COUNTRIES_MAP.get((query.substring(query.indexOf(' ') + 1).trim().toUpperCase())));
         final String response;

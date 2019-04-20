@@ -39,6 +39,7 @@ package net.thauvin.erik.mobibot.msg;
  * @created 2019-04-09
  * @since 1.0
  */
+@SuppressWarnings("unused")
 public class PrivateMessage extends Message {
     public PrivateMessage(final String message) {
         this.setMessage(message);

@@ -82,6 +82,15 @@ public final class CurrencyConverter extends ThreadedModule {
         commands.add(CURRENCY_CMD);
     }
 
+    /**
+     * Converts from a currency to another.
+     *
+     * <p>100 USD to EUR</p>
+     *
+     * @param query The query.
+     * @return The {@link Message} contained the converted currency.
+     * @throws ModuleException If an error occurs while converting.
+     */
     static Message convertCurrency(final String query) throws ModuleException {
         if (EXCHANGE_RATES.isEmpty()) {
             try {
@@ -178,22 +187,6 @@ public final class CurrencyConverter extends ThreadedModule {
     }
 
     /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void helpResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate) {
-        bot.send(sender, "To convert from one currency to another:");
-        bot.send(sender, bot.helpIndent(bot.getNick() + ": " + CURRENCY_CMD + " [100 USD to EUR]"));
-
-        if (args.endsWith(CURRENCY_CMD)) {
-            bot.send(sender, "For a listing of currency rates:");
-            bot.send(sender, bot.helpIndent(bot.getNick() + ": " + CURRENCY_CMD) + ' ' + CURRENCY_RATES_KEYWORD);
-            bot.send(sender, "For a listing of supported currencies:");
-            bot.send(sender, bot.helpIndent(bot.getNick() + ": " + CURRENCY_CMD));
-        }
-    }
-
-    /**
      * Converts the specified currencies.
      */
     @SuppressFBWarnings(value = "REDOS")
@@ -213,6 +206,22 @@ public final class CurrencyConverter extends ThreadedModule {
             } else {
                 helpResponse(bot, sender, CURRENCY_CMD + ' ' + query, true);
             }
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void helpResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate) {
+        bot.send(sender, "To convert from one currency to another:");
+        bot.send(sender, bot.helpIndent(bot.getNick() + ": " + CURRENCY_CMD + " [100 USD to EUR]"));
+
+        if (args.endsWith(CURRENCY_CMD)) {
+            bot.send(sender, "For a listing of currency rates:");
+            bot.send(sender, bot.helpIndent(bot.getNick() + ": " + CURRENCY_CMD) + ' ' + CURRENCY_RATES_KEYWORD);
+            bot.send(sender, "For a listing of supported currencies:");
+            bot.send(sender, bot.helpIndent(bot.getNick() + ": " + CURRENCY_CMD));
         }
     }
 }

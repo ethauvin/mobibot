@@ -44,6 +44,7 @@ public class PublicMessage extends Message {
         this.setMessage(message);
     }
 
+    @SuppressWarnings("unused")
     public PublicMessage(final String message, final String color) {
         this.setMessage(message);
         this.setColor(color);

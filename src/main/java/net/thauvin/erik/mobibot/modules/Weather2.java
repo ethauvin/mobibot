@@ -73,12 +73,6 @@ public class Weather2 extends ThreadedModule {
         properties.put(OWM_API_KEY_PROP, "");
     }
 
-    @SuppressWarnings("AvoidEscapedUnicodeCharacters")
-    private static String getTemps(final Double d) {
-        final double c = (d - 32) * 5 / 9;
-        return Math.round(d) + " \u00B0F, " + Math.round(c) + " \u00B0C";
-    }
-
     private static OWM.Country getCountry(final String countryCode) {
         for (final OWM.Country c : OWM.Country.values()) {
             if (c.name().equalsIgnoreCase(countryCode)) {
@@ -89,6 +83,25 @@ public class Weather2 extends ThreadedModule {
         return OWM.Country.UNITED_STATES;
     }
 
+    @SuppressWarnings("AvoidEscapedUnicodeCharacters")
+    private static String getTemps(final Double d) {
+        final double c = (d - 32) * 5 / 9;
+        return Math.round(d) + " \u00B0F, " + Math.round(c) + " \u00B0C";
+    }
+
+    /**
+     * Retrieves the weather data.
+     *
+     * <ul>
+     * <li>98204</li>
+     * <li>London, UK</li>
+     * </ul>
+     *
+     * @param query  The query.
+     * @param apiKey The API key.
+     * @return The {@link Message} array containing the weather data.
+     * @throws ModuleException If an error occurs while retrieving the weather data.
+     */
     static ArrayList<Message> getWeather(final String query, final String apiKey) throws ModuleException {
         if (!Utils.isValidString(apiKey)) {
             throw new ModuleException(Utils.capitalize(WEATHER_CMD) + " is disabled. The API key is missing.");
