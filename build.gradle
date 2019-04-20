@@ -25,6 +25,12 @@ mainClassName = packageName + '.Mobibot'
 
 compileJava.options.annotationProcessorGeneratedSourcesDirectory = file("${projectDir}/src/generated/java")
 
+
+ext {
+    log4j = '2.11.2'
+    spotbugs_annotations = '3.1.12'
+}
+
 repositories {
     mavenLocal()
     mavenCentral()
@@ -38,9 +44,9 @@ dependencies {
     compile 'pircbot:pircbot:1.5.0'
     compileOnly 'pircbot:pircbot:1.5.0:sources'
 
-    compile 'org.apache.logging.log4j:log4j-api:2.11.2'
-    compile 'org.apache.logging.log4j:log4j-core:2.11.2'
-    compile 'org.apache.logging.log4j:log4j-slf4j-impl:2.11.2'
+    compile "org.apache.logging.log4j:log4j-api:$log4j"
+    compile "org.apache.logging.log4j:log4j-core:$log4j"
+    compile "org.apache.logging.log4j:log4j-slf4j-impl:$log4j"
 
     compile 'commons-cli:commons-cli:1.4'
 
@@ -62,8 +68,10 @@ dependencies {
     testImplementation 'org.assertj:assertj-core:3.12.2'
 
     spotbugsPlugins 'com.h3xstream.findsecbugs:findsecbugs-plugin:1.9.0'
+    spotbugsPlugins 'com.mebigfatguy.fb-contrib:fb-contrib:7.4.3.sb'
 
-    compileOnly 'com.github.spotbugs:spotbugs-annotations:3.1.11'
+    compileOnly "com.github.spotbugs:spotbugs-annotations:$spotbugs_annotations"
+    testCompileOnly "com.github.spotbugs:spotbugs-annotations:$spotbugs_annotations"
 }
 
 test {
