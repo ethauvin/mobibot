@@ -189,7 +189,7 @@ public final class EntriesMgr {
      * @param history     The history array.
      * @param isDayBackup Set the true if the daily backup file should also be created.
      */
-    @SuppressFBWarnings(value = "CE_CLASS_ENVY", justification = "Yes, it does.")
+    @SuppressFBWarnings(value = {"CE_CLASS_ENVY", "CC_CYCLOMATIC_COMPLEXITY"}, justification = "Yes, it does.")
     public static void saveEntries(final Mobibot bot,
                                    final List<EntryLink> entries,
                                    final List<String> history,
@@ -221,9 +221,15 @@ public final class EntriesMgr {
                     for (int i = (entries.size() - 1); i >= 0; --i) {
                         entry = entries.get(i);
 
-                        buff = new StringBuilder(
-                            "Posted by <b>" + entry.getNick() + "</b> on <a href=\"irc://" + bot.getIrcServer() + '/'
-                                + entry.getChannel() + "\"><b>" + entry.getChannel() + "</b></a>");
+                        buff = new StringBuilder()
+                            .append("Posted by <b>")
+                            .append(entry.getNick())
+                            .append("</b> on <a href=\"irc://")
+                            .append(bot.getIrcServer()).append('/')
+                            .append(entry.getChannel())
+                            .append("\"><b>")
+                            .append(entry.getChannel())
+                            .append("</b></a>");
 
                         if (entry.getCommentsCount() > 0) {
                             buff.append(" <br/><br/>");

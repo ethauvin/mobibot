@@ -241,7 +241,7 @@ public class Mobibot extends PircBot {
             today = EntriesMgr.loadEntries(logsDir + EntriesMgr.CURRENT_XML, ircChannel, entries);
 
             if (logger.isDebugEnabled()) {
-                logger.debug("Last feed: " + today);
+                logger.debug("Last feed: {}", today);
             }
 
             if (!Utils.today().equals(today)) {
@@ -831,7 +831,7 @@ public class Mobibot extends PircBot {
                 }
             }
 
-            send(sender, "The following nicks are ignored: " + ignoredNicks.toString());
+            send(sender, "The following nicks are ignored: " + ignoredNicks);
         }
     }
 
@@ -971,7 +971,7 @@ public class Mobibot extends PircBot {
                                    final String hostname,
                                    final String message) {
         if (logger.isDebugEnabled()) {
-            logger.debug(">>> " + sender + ": " + message);
+            logger.debug(">>> {} : {}", sender, message);
         }
 
         boolean isCommand = false;
@@ -1276,7 +1276,7 @@ public class Mobibot extends PircBot {
                                           final String hostname,
                                           final String message) {
         if (logger.isDebugEnabled()) {
-            logger.debug(">>> " + sender + ": " + message);
+            logger.debug(">>> {} : {}", sender, message);
         }
 
         final String[] cmds = message.split(" ", 2);
@@ -1443,13 +1443,13 @@ public class Mobibot extends PircBot {
         if (Utils.isValidString(message) && Utils.isValidString(sender)) {
             if (isPrivate) {
                 if (logger.isDebugEnabled()) {
-                    logger.debug("Sending message to " + sender + ": " + message);
+                    logger.debug("Sending message to {} : {}", sender, message);
                 }
 
                 sendMessage(sender, message);
             } else {
                 if (logger.isDebugEnabled()) {
-                    logger.debug("Sending notice to " + sender + ": " + message);
+                    logger.debug("Sending notice to {} : {}", sender, message);
                 }
 
                 sendNotice(sender, message);

@@ -27,4 +27,10 @@
         </Or>
         <Bug pattern="FCCD_FIND_CLASS_CIRCULAR_DEPENDENCY"/>
     </Match>
+    <Match>
+        <Class name="net.thauvin.erik.mobibot.Mobibot"/>
+        <Method name="main"/>
+        <Bug pattern="PATH_TRAVERSAL_OUT"/>
+        <Confidence value="1"/>
+    </Match>
 </FindBugsFilter>

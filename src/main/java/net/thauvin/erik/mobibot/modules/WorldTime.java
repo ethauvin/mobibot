@@ -194,7 +194,7 @@ public final class WorldTime extends AbstractModule {
                     + tz.substring(tz.indexOf('/') + 1).replace('_', ' ');
             }
         } else {
-            return new ErrorMessage("The supported countries/zones are: " + COUNTRIES_MAP.keySet().toString());
+            return new ErrorMessage("The supported countries/zones are: " + COUNTRIES_MAP.keySet());
         }
 
         return new PublicMessage(response);

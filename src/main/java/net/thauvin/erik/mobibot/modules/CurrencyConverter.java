@@ -150,12 +150,12 @@ public final class CurrencyConverter extends ThreadedModule {
                                 + cmds[3].toUpperCase());
                     } catch (Exception e) {
                         throw new ModuleException("convertCurrency(" + query + ')',
-                            "The supported currencies are: " + EXCHANGE_RATES.keySet().toString(), e);
+                            "The supported currencies are: " + EXCHANGE_RATES.keySet(), e);
                     }
                 }
             } else if (CURRENCY_RATES_KEYWORD.equals(query)) {
 
-                final StringBuilder buff = new StringBuilder('[' + pubDate + "]: ");
+                final StringBuilder buff = new StringBuilder().append('[').append(pubDate).append("]: ");
 
                 int i = 0;
                 for (final Map.Entry<String, String> rate : EXCHANGE_RATES.entrySet()) {
@@ -169,7 +169,7 @@ public final class CurrencyConverter extends ThreadedModule {
                 return new NoticeMessage(buff.toString());
             }
         }
-        return new ErrorMessage("The supported currencies are: " + EXCHANGE_RATES.keySet().toString());
+        return new ErrorMessage("The supported currencies are: " + EXCHANGE_RATES.keySet());
     }
 
     /**
