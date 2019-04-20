@@ -75,17 +75,8 @@ final class TellMessagesMgr {
      */
     static boolean clean(final List<TellMessage> tellMessages, final int tellMaxDays) {
         final LocalDateTime today = LocalDateTime.now(Clock.systemUTC());
-        boolean cleaned = false;
 
-        for (final TellMessage message : tellMessages) {
-            final LocalDateTime maxDate = message.getQueued().plusDays(tellMaxDays);
-            if (maxDate.isBefore(today)) {
-                tellMessages.remove(message);
-                cleaned = true;
-            }
-        }
-
-        return cleaned;
+        return tellMessages.removeIf(o -> o.getQueued().plusDays(tellMaxDays).isBefore(today));
     }
 
     /**
