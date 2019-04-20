@@ -12,13 +12,19 @@
         <Or>
             <Bug pattern="PATH_TRAVERSAL_IN"/>
             <Bug pattern="PATH_TRAVERSAL_OUT"/>
+
         </Or>
         <Confidence value="2"/>
     </Match>
     <Match>
-        <Class name="net.thauvin.erik.mobibot.Mobibot"/>
-        <Method name="main"/>
-        <Bug pattern="PATH_TRAVERSAL_OUT"/>
-        <Confidence value="1"/>
+        <Or>
+            <Class name="net.thauvin.erik.mobibot.Mobibot"/>
+            <Class name="net.thauvin.erik.mobibot.Pinboard"/>
+            <Class name="net.thauvin.erik.mobibot.FeedReader"/>
+            <Class name="net.thauvin.erik.mobibot.tell.Tell"/>
+            <Package name="net.thauvin.erik.mobibot.modules.*"/>
+            <Package name="net.thauvin.erik.mobibot.entries.*"/>
+        </Or>
+        <Bug pattern="FCCD_FIND_CLASS_CIRCULAR_DEPENDENCY"/>
     </Match>
 </FindBugsFilter>

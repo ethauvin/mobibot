@@ -178,7 +178,7 @@ public class Message {
      *
      * @param isPrivate The private flag.
      */
-    public void setPrivate(boolean isPrivate) {
+    public void setPrivate(final boolean isPrivate) {
         this.isPrivate = isPrivate;
     }
 }

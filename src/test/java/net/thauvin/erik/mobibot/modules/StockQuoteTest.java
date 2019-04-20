@@ -32,6 +32,7 @@
 
 package net.thauvin.erik.mobibot.modules;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import net.thauvin.erik.mobibot.msg.Message;
 import org.testng.annotations.Test;
 
@@ -46,7 +47,9 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @created 2019-04-07
  * @since 1.0
  */
+
 public class StockQuoteTest extends LocalProperties {
+    @SuppressFBWarnings("LEST_LOST_EXCEPTION_STACK_TRACE")
     @Test
     public void testGetQuote() throws ModuleException {
         final String apiKey = LocalProperties.getProperty(StockQuote.ALPHAVANTAGE_API_KEY_PROP);

@@ -34,6 +34,7 @@ package net.thauvin.erik.mobibot.entries;
 
 import com.rometools.rome.feed.synd.SyndCategory;
 import com.rometools.rome.feed.synd.SyndCategoryImpl;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 import java.io.Serializable;
 import java.util.Calendar;
@@ -291,6 +292,7 @@ public class EntryLink implements Serializable {
      *
      * @param tags The space-delimited tags.
      */
+    @SuppressFBWarnings(value = "STT_STRING_PARSING_A_FIELD")
     public final void setTags(final String tags) {
         if (tags != null) {
             final String[] parts = tags.replaceAll(", ", " ").replaceAll(",", " ").split(" ");
@@ -310,7 +312,7 @@ public class EntryLink implements Serializable {
 
                     if (mod == '-') {
                         // Don't remove the channel tag, if any.
-                        if (!tag.getName().equals(channel.substring(1))) {
+                        if (!channel.substring(1).equals(tag.getName())) {
                             this.tags.remove(tag);
                         }
                     } else if (mod == '+') {
@@ -334,7 +336,7 @@ public class EntryLink implements Serializable {
      *
      * @param tags The tags.
      */
-    private void setTags(final List<SyndCategory> tags) {
+    final void setTags(final List<SyndCategory> tags) {
         this.tags.addAll(tags);
     }
 

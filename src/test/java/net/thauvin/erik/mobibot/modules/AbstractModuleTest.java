@@ -32,6 +32,8 @@
 
 package net.thauvin.erik.mobibot.modules;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
@@ -41,7 +43,9 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @created 2019-04-07
  * @since 1.0
  */
+
 final class AbstractModuleTest {
+    @SuppressFBWarnings("CE_CLASS_ENVY")
     static void testAbstractModule(final AbstractModule module) {
         final String name = module.getClass().getName();
 

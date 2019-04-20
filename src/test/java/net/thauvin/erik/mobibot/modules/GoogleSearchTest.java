@@ -32,6 +32,7 @@
 
 package net.thauvin.erik.mobibot.modules;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import net.thauvin.erik.mobibot.msg.Message;
 import org.testng.annotations.Test;
 
@@ -52,6 +53,7 @@ public class GoogleSearchTest extends LocalProperties {
         AbstractModuleTest.testAbstractModule(new GoogleSearch());
     }
 
+    @SuppressFBWarnings("LEST_LOST_EXCEPTION_STACK_TRACE")
     @Test
     public void testSearchGoogle() throws ModuleException {
         final String apiKey = LocalProperties.getProperty(GoogleSearch.GOOGLE_API_KEY_PROP);

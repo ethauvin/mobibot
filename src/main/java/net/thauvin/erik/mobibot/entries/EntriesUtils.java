@@ -32,6 +32,7 @@
 
 package net.thauvin.erik.mobibot.entries;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import net.thauvin.erik.mobibot.Commands;
 import net.thauvin.erik.mobibot.Constants;
 import net.thauvin.erik.mobibot.Utils;
@@ -84,6 +85,7 @@ public final class EntriesUtils {
      * @param isView Set to true to display the number of comments.
      * @return The entry's link.
      */
+    @SuppressFBWarnings(value = "CE_CLASS_ENVY", justification = "Yes, it does.")
     public static String buildLink(final int index, final EntryLink entry, final boolean isView) {
         final StringBuilder buff = new StringBuilder(Commands.LINK_CMD + (index + 1) + ": ");
 

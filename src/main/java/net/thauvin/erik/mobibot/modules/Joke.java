@@ -107,7 +107,7 @@ public final class Joke extends ThreadedModule {
     /**
      * Returns a random joke from <a href="http://www.icndb.com/">The Internet Chuck Norris Database</a>.
      */
-    void run(final Mobibot bot, final String sender, String arg) {
+    void run(final Mobibot bot, final String sender, final String arg) {
         try {
             bot.send(Utils.cyan(randomJoke().getMessage()));
         } catch (ModuleException e) {

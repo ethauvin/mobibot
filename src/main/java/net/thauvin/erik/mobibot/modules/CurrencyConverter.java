@@ -130,7 +130,7 @@ public final class CurrencyConverter extends ThreadedModule {
             final String[] cmds = query.split(" ");
 
             if (cmds.length == 4) {
-                if (cmds[3].equals(cmds[1]) || cmds[0].equals("0")) {
+                if (cmds[3].equals(cmds[1]) || "0".equals(cmds[0])) {
                     return new ErrorMessage("You're kidding, right?");
                 } else {
                     try {
@@ -153,7 +153,7 @@ public final class CurrencyConverter extends ThreadedModule {
                             "The supported currencies are: " + EXCHANGE_RATES.keySet().toString(), e);
                     }
                 }
-            } else if (query.equals(CURRENCY_RATES_KEYWORD)) {
+            } else if (CURRENCY_RATES_KEYWORD.equals(query)) {
 
                 final StringBuilder buff = new StringBuilder('[' + pubDate + "]: ");
 

@@ -32,6 +32,7 @@
 
 package net.thauvin.erik.mobibot.modules;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import net.thauvin.erik.mobibot.Constants;
 import org.testng.annotations.Test;
 
@@ -48,6 +49,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @since 1.0
  */
 public class TwitterTest {
+    @SuppressFBWarnings("MDM")
     private String getCi() {
         if ("true".equals(System.getenv("CIRCLECI"))) {
             return "CircleCI";

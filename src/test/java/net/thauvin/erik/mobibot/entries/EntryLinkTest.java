@@ -84,7 +84,7 @@ public class EntryLinkTest {
         final List<SyndCategory> tags = entryLink.getTags();
 
         int i = 0;
-        for (SyndCategory tag : tags) {
+        for (final SyndCategory tag : tags) {
             assertThat(tag.getName()).as("tag.getName(" + i + ')').isEqualTo("tag" + (i + 1));
             i++;
         }

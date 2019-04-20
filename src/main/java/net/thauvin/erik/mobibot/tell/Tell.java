@@ -32,6 +32,7 @@
 
 package net.thauvin.erik.mobibot.tell;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import net.thauvin.erik.mobibot.Commands;
 import net.thauvin.erik.mobibot.Mobibot;
 import net.thauvin.erik.mobibot.Utils;
@@ -100,7 +101,8 @@ public class Tell {
      *
      * @return <code>true</code> if the queue was cleaned.
      */
-    private boolean clean() {
+    @SuppressWarnings("WeakerAccess")
+    final boolean clean() {
         if (bot.getLogger().isDebugEnabled()) {
             bot.getLogger().debug("Cleaning the messages.");
         }
@@ -138,12 +140,13 @@ public class Tell {
      * @param sender The sender's nick.
      * @param cmds   The commands string.
      */
+    @SuppressFBWarnings(value = "CC_CYCLOMATIC_COMPLEXITY", justification = "Working on it.")
     public void response(final String sender, final String cmds) {
         final String arrow = " --> ";
         if (!Utils.isValidString(cmds)) {
             helpResponse(sender);
         } else if (cmds.startsWith(Commands.VIEW_CMD)) {
-            if (bot.isOp(sender) && cmds.equals(Commands.VIEW_CMD + ' ' + TELL_ALL_KEYWORD)) {
+            if (bot.isOp(sender) && (Commands.VIEW_CMD + ' ' + TELL_ALL_KEYWORD).equals(cmds)) {
                 if (!messages.isEmpty()) {
                     for (final TellMessage message : messages) {
                         bot.send(sender, Utils.bold(message.getSender()) + arrow + Utils.bold(message.getRecipient())
@@ -201,7 +204,7 @@ public class Tell {
                 final String id = split[1];
                 boolean deleted = false;
 
-                if (id.equalsIgnoreCase(TELL_ALL_KEYWORD)) {
+                if (TELL_ALL_KEYWORD.equalsIgnoreCase(id)) {
                     for (final TellMessage message : messages) {
                         if (message.getSender().equalsIgnoreCase(sender) && message.isReceived()) {
                             messages.remove(message);
@@ -272,7 +275,8 @@ public class Tell {
     /**
      * Saves the messages queue.
      */
-    private void save() {
+    @SuppressWarnings("WeakerAccess")
+    final void save() {
         TellMessagesMgr.save(serializedObject, messages, bot.getLogger());
     }
 

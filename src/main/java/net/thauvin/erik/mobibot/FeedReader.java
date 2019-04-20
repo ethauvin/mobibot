@@ -33,7 +33,6 @@
 package net.thauvin.erik.mobibot;
 
 import com.rometools.rome.feed.synd.SyndEntry;
-import com.rometools.rome.feed.synd.SyndEntryImpl;
 import com.rometools.rome.feed.synd.SyndFeed;
 import com.rometools.rome.io.SyndFeedInput;
 import com.rometools.rome.io.XmlReader;
@@ -87,10 +86,10 @@ class FeedReader implements Runnable {
             final SyndFeed feed = input.build(new XmlReader(new URL(url)));
 
             SyndEntry item;
-            final List items = feed.getEntries();
+            final List<SyndEntry> items = feed.getEntries();
 
             for (int i = 0; (i < items.size()) && (i < MAX_ITEMS); i++) {
-                item = (SyndEntryImpl) items.get(i);
+                item = items.get(i);
                 bot.send(sender, item.getTitle());
                 bot.send(sender, TAB_INDENT + Utils.green(item.getLink()));
             }

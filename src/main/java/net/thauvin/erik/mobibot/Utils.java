@@ -95,9 +95,9 @@ public final class Utils {
      * @return The colorized string.
      */
     static String colorize(final String s, final String color) {
-        if (!Utils.isValidString(color) || color.equals(Colors.NORMAL)) {
+        if (!Utils.isValidString(color) || Colors.NORMAL.equals(color)) {
             return s;
-        } else if (color.equals(Colors.BOLD) || color.equals(Colors.REVERSE)) {
+        } else if (Colors.BOLD.equals(color) || Colors.REVERSE.equals(color)) {
             return color + s + color;
         }
 
@@ -247,14 +247,12 @@ public final class Utils {
      * @return The unescaped string.
      */
     public static String unescapeXml(final String str) {
-        String s = str.replaceAll("&amp;", "&");
-        s = s.replaceAll("&lt;", "<");
-        s = s.replaceAll("&gt;", ">");
-        s = s.replaceAll("&quot;", "\"");
-        s = s.replaceAll("&apos;", "'");
-        s = s.replaceAll("&#39;", "'");
-
-        return s;
+        return str.replaceAll("&amp;", "&")
+            .replaceAll("&lt;", "<")
+            .replaceAll("&gt;", ">")
+            .replaceAll("&quot;", "\"")
+            .replaceAll("&apos;", "'")
+            .replaceAll("&#39;", "'");
     }
 
     /**
