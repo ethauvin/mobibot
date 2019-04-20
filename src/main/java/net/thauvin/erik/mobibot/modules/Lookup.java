@@ -32,6 +32,7 @@
 
 package net.thauvin.erik.mobibot.modules;
 
+import net.thauvin.erik.mobibot.Constants;
 import net.thauvin.erik.mobibot.Mobibot;
 import org.apache.commons.net.whois.WhoisClient;
 
@@ -123,9 +124,9 @@ public final class Lookup extends AbstractModule {
         final String[] lines;
 
         try {
-            whoisClient.setDefaultTimeout(Mobibot.CONNECT_TIMEOUT);
+            whoisClient.setDefaultTimeout(Constants.CONNECT_TIMEOUT);
             whoisClient.connect(host);
-            whoisClient.setSoTimeout(Mobibot.CONNECT_TIMEOUT);
+            whoisClient.setSoTimeout(Constants.CONNECT_TIMEOUT);
             whoisClient.setSoLinger(false, 0);
 
             if (host.equals(WHOIS_HOST)) {

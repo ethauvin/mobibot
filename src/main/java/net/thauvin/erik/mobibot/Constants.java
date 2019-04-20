@@ -41,7 +41,12 @@ package net.thauvin.erik.mobibot;
  */
 public final class Constants {
     /**
-     *  The empty title string.
+     * The connect/read timeout in ms.
+     */
+    public static final int CONNECT_TIMEOUT = 5000;
+
+    /**
+     * The empty title string.
      */
     public static final String NO_TITLE = "No Title";
 

@@ -97,10 +97,6 @@ import java.util.StringTokenizer;
 @SuppressWarnings("WeakerAccess")
 @Version(properties = "version.properties", className = "ReleaseInfo")
 public class Mobibot extends PircBot {
-    /**
-     * The connect/read timeout in ms.
-     */
-    public static final int CONNECT_TIMEOUT = 5000;
 
     // The default port.
     private static final int DEFAULT_PORT = 6667;
@@ -221,8 +217,10 @@ public class Mobibot extends PircBot {
      * @param p           The bot's properties.
      */
     public Mobibot(final String nickname, final String channel, final String logsDirPath, final Properties p) {
-        System.getProperties().setProperty("sun.net.client.defaultConnectTimeout", String.valueOf(CONNECT_TIMEOUT));
-        System.getProperties().setProperty("sun.net.client.defaultReadTimeout", String.valueOf(CONNECT_TIMEOUT));
+        System.getProperties().setProperty("sun.net.client.defaultConnectTimeout",
+            String.valueOf(Constants.CONNECT_TIMEOUT));
+        System.getProperties().setProperty("sun.net.client.defaultReadTimeout",
+            String.valueOf(Constants.CONNECT_TIMEOUT));
 
         setName(nickname);
 
