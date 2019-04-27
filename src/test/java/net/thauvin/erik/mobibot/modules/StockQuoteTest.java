@@ -36,7 +36,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import net.thauvin.erik.mobibot.msg.Message;
 import org.testng.annotations.Test;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -50,11 +50,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class StockQuoteTest extends LocalProperties {
     @SuppressFBWarnings("LEST_LOST_EXCEPTION_STACK_TRACE")
+    @SuppressWarnings("PMD.PreserveStackTrace")
     @Test
     public void testGetQuote() throws ModuleException {
         final String apiKey = LocalProperties.getProperty(StockQuote.ALPHAVANTAGE_API_KEY_PROP);
         try {
-            ArrayList<Message> messages = StockQuote.getQuote("AAPL", apiKey);
+            List<Message> messages = StockQuote.getQuote("AAPL", apiKey);
             assertThat(messages).as("response not empty").isNotEmpty();
             assertThat(messages.get(0).getMessage()).as("same stock symbol").contains("AAPL");
 

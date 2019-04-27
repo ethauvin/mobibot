@@ -46,6 +46,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The StockQuote module.
@@ -80,7 +81,7 @@ public final class StockQuote extends ThreadedModule {
      * @return The {@link Message} array containing the stock quote.
      * @throws ModuleException If an errors occurs.
      */
-    static ArrayList<Message> getQuote(final String symbol, final String apiKey) throws ModuleException {
+    static List<Message> getQuote(final String symbol, final String apiKey) throws ModuleException {
         if (!Utils.isValidString(apiKey)) {
             throw new ModuleException(Utils.capitalize(STOCK_CMD) + " is disabled. The API key is missing.");
         }
@@ -166,10 +167,11 @@ public final class StockQuote extends ThreadedModule {
     /**
      * Returns the specified stock quote from Alpha Advantage.
      */
+    @Override
     void run(final Mobibot bot, final String sender, final String symbol) {
         if (Utils.isValidString(symbol)) {
             try {
-                final ArrayList<Message> messages = getQuote(symbol, properties.get(ALPHAVANTAGE_API_KEY_PROP));
+                final List<Message> messages = getQuote(symbol, properties.get(ALPHAVANTAGE_API_KEY_PROP));
                 for (final Message msg : messages) {
                     bot.send(sender, msg);
                 }

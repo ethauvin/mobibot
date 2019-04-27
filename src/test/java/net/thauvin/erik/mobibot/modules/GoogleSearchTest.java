@@ -36,7 +36,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import net.thauvin.erik.mobibot.msg.Message;
 import org.testng.annotations.Test;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -54,12 +54,13 @@ public class GoogleSearchTest extends LocalProperties {
     }
 
     @SuppressFBWarnings("LEST_LOST_EXCEPTION_STACK_TRACE")
+    @SuppressWarnings("PMD.PreserveStackTrace")
     @Test
     public void testSearchGoogle() throws ModuleException {
         final String apiKey = LocalProperties.getProperty(GoogleSearch.GOOGLE_API_KEY_PROP);
         final String cseKey = LocalProperties.getProperty(GoogleSearch.GOOGLE_CSE_KEY_PROP);
         try {
-            ArrayList<Message> messages = GoogleSearch.searchGoogle("mobibot site:github.com", apiKey, cseKey);
+            List<Message> messages = GoogleSearch.searchGoogle("mobibot site:github.com", apiKey, cseKey);
             assertThat(messages).as("mobibot results not empty").isNotEmpty();
             assertThat(messages.get(0).getMessage()).as("found mobitopia").contains("mobibot");
 

@@ -102,7 +102,7 @@ public class Weather2 extends ThreadedModule {
      * @return The {@link Message} array containing the weather data.
      * @throws ModuleException If an error occurs while retrieving the weather data.
      */
-    static ArrayList<Message> getWeather(final String query, final String apiKey) throws ModuleException {
+    static List<Message> getWeather(final String query, final String apiKey) throws ModuleException {
         if (!Utils.isValidString(apiKey)) {
             throw new ModuleException(Utils.capitalize(WEATHER_CMD) + " is disabled. The API key is missing.");
         }
@@ -204,10 +204,11 @@ public class Weather2 extends ThreadedModule {
     /**
      * Fetches the weather data from a specific city.
      */
+    @Override
     void run(final Mobibot bot, final String sender, final String args) {
         if (Utils.isValidString(args)) {
             try {
-                final ArrayList<Message> messages = getWeather(args, properties.get(OWM_API_KEY_PROP));
+                final List<Message> messages = getWeather(args, properties.get(OWM_API_KEY_PROP));
                 if (messages.get(0).isError()) {
                     helpResponse(bot, sender, args, true);
                 } else {

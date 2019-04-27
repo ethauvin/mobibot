@@ -36,7 +36,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import net.thauvin.erik.mobibot.msg.Message;
 import org.testng.annotations.Test;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -51,7 +51,7 @@ public class Weather2Test extends LocalProperties {
     @SuppressFBWarnings("PRMC_POSSIBLY_REDUNDANT_METHOD_CALLS")
     @Test
     public void testWeather() throws ModuleException {
-        ArrayList<Message> messages = Weather2.getWeather("98204",
+        List<Message> messages = Weather2.getWeather("98204",
             LocalProperties.getProperty(Weather2.OWM_API_KEY_PROP));
         assertThat(messages.get(0).getMessage()).as("is Everett").contains("Everett");
         messages = Weather2.getWeather("London, UK", LocalProperties.getProperty(Weather2.OWM_API_KEY_PROP));
