@@ -48,26 +48,29 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @since 1.0
  */
 public class ModuleExceptionTest {
+    static final String debugMessage = "debugMessage";
+    static final String message = "message";
+
     @DataProvider(name = "dp")
     Object[][] createData(final Method m) {
-        return new Object[][]{new Object[]{new ModuleException("debugMessage", "message",
+        return new Object[][]{new Object[]{new ModuleException(debugMessage, message,
             new IOException("Secret URL http://foo.com?apiKey=sec&userID=me"))},
-            new Object[]{new ModuleException("debugMessage", "message",
+            new Object[]{new ModuleException(debugMessage, message,
                 new IOException("URL http://foobar.com"))},
-            new Object[]{new ModuleException("debugMessage", "message",
+            new Object[]{new ModuleException(debugMessage, message,
                 new IOException("URL http://foobar.com?"))},
-            new Object[]{new ModuleException("debugMessage", "message")}
+            new Object[]{new ModuleException(debugMessage, message)}
         };
     }
 
     @Test(dataProvider = "dp")
     final void testGetDebugMessage(final ModuleException e) {
-        assertThat(e.getDebugMessage()).as("get debug message").isEqualTo("debugMessage");
+        assertThat(e.getDebugMessage()).as("get debug message").isEqualTo(debugMessage);
     }
 
     @Test(dataProvider = "dp")
     final void testGetMessage(final ModuleException e) {
-        assertThat(e.getMessage()).as("get message").isEqualTo("message");
+        assertThat(e.getMessage()).as("get message").isEqualTo(message);
     }
 
     @Test(dataProvider = "dp")
