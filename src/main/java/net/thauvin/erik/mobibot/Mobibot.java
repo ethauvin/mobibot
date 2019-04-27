@@ -165,6 +165,8 @@ public class Mobibot extends PircBot {
             + System.getProperty("java.vm.info")
             + ')'
     };
+    // The logger.
+    private static final Logger logger = LogManager.getLogger(Mobibot.class);
     // The commands list.
     private final List<String> commandsList = new ArrayList<>();
     // The entries array.
@@ -179,8 +181,6 @@ public class Mobibot extends PircBot {
     private final int ircPort;
     // The IRC server.
     private final String ircServer;
-    // The logger.
-    private final Logger logger = LogManager.getLogger(Mobibot.class);
     // The logger default level.
     private final Level loggerLevel;
     // The log directory.
