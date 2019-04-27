@@ -206,7 +206,7 @@ public class Mobibot extends PircBot {
     // The NickServ ident password.
     private String identPwd = "";
     // The pinboard posts handler.
-    private Pinboard pinboard = null;
+    private Pinboard pinboard;
     // Today's date.
     private String today = Utils.today();
     // The weblog URL.
