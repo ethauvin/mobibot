@@ -12,15 +12,15 @@ import java.time.*;
  * @author <a href="https://github.com/ethauvin/semver">Semantic Version Annotation Processor</a>
  */
 public final class ReleaseInfo {
-    public final static String PROJECT = "mobibot";
-    public final static LocalDateTime BUILDDATE =
-        LocalDateTime.ofInstant(Instant.ofEpochMilli(1555742153981L), ZoneId.systemDefault());
-    public final static int MAJOR = 0;
-    public final static int MINOR = 7;
-    public final static int PATCH = 3;
-    public final static String PRERELEASE = "beta";
-    public final static String BUILDMETA = "306";
-    public final static String VERSION = "0.7.3-beta+306";
+    public static final String PROJECT = "mobibot";
+    public static final LocalDateTime BUILDDATE =
+        LocalDateTime.ofInstant(Instant.ofEpochMilli(1556357432557L), ZoneId.systemDefault());
+    public static final int MAJOR = 0;
+    public static final int MINOR = 7;
+    public static final int PATCH = 3;
+    public static final String PRERELEASE = "beta";
+    public static final String BUILDMETA = "430";
+    public static final String VERSION = "0.7.3-beta+430";
 
     /**
      * Disables the default constructor.
