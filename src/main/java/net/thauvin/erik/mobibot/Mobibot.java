@@ -800,8 +800,8 @@ public class Mobibot extends PircBot {
      */
     private void ignoreResponse(final String sender, final String args) {
         if (!isOp(sender)) {
-            final String nick = sender.toLowerCase();
-            final boolean isMe = args.toLowerCase().startsWith(Commands.IGNORE_ME_KEYWORD);
+            final String nick = sender.toLowerCase(Constants.LOCALE);
+            final boolean isMe = args.toLowerCase(Constants.LOCALE).startsWith(Commands.IGNORE_ME_KEYWORD);
             if (isMe) {
                 if (ignoredNicks.remove(nick)) {
                     send(sender, "You are no longer ignored.");
@@ -818,13 +818,13 @@ public class Mobibot extends PircBot {
             }
         } else {
             if (args.length() > 0) {
-                final String[] nicks = args.toLowerCase().split(" ");
+                final String[] nicks = args.toLowerCase(Constants.LOCALE).split(" ");
 
                 for (final String nick : nicks) {
                     final String ignore;
 
                     if (Commands.IGNORE_ME_KEYWORD.equals(nick)) {
-                        ignore = sender.toLowerCase();
+                        ignore = sender.toLowerCase(Constants.LOCALE);
                     } else {
                         ignore = nick;
                     }
@@ -908,7 +908,7 @@ public class Mobibot extends PircBot {
      * @return <code>true</code> if the nick should be ignored, <code>false</code> otherwise.
      */
     private boolean isIgnoredNick(final String nick) {
-        return Utils.isValidString(nick) && ignoredNicks.contains(nick.toLowerCase());
+        return Utils.isValidString(nick) && ignoredNicks.contains(nick.toLowerCase(Constants.LOCALE));
     }
 
     /**
@@ -1149,7 +1149,7 @@ public class Mobibot extends PircBot {
             isCommand = true;
 
             final String[] cmds = message.substring(message.indexOf(':') + 1).trim().split(" ", 2);
-            final String cmd = cmds[0].toLowerCase();
+            final String cmd = cmds[0].toLowerCase(Constants.LOCALE);
 
             String args = "";
 
@@ -1376,7 +1376,7 @@ public class Mobibot extends PircBot {
         }
 
         final String[] cmds = message.split(" ", 2);
-        final String cmd = cmds[0].toLowerCase();
+        final String cmd = cmds[0].toLowerCase(Constants.LOCALE);
         String args = "";
 
         if (cmds.length > 1) {
@@ -1641,7 +1641,7 @@ public class Mobibot extends PircBot {
             final StringTokenizer st = new StringTokenizer(nicks, ",");
 
             while (st.hasMoreTokens()) {
-                ignoredNicks.add(st.nextToken().trim().toLowerCase());
+                ignoredNicks.add(st.nextToken().trim().toLowerCase(Constants.LOCALE));
             }
         }
     }
@@ -1733,7 +1733,7 @@ public class Mobibot extends PircBot {
      * @param isPrivate Set to <code>true</code> if the response should be sent as a private message.
      */
     private void viewResponse(final String sender, final String args, final boolean isPrivate) {
-        String lcArgs = args.toLowerCase();
+        String lcArgs = args.toLowerCase(Constants.LOCALE);
 
         if (!entries.isEmpty()) {
             final int max = entries.size();
@@ -1774,9 +1774,9 @@ public class Mobibot extends PircBot {
                 entry = entries.get(i);
 
                 if (lcArgs.length() > 0) {
-                    if ((entry.getLink().toLowerCase().contains(lcArgs))
-                        || (entry.getTitle().toLowerCase().contains(lcArgs))
-                        || (entry.getNick().toLowerCase().contains(lcArgs))) {
+                    if ((entry.getLink().toLowerCase(Constants.LOCALE).contains(lcArgs))
+                        || (entry.getTitle().toLowerCase(Constants.LOCALE).contains(lcArgs))
+                        || (entry.getNick().toLowerCase(Constants.LOCALE).contains(lcArgs))) {
                         if (sent > MAX_ENTRIES) {
                             send(sender,
                                 "To view more, try: " + Utils
