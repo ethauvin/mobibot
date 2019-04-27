@@ -46,6 +46,7 @@ import java.util.regex.Pattern;
  */
 public class ModuleException extends Exception {
     private static final long serialVersionUID = -3036774290621088107L;
+
     private final String debugMessage;
     private final Pattern urlPattern = Pattern.compile("(https?://\\S+)(\\?\\S+)");
 
@@ -104,11 +105,12 @@ public class ModuleException extends Exception {
                 final HttpUrl url = HttpUrl.parse(matcher.group(1) + matcher.group(2));
                 if (url != null) {
                     final StringBuilder query = new StringBuilder("?");
-                    for (int i = 0, size = url.querySize(); i < size; i++) {
+                    final int size = url.querySize();
+                    for (int i = 0; i < size; i++) {
                         if (i > 0) {
                             query.append('&');
                         }
-                        query.append(url.queryParameterName(i)).append('=').append('[')
+                        query.append(url.queryParameterName(i)).append("=[")
                             .append(url.queryParameterValue(i).length()).append(']');
                     }
                     return getDebugMessage() + "\nCaused by: " + getCause().getClass().getName() + ": "
