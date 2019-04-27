@@ -173,10 +173,10 @@ public final class Utils {
      * @return <code>true</code> if the string is valid, <code>false</code> otherwise.
      */
     public static boolean isValidString(final CharSequence s) {
-        final int len;
-        if (s == null || (len = s.length()) == 0) {
+        if (s == null || s.length() == 0) {
             return false;
         }
+        final int len = s.length();
         for (int i = 0; i < len; i++) {
             if (!Character.isWhitespace(s.charAt(i))) {
                 return true;
