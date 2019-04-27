@@ -36,10 +36,10 @@ import net.thauvin.erik.mobibot.Mobibot;
 import net.thauvin.erik.mobibot.Utils;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * The <code>Module</code> abstract class.
@@ -50,7 +50,7 @@ import java.util.Set;
  */
 public abstract class AbstractModule {
     final List<String> commands = new ArrayList<>();
-    final Map<String, String> properties = new HashMap<>();
+    final Map<String, String> properties = new ConcurrentHashMap<>();
 
     /**
      * Responds to a command.
