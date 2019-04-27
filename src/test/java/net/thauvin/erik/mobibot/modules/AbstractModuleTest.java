@@ -45,6 +45,10 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 
 final class AbstractModuleTest {
+    private AbstractModuleTest() {
+        throw new UnsupportedOperationException("Illegal constructor call.");
+    }
+
     @SuppressFBWarnings("CE_CLASS_ENVY")
     static void testAbstractModule(final AbstractModule module) {
         final String name = module.getClass().getName();
