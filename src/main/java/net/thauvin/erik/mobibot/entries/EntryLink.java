@@ -292,7 +292,8 @@ public class EntryLink implements Serializable {
      *
      * @param tags The space-delimited tags.
      */
-    @SuppressFBWarnings(value = "STT_STRING_PARSING_A_FIELD")
+    @SuppressFBWarnings("STT_STRING_PARSING_A_FIELD")
+    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     public final void setTags(final String tags) {
         if (tags != null) {
             final String[] parts = tags.replaceAll(", ", " ").replaceAll(",", " ").split(" ");

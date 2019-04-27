@@ -60,6 +60,7 @@ import java.util.TreeMap;
  * @created Feb 11, 2004
  * @since 1.0
  */
+@SuppressWarnings("PMD.UseConcurrentHashMap")
 public final class CurrencyConverter extends ThreadedModule {
     /**
      * The rates keyword.

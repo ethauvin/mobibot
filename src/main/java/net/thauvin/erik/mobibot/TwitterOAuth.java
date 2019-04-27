@@ -27,6 +27,7 @@ import java.io.InputStreamReader;
  * @created Sep 13, 2010
  * @since 1.0
  */
+@SuppressWarnings("PMD.UseUtilityClass")
 public final class TwitterOAuth {
     /**
      * Twitter OAuth Client Registration.

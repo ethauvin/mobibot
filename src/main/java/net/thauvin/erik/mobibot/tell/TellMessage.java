@@ -44,6 +44,7 @@ import java.time.format.DateTimeFormatter;
  * @created 2014-04-24
  * @since 1.0
  */
+@SuppressWarnings("PMD.DataClass")
 public class TellMessage implements Serializable {
     private static final long serialVersionUID = 2L;
     private final String id;

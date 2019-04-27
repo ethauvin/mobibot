@@ -130,7 +130,7 @@ public final class EntriesMgr {
      * @throws IOException   If the file was not found or could not be read.
      * @throws FeedException If an error occurred while reading the feed.
      */
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     public static String loadEntries(final String file, final String channel, final List<EntryLink> entries)
         throws IOException, FeedException {
         entries.clear();
@@ -190,6 +190,7 @@ public final class EntriesMgr {
      * @param isDayBackup Set the true if the daily backup file should also be created.
      */
     @SuppressFBWarnings(value = {"CE_CLASS_ENVY", "CC_CYCLOMATIC_COMPLEXITY"}, justification = "Yes, it does.")
+    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     public static void saveEntries(final Mobibot bot,
                                    final List<EntryLink> entries,
                                    final List<String> history,

@@ -45,6 +45,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @created 2017-05-30
  * @since 1.0
  */
+@SuppressWarnings("PMD.AvoidUsingHardCodedIP")
 public class LookupTest {
     @Test
     public void testLookupImpl() {
