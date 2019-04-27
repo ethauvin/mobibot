@@ -87,9 +87,8 @@ public final class EntriesUtils {
      */
     @SuppressFBWarnings(value = "CE_CLASS_ENVY", justification = "Yes, it does.")
     public static String buildLink(final int index, final EntryLink entry, final boolean isView) {
-        final StringBuilder buff = new StringBuilder().append(Commands.LINK_CMD).append(index + 1).append(": ");
-
-        buff.append('[').append(entry.getNick()).append(']');
+        final StringBuilder buff = new StringBuilder().append(Commands.LINK_CMD).append(index + 1)
+            .append(": ").append('[').append(entry.getNick()).append(']');
 
         if (isView && entry.hasComments()) {
             buff.append("[+").append(entry.getCommentsCount()).append(']');
