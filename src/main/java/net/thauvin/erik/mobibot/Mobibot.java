@@ -689,90 +689,93 @@ public class Mobibot extends PircBot {
         } else if (Commands.INFO_CMD.equals(lcTopic)) {
             send(sender, "To view information about the bot:");
             send(sender, helpIndent(getNick() + ": " + Commands.INFO_CMD));
-        } else if (Commands.CYCLE_CMD.equals(lcTopic) && isOp(sender)) {
-            send(sender, "To have the bot leave the channel and come back:");
-            send(sender, helpIndent("/msg " + getNick() + ' ' + Commands.CYCLE_CMD));
-        } else if (Commands.ME_CMD.equals(lcTopic) && isOp(sender)) {
-            send(sender, "To have the bot perform an action:");
-            send(sender, helpIndent("/msg " + getNick() + ' ' + Commands.ME_CMD + " <action>"));
-        } else if (Commands.SAY_CMD.equals(lcTopic) && isOp(sender)) {
-            send(sender, "To have the bot say something on the channel:");
-            send(sender, helpIndent("/msg " + getNick() + ' ' + Commands.SAY_CMD + " <text>"));
-        } else if (Commands.VERSION_CMD.equals(lcTopic) && isOp(sender)) {
-            send(sender, "To view the version data (bot, java, etc.):");
-            send(sender, helpIndent("/msg " + getNick() + ' ' + Commands.VERSION_CMD));
-        } else if (Commands.MSG_CMD.equals(lcTopic) && isOp(sender)) {
-            send(sender, "To have the bot send a private message to someone:");
-            send(sender, helpIndent("/msg " + getNick() + ' ' + Commands.MSG_CMD + " <nick> <text>"));
-        } else if (Commands.IGNORE_CMD.equals(lcTopic)) {
-            send(sender, "To check your ignore status:");
-            send(sender, helpIndent(getNick() + ": " + Commands.IGNORE_CMD));
-
-            send(sender, "To toggle your ignore status:");
-            send(sender, helpIndent(getNick() + ": " + Commands.IGNORE_CMD + ' ' + Commands.IGNORE_ME_KEYWORD));
-        } else if (Tell.TELL_CMD.equals(lcTopic) && tell.isEnabled()) {
-            tell.helpResponse(sender);
         } else {
-            for (final AbstractModule module : MODULES) {
-                for (final String cmd : module.getCommands()) {
-                    if (lcTopic.equals(cmd)) {
-                        module.helpResponse(this, sender, topic, true);
-                        return;
+            final String msg = "/msg ";
+            if (Commands.CYCLE_CMD.equals(lcTopic) && isOp(sender)) {
+                send(sender, "To have the bot leave the channel and come back:");
+                send(sender, helpIndent(msg + getNick() + ' ' + Commands.CYCLE_CMD));
+            } else if (Commands.ME_CMD.equals(lcTopic) && isOp(sender)) {
+                send(sender, "To have the bot perform an action:");
+                send(sender, helpIndent(msg + getNick() + ' ' + Commands.ME_CMD + " <action>"));
+            } else if (Commands.SAY_CMD.equals(lcTopic) && isOp(sender)) {
+                send(sender, "To have the bot say something on the channel:");
+                send(sender, helpIndent(msg + getNick() + ' ' + Commands.SAY_CMD + " <text>"));
+            } else if (Commands.VERSION_CMD.equals(lcTopic) && isOp(sender)) {
+                send(sender, "To view the version data (bot, java, etc.):");
+                send(sender, helpIndent(msg + getNick() + ' ' + Commands.VERSION_CMD));
+            } else if (Commands.MSG_CMD.equals(lcTopic) && isOp(sender)) {
+                send(sender, "To have the bot send a private message to someone:");
+                send(sender, helpIndent(msg + getNick() + ' ' + Commands.MSG_CMD + " <nick> <text>"));
+            } else if (Commands.IGNORE_CMD.equals(lcTopic)) {
+                send(sender, "To check your ignore status:");
+                send(sender, helpIndent(getNick() + ": " + Commands.IGNORE_CMD));
+
+                send(sender, "To toggle your ignore status:");
+                send(sender, helpIndent(getNick() + ": " + Commands.IGNORE_CMD + ' ' + Commands.IGNORE_ME_KEYWORD));
+            } else if (Tell.TELL_CMD.equals(lcTopic) && tell.isEnabled()) {
+                tell.helpResponse(sender);
+            } else {
+                for (final AbstractModule module : MODULES) {
+                    for (final String cmd : module.getCommands()) {
+                        if (lcTopic.equals(cmd)) {
+                            module.helpResponse(this, sender, topic, true);
+                            return;
+                        }
                     }
                 }
-            }
 
-            send(sender, Utils.bold("Type a URL on " + ircChannel + " to post it."));
-            send(sender, "For more information on a specific command, type:");
-            send(sender, helpIndent(getNick() + ": " + Commands.HELP_CMD + " <command>"));
-            send(sender, "The commands are:");
+                send(sender, Utils.bold("Type a URL on " + ircChannel + " to post it."));
+                send(sender, "For more information on a specific command, type:");
+                send(sender, helpIndent(getNick() + ": " + Commands.HELP_CMD + " <command>"));
+                send(sender, "The commands are:");
 
-            if (commandsList.isEmpty()) {
-                commandsList.add(Commands.IGNORE_CMD);
-                commandsList.add(Commands.INFO_CMD);
-                commandsList.add(getChannelName());
-                commandsList.add(Commands.HELP_POSTING_KEYWORD);
-                commandsList.add(Commands.HELP_TAGS_KEYWORD);
-                commandsList.add(Commands.RECAP_CMD);
-                commandsList.add(Commands.USERS_CMD);
-                commandsList.add(Commands.VIEW_CMD);
+                if (commandsList.isEmpty()) {
+                    commandsList.add(Commands.IGNORE_CMD);
+                    commandsList.add(Commands.INFO_CMD);
+                    commandsList.add(getChannelName());
+                    commandsList.add(Commands.HELP_POSTING_KEYWORD);
+                    commandsList.add(Commands.HELP_TAGS_KEYWORD);
+                    commandsList.add(Commands.RECAP_CMD);
+                    commandsList.add(Commands.USERS_CMD);
+                    commandsList.add(Commands.VIEW_CMD);
 
-                MODULES.stream().filter(AbstractModule::isEnabled).forEach(
-                    module -> commandsList.addAll(module.getCommands()));
+                    MODULES.stream().filter(AbstractModule::isEnabled).forEach(
+                        module -> commandsList.addAll(module.getCommands()));
 
-                if (tell.isEnabled()) {
-                    commandsList.add(Tell.TELL_CMD);
+                    if (tell.isEnabled()) {
+                        commandsList.add(Tell.TELL_CMD);
+                    }
+
+                    Collections.sort(commandsList);
                 }
 
-                Collections.sort(commandsList);
-            }
+                final StringBuilder sb = new StringBuilder(0);
 
-            final StringBuilder sb = new StringBuilder(0);
+                for (int i = 0, cmdCount = 1; i < commandsList.size(); i++, cmdCount++) {
+                    if (sb.length() > 0) {
+                        sb.append("  ");
+                    }
 
-            for (int i = 0, cmdCount = 1; i < commandsList.size(); i++, cmdCount++) {
-                if (sb.length() > 0) {
-                    sb.append("  ");
+                    sb.append(commandsList.get(i));
+
+                    // 6 commands per line or last command
+                    if (sb.length() > 0 && (cmdCount == 6 || i == (commandsList.size() - 1))) {
+                        send(sender, helpIndent(sb.toString()));
+
+                        sb.setLength(0);
+                        cmdCount = 0;
+                    }
                 }
 
-                sb.append(commandsList.get(i));
-
-                // 6 commands per line or last command
-                if (sb.length() > 0 && (cmdCount == 6 || i == (commandsList.size() - 1))) {
-                    send(sender, helpIndent(sb.toString()));
-
-                    sb.setLength(0);
-                    cmdCount = 0;
+                if (isOp(sender)) {
+                    send(sender, "The op commands are:");
+                    send(sender, helpIndent(
+                        Commands.CYCLE_CMD + "  "
+                            + Commands.ME_CMD + "  "
+                            + Commands.MSG_CMD + "  "
+                            + Commands.SAY_CMD + "  "
+                            + Commands.VERSION_CMD));
                 }
-            }
-
-            if (isOp(sender)) {
-                send(sender, "The op commands are:");
-                send(sender, helpIndent(
-                    Commands.CYCLE_CMD + "  "
-                        + Commands.ME_CMD + "  "
-                        + Commands.MSG_CMD + "  "
-                        + Commands.SAY_CMD + "  "
-                        + Commands.VERSION_CMD));
             }
         }
     }
