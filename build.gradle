@@ -130,7 +130,7 @@ sonarqube {
 
 jacocoTestReport {
     reports {
-        html.enabled true
+        html.enabled = true
         xml.enabled = true
     }
 }
