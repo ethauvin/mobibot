@@ -18,7 +18,6 @@ defaultTasks 'deploy'
 
 final def packageName = 'net.thauvin.erik.mobibot'
 final def deployDir = 'deploy'
-def isRelease = 'release' in gradle.startParameter.taskNames
 final def semverProcessor = "net.thauvin.erik:semver:1.1.1"
 
 mainClassName = packageName + '.Mobibot'

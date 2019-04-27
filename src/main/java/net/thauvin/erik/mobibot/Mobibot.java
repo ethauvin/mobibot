@@ -99,7 +99,7 @@ import java.util.StringTokenizer;
  * @since 1.0
  */
 @SuppressWarnings("WeakerAccess")
-@Version(properties = "version.properties", className = "ReleaseInfo")
+@Version(properties = "version.properties", template = "mobibot.mustache", className = "ReleaseInfo")
 public class Mobibot extends PircBot {
 
     // The default port.
