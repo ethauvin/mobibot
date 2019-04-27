@@ -54,6 +54,7 @@ public class Calc extends AbstractModule {
      * The default constructor.
      */
     public Calc() {
+        super();
         commands.add(CALC_CMD);
     }
 

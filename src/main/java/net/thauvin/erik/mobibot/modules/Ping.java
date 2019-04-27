@@ -47,11 +47,6 @@ import java.util.List;
  */
 public class Ping extends AbstractModule {
     /**
-     * The ping command.
-     */
-    private static final String PING_CMD = "ping";
-
-    /**
      * The ping responses.
      */
     static final List<String> PINGS =
@@ -68,11 +63,16 @@ public class Ping extends AbstractModule {
             "is hibernating.",
             "is saving energy: apathetic mode activated.",
             "is busy. Go away!");
+    /**
+     * The ping command.
+     */
+    private static final String PING_CMD = "ping";
 
     /**
      * The default constructor.
      */
     public Ping() {
+        super();
         commands.add(PING_CMD);
     }
 

@@ -69,6 +69,7 @@ public class Weather2 extends ThreadedModule {
      * Creates a new {@link Weather2} instance.
      */
     public Weather2() {
+        super();
         commands.add(WEATHER_CMD);
         properties.put(OWM_API_KEY_PROP, "");
     }
@@ -183,11 +184,6 @@ public class Weather2 extends ThreadedModule {
         return messages;
     }
 
-    private static String wind(final Double w) {
-        final double kmh = w * 1.60934;
-        return Math.round(w) + " mph, " + Math.round(kmh) + " km/h";
-    }
-
     /**
      * {@inheritDoc}
      */
@@ -223,5 +219,10 @@ public class Weather2 extends ThreadedModule {
         } else {
             helpResponse(bot, sender, args, true);
         }
+    }
+
+    private static String wind(final Double w) {
+        final double kmh = w * 1.60934;
+        return Math.round(w) + " mph, " + Math.round(kmh) + " km/h";
     }
 }

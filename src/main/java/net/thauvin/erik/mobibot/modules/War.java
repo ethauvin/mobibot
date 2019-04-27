@@ -57,6 +57,7 @@ public final class War extends AbstractModule {
      * The default constructor.
      */
     public War() {
+        super();
         commands.add(WAR_CMD);
     }
 

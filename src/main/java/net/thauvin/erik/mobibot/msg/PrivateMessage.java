@@ -42,10 +42,18 @@ package net.thauvin.erik.mobibot.msg;
 @SuppressWarnings("unused")
 public class PrivateMessage extends Message {
     public PrivateMessage(final String message) {
+        super();
         this.setMessage(message);
     }
 
+    /**
+     * Creates a new private message.
+     *
+     * @param message The message.
+     * @param color   The message color.
+     */
     public PrivateMessage(final String message, final String color) {
+        super();
         this.setMessage(message);
         this.setColor(color);
     }

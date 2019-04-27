@@ -60,6 +60,7 @@ public final class Twitter extends ThreadedModule {
      * Creates a new {@link Twitter} instance.
      */
     public Twitter() {
+        super();
         commands.add(TWITTER_CMD);
         properties.put(CONSUMER_SECRET_PROP, "");
         properties.put(CONSUMER_KEY_PROP, "");

@@ -46,6 +46,7 @@ public class NoticeMessage extends Message {
      * @param message The notice's message.
      */
     public NoticeMessage(final String message) {
+        super();
         this.setMessage(message);
         this.setNotice(true);
     }
@@ -57,6 +58,7 @@ public class NoticeMessage extends Message {
      * @param color   The color.
      */
     public NoticeMessage(final String message, final String color) {
+        super();
         this.setMessage(message);
         this.setNotice(true);
         this.setColor(color);

@@ -60,6 +60,7 @@ public final class Lookup extends AbstractModule {
      * The default constructor.
      */
     public Lookup() {
+        super();
         commands.add(LOOKUP_CMD);
     }
 

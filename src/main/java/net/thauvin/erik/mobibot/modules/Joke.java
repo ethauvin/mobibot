@@ -62,6 +62,7 @@ public final class Joke extends ThreadedModule {
      * Creates a new {@link Joke} instance.
      */
     public Joke() {
+        super();
         commands.add(JOKE_CMD);
     }
 
@@ -107,6 +108,7 @@ public final class Joke extends ThreadedModule {
     /**
      * Returns a random joke from <a href="http://www.icndb.com/">The Internet Chuck Norris Database</a>.
      */
+    @Override
     void run(final Mobibot bot, final String sender, final String arg) {
         try {
             bot.send(Utils.cyan(randomJoke().getMessage()));

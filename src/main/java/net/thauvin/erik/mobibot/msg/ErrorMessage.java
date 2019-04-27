@@ -46,6 +46,7 @@ public class ErrorMessage extends Message {
      * @param message The error message.
      */
     public ErrorMessage(final String message) {
+        super();
         this.setMessage(message);
         this.setError(true);
         this.setNotice(true);
@@ -59,6 +60,7 @@ public class ErrorMessage extends Message {
      */
     @SuppressWarnings("unused")
     public ErrorMessage(final String message, final String color) {
+        super();
         this.setMessage(message);
         this.setError(true);
         this.setNotice(true);

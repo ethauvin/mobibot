@@ -49,6 +49,7 @@ import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The GoogleSearch module.
@@ -71,9 +72,44 @@ public final class GoogleSearch extends ThreadedModule {
      * Creates a new {@link GoogleSearch} instance.
      */
     public GoogleSearch() {
+        super();
         commands.add(GOOGLE_CMD);
         properties.put(GOOGLE_API_KEY_PROP, "");
         properties.put(GOOGLE_CSE_KEY_PROP, "");
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void helpResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate) {
+        if (isEnabled()) {
+            bot.send(sender, "To search Google:");
+            bot.send(sender, bot.helpIndent(bot.getNick() + ": " + GOOGLE_CMD + " <query>"));
+        } else {
+            bot.send(sender, "The Google search module is disabled.");
+        }
+    }
+
+    /**
+     * Searches Google.
+     */
+    @Override
+    void run(final Mobibot bot, final String sender, final String query) {
+        if (Utils.isValidString(query)) {
+            try {
+                final List<Message> results = searchGoogle(query, properties.get(GOOGLE_API_KEY_PROP),
+                    properties.get(GOOGLE_CSE_KEY_PROP));
+                for (final Message msg : results) {
+                    bot.send(sender, msg);
+                }
+            } catch (ModuleException e) {
+                bot.getLogger().warn(e.getDebugMessage(), e);
+                bot.send(sender, e.getMessage());
+            }
+        } else {
+            helpResponse(bot, sender, query, true);
+        }
     }
 
     /**
@@ -85,8 +121,9 @@ public final class GoogleSearch extends ThreadedModule {
      * @return The {@link Message} array containing the search results.
      * @throws ModuleException If an error occurs while searching.
      */
-    @SuppressFBWarnings(value = {"URLCONNECTION_SSRF_FD", "REC_CATCH_EXCEPTION"})
-    static ArrayList<Message> searchGoogle(final String query, final String apiKey, final String cseKey)
+    @SuppressFBWarnings({"URLCONNECTION_SSRF_FD", "REC_CATCH_EXCEPTION"})
+    @SuppressWarnings(("PMD.AvoidInstantiatingObjectsInLoops"))
+    static List<Message> searchGoogle(final String query, final String apiKey, final String cseKey)
         throws ModuleException {
         if (!Utils.isValidString(apiKey) || !Utils.isValidString(cseKey)) {
             throw new ModuleException(Utils.capitalize(GOOGLE_CMD) + " is disabled. The API keys are missing.");
@@ -132,39 +169,6 @@ public final class GoogleSearch extends ThreadedModule {
             return results;
         } else {
             throw new ModuleException("Invalid query.");
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void helpResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate) {
-        if (isEnabled()) {
-            bot.send(sender, "To search Google:");
-            bot.send(sender, bot.helpIndent(bot.getNick() + ": " + GOOGLE_CMD + " <query>"));
-        } else {
-            bot.send(sender, "The Google search module is disabled.");
-        }
-    }
-
-    /**
-     * Searches Google.
-     */
-    void run(final Mobibot bot, final String sender, final String query) {
-        if (Utils.isValidString(query)) {
-            try {
-                final ArrayList<Message> results = searchGoogle(query, properties.get(GOOGLE_API_KEY_PROP),
-                    properties.get(GOOGLE_CSE_KEY_PROP));
-                for (final Message msg : results) {
-                    bot.send(sender, msg);
-                }
-            } catch (ModuleException e) {
-                bot.getLogger().warn(e.getDebugMessage(), e);
-                bot.send(sender, e.getMessage());
-            }
-        } else {
-            helpResponse(bot, sender, query, true);
         }
     }
 }

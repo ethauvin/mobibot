@@ -52,6 +52,7 @@ public final class Dice extends AbstractModule {
      * The default constructor.
      */
     public Dice() {
+        super();
         commands.add(DICE_CMD);
     }
 

@@ -70,6 +70,7 @@ public final class StockQuote extends ThreadedModule {
      * Creates a new {@link StockQuote} instance.
      */
     public StockQuote() {
+        super();
         commands.add(STOCK_CMD);
         properties.put(ALPHAVANTAGE_API_KEY_PROP, "");
     }

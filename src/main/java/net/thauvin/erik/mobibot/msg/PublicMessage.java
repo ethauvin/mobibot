@@ -41,11 +41,19 @@ package net.thauvin.erik.mobibot.msg;
  */
 public class PublicMessage extends Message {
     public PublicMessage(final String message) {
+        super();
         this.setMessage(message);
     }
 
+    /**
+     * Creates a new public message.
+     *
+     * @param message The message.
+     * @param color   The message color.
+     */
     @SuppressWarnings("unused")
     public PublicMessage(final String message, final String color) {
+        super();
         this.setMessage(message);
         this.setColor(color);
     }
