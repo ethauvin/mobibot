@@ -221,6 +221,7 @@ public class Mobibot extends PircBot {
      * @param p           The bot's properties.
      */
     public Mobibot(final String nickname, final String channel, final String logsDirPath, final Properties p) {
+        super();
         System.getProperties().setProperty("sun.net.client.defaultConnectTimeout",
             String.valueOf(Constants.CONNECT_TIMEOUT));
         System.getProperties().setProperty("sun.net.client.defaultReadTimeout",
@@ -324,108 +325,6 @@ public class Mobibot extends PircBot {
     }
 
     /**
-     * The Truth Is Out There...
-     *
-     * @param args The command line arguments.
-     */
-    @SuppressFBWarnings({"INFORMATION_EXPOSURE_THROUGH_AN_ERROR_MESSAGE", "DM_DEFAULT_ENCODING",
-        "IOI_USE_OF_FILE_STREAM_CONSTRUCTORS"})
-    public static void main(final String[] args) {
-        // Setup the command line options
-        final Options options = new Options();
-        options.addOption(Commands.HELP_ARG.substring(0, 1), Commands.HELP_ARG, false, "print this help message");
-        options.addOption(Commands.DEBUG_ARG.substring(0, 1), Commands.DEBUG_ARG, false,
-            "print debug & logging data directly to the console");
-        options.addOption(Option.builder(
-            Commands.PROPS_ARG.substring(0, 1)).hasArg().argName("file").desc("use " + "alternate properties file")
-            .longOpt(Commands.PROPS_ARG).build());
-        options.addOption(Commands.VERSION_ARG.substring(0, 1), Commands.VERSION_ARG, false, "print version info");
-
-        // Parse the command line
-        final CommandLineParser parser = new DefaultParser();
-        CommandLine line = null;
-
-        try {
-            line = parser.parse(options, args);
-        } catch (ParseException e) {
-            System.err.println("CLI Parsing failed.  Reason: " + e.getMessage());
-            e.printStackTrace(System.err);
-            System.exit(1);
-        }
-
-        if (line.hasOption(Commands.HELP_ARG.charAt(0))) {
-            // Output the usage
-            new HelpFormatter().printHelp(Mobibot.class.getName(), options);
-        } else if (line.hasOption(Commands.VERSION_ARG.charAt(0))) {
-            for (final String s : INFO_STRS) {
-                System.out.println(s);
-            }
-        } else {
-            final Properties p = new Properties();
-
-            try (final InputStream fis = Files.newInputStream(Paths.get(
-                line.getOptionValue(Commands.PROPS_ARG.charAt(0), "./mobibot.properties")))) {
-                // Load the properties files
-                p.load(fis);
-            } catch (FileNotFoundException e) {
-                System.err.println("Unable to find properties file.");
-                e.printStackTrace(System.err);
-                System.exit(1);
-            } catch (IOException e) {
-                System.err.println("Unable to open properties file.");
-                e.printStackTrace(System.err);
-                System.exit(1);
-            }
-
-            final String nickname = p.getProperty("nick", Mobibot.class.getName().toLowerCase());
-            final String channel = p.getProperty("channel");
-            final String logsDir = Utils.ensureDir(p.getProperty("logs", "."), false);
-
-            // Redirect the stdout and stderr
-            if (!line.hasOption(Commands.DEBUG_ARG.charAt(0))) {
-                try {
-                    final PrintStream stdout = new PrintStream(new FileOutputStream(
-                        logsDir + channel.substring(1) + '.' + Utils.today() + ".log", true));
-                    System.setOut(stdout);
-                } catch (IOException e) {
-                    System.err.println("Unable to open output (stdout) log file.");
-                    e.printStackTrace(System.err);
-                    System.exit(1);
-                }
-
-                try {
-                    final PrintStream stderr = new PrintStream(
-                        new FileOutputStream(logsDir + nickname + ".err", true));
-                    System.setErr(stderr);
-                } catch (IOException e) {
-                    System.err.println("Unable to open error (stderr) log file.");
-                    e.printStackTrace(System.err);
-                    System.exit(1);
-                }
-            }
-
-            // Create the bot
-            final Mobibot bot = new Mobibot(nickname, channel, logsDir, p);
-
-            // Connect
-            bot.connect();
-        }
-    }
-
-    /**
-     * Sleeps for the specified number of seconds.
-     *
-     * @param secs The number of seconds to sleep for.
-     */
-    private static void sleep(final int secs) {
-        try {
-            Thread.sleep((long) (secs * 1000));
-        } catch (InterruptedException ignore) {
-            // Do nothing.
-        }
-    }
-
-    /**
      * Sends an action to the current channel.
      *
      * @param action The action.
@@ -449,7 +348,7 @@ public class Mobibot extends PircBot {
     /**
      * Connects to the server and joins the channel.
      */
-    @SuppressFBWarnings(value = {"DM_EXIT", "INFORMATION_EXPOSURE_THROUGH_AN_ERROR_MESSAGE"})
+    @SuppressFBWarnings({"DM_EXIT", "INFORMATION_EXPOSURE_THROUGH_AN_ERROR_MESSAGE"})
     public final void connect() {
         try {
             connect(ircServer, ircPort);
@@ -521,15 +420,6 @@ public class Mobibot extends PircBot {
      */
     public final String getBacklogsUrl() {
         return backLogsUrl;
-    }
-
-    /**
-     * Sets the backlogs URL.
-     *
-     * @param url The backlogs URL.
-     */
-    final void setBacklogsUrl(final String url) {
-        backLogsUrl = url;
     }
 
     /**
@@ -616,15 +506,6 @@ public class Mobibot extends PircBot {
      */
     public final String getWeblogUrl() {
         return weblogUrl;
-    }
-
-    /**
-     * Sets the weblog URL.
-     *
-     * @param url The weblog URL.
-     */
-    final void setWeblogUrl(final String url) {
-        weblogUrl = url;
     }
 
     /**
@@ -857,7 +738,7 @@ public class Mobibot extends PircBot {
             }
         }
 
-        final StringBuilder info = new StringBuilder("Uptime: ");
+        final StringBuilder info = new StringBuilder(28).append("Uptime: ");
 
         long timeInSeconds = (System.currentTimeMillis() - START_TIME) / 1000L;
 
@@ -891,9 +772,8 @@ public class Mobibot extends PircBot {
 
         final long minutes = timeInSeconds / 60L;
 
-        info.append(minutes).append(Utils.plural(minutes, " minute ", " minutes "));
-
-        info.append("[Entries: ").append(entries.size());
+        info.append(minutes).append(Utils.plural(minutes, " minute ", " minutes "))
+            .append("[Entries: ").append(entries.size());
 
         if (tell.isEnabled() && isOp(sender)) {
             info.append(", Messages: ").append(tell.size());
@@ -1576,7 +1456,6 @@ public class Mobibot extends PircBot {
         send(who, message, false);
     }
 
-
     /**
      * Sends a message.
      *
@@ -1599,7 +1478,6 @@ public class Mobibot extends PircBot {
         send(who, Utils.colorize(message, color), isPrivate);
     }
 
-
     /**
      * Sends a message.
      *
@@ -1611,6 +1489,14 @@ public class Mobibot extends PircBot {
         send(who, Utils.colorize(message, color), false);
     }
 
+    /**
+     * Sets the backlogs URL.
+     *
+     * @param url The backlogs URL.
+     */
+    final void setBacklogsUrl(final String url) {
+        backLogsUrl = url;
+    }
 
     /**
      * Sets the feed URL.
@@ -1667,6 +1553,28 @@ public class Mobibot extends PircBot {
      */
     final void setTags(final String tags) {
         defaultTags = tags;
+    }
+
+    /**
+     * Sets the weblog URL.
+     *
+     * @param url The weblog URL.
+     */
+    final void setWeblogUrl(final String url) {
+        weblogUrl = url;
+    }
+
+    /**
+     * Sleeps for the specified number of seconds.
+     *
+     * @param secs The number of seconds to sleep for.
+     */
+    private static void sleep(final int secs) {
+        try {
+            Thread.sleep((long) (secs * 1000));
+        } catch (InterruptedException ignore) {
+            // Do nothing.
+        }
     }
 
     /**
