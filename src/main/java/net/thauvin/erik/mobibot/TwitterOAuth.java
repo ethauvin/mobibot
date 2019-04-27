@@ -7,6 +7,7 @@ import twitter4j.auth.AccessToken;
 import twitter4j.auth.RequestToken;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 
 /**
@@ -35,8 +36,8 @@ public final class TwitterOAuth {
      * @param args The consumerKey and consumerSecret should be passed as arguments.
      */
     @SuppressFBWarnings({"DM_DEFAULT_ENCODING", "IMC_IMMATURE_CLASS_PRINTSTACKTRACE"})
-    public static void main(final String[] args)
-        throws Exception {
+    @SuppressWarnings({"PMD.AvoidPrintStackTrace", "PMD.SystemPrintln"})
+    public static void main(final String[] args) throws TwitterException, IOException {
         if (args.length == 2) {
             final twitter4j.Twitter twitter = new TwitterFactory().getInstance();
             twitter.setOAuthConsumer(args[0], args[1]);
