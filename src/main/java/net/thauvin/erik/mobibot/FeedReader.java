@@ -80,6 +80,7 @@ class FeedReader implements Runnable {
     /**
      * Fetches the Feed's items.
      */
+    @Override
     public final void run() {
         try {
             final SyndFeedInput input = new SyndFeedInput();
