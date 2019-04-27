@@ -35,6 +35,7 @@ package net.thauvin.erik.mobibot.entries;
 import com.rometools.rome.feed.synd.SyndCategory;
 import com.rometools.rome.feed.synd.SyndCategoryImpl;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import net.thauvin.erik.mobibot.Constants;
 
 import java.io.Serializable;
 import java.util.Calendar;
@@ -307,7 +308,7 @@ public class EntryLink implements Serializable {
 
                 if (part.length() >= 2) {
                     tag = new SyndCategoryImpl();
-                    tag.setName(part.substring(1).toLowerCase());
+                    tag.setName(part.substring(1).toLowerCase(Constants.LOCALE));
 
                     mod = part.charAt(0);
 
@@ -321,7 +322,7 @@ public class EntryLink implements Serializable {
                             this.tags.add(tag);
                         }
                     } else {
-                        tag.setName(part.trim().toLowerCase());
+                        tag.setName(part.trim().toLowerCase(Constants.LOCALE));
 
                         if (!this.tags.contains(tag)) {
                             this.tags.add(tag);
@@ -395,6 +396,7 @@ public class EntryLink implements Serializable {
      *
      * @return A string representation of the object.
      */
+    @Override
     public final String toString() {
 
         return super.toString() + "[ channel -> '" + channel + '\'' + ", comments -> " + comments + ", date -> " + date

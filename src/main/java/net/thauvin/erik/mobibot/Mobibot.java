@@ -585,8 +585,8 @@ public class Mobibot extends PircBot {
         for (final char c : getNick().toCharArray()) {
             if (Character.isLetter(c)) {
                 buff.append('[')
-                    .append(String.valueOf(c).toLowerCase())
-                    .append(String.valueOf(c).toUpperCase())
+                    .append(String.valueOf(c).toLowerCase(Constants.LOCALE))
+                    .append(String.valueOf(c).toUpperCase(Constants.LOCALE))
                     .append(']');
             } else {
                 buff.append(c);
@@ -651,7 +651,7 @@ public class Mobibot extends PircBot {
      * @param topic  The help topic, if any.
      */
     private void helpResponse(final String sender, final String topic) {
-        final String lcTopic = topic.toLowerCase().trim();
+        final String lcTopic = topic.toLowerCase(Constants.LOCALE).trim();
 
         if (Commands.HELP_POSTING_KEYWORD.equals(lcTopic)) {
             send(sender, Utils.bold("Post a URL, by saying it on a line on its own:"));

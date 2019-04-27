@@ -33,6 +33,7 @@
 package net.thauvin.erik.mobibot.modules;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import net.thauvin.erik.mobibot.Constants;
 import net.thauvin.erik.mobibot.Mobibot;
 import net.thauvin.erik.mobibot.Utils;
 import net.thauvin.erik.mobibot.msg.ErrorMessage;
@@ -80,7 +81,46 @@ public final class CurrencyConverter extends ThreadedModule {
      * Creates a new {@link CurrencyConverter} instance.
      */
     public CurrencyConverter() {
+        super();
         commands.add(CURRENCY_CMD);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void commandResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate) {
+        synchronized (this) {
+            if (!pubDate.equals(Utils.today())) {
+                EXCHANGE_RATES.clear();
+            }
+        }
+
+        super.commandResponse(bot, sender, args, isPrivate);
+    }
+
+    /**
+     * Converts the specified currencies.
+     */
+    @SuppressFBWarnings("REDOS")
+    @Override
+    void run(final Mobibot bot, final String sender, final String query) {
+        if (Utils.isValidString(sender) && Utils.isValidString(query)) {
+            if (query.matches("\\d+([,\\d]+)?(\\.\\d+)? [a-zA-Z]{3}+ to [a-zA-Z]{3}+")) {
+                try {
+                    final Message msg = convertCurrency(query);
+                    if (msg.isError()) {
+                        helpResponse(bot, sender, CURRENCY_CMD + ' ' + query, false);
+                    }
+                    bot.send(sender, msg);
+                } catch (ModuleException e) {
+                    bot.getLogger().warn(e.getDebugMessage(), e);
+                    bot.send(sender, e.getMessage());
+                }
+            } else {
+                helpResponse(bot, sender, CURRENCY_CMD + ' ' + query, true);
+            }
+        }
     }
 
     /**
@@ -136,19 +176,20 @@ public final class CurrencyConverter extends ThreadedModule {
                 } else {
                     try {
                         final double amt = Double.parseDouble(cmds[0].replaceAll(",", ""));
-                        final double from = Double.parseDouble(EXCHANGE_RATES.get(cmds[1].toUpperCase()));
-                        final double to = Double.parseDouble(EXCHANGE_RATES.get(cmds[3].toUpperCase()));
+                        final double from = Double.parseDouble(EXCHANGE_RATES.get(cmds[1]
+                            .toUpperCase(Constants.LOCALE)));
+                        final double to = Double.parseDouble(EXCHANGE_RATES.get(cmds[3].toUpperCase(Constants.LOCALE)));
 
                         return new PublicMessage(
                             NumberFormat.getCurrencyInstance(Locale.US).format(amt).substring(1)
                                 + ' '
-                                + cmds[1].toUpperCase()
+                                + cmds[1].toUpperCase(Constants.LOCALE)
                                 + " = "
                                 + NumberFormat.getCurrencyInstance(Locale.US)
                                 .format((amt * to) / from)
                                 .substring(1)
                                 + ' '
-                                + cmds[3].toUpperCase());
+                                + cmds[3].toUpperCase(Constants.LOCALE));
                     } catch (Exception e) {
                         throw new ModuleException("convertCurrency(" + query + ')',
                             "The supported currencies are: " + EXCHANGE_RATES.keySet(), e);
@@ -171,43 +212,6 @@ public final class CurrencyConverter extends ThreadedModule {
             }
         }
         return new ErrorMessage("The supported currencies are: " + EXCHANGE_RATES.keySet());
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void commandResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate) {
-        synchronized (this) {
-            if (!pubDate.equals(Utils.today())) {
-                EXCHANGE_RATES.clear();
-            }
-        }
-
-        super.commandResponse(bot, sender, args, isPrivate);
-    }
-
-    /**
-     * Converts the specified currencies.
-     */
-    @SuppressFBWarnings(value = "REDOS")
-    void run(final Mobibot bot, final String sender, final String query) {
-        if (Utils.isValidString(sender) && Utils.isValidString(query)) {
-            if (query.matches("\\d+([,\\d]+)?(\\.\\d+)? [a-zA-Z]{3}+ to [a-zA-Z]{3}+")) {
-                try {
-                    final Message msg = convertCurrency(query);
-                    if (msg.isError()) {
-                        helpResponse(bot, sender, CURRENCY_CMD + ' ' + query, false);
-                    }
-                    bot.send(sender, msg);
-                } catch (ModuleException e) {
-                    bot.getLogger().warn(e.getDebugMessage(), e);
-                    bot.send(sender, e.getMessage());
-                }
-            } else {
-                helpResponse(bot, sender, CURRENCY_CMD + ' ' + query, true);
-            }
-        }
     }
 
     /**

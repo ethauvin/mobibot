@@ -32,6 +32,7 @@
 
 package net.thauvin.erik.mobibot.modules;
 
+import net.thauvin.erik.mobibot.Constants;
 import org.testng.annotations.BeforeSuite;
 
 import java.io.IOException;
@@ -64,7 +65,7 @@ class LocalProperties {
     }
 
     private static String keyToEnv(final String key) {
-        return key.replaceAll("-", "_").toUpperCase();
+        return key.replaceAll("-", "_").toUpperCase(Constants.LOCALE);
     }
 
     @BeforeSuite(alwaysRun = true)

@@ -84,7 +84,7 @@ public final class Utils {
      * @return The capitalized string.
      */
     public static String capitalize(final String s) {
-        return s.substring(0, 1).toUpperCase() + s.substring(1);
+        return s.substring(0, 1).toUpperCase(Constants.LOCALE) + s.substring(1);
     }
 
     /**

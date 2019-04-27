@@ -32,6 +32,8 @@
 
 package net.thauvin.erik.mobibot;
 
+import java.util.Locale;
+
 /**
  * The <code>Constants</code> class.
  *
@@ -54,6 +56,11 @@ public final class Constants {
      * The Twitter handle property key.
      */
     public static final String TWITTER_HANDLE_PROP = "twitter-handle";
+
+    /**
+     * Default locale.
+     */
+    public static final Locale LOCALE = Locale.getDefault();
 
     /**
      * Disables the default constructor.
