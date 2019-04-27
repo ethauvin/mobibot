@@ -52,7 +52,7 @@ public class Message {
      * Creates a new message.
      */
     public Message() {
-
+        // This constructor is intentionally empty.
     }
 
     /**
@@ -102,30 +102,12 @@ public class Message {
     }
 
     /**
-     * Set the color.
-     *
-     * @param color The new color.
-     */
-    public void setColor(final String color) {
-        this.color = color;
-    }
-
-    /**
      * Returns the message.
      *
      * @return The message.
      */
     public String getMessage() {
         return msg;
-    }
-
-    /**
-     * Sets the message.
-     *
-     * @param message The new message.
-     */
-    public void setMessage(final String message) {
-        msg = message;
     }
 
     /**
@@ -138,15 +120,6 @@ public class Message {
     }
 
     /**
-     * Sets the message error flag.
-     *
-     * @param error The error flag.
-     */
-    public void setError(final boolean error) {
-        isError = error;
-    }
-
-    /**
      * Returns the message notice flag.
      *
      * @return The notice flag.
@@ -156,21 +129,48 @@ public class Message {
     }
 
     /**
-     * Sets the message notice flag.
-     *
-     * @param isNotice The notice flag.
-     */
-    public void setNotice(final boolean isNotice) {
-        this.isNotice = isNotice;
-    }
-
-    /**
      * Returns the message private flag.
      *
      * @return The private flag.
      */
     public boolean isPrivate() {
         return isPrivate;
+    }
+
+    /**
+     * Set the color.
+     *
+     * @param color The new color.
+     */
+    public void setColor(final String color) {
+        this.color = color;
+    }
+
+    /**
+     * Sets the message error flag.
+     *
+     * @param error The error flag.
+     */
+    public void setError(final boolean error) {
+        isError = error;
+    }
+
+    /**
+     * Sets the message.
+     *
+     * @param message The new message.
+     */
+    public void setMessage(final String message) {
+        msg = message;
+    }
+
+    /**
+     * Sets the message notice flag.
+     *
+     * @param isNotice The notice flag.
+     */
+    public void setNotice(final boolean isNotice) {
+        this.isNotice = isNotice;
     }
 
     /**
