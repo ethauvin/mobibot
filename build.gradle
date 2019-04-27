@@ -4,9 +4,10 @@ plugins {
     id 'idea'
     id 'jacoco'
     id 'java'
+    id 'pmd'
     id "com.github.ben-manes.versions" version "0.21.0"
     id "com.github.spotbugs" version "1.7.1"
-    id "net.thauvin.erik.gradle.semver" version "0.9.9-beta"
+    id "net.thauvin.erik.gradle.semver" version "1.0.0"
     id "org.sonarqube" version "2.7"
 }
 
@@ -18,7 +19,7 @@ defaultTasks 'deploy'
 final def packageName = 'net.thauvin.erik.mobibot'
 final def deployDir = 'deploy'
 def isRelease = 'release' in gradle.startParameter.taskNames
-final def semverProcessor = "net.thauvin.erik:semver:1.0.1"
+final def semverProcessor = "net.thauvin.erik:semver:1.2.0"
 
 mainClassName = packageName + '.Mobibot'
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
@@ -28,7 +29,7 @@ compileJava.options.annotationProcessorGeneratedSourcesDirectory = file("${proje
 
 ext {
     log4j = '2.11.2'
-    spotbugs_annotations = '3.1.12'
+    spotbugs_annotations = '4.0.0-beta1'
 }
 
 repositories {
@@ -76,8 +77,13 @@ dependencies {
 
 test {
     useTestNG() {
-        suites 'src/test/resources/testng.xml'
+        suites('src/test/resources/testng.xml')
     }
+}
+
+pmd {
+    ruleSetFiles = files("config/pmd.xml")
+    ruleSets = []
 }
 
 compileJava {
@@ -155,7 +161,7 @@ task copyToDeployLib(type: Copy) {
     into deployDir + '/lib'
 }
 
-task deploy(dependsOn: ['build']) {
+task deploy(dependsOn: ['build', 'jar']) {
     description = 'Copies all needed files to the ${deployDir} directory.'
     group = 'Publishing'
     outputs.dir deployDir
