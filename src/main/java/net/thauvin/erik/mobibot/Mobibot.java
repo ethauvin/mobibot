@@ -818,21 +818,7 @@ public class Mobibot extends PircBot {
     public final void joinChannel() {
         joinChannel(ircChannel);
 
-        if (twitterModule.isEnabled() && Utils.isValidString(twitterHandle)) {
-            new Thread(() -> {
-                try {
-                    twitterModule.post(
-                        twitterHandle,
-                        getName() + ReleaseInfo.VERSION + " has joined " + ircChannel,
-                        true);
-                } catch (ModuleException e) {
-                    if (logger.isWarnEnabled()) {
-                        logger.warn(
-                            "Failed to notify " + twitterHandle + " of joining " + ircChannel + " on Twitter.", e);
-                    }
-                }
-            }).start();
-        }
+        twitterNotification("has joined " + ircChannel);
     }
 
     /**
@@ -1273,6 +1259,7 @@ public class Mobibot extends PircBot {
             System.exit(0);
         } else if (Commands.DIE_CMD.equals(cmd) && isOp(sender)) {
             send(ircChannel, sender + " has just signed my death sentence.");
+            twitterNotification("killed by  " + sender + " on " + ircChannel);
             saveEntries(true);
             sleep(3);
             quitServer("The Bot Is Out There!");
@@ -1590,6 +1577,28 @@ public class Mobibot extends PircBot {
 
         if (recap.size() > MAX_RECAP) {
             recap.remove(0);
+        }
+    }
+
+    /**
+     * Send a notification to the registered Twitter handle.
+     *
+     * @param msg The twitter message.
+     */
+    final void twitterNotification(final String msg) {
+        if (twitterModule.isEnabled() && Utils.isValidString(twitterHandle)) {
+            new Thread(() -> {
+                try {
+                    twitterModule.post(
+                        twitterHandle,
+                        getName() + ' ' + ReleaseInfo.VERSION + " " + msg, true);
+                } catch (ModuleException e) {
+                    if (logger.isWarnEnabled()) {
+                        logger.warn(
+                            "Failed to notify @" + twitterHandle + ": " + msg, e);
+                    }
+                }
+            }).start();
         }
     }
 
