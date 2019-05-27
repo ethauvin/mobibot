@@ -1450,13 +1450,13 @@
         <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.beust/jcommander/1.72/7ef123d5dfb6f839b41265648ff1be34982d50f8/jcommander-1.72-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Gradle: com.github.spotbugs:spotbugs-annotations:4.0.0-beta1">
+    <library name="Gradle: com.github.spotbugs:spotbugs-annotations:4.0.0-beta2">
       <CLASSES>
-        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.spotbugs/spotbugs-annotations/4.0.0-beta1/c017c1646dc8e74a2eff232298ba31151874d797/spotbugs-annotations-4.0.0-beta1.jar!/" />
+        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.spotbugs/spotbugs-annotations/4.0.0-beta2/8d6fda3f5e668802f52b8f6632c12c3b5feb596f/spotbugs-annotations-4.0.0-beta2.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES>
-        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.spotbugs/spotbugs-annotations/4.0.0-beta1/339b39795ac29f89077c55ba1c7f33cf0207f036/spotbugs-annotations-4.0.0-beta1-sources.jar!/" />
+        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.spotbugs/spotbugs-annotations/4.0.0-beta2/33e9a2747415c2f856cba49beabd886a21481431/spotbugs-annotations-4.0.0-beta2-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Gradle: com.github.spullara.mustache.java:compiler:0.9.6">
@@ -1504,13 +1504,13 @@
         <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.rometools/rome/1.12.0/75e65a94c7663e232de3f5b9cb68004cb449cf3/rome-1.12.0-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Gradle: com.squareup.okhttp3:okhttp:3.14.1">
+    <library name="Gradle: com.squareup.okhttp3:okhttp:3.14.2">
       <CLASSES>
-        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.squareup.okhttp3/okhttp/3.14.1/67612a22d4b8f33c55263b188bf5a72774d06d18/okhttp-3.14.1.jar!/" />
+        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.squareup.okhttp3/okhttp/3.14.2/eaed79ed6bc1e14fad462172b6a09524545b165c/okhttp-3.14.2.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES>
-        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.squareup.okhttp3/okhttp/3.14.1/f8319293dad84c8ac79282b26d835f6edb9f637d/okhttp-3.14.1-sources.jar!/" />
+        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.squareup.okhttp3/okhttp/3.14.2/155f20f50fc3754b139c115cccd6fe752af655ed/okhttp-3.14.2-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Gradle: com.squareup.okio:okio:1.17.2">
@@ -1576,13 +1576,13 @@
         <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/net.objecthunter/exp4j/0.4.8/8d86f148ff1f0d5b624eae9bb0882198ab5cd07/exp4j-0.4.8-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Gradle: net.thauvin.erik:pinboard-poster:1.0.0">
+    <library name="Gradle: net.thauvin.erik:pinboard-poster:1.0.1">
       <CLASSES>
-        <root url="jar://$MAVEN_REPOSITORY$/net/thauvin/erik/pinboard-poster/1.0.0/pinboard-poster-1.0.0.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/net/thauvin/erik/pinboard-poster/1.0.1/pinboard-poster-1.0.1.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES>
-        <root url="jar://$MAVEN_REPOSITORY$/net/thauvin/erik/pinboard-poster/1.0.0/pinboard-poster-1.0.0-sources.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/net/thauvin/erik/pinboard-poster/1.0.1/pinboard-poster-1.0.1-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Gradle: net.thauvin.erik:semver:1.2.0">
@@ -1648,12 +1648,14 @@
         <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jdom/jdom2/2.0.6/3dcf8ba7582eeac3b67ed5155ee3659e16c8dadc/jdom2-2.0.6-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Gradle: org.jetbrains.kotlin:kotlin-stdlib-common:1.3.30" type="kotlin.common">
+    <library name="Gradle: org.jetbrains.kotlin:kotlin-stdlib-common:1.3.31" type="kotlin.common">
       <CLASSES>
-        <root url="jar://$MAVEN_REPOSITORY$/org/jetbrains/kotlin/kotlin-stdlib-common/1.3.30/kotlin-stdlib-common-1.3.30.jar!/" />
+        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib-common/1.3.31/20c34a04ea25cb1ef0139598bd67c764562cb170/kotlin-stdlib-common-1.3.31.jar!/" />
       </CLASSES>
       <JAVADOC />
-      <SOURCES />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib-common/1.3.31/958c401b129f64de74af4b11a0894693edfa168d/kotlin-stdlib-common-1.3.31-sources.jar!/" />
+      </SOURCES>
     </library>
     <library name="Gradle: org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.3.30">
       <CLASSES>
@@ -1673,12 +1675,14 @@
         <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib-jdk8/1.3.30/269416550424b90ce1c27727d0d5c65b6bb730c9/kotlin-stdlib-jdk8-1.3.30-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Gradle: org.jetbrains.kotlin:kotlin-stdlib:1.3.30">
+    <library name="Gradle: org.jetbrains.kotlin:kotlin-stdlib:1.3.31">
       <CLASSES>
-        <root url="jar://$MAVEN_REPOSITORY$/org/jetbrains/kotlin/kotlin-stdlib/1.3.30/kotlin-stdlib-1.3.30.jar!/" />
+        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/1.3.31/11289d20fd95ae219333f3456072be9f081c30cc/kotlin-stdlib-1.3.31.jar!/" />
       </CLASSES>
       <JAVADOC />
-      <SOURCES />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/1.3.31/d16c788b755be19bf8a7eace113755519a1d7182/kotlin-stdlib-1.3.31-sources.jar!/" />
+      </SOURCES>
     </library>
     <library name="Gradle: org.jetbrains:annotations:13.0">
       <CLASSES>
@@ -1698,13 +1702,13 @@
         <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.json/json/20180813/60753006d96d5fc85b61b0897f3326b5c4e1c4f0/json-20180813-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Gradle: org.jsoup:jsoup:1.11.3">
+    <library name="Gradle: org.jsoup:jsoup:1.12.1">
       <CLASSES>
-        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jsoup/jsoup/1.11.3/36da09a8f68484523fa2aaa100399d612b247d67/jsoup-1.11.3.jar!/" />
+        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jsoup/jsoup/1.12.1/55819a28fc834c2f2bcf4dcdb278524dc3cf088f/jsoup-1.12.1.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES>
-        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jsoup/jsoup/1.11.3/871302b15d8cee9bfb393c4f1d0386b17646d8d1/jsoup-1.11.3-sources.jar!/" />
+        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jsoup/jsoup/1.12.1/1ec738903bf781d7218455e314c6dc9831a2f9a6/jsoup-1.12.1-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Gradle: org.slf4j:slf4j-api:1.7.25">
