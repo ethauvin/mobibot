@@ -99,7 +99,7 @@ import java.util.StringTokenizer;
  * @since 1.0
  */
 @SuppressWarnings("WeakerAccess")
-@Version(properties = "version.properties", template = "mobibot.mustache", className = "ReleaseInfo")
+@Version(properties = "version.properties", className = "ReleaseInfo")
 public class Mobibot extends PircBot {
 
     // The default port.
@@ -1653,10 +1653,9 @@ public class Mobibot extends PircBot {
      * @param isPrivate Set to <code>true</code> if the response should be sent as a private message.
      */
     private void viewResponse(final String sender, final String args, final boolean isPrivate) {
-        String lcArgs = args.toLowerCase(Constants.LOCALE);
-
         if (!entries.isEmpty()) {
             final int max = entries.size();
+            String lcArgs = args.toLowerCase(Constants.LOCALE);
             int i = 0;
 
             if ((lcArgs.length() <= 0) && (max > MAX_ENTRIES)) {

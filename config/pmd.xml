@@ -4,6 +4,7 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://pmd.sourceforge.net/ruleset/2.0.0 https://pmd.sourceforge.io/ruleset_2_0_0.xsd">
     <description>Erik's Ruleset</description>
+    <!-- BEST PRACTICES -->
     <rule ref="category/java/bestpractices.xml/AvoidStringBufferField"/>
     <rule ref="category/java/bestpractices.xml/AvoidUsingHardCodedIP"/>
     <rule ref="category/java/bestpractices.xml/CheckResultSet"/>
@@ -103,7 +104,7 @@
     <rule ref="category/java/documentation.xml/UncommentedEmptyMethodBody"/>
 
 
-    <!-- ERRORPRONE -->
+    <!-- ERROR PRONE -->
     <rule ref="category/java/errorprone.xml/AssignmentInOperand">
         <properties>
             <property name="allowWhile" value="true"/>

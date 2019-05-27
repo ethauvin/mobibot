@@ -44,7 +44,7 @@ import java.time.LocalDateTime;
  */
 public class EntryComment implements Serializable {
     // The serial version UID.
-    static final long serialVersionUID = 6957415292233553224L;
+    static final long serialVersionUID = 1L;
 
     // The creation date.
     private final LocalDateTime date = LocalDateTime.now();

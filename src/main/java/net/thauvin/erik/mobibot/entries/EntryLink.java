@@ -52,7 +52,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
  */
 public class EntryLink implements Serializable {
     // The serial version UID.
-    static final long serialVersionUID = 3676245542270899086L;
+    static final long serialVersionUID = 1L;
 
     // The link's comments
     private final List<EntryComment> comments = new CopyOnWriteArrayList<>();

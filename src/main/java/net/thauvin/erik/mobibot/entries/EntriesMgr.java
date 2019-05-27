@@ -54,6 +54,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -99,7 +100,7 @@ public final class EntriesMgr {
      * @throws IOException   If the file was not found or could not be read.
      * @throws FeedException If an error occurred while reading the feed.
      */
-    public static void loadBacklogs(final String file, final List<String> history)
+    public static void loadBacklogs(final String file, final Collection<String> history)
         throws IOException, FeedException {
         history.clear();
 
@@ -131,7 +132,7 @@ public final class EntriesMgr {
      * @throws FeedException If an error occurred while reading the feed.
      */
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
-    public static String loadEntries(final String file, final String channel, final List<EntryLink> entries)
+    public static String loadEntries(final String file, final String channel, final Collection<EntryLink> entries)
         throws IOException, FeedException {
         entries.clear();
 
