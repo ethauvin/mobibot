@@ -6,9 +6,9 @@ plugins {
     id 'java'
     id 'pmd'
     id "com.github.ben-manes.versions" version "0.21.0"
-    id "com.github.spotbugs" version "1.7.1"
-    id "net.thauvin.erik.gradle.semver" version "1.0.0"
-    id "org.sonarqube" version "2.7"
+    id "com.github.spotbugs" version "2.0.0"
+    id "net.thauvin.erik.gradle.semver" version "1.0.2"
+    id "org.sonarqube" version "2.7.1"
 }
 
 
@@ -18,7 +18,7 @@ defaultTasks 'deploy'
 
 final def packageName = 'net.thauvin.erik.mobibot'
 final def deployDir = 'deploy'
-final def semverProcessor = "net.thauvin.erik:semver:1.1.1"
+final def semverProcessor = "net.thauvin.erik:semver:1.2.0"
 
 mainClassName = packageName + '.Mobibot'
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
@@ -28,7 +28,7 @@ compileJava.options.annotationProcessorGeneratedSourcesDirectory = file("${proje
 
 ext {
     log4j = '2.11.2'
-    spotbugs_annotations = '4.0.0-beta1'
+    spotbugs_annotations = '4.0.0-beta2'
 }
 
 repositories {
@@ -51,16 +51,16 @@ dependencies {
     compile 'commons-cli:commons-cli:1.4'
 
     compile 'commons-net:commons-net:3.6'
-    compile 'com.squareup.okhttp3:okhttp:3.14.1'
+    compile 'com.squareup.okhttp3:okhttp:3.14.2'
 
     compile 'com.rometools:rome:1.12.0'
 
     compile 'org.json:json:20180813'
-    compile 'org.jsoup:jsoup:1.11.3'
+    compile 'org.jsoup:jsoup:1.12.1'
     compile 'net.objecthunter:exp4j:0.4.8'
 
     compile 'org.twitter4j:twitter4j-core:4.0.7'
-    compile 'net.thauvin.erik:pinboard-poster:1.0.0'
+    compile 'net.thauvin.erik:pinboard-poster:1.0.1'
 
     compile 'net.aksingh:owm-japis:2.5.3.0'
 
@@ -68,7 +68,7 @@ dependencies {
     testImplementation 'org.assertj:assertj-core:3.12.2'
 
     spotbugsPlugins 'com.h3xstream.findsecbugs:findsecbugs-plugin:1.9.0'
-    spotbugsPlugins 'com.mebigfatguy.fb-contrib:fb-contrib:7.4.3.sb'
+    spotbugsPlugins 'com.mebigfatguy.fb-contrib:fb-contrib:7.4.5'
 
     compileOnly "com.github.spotbugs:spotbugs-annotations:$spotbugs_annotations"
     testCompileOnly "com.github.spotbugs:spotbugs-annotations:$spotbugs_annotations"
@@ -87,7 +87,7 @@ pmd {
 
 compileJava {
     dependsOn('incrementBuildMeta')
-    options.compilerArgs << '-Xlint:unchecked' << '-Xlint:deprecation'
+    options.compilerArgs += ['-Xlint:unchecked', '-Xlint:deprecation', "-Asemver.project.dir=$projectDir"]
 }
 
 javadoc {
@@ -104,7 +104,9 @@ jar {
 }
 
 clean {
-    delete deployDir
+    doLast {
+        project.delete(fileTree(deployDir))
+    }
 }
 
 run {
