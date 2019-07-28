@@ -44,6 +44,7 @@ import net.thauvin.erik.mobibot.msg.ErrorMessage;
 import net.thauvin.erik.mobibot.msg.Message;
 import net.thauvin.erik.mobibot.msg.NoticeMessage;
 import net.thauvin.erik.mobibot.msg.PublicMessage;
+import okhttp3.HttpUrl;
 import org.jibble.pircbot.Colors;
 
 import java.util.ArrayList;
@@ -167,10 +168,20 @@ public class Weather2 extends ThreadedModule {
                                 messages.add(new NoticeMessage(condition.toString()));
                             }
                         }
-                        messages.add(new NoticeMessage("https://openweathermap.org/city/"
-                            + cwd.getCityId(), Colors.GREEN));
-                    }
 
+                        if (cwd.getCityId() != null) {
+                            if (cwd.getCityId() > 0) {
+                                messages.add(new NoticeMessage("https://openweathermap.org/city/" + cwd.getCityId(),
+                                                               Colors.GREEN));
+                            } else {
+                                final HttpUrl url =
+                                    HttpUrl.parse("https://openweathermap.org/find").newBuilder().addQueryParameter(
+                                        "q", city).build();
+                                messages.add(
+                                    new NoticeMessage(url.toString(), Colors.GREEN));
+                            }
+                        }
+                    }
                 } catch (APIException | NullPointerException e) {
                     throw new ModuleException("getWeather(" + query + ')', "Unable to perform weather lookup.", e);
                 }
@@ -194,7 +205,7 @@ public class Weather2 extends ThreadedModule {
         bot.send(sender, "For example:");
         bot.send(sender, bot.helpIndent(bot.getNick() + ": " + WEATHER_CMD + " paris, fr"));
         bot.send(sender, "The default ISO 3166 country code is " + Utils.bold("US")
-            + ". Zip codes are supported in most countries.");
+                         + ". Zip codes are supported in most countries.");
     }
 
     /**
