@@ -162,11 +162,13 @@ task copyToDeploy(type: Copy) {
 }
 
 task copyToDeployLib(type: Copy) {
-    from configurations.compile
+    from(configurations.runtime) {
+        exclude 'annotations-*.jar'
+    }
     into deployDir + '/lib'
 }
 
-task deploy(dependsOn: ['build', 'jar']) {
+task deploy(dependsOn: ['clean', 'build', 'jar']) {
     description = 'Copies all needed files to the ${deployDir} directory.'
     group = 'Publishing'
     outputs.dir deployDir
