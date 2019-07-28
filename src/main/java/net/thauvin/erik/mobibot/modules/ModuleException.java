@@ -32,6 +32,7 @@
 
 package net.thauvin.erik.mobibot.modules;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import okhttp3.HttpUrl;
 
 import java.util.regex.Matcher;
@@ -97,6 +98,7 @@ public class ModuleException extends Exception {
      *
      * @return The sanitized message.
      */
+    @SuppressFBWarnings(value = "NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE", justification = "false positive?")
     String getSanitizedMessage() {
         if (hasCause()) {
             final String causeMessage = getCause().getMessage();

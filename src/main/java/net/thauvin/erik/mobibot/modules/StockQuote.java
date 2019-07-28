@@ -32,6 +32,7 @@
 
 package net.thauvin.erik.mobibot.modules;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import net.thauvin.erik.mobibot.Mobibot;
 import net.thauvin.erik.mobibot.Utils;
 import net.thauvin.erik.mobibot.msg.ErrorMessage;
@@ -82,6 +83,7 @@ public final class StockQuote extends ThreadedModule {
      * @return The {@link Message} array containing the stock quote.
      * @throws ModuleException If an errors occurs.
      */
+    @SuppressFBWarnings(value = "NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE", justification = "false positive?")
     static List<Message> getQuote(final String symbol, final String apiKey) throws ModuleException {
         if (!Utils.isValidString(apiKey)) {
             throw new ModuleException(Utils.capitalize(STOCK_CMD) + " is disabled. The API key is missing.");
