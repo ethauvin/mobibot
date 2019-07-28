@@ -181,4 +181,10 @@ public class Message {
     public void setPrivate(final boolean isPrivate) {
         this.isPrivate = isPrivate;
     }
+
+    @Override
+    public String toString() {
+        return "Message{" + "color='" + color + '\'' + ", isError=" + isError + ", isNotice=" + isNotice
+               + ", isPrivate=" + isPrivate + ", msg='" + msg + '\'' + '}';
+    }
 }
