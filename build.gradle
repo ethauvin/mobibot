@@ -64,7 +64,7 @@ dependencies {
     testImplementation 'org.assertj:assertj-core:3.12.2'
 
     spotbugsPlugins 'com.h3xstream.findsecbugs:findsecbugs-plugin:1.9.0'
-    spotbugsPlugins 'com.mebigfatguy.fb-contrib:fb-contrib:7.4.6'
+    spotbugsPlugins 'com.mebigfatguy.sb-contrib:sb-contrib:7.4.6'
 
     compileOnly "com.github.spotbugs:spotbugs-annotations:$spotbugs_annotations"
     testCompileOnly "com.github.spotbugs:spotbugs-annotations:$spotbugs_annotations"
