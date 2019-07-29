@@ -36,6 +36,7 @@ import org.testng.annotations.Test;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.temporal.Temporal;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -47,17 +48,17 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @since 1.0
  */
 public class TellMessageTest {
-    private final String message = "Test message.";
-    private final String recipient = "recipient";
-    private final String sender = "sender";
-    private final TellMessage tellMessage = new TellMessage(sender, recipient, message);
-
-    private boolean isValidDate(final LocalDateTime date) {
+    private boolean isValidDate(final Temporal date) {
         return Duration.between(date, LocalDateTime.now()).toMinutes() < 1;
     }
 
     @Test
     void testTellMessage() {
+        final String message = "Test message.";
+        final String recipient = "recipient";
+        final String sender = "sender";
+        final TellMessage tellMessage = new TellMessage(sender, recipient, message);
+
         assertThat(tellMessage.getSender()).as(sender).isEqualTo(sender);
         assertThat(tellMessage.getRecipient()).as(recipient).isEqualTo(recipient);
         assertThat(tellMessage.getMessage()).as(message).isEqualTo(message);
@@ -76,6 +77,5 @@ public class TellMessageTest {
         tellMessage.setIsNotified();
         assertThat(tellMessage.isNotified()).as("is notified").isTrue();
     }
-
 }
 
