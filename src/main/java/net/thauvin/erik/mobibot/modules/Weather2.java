@@ -169,14 +169,14 @@ public class Weather2 extends ThreadedModule {
                             }
                         }
 
-                        if (cwd.getCityId() != null) {
+                        if (cwd.hasCityId() && cwd.getCityId() != null) {
                             if (cwd.getCityId() > 0) {
                                 messages.add(new NoticeMessage("https://openweathermap.org/city/" + cwd.getCityId(),
                                                                Colors.GREEN));
                             } else {
                                 final HttpUrl url =
                                     HttpUrl.parse("https://openweathermap.org/find").newBuilder().addQueryParameter(
-                                        "q", city).build();
+                                        "q", city + ',' + country).build();
                                 messages.add(
                                     new NoticeMessage(url.toString(), Colors.GREEN));
                             }

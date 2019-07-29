@@ -53,7 +53,7 @@ public class Weather2Test extends LocalProperties {
     public void testWeather() throws ModuleException {
         List<Message> messages = Weather2.getWeather("98204", LocalProperties.getProperty(Weather2.OWM_API_KEY_PROP));
         assertThat(messages.get(0).getMessage()).as("is Everett").contains("Everett");
-        assertThat(messages.get(messages.size() - 1).getMessage()).as("is City Search").endsWith("98204");
+        assertThat(messages.get(messages.size() - 1).getMessage()).as("is City Search").endsWith("98204%2CUS");
 
         messages = Weather2.getWeather("London, UK", LocalProperties.getProperty(Weather2.OWM_API_KEY_PROP));
         assertThat(messages.get(0).getMessage()).as("is UK").contains("UK");
