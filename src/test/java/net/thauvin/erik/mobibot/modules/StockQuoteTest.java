@@ -39,6 +39,7 @@ import org.testng.annotations.Test;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 /**
  * The <code>StockQuoteTest</code> class.
@@ -62,19 +63,11 @@ public class StockQuoteTest extends LocalProperties {
             messages = StockQuote.getQuote("012", apiKey);
             assertThat(messages.get(0).isError()).as("invalid symbol error").isTrue();
 
-            try {
-                StockQuote.getQuote("test", "");
-            } catch (Exception e) {
-                assertThat(e).as("no API key").isInstanceOf(ModuleException.class);
-                assertThat(e).as("no API key exception has no cause").hasNoCause();
-            }
+            assertThatThrownBy(() -> StockQuote.getQuote("test", "")).as("no API key").isInstanceOf(
+                ModuleException.class).hasNoCause();
 
-            try {
-                StockQuote.getQuote("", "apikey");
-            } catch (Exception e) {
-                assertThat(e).as("no symbol").isInstanceOf(ModuleException.class);
-                assertThat(e).as("no symbol exception has no cause").hasNoCause();
-            }
+            assertThatThrownBy(() -> StockQuote.getQuote("", "apikey")).as("no symbol").isInstanceOf(
+                ModuleException.class).hasNoCause();
 
         } catch (ModuleException e) {
             // Avoid displaying api keys in CI logs.

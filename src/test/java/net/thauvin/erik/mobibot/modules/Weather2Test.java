@@ -33,12 +33,14 @@
 package net.thauvin.erik.mobibot.modules;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import net.aksingh.owmjapis.api.APIException;
 import net.thauvin.erik.mobibot.msg.Message;
 import org.testng.annotations.Test;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 /**
  * The <code>Weather2Test</code> class.
@@ -59,19 +61,17 @@ public class Weather2Test extends LocalProperties {
         assertThat(messages.get(0).getMessage()).as("is UK").contains("UK");
         assertThat(messages.get(messages.size() - 1).getMessage()).as("is City Code").endsWith("4298960");
 
-        try {
-            Weather2.getWeather("test", "");
-        } catch (Exception e) {
-            assertThat(e).as("no API key").isInstanceOf(ModuleException.class);
-            assertThat(e).as("no API key exception has no cause").hasNoCause();
-        }
+        assertThatThrownBy(
+            () -> Weather2.getWeather("Montpellier, FR", LocalProperties.getProperty(Weather2.OWM_API_KEY_PROP))).as(
+            "Montpellier not found").hasCauseInstanceOf(APIException.class);
 
-        try {
-            Weather2.getWeather("", "apikey");
-        } catch (Exception e) {
-            assertThat(e).as("no query").isInstanceOf(ModuleException.class);
-            assertThat(e).as("no query exception has no cause").hasNoCause();
-        }
+        assertThatThrownBy(
+            () -> Weather2.getWeather("test", "")).as(
+            "no API key").isInstanceOf(ModuleException.class).hasNoCause();
+
+        messages = Weather2.getWeather("", "apikey");
+        assertThat(messages.get(0).isError()).as("No api key.").isTrue();
+
     }
 
     @Test

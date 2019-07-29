@@ -39,6 +39,7 @@ import org.testng.annotations.Test;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 /**
  * The <code>GoogleSearchTest</code> class.
@@ -68,26 +69,14 @@ public class GoogleSearchTest extends LocalProperties {
             assertThat(messages).as("aapl results not empty").isNotEmpty();
             assertThat(messages.get(0).getMessage()).as("found apple").containsIgnoringCase("apple");
 
-            try {
-                GoogleSearch.searchGoogle("test", "", "apiKey");
-            } catch (Exception e) {
-                assertThat(e).as("no API key").isInstanceOf(ModuleException.class);
-                assertThat(e).as("no API key exception has no cause").hasNoCause();
-            }
+            assertThatThrownBy(() -> GoogleSearch.searchGoogle("test", "", "apiKey")).as("no API key").isInstanceOf(
+                ModuleException.class).hasNoCause();
 
-            try {
-                GoogleSearch.searchGoogle("test", "apiKey", "");
-            } catch (Exception e) {
-                assertThat(e).as("no CSE API key").isInstanceOf(ModuleException.class);
-                assertThat(e).as("no CSE API key exception has no cause").hasNoCause();
-            }
+            assertThatThrownBy(() -> GoogleSearch.searchGoogle("test", "apiKey", "")).as("no CSE API key").isInstanceOf(
+                ModuleException.class).hasNoCause();
 
-            try {
-                GoogleSearch.searchGoogle("", "apikey", "apiKey");
-            } catch (Exception e) {
-                assertThat(e).as("no query").isInstanceOf(ModuleException.class);
-                assertThat(e).as("no query exception has no cause").hasNoCause();
-            }
+            assertThatThrownBy(() -> GoogleSearch.searchGoogle("", "apikey", "apiKey")).as("no query").isInstanceOf(
+                ModuleException.class).hasNoCause();
         } catch (ModuleException e) {
             // Avoid displaying api keys in CI logs.
             if ("true".equals(System.getenv("CI"))) {
