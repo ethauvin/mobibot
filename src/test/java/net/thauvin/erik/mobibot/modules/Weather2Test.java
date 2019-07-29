@@ -54,11 +54,11 @@ public class Weather2Test extends LocalProperties {
     @Test
     public void testWeather() throws ModuleException {
         List<Message> messages = Weather2.getWeather("98204", LocalProperties.getProperty(Weather2.OWM_API_KEY_PROP));
-        assertThat(messages.get(0).getMessage()).as("is Everett").contains("Everett");
+        assertThat(messages.get(0).getMessage()).as("is Everett").contains("Everett").contains("US");
         assertThat(messages.get(messages.size() - 1).getMessage()).as("is City Search").endsWith("98204%2CUS");
 
         messages = Weather2.getWeather("London, UK", LocalProperties.getProperty(Weather2.OWM_API_KEY_PROP));
-        assertThat(messages.get(0).getMessage()).as("is UK").contains("UK");
+        assertThat(messages.get(0).getMessage()).as("is UK").contains("London").contains("UK");
         assertThat(messages.get(messages.size() - 1).getMessage()).as("is City Code").endsWith("4298960");
 
         assertThatThrownBy(
@@ -70,7 +70,7 @@ public class Weather2Test extends LocalProperties {
             "no API key").isInstanceOf(ModuleException.class).hasNoCause();
 
         messages = Weather2.getWeather("", "apikey");
-        assertThat(messages.get(0).isError()).as("No api key.").isTrue();
+        assertThat(messages.get(0).isError()).as("no query").isTrue();
 
     }
 
