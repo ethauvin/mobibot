@@ -32,6 +32,8 @@
 
 package net.thauvin.erik.mobibot.modules;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import net.thauvin.erik.mobibot.msg.ErrorMessage;
 import org.testng.annotations.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -55,9 +57,12 @@ public class CurrencyConverterTest {
     }
 
     @Test
+    @SuppressFBWarnings("PRMC_POSSIBLY_REDUNDANT_METHOD_CALLS")
     public void testConvertCurrency() throws ModuleException {
         assertThat(CurrencyConverter.convertCurrency("100 USD to EUR").getMessage())
             .as("100 USD to EUR").startsWith("100.00 USD = ");
+        assertThat(CurrencyConverter.convertCurrency("100 USD to USD"))
+            .as("100 USD to USD").isInstanceOf(ErrorMessage.class);
         assertThat(CurrencyConverter.convertCurrency(CurrencyConverter.CURRENCY_RATES_KEYWORD).isNotice())
             .as(CurrencyConverter.CURRENCY_RATES_KEYWORD + " is notice").isTrue();
         assertThat(CurrencyConverter.convertCurrency(CurrencyConverter.CURRENCY_RATES_KEYWORD).getMessage())

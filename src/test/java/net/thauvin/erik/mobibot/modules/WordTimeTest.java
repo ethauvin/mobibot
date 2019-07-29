@@ -45,14 +45,14 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 public class WordTimeTest {
     @Test
-    public void testWorldTimeImpl() {
-        AbstractModuleTest.testAbstractModule(new Lookup());
+    public void testWorldTime() {
+        assertThat(WorldTime.worldTime("PST").getMessage()).as("PST").endsWith("Los Angeles");
+        assertThat(WorldTime.worldTime("BLAH").isError()).as("BLAH").isTrue();
+        assertThat(WorldTime.worldTime("BEATS").getMessage()).as("BEATS").contains("@");
     }
 
     @Test
-    public void testWorldTime() {
-        assertThat(WorldTime.worldTime("PST").getMessage()).as("PST").startsWith("The time is ");
-        assertThat(WorldTime.worldTime("BLAH").isError()).as("BLAH").isTrue();
-        assertThat(WorldTime.worldTime("BEATS").getMessage()).as("BEATS").contains("@");
+    public void testWorldTimeImpl() {
+        AbstractModuleTest.testAbstractModule(new Lookup());
     }
 }

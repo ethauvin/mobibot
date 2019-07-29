@@ -45,15 +45,15 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 public class CalcTest {
     @Test
-    public void testCalcImpl() {
-        AbstractModuleTest.testAbstractModule(new Calc());
-    }
-    
-    @Test
     public void testCalc() {
         assertThat(Calc.calc("1 + 1")).as("calc(1+1)").isEqualTo("1+1 = 2");
         assertThat(Calc.calc("1 -3")).as("calc(1 -3)").isEqualTo("1-3 = -2");
         assertThat(Calc.calc("pi+π+e+φ")).as("calc(pi+π+e+φ)").isEqualTo("pi+π+e+φ = 10.62");
         assertThat(Calc.calc("one + one")).as("calc(one + one)").startsWith("No idea.");
+    }
+
+    @Test
+    public void testCalcImpl() {
+        AbstractModuleTest.testAbstractModule(new Calc());
     }
 }
