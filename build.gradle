@@ -84,9 +84,7 @@ pmd {
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
     options.annotationProcessorGeneratedSourcesDirectory = file("${projectDir}/src/generated/java")
-    if (JavaVersion.current().isJava12Compatible()) {
-        options.compilerArgs += [ "-Asemver.project.dir=$projectDir" ]
-    }
+    options.compilerArgs += [ "-Asemver.project.dir=$projectDir" ]
 }
 
 compileJava {
