@@ -91,7 +91,7 @@ public class TellMessage implements Serializable {
     }
 
     /**
-     * Returns the state of the queue flag.
+     * Returns the queued date/time.
      *
      * @return <code>true</code> if the message is queued.
      */
