@@ -56,12 +56,15 @@ public class StockQuoteTest extends LocalProperties {
     public void testGetQuote() throws ModuleException {
         final String apiKey = LocalProperties.getProperty(StockQuote.ALPHAVANTAGE_API_KEY_PROP);
         try {
-            List<Message> messages = StockQuote.getQuote("AAPL", apiKey);
+            final List<Message> messages = StockQuote.getQuote("AAPL", apiKey);
             assertThat(messages).as("response not empty").isNotEmpty();
             assertThat(messages.get(0).getMessage()).as("same stock symbol").contains("AAPL");
 
-            messages = StockQuote.getQuote("012", apiKey);
-            assertThat(messages.get(0).isError()).as("invalid symbol error").isTrue();
+            try {
+                StockQuote.getQuote("012", apiKey);
+            } catch (ModuleException e) {
+                assertThat(e.getMessage()).as("invalid symbol").containsIgnoringCase("invalid symbol");
+            }
 
             assertThatThrownBy(() -> StockQuote.getQuote("test", "")).as("no API key").isInstanceOf(
                 ModuleException.class).hasNoCause();

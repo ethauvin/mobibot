@@ -113,7 +113,12 @@ public final class StockQuote extends ThreadedModule {
                     try {
                         final String error = json.getString("Error Message");
                         if (!error.isEmpty()) {
-                            throw new ModuleException(debugMessage, Utils.unescapeXml(error));
+                            if (error.startsWith("Invalid API call.")) {
+                                throw new ModuleException(debugMessage + ": " + Utils.unescapeXml(error),
+                                    "Invalid symbol.");
+                            } else {
+                                throw new ModuleException(debugMessage, Utils.unescapeXml(error));
+                            }
                         }
                     } catch (JSONException ignore) {
                         // Do nothing.
