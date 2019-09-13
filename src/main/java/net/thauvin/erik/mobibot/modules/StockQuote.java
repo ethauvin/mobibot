@@ -81,7 +81,7 @@ public final class StockQuote extends ThreadedModule {
         properties.put(ALPHAVANTAGE_API_KEY_PROP, "");
     }
 
-    @SuppressFBWarnings("NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE")
+    @SuppressFBWarnings(value = "NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE", justification = "false positive?")
     private static JSONObject getJsonResponse(final Response response, final String debugMessage)
         throws IOException, ModuleException {
         if (response.isSuccessful()) {
@@ -131,7 +131,6 @@ public final class StockQuote extends ThreadedModule {
      * @return The {@link Message} array containing the stock quote.
      * @throws ModuleException If an errors occurs.
      */
-    @SuppressFBWarnings(value = "NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE", justification = "false positive?")
     static List<Message> getQuote(final String symbol, final String apiKey) throws ModuleException {
         if (!Utils.isValidString(apiKey)) {
             throw new ModuleException(Utils.capitalize(STOCK_CMD) + " is disabled. The API key is missing.");
