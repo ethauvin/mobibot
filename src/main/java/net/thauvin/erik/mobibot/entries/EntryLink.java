@@ -297,7 +297,7 @@ public class EntryLink implements Serializable {
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     public final void setTags(final String tags) {
         if (tags != null) {
-            final String[] parts = tags.replace(", ", " ").replace(",", " ").split(" ");
+            final String[] parts = tags.replace(", ", " ").replace(',', ' ').split(" ");
 
             SyndCategoryImpl tag;
             String part;

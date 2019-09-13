@@ -65,7 +65,7 @@ class LocalProperties {
     }
 
     private static String keyToEnv(final String key) {
-        return key.replace("-", "_").toUpperCase(Constants.LOCALE);
+        return key.replace('-', '_').toUpperCase(Constants.LOCALE);
     }
 
     @BeforeSuite(alwaysRun = true)
