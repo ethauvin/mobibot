@@ -81,6 +81,49 @@ public final class StockQuote extends ThreadedModule {
         properties.put(ALPHAVANTAGE_API_KEY_PROP, "");
     }
 
+    @SuppressFBWarnings("NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE")
+    private static JSONObject getJsonResponse(final Response response, final String debugMessage)
+        throws IOException, ModuleException {
+        if (response.isSuccessful()) {
+            if (response.body() != null) {
+                final JSONObject json = new JSONObject(Objects.requireNonNull(response.body()).string());
+
+                try {
+                    final String info = json.getString("Information");
+                    if (!info.isEmpty()) {
+                        throw new ModuleException(debugMessage, Utils.unescapeXml(info));
+                    }
+                } catch (JSONException ignore) {
+                    // Do nothing.
+                }
+
+                try {
+                    final String error = json.getString("Note");
+                    if (!error.isEmpty()) {
+                        throw new ModuleException(debugMessage, Utils.unescapeXml(error));
+                    }
+                } catch (JSONException ignore) {
+                    // Do nothing.
+                }
+
+                try {
+                    final String error = json.getString("Error Message");
+                    if (!error.isEmpty()) {
+                        throw new ModuleException(debugMessage, Utils.unescapeXml(error));
+                    }
+                } catch (JSONException ignore) {
+                    // Do nothing.
+                }
+
+                return json;
+            } else {
+                throw new ModuleException(debugMessage, "Invalid Response (" + response.code() + ')');
+            }
+        } else {
+            throw new ModuleException(debugMessage, "Empty Response.");
+        }
+    }
+
     /**
      * Retrieves a stock quote.
      *
@@ -105,58 +148,47 @@ public final class StockQuote extends ThreadedModule {
                     ALAPHADVANTAGE_URL + "SYMBOL_SEARCH&keywords=" + symbol + "&apikey=" + apiKey).build();
                 Response response = client.newCall(request).execute();
 
-                if (response.body() != null) {
-                    JSONObject json = new JSONObject(Objects.requireNonNull(response.body()).string());
-                    validateJsonResponse(json, debugMessage);
+                JSONObject json = getJsonResponse(response, debugMessage);
 
-                    final JSONArray symbols = json.getJSONArray("bestMatches");
-                    if (symbols.isEmpty()) {
-                        messages.add(new ErrorMessage(INVALID_SYMBOL));
-                        return messages;
-                    }
-
-                    final JSONObject symbolInfo = symbols.getJSONObject(0);
-
-                    // Get quote for symbol
-                    request = new Request.Builder().url(
-                        ALAPHADVANTAGE_URL + "GLOBAL_QUOTE&symbol=" + symbolInfo.getString("1. symbol") + "&apikey="
-                        + apiKey).build();
-                    response = client.newCall(request).execute();
-                    if (response.body() != null) {
-                        json = new JSONObject(Objects.requireNonNull(response.body()).string());
-                        validateJsonResponse(json, debugMessage);
-
-                        final JSONObject quote = json.getJSONObject("Global Quote");
-
-                        if (quote.isEmpty()) {
-                            messages.add(new ErrorMessage(INVALID_SYMBOL));
-                            return messages;
-                        }
-
-                        messages.add(new PublicMessage(
-                            "Symbol: " + Utils.unescapeXml(quote.getString("01. symbol")) + " [" + Utils
-                                .unescapeXml(symbolInfo.getString("2. name") + ']')));
-                        messages.add(
-                            new PublicMessage("    Price:     " + Utils.unescapeXml(quote.getString("05. price"))));
-                        messages.add(new PublicMessage(
-                            "    Previous:  " + Utils.unescapeXml(quote.getString("08. previous close"))));
-                        messages.add(
-                            new NoticeMessage("    Open:      " + Utils.unescapeXml(quote.getString("02. open"))));
-                        messages.add(
-                            new NoticeMessage("    High:      " + Utils.unescapeXml(quote.getString("03. high"))));
-                        messages.add(
-                            new NoticeMessage("    Low:       " + Utils.unescapeXml(quote.getString("04. low"))));
-                        messages.add(
-                            new NoticeMessage("    Volume:    " + Utils.unescapeXml(quote.getString("06. volume"))));
-                        messages.add(new NoticeMessage(
-                            "    Latest:    " + Utils.unescapeXml(quote.getString("07. latest trading day"))));
-                        messages.add(new NoticeMessage(
-                            "    Change:    " + Utils.unescapeXml(quote.getString("09. change")) + " [" + Utils
-                                .unescapeXml(quote.getString("10. change percent")) + ']'));
-
-                    }
+                final JSONArray symbols = json.getJSONArray("bestMatches");
+                if (symbols.isEmpty()) {
+                    messages.add(new ErrorMessage(INVALID_SYMBOL));
+                    return messages;
                 }
-            } catch (IOException e) {
+
+                final JSONObject symbolInfo = symbols.getJSONObject(0);
+
+                // Get quote for symbol
+                request = new Request.Builder().url(
+                    ALAPHADVANTAGE_URL + "GLOBAL_QUOTE&symbol=" + symbolInfo.getString("1. symbol") + "&apikey="
+                    + apiKey).build();
+                response = client.newCall(request).execute();
+
+                json = getJsonResponse(response, debugMessage);
+
+                final JSONObject quote = json.getJSONObject("Global Quote");
+
+                if (quote.isEmpty()) {
+                    messages.add(new ErrorMessage(INVALID_SYMBOL));
+                    return messages;
+                }
+
+                messages.add(new PublicMessage(
+                    "Symbol: " + Utils.unescapeXml(quote.getString("01. symbol")) + " [" + Utils
+                        .unescapeXml(symbolInfo.getString("2. name") + ']')));
+                messages.add(new PublicMessage("    Price:     " + Utils.unescapeXml(quote.getString("05. price"))));
+                messages.add(
+                    new PublicMessage("    Previous:  " + Utils.unescapeXml(quote.getString("08. previous close"))));
+                messages.add(new NoticeMessage("    Open:      " + Utils.unescapeXml(quote.getString("02. open"))));
+                messages.add(new NoticeMessage("    High:      " + Utils.unescapeXml(quote.getString("03. high"))));
+                messages.add(new NoticeMessage("    Low:       " + Utils.unescapeXml(quote.getString("04. low"))));
+                messages.add(new NoticeMessage("    Volume:    " + Utils.unescapeXml(quote.getString("06. volume"))));
+                messages.add(new NoticeMessage(
+                    "    Latest:    " + Utils.unescapeXml(quote.getString("07. latest trading day"))));
+                messages.add(new NoticeMessage(
+                    "    Change:    " + Utils.unescapeXml(quote.getString("09. change")) + " [" + Utils
+                        .unescapeXml(quote.getString("10. change percent")) + ']'));
+            } catch (IOException | NullPointerException e) {
                 throw new ModuleException(debugMessage, "An error has occurred retrieving a stock quote.", e);
             }
             return messages;
@@ -191,35 +223,6 @@ public final class StockQuote extends ThreadedModule {
             }
         } else {
             helpResponse(bot, sender, symbol, true);
-        }
-    }
-
-    private static void validateJsonResponse(final JSONObject json, final String debugMessage) throws ModuleException {
-        try {
-            final String info = json.getString("Information");
-            if (!info.isEmpty()) {
-                throw new ModuleException(debugMessage, Utils.unescapeXml(info));
-            }
-        } catch (JSONException ignore) {
-            // Do nothing.
-        }
-
-        try {
-            final String error = json.getString("Note");
-            if (!error.isEmpty()) {
-                throw new ModuleException(debugMessage, Utils.unescapeXml(error));
-            }
-        } catch (JSONException ignore) {
-            // Do nothing.
-        }
-
-        try {
-            final String error = json.getString("Error Message");
-            if (!error.isEmpty()) {
-                throw new ModuleException(debugMessage, Utils.unescapeXml(error));
-            }
-        } catch (JSONException ignore) {
-            // Do nothing.
         }
     }
 }
