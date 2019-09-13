@@ -71,7 +71,7 @@ public class Calc extends AbstractModule {
 
         try {
             final Expression calc = new ExpressionBuilder(query).build();
-            return query.replaceAll(" ", "") + " = " + decimalFormat.format(calc.evaluate());
+            return query.replace(" ", "") + " = " + decimalFormat.format(calc.evaluate());
         } catch (Exception e) {
             return "No idea. This is the kind of math I don't get.";
         }

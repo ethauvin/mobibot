@@ -115,6 +115,6 @@ public final class EntriesUtils {
      * @return The entry's tags.
      */
     public static String buildTags(final int entryIndex, final EntryLink entry) {
-        return (Commands.LINK_CMD + (entryIndex + 1) + "T: " + entry.getPinboardTags().replaceAll(",", ", "));
+        return (Commands.LINK_CMD + (entryIndex + 1) + "T: " + entry.getPinboardTags().replace(",", ", "));
     }
 }

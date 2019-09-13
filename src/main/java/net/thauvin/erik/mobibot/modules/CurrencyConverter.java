@@ -175,7 +175,7 @@ public final class CurrencyConverter extends ThreadedModule {
                     return new ErrorMessage("You're kidding, right?");
                 } else {
                     try {
-                        final double amt = Double.parseDouble(cmds[0].replaceAll(",", ""));
+                        final double amt = Double.parseDouble(cmds[0].replace(",", ""));
                         final double from = Double.parseDouble(EXCHANGE_RATES.get(cmds[1]
                             .toUpperCase(Constants.LOCALE)));
                         final double to = Double.parseDouble(EXCHANGE_RATES.get(cmds[3].toUpperCase(Constants.LOCALE)));

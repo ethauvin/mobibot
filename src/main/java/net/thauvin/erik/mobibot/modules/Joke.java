@@ -89,8 +89,8 @@ public final class Joke extends ThreadedModule {
 
                 //noinspection RegExpRedundantEscape
                 return new PublicMessage(
-                    json.getJSONObject("value").get("joke").toString().replaceAll("\\'", "'")
-                        .replaceAll("\\\"", "\""));
+                    json.getJSONObject("value").get("joke").toString().replace("\\'", "'")
+                        .replace("\\\"", "\""));
             }
         } catch (Exception e) {
             throw new ModuleException("randomJoke()", "An error has occurred retrieving a random joke.", e);

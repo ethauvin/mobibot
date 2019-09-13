@@ -247,12 +247,12 @@ public final class Utils {
      * @return The unescaped string.
      */
     public static String unescapeXml(final String str) {
-        return str.replaceAll("&amp;", "&")
-            .replaceAll("&lt;", "<")
-            .replaceAll("&gt;", ">")
-            .replaceAll("&quot;", "\"")
-            .replaceAll("&apos;", "'")
-            .replaceAll("&#39;", "'");
+        return str.replace("&amp;", "&")
+            .replace("&lt;", "<")
+            .replace("&gt;", ">")
+            .replace("&quot;", "\"")
+            .replace("&apos;", "'")
+            .replace("&#39;", "'");
     }
 
     /**
