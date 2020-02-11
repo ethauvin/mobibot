@@ -1,3 +1,4 @@
+__pycache__
 !.vscode/extensions.json
 !.vscode/launch.json
 !.vscode/settings.json
@@ -25,9 +26,10 @@
 .idea/**/uiDesigner.xml
 .idea/**/usage.statistics.xml
 .idea/**/workspace.xml
-.idea/caches/build_file_checksums.ser
-.idea/httpRequests
-.idea/replstate.xml
+.idea/**/caches/build_file_checksums.ser
+.idea/**/httpRequests
+.idea/**/replstate.xml
+.idea/**/shelf/
 .kobalt
 .mtj.tmp/
 .mvn/timing.properties
@@ -84,3 +86,4 @@ release.properties
 target/
 test-output
 Thumbs.db
+venv
