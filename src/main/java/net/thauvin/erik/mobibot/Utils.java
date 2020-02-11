@@ -273,17 +273,13 @@ public final class Utils {
 
         if (days > 0) {
             info.append(days).append(plural(days, " day ", " days "));
-
         }
 
         if (hours > 0) {
             info.append(hours).append(plural(hours, " hour ", " hours "));
-
         }
 
-        if (minutes > 0) {
-            info.append(minutes).append(plural(minutes, " minute", " minutes"));
-        }
+        info.append(minutes).append(plural(minutes, " minute", " minutes"));
 
         return info.toString();
     }
