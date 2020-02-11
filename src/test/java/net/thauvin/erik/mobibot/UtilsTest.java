@@ -32,6 +32,7 @@
 
 package net.thauvin.erik.mobibot;
 
+import org.apache.commons.lang3.StringUtils;
 import org.jibble.pircbot.Colors;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -54,8 +55,7 @@ public class UtilsTest {
         " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~";
 
     private final Calendar cal = Calendar.getInstance();
-    private final LocalDateTime localDateTime =
-        LocalDateTime.of(1952, 2, 17, 12, 30, 0);
+    private final LocalDateTime localDateTime = LocalDateTime.of(1952, 2, 17, 12, 30, 0);
 
     @BeforeClass
     public void setUp() {
@@ -69,16 +69,11 @@ public class UtilsTest {
     }
 
     @Test
-    public void testCapitalize() {
-        assertThat(Utils.capitalize("this is a test.")).isEqualTo("This is a test.");
-    }
-
-    @Test
     public void testColorize() {
-        assertThat(Utils.colorize(ASCII, Colors.REVERSE)).as("reverse")
-            .isEqualTo(Colors.REVERSE + ASCII + Colors.REVERSE);
-        assertThat(Utils.colorize(ASCII, Colors.RED)).as("red")
-            .isEqualTo(Colors.RED + ASCII + Colors.NORMAL);
+        assertThat(Utils.colorize(ASCII, Colors.REVERSE)).as("colorize(reverse)").isEqualTo(
+            Colors.REVERSE + ASCII + Colors.REVERSE);
+        assertThat(Utils.colorize(ASCII, Colors.RED)).as("colorize(red)").isEqualTo(Colors.RED + ASCII + Colors.NORMAL);
+        assertThat(Utils.colorize(null, Colors.RED)).as("colorize(null)").isEqualTo(Colors.NORMAL);
     }
 
     @Test
@@ -88,10 +83,9 @@ public class UtilsTest {
 
     @Test
     public void testEnsureDir() {
-        assertThat(Utils.ensureDir("dir", false)).as("ensureDir(dir, false)")
-            .isEqualTo("dir" + File.separatorChar);
-        assertThat(Utils.ensureDir("https://erik.thauvin.net", true))
-            .as("ensureDir(erik.thauvin.net, true)").isEqualTo("https://erik.thauvin.net/");
+        assertThat(Utils.ensureDir("dir", false)).as("ensureDir(dir, false)").isEqualTo("dir" + File.separatorChar);
+        assertThat(Utils.ensureDir("https://erik.thauvin.net", true)).as("ensureDir(erik.thauvin.net, true)").isEqualTo(
+            "https://erik.thauvin.net/");
     }
 
     @Test
@@ -106,18 +100,16 @@ public class UtilsTest {
     }
 
     @Test
-    public void testIsValidString() {
-        assertThat(Utils.isValidString(ASCII)).as("isValidString(ascii)").isTrue();
-        assertThat(Utils.isValidString("")).as("isValidString(empty)").isFalse();
-        assertThat(Utils.isValidString("    ")).as("isValidString(   )").isFalse();
-        assertThat(Utils.isValidString("  \t ")).as("isValidString(tab)").isFalse();
-        assertThat(Utils.isValidString(null)).as("isValidString(null)").isFalse();
-    }
-
-    @Test
     public void testIsoLocalDate() {
         assertThat(Utils.isoLocalDate(cal.getTime())).as("isoLocalDate(date)").isEqualTo("1952-02-17");
         assertThat(Utils.isoLocalDate(localDateTime)).as("isoLocalDate(localDate)").isEqualTo("1952-02-17");
+    }
+
+    @Test
+    public void testObfuscate() {
+        assertThat(Utils.obfuscate(ASCII).length()).as("obfuscate is right length").isEqualTo(ASCII.length());
+        assertThat(Utils.obfuscate(ASCII)).as("obfuscate()").isEqualTo(StringUtils.repeat("x", ASCII.length()));
+        assertThat(Utils.obfuscate(" ")).as("obfuscate(blank)").isEqualTo(" ");
     }
 
     @Test
@@ -143,14 +135,18 @@ public class UtilsTest {
 
     @Test
     public void testUnescapeXml() {
-        assertThat(Utils.unescapeXml("&lt;a name=&quot;test &amp; &apos;&#39;&quot;&gt;"))
-            .isEqualTo("<a name=\"test & ''\">");
+        assertThat(Utils.unescapeXml("&lt;a name=&quot;test &amp; &apos;&#39;&quot;&gt;")).isEqualTo(
+            "<a name=\"test & ''\">");
+    }
+
+    @Test
+    public void testUptime() {
+        assertThat("17 years 2 months 2 weeks 1 day 6 hours 45 minutes").isEqualTo(Utils.uptime(547800300076L));
     }
 
     @Test
     public void testUtcDateTime() {
         assertThat(Utils.utcDateTime(cal.getTime())).as("utcDateTime(date)").isEqualTo("1952-02-17 12:30");
-        assertThat(Utils.utcDateTime(localDateTime)).as("utcDateTime(localDate)")
-            .isEqualTo("1952-02-17 12:30");
+        assertThat(Utils.utcDateTime(localDateTime)).as("utcDateTime(localDate)").isEqualTo("1952-02-17 12:30");
     }
 }

@@ -32,6 +32,7 @@
 
 package net.thauvin.erik.mobibot;
 
+import org.apache.commons.lang3.StringUtils;
 import org.jibble.pircbot.Colors;
 
 import java.io.File;
@@ -39,6 +40,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Miscellaneous utilities class.
@@ -78,16 +80,6 @@ public final class Utils {
     }
 
     /**
-     * Capitalize a string.
-     *
-     * @param s The string.
-     * @return The capitalized string.
-     */
-    public static String capitalize(final String s) {
-        return s.substring(0, 1).toUpperCase(Constants.LOCALE) + s.substring(1);
-    }
-
-    /**
      * Colorize a string.
      *
      * @param s     The string.
@@ -95,8 +87,8 @@ public final class Utils {
      * @return The colorized string.
      */
     static String colorize(final String s, final String color) {
-        if (!Utils.isValidString(color) || Colors.NORMAL.equals(color)) {
-            return s;
+        if (s == null) {
+            return Colors.NORMAL;
         } else if (Colors.BOLD.equals(color) || Colors.REVERSE.equals(color)) {
             return color + s + color;
         }
@@ -105,7 +97,7 @@ public final class Utils {
     }
 
     /**
-     * Meks the given string cyan.
+     * Makes the given string cyan.
      *
      * @param s The string.
      * @return The cyan string.
@@ -167,25 +159,6 @@ public final class Utils {
     }
 
     /**
-     * Returns <code>true</code> if the given string is <em>not</em> blank or null.
-     *
-     * @param s The string to check.
-     * @return <code>true</code> if the string is valid, <code>false</code> otherwise.
-     */
-    public static boolean isValidString(final CharSequence s) {
-        if (s == null || s.length() == 0) {
-            return false;
-        }
-        final int len = s.length();
-        for (int i = 0; i < len; i++) {
-            if (!Character.isWhitespace(s.charAt(i))) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
      * Returns the specified date as an ISO local date string.
      *
      * @param date The date.
@@ -203,6 +176,19 @@ public final class Utils {
      */
     public static String isoLocalDate(final LocalDateTime date) {
         return date.format(DateTimeFormatter.ISO_LOCAL_DATE);
+    }
+
+    /**
+     * Obfuscates the given string.
+     *
+     * @param s The string.
+     * @return The obfuscated string.
+     */
+    public static String obfuscate(final String s) {
+        if (StringUtils.isNotBlank(s)) {
+            return StringUtils.repeat('x', s.length());
+        }
+        return s;
     }
 
     /**
@@ -247,19 +233,66 @@ public final class Utils {
      * @return The unescaped string.
      */
     public static String unescapeXml(final String str) {
-        return str.replace("&amp;", "&")
-            .replace("&lt;", "<")
-            .replace("&gt;", ">")
-            .replace("&quot;", "\"")
-            .replace("&apos;", "'")
-            .replace("&#39;", "'");
+        return str.replace("&amp;", "&").replace("&lt;", "<").replace("&gt;", ">").replace("&quot;", "\"").replace(
+            "&apos;", "'").replace("&#39;", "'");
+    }
+
+    /**
+     * Converts milliseconds to year month week day hour and minutes.
+     *
+     * @param uptime The uptime in milliseconds.
+     * @return The uptime in year month week day hours and minutes.
+     */
+    public static String uptime(final long uptime) {
+        final StringBuilder info = new StringBuilder();
+
+        long days = TimeUnit.MILLISECONDS.toDays(uptime);
+        final long years = days / 365;
+        days %= 365;
+        final long months = days / 30;
+        days %= 30;
+        final long weeks = days / 7;
+        days %= 7;
+        final long hours = TimeUnit.MILLISECONDS.toHours(uptime) - TimeUnit.DAYS.toHours(
+            TimeUnit.MILLISECONDS.toDays(uptime));
+        final long minutes = TimeUnit.MILLISECONDS.toMinutes(uptime) - TimeUnit.HOURS.toMinutes(
+            TimeUnit.MILLISECONDS.toHours(uptime));
+
+        if (years > 0) {
+            info.append(years).append(plural(years, " year ", " years "));
+        }
+
+        if (months > 0) {
+            info.append(weeks).append(plural(months, " month ", " months "));
+        }
+
+        if (weeks > 0) {
+            info.append(weeks).append(plural(weeks, " week ", " weeks "));
+        }
+
+
+        if (days > 0) {
+            info.append(days).append(plural(days, " day ", " days "));
+
+        }
+
+        if (hours > 0) {
+            info.append(hours).append(plural(hours, " hour ", " hours "));
+
+        }
+
+        if (minutes > 0) {
+            info.append(minutes).append(plural(minutes, " minute", " minutes"));
+        }
+
+        return info.toString();
     }
 
     /**
      * Returns the specified date formatted as <code>yyyy-MM-dd HH:mm</code>.
      *
      * @param date The date.
-     * @return The fromatted date.
+     * @return The formatted date.
      */
     public static String utcDateTime(final Date date) {
         return utcDateTime(LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault()));

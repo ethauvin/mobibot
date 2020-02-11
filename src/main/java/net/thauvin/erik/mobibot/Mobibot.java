@@ -62,6 +62,7 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -78,6 +79,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
+import java.lang.management.ManagementFactory;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.Clock;
@@ -109,10 +111,9 @@ public class Mobibot extends PircBot {
     private static final String DEFAULT_SERVER = "irc.freenode.net";
 
     // The info strings.
-    private static final String[] INFO_STRS = {
-        ReleaseInfo.PROJECT + " v" + ReleaseInfo.VERSION + " by Erik C. Thauvin (erik@thauvin.net)",
-        "https://www.mobitopia.org/mobibot/"
-    };
+    private static final String[] INFO_STRS =
+        {ReleaseInfo.PROJECT + " v" + ReleaseInfo.VERSION + " by Erik C. Thauvin (erik@thauvin.net)",
+         "https://www.mobitopia.org/mobibot/"};
 
     // The link match string.
     private static final String LINK_MATCH = "^[hH][tT][tT][pP](|[sS])://.*";
@@ -132,39 +133,18 @@ public class Mobibot extends PircBot {
     // The modules.
     private static final List<AbstractModule> MODULES = new ArrayList<>(0);
 
-    // The start time.
-    private static final long START_TIME = System.currentTimeMillis();
-
     // The tags/categories marker.
     private static final String TAGS_MARKER = "tags:";
 
     // The version strings.
-    private static final String[] VERSION_STRS = {
-        "Version: "
-            + ReleaseInfo.VERSION
-            + " ("
-            + Utils.isoLocalDate(ReleaseInfo.BUILDDATE) + ')',
-        "Platform: "
-            + System.getProperty("os.name")
-            + " ("
-            + System.getProperty("os.version")
-            + ", "
-            + System.getProperty("os.arch")
-            + ", "
-            + System.getProperty("user.country") + ')',
-        "Runtime: "
-            + System.getProperty("java.runtime.name")
-            + " (build "
-            + System.getProperty("java.runtime.version")
-            + ')',
-        "VM: "
-            + System.getProperty("java.vm.name")
-            + " (build "
-            + System.getProperty("java.vm.version")
-            + ", "
-            + System.getProperty("java.vm.info")
-            + ')'
-    };
+    private static final String[] VERSION_STRS = {"Version: " + ReleaseInfo.VERSION + " (" + Utils.isoLocalDate(
+        ReleaseInfo.BUILDDATE) + ')', "Platform: " + System.getProperty("os.name") + " (" + System.getProperty(
+        "os.version") + ", " + System.getProperty("os.arch") + ", " + System.getProperty("user.country") + ')',
+                                                  "Runtime: " + System.getProperty("java.runtime.name") + " (build "
+                                                  + System.getProperty("java.runtime.version") + ')',
+                                                  "VM: " + System.getProperty("java.vm.name") + " (build " + System
+                                                      .getProperty("java.vm.version") + ", " + System.getProperty(
+                                                      "java.vm.info") + ')'};
     // The logger.
     private static final Logger logger = LogManager.getLogger(Mobibot.class);
     // The commands list.
@@ -223,9 +203,9 @@ public class Mobibot extends PircBot {
     public Mobibot(final String nickname, final String channel, final String logsDirPath, final Properties p) {
         super();
         System.getProperties().setProperty("sun.net.client.defaultConnectTimeout",
-            String.valueOf(Constants.CONNECT_TIMEOUT));
+                                           String.valueOf(Constants.CONNECT_TIMEOUT));
         System.getProperties().setProperty("sun.net.client.defaultReadTimeout",
-            String.valueOf(Constants.CONNECT_TIMEOUT));
+                                           String.valueOf(Constants.CONNECT_TIMEOUT));
 
         setName(nickname);
 
@@ -274,8 +254,7 @@ public class Mobibot extends PircBot {
         setLogin(p.getProperty("login", getName()));
         setVersion(p.getProperty("weblog", ""));
         setMessageDelay(MESSAGE_DELAY);
-        setIdentity(p.getProperty("ident", ""), p.getProperty("ident-nick", ""),
-            p.getProperty("ident-msg", ""));
+        setIdentity(p.getProperty("ident", ""), p.getProperty("ident-nick", ""), p.getProperty("ident-msg", ""));
 
         // Set the URLs
         setWeblogUrl(getVersion());
@@ -304,12 +283,11 @@ public class Mobibot extends PircBot {
         MODULES.add(new WorldTime());
 
         // Load the modules properties
-        MODULES.stream().filter(AbstractModule::hasProperties).forEach(
-            module -> {
-                for (final String s : module.getPropertyKeys()) {
-                    module.setProperty(s, p.getProperty(s, ""));
-                }
-            });
+        MODULES.stream().filter(AbstractModule::hasProperties).forEach(module -> {
+            for (final String s : module.getPropertyKeys()) {
+                module.setProperty(s, p.getProperty(s, ""));
+            }
+        });
 
         // Get the tell command settings
         tell = new Tell(this, p.getProperty("tell-max-days"), p.getProperty("tell-max-size"));
@@ -340,7 +318,7 @@ public class Mobibot extends PircBot {
      * @param action  The action.
      */
     private void action(final String channel, final String action) {
-        if (Utils.isValidString(channel) && Utils.isValidString(action)) {
+        if (StringUtils.isNotBlank(channel) && StringUtils.isNotBlank(action)) {
             sendAction(channel, action);
         }
     }
@@ -364,8 +342,7 @@ public class Mobibot extends PircBot {
                     if (retries == MAX_RECONNECT) {
                         if (logger.isDebugEnabled()) {
                             logger.debug(
-                                "Unable to reconnect to " + ircServer + " after " + MAX_RECONNECT + " retries.",
-                                ex);
+                                "Unable to reconnect to " + ircServer + " after " + MAX_RECONNECT + " retries.", ex);
                         }
 
                         e.printStackTrace(System.err);
@@ -388,7 +365,7 @@ public class Mobibot extends PircBot {
      * @param sender The nick of the person who sent the private message.
      */
     private void feedResponse(final String sender) {
-        if (Utils.isValidString(feedUrl)) {
+        if (StringUtils.isNotBlank(feedUrl)) {
             new Thread(new FeedReader(this, sender, feedUrl)).start();
         } else {
             send(sender, "There is no weblog setup for this channel.");
@@ -478,10 +455,8 @@ public class Mobibot extends PircBot {
 
         for (final char c : getNick().toCharArray()) {
             if (Character.isLetter(c)) {
-                buff.append('[')
-                    .append(String.valueOf(c).toLowerCase(Constants.LOCALE))
-                    .append(String.valueOf(c).toUpperCase(Constants.LOCALE))
-                    .append(']');
+                buff.append('[').append(String.valueOf(c).toLowerCase(Constants.LOCALE)).append(
+                    String.valueOf(c).toUpperCase(Constants.LOCALE)).append(']');
             } else {
                 buff.append(c);
             }
@@ -651,11 +626,8 @@ public class Mobibot extends PircBot {
                 if (isOp(sender)) {
                     send(sender, "The op commands are:");
                     send(sender, helpIndent(
-                        Commands.CYCLE_CMD + "  "
-                            + Commands.ME_CMD + "  "
-                            + Commands.MSG_CMD + "  "
-                            + Commands.SAY_CMD + "  "
-                            + Commands.VERSION_CMD));
+                        Commands.CYCLE_CMD + "  " + Commands.ME_CMD + "  " + Commands.MSG_CMD + "  " + Commands.SAY_CMD
+                        + "  " + Commands.VERSION_CMD));
                 }
             }
         }
@@ -666,12 +638,12 @@ public class Mobibot extends PircBot {
      */
     private void identify() {
         // Identify with NickServ
-        if (Utils.isValidString(identPwd)) {
+        if (StringUtils.isNotBlank(identPwd)) {
             identify(identPwd);
         }
 
         // Identify with a specified nick
-        if (Utils.isValidString(identNick) && Utils.isValidString(identMsg)) {
+        if (StringUtils.isNotBlank(identNick) && StringUtils.isNotBlank(identMsg)) {
             sendMessage(identNick, identMsg);
         }
     }
@@ -740,40 +712,9 @@ public class Mobibot extends PircBot {
 
         final StringBuilder info = new StringBuilder(28).append("Uptime: ");
 
-        long timeInSeconds = (System.currentTimeMillis() - START_TIME) / 1000L;
+        info.append(Utils.uptime(ManagementFactory.getRuntimeMXBean().getUptime()));
 
-        final long years = timeInSeconds / 31540000L;
-
-        if (years > 0) {
-            info.append(years).append(Utils.plural(years, " year ", " years "));
-            timeInSeconds -= (years * 31540000L);
-        }
-
-        final long weeks = timeInSeconds / 604800L;
-
-        if (weeks > 0) {
-            info.append(weeks).append(Utils.plural(weeks, " week ", " weeks "));
-            timeInSeconds -= (weeks * 604800L);
-        }
-
-        final long days = timeInSeconds / 86400L;
-
-        if (days > 0) {
-            info.append(days).append(Utils.plural(days, " day ", " days "));
-            timeInSeconds -= (days * 86400L);
-        }
-
-        final long hours = timeInSeconds / 3600L;
-
-        if (hours > 0) {
-            info.append(hours).append(Utils.plural(hours, " hour ", " hours "));
-            timeInSeconds -= (hours * 3600L);
-        }
-
-        final long minutes = timeInSeconds / 60L;
-
-        info.append(minutes).append(Utils.plural(minutes, " minute ", " minutes "))
-            .append("[Entries: ").append(entries.size());
+        info.append("[Entries: ").append(entries.size());
 
         if (tell.isEnabled() && isOp(sender)) {
             info.append(", Messages: ").append(tell.size());
@@ -791,7 +732,7 @@ public class Mobibot extends PircBot {
      * @return <code>true</code> if the nick should be ignored, <code>false</code> otherwise.
      */
     private boolean isIgnoredNick(final String nick) {
-        return Utils.isValidString(nick) && ignoredNicks.contains(nick.toLowerCase(Constants.LOCALE));
+        return StringUtils.isNotBlank(nick) && ignoredNicks.contains(nick.toLowerCase(Constants.LOCALE));
     }
 
     /**
@@ -826,18 +767,17 @@ public class Mobibot extends PircBot {
      *
      * @param args The command line arguments.
      */
-    @SuppressFBWarnings({"INFORMATION_EXPOSURE_THROUGH_AN_ERROR_MESSAGE", "DM_DEFAULT_ENCODING",
-        "IOI_USE_OF_FILE_STREAM_CONSTRUCTORS"})
+    @SuppressFBWarnings(
+        {"INFORMATION_EXPOSURE_THROUGH_AN_ERROR_MESSAGE", "DM_DEFAULT_ENCODING", "IOI_USE_OF_FILE_STREAM_CONSTRUCTORS"})
     @SuppressWarnings({"PMD.SystemPrintln", "PMD.AvoidFileStream"})
     public static void main(final String[] args) {
         // Setup the command line options
         final Options options = new Options();
         options.addOption(Commands.HELP_ARG.substring(0, 1), Commands.HELP_ARG, false, "print this help message");
         options.addOption(Commands.DEBUG_ARG.substring(0, 1), Commands.DEBUG_ARG, false,
-            "print debug & logging data directly to the console");
-        options.addOption(Option.builder(
-            Commands.PROPS_ARG.substring(0, 1)).hasArg().argName("file").desc("use " + "alternate properties file")
-            .longOpt(Commands.PROPS_ARG).build());
+                          "print debug & logging data directly to the console");
+        options.addOption(Option.builder(Commands.PROPS_ARG.substring(0, 1)).hasArg().argName("file").desc(
+            "use " + "alternate properties file").longOpt(Commands.PROPS_ARG).build());
         options.addOption(Commands.VERSION_ARG.substring(0, 1), Commands.VERSION_ARG, false, "print version info");
 
         // Parse the command line
@@ -862,8 +802,8 @@ public class Mobibot extends PircBot {
         } else {
             final Properties p = new Properties();
 
-            try (final InputStream fis = Files.newInputStream(Paths.get(
-                line.getOptionValue(Commands.PROPS_ARG.charAt(0), "./mobibot.properties")))) {
+            try (final InputStream fis = Files.newInputStream(
+                Paths.get(line.getOptionValue(Commands.PROPS_ARG.charAt(0), "./mobibot.properties")))) {
                 // Load the properties files
                 p.load(fis);
             } catch (FileNotFoundException e) {
@@ -883,8 +823,8 @@ public class Mobibot extends PircBot {
             // Redirect the stdout and stderr
             if (!line.hasOption(Commands.DEBUG_ARG.charAt(0))) {
                 try {
-                    final PrintStream stdout = new PrintStream(new FileOutputStream(
-                        logsDir + channel.substring(1) + '.' + Utils.today() + ".log", true));
+                    final PrintStream stdout = new PrintStream(
+                        new FileOutputStream(logsDir + channel.substring(1) + '.' + Utils.today() + ".log", true));
                     System.setOut(stdout);
                 } catch (IOException e) {
                     System.err.println("Unable to open output (stdout) log file.");
@@ -893,8 +833,7 @@ public class Mobibot extends PircBot {
                 }
 
                 try {
-                    final PrintStream stderr = new PrintStream(
-                        new FileOutputStream(logsDir + nickname + ".err", true));
+                    final PrintStream stderr = new PrintStream(new FileOutputStream(logsDir + nickname + ".err", true));
                     System.setErr(stderr);
                 } catch (IOException e) {
                     System.err.println("Unable to open error (stderr) log file.");
@@ -916,7 +855,7 @@ public class Mobibot extends PircBot {
      */
     @Override
     protected final void onDisconnect() {
-        if (Utils.isValidString(weblogUrl)) {
+        if (StringUtils.isNotBlank(weblogUrl)) {
             setVersion(weblogUrl);
         }
 
@@ -930,10 +869,7 @@ public class Mobibot extends PircBot {
      */
     @SuppressFBWarnings(value = "CC_CYCLOMATIC_COMPLEXITY", justification = "Working on it.")
     @Override
-    protected final void onMessage(final String channel,
-                                   final String sender,
-                                   final String login,
-                                   final String hostname,
+    protected final void onMessage(final String channel, final String sender, final String login, final String hostname,
                                    final String message) {
         if (logger.isDebugEnabled()) {
             logger.debug(">>> {} : {}", sender, message);
@@ -971,7 +907,7 @@ public class Mobibot extends PircBot {
                         if (data.length == 1) {
                             title = data[0].trim();
                         } else {
-                            if (Utils.isValidString(data[0])) {
+                            if (StringUtils.isNotBlank(data[0])) {
                                 title = data[0].trim();
                             }
 
@@ -984,7 +920,7 @@ public class Mobibot extends PircBot {
                             final Document html = Jsoup.connect(link).userAgent("Mozilla").get();
                             final String htmlTitle = html.title();
 
-                            if (Utils.isValidString(htmlTitle)) {
+                            if (StringUtils.isNotBlank(htmlTitle)) {
                                 title = htmlTitle;
                             }
                         } catch (IOException ignore) {
@@ -1010,8 +946,7 @@ public class Mobibot extends PircBot {
                     }
                 } else {
                     final EntryLink entry = entries.get(dupIndex);
-                    send(sender, Utils.bold("Duplicate") + " >> "
-                        + EntriesUtils.buildLink(dupIndex, entry));
+                    send(sender, Utils.bold("Duplicate") + " >> " + EntriesUtils.buildLink(dupIndex, entry));
                 }
             }
         } else if (message.matches(getNickPattern() + ":.*")) { // mobibot: <command>
@@ -1236,9 +1171,7 @@ public class Mobibot extends PircBot {
      */
     @SuppressFBWarnings(value = {"DM_EXIT", "CC_CYCLOMATIC_COMPLEXITY"}, justification = "Yes, we want to bail out.")
     @Override
-    protected final void onPrivateMessage(final String sender,
-                                          final String login,
-                                          final String hostname,
+    protected final void onPrivateMessage(final String sender, final String login, final String hostname,
                                           final String message) {
         if (logger.isDebugEnabled()) {
             logger.debug(">>> {} : {}", sender, message);
@@ -1346,12 +1279,9 @@ public class Mobibot extends PircBot {
      * {@inheritDoc}
      */
     @Override
-    protected final void onAction(final String sender,
-                                  final String login,
-                                  final String hostname,
-                                  final String target,
+    protected final void onAction(final String sender, final String login, final String hostname, final String target,
                                   final String action) {
-        if (target.equals(ircChannel)) {
+        if (target != null && target.equals(ircChannel)) {
             storeRecap(sender, action, true);
         }
     }
@@ -1406,7 +1336,7 @@ public class Mobibot extends PircBot {
      *                  sent.
      */
     public final void send(final String sender, final String message, final boolean isPrivate) {
-        if (Utils.isValidString(message) && Utils.isValidString(sender)) {
+        if (StringUtils.isNotBlank(message) && StringUtils.isNotBlank(sender)) {
             if (isPrivate) {
                 if (logger.isDebugEnabled()) {
                     logger.debug("Sending message to {} : {}", sender, message);
@@ -1472,6 +1402,7 @@ public class Mobibot extends PircBot {
      * @param message The actual message.
      * @param color   The message's color.
      */
+    @SuppressWarnings("unused")
     public final void send(final String who, final String message, final String color) {
         send(who, Utils.colorize(message, color), false);
     }
@@ -1513,7 +1444,7 @@ public class Mobibot extends PircBot {
      * @param nicks The nicks to ignore
      */
     final void setIgnoredNicks(final String nicks) {
-        if (Utils.isValidString(nicks)) {
+        if (StringUtils.isNotBlank(nicks)) {
             final StringTokenizer st = new StringTokenizer(nicks, ",");
 
             while (st.hasMoreTokens()) {
@@ -1528,7 +1459,7 @@ public class Mobibot extends PircBot {
      * @param apiToken The API token
      */
     final void setPinboardAuth(final String apiToken) {
-        if (Utils.isValidString(apiToken)) {
+        if (StringUtils.isNotBlank(apiToken)) {
             pinboard = new Pinboard(this, apiToken, ircServer);
         }
     }
@@ -1558,7 +1489,7 @@ public class Mobibot extends PircBot {
      */
     private static void sleep(final int secs) {
         try {
-            Thread.sleep((long) (secs * 1000));
+            Thread.sleep(secs * 1000L);
         } catch (InterruptedException ignore) {
             // Do nothing.
         }
@@ -1573,7 +1504,7 @@ public class Mobibot extends PircBot {
      */
     private void storeRecap(final String sender, final String message, final boolean isAction) {
         recap.add(Utils.utcDateTime(LocalDateTime.now(Clock.systemUTC())) + " -> " + sender + (isAction ? " " : ": ")
-            + message);
+                  + message);
 
         if (recap.size() > MAX_RECAP) {
             recap.remove(0);
@@ -1586,16 +1517,13 @@ public class Mobibot extends PircBot {
      * @param msg The twitter message.
      */
     final void twitterNotification(final String msg) {
-        if (twitterModule.isEnabled() && Utils.isValidString(twitterHandle)) {
+        if (twitterModule.isEnabled() && StringUtils.isNotBlank(twitterHandle)) {
             new Thread(() -> {
                 try {
-                    twitterModule.post(
-                        twitterHandle,
-                        getName() + ' ' + ReleaseInfo.VERSION + " " + msg, true);
+                    twitterModule.post(twitterHandle, getName() + ' ' + ReleaseInfo.VERSION + " " + msg, true);
                 } catch (ModuleException e) {
                     if (logger.isWarnEnabled()) {
-                        logger.warn(
-                            "Failed to notify @" + twitterHandle + ": " + msg, e);
+                        logger.warn("Failed to notify @" + twitterHandle + ": " + msg, e);
                     }
                 }
             }).start();
@@ -1693,14 +1621,14 @@ public class Mobibot extends PircBot {
                 entry = entries.get(i);
 
                 if (lcArgs.length() > 0) {
-                    if ((entry.getLink().toLowerCase(Constants.LOCALE).contains(lcArgs))
-                        || (entry.getTitle().toLowerCase(Constants.LOCALE).contains(lcArgs))
+                    if ((entry.getLink().toLowerCase(Constants.LOCALE).contains(lcArgs)) || (entry.getTitle()
+                                                                                                 .toLowerCase(
+                                                                                                     Constants.LOCALE)
+                                                                                                 .contains(lcArgs))
                         || (entry.getNick().toLowerCase(Constants.LOCALE).contains(lcArgs))) {
                         if (sent > MAX_ENTRIES) {
-                            send(sender,
-                                "To view more, try: " + Utils
-                                    .bold(getNick() + ": " + Commands.VIEW_CMD + ' ' + (i + 1) + ' ' + lcArgs),
-                                isPrivate);
+                            send(sender, "To view more, try: " + Utils
+                                .bold(getNick() + ": " + Commands.VIEW_CMD + ' ' + (i + 1) + ' ' + lcArgs), isPrivate);
 
                             break;
                         }
@@ -1711,9 +1639,8 @@ public class Mobibot extends PircBot {
                 } else {
                     if (sent > MAX_ENTRIES) {
                         send(sender,
-                            "To view more, try: " + Utils
-                                .bold(getNick() + ": " + Commands.VIEW_CMD + ' ' + (i + 1)),
-                            isPrivate);
+                             "To view more, try: " + Utils.bold(getNick() + ": " + Commands.VIEW_CMD + ' ' + (i + 1)),
+                             isPrivate);
 
                         break;
                     }
