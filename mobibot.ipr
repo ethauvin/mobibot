@@ -1437,13 +1437,13 @@
         <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.beust/jcommander/1.72/7ef123d5dfb6f839b41265648ff1be34982d50f8/jcommander-1.72-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Gradle: com.github.spotbugs:spotbugs-annotations:4.0.0-beta3">
+    <library name="Gradle: com.github.spotbugs:spotbugs-annotations:4.0.0-beta4">
       <CLASSES>
-        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.spotbugs/spotbugs-annotations/4.0.0-beta3/65ce8bfb2bcc1abd1adc5816fc19c687cdad77b5/spotbugs-annotations-4.0.0-beta3.jar!/" />
+        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.spotbugs/spotbugs-annotations/4.0.0-beta4/4c2237f748f5af8a1655a20945ddec334708b0cc/spotbugs-annotations-4.0.0-beta4.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES>
-        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.spotbugs/spotbugs-annotations/4.0.0-beta3/672866c39247ef05484380d72024dec31ca0cf82/spotbugs-annotations-4.0.0-beta3-sources.jar!/" />
+        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.spotbugs/spotbugs-annotations/4.0.0-beta4/d5e1583e2019b1ee5f9823b6d96156f92dc1e666/spotbugs-annotations-4.0.0-beta4-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Gradle: com.github.spullara.mustache.java:compiler:0.9.6">
@@ -1473,31 +1473,31 @@
         <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.google.code.gson/gson/2.8.5/c5b4c491aecb72e7c32a78da0b5c6b9cda8dee0f/gson-2.8.5-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Gradle: com.rometools:rome-utils:1.12.1">
+    <library name="Gradle: com.rometools:rome-utils:1.12.2">
       <CLASSES>
-        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.rometools/rome-utils/1.12.1/e14b9757402f0971fabe245f8a3ee7c889151f26/rome-utils-1.12.1.jar!/" />
+        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.rometools/rome-utils/1.12.2/240dc40fb9333ac872319e7d31178bffc63f7900/rome-utils-1.12.2.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES>
-        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.rometools/rome-utils/1.12.1/4823407506599821643d09519ba2193f520c259a/rome-utils-1.12.1-sources.jar!/" />
+        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.rometools/rome-utils/1.12.2/d27c01295ababef9a2d6266dec6d22b0ad137dce/rome-utils-1.12.2-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Gradle: com.rometools:rome:1.12.1">
+    <library name="Gradle: com.rometools:rome:1.12.2">
       <CLASSES>
-        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.rometools/rome/1.12.1/e9038b34b001007b2a1f3823c532f3524222075f/rome-1.12.1.jar!/" />
+        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.rometools/rome/1.12.2/eaa7a2025cd38a6678d96b2b78b4f7e68e3f8e36/rome-1.12.2.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES>
-        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.rometools/rome/1.12.1/46920b2dae8ec033a2948a07f58cfc133276070b/rome-1.12.1-sources.jar!/" />
+        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.rometools/rome/1.12.2/f87f5f50b5a7f2c7e4b8e593ec644e7803660daf/rome-1.12.2-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Gradle: com.squareup.okhttp3:okhttp:4.1.1">
+    <library name="Gradle: com.squareup.okhttp3:okhttp:4.2.0">
       <CLASSES>
-        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.squareup.okhttp3/okhttp/4.1.1/4c8c6d55ec16c575131f293c9b2cb7b705809a83/okhttp-4.1.1.jar!/" />
+        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.squareup.okhttp3/okhttp/4.2.0/446acd5a6fc0cf117c5df424af09b38f461d29e6/okhttp-4.2.0.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES>
-        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.squareup.okhttp3/okhttp/4.1.1/8b14260502684c226128e726b27a52a3a65ee721/okhttp-4.1.1-sources.jar!/" />
+        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.squareup.okhttp3/okhttp/4.2.0/d89a60517bd1e90121b22510494e22497d8be28b/okhttp-4.2.0-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Gradle: com.squareup.okio:okio:2.2.2">
@@ -1579,6 +1579,15 @@
       <JAVADOC />
       <SOURCES>
         <root url="jar://$MAVEN_REPOSITORY$/net/thauvin/erik/semver/1.2.0/semver-1.2.0-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Gradle: org.apache.commons:commons-lang3:3.9">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.apache.commons/commons-lang3/3.9/122c7cee69b53ed4a7681c03d4ee4c0e2765da5/commons-lang3-3.9.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.apache.commons/commons-lang3/3.9/8f1cb192e229bc4cd1c900c51171d96706e6d195/commons-lang3-3.9-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Gradle: org.apache.logging.log4j:log4j-api:2.12.1">
