@@ -53,14 +53,13 @@ public class ModuleExceptionTest {
 
     @DataProvider(name = "dp")
     Object[][] createData(final Method m) {
-        return new Object[][]{new Object[]{new ModuleException(debugMessage, message,
-            new IOException("Secret URL http://foo.com?apiKey=sec&userID=me"))},
-            new Object[]{new ModuleException(debugMessage, message,
-                new IOException("URL http://foobar.com"))},
-            new Object[]{new ModuleException(debugMessage, message,
-                new IOException("URL http://foobar.com?"))},
-            new Object[]{new ModuleException(debugMessage, message)}
-        };
+        return new Object[][]{new Object[]{new ModuleException(debugMessage,
+                                                               message,
+                                                               new IOException("URL http://foobar.com"))},
+                              new Object[]{new ModuleException(debugMessage,
+                                                               message,
+                                                               new IOException("URL http://foobar.com?"))},
+                              new Object[]{new ModuleException(debugMessage, message)}};
     }
 
     @Test(dataProvider = "dp")
@@ -73,16 +72,13 @@ public class ModuleExceptionTest {
         assertThat(e.getMessage()).as("get message").isEqualTo(message);
     }
 
-    @Test(dataProvider = "dp")
-    final void testGetSanitizedMessage(final ModuleException e) {
-        if (e.hasCause()) {
-            if (e.getSanitizedMessage().contains("Secret")) {
-                assertThat(e.getSanitizedMessage()).as("get sanitized url")
-                    .contains("http://foo.com?apiKey=[3]&userID=[2]");
-            } else {
-                assertThat(e.getSanitizedMessage()).as("get sanitized url")
-                    .contains("http://foobar.com");
-            }
-        }
+    @Test
+    final void testGetSanitizedMessage() {
+        final String apiKey = "1234567890";
+        final ModuleException e = new ModuleException(debugMessage,
+                                                      message,
+                                                      new IOException(
+                                                          "URL http://foo.com?apiKey=" + apiKey + "&userID=me"));
+        assertThat(e.getSanitizedMessage(apiKey)).as("sanitized url").contains("xxxxxxxxxx").doesNotContain(apiKey);
     }
 }

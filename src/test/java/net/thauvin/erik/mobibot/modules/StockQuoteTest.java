@@ -75,7 +75,7 @@ public class StockQuoteTest extends LocalProperties {
         } catch (ModuleException e) {
             // Avoid displaying api keys in CI logs.
             if ("true".equals(System.getenv("CI"))) {
-                throw new ModuleException(e.getDebugMessage(), e.getSanitizedMessage());
+                throw new ModuleException(e.getDebugMessage(), e.getSanitizedMessage(apiKey));
             } else {
                 throw e;
             }
