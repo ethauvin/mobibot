@@ -45,10 +45,12 @@ import net.thauvin.erik.mobibot.msg.Message;
 import net.thauvin.erik.mobibot.msg.NoticeMessage;
 import net.thauvin.erik.mobibot.msg.PublicMessage;
 import okhttp3.HttpUrl;
+import org.apache.commons.lang3.StringUtils;
 import org.jibble.pircbot.Colors;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * The <code>Weather2</code> module.
@@ -105,8 +107,8 @@ public class Weather2 extends ThreadedModule {
      * @throws ModuleException If an error occurs while retrieving the weather data.
      */
     static List<Message> getWeather(final String query, final String apiKey) throws ModuleException {
-        if (!Utils.isValidString(apiKey)) {
-            throw new ModuleException(Utils.capitalize(WEATHER_CMD) + " is disabled. The API key is missing.");
+        if (StringUtils.isBlank(apiKey)) {
+            throw new ModuleException(StringUtils.capitalize(WEATHER_CMD) + " is disabled. The API key is missing.");
         }
 
         final OWM owm = new OWM(apiKey);
@@ -114,13 +116,13 @@ public class Weather2 extends ThreadedModule {
 
         owm.setUnit(OWM.Unit.IMPERIAL);
 
-        if (Utils.isValidString(query)) {
+        if (StringUtils.isNotBlank(query)) {
             final String[] argv = query.split(",");
 
             if (argv.length >= 1 && argv.length <= 2) {
                 final String country;
                 final String city = argv[0].trim();
-                if (argv.length > 1 && Utils.isValidString(argv[1])) {
+                if (argv.length > 1 && StringUtils.isNotBlank(argv[1])) {
                     country = argv[1].trim();
                 } else {
                     country = "US";
@@ -160,7 +162,7 @@ public class Weather2 extends ThreadedModule {
                             if (list != null) {
                                 for (final Weather w : list) {
                                     if (condition.indexOf(",") == -1) {
-                                        condition.append(Utils.capitalize(w.getDescription()));
+                                        condition.append(StringUtils.capitalize(w.getDescription()));
                                     } else {
                                         condition.append(", ").append(w.getDescription());
                                     }
@@ -174,11 +176,13 @@ public class Weather2 extends ThreadedModule {
                                 messages.add(new NoticeMessage("https://openweathermap.org/city/" + cwd.getCityId(),
                                                                Colors.GREEN));
                             } else {
-                                final HttpUrl url =
-                                    HttpUrl.parse("https://openweathermap.org/find").newBuilder().addQueryParameter(
-                                        "q", city + ',' + country).build();
-                                messages.add(
-                                    new NoticeMessage(url.toString(), Colors.GREEN));
+                                final HttpUrl url = Objects.requireNonNull(HttpUrl.parse(
+                                    "https://openweathermap.org/find"))
+                                                           .newBuilder()
+                                                           .addQueryParameter("q",
+                                                                              city + ',' + country)
+                                                           .build();
+                                messages.add(new NoticeMessage(url.toString(), Colors.GREEN));
                             }
                         }
                     }
@@ -204,8 +208,9 @@ public class Weather2 extends ThreadedModule {
         bot.send(sender, bot.helpIndent(bot.getNick() + ": " + WEATHER_CMD + " <city> [, <country code>]"));
         bot.send(sender, "For example:");
         bot.send(sender, bot.helpIndent(bot.getNick() + ": " + WEATHER_CMD + " paris, fr"));
-        bot.send(sender, "The default ISO 3166 country code is " + Utils.bold("US")
-                         + ". Zip codes are supported in most countries.");
+        bot.send(sender,
+                 "The default ISO 3166 country code is " + Utils.bold("US")
+                 + ". Zip codes are supported in most countries.");
     }
 
     /**
@@ -213,7 +218,7 @@ public class Weather2 extends ThreadedModule {
      */
     @Override
     void run(final Mobibot bot, final String sender, final String args) {
-        if (Utils.isValidString(args)) {
+        if (StringUtils.isNotBlank(args)) {
             try {
                 final List<Message> messages = getWeather(args, properties.get(OWM_API_KEY_PROP));
                 if (messages.get(0).isError()) {

@@ -33,7 +33,7 @@
 package net.thauvin.erik.mobibot.modules;
 
 import net.thauvin.erik.mobibot.Mobibot;
-import net.thauvin.erik.mobibot.Utils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -103,7 +103,7 @@ public abstract class AbstractModule {
     public abstract void helpResponse(final Mobibot bot,
                                       final String sender,
                                       final String args,
-                                      final boolean isPrivate);
+                                      @SuppressWarnings("unused") final boolean isPrivate);
 
     /**
      * Returns <code>true</code> if the module is enabled.
@@ -134,7 +134,7 @@ public abstract class AbstractModule {
      */
     boolean isValidProperties() {
         for (final String s : getPropertyKeys()) {
-            if (!Utils.isValidString(properties.get(s))) {
+            if (StringUtils.isBlank(properties.get(s))) {
                 return false;
             }
         }
@@ -149,7 +149,7 @@ public abstract class AbstractModule {
      * @param value The value.
      */
     public void setProperty(final String key, final String value) {
-        if (Utils.isValidString(key)) {
+        if (StringUtils.isNotBlank(key)) {
             properties.put(key, value);
         }
     }

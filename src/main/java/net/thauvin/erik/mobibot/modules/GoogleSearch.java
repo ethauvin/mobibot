@@ -37,6 +37,7 @@ import net.thauvin.erik.mobibot.Mobibot;
 import net.thauvin.erik.mobibot.Utils;
 import net.thauvin.erik.mobibot.msg.Message;
 import net.thauvin.erik.mobibot.msg.NoticeMessage;
+import org.apache.commons.lang3.StringUtils;
 import org.jibble.pircbot.Colors;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -96,7 +97,7 @@ public final class GoogleSearch extends ThreadedModule {
      */
     @Override
     void run(final Mobibot bot, final String sender, final String query) {
-        if (Utils.isValidString(query)) {
+        if (StringUtils.isNotBlank(query)) {
             try {
                 final List<Message> results = searchGoogle(query, properties.get(GOOGLE_API_KEY_PROP),
                     properties.get(GOOGLE_CSE_KEY_PROP));
@@ -125,11 +126,11 @@ public final class GoogleSearch extends ThreadedModule {
     @SuppressWarnings(("PMD.AvoidInstantiatingObjectsInLoops"))
     static List<Message> searchGoogle(final String query, final String apiKey, final String cseKey)
         throws ModuleException {
-        if (!Utils.isValidString(apiKey) || !Utils.isValidString(cseKey)) {
-            throw new ModuleException(Utils.capitalize(GOOGLE_CMD) + " is disabled. The API keys are missing.");
+        if (StringUtils.isBlank(apiKey) || StringUtils.isBlank(cseKey)) {
+            throw new ModuleException(StringUtils.capitalize(GOOGLE_CMD) + " is disabled. The API keys are missing.");
         }
 
-        if (Utils.isValidString(query)) {
+        if (StringUtils.isNotBlank(query)) {
             final ArrayList<Message> results = new ArrayList<>();
             try {
                 final String q = URLEncoder.encode(query, StandardCharsets.UTF_8.toString());

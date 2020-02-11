@@ -44,6 +44,7 @@ import com.rometools.rome.io.SyndFeedOutput;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import net.thauvin.erik.mobibot.Mobibot;
 import net.thauvin.erik.mobibot.Utils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -200,7 +201,7 @@ public final class EntriesMgr {
             bot.getLogger().debug("Saving the feeds...");
         }
 
-        if (Utils.isValidString(bot.getLogsDir()) && Utils.isValidString(bot.getWeblogUrl())) {
+        if (StringUtils.isNotBlank(bot.getLogsDir()) && StringUtils.isNotBlank(bot.getWeblogUrl())) {
             try {
                 final SyndFeedOutput output = new SyndFeedOutput();
                 SyndFeed rss = new SyndFeedImpl();
@@ -279,8 +280,8 @@ public final class EntriesMgr {
                 }
 
                 if (isDayBackup) {
-                    if (Utils.isValidString(bot.getBacklogsUrl())) {
-                        if (history.indexOf(bot.getToday()) == -1) {
+                    if (StringUtils.isNotBlank(bot.getBacklogsUrl())) {
+                        if (!history.contains(bot.getToday())) {
                             history.add(bot.getToday());
 
                             while (history.size() > MAX_BACKLOGS) {

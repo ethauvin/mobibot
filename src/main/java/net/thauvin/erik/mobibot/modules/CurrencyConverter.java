@@ -40,6 +40,7 @@ import net.thauvin.erik.mobibot.msg.ErrorMessage;
 import net.thauvin.erik.mobibot.msg.Message;
 import net.thauvin.erik.mobibot.msg.NoticeMessage;
 import net.thauvin.erik.mobibot.msg.PublicMessage;
+import org.apache.commons.lang3.StringUtils;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.JDOMException;
@@ -105,7 +106,7 @@ public final class CurrencyConverter extends ThreadedModule {
     @SuppressFBWarnings("REDOS")
     @Override
     void run(final Mobibot bot, final String sender, final String query) {
-        if (Utils.isValidString(sender) && Utils.isValidString(query)) {
+        if (StringUtils.isNotBlank(sender) && StringUtils.isNotBlank(query)) {
             if (query.matches("\\d+([,\\d]+)?(\\.\\d+)? [a-zA-Z]{3}+ to [a-zA-Z]{3}+")) {
                 try {
                     final Message msg = convertCurrency(query);
@@ -146,7 +147,7 @@ public final class CurrencyConverter extends ThreadedModule {
 
                 pubDate = cubeTime.getAttribute("time").getValue();
 
-                final List cubes = cubeTime.getChildren();
+                final List<Element> cubes = cubeTime.getChildren();
                 Element cube;
 
                 for (final Object rawCube : cubes) {

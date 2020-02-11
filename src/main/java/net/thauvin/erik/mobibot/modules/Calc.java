@@ -35,7 +35,7 @@ package net.thauvin.erik.mobibot.modules;
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
 import net.thauvin.erik.mobibot.Mobibot;
-import net.thauvin.erik.mobibot.Utils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.text.DecimalFormat;
 
@@ -82,7 +82,7 @@ public class Calc extends AbstractModule {
      */
     @Override
     public void commandResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate) {
-        if (Utils.isValidString(args)) {
+        if (StringUtils.isNotBlank(args)) {
             bot.send(calc(args));
 
         } else {

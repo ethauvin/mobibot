@@ -42,6 +42,7 @@ import net.thauvin.erik.mobibot.msg.PublicMessage;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -68,7 +69,7 @@ public final class StockQuote extends ThreadedModule {
      */
     static final String INVALID_SYMBOL = "Invalid symbol.";
     // The Alpha Advantage URL.
-    private static final String ALAPHADVANTAGE_URL = "https://www.alphavantage.co/query?function=";
+    private static final String ALAPHAVANTAGE_URL = "https://www.alphavantage.co/query?function=";
     // The quote command.
     private static final String STOCK_CMD = "stock";
 
@@ -132,11 +133,11 @@ public final class StockQuote extends ThreadedModule {
      * @throws ModuleException If an errors occurs.
      */
     static List<Message> getQuote(final String symbol, final String apiKey) throws ModuleException {
-        if (!Utils.isValidString(apiKey)) {
-            throw new ModuleException(Utils.capitalize(STOCK_CMD) + " is disabled. The API key is missing.");
+        if (StringUtils.isBlank(apiKey)) {
+            throw new ModuleException(StringUtils.capitalize(STOCK_CMD) + " is disabled. The API key is missing.");
         }
 
-        if (Utils.isValidString(symbol)) {
+        if (StringUtils.isNotBlank(symbol)) {
             final String debugMessage = "getQuote(" + symbol + ')';
             final ArrayList<Message> messages = new ArrayList<>();
             final OkHttpClient client = new OkHttpClient();
@@ -144,7 +145,7 @@ public final class StockQuote extends ThreadedModule {
             try {
                 // Search for symbol/keywords
                 Request request = new Request.Builder().url(
-                    ALAPHADVANTAGE_URL + "SYMBOL_SEARCH&keywords=" + symbol + "&apikey=" + apiKey).build();
+                    ALAPHAVANTAGE_URL + "SYMBOL_SEARCH&keywords=" + symbol + "&apikey=" + apiKey).build();
                 Response response = client.newCall(request).execute();
 
                 JSONObject json = getJsonResponse(response, debugMessage);
@@ -159,7 +160,7 @@ public final class StockQuote extends ThreadedModule {
 
                 // Get quote for symbol
                 request = new Request.Builder().url(
-                    ALAPHADVANTAGE_URL + "GLOBAL_QUOTE&symbol=" + symbolInfo.getString("1. symbol") + "&apikey="
+                    ALAPHAVANTAGE_URL + "GLOBAL_QUOTE&symbol=" + symbolInfo.getString("1. symbol") + "&apikey="
                     + apiKey).build();
                 response = client.newCall(request).execute();
 
@@ -210,7 +211,7 @@ public final class StockQuote extends ThreadedModule {
      */
     @Override
     void run(final Mobibot bot, final String sender, final String symbol) {
-        if (Utils.isValidString(symbol)) {
+        if (StringUtils.isNotBlank(symbol)) {
             try {
                 final List<Message> messages = getQuote(symbol, properties.get(ALPHAVANTAGE_API_KEY_PROP));
                 for (final Message msg : messages) {

@@ -32,11 +32,8 @@
 
 package net.thauvin.erik.mobibot.modules;
 
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-import okhttp3.HttpUrl;
-
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import net.thauvin.erik.mobibot.Utils;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * The <code>ModuleException</code> class.
@@ -49,7 +46,6 @@ public class ModuleException extends Exception {
     private static final long serialVersionUID = 1L;
 
     private final String debugMessage;
-    private final Pattern urlPattern = Pattern.compile("(https?://\\S+)(\\?\\S+)");
 
     /**
      * Creates a new exception.
@@ -94,33 +90,19 @@ public class ModuleException extends Exception {
     }
 
     /**
-     * Return the sanitized (URL query parameters are replaced by char count) message.
+     * Return the sanitized message (e.g. remove API keys, etc.)
      *
+     * @param sanitize The words to sanitize.
      * @return The sanitized message.
      */
-    @SuppressFBWarnings(value = "NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE", justification = "false positive?")
-    String getSanitizedMessage() {
-        if (hasCause()) {
-            final String causeMessage = getCause().getMessage();
-            final Matcher matcher = urlPattern.matcher(causeMessage);
-            if (matcher.find()) {
-                final HttpUrl url = HttpUrl.parse(matcher.group(1) + matcher.group(2));
-                if (url != null) {
-                    final StringBuilder query = new StringBuilder("?");
-                    final int size = url.querySize();
-                    for (int i = 0; i < size; i++) {
-                        if (i > 0) {
-                            query.append('&');
-                        }
-                        query.append(url.queryParameterName(i)).append("=[")
-                            .append(url.queryParameterValue(i).length()).append(']');
-                    }
-                    return getDebugMessage() + "\nCaused by: " + getCause().getClass().getName() + ": "
-                        + causeMessage.replace(matcher.group(2), query);
-                }
-            }
+    String getSanitizedMessage(final String... sanitize) {
+        final String[] obfuscate = new String[sanitize.length];
+        for (int i = 0; i < sanitize.length; i++) {
+            obfuscate[i] = Utils.obfuscate(sanitize[i]);
         }
-        return getDebugMessage() + "\nCaused by: " + getCause().getClass().getName() + ": " + getCause().getMessage();
+        return getCause().getClass().getName() + ": " + StringUtils.replaceEach(getCause().getMessage(),
+                                                                                sanitize,
+                                                                                obfuscate);
     }
 
     /**
@@ -128,6 +110,7 @@ public class ModuleException extends Exception {
      *
      * @return <code>true</code> or <code>false</code>
      */
+    @SuppressWarnings("unused")
     boolean hasCause() {
         return getCause() != null;
     }

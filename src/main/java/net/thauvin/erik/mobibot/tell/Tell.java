@@ -36,6 +36,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import net.thauvin.erik.mobibot.Commands;
 import net.thauvin.erik.mobibot.Mobibot;
 import net.thauvin.erik.mobibot.Utils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -143,7 +144,7 @@ public class Tell {
     @SuppressFBWarnings(value = "CC_CYCLOMATIC_COMPLEXITY", justification = "Working on it.")
     public void response(final String sender, final String cmds) {
         final String arrow = " --> ";
-        if (!Utils.isValidString(cmds)) {
+        if (StringUtils.isBlank(cmds)) {
             helpResponse(sender);
         } else if (cmds.startsWith(Commands.VIEW_CMD)) {
             if (bot.isOp(sender) && (Commands.VIEW_CMD + ' ' + TELL_ALL_KEYWORD).equals(cmds)) {
@@ -249,7 +250,7 @@ public class Tell {
         } else {
             final String[] split = cmds.split(" ", 2);
 
-            if (split.length == 2 && (Utils.isValidString(split[1]) && split[1].contains(" "))) {
+            if (split.length == 2 && (StringUtils.isNotBlank(split[1]) && split[1].contains(" "))) {
                 if (messages.size() < maxSize) {
                     final TellMessage message = new TellMessage(sender, split[0], split[1].trim());
 
