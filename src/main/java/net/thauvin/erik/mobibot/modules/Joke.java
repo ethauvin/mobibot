@@ -87,7 +87,6 @@ public final class Joke extends ThreadedModule {
 
                 final JSONObject json = new JSONObject(sb.toString());
 
-                //noinspection RegExpRedundantEscape
                 return new PublicMessage(
                     json.getJSONObject("value").get("joke").toString().replace("\\'", "'")
                         .replace("\\\"", "\""));

@@ -63,6 +63,7 @@ public class Message {
      * @param isError   The error flag.
      * @param isPrivate The Private message
      */
+    @SuppressWarnings("unused")
     public Message(final String message, final boolean isNotice, final boolean isError, final boolean isPrivate) {
         msg = message;
         this.isNotice = isNotice;
@@ -80,6 +81,7 @@ public class Message {
      * @param isPrivate The Private message
      * @param color     The color.
      */
+    @SuppressWarnings("unused")
     public Message(final String message,
                    final boolean isNotice,
                    final boolean isError,
@@ -178,6 +180,7 @@ public class Message {
      *
      * @param isPrivate The private flag.
      */
+    @SuppressWarnings("unused")
     public void setPrivate(final boolean isPrivate) {
         this.isPrivate = isPrivate;
     }

@@ -34,6 +34,8 @@ public final class TwitterOAuth {
      * Twitter OAuth Client Registration.
      *
      * @param args The consumerKey and consumerSecret should be passed as arguments.
+     * @throws TwitterException If an error occurs.
+     * @throws IOException      If an IO error occurs.
      */
     @SuppressFBWarnings({"DM_DEFAULT_ENCODING", "IMC_IMMATURE_CLASS_PRINTSTACKTRACE"})
     @SuppressWarnings({"PMD.AvoidPrintStackTrace", "PMD.SystemPrintln"})
@@ -43,29 +45,29 @@ public final class TwitterOAuth {
             twitter.setOAuthConsumer(args[0], args[1]);
             final RequestToken requestToken = twitter.getOAuthRequestToken();
             AccessToken accessToken = null;
-            final BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-            while (null == accessToken) {
-                System.out.println("Open the following URL and grant access to your account:");
-                System.out.println(requestToken.getAuthorizationURL());
-                System.out.print("Enter the PIN (if available) or just hit enter.[PIN]:");
-                final String pin = br.readLine();
-                try {
-                    if (pin != null && pin.length() > 0) {
-                        accessToken = twitter.getOAuthAccessToken(requestToken, pin);
-                    } else {
-                        accessToken = twitter.getOAuthAccessToken();
-                    }
+            try (final BufferedReader br = new BufferedReader(new InputStreamReader(System.in))) {
+                while (null == accessToken) {
+                    System.out.println("Open the following URL and grant access to your account:");
+                    System.out.println(requestToken.getAuthorizationURL());
+                    System.out.print("Enter the PIN (if available) or just hit enter.[PIN]:");
+                    final String pin = br.readLine();
+                    try {
+                        if (pin != null && pin.length() > 0) {
+                            accessToken = twitter.getOAuthAccessToken(requestToken, pin);
+                        } else {
+                            accessToken = twitter.getOAuthAccessToken();
+                        }
 
-                    System.out.println(
-                        "Please add the following to the bot's property file:" + "\n\n" + "twitter-consumerKey="
+                        System.out.println(
+                            "Please add the following to the bot's property file:" + "\n\n" + "twitter-consumerKey="
                             + args[0] + '\n' + "twitter-consumerSecret=" + args[1] + '\n' + "twitter-token="
-                            + accessToken.getToken() + '\n' + "twitter-tokenSecret=" + accessToken
-                            .getTokenSecret());
-                } catch (TwitterException te) {
-                    if (401 == te.getStatusCode()) {
-                        System.out.println("Unable to get the access token.");
-                    } else {
-                        te.printStackTrace();
+                            + accessToken.getToken() + '\n' + "twitter-tokenSecret=" + accessToken.getTokenSecret());
+                    } catch (TwitterException te) {
+                        if (401 == te.getStatusCode()) {
+                            System.out.println("Unable to get the access token.");
+                        } else {
+                            te.printStackTrace();
+                        }
                     }
                 }
             }

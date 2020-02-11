@@ -710,11 +710,10 @@ public class Mobibot extends PircBot {
             }
         }
 
-        final StringBuilder info = new StringBuilder(28).append("Uptime: ");
+        final StringBuilder info = new StringBuilder(28);
 
-        info.append(Utils.uptime(ManagementFactory.getRuntimeMXBean().getUptime()));
-
-        info.append("[Entries: ").append(entries.size());
+        info.append("Uptime: ").append(Utils.uptime(ManagementFactory.getRuntimeMXBean().getUptime())).append(
+            " [Entries: ").append(entries.size());
 
         if (tell.isEnabled() && isOp(sender)) {
             info.append(", Messages: ").append(tell.size());
@@ -769,7 +768,7 @@ public class Mobibot extends PircBot {
      */
     @SuppressFBWarnings(
         {"INFORMATION_EXPOSURE_THROUGH_AN_ERROR_MESSAGE", "DM_DEFAULT_ENCODING", "IOI_USE_OF_FILE_STREAM_CONSTRUCTORS"})
-    @SuppressWarnings({"PMD.SystemPrintln", "PMD.AvoidFileStream"})
+    @SuppressWarnings({"PMD.SystemPrintln", "PMD.AvoidFileStream", "PMD.CloseResource"})
     public static void main(final String[] args) {
         // Setup the command line options
         final Options options = new Options();

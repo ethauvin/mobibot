@@ -42,6 +42,7 @@ import java.time.LocalDateTime;
  * @created Jan 31, 2004
  * @since 1.0
  */
+@SuppressWarnings({"PMD.DataClass"})
 public class EntryComment implements Serializable {
     // The serial version UID.
     static final long serialVersionUID = 1L;

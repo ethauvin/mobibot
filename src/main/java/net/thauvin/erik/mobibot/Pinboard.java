@@ -45,7 +45,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * The class to handle posts to pinbard.in.
+ * The class to handle posts to pinboard.in.
  *
  * @author <a href="https://erik.thauvin.net" target="_blank">Erik C. Thauvin</a>
  * @created 2017-05-17
@@ -81,14 +81,14 @@ class Pinboard {
      * @param entry The entry to add.
      */
     final void addPost(final EntryLink entry) {
-        final SwingWorker<Boolean, Void> worker = new SwingWorker<Boolean, Void>() {
+        final SwingWorker<Boolean, Void> worker = new SwingWorker<>() {
             @Override
             protected Boolean doInBackground() {
                 return pinboard.addPin(entry.getLink(),
-                    entry.getTitle(),
-                    postedBy(entry),
-                    entry.getPinboardTags(),
-                    formatDate(entry.getDate()));
+                                       entry.getTitle(),
+                                       postedBy(entry),
+                                       entry.getPinboardTags(),
+                                       formatDate(entry.getDate()));
             }
         };
 
@@ -103,7 +103,7 @@ class Pinboard {
     final void deletePost(final EntryLink entry) {
         final String link = entry.getLink();
 
-        final SwingWorker<Boolean, Void> worker = new SwingWorker<Boolean, Void>() {
+        final SwingWorker<Boolean, Void> worker = new SwingWorker<>() {
             @Override
             protected Boolean doInBackground() {
                 return pinboard.deletePin(link);
@@ -140,25 +140,25 @@ class Pinboard {
      * @param entry  The entry to add.
      */
     final void updatePost(final String oldUrl, final EntryLink entry) {
-        final SwingWorker<Boolean, Void> worker = new SwingWorker<Boolean, Void>() {
+        final SwingWorker<Boolean, Void> worker = new SwingWorker<>() {
             @Override
             protected Boolean doInBackground() {
                 if (!oldUrl.equals(entry.getLink())) {
                     pinboard.deletePin(oldUrl);
 
                     return pinboard.addPin(entry.getLink(),
-                        entry.getTitle(),
-                        postedBy(entry),
-                        entry.getPinboardTags(),
-                        formatDate(entry.getDate()));
+                                           entry.getTitle(),
+                                           postedBy(entry),
+                                           entry.getPinboardTags(),
+                                           formatDate(entry.getDate()));
                 } else {
                     return pinboard.addPin(entry.getLink(),
-                        entry.getTitle(),
-                        postedBy(entry),
-                        entry.getPinboardTags(),
-                        formatDate(entry.getDate()),
-                        true,
-                        true);
+                                           entry.getTitle(),
+                                           postedBy(entry),
+                                           entry.getPinboardTags(),
+                                           formatDate(entry.getDate()),
+                                           true,
+                                           true);
                 }
             }
         };

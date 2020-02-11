@@ -132,6 +132,7 @@ public final class StockQuote extends ThreadedModule {
      * @return The {@link Message} array containing the stock quote.
      * @throws ModuleException If an errors occurs.
      */
+    @SuppressWarnings({"PMD.CloseResource"})
     static List<Message> getQuote(final String symbol, final String apiKey) throws ModuleException {
         if (StringUtils.isBlank(apiKey)) {
             throw new ModuleException(StringUtils.capitalize(STOCK_CMD) + " is disabled. The API key is missing.");
