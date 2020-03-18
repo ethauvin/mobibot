@@ -80,8 +80,9 @@ class Pinboard {
      *
      * @param entry The entry to add.
      */
+    @SuppressWarnings("Convert2Diamond")
     final void addPost(final EntryLink entry) {
-        final SwingWorker<Boolean, Void> worker = new SwingWorker<>() {
+        final SwingWorker<Boolean, Void> worker = new SwingWorker<Boolean, Void>() {
             @Override
             protected Boolean doInBackground() {
                 return pinboard.addPin(entry.getLink(),
@@ -100,10 +101,11 @@ class Pinboard {
      *
      * @param entry The entry to delete.
      */
+    @SuppressWarnings("Convert2Diamond")
     final void deletePost(final EntryLink entry) {
         final String link = entry.getLink();
 
-        final SwingWorker<Boolean, Void> worker = new SwingWorker<>() {
+        final SwingWorker<Boolean, Void> worker = new SwingWorker<Boolean, Void>() {
             @Override
             protected Boolean doInBackground() {
                 return pinboard.deletePin(link);
@@ -139,8 +141,9 @@ class Pinboard {
      * @param oldUrl The old post URL.
      * @param entry  The entry to add.
      */
+    @SuppressWarnings("Convert2Diamond")
     final void updatePost(final String oldUrl, final EntryLink entry) {
-        final SwingWorker<Boolean, Void> worker = new SwingWorker<>() {
+        final SwingWorker<Boolean, Void> worker = new SwingWorker<Boolean, Void>() {
             @Override
             protected Boolean doInBackground() {
                 if (!oldUrl.equals(entry.getLink())) {
