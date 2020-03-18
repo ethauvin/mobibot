@@ -47,6 +47,7 @@ import org.jdom2.JDOMException;
 import org.jdom2.Namespace;
 import org.jdom2.input.SAXBuilder;
 
+import javax.xml.XMLConstants;
 import java.io.IOException;
 import java.net.URL;
 import java.text.NumberFormat;
@@ -137,6 +138,9 @@ public final class CurrencyConverter extends ThreadedModule {
         if (EXCHANGE_RATES.isEmpty()) {
             try {
                 final SAXBuilder builder = new SAXBuilder();
+                // See https://rules.sonarsource.com/java/tag/owasp/RSPEC-2755
+                builder.setProperty(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+                builder.setProperty(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
                 builder.setIgnoringElementContentWhitespace(true);
 
                 final Document doc = builder.build(new URL(EXCHANGE_TABLE_URL));
