@@ -12,6 +12,10 @@
         <module name="mobibot.main" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel target="13" />
+    <bytecodeTargetLevel>
+      <module name="mobibot" target="14" />
+      <module name="mobibot.main" target="14" />
+      <module name="mobibot.test" target="14" />
+    </bytecodeTargetLevel>
   </component>
 </project>
