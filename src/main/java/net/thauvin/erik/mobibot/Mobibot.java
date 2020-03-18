@@ -710,7 +710,7 @@ public class Mobibot extends PircBot {
             }
         }
 
-        final StringBuilder info = new StringBuilder(28);
+        final StringBuilder info = new StringBuilder(29);
 
         info.append("Uptime: ").append(Utils.uptime(ManagementFactory.getRuntimeMXBean().getUptime())).append(
             " [Entries: ").append(entries.size());
