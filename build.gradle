@@ -121,7 +121,7 @@ javadoc {
 
 jar {
     manifest.attributes('Main-Class': mainClassName,
-            'Class-Path': '. ./lib/' + configurations.compile.collect { it.getName() }.join(' ./lib/'))
+            'Class-Path': '. ./lib/' + configurations.runtimeClasspath.collect { it.getName() }.join(' ./lib/'))
     archiveVersion.set("")
 }
 
