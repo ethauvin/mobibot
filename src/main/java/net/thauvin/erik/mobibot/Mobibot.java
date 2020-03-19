@@ -113,7 +113,7 @@ public class Mobibot extends PircBot {
     // The info strings.
     private static final String[] INFO_STRS =
         {ReleaseInfo.PROJECT + " v" + ReleaseInfo.VERSION + " by Erik C. Thauvin (erik@thauvin.net)",
-         "https://www.mobitopia.org/mobibot/"};
+            "https://www.mobitopia.org/mobibot/"};
 
     // The link match string.
     private static final String LINK_MATCH = "^[hH][tT][tT][pP](|[sS])://.*";
@@ -136,15 +136,15 @@ public class Mobibot extends PircBot {
     // The tags/categories marker.
     private static final String TAGS_MARKER = "tags:";
 
-    // The version strings.
-    private static final String[] VERSION_STRS = {"Version: " + ReleaseInfo.VERSION + " (" + Utils.isoLocalDate(
-        ReleaseInfo.BUILDDATE) + ')', "Platform: " + System.getProperty("os.name") + " (" + System.getProperty(
-        "os.version") + ", " + System.getProperty("os.arch") + ", " + System.getProperty("user.country") + ')',
-                                                  "Runtime: " + System.getProperty("java.runtime.name") + " (build "
-                                                  + System.getProperty("java.runtime.version") + ')',
-                                                  "VM: " + System.getProperty("java.vm.name") + " (build " + System
-                                                      .getProperty("java.vm.version") + ", " + System.getProperty(
-                                                      "java.vm.info") + ')'};
+    /* The version strings.*/
+    private static final String[] VERSION_STRS =
+        {"Version: " + ReleaseInfo.VERSION + " (" + Utils.isoLocalDate(ReleaseInfo.BUILDDATE) + ')',
+            "Platform: " + System.getProperty("os.name") + " (" + System.getProperty("os.version") + ", " + System
+                .getProperty("os.arch") + ", " + System.getProperty("user.country") + ')',
+            "Runtime: " + System.getProperty("java.runtime.name") + " (build " + System
+                .getProperty("java.runtime.version") + ')',
+            "VM: " + System.getProperty("java.vm.name") + " (build " + System.getProperty("java.vm.version") + ", "
+            + System.getProperty("java.vm.info") + ')'};
     // The logger.
     private static final Logger logger = LogManager.getLogger(Mobibot.class);
     // The commands list.
@@ -300,6 +300,111 @@ public class Mobibot extends PircBot {
 
         // Save the entries
         saveEntries(true);
+    }
+
+    /**
+     * The Truth Is Out There...
+     *
+     * @param args The command line arguments.
+     */
+    @SuppressFBWarnings(
+        {
+            "INFORMATION_EXPOSURE_THROUGH_AN_ERROR_MESSAGE",
+            "DM_DEFAULT_ENCODING",
+            "IOI_USE_OF_FILE_STREAM_CONSTRUCTORS"
+        })
+    @SuppressWarnings({"PMD.SystemPrintln", "PMD.AvoidFileStream", "PMD.CloseResource"})
+    public static void main(final String[] args) {
+        // Setup the command line options
+        final Options options = new Options()
+            .addOption(Commands.HELP_ARG.substring(0, 1), Commands.HELP_ARG, false, "print this help message")
+            .addOption(Commands.DEBUG_ARG.substring(0, 1), Commands.DEBUG_ARG, false,
+                       "print debug & logging data directly to the console")
+            .addOption(Option.builder(Commands.PROPS_ARG.substring(0, 1)).hasArg().argName("file")
+                             .desc("use " + "alternate properties file").longOpt(Commands.PROPS_ARG).build())
+            .addOption(Commands.VERSION_ARG.substring(0, 1), Commands.VERSION_ARG, false, "print version info");
+
+        // Parse the command line
+        final CommandLineParser parser = new DefaultParser();
+        CommandLine line = null;
+
+        try {
+            line = parser.parse(options, args);
+        } catch (ParseException e) {
+            System.err.println("CLI Parsing failed.  Reason: " + e.getMessage());
+            e.printStackTrace(System.err);
+            System.exit(1);
+        }
+
+        if (line.hasOption(Commands.HELP_ARG.charAt(0))) {
+            // Output the usage
+            new HelpFormatter().printHelp(Mobibot.class.getName(), options);
+        } else if (line.hasOption(Commands.VERSION_ARG.charAt(0))) {
+            for (final String s : INFO_STRS) {
+                System.out.println(s);
+            }
+        } else {
+            final Properties p = new Properties();
+
+            try (final InputStream fis = Files.newInputStream(
+                Paths.get(line.getOptionValue(Commands.PROPS_ARG.charAt(0), "./mobibot.properties")))) {
+                // Load the properties files
+                p.load(fis);
+            } catch (FileNotFoundException e) {
+                System.err.println("Unable to find properties file.");
+                e.printStackTrace(System.err);
+                System.exit(1);
+            } catch (IOException e) {
+                System.err.println("Unable to open properties file.");
+                e.printStackTrace(System.err);
+                System.exit(1);
+            }
+
+            final String nickname = p.getProperty("nick", Mobibot.class.getName().toLowerCase(Constants.LOCALE));
+            final String channel = p.getProperty("channel");
+            final String logsDir = Utils.ensureDir(p.getProperty("logs", "."), false);
+
+            // Redirect the stdout and stderr
+            if (!line.hasOption(Commands.DEBUG_ARG.charAt(0))) {
+                try {
+                    final PrintStream stdout = new PrintStream(
+                        new FileOutputStream(logsDir + channel.substring(1) + '.' + Utils.today() + ".log", true));
+                    System.setOut(stdout);
+                } catch (IOException e) {
+                    System.err.println("Unable to open output (stdout) log file.");
+                    e.printStackTrace(System.err);
+                    System.exit(1);
+                }
+
+                try {
+                    final PrintStream stderr = new PrintStream(new FileOutputStream(logsDir + nickname + ".err", true));
+                    System.setErr(stderr);
+                } catch (IOException e) {
+                    System.err.println("Unable to open error (stderr) log file.");
+                    e.printStackTrace(System.err);
+                    System.exit(1);
+                }
+            }
+
+            // Create the bot
+            final Mobibot bot = new Mobibot(nickname, channel, logsDir, p);
+
+            // Connect
+            bot.connect();
+        }
+    }
+
+    /**
+     * Sleeps for the specified number of seconds.
+     *
+     * @param secs The number of seconds to sleep for.
+     */
+    private static void sleep(final int secs) {
+        try {
+            Thread.sleep(secs * 1000L);
+        } catch (InterruptedException ignore) {
+            // Do nothing.
+        }
     }
 
     /**
@@ -595,8 +700,8 @@ public class Mobibot extends PircBot {
                     commandsList.add(Commands.USERS_CMD);
                     commandsList.add(Commands.VIEW_CMD);
 
-                    MODULES.stream().filter(AbstractModule::isEnabled).forEach(
-                        module -> commandsList.addAll(module.getCommands()));
+                    MODULES.stream().filter(AbstractModule::isEnabled)
+                           .forEach(module -> commandsList.addAll(module.getCommands()));
 
                     if (tell.isEnabled()) {
                         commandsList.add(Tell.TELL_CMD);
@@ -625,9 +730,9 @@ public class Mobibot extends PircBot {
 
                 if (isOp(sender)) {
                     send(sender, "The op commands are:");
-                    send(sender, helpIndent(
-                        Commands.CYCLE_CMD + "  " + Commands.ME_CMD + "  " + Commands.MSG_CMD + "  " + Commands.SAY_CMD
-                        + "  " + Commands.VERSION_CMD));
+                    send(sender,
+                         helpIndent(Commands.CYCLE_CMD + "  " + Commands.ME_CMD + "  " + Commands.MSG_CMD + "  "
+                                    + Commands.SAY_CMD + "  " + Commands.VERSION_CMD));
                 }
             }
         }
@@ -759,94 +864,6 @@ public class Mobibot extends PircBot {
         joinChannel(ircChannel);
 
         twitterNotification("has joined " + ircChannel);
-    }
-
-    /**
-     * The Truth Is Out There...
-     *
-     * @param args The command line arguments.
-     */
-    @SuppressFBWarnings(
-        {"INFORMATION_EXPOSURE_THROUGH_AN_ERROR_MESSAGE", "DM_DEFAULT_ENCODING", "IOI_USE_OF_FILE_STREAM_CONSTRUCTORS"})
-    @SuppressWarnings({"PMD.SystemPrintln", "PMD.AvoidFileStream", "PMD.CloseResource"})
-    public static void main(final String[] args) {
-        // Setup the command line options
-        final Options options = new Options();
-        options.addOption(Commands.HELP_ARG.substring(0, 1), Commands.HELP_ARG, false, "print this help message");
-        options.addOption(Commands.DEBUG_ARG.substring(0, 1), Commands.DEBUG_ARG, false,
-                          "print debug & logging data directly to the console");
-        options.addOption(Option.builder(Commands.PROPS_ARG.substring(0, 1)).hasArg().argName("file").desc(
-            "use " + "alternate properties file").longOpt(Commands.PROPS_ARG).build());
-        options.addOption(Commands.VERSION_ARG.substring(0, 1), Commands.VERSION_ARG, false, "print version info");
-
-        // Parse the command line
-        final CommandLineParser parser = new DefaultParser();
-        CommandLine line = null;
-
-        try {
-            line = parser.parse(options, args);
-        } catch (ParseException e) {
-            System.err.println("CLI Parsing failed.  Reason: " + e.getMessage());
-            e.printStackTrace(System.err);
-            System.exit(1);
-        }
-
-        if (line.hasOption(Commands.HELP_ARG.charAt(0))) {
-            // Output the usage
-            new HelpFormatter().printHelp(Mobibot.class.getName(), options);
-        } else if (line.hasOption(Commands.VERSION_ARG.charAt(0))) {
-            for (final String s : INFO_STRS) {
-                System.out.println(s);
-            }
-        } else {
-            final Properties p = new Properties();
-
-            try (final InputStream fis = Files.newInputStream(
-                Paths.get(line.getOptionValue(Commands.PROPS_ARG.charAt(0), "./mobibot.properties")))) {
-                // Load the properties files
-                p.load(fis);
-            } catch (FileNotFoundException e) {
-                System.err.println("Unable to find properties file.");
-                e.printStackTrace(System.err);
-                System.exit(1);
-            } catch (IOException e) {
-                System.err.println("Unable to open properties file.");
-                e.printStackTrace(System.err);
-                System.exit(1);
-            }
-
-            final String nickname = p.getProperty("nick", Mobibot.class.getName().toLowerCase(Constants.LOCALE));
-            final String channel = p.getProperty("channel");
-            final String logsDir = Utils.ensureDir(p.getProperty("logs", "."), false);
-
-            // Redirect the stdout and stderr
-            if (!line.hasOption(Commands.DEBUG_ARG.charAt(0))) {
-                try {
-                    final PrintStream stdout = new PrintStream(
-                        new FileOutputStream(logsDir + channel.substring(1) + '.' + Utils.today() + ".log", true));
-                    System.setOut(stdout);
-                } catch (IOException e) {
-                    System.err.println("Unable to open output (stdout) log file.");
-                    e.printStackTrace(System.err);
-                    System.exit(1);
-                }
-
-                try {
-                    final PrintStream stderr = new PrintStream(new FileOutputStream(logsDir + nickname + ".err", true));
-                    System.setErr(stderr);
-                } catch (IOException e) {
-                    System.err.println("Unable to open error (stderr) log file.");
-                    e.printStackTrace(System.err);
-                    System.exit(1);
-                }
-            }
-
-            // Create the bot
-            final Mobibot bot = new Mobibot(nickname, channel, logsDir, p);
-
-            // Connect
-            bot.connect();
-        }
     }
 
     /**
@@ -1482,19 +1499,6 @@ public class Mobibot extends PircBot {
     }
 
     /**
-     * Sleeps for the specified number of seconds.
-     *
-     * @param secs The number of seconds to sleep for.
-     */
-    private static void sleep(final int secs) {
-        try {
-            Thread.sleep(secs * 1000L);
-        } catch (InterruptedException ignore) {
-            // Do nothing.
-        }
-    }
-
-    /**
      * Stores the last 10 public messages and actions.
      *
      * @param sender   The nick of the person who sent the private message.
@@ -1620,14 +1624,14 @@ public class Mobibot extends PircBot {
                 entry = entries.get(i);
 
                 if (lcArgs.length() > 0) {
-                    if ((entry.getLink().toLowerCase(Constants.LOCALE).contains(lcArgs)) || (entry.getTitle()
-                                                                                                 .toLowerCase(
-                                                                                                     Constants.LOCALE)
-                                                                                                 .contains(lcArgs))
+                    if ((entry.getLink().toLowerCase(Constants.LOCALE).contains(lcArgs))
+                        || (entry.getTitle().toLowerCase(Constants.LOCALE).contains(lcArgs))
                         || (entry.getNick().toLowerCase(Constants.LOCALE).contains(lcArgs))) {
                         if (sent > MAX_ENTRIES) {
-                            send(sender, "To view more, try: " + Utils
-                                .bold(getNick() + ": " + Commands.VIEW_CMD + ' ' + (i + 1) + ' ' + lcArgs), isPrivate);
+                            send(sender,
+                                 "To view more, try: " + Utils
+                                     .bold(getNick() + ": " + Commands.VIEW_CMD + ' ' + (i + 1) + ' ' + lcArgs),
+                                 isPrivate);
 
                             break;
                         }
