@@ -342,7 +342,7 @@ public class Mobibot extends PircBot {
                     if (retries == MAX_RECONNECT) {
                         if (logger.isDebugEnabled()) {
                             logger.debug(
-                                "Unable to reconnect to " + ircServer + " after " + MAX_RECONNECT + " retries.", ex);
+                                "Unable to reconnect to {} after {} retries.", ircServer, MAX_RECONNECT, ex);
                         }
 
                         e.printStackTrace(System.err);
@@ -1522,7 +1522,7 @@ public class Mobibot extends PircBot {
                     twitterModule.post(twitterHandle, getName() + ' ' + ReleaseInfo.VERSION + " " + msg, true);
                 } catch (ModuleException e) {
                     if (logger.isWarnEnabled()) {
-                        logger.warn("Failed to notify @" + twitterHandle + ": " + msg, e);
+                        logger.warn("Failed to notify @{}: {}", twitterHandle, msg, e);
                     }
                 }
             }).start();
