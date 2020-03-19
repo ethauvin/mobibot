@@ -154,8 +154,8 @@ public final class CurrencyConverter extends ThreadedModule {
                 final List<Element> cubes = cubeTime.getChildren();
                 Element cube;
 
-                for (final Object rawCube : cubes) {
-                    cube = (Element) rawCube;
+                for (final Element rawCube : cubes) {
+                    cube = rawCube;
                     EXCHANGE_RATES.put(
                         cube.getAttribute("currency").getValue(),
                         cube.getAttribute("rate").getValue());
