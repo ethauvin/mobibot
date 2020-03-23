@@ -1,7 +1,7 @@
 /*
  * TellMessagesMgr.java
  *
- * Copyright (c) 2004-2019, Erik C. Thauvin (erik@thauvin.net)
+ * Copyright (c) 2004-2020, Erik C. Thauvin (erik@thauvin.net)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -99,7 +99,7 @@ final class TellMessagesMgr {
                 return ((List<TellMessage>) input.readObject());
             }
         } catch (FileNotFoundException ignore) {
-            // Do nothing.
+            // Do nothing
         } catch (IOException e) {
             logger.error("An IO error occurred loading the messages queue.", e);
         } catch (Exception e) {

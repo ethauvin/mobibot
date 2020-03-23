@@ -49,19 +49,19 @@ import java.util.List;
  * @since 1.0
  */
 class FeedReader implements Runnable {
-    // The maximum number of feed items to display.
+    // Maximum number of feed items to display
     private static final int MAX_ITEMS = 5;
 
-    // The tab indent (4 spaces).
+    // Tab indent (4 spaces)
     private static final String TAB_INDENT = "    ";
 
-    // The bot.
+    // Bot
     private final Mobibot bot;
 
-    // The nick of the person who sent the message.
+    // Nick of the person who sent the message
     private final String sender;
 
-    // The URL to fetch.
+    // URL to fetch
     private final String url;
 
     /**

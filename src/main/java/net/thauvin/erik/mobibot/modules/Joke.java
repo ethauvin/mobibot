@@ -52,9 +52,9 @@ import java.nio.charset.StandardCharsets;
  * @since 1.0
  */
 public final class Joke extends ThreadedModule {
-    // The joke command.
+    // Joke command
     private static final String JOKE_CMD = "joke";
-    // The ICNDB URL.
+    // ICNDB URL
     private static final String JOKE_URL =
             "http://api.icndb.com/jokes/random?escape=javascript&exclude=[explicit]&limitTo=[nerdy]";
 

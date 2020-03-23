@@ -56,9 +56,9 @@ import java.util.TreeMap;
  */
 @SuppressWarnings("PMD.UseConcurrentHashMap")
 public final class WorldTime extends AbstractModule {
-    // The beats (Internet Time) keyword.
+    // Beats (Internet Time) keyword
     private static final String BEATS_KEYWORD = ".beats";
-    // The supported countries.
+    // Supported countries
     private static final Map<String, String> COUNTRIES_MAP;
 
 

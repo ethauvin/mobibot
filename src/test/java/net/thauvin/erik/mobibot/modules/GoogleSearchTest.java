@@ -1,7 +1,7 @@
 /*
  * GoogleSearchTest.java
  *
- * Copyright (c) 2004-2019, Erik C. Thauvin (erik@thauvin.net)
+ * Copyright (c) 2004-2020, Erik C. Thauvin (erik@thauvin.net)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -78,7 +78,7 @@ public class GoogleSearchTest extends LocalProperties {
             assertThatThrownBy(() -> GoogleSearch.searchGoogle("", "apikey", "apiKey")).as("no query").isInstanceOf(
                 ModuleException.class).hasNoCause();
         } catch (ModuleException e) {
-            // Avoid displaying api keys in CI logs.
+            // Avoid displaying api keys in CI logs
             if ("true".equals(System.getenv("CI"))) {
                 throw new ModuleException(e.getDebugMessage(), e.getSanitizedMessage(apiKey, cseKey));
             } else {

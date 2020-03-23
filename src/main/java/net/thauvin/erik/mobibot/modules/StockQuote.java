@@ -68,9 +68,9 @@ public final class StockQuote extends ThreadedModule {
      * The Invalid Symbol error string.
      */
     static final String INVALID_SYMBOL = "Invalid symbol.";
-    // The Alpha Advantage URL.
+    // Alpha Advantage URL
     private static final String ALAPHAVANTAGE_URL = "https://www.alphavantage.co/query?function=";
-    // The quote command.
+    // Quote command
     private static final String STOCK_CMD = "stock";
 
     /**
@@ -95,7 +95,7 @@ public final class StockQuote extends ThreadedModule {
                         throw new ModuleException(debugMessage, Utils.unescapeXml(info));
                     }
                 } catch (JSONException ignore) {
-                    // Do nothing.
+                    // Do nothing
                 }
 
                 try {
@@ -104,7 +104,7 @@ public final class StockQuote extends ThreadedModule {
                         throw new ModuleException(debugMessage, Utils.unescapeXml(error));
                     }
                 } catch (JSONException ignore) {
-                    // Do nothing.
+                    // Do nothing
                 }
 
                 try {
@@ -113,7 +113,7 @@ public final class StockQuote extends ThreadedModule {
                         throw new ModuleException(debugMessage, Utils.unescapeXml(error));
                     }
                 } catch (JSONException ignore) {
-                    // Do nothing.
+                    // Do nothing
                 }
 
                 return json;

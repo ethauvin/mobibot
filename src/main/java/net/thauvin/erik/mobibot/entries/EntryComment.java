@@ -1,7 +1,7 @@
 /*
  * EntryComment.java
  *
- * Copyright (c) 2004-2019, Erik C. Thauvin (erik@thauvin.net)
+ * Copyright (c) 2004-2020, Erik C. Thauvin (erik@thauvin.net)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -44,10 +44,10 @@ import java.time.LocalDateTime;
  */
 @SuppressWarnings({"PMD.DataClass"})
 public class EntryComment implements Serializable {
-    // The serial version UID.
+    // Serial version UID
     static final long serialVersionUID = 1L;
 
-    // The creation date.
+    // Creation date
     private final LocalDateTime date = LocalDateTime.now();
 
     private String comment = "";
@@ -69,7 +69,7 @@ public class EntryComment implements Serializable {
      */
     @SuppressWarnings("UnusedDeclaration")
     protected EntryComment() {
-        // Required for serialization.
+        // Required for serialization
     }
 
     /**

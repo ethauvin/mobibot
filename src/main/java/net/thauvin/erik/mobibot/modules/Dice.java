@@ -45,7 +45,7 @@ import java.security.SecureRandom;
  * @since 1.0
  */
 public final class Dice extends AbstractModule {
-    // The dice command.
+    // Dice command
     private static final String DICE_CMD = "dice";
 
     /**

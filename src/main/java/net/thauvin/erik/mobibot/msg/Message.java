@@ -1,7 +1,7 @@
 /*
  * Message.java
  *
- * Copyright (c) 2004-2019, Erik C. Thauvin (erik@thauvin.net)
+ * Copyright (c) 2004-2020, Erik C. Thauvin (erik@thauvin.net)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -52,7 +52,7 @@ public class Message {
      * Creates a new message.
      */
     public Message() {
-        // This constructor is intentionally empty.
+        // This constructor is intentionally empty
     }
 
     /**

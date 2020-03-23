@@ -53,7 +53,7 @@ public final class Lookup extends AbstractModule {
      */
     static final String WHOIS_HOST = "whois.arin.net";
 
-    // The lookup command.
+    // Lookup command
     private static final String LOOKUP_CMD = "lookup";
 
     /**

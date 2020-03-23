@@ -108,40 +108,40 @@ import static org.apache.commons.lang3.StringUtils.isNotBlank;
          className = "ReleaseInfo")
 public class Mobibot extends PircBot {
 
-    // The default port.
+    // Default port
     private static final int DEFAULT_PORT = 6667;
 
-    // The default server.
+    // Default server
     private static final String DEFAULT_SERVER = "irc.freenode.net";
 
-    // The info strings.
+    // Info strings
     @SuppressWarnings("indentation")
     private static final String[] INFO_STRS = {
             ReleaseInfo.PROJECT + " v" + ReleaseInfo.VERSION + " by Erik C. Thauvin (erik@thauvin.net)",
             "https://www.mobitopia.org/mobibot/" };
 
-    // The link match string.
+    // Link match string
     private static final String LINK_MATCH = "^[hH][tT][tT][pP](|[sS])://.*";
 
-    // The default maximum number of entries to display.
+    // Default maximum number of entries to display
     private static final int MAX_ENTRIES = 8;
 
-    // The default maximum recap entries.
+    // Default maximum recap entries
     private static final int MAX_RECAP = 10;
 
-    // The maximum number of times the bot will try to reconnect, if disconnected.
+    // Maximum number of times the bot will try to reconnect, if disconnected
     private static final int MAX_RECONNECT = 10;
 
-    // The number of milliseconds to delay between consecutive messages.
+    // Number of milliseconds to delay between consecutive messages
     private static final long MESSAGE_DELAY = 1000L;
 
-    // The modules.
+    // Modules
     private static final List<AbstractModule> MODULES = new ArrayList<>(0);
 
-    // The tags/categories marker.
+    // Tags/categories marker
     private static final String TAGS_MARKER = "tags:";
 
-    /* The version strings.*/
+    // Version strings
     @SuppressWarnings("indentation")
     private static final String[] VERSION_STRS =
             { "Version: " + ReleaseInfo.VERSION + " (" + Utils.isoLocalDate(ReleaseInfo.BUILDDATE) + ')',
@@ -151,53 +151,53 @@ public class Mobibot extends PircBot {
                       "java.runtime.version") + ')',
               "VM: " + System.getProperty("java.vm.name") + " (build " + System.getProperty("java.vm.version") + ", "
               + System.getProperty("java.vm.info") + ')' };
-    // The logger.
+    // Logger
     private static final Logger logger = LogManager.getLogger(Mobibot.class);
-    // The commands list.
+    // Commands list
     private final List<String> commandsList = new ArrayList<>();
-    // The entries array.
+    // Entries array
     private final List<EntryLink> entries = new ArrayList<>(0);
-    // The history/backlogs array.
+    // History/backlogs array
     private final List<String> history = new ArrayList<>(0);
-    // The ignored nicks array.
+    // Ignored nicks array
     private final Set<String> ignoredNicks = new HashSet<>(0);
-    // The main channel.
+    // Main channel
     private final String ircChannel;
-    // The IRC port.
+    // IRC port
     private final int ircPort;
-    // The IRC server.
+    // IRC server
     private final String ircServer;
-    // The logger default level.
+    // Logger default level
     private final Level loggerLevel;
-    // The log directory.
+    // Log directory
     private final String logsDir;
-    // The recap array.
+    // Recap array
     private final List<String> recap = new ArrayList<>(0);
-    // The tell object.
+    // Tell object
     private final Tell tell;
-    // The Twitter handle for channel join notifications.
     // Automatically post links to Twitter
     private final boolean twitterAutoPost;
+    // Twitter handle for channel join notifications
     private final String twitterHandle;
-    // The Twitter module.
+    // Twitter module
     private final Twitter twitterModule;
-    // The backlogs URL.
+    // Backlogs URL
     private String backLogsUrl = "";
-    // The default tags/categories.
+    // Default tags/categories
     private String defaultTags = "";
-    // The feed URL.
+    // Feed URL
     private String feedUrl = "";
-    // The ident message.
+    // Ident message
     private String identMsg = "";
-    // The ident nick.
+    // Ident nick
     private String identNick = "";
-    // The NickServ ident password.
+    // NickServ ident password
     private String identPwd = "";
-    // The pinboard posts handler.
+    // Pinboard posts handler
     private Pinboard pinboard;
-    // Today's date.
+    // Today's date
     private String today = Utils.today();
-    // The weblog URL.
+    // Weblog URL
     private String weblogUrl = "";
 
     /**
@@ -225,7 +225,7 @@ public class Mobibot extends PircBot {
         // Set the logger level
         loggerLevel = logger.getLevel();
 
-        // Load the current entries, if any.
+        // Load the current entries, if any
         try {
             today = EntriesMgr.loadEntries(logsDir + EntriesMgr.CURRENT_XML, ircChannel, entries);
 
@@ -238,18 +238,18 @@ public class Mobibot extends PircBot {
                 today = Utils.today();
             }
         } catch (IOException ignore) {
-            // Do nothing.
+            // Do nothing
         } catch (FeedException e) {
             if (logger.isErrorEnabled()) {
                 logger.error("An error occurred while parsing the '" + EntriesMgr.CURRENT_XML + "' file.", e);
             }
         }
 
-        // Load the backlogs, if any.
+        // Load the backlogs, if any
         try {
             EntriesMgr.loadBacklogs(logsDir + EntriesMgr.NAV_XML, history);
         } catch (IOException ignore) {
-            // Do nothing.
+            // Do nothing
         } catch (FeedException e) {
             if (logger.isErrorEnabled()) {
                 logger.error("An error occurred while parsing the '" + EntriesMgr.NAV_XML + "' file.", e);
@@ -421,7 +421,7 @@ public class Mobibot extends PircBot {
         try {
             Thread.sleep(secs * 1000L);
         } catch (InterruptedException ignore) {
-            // Do nothing.
+            // Do nothing
         }
     }
 
@@ -956,7 +956,12 @@ public class Mobibot extends PircBot {
                             final String htmlTitle = html.title();
 
                             if (isNotBlank(htmlTitle)) {
-                                title = htmlTitle;
+                                final String[] split = htmlTitle.split("( \\| )", 2);
+                                if (split.length == 2) {
+                                    title = split[0];
+                                } else {
+                                    title = htmlTitle;
+                                }
                             }
                         } catch (IOException ignore) {
                             // Do nothing
@@ -969,6 +974,7 @@ public class Mobibot extends PircBot {
                     final EntryLink entry = entries.get(index);
                     send(channel, EntriesUtils.buildLink(index, entry));
 
+                    // Add link to pinboard
                     if (pinboard != null) {
                         pinboard.addPost(entry);
                     }
@@ -1038,7 +1044,7 @@ public class Mobibot extends PircBot {
                     }
                 }
             }
-        } else if (message.matches(Commands.LINK_CMD + "[0-9]+:.*")) { // L1:<comment>, L1:-, L1:|<title>, etc.
+        } else if (message.matches(Commands.LINK_CMD + "[0-9]+:.*")) { // L1:<comment>, L1:-, L1:|<title>, etc
             isCommand = true;
 
             final String[] cmds = message.substring(1).split(":", 2);
@@ -1165,7 +1171,7 @@ public class Mobibot extends PircBot {
                     }
                 }
             }
-        } else if (message.matches(Commands.LINK_CMD + "[0-9]+\\.[0-9]+:.*")) { // L1.1:<command>
+        } else if (message.matches(Commands.LINK_CMD + "[0-9]+\\.[0-9]+:.*")) { // L11:<command>
             isCommand = true;
 
             final String[] cmds = message.substring(1).split("[.:]", 3);
@@ -1178,15 +1184,15 @@ public class Mobibot extends PircBot {
                 if (cindex < entry.getCommentsCount()) {
                     final String cmd = cmds[2].trim();
 
-                    // L1.1:
+                    // L11:
                     if (cmd.length() == 0) {
                         final EntryComment comment = entry.getComment(cindex);
                         send(channel, EntriesUtils.buildComment(index, cindex, comment));
-                    } else if ("-".equals(cmd)) { // L1.1:-
+                    } else if ("-".equals(cmd)) { // L11:-
                         entry.deleteComment(cindex);
                         send(channel, "Comment " + Commands.LINK_CMD + (index + 1) + '.' + (cindex + 1) + " removed.");
                         saveEntries(false);
-                    } else if (cmd.charAt(0) == '?') { // L1.1:?<author>
+                    } else if (cmd.charAt(0) == '?') { // L11:?<author>
                         if (isOp(sender)) {
                             if (cmd.length() > 1) {
                                 final EntryComment comment = entry.getComment(cindex);
@@ -1258,7 +1264,7 @@ public class Mobibot extends PircBot {
         } else if (Commands.USERS_CMD.equals(cmd)) {
             usersResponse(sender, true);
         } else if ((cmds.length > 1) && isOp(sender) && Commands.ADDLOG_CMD.equals(cmd)) {
-            // e.g. 2014-04-01
+            // e.g 2014-04-01
             final File backlog = new File(logsDir + args + EntriesMgr.XML_EXT);
             if (backlog.exists()) {
                 history.add(0, args);
@@ -1557,7 +1563,10 @@ public class Mobibot extends PircBot {
         if (twitterModule.isEnabled() && isNotBlank(twitterHandle)) {
             new Thread(() -> {
                 try {
-                    twitterModule.post(twitterHandle, getName() + ' ' + ReleaseInfo.VERSION + " " + msg, true);
+                    twitterModule.post(
+                            twitterHandle,
+                            getName() + ' ' + ReleaseInfo.VERSION + " " + msg,
+                            true);
                 } catch (ModuleException e) {
                     if (logger.isWarnEnabled()) {
                         logger.warn("Failed to notify @{}: {}", twitterHandle, msg, e);
@@ -1647,7 +1656,7 @@ public class Mobibot extends PircBot {
                         i = 0;
                     }
                 } catch (NumberFormatException ignore) {
-                    // Do nothing.
+                    // Do nothing
                 }
             }
 

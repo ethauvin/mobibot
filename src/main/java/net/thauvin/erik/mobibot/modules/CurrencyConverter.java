@@ -70,13 +70,13 @@ public final class CurrencyConverter extends ThreadedModule {
      */
     static final String CURRENCY_RATES_KEYWORD = "rates";
 
-    // The currency command.
+    // Currency command
     private static final String CURRENCY_CMD = "currency";
-    // The exchange rates.
+    // Exchange rates
     private static final Map<String, String> EXCHANGE_RATES = new TreeMap<>();
-    // The exchange rates table URL.
+    // Exchange rates table URL
     private static final String EXCHANGE_TABLE_URL = "https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml";
-    // The last exchange rates table publication date.
+    // Last exchange rates table publication date
     private static String pubDate = "";
 
     /**
@@ -100,7 +100,7 @@ public final class CurrencyConverter extends ThreadedModule {
         if (EXCHANGE_RATES.isEmpty()) {
             try {
                 final SAXBuilder builder = new SAXBuilder();
-                // See https://rules.sonarsource.com/java/tag/owasp/RSPEC-2755
+                // See https://rules.sonarsourcecom/java/tag/owasp/RSPEC-2755
                 builder.setProperty(XMLConstants.ACCESS_EXTERNAL_DTD, "");
                 builder.setProperty(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
                 builder.setIgnoringElementContentWhitespace(true);

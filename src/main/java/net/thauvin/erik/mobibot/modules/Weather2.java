@@ -65,7 +65,7 @@ public class Weather2 extends ThreadedModule {
      */
     static final String OWM_API_KEY_PROP = "owm-api-key";
 
-    // The weather command.
+    // Weather command
     private static final String WEATHER_CMD = "weather";
 
     /**

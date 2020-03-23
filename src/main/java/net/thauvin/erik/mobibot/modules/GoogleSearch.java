@@ -60,13 +60,13 @@ import java.util.List;
  * @since 1.0
  */
 public final class GoogleSearch extends ThreadedModule {
-    // The Google API Key property.
+    // Google API Key property
     static final String GOOGLE_API_KEY_PROP = "google-api-key";
-    // The Google Custom Search Engine ID property.
+    // Google Custom Search Engine ID property
     static final String GOOGLE_CSE_KEY_PROP = "google-cse-cx";
-    // The Google command
+    // Google command
     private static final String GOOGLE_CMD = "google";
-    // The tab indent (4 spaces).
+    // Tab indent (4 spaces)
     private static final String TAB_INDENT = "    ";
 
     /**

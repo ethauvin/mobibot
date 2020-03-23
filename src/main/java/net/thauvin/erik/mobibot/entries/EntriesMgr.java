@@ -1,7 +1,7 @@
 /*
  * EntriesMgr.java
  *
- * Copyright (c) 2004-2019, Erik C. Thauvin (erik@thauvin.net)
+ * Copyright (c) 2004-2020, Erik C. Thauvin (erik@thauvin.net)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -81,7 +81,7 @@ public final class EntriesMgr {
      */
     public static final String XML_EXT = ".xml";
 
-    // The maximum number of backlogs to keep.
+    // Maximum number of backlogs to keep
     private static final int MAX_BACKLOGS = 10;
 
     /**

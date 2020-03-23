@@ -41,7 +41,7 @@ class RockPaperScissorsTest {
     @Test(invocationCount = 5)
     fun testWinLoseOrDraw() {
         var play = RockPaperScissors.winLoseOrDraw(Shapes.SCISSORS)
-        // println("SCISSORS vs ${play.first}: ${play.second}")
+        // println("SCISSORS vs ${play.first}: ${playsecond}")
         when (play.first) {
             Shapes.SCISSORS -> assertThat(play.second).`as`("SCISSORS vs ${play.first}").isEqualTo(Results.DRAW)
             Shapes.ROCK -> assertThat(play.second).`as`("SCISSORS vs ${play.first}").isEqualTo(Results.LOSE)
@@ -49,7 +49,7 @@ class RockPaperScissorsTest {
         }
 
         play = RockPaperScissors.winLoseOrDraw(Shapes.ROCK)
-        // println("ROCK vs ${play.first}: ${play.second}")
+        // println("ROCK vs ${play.first}: ${playsecond}")
         when (play.first) {
             Shapes.SCISSORS -> assertThat(play.second).`as`("ROCK vs ${play.first}").isEqualTo(Results.WIN)
             Shapes.ROCK -> assertThat(play.second).`as`("ROCK vs ${play.first}").isEqualTo(Results.DRAW)
@@ -57,7 +57,7 @@ class RockPaperScissorsTest {
         }
 
         play = RockPaperScissors.winLoseOrDraw(Shapes.PAPER)
-        // println("PAPER vs ${play.first}: ${play.second}")
+        // println("PAPER vs ${play.first}: ${playsecond}")
         when (play.first) {
             Shapes.SCISSORS -> assertThat(play.second).`as`("PAPER vs ${play.first}").isEqualTo(Results.LOSE)
             Shapes.ROCK -> assertThat(play.second).`as`("PAPER vs ${play.first}").isEqualTo(Results.WIN)

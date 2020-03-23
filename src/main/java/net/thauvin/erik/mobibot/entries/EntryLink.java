@@ -1,7 +1,7 @@
 /*
  * EntryLink.java
  *
- * Copyright (c) 2004-2019, Erik C. Thauvin (erik@thauvin.net)
+ * Copyright (c) 2004-2020, Erik C. Thauvin (erik@thauvin.net)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -51,31 +51,31 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * @since 1.0
  */
 public class EntryLink implements Serializable {
-    // The serial version UID.
+    // Serial version UID
     static final long serialVersionUID = 1L;
 
-    // The link's comments
+    // Link's comments
     private final List<EntryComment> comments = new CopyOnWriteArrayList<>();
 
-    // The tags/categories
+    // Tags/categories
     private final List<SyndCategory> tags = new CopyOnWriteArrayList<>();
 
-    // The channel
+    // Channel
     private String channel;
 
-    // The creation date
+    // Creation date
     private Date date = Calendar.getInstance().getTime();
 
-    // The link's URL
+    // Link's URL
     private String link;
 
-    // The author's login
+    // Author's login
     private String login = "";
 
-    // The author's nickname
+    // Author's nickname
     private String nick;
 
-    // The link's title
+    // Link's title
     private String title;
 
     /**
@@ -313,7 +313,7 @@ public class EntryLink implements Serializable {
                     mod = part.charAt(0);
 
                     if (mod == '-') {
-                        // Don't remove the channel tag, if any.
+                        // Don't remove the channel tag, if any
                         if (!channel.substring(1).equals(tag.getName())) {
                             this.tags.remove(tag);
                         }
