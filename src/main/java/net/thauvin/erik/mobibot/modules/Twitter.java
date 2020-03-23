@@ -48,12 +48,12 @@ import twitter4j.conf.ConfigurationBuilder;
  * @since 1.0
  */
 public final class Twitter extends ThreadedModule {
-    // The property keys.
+    // Property keys
     static final String CONSUMER_KEY_PROP = "twitter-consumerKey";
     static final String CONSUMER_SECRET_PROP = "twitter-consumerSecret";
     static final String TOKEN_PROP = "twitter-token";
     static final String TOKEN_SECRET_PROP = "twitter-tokenSecret";
-    // The twitter command.
+    // Twitter command
     private static final String TWITTER_CMD = "twitter";
 
     /**
@@ -90,19 +90,16 @@ public final class Twitter extends ThreadedModule {
                                final boolean isDm) throws ModuleException {
         try {
             final ConfigurationBuilder cb = new ConfigurationBuilder();
-            cb.setDebugEnabled(true)
-                .setOAuthConsumerKey(consumerKey)
-                .setOAuthConsumerSecret(consumerSecret)
-                .setOAuthAccessToken(token)
-                .setOAuthAccessTokenSecret(tokenSecret);
+            cb.setDebugEnabled(true).setOAuthConsumerKey(consumerKey).setOAuthConsumerSecret(consumerSecret)
+              .setOAuthAccessToken(token).setOAuthAccessTokenSecret(tokenSecret);
 
             final TwitterFactory tf = new TwitterFactory(cb.build());
             final twitter4j.Twitter twitter = tf.getInstance();
 
             if (!isDm) {
-                final Status status = twitter.updateStatus(message + " (" + handle + ')');
-                return new NoticeMessage("You message was posted to http://twitter.com/" + twitter.getScreenName()
-                    + "/statuses/" + status.getId());
+                final Status status = twitter.updateStatus(message);
+                return new NoticeMessage("You message was posted to https://twitter.com/" + twitter.getScreenName()
+                                         + "/statuses/" + status.getId());
             } else {
                 final DirectMessage dm = twitter.sendDirectMessage(handle, message);
                 return new NoticeMessage(dm.getText());
@@ -134,14 +131,15 @@ public final class Twitter extends ThreadedModule {
      * @return The {@link Message} to send back.
      * @throws ModuleException If an error occurs while posting.
      */
-    public Message post(final String handle, final String message, final boolean isDm) throws ModuleException {
+    public Message post(final String handle, final String message, final boolean isDm)
+            throws ModuleException {
         return twitterPost(properties.get(CONSUMER_KEY_PROP),
-            properties.get(CONSUMER_SECRET_PROP),
-            properties.get(TOKEN_PROP),
-            properties.get(TOKEN_SECRET_PROP),
-            handle,
-            message,
-            isDm);
+                           properties.get(CONSUMER_SECRET_PROP),
+                           properties.get(TOKEN_PROP),
+                           properties.get(TOKEN_SECRET_PROP),
+                           handle,
+                           message,
+                           isDm);
     }
 
     /**
@@ -150,7 +148,8 @@ public final class Twitter extends ThreadedModule {
     @Override
     void run(final Mobibot bot, final String sender, final String cmd, final String message) {
         try {
-            bot.send(sender, post(sender, message, false).getMessage());
+            bot.send(sender,
+                     post(sender, message + " (by " + sender + " on " + bot.getChannel() + ')', false).getMessage());
         } catch (ModuleException e) {
             bot.getLogger().warn(e.getDebugMessage(), e);
             bot.send(sender, e.getMessage());

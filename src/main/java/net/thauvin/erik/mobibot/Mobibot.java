@@ -176,6 +176,8 @@ public class Mobibot extends PircBot {
     // The tell object.
     private final Tell tell;
     // The Twitter handle for channel join notifications.
+    // Automatically post links to Twitter
+    private final boolean twitterAutoPost;
     private final String twitterHandle;
     // The Twitter module.
     private final Twitter twitterModule;
@@ -284,6 +286,7 @@ public class Mobibot extends PircBot {
         twitterModule = new Twitter();
         MODULES.add(twitterModule);
         twitterHandle = p.getProperty(Constants.TWITTER_HANDLE_PROP, "");
+        twitterAutoPost = Boolean.parseBoolean(p.getProperty(Constants.TWITTER_AUTOPOST_PROP, "false"));
 
         MODULES.add(new War());
         MODULES.add(new Weather2());
@@ -968,6 +971,20 @@ public class Mobibot extends PircBot {
 
                     if (pinboard != null) {
                         pinboard.addPost(entry);
+                    }
+
+                    // Post link to twitter
+                    if (twitterAutoPost && twitterModule.isEnabled()) {
+                        final String msg = title + ' ' + link + " via " + sender + " on " + getChannel();
+                        new Thread(() -> {
+                            try {
+                                twitterModule.post(twitterHandle, msg, false);
+                            } catch (ModuleException e) {
+                                if (logger.isWarnEnabled()) {
+                                    logger.warn("Failed to post link on twitter.", e);
+                                }
+                            }
+                        }).start();
                     }
 
                     saveEntries(isBackup);

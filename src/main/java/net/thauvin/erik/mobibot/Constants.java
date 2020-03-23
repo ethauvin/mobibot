@@ -46,21 +46,22 @@ public final class Constants {
      * The connect/read timeout in ms.
      */
     public static final int CONNECT_TIMEOUT = 5000;
-
-    /**
-     * The empty title string.
-     */
-    public static final String NO_TITLE = "No Title";
-
-    /**
-     * The Twitter handle property key.
-     */
-    public static final String TWITTER_HANDLE_PROP = "twitter-handle";
-
     /**
      * Default locale.
      */
     public static final Locale LOCALE = Locale.getDefault();
+    /**
+     * The empty title string.
+     */
+    public static final String NO_TITLE = "No Title";
+    /**
+     * The Twitter handle property key.
+     */
+    public static final String TWITTER_HANDLE_PROP = "twitter-handle";
+    /**
+     * The twitter post flag property key.
+     */
+    public static final String TWITTER_AUTOPOST_PROP = "twitter-auto-post";
 
     /**
      * Disables the default constructor.
