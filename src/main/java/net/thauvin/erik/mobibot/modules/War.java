@@ -1,7 +1,7 @@
 /*
  * War.java
  *
- * Copyright (c) 2004-2019, Erik C. Thauvin (erik@thauvin.net)
+ * Copyright (c) 2004-2020, Erik C. Thauvin (erik@thauvin.net)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -49,9 +49,9 @@ public final class War extends AbstractModule {
     private static final String WAR_CMD = "war";
     // The deck of card.
     private static final String[] WAR_DECK =
-        new String[]{"Ace", "King", "Queen", "Jack", "10", "9", "8", "7", "6", "5", "4", "3", "2"};
+            new String[]{ "Ace", "King", "Queen", "Jack", "10", "9", "8", "7", "6", "5", "4", "3", "2" };
     // The suits for the deck of card.
-    private static final String[] WAR_SUITS = new String[]{"Hearts", "Spades", "Diamonds", "Clubs"};
+    private static final String[] WAR_SUITS = new String[]{ "Hearts", "Spades", "Diamonds", "Clubs" };
 
     /**
      * The default constructor.
@@ -62,15 +62,14 @@ public final class War extends AbstractModule {
     }
 
     /**
-     * Plays war.
-     *
-     * @param bot       The bot's instance.
-     * @param sender    The sender.
-     * @param args      The command arguments.
-     * @param isPrivate Set to <code>true</code> if the response should be sent as a private message.
+     * {@inheritDoc}
      */
     @Override
-    public void commandResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate) {
+    public void commandResponse(final Mobibot bot,
+                                final String sender,
+                                final String cmd,
+                                final String args,
+                                final boolean isPrivate) {
         final SecureRandom r = new SecureRandom();
 
         int i;
@@ -81,7 +80,7 @@ public final class War extends AbstractModule {
             y = r.nextInt(WAR_DECK.length);
 
             bot.send(bot.getChannel(),
-                sender + " drew the " + Utils.bold(WAR_DECK[i]) + " of " + WAR_SUITS[r.nextInt(WAR_SUITS.length)]);
+                     sender + " drew the " + Utils.bold(WAR_DECK[i]) + " of " + WAR_SUITS[r.nextInt(WAR_SUITS.length)]);
             bot.action("drew the " + Utils.bold(WAR_DECK[y]) + " of " + WAR_SUITS[r.nextInt(WAR_SUITS.length)]);
 
             if (i != y) {

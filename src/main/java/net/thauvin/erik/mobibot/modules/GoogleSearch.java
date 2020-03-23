@@ -1,7 +1,7 @@
 /*
  * GoogleSearch.java
  *
- * Copyright (c) 2004-2019, Erik C. Thauvin (erik@thauvin.net)
+ * Copyright (c) 2004-2020, Erik C. Thauvin (erik@thauvin.net)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -96,7 +96,7 @@ public final class GoogleSearch extends ThreadedModule {
      * Searches Google.
      */
     @Override
-    void run(final Mobibot bot, final String sender, final String query) {
+    void run(final Mobibot bot, final String sender, final String cmd, final String query) {
         if (StringUtils.isNotBlank(query)) {
             try {
                 final List<Message> results = searchGoogle(query, properties.get(GOOGLE_API_KEY_PROP),

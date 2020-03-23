@@ -1,7 +1,7 @@
 /*
  * Calc.java
  *
- * Copyright (c) 2004-2019, Erik C. Thauvin (erik@thauvin.net)
+ * Copyright (c) 2004-2020, Erik C. Thauvin (erik@thauvin.net)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -81,7 +81,11 @@ public class Calc extends AbstractModule {
      * {@inheritDoc}
      */
     @Override
-    public void commandResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate) {
+    public void commandResponse(final Mobibot bot,
+                                final String sender,
+                                final String cmd,
+                                final String args,
+                                final boolean isPrivate) {
         if (StringUtils.isNotBlank(args)) {
             bot.send(calc(args));
 

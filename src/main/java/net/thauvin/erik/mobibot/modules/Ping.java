@@ -1,7 +1,7 @@
 /*
  * Ping.java
  *
- * Copyright (c) 2004-2019, Erik C. Thauvin (erik@thauvin.net)
+ * Copyright (c) 2004-2020, Erik C. Thauvin (erik@thauvin.net)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -50,19 +50,19 @@ public class Ping extends AbstractModule {
      * The ping responses.
      */
     static final List<String> PINGS =
-        Arrays.asList(
-            "is barely alive.",
-            "is trying to stay awake.",
-            "has gone fishing.",
-            "is somewhere over the rainbow.",
-            "has fallen and can't get up.",
-            "is running. You better go chase it.",
-            "has just spontaneously combusted.",
-            "is talking to itself... don't interrupt. That's rude.",
-            "is bartending at an AA meeting.",
-            "is hibernating.",
-            "is saving energy: apathetic mode activated.",
-            "is busy. Go away!");
+            Arrays.asList(
+                    "is barely alive.",
+                    "is trying to stay awake.",
+                    "has gone fishing.",
+                    "is somewhere over the rainbow.",
+                    "has fallen and can't get up.",
+                    "is running. You better go chase it.",
+                    "has just spontaneously combusted.",
+                    "is talking to itself... don't interrupt. That's rude.",
+                    "is bartending at an AA meeting.",
+                    "is hibernating.",
+                    "is saving energy: apathetic mode activated.",
+                    "is busy. Go away!");
     /**
      * The ping command.
      */
@@ -80,7 +80,11 @@ public class Ping extends AbstractModule {
      * {@inheritDoc}
      */
     @Override
-    public void commandResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate) {
+    public void commandResponse(final Mobibot bot,
+                                final String sender,
+                                final String cmd,
+                                final String args,
+                                final boolean isPrivate) {
         final SecureRandom r = new SecureRandom();
         bot.action(PINGS.get(r.nextInt(PINGS.size())));
     }

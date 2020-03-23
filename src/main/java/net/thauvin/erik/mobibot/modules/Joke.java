@@ -1,7 +1,7 @@
 /*
  * Joke.java
  *
- * Copyright (c) 2004-2019, Erik C. Thauvin (erik@thauvin.net)
+ * Copyright (c) 2004-2020, Erik C. Thauvin (erik@thauvin.net)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -56,7 +56,7 @@ public final class Joke extends ThreadedModule {
     private static final String JOKE_CMD = "joke";
     // The ICNDB URL.
     private static final String JOKE_URL =
-        "http://api.icndb.com/jokes/random?escape=javascript&exclude=[explicit]&limitTo=[nerdy]";
+            "http://api.icndb.com/jokes/random?escape=javascript&exclude=[explicit]&limitTo=[nerdy]";
 
     /**
      * Creates a new {@link Joke} instance.
@@ -79,7 +79,7 @@ public final class Joke extends ThreadedModule {
 
             final StringBuilder sb = new StringBuilder();
             try (final BufferedReader reader =
-                     new BufferedReader(new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8))) {
+                         new BufferedReader(new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8))) {
                 String line;
                 while ((line = reader.readLine()) != null) {
                     sb.append(line);
@@ -88,8 +88,8 @@ public final class Joke extends ThreadedModule {
                 final JSONObject json = new JSONObject(sb.toString());
 
                 return new PublicMessage(
-                    json.getJSONObject("value").get("joke").toString().replace("\\'", "'")
-                        .replace("\\\"", "\""));
+                        json.getJSONObject("value").get("joke").toString().replace("\\'", "'")
+                            .replace("\\\"", "\""));
             }
         } catch (Exception e) {
             throw new ModuleException("randomJoke()", "An error has occurred retrieving a random joke.", e);
@@ -100,15 +100,19 @@ public final class Joke extends ThreadedModule {
      * {@inheritDoc}
      */
     @Override
-    public void commandResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate) {
-        new Thread(() -> run(bot, sender, args)).start();
+    public void commandResponse(final Mobibot bot,
+                                final String sender,
+                                final String cmd,
+                                final String args,
+                                final boolean isPrivate) {
+        new Thread(() -> run(bot, sender, cmd, args)).start();
     }
 
     /**
      * Returns a random joke from <a href="http://www.icndb.com/">The Internet Chuck Norris Database</a>.
      */
     @Override
-    void run(final Mobibot bot, final String sender, final String arg) {
+    void run(final Mobibot bot, final String sender, final String cmd, final String arg) {
         try {
             bot.send(Utils.cyan(randomJoke().getMessage()));
         } catch (ModuleException e) {

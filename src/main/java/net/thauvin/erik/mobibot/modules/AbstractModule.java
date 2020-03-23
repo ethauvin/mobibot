@@ -1,7 +1,7 @@
 /*
  * AbstractModule.java
  *
- * Copyright (c) 2004-2019, Erik C. Thauvin (erik@thauvin.net)
+ * Copyright (c) 2004-2020, Erik C. Thauvin (erik@thauvin.net)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -57,11 +57,13 @@ public abstract class AbstractModule {
      *
      * @param bot       The bot's instance.
      * @param sender    The sender.
+     * @param cmd       The command.
      * @param args      The command arguments.
      * @param isPrivate Set to <code>true</code> if the response should be sent as a private message.
      */
     public abstract void commandResponse(final Mobibot bot,
                                          final String sender,
+                                         final String cmd,
                                          final String args,
                                          final boolean isPrivate);
 

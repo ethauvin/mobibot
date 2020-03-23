@@ -1,7 +1,7 @@
 /*
  * CurrencyConverter.java
  *
- * Copyright (c) 2004-2019, Erik C. Thauvin (erik@thauvin.net)
+ * Copyright (c) 2004-2020, Erik C. Thauvin (erik@thauvin.net)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -88,44 +88,6 @@ public final class CurrencyConverter extends ThreadedModule {
     }
 
     /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void commandResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate) {
-        synchronized (this) {
-            if (!pubDate.equals(Utils.today())) {
-                EXCHANGE_RATES.clear();
-            }
-        }
-
-        super.commandResponse(bot, sender, args, isPrivate);
-    }
-
-    /**
-     * Converts the specified currencies.
-     */
-    @SuppressFBWarnings("REDOS")
-    @Override
-    void run(final Mobibot bot, final String sender, final String query) {
-        if (StringUtils.isNotBlank(sender) && StringUtils.isNotBlank(query)) {
-            if (query.matches("\\d+([,\\d]+)?(\\.\\d+)? [a-zA-Z]{3}+ to [a-zA-Z]{3}+")) {
-                try {
-                    final Message msg = convertCurrency(query);
-                    if (msg.isError()) {
-                        helpResponse(bot, sender, CURRENCY_CMD + ' ' + query, false);
-                    }
-                    bot.send(sender, msg);
-                } catch (ModuleException e) {
-                    bot.getLogger().warn(e.getDebugMessage(), e);
-                    bot.send(sender, e.getMessage());
-                }
-            } else {
-                helpResponse(bot, sender, CURRENCY_CMD + ' ' + query, true);
-            }
-        }
-    }
-
-    /**
      * Converts from a currency to another.
      *
      * <p>100 USD to EUR</p>
@@ -157,8 +119,8 @@ public final class CurrencyConverter extends ThreadedModule {
                 for (final Element rawCube : cubes) {
                     cube = rawCube;
                     EXCHANGE_RATES.put(
-                        cube.getAttribute("currency").getValue(),
-                        cube.getAttribute("rate").getValue());
+                            cube.getAttribute("currency").getValue(),
+                            cube.getAttribute("rate").getValue());
                 }
 
                 EXCHANGE_RATES.put("EUR", "1");
@@ -166,7 +128,7 @@ public final class CurrencyConverter extends ThreadedModule {
                 throw new ModuleException(query, "An error has occurred while parsing the exchange rates table.", e);
             } catch (IOException e) {
                 throw new ModuleException(
-                    query, "An error has occurred while fetching the exchange rates table.", e);
+                        query, "An error has occurred while fetching the exchange rates table.", e);
             }
         }
 
@@ -181,23 +143,23 @@ public final class CurrencyConverter extends ThreadedModule {
                 } else {
                     try {
                         final double amt = Double.parseDouble(cmds[0].replace(",", ""));
-                        final double from = Double.parseDouble(EXCHANGE_RATES.get(cmds[1]
-                            .toUpperCase(Constants.LOCALE)));
+                        final double from =
+                                Double.parseDouble(EXCHANGE_RATES.get(cmds[1].toUpperCase(Constants.LOCALE)));
                         final double to = Double.parseDouble(EXCHANGE_RATES.get(cmds[3].toUpperCase(Constants.LOCALE)));
 
                         return new PublicMessage(
-                            NumberFormat.getCurrencyInstance(Locale.US).format(amt).substring(1)
+                                NumberFormat.getCurrencyInstance(Locale.US).format(amt).substring(1)
                                 + ' '
                                 + cmds[1].toUpperCase(Constants.LOCALE)
                                 + " = "
                                 + NumberFormat.getCurrencyInstance(Locale.US)
-                                .format((amt * to) / from)
-                                .substring(1)
+                                              .format((amt * to) / from)
+                                              .substring(1)
                                 + ' '
                                 + cmds[3].toUpperCase(Constants.LOCALE));
                     } catch (Exception e) {
                         throw new ModuleException("convertCurrency(" + query + ')',
-                            "The supported currencies are: " + EXCHANGE_RATES.keySet(), e);
+                                                  "The supported currencies are: " + EXCHANGE_RATES.keySet(), e);
                     }
                 }
             } else if (CURRENCY_RATES_KEYWORD.equals(query)) {
@@ -217,6 +179,48 @@ public final class CurrencyConverter extends ThreadedModule {
             }
         }
         return new ErrorMessage("The supported currencies are: " + EXCHANGE_RATES.keySet());
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void commandResponse(final Mobibot bot,
+                                final String sender,
+                                final String cmd,
+                                final String args,
+                                final boolean isPrivate) {
+        synchronized (this) {
+            if (!pubDate.equals(Utils.today())) {
+                EXCHANGE_RATES.clear();
+            }
+        }
+
+        super.commandResponse(bot, sender, cmd, args, isPrivate);
+    }
+
+    /**
+     * Converts the specified currencies.
+     */
+    @SuppressFBWarnings("REDOS")
+    @Override
+    void run(final Mobibot bot, final String sender, final String cmd, final String query) {
+        if (StringUtils.isNotBlank(sender) && StringUtils.isNotBlank(query)) {
+            if (query.matches("\\d+([,\\d]+)?(\\.\\d+)? [a-zA-Z]{3}+ to [a-zA-Z]{3}+")) {
+                try {
+                    final Message msg = convertCurrency(query);
+                    if (msg.isError()) {
+                        helpResponse(bot, sender, CURRENCY_CMD + ' ' + query, false);
+                    }
+                    bot.send(sender, msg);
+                } catch (ModuleException e) {
+                    bot.getLogger().warn(e.getDebugMessage(), e);
+                    bot.send(sender, e.getMessage());
+                }
+            } else {
+                helpResponse(bot, sender, CURRENCY_CMD + ' ' + query, true);
+            }
+        }
     }
 
     /**

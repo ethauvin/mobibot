@@ -1,7 +1,7 @@
 /*
  * Twitter.java
  *
- * Copyright (c) 2004-2019, Erik C. Thauvin (erik@thauvin.net)
+ * Copyright (c) 2004-2020, Erik C. Thauvin (erik@thauvin.net)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -148,7 +148,7 @@ public final class Twitter extends ThreadedModule {
      * Posts to twitter.
      */
     @Override
-    void run(final Mobibot bot, final String sender, final String message) {
+    void run(final Mobibot bot, final String sender, final String cmd, final String message) {
         try {
             bot.send(sender, post(sender, message, false).getMessage());
         } catch (ModuleException e) {

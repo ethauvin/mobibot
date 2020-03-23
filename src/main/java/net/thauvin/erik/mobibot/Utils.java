@@ -1,7 +1,7 @@
 /*
  * Utils.java
  *
- * Copyright (c) 2004-2019, Erik C. Thauvin (erik@thauvin.net)
+ * Copyright (c) 2004-2020, Erik C. Thauvin (erik@thauvin.net)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -34,6 +34,7 @@ package net.thauvin.erik.mobibot;
 
 import org.apache.commons.lang3.StringUtils;
 import org.jibble.pircbot.Colors;
+import org.jsoup.Jsoup;
 
 import java.io.File;
 import java.time.LocalDateTime;
@@ -233,8 +234,7 @@ public final class Utils {
      * @return The unescaped string.
      */
     public static String unescapeXml(final String str) {
-        return str.replace("&amp;", "&").replace("&lt;", "<").replace("&gt;", ">").replace("&quot;", "\"").replace(
-            "&apos;", "'").replace("&#39;", "'");
+        return Jsoup.parse(str).text();
     }
 
     /**
@@ -254,9 +254,9 @@ public final class Utils {
         final long weeks = days / 7;
         days %= 7;
         final long hours = TimeUnit.MILLISECONDS.toHours(uptime) - TimeUnit.DAYS.toHours(
-            TimeUnit.MILLISECONDS.toDays(uptime));
+                TimeUnit.MILLISECONDS.toDays(uptime));
         final long minutes = TimeUnit.MILLISECONDS.toMinutes(uptime) - TimeUnit.HOURS.toMinutes(
-            TimeUnit.MILLISECONDS.toHours(uptime));
+                TimeUnit.MILLISECONDS.toHours(uptime));
 
         if (years > 0) {
             info.append(years).append(plural(years, " year ", " years "));

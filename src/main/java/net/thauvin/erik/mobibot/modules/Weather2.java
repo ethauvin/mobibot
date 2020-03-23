@@ -1,7 +1,7 @@
 /*
  * Weather2.java
  *
- * Copyright (c) 2004-2019, Erik C. Thauvin (erik@thauvin.net)
+ * Copyright (c) 2004-2020, Erik C. Thauvin (erik@thauvin.net)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -217,7 +217,7 @@ public class Weather2 extends ThreadedModule {
      * Fetches the weather data from a specific city.
      */
     @Override
-    void run(final Mobibot bot, final String sender, final String args) {
+    void run(final Mobibot bot, final String sender, final String cmd, final String args) {
         if (StringUtils.isNotBlank(args)) {
             try {
                 final List<Message> messages = getWeather(args, properties.get(OWM_API_KEY_PROP));

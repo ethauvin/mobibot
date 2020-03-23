@@ -1,7 +1,7 @@
 /*
  * Dice.java
  *
- * Copyright (c) 2004-2019, Erik C. Thauvin (erik@thauvin.net)
+ * Copyright (c) 2004-2020, Erik C. Thauvin (erik@thauvin.net)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -57,15 +57,14 @@ public final class Dice extends AbstractModule {
     }
 
     /**
-     * Rolls the dice.
-     *
-     * @param bot       The bot's instance.
-     * @param sender    The sender.
-     * @param args      The command arguments.
-     * @param isPrivate Set to <code>true</code> if the response should be sent as a private message.
+     * {@inheritDoc}
      */
     @Override
-    public void commandResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate) {
+    public void commandResponse(final Mobibot bot,
+                                final String sender,
+                                final String cmd,
+                                final String args,
+                                final boolean isPrivate) {
         final SecureRandom r = new SecureRandom();
 
         int i = r.nextInt(6) + 1;
@@ -73,15 +72,15 @@ public final class Dice extends AbstractModule {
         final int playerTotal = i + y;
 
         bot.send(bot.getChannel(),
-            sender + " rolled two dice: " + Utils.bold(i) + " and " + Utils.bold(y) + " for a total of "
-                + Utils.bold(playerTotal));
+                 sender + " rolled two dice: " + Utils.bold(i) + " and " + Utils.bold(y) + " for a total of "
+                 + Utils.bold(playerTotal));
 
         i = r.nextInt(6) + 1;
         y = r.nextInt(6) + 1;
         final int total = i + y;
 
         bot.action(
-            "rolled two dice: " + Utils.bold(i) + " and " + Utils.bold(y) + " for a total of " + Utils.bold(total));
+                "rolled two dice: " + Utils.bold(i) + " and " + Utils.bold(y) + " for a total of " + Utils.bold(total));
 
         if (playerTotal < total) {
             bot.action("wins.");

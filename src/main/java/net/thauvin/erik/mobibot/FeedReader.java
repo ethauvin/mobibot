@@ -1,7 +1,7 @@
 /*
  * FeedReader.java
  *
- * Copyright (c) 2004-2019, Erik C. Thauvin (erik@thauvin.net)
+ * Copyright (c) 2004-2020, Erik C. Thauvin (erik@thauvin.net)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -88,11 +88,14 @@ class FeedReader implements Runnable {
 
             SyndEntry item;
             final List<SyndEntry> items = feed.getEntries();
-
-            for (int i = 0; (i < items.size()) && (i < MAX_ITEMS); i++) {
-                item = items.get(i);
-                bot.send(sender, item.getTitle());
-                bot.send(sender, TAB_INDENT + Utils.green(item.getLink()));
+            if (items.isEmpty()) {
+                bot.send(sender, "There is currently nothing to view. Why don't you post something?");
+            } else {
+                for (int i = 0; (i < items.size()) && (i < MAX_ITEMS); i++) {
+                    item = items.get(i);
+                    bot.send(sender, item.getTitle());
+                    bot.send(sender, TAB_INDENT + Utils.green(item.getLink()));
+                }
             }
         } catch (MalformedURLException e) {
             bot.getLogger().debug("Invalid feed URL.", e);

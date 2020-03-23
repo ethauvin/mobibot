@@ -1,7 +1,7 @@
 /*
  * WorldTime.java
  *
- * Copyright (c) 2004-2019, Erik C. Thauvin (erik@thauvin.net)
+ * Copyright (c) 2004-2020, Erik C. Thauvin (erik@thauvin.net)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -146,9 +146,9 @@ public final class WorldTime extends AbstractModule {
         countries.put("INTERNET", BEATS_KEYWORD);
         countries.put("BEATS", BEATS_KEYWORD);
 
-        ZoneId.getAvailableZoneIds().stream().filter(tz ->
-            !tz.contains("/") && tz.length() == 3 && !countries.containsKey(tz)).forEach(tz ->
-            countries.put(tz, tz));
+        ZoneId.getAvailableZoneIds().stream()
+              .filter(tz -> !tz.contains("/") && tz.length() == 3 && !countries.containsKey(tz))
+              .forEach(tz -> countries.put(tz, tz));
 
         COUNTRIES_MAP = Collections.unmodifiableMap(countries);
     }
@@ -162,15 +162,58 @@ public final class WorldTime extends AbstractModule {
     }
 
     /**
-     * Responds with the current time in the specified timezone/country.
+     * Returns the current Internet (beat) Time.
      *
-     * @param bot       The bot's instance.
-     * @param sender    The sender.
-     * @param args      The command arguments.
-     * @param isPrivate Set to <code>true</code> if the response should be sent as a private message.
+     * @return The Internet Time string.
+     */
+    private static String internetTime() {
+        final ZonedDateTime zdt = ZonedDateTime.now(ZoneId.of("UTC+01:00"));
+        final int beats = (int) ((zdt.get(ChronoField.SECOND_OF_MINUTE) + (zdt.get(ChronoField.MINUTE_OF_HOUR) * 60)
+                                  + (zdt.get(ChronoField.HOUR_OF_DAY) * 3600)) / 86.4);
+        return String.format("%c%03d", '@', beats);
+    }
+
+    /**
+     * Returns the world time.
+     *
+     * <ul>
+     * <li>PST</li>
+     * <li>BEATS</li>
+     * </ul>
+     *
+     * @param query The query.
+     * @return The {@link Message} containing the world time.
+     */
+    @SuppressFBWarnings("STT_STRING_PARSING_A_FIELD")
+    static Message worldTime(final String query) {
+        final String tz = (COUNTRIES_MAP.get((query.substring(query.indexOf(' ') + 1).trim()
+                                                   .toUpperCase(Constants.LOCALE))));
+        final String response;
+
+        if (tz != null) {
+            if (BEATS_KEYWORD.equals(tz)) {
+                response = ("The current Internet Time is: " + internetTime() + ' ' + BEATS_KEYWORD);
+            } else {
+                response = ZonedDateTime.now().withZoneSameInstant(ZoneId.of(tz)).format(
+                        DateTimeFormatter.ofPattern("'The time is 'HH:mm' on 'EEEE, d MMMM yyyy' in '"))
+                           + tz.substring(tz.indexOf('/') + 1).replace('_', ' ');
+            }
+        } else {
+            return new ErrorMessage("The supported countries/zones are: " + COUNTRIES_MAP.keySet());
+        }
+
+        return new PublicMessage(response);
+    }
+
+    /**
+     * {@inheritDoc}
      */
     @Override
-    public void commandResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate) {
+    public void commandResponse(final Mobibot bot,
+                                final String sender,
+                                final String cmd,
+                                final String args,
+                                final boolean isPrivate) {
         final Message msg = worldTime(args);
 
         if (isPrivate) {
@@ -202,49 +245,5 @@ public final class WorldTime extends AbstractModule {
     @Override
     public boolean isPrivateMsgEnabled() {
         return true;
-    }
-
-    /**
-     * Returns the current Internet (beat) Time.
-     *
-     * @return The Internet Time string.
-     */
-    private static String internetTime() {
-        final ZonedDateTime zdt = ZonedDateTime.now(ZoneId.of("UTC+01:00"));
-        final int beats = (int) ((zdt.get(ChronoField.SECOND_OF_MINUTE) + (zdt.get(ChronoField.MINUTE_OF_HOUR) * 60)
-            + (zdt.get(ChronoField.HOUR_OF_DAY) * 3600)) / 86.4);
-        return String.format("%c%03d", '@', beats);
-    }
-
-    /**
-     * Returns the world time.
-     *
-     * <ul>
-     * <li>PST</li>
-     * <li>BEATS</li>
-     * </ul>
-     *
-     * @param query The query.
-     * @return The {@link Message} containing the world time.
-     */
-    @SuppressFBWarnings("STT_STRING_PARSING_A_FIELD")
-    static Message worldTime(final String query) {
-        final String tz = (COUNTRIES_MAP.get((query.substring(query.indexOf(' ') + 1).trim()
-            .toUpperCase(Constants.LOCALE))));
-        final String response;
-
-        if (tz != null) {
-            if (BEATS_KEYWORD.equals(tz)) {
-                response = ("The current Internet Time is: " + internetTime() + ' ' + BEATS_KEYWORD);
-            } else {
-                response = ZonedDateTime.now().withZoneSameInstant(ZoneId.of(tz)).format(
-                    DateTimeFormatter.ofPattern("'The time is 'HH:mm' on 'EEEE, d MMMM yyyy' in '"))
-                    + tz.substring(tz.indexOf('/') + 1).replace('_', ' ');
-            }
-        } else {
-            return new ErrorMessage("The supported countries/zones are: " + COUNTRIES_MAP.keySet());
-        }
-
-        return new PublicMessage(response);
     }
 }

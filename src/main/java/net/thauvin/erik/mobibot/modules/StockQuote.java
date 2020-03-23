@@ -1,7 +1,7 @@
 /*
  * StockQuote.java
  *
- * Copyright (c) 2004-2019, Erik C. Thauvin (erik@thauvin.net)
+ * Copyright (c) 2004-2020, Erik C. Thauvin (erik@thauvin.net)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -211,7 +211,7 @@ public final class StockQuote extends ThreadedModule {
      * Returns the specified stock quote from Alpha Advantage.
      */
     @Override
-    void run(final Mobibot bot, final String sender, final String symbol) {
+    void run(final Mobibot bot, final String sender, final String cmd, final String symbol) {
         if (StringUtils.isNotBlank(symbol)) {
             try {
                 final List<Message> messages = getQuote(symbol, properties.get(ALPHAVANTAGE_API_KEY_PROP));
