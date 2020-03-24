@@ -43,82 +43,74 @@ import kotlin.random.Random
 class RockPaperScissors : AbstractModule() {
     init {
         with(commands) {
-            add(Shapes.ROCK.value)
-            add(Shapes.SCISSORS.value)
-            add(Shapes.PAPER.value)
+            add(Hands.ROCK.name.toLowerCase())
+            add(Hands.PAPER.name.toLowerCase())
+            add(Hands.SCISSORS.name.toLowerCase())
         }
     }
 
-    enum class Shapes(val value: String) {
-        ROCK("rock"), PAPER("paper"), SCISSORS("scissors")
-    }
+    enum class Hands(val action: String) {
+        ROCK("crushes") {
+            override fun beats(hand: Hands): Boolean {
+                return hand == SCISSORS
+            }
+        },
+        PAPER("covers") {
+            override fun beats(hand: Hands): Boolean {
+                return hand == ROCK
+            }
+        },
+        SCISSORS("cuts") {
+            override fun beats(hand: Hands): Boolean {
+                return hand == PAPER
+            }
+        };
 
-    enum class Results {
-        WIN, LOSE, DRAW
+        abstract fun beats(hand: Hands): Boolean
     }
-
 
     companion object {
-        /**
-         * Returns the the randomly picked shape, result and action (cuts, crushes, covers, vs.)
-         */
-        fun winLoseOrDraw(hand: Shapes): Triple<Shapes, Results, String> {
-            val botHand = Shapes.values()[Random.nextInt(0, Shapes.values().size)]
-            val result: Results
-            val action: String
-            if (botHand == hand) {
-                result = Results.DRAW
-                action = "vs."
-            } else {
-                val shapes = arrayOf(hand, botHand)
-                if (shapes.contains(Shapes.ROCK) && shapes.contains(Shapes.SCISSORS)) {
-                    action = "crushes"
-                    result = if (hand == Shapes.ROCK) {
-                        Results.WIN
-                    } else {
-                        Results.LOSE
-                    }
-                } else if (shapes.contains(Shapes.PAPER) && shapes.contains(Shapes.ROCK)) {
-                    action = "covers"
-                    result = if (hand == Shapes.PAPER) {
-                        Results.WIN
-                    } else {
-                        Results.LOSE
-                    }
-                } else { // SCISSORS vs. PAPER
-                    action = "cuts"
-                    result = if (hand == Shapes.SCISSORS) {
-                        Results.WIN
-                    } else {
-                        Results.LOSE
-                    }
-                }
+        // For testing.
+        fun winLoseOrDraw(player: String, bot: String ): String {
+            val hand = Hands.valueOf(player.toUpperCase())
+            val botHand = Hands.valueOf(bot.toUpperCase())
+
+            return when {
+                hand == botHand -> "draw"
+                hand.beats(botHand) -> "win"
+                else -> "lose"
             }
-            return Triple(botHand, result, action)
         }
     }
 
-    override fun commandResponse(bot: Mobibot?, sender: String?, cmd: String?, args: String?, isPrivate: Boolean) {
-        val result = winLoseOrDraw(Shapes.valueOf(cmd!!.toUpperCase()))
-        when (result.second) {
-            Results.WIN -> bot!!.action(
-                "${Utils.green(cmd)} ${Utils.bold(result.third)} ${Utils.red(result.first.value)} ~ You win ~"
-            )
-            Results.LOSE -> bot!!.action(
-                "${Utils.green(result.first.value)} ${Utils.bold(result.third)} ${Utils.red(cmd)} ~ You lose ~"
-            )
-            else -> bot!!.action(
-                "${Utils.green(cmd)} ${Utils.bold(result.third)} ${Utils.green(result.first.value)}"
-                    + " ~ The game is tied ~"
-            )
+    override fun commandResponse(bot: Mobibot, sender: String, cmd: String, args: String?, isPrivate: Boolean) {
+        val hand = Hands.valueOf(cmd.toUpperCase())
+        val botHand = Hands.values()[Random.nextInt(0, Hands.values().size)]
+        when {
+            hand == botHand -> {
+                bot.action("${Utils.green(hand.name)} vs. ${Utils.green(botHand.name)} ~ The game is tied ~")
+            }
+            hand.beats(botHand) -> {
+                bot.action(
+                    "${Utils.green(hand.name)} ${Utils.bold(hand.action)} ${Utils.red(botHand.name)} ~ You win ~"
+                )
+            }
+            else -> {
+                bot.action(
+                    "${Utils.green(botHand.name)} ${Utils.bold(botHand.action)} ${Utils.red(botHand.name)} ~ You lose ~"
+                )
+            }
         }
     }
 
-    override fun helpResponse(bot: Mobibot?, sender: String?, args: String?, isPrivate: Boolean) {
-        bot!!.send(sender, "To play Rock Paper Scissors:")
+    override fun helpResponse(bot: Mobibot, sender: String, args: String?, isPrivate: Boolean) {
+        bot.send(sender, "To play Rock Paper Scissors:")
         bot.send(
             sender,
-            bot.helpIndent("${bot.nick}: ${Shapes.ROCK.value} or ${Shapes.PAPER.value} or ${Shapes.SCISSORS.value}")
+            bot.helpIndent(
+                "${bot.nick}: ${Hands.ROCK.name.toLowerCase()} or ${Hands.PAPER.name.toLowerCase()}"
+                    + " or ${Hands.SCISSORS.name.toLowerCase()}"
+            )
         )
     }
 }

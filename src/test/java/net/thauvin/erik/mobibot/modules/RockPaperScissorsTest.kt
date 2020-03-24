@@ -32,36 +32,26 @@
 
 package net.thauvin.erik.mobibot.modules
 
-import net.thauvin.erik.mobibot.modules.RockPaperScissors.Results
-import net.thauvin.erik.mobibot.modules.RockPaperScissors.Shapes
+
 import org.assertj.core.api.Assertions.assertThat
 import org.testng.annotations.Test
 
 class RockPaperScissorsTest {
-    @Test(invocationCount = 5)
+    @Test
     fun testWinLoseOrDraw() {
-        var play = RockPaperScissors.winLoseOrDraw(Shapes.SCISSORS)
-        // println("SCISSORS vs ${play.first}: ${playsecond}")
-        when (play.first) {
-            Shapes.SCISSORS -> assertThat(play.second).`as`("SCISSORS vs ${play.first}").isEqualTo(Results.DRAW)
-            Shapes.ROCK -> assertThat(play.second).`as`("SCISSORS vs ${play.first}").isEqualTo(Results.LOSE)
-            else -> assertThat(play.second).`as`("SCISSORS vs ${play.first}").isEqualTo(Results.WIN)
-        }
-
-        play = RockPaperScissors.winLoseOrDraw(Shapes.ROCK)
-        // println("ROCK vs ${play.first}: ${playsecond}")
-        when (play.first) {
-            Shapes.SCISSORS -> assertThat(play.second).`as`("ROCK vs ${play.first}").isEqualTo(Results.WIN)
-            Shapes.ROCK -> assertThat(play.second).`as`("ROCK vs ${play.first}").isEqualTo(Results.DRAW)
-            else -> assertThat(play.second).`as`("ROCK vs ${play.first}").isEqualTo(Results.LOSE)
-        }
-
-        play = RockPaperScissors.winLoseOrDraw(Shapes.PAPER)
-        // println("PAPER vs ${play.first}: ${playsecond}")
-        when (play.first) {
-            Shapes.SCISSORS -> assertThat(play.second).`as`("PAPER vs ${play.first}").isEqualTo(Results.LOSE)
-            Shapes.ROCK -> assertThat(play.second).`as`("PAPER vs ${play.first}").isEqualTo(Results.WIN)
-            else -> assertThat(play.second).`as`("PAPER vs ${play.first}").isEqualTo(Results.DRAW)
-        }
+        assertThat(
+            RockPaperScissors.winLoseOrDraw("scissors", "paper")).`as`("scissors vs. paper").isEqualTo("win")
+        assertThat(
+            RockPaperScissors.winLoseOrDraw("paper", "rock")).`as`("paper vs. rock").isEqualTo("win")
+        assertThat(
+            RockPaperScissors.winLoseOrDraw("rock", "scissors")).`as`("rock vs. scissors").isEqualTo("win")
+        assertThat(
+            RockPaperScissors.winLoseOrDraw("paper", "scissors")).`as`("paper vs. scissors").isEqualTo("lose")
+        assertThat(
+            RockPaperScissors.winLoseOrDraw("rock", "paper")).`as`("rock vs. paper").isEqualTo("lose")
+        assertThat(
+            RockPaperScissors.winLoseOrDraw("scissors", "rock")).`as`("scissors vs. rock").isEqualTo("lose")
+        assertThat(
+            RockPaperScissors.winLoseOrDraw("scissors", "scissors")).`as`("scissors vs. scissors").isEqualTo("draw")
     }
 }
