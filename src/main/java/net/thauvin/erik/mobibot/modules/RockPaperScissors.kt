@@ -37,7 +37,6 @@ import net.thauvin.erik.mobibot.Utils
 import kotlin.random.Random
 
 
-
 /**
  * Simple module example in Kotlin.
  */
@@ -58,51 +57,60 @@ class RockPaperScissors : AbstractModule() {
         WIN, LOSE, DRAW
     }
 
+
     companion object {
         /**
-         * Returns the the randomly picked shape and result.
+         * Returns the the randomly picked shape, result and action (cuts, crushes, covers, vs.)
          */
-        fun winLoseOrDraw(hand: Shapes): Pair<Shapes, Results> {
+        fun winLoseOrDraw(hand: Shapes): Triple<Shapes, Results, String> {
             val botHand = Shapes.values()[Random.nextInt(0, Shapes.values().size)]
             val result: Results
+            val action: String
             if (botHand == hand) {
                 result = Results.DRAW
+                action = "vs."
             } else {
-                when (botHand) {
-                    Shapes.ROCK -> {
-                        result = if (hand == Shapes.PAPER) {
-                            Results.WIN
-                        } else {
-                            Results.LOSE
-                        }
+                val shapes = arrayOf(hand, botHand)
+                if (shapes.contains(Shapes.ROCK) && shapes.contains(Shapes.SCISSORS)) {
+                    action = "crushes"
+                    result = if (hand == Shapes.ROCK) {
+                        Results.WIN
+                    } else {
+                        Results.LOSE
                     }
-                    Shapes.PAPER -> {
-                        result = if (hand == Shapes.ROCK) {
-                            Results.LOSE
-                        } else {
-                            Results.WIN
-                        }
+                } else if (shapes.contains(Shapes.PAPER) && shapes.contains(Shapes.ROCK)) {
+                    action = "covers"
+                    result = if (hand == Shapes.PAPER) {
+                        Results.WIN
+                    } else {
+                        Results.LOSE
                     }
-                    Shapes.SCISSORS -> {
-                        result = if (hand == Shapes.ROCK) {
-                            Results.WIN
-                        } else {
-                            Results.LOSE
-                        }
+                } else { // SCISSORS vs. PAPER
+                    action = "cuts"
+                    result = if (hand == Shapes.SCISSORS) {
+                        Results.WIN
+                    } else {
+                        Results.LOSE
                     }
                 }
             }
-            return Pair(botHand, result)
+            return Triple(botHand, result, action)
         }
     }
 
     override fun commandResponse(bot: Mobibot?, sender: String?, cmd: String?, args: String?, isPrivate: Boolean) {
         val result = winLoseOrDraw(Shapes.valueOf(cmd!!.toUpperCase()))
-        val picked = "picked ${Utils.bold(result.first.value)}."
         when (result.second) {
-            Results.WIN -> bot!!.action("$picked You win.")
-            Results.LOSE -> bot!!.action("$picked You lose.")
-            else -> bot!!.action("$picked We have a draw.")
+            Results.WIN -> bot!!.action(
+                "${Utils.green(cmd)} ${Utils.bold(result.third)} ${Utils.red(result.first.value)} ~ You win ~"
+            )
+            Results.LOSE -> bot!!.action(
+                "${Utils.green(result.first.value)} ${Utils.bold(result.third)} ${Utils.red(cmd)} ~ You lose ~"
+            )
+            else -> bot!!.action(
+                "${Utils.green(cmd)} ${Utils.bold(result.third)} ${Utils.green(result.first.value)}"
+                    + " ~ The game is tied ~"
+            )
         }
     }
 

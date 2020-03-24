@@ -209,6 +209,16 @@ public final class Utils {
     }
 
     /**
+     * Makes the given string red.
+     *
+     * @param s The string.
+     * @return The red string.
+     */
+    public static String red(final String s) {
+        return colorize(s, Colors.RED);
+    }
+
+    /**
      * Makes the given string reverse color.
      *
      * @param s The string.
