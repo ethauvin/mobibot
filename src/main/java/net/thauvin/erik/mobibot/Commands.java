@@ -101,6 +101,10 @@ public final class Commands {
      */
     static final String ME_CMD = "me";
     /**
+     * The modules command.
+     */
+    static final String MODULES_CMD = "modules";
+    /**
      * The msg command.
      */
     static final String MSG_CMD = "msg";
@@ -132,6 +136,7 @@ public final class Commands {
      * The version command.
      */
     static final String VERSION_CMD = "version";
+
 
     /**
      * Disables the default constructor.

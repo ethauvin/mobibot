@@ -749,8 +749,17 @@ public class Mobibot extends PircBot {
                 if (isOp(sender)) {
                     send(sender, "The op commands are:");
                     send(sender,
-                         helpIndent(Commands.CYCLE_CMD + "  " + Commands.ME_CMD + "  " + Commands.MSG_CMD + "  "
-                                    + Commands.SAY_CMD + "  " + Commands.VERSION_CMD));
+                         helpIndent(Commands.CYCLE_CMD
+                                    + "  "
+                                    + Commands.ME_CMD
+                                    + "  "
+                                    + Commands.MODULES_CMD
+                                    + "  "
+                                    + Commands.MSG_CMD
+                                    + "  "
+                                    + Commands.SAY_CMD
+                                    + "  "
+                                    + Commands.VERSION_CMD));
                 }
             }
         }
@@ -1277,6 +1286,15 @@ public class Mobibot extends PircBot {
                 action(args);
             } else {
                 helpResponse(sender, Commands.ME_CMD);
+            }
+        } else if (Commands.MODULES_CMD.equals(cmd) && isOp(sender)) {
+            if (MODULES.isEmpty()) {
+                send(sender, "There are not enabled modules.", true);
+            } else {
+                send(sender, "The enabled modules are:");
+                for (final AbstractModule mod : MODULES) {
+                    send(sender, helpIndent(mod.getClass().getSimpleName()));
+                }
             }
         } else if ((cmds.length > 1) && isOp(sender) && Commands.NICK_CMD.equals(cmd)) {
             changeNick(args);
