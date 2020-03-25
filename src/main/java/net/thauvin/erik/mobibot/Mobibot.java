@@ -92,6 +92,7 @@ import java.util.List;
 import java.util.Properties;
 import java.util.Set;
 import java.util.StringTokenizer;
+import java.util.Timer;
 
 import static net.thauvin.erik.mobibot.Utils.bold;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
@@ -140,7 +141,6 @@ public class Mobibot extends PircBot {
 
     // Tags/categories marker
     private static final String TAGS_MARKER = "tags:";
-
     // Version strings
     @SuppressWarnings("indentation")
     private static final String[] VERSION_STRS =
@@ -153,6 +153,8 @@ public class Mobibot extends PircBot {
               + System.getProperty("java.vm.info") + ')' };
     // Logger
     private static final Logger logger = LogManager.getLogger(Mobibot.class);
+    // Timer
+    private static final Timer timer = new Timer(true);
     // Commands list
     private final List<String> commandsList = new ArrayList<>();
     // Entries array
@@ -175,6 +177,8 @@ public class Mobibot extends PircBot {
     private final List<String> recap = new ArrayList<>(0);
     // Tell object
     private final Tell tell;
+    // The Twitter auto-posts list.
+    private final List<Integer> twitterAutoLinks = Collections.synchronizedList(new ArrayList<>());
     // Automatically post links to Twitter
     private final boolean twitterAutoPost;
     // Twitter handle for channel join notifications
@@ -318,11 +322,9 @@ public class Mobibot extends PircBot {
      * @param args The command line arguments.
      */
     @SuppressFBWarnings(
-            {
-                    "INFORMATION_EXPOSURE_THROUGH_AN_ERROR_MESSAGE",
-                    "DM_DEFAULT_ENCODING",
-                    "IOI_USE_OF_FILE_STREAM_CONSTRUCTORS"
-            })
+            { "INFORMATION_EXPOSURE_THROUGH_AN_ERROR_MESSAGE",
+              "DM_DEFAULT_ENCODING",
+              "IOI_USE_OF_FILE_STREAM_CONSTRUCTORS" })
     @SuppressWarnings({ "PMD.SystemPrintln", "PMD.AvoidFileStream", "PMD.CloseResource" })
     public static void main(final String[] args) {
         // Setup the command line options
@@ -851,6 +853,10 @@ public class Mobibot extends PircBot {
             info.append(", Messages: ").append(tell.size());
         }
 
+        if (twitterAutoPost && twitterModule.isEnabled()) {
+            info.append(", Twitter: ").append(twitterAutoLinks.size());
+        }
+
         info.append(", Recap: ").append(recap.size()).append(']');
 
         send(sender, info.toString(), isPrivate);
@@ -988,18 +994,10 @@ public class Mobibot extends PircBot {
                         pinboard.addPost(entry);
                     }
 
-                    // Post link to twitter
+                    // Queue link for posting to twitter
                     if (twitterAutoPost && twitterModule.isEnabled()) {
-                        final String msg = title + ' ' + link + " via " + sender + " on " + getChannel();
-                        new Thread(() -> {
-                            try {
-                                twitterModule.post(twitterHandle, msg, false);
-                            } catch (ModuleException e) {
-                                if (logger.isWarnEnabled()) {
-                                    logger.warn("Failed to post link on twitter.", e);
-                                }
-                            }
-                        }).start();
+                        twitterAutoLinks.add(index);
+                        timer.schedule(new TwitterTimer(this, index), Constants.TIMER_DELAY * 60L * 1000L);
                     }
 
                     saveEntries(isBackup);
@@ -1088,9 +1086,15 @@ public class Mobibot extends PircBot {
                                 pinboard.deletePost(entry);
                             }
 
+                            if (twitterAutoPost && twitterModule.isEnabled()) {
+                                twitterAutoLinks.remove(index);
+                            }
+
                             entries.remove(index);
                             send(channel, "Entry " + Commands.LINK_CMD + (index + 1) + " removed.");
                             saveEntries(false);
+
+
                         } else {
                             send(sender, "Please ask a channel op to remove this entry for you.");
                         }
@@ -1257,9 +1261,11 @@ public class Mobibot extends PircBot {
             System.exit(0);
         } else if (Commands.DIE_CMD.equals(cmd) && isOp(sender)) {
             send(ircChannel, sender + " has just signed my death sentence.");
+            timer.cancel();
+            twitterShutdown();
             twitterNotification("killed by  " + sender + " on " + ircChannel);
             saveEntries(true);
-            sleep(3);
+            sleep(10);
             quitServer("The Bot Is Out There!");
             System.exit(0);
         } else if (Commands.CYCLE_CMD.equals(cmd)) {
@@ -1291,7 +1297,7 @@ public class Mobibot extends PircBot {
             if (MODULES.isEmpty()) {
                 send(sender, "There are not enabled modules.", true);
             } else {
-                send(sender, "The enabled modules are:");
+                send(sender, "The enabled modules are: ");
                 for (final AbstractModule mod : MODULES) {
                     send(sender, helpIndent(mod.getClass().getSimpleName()));
                 }
@@ -1564,11 +1570,36 @@ public class Mobibot extends PircBot {
      * @param isAction Set to <code>true</code> if the message is an action.
      */
     private void storeRecap(final String sender, final String message, final boolean isAction) {
-        recap.add(Utils.utcDateTime(LocalDateTime.now(Clock.systemUTC())) + " -> " + sender + (isAction ? " " : ": ")
-                  + message);
+        recap.add(
+                Utils.utcDateTime(LocalDateTime.now(Clock.systemUTC())) + " -> " + sender + (isAction ? " " : ": ")
+                + message);
 
         if (recap.size() > MAX_RECAP) {
             recap.remove(0);
+        }
+    }
+
+    /**
+     * Auto-post to twitter.
+     *
+     * @param index The post entry index.
+     */
+    final void twitterAutoPost(final int index) {
+        if (twitterAutoPost && twitterModule.isEnabled()
+            && twitterAutoLinks.contains(index) && entries.size() >= index) {
+            final EntryLink entry = entries.get(index);
+            final String msg =
+                    entry.getTitle() + ' ' + entry.getLink() + " via " + entry.getNick() + " on " + getChannel();
+            new Thread(() -> {
+                try {
+                    twitterModule.post(twitterHandle, msg, false);
+                } catch (ModuleException e) {
+                    if (logger.isWarnEnabled()) {
+                        logger.warn("Failed to post link on twitter.", e);
+                    }
+                }
+            }).start();
+            twitterAutoLinks.remove((Object) index);
         }
     }
 
@@ -1591,6 +1622,19 @@ public class Mobibot extends PircBot {
                     }
                 }
             }).start();
+        }
+    }
+
+    /**
+     * Post all the links on twitter on shutdown.
+     */
+    final void twitterShutdown() {
+        if (twitterModule.isEnabled() && isNotBlank(twitterHandle)) {
+            synchronized (twitterAutoLinks) {
+                for (final int i : twitterAutoLinks) {
+                    twitterAutoPost(i);
+                }
+            }
         }
     }
 

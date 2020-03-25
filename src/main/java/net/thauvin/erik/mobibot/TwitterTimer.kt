@@ -1,7 +1,7 @@
 /*
- * Constants.java
+ * TwitterTimer.kt
  *
- * Copyright (c) 2004-2019, Erik C. Thauvin (erik@thauvin.net)
+ * Copyright (c) 2004-2020, Erik C. Thauvin (erik@thauvin.net)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -30,47 +30,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package net.thauvin.erik.mobibot;
+package net.thauvin.erik.mobibot
 
-import java.util.Locale;
+import java.util.*
 
-/**
- * The <code>Constants</code> class.
- *
- * @author <a href="https://erik.thauvin.net/" target="_blank">Erik C. Thauvin</a>
- * @created 2019-04-19
- * @since 1.0
- */
-public final class Constants {
-    /**
-     * The connect/read timeout in ms.
-     */
-    public static final int CONNECT_TIMEOUT = 5000;
-    /**
-     * Default locale.
-     */
-    public static final Locale LOCALE = Locale.getDefault();
-    /**
-     * The empty title string.
-     */
-    public static final String NO_TITLE = "No Title";
-    /**
-     * The timer delay in minutes.
-     */
-    public static final long TIMER_DELAY = 10L;
-    /**
-     * The twitter post flag property key.
-     */
-    public static final String TWITTER_AUTOPOST_PROP = "twitter-auto-post";
-    /**
-     * The Twitter handle property key.
-     */
-    public static final String TWITTER_HANDLE_PROP = "twitter-handle";
-
-    /**
-     * Disables the default constructor.
-     */
-    private Constants() {
-        throw new UnsupportedOperationException("Illegal constructor call.");
+class TwitterTimer(var bot: Mobibot, private var index: Int) : TimerTask() {
+    override fun run() {
+       bot.twitterAutoPost(index)
     }
 }
