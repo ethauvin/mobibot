@@ -978,8 +978,9 @@ public class Mobibot extends PircBot {
 
                     if (!tagsKeywords.isEmpty()) {
                         for (final String match : tagsKeywords) {
-                            if (title.matches("(?i).*\\b" + match.trim() + "\\b.*")) {
-                                tags.append(' ').append(match.trim());
+                            final String m = match.trim();
+                            if (title.matches("(?i).*\\b" + m + "\\b.*")) {
+                                tags.append(' ').append(m);
                             }
                         }
                     }
