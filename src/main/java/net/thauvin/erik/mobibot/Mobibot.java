@@ -843,12 +843,14 @@ public class Mobibot extends PircBot {
         info.append("Uptime: ").append(Utils.uptime(ManagementFactory.getRuntimeMXBean().getUptime())).append(
                 " [Entries: ").append(entries.size());
 
-        if (tell.isEnabled() && isOp(sender)) {
-            info.append(", Messages: ").append(tell.size());
-        }
+        if (isOp(sender)) {
+            if (tell.isEnabled()) {
+                info.append(", Messages: ").append(tell.size());
+            }
 
-        if (twitterAutoPost && twitterModule.isEnabled()) {
-            info.append(", Twitter: ").append(twitterAutoLinks.size());
+            if (twitterAutoPost && twitterModule.isEnabled()) {
+                info.append(", Twitter: ").append(twitterAutoLinks.size());
+            }
         }
 
         info.append(", Recap: ").append(recap.size()).append(']');
