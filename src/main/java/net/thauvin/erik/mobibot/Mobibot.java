@@ -111,34 +111,25 @@ public class Mobibot extends PircBot {
 
     // Default port
     private static final int DEFAULT_PORT = 6667;
-
     // Default server
     private static final String DEFAULT_SERVER = "irc.freenode.net";
-
     // Info strings
     @SuppressWarnings("indentation")
     private static final String[] INFO_STRS = {
             ReleaseInfo.PROJECT + " v" + ReleaseInfo.VERSION + " by Erik C. Thauvin (erik@thauvin.net)",
             "https://www.mobitopia.org/mobibot/" };
-
     // Link match string
     private static final String LINK_MATCH = "^[hH][tT][tT][pP](|[sS])://.*";
-
     // Default maximum number of entries to display
     private static final int MAX_ENTRIES = 8;
-
     // Default maximum recap entries
     private static final int MAX_RECAP = 10;
-
     // Maximum number of times the bot will try to reconnect, if disconnected
     private static final int MAX_RECONNECT = 10;
-
     // Number of milliseconds to delay between consecutive messages
     private static final long MESSAGE_DELAY = 1000L;
-
     // Modules
     private static final List<AbstractModule> MODULES = new ArrayList<>(0);
-
     // Tags/categories marker
     private static final String TAGS_MARKER = "tags:";
     // Version strings
@@ -175,10 +166,12 @@ public class Mobibot extends PircBot {
     private final String logsDir;
     // Recap array
     private final List<String> recap = new ArrayList<>(0);
+    // Tags keywords matches
+    private final List<String> tagsKeywords = new ArrayList<>();
     // Tell object
     private final Tell tell;
     // The Twitter auto-posts list.
-    private final List<Integer> twitterAutoLinks = Collections.synchronizedList(new ArrayList<>());
+    private final List<Integer> twitterAutoLinks = new ArrayList<>();
     // Automatically post links to Twitter
     private final boolean twitterAutoPost;
     // Twitter handle for channel join notifications
@@ -308,6 +301,7 @@ public class Mobibot extends PircBot {
 
         // Set the tags
         setTags(p.getProperty("tags", ""));
+        setTagsKeywords(p.getProperty("tags-keywords", ""));
 
         // Set the ignored nicks
         setIgnoredNicks(p.getProperty("ignore", ""));
@@ -895,7 +889,6 @@ public class Mobibot extends PircBot {
      */
     public final void joinChannel() {
         joinChannel(ircChannel);
-
         twitterNotification("has joined " + ircChannel);
     }
 
@@ -983,6 +976,14 @@ public class Mobibot extends PircBot {
                         }
                     }
 
+                    if (!tagsKeywords.isEmpty()) {
+                        for (final String match : tagsKeywords) {
+                            if (title.matches("(?i).*\\b" + match.trim() + "\\b.*")) {
+                                tags.append(' ').append(match.trim());
+                            }
+                        }
+                    }
+
                     entries.add(new EntryLink(link, title, sender, login, channel, tags.toString()));
 
                     final int index = entries.size() - 1;
@@ -1022,7 +1023,6 @@ public class Mobibot extends PircBot {
             if (cmds.length > 1) {
                 args = cmds[1].trim();
             }
-
 
             if (cmd.startsWith(Commands.HELP_CMD)) { // mobibot: help
                 helpResponse(sender, args);
@@ -1093,8 +1093,6 @@ public class Mobibot extends PircBot {
                             entries.remove(index);
                             send(channel, "Entry " + Commands.LINK_CMD + (index + 1) + " removed.");
                             saveEntries(false);
-
-
                         } else {
                             send(sender, "Please ask a channel op to remove this entry for you.");
                         }
@@ -1265,7 +1263,7 @@ public class Mobibot extends PircBot {
             twitterShutdown();
             twitterNotification("killed by  " + sender + " on " + ircChannel);
             saveEntries(true);
-            sleep(10);
+            sleep(3);
             quitServer("The Bot Is Out There!");
             System.exit(0);
         } else if (Commands.CYCLE_CMD.equals(cmd)) {
@@ -1337,7 +1335,6 @@ public class Mobibot extends PircBot {
                 Configurator.setLevel(logger.getName(), Level.DEBUG);
 
             }
-
             send(sender, "Debug logging is " + (logger.isDebugEnabled() ? "enabled." : "disabled."), true);
         } else {
             for (final AbstractModule module : MODULES) {
@@ -1554,6 +1551,19 @@ public class Mobibot extends PircBot {
     }
 
     /**
+     * Sets the tags keywords matches.
+     *
+     * @param matches The tags keywords.
+     */
+    final void setTagsKeywords(final String matches) {
+        if (isNotBlank(matches)) {
+            tagsKeywords.addAll(Arrays.asList(matches.split(", +?| +")));
+        } else {
+            tagsKeywords.clear();
+        }
+    }
+
+    /**
      * Sets the weblog URL.
      *
      * @param url The weblog URL.
@@ -1630,10 +1640,8 @@ public class Mobibot extends PircBot {
      */
     final void twitterShutdown() {
         if (twitterModule.isEnabled() && isNotBlank(twitterHandle)) {
-            synchronized (twitterAutoLinks) {
-                for (final int i : twitterAutoLinks) {
-                    twitterAutoPost(i);
-                }
+            for (final int i : twitterAutoLinks) {
+                twitterAutoPost(i);
             }
         }
     }
@@ -1649,22 +1657,17 @@ public class Mobibot extends PircBot {
         final String[] nicks = new String[users.length];
 
         for (int i = 0; i < users.length; i++) {
-            nicks[i] = users[i].getNick();
+            final String nick = users[i].getNick();
+            if (isOp(nick)) {
+                nicks[i] = '@' + users[i].getNick();
+            } else {
+                nicks[i] = users[i].getNick();
+            }
         }
 
         Arrays.sort(nicks, String.CASE_INSENSITIVE_ORDER);
 
-        final StringBuilder buff = new StringBuilder(0);
-
-        for (final String nick : nicks) {
-            if (isOp(nick)) {
-                buff.append('@');
-            }
-
-            buff.append(nick).append(' ');
-        }
-
-        send(sender, buff.toString(), isPrivate);
+        send(sender, String.join(" ", nicks), isPrivate);
     }
 
     /**
