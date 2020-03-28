@@ -35,7 +35,6 @@ package net.thauvin.erik.mobibot.commands
 import net.thauvin.erik.mobibot.Mobibot
 import net.thauvin.erik.mobibot.Utils
 import net.thauvin.erik.mobibot.commands.links.UrlMgr
-import org.jibble.pircbot.Colors
 import java.lang.management.ManagementFactory
 
 class Info : AbstractCommand() {

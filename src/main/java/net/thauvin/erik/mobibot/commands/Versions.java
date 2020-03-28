@@ -91,7 +91,7 @@ public class Versions extends AbstractCommand {
                 bot.send(sender, v);
             }
         } else {
-            bot.helpDefault(sender, isOp);
+            bot.helpDefault(sender, false);
         }
 
     }

@@ -323,5 +323,4 @@ public final class Utils {
     public static String utcDateTime(final LocalDateTime date) {
         return date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
     }
-
 }
