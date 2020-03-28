@@ -57,11 +57,7 @@ class Info : AbstractCommand() {
         isPrivate: Boolean
     ) {
         for (info in Mobibot.INFO) {
-            if (info.startsWith("https://")) {
-                bot.send(sender, info, Colors.DARK_GREEN, isPrivate)
-            } else {
                 bot.send(sender, info, isPrivate)
-            }
         }
 
         val info = StringBuilder("Uptime: ")

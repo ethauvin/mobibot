@@ -38,13 +38,13 @@ import net.thauvin.erik.mobibot.commands.Cycle;
 import net.thauvin.erik.mobibot.commands.Ignore;
 import net.thauvin.erik.mobibot.commands.Info;
 import net.thauvin.erik.mobibot.commands.Me;
-import net.thauvin.erik.mobibot.commands.MobibotVersion;
 import net.thauvin.erik.mobibot.commands.Modules;
 import net.thauvin.erik.mobibot.commands.Msg;
 import net.thauvin.erik.mobibot.commands.Nick;
 import net.thauvin.erik.mobibot.commands.Recap;
 import net.thauvin.erik.mobibot.commands.Say;
 import net.thauvin.erik.mobibot.commands.Users;
+import net.thauvin.erik.mobibot.commands.Versions;
 import net.thauvin.erik.mobibot.commands.links.Comment;
 import net.thauvin.erik.mobibot.commands.links.Posting;
 import net.thauvin.erik.mobibot.commands.links.Tags;
@@ -117,19 +117,10 @@ public class Mobibot extends PircBot {
     // Info strings
     @SuppressWarnings("indentation")
     public static final List<String> INFO =
-            List.of(ReleaseInfo.PROJECT + " v" + ReleaseInfo.VERSION + " by Erik C. Thauvin (erik@thauvin.net)",
-                    "https://www.mobitopia.org/mobibot/");
-    // Version strings
-    @SuppressWarnings("indentation")
-    public static final List<String> MOBIBOT_VERSIONS =
-            List.of("Version: " + ReleaseInfo.VERSION + " (" + Utils.isoLocalDate(ReleaseInfo.BUILDDATE) + ')',
-                    "Platform: " + System.getProperty("os.name") + " (" + System.getProperty("os.version") + ", "
-                    + System.getProperty("os.arch") + ", " + System.getProperty("user.country") + ')',
-                    "Runtime: " + System.getProperty("java.runtime.name") + " (build " + System.getProperty(
-                            "java.runtime.version") + ')',
-                    "VM: " + System.getProperty("java.vm.name") + " (build " + System.getProperty("java.vm.version")
-                    + ", "
-                    + System.getProperty("java.vm.info") + ')');
+            List.of(
+                    ReleaseInfo.PROJECT + " v" + ReleaseInfo.VERSION
+                    + " (" + Utils.green("https://www.mobitopia.org/mobibot/") + ')',
+                    "Written by Erik C. Thauvin (" + Utils.green("https://erik.thauvin.net/") + ')');
     // Timer
     public static final Timer timer = new Timer(true);
     // Default port
@@ -253,13 +244,13 @@ public class Mobibot extends PircBot {
         commands.add(ignoreCommand);
         commands.add(new Info());
         commands.add(new Me());
-        commands.add(new MobibotVersion());
         commands.add(new Modules());
         commands.add(new Msg());
         commands.add(new Nick());
         commands.add(new Recap());
         commands.add(new Say());
         commands.add(new Users());
+        commands.add(new Versions());
 
         // Load the links commands
         commands.add(new Comment());
