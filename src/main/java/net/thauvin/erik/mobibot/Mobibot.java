@@ -32,11 +32,26 @@
 
 package net.thauvin.erik.mobibot;
 
-import com.rometools.rome.io.FeedException;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import net.thauvin.erik.mobibot.commands.AbstractCommand;
+import net.thauvin.erik.mobibot.commands.Cycle;
+import net.thauvin.erik.mobibot.commands.Ignore;
+import net.thauvin.erik.mobibot.commands.Info;
+import net.thauvin.erik.mobibot.commands.Me;
+import net.thauvin.erik.mobibot.commands.MobibotVersion;
+import net.thauvin.erik.mobibot.commands.Modules;
+import net.thauvin.erik.mobibot.commands.Msg;
+import net.thauvin.erik.mobibot.commands.Nick;
+import net.thauvin.erik.mobibot.commands.Recap;
+import net.thauvin.erik.mobibot.commands.Say;
+import net.thauvin.erik.mobibot.commands.Users;
+import net.thauvin.erik.mobibot.commands.links.Comment;
+import net.thauvin.erik.mobibot.commands.links.Posting;
+import net.thauvin.erik.mobibot.commands.links.Tags;
+import net.thauvin.erik.mobibot.commands.links.UrlMgr;
+import net.thauvin.erik.mobibot.commands.links.View;
+import net.thauvin.erik.mobibot.commands.tell.Tell;
 import net.thauvin.erik.mobibot.entries.EntriesMgr;
-import net.thauvin.erik.mobibot.entries.EntriesUtils;
-import net.thauvin.erik.mobibot.entries.EntryComment;
 import net.thauvin.erik.mobibot.entries.EntryLink;
 import net.thauvin.erik.mobibot.modules.AbstractModule;
 import net.thauvin.erik.mobibot.modules.Calc;
@@ -54,7 +69,6 @@ import net.thauvin.erik.mobibot.modules.War;
 import net.thauvin.erik.mobibot.modules.Weather2;
 import net.thauvin.erik.mobibot.modules.WorldTime;
 import net.thauvin.erik.mobibot.msg.Message;
-import net.thauvin.erik.mobibot.tell.Tell;
 import net.thauvin.erik.semver.Version;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -63,15 +77,13 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.config.Configurator;
-import org.jibble.pircbot.Colors;
 import org.jibble.pircbot.PircBot;
 import org.jibble.pircbot.User;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -79,22 +91,16 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
-import java.lang.management.ManagementFactory;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.time.Clock;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Properties;
 import java.util.Set;
-import java.util.StringTokenizer;
 import java.util.Timer;
 
-import static net.thauvin.erik.mobibot.Utils.bold;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 /**
@@ -108,52 +114,44 @@ import static org.apache.commons.lang3.StringUtils.isNotBlank;
 @Version(properties = "version.properties",
          className = "ReleaseInfo")
 public class Mobibot extends PircBot {
-
+    // Info strings
+    @SuppressWarnings("indentation")
+    public static final List<String> INFO =
+            List.of(ReleaseInfo.PROJECT + " v" + ReleaseInfo.VERSION + " by Erik C. Thauvin (erik@thauvin.net)",
+                    "https://www.mobitopia.org/mobibot/");
+    // Version strings
+    @SuppressWarnings("indentation")
+    public static final List<String> MOBIBOT_VERSIONS =
+            List.of("Version: " + ReleaseInfo.VERSION + " (" + Utils.isoLocalDate(ReleaseInfo.BUILDDATE) + ')',
+                    "Platform: " + System.getProperty("os.name") + " (" + System.getProperty("os.version") + ", "
+                    + System.getProperty("os.arch") + ", " + System.getProperty("user.country") + ')',
+                    "Runtime: " + System.getProperty("java.runtime.name") + " (build " + System.getProperty(
+                            "java.runtime.version") + ')',
+                    "VM: " + System.getProperty("java.vm.name") + " (build " + System.getProperty("java.vm.version")
+                    + ", "
+                    + System.getProperty("java.vm.info") + ')');
+    // Timer
+    public static final Timer timer = new Timer(true);
     // Default port
     private static final int DEFAULT_PORT = 6667;
     // Default server
     private static final String DEFAULT_SERVER = "irc.freenode.net";
-    // Info strings
-    @SuppressWarnings("indentation")
-    private static final String[] INFO_STRS = {
-            ReleaseInfo.PROJECT + " v" + ReleaseInfo.VERSION + " by Erik C. Thauvin (erik@thauvin.net)",
-            "https://www.mobitopia.org/mobibot/" };
-    // Link match string
-    private static final String LINK_MATCH = "^[hH][tT][tT][pP](|[sS])://.*";
-    // Default maximum number of entries to display
-    private static final int MAX_ENTRIES = 8;
-    // Default maximum recap entries
-    private static final int MAX_RECAP = 10;
     // Maximum number of times the bot will try to reconnect, if disconnected
     private static final int MAX_RECONNECT = 10;
     // Number of milliseconds to delay between consecutive messages
     private static final long MESSAGE_DELAY = 1000L;
-    // Modules
-    private static final List<AbstractModule> MODULES = new ArrayList<>(0);
-    // Tags/categories marker
-    private static final String TAGS_MARKER = "tags:";
-    // Version strings
-    @SuppressWarnings("indentation")
-    private static final String[] VERSION_STRS =
-            { "Version: " + ReleaseInfo.VERSION + " (" + Utils.isoLocalDate(ReleaseInfo.BUILDDATE) + ')',
-              "Platform: " + System.getProperty("os.name") + " (" + System.getProperty("os.version") + ", "
-              + System.getProperty("os.arch") + ", " + System.getProperty("user.country") + ')',
-              "Runtime: " + System.getProperty("java.runtime.name") + " (build " + System.getProperty(
-                      "java.runtime.version") + ')',
-              "VM: " + System.getProperty("java.vm.name") + " (build " + System.getProperty("java.vm.version") + ", "
-              + System.getProperty("java.vm.info") + ')' };
     // Logger
     private static final Logger logger = LogManager.getLogger(Mobibot.class);
-    // Timer
-    private static final Timer timer = new Timer(true);
-    // Commands list
-    private final List<String> commandsList = new ArrayList<>();
-    // Entries array
-    private final List<EntryLink> entries = new ArrayList<>(0);
-    // History/backlogs array
-    private final List<String> history = new ArrayList<>(0);
-    // Ignored nicks array
-    private final Set<String> ignoredNicks = new HashSet<>(0);
+    // Ignore command
+    public final Ignore ignoreCommand;
+    // Automatically post links to Twitter
+    public final boolean isTwitterAutoPost;
+    // Tell object
+    public final Tell tell;
+    // Commands
+    private final List<AbstractCommand> commands = new ArrayList<>();
+    // Commands Names
+    private final List<String> commandsNames = new ArrayList<>();
     // Main channel
     private final String ircChannel;
     // IRC port
@@ -164,24 +162,22 @@ public class Mobibot extends PircBot {
     private final Level loggerLevel;
     // Log directory
     private final String logsDir;
-    // Recap array
-    private final List<String> recap = new ArrayList<>(0);
-    // Tags keywords matches
-    private final List<String> tagsKeywords = new ArrayList<>();
-    // Tell object
-    private final Tell tell;
-    // The Twitter auto-posts list.
-    private final List<Integer> twitterAutoLinks = new ArrayList<>();
-    // Automatically post links to Twitter
-    private final boolean twitterAutoPost;
+    // Modules
+    private final List<AbstractModule> modules = new ArrayList<>(0);
+    // Modules
+    private final List<String> modulesNames = new ArrayList<>(0);
+    // Operators commands names
+    private final List<String> opsCommandsNames = new ArrayList<>();
+    // Today's date
+    private final String today = Utils.today();
+    // Twitter auto-posts.
+    private final Set<Integer> twitterEntries = new HashSet<>();
     // Twitter handle for channel join notifications
     private final String twitterHandle;
     // Twitter module
     private final Twitter twitterModule;
     // Backlogs URL
     private String backLogsUrl = "";
-    // Default tags/categories
-    private String defaultTags = "";
     // Feed URL
     private String feedUrl = "";
     // Ident message
@@ -192,8 +188,6 @@ public class Mobibot extends PircBot {
     private String identPwd = "";
     // Pinboard posts handler
     private Pinboard pinboard;
-    // Today's date
-    private String today = Utils.today();
     // Weblog URL
     private String weblogUrl = "";
 
@@ -222,34 +216,16 @@ public class Mobibot extends PircBot {
         // Set the logger level
         loggerLevel = logger.getLevel();
 
-        // Load the current entries, if any
+        // Load the current entries and backlogs, if any
         try {
-            today = EntriesMgr.loadEntries(logsDir + EntriesMgr.CURRENT_XML, ircChannel, entries);
+            UrlMgr.startup(logsDir + EntriesMgr.CURRENT_XML, logsDir + EntriesMgr.NAV_XML, ircChannel);
 
             if (logger.isDebugEnabled()) {
-                logger.debug("Last feed: {}", today);
+                logger.debug("Last feed: {}", UrlMgr.getToday());
             }
-
-            if (!Utils.today().equals(today)) {
-                entries.clear();
-                today = Utils.today();
-            }
-        } catch (IOException ignore) {
-            // Do nothing
-        } catch (FeedException e) {
+        } catch (Exception e) {
             if (logger.isErrorEnabled()) {
-                logger.error("An error occurred while parsing the '" + EntriesMgr.CURRENT_XML + "' file.", e);
-            }
-        }
-
-        // Load the backlogs, if any
-        try {
-            EntriesMgr.loadBacklogs(logsDir + EntriesMgr.NAV_XML, history);
-        } catch (IOException ignore) {
-            // Do nothing
-        } catch (FeedException e) {
-            if (logger.isErrorEnabled()) {
-                logger.error("An error occurred while parsing the '" + EntriesMgr.NAV_XML + "' file.", e);
+                logger.error("An error occurred while loading the logs.", e);
             }
         }
 
@@ -269,28 +245,53 @@ public class Mobibot extends PircBot {
         // Set the pinboard authentication
         setPinboardAuth(p.getProperty("pinboard-api-token"));
 
+        // Set the ignored nicks
+        ignoreCommand = new Ignore(p.getProperty("ignore", ""));
+
+        // Load the commands
+        commands.add(new Cycle());
+        commands.add(ignoreCommand);
+        commands.add(new Info());
+        commands.add(new Me());
+        commands.add(new MobibotVersion());
+        commands.add(new Modules());
+        commands.add(new Msg());
+        commands.add(new Nick());
+        commands.add(new Recap());
+        commands.add(new Say());
+        commands.add(new Users());
+
+        // Load the links commands
+        commands.add(new Comment());
+        commands.add(new Posting());
+        commands.add(new Tags());
+        commands.add(new UrlMgr(p.getProperty("tags", ""), p.getProperty("tags-keywords", "")));
+        commands.add(new View());
+
+
         // Load the modules
-        MODULES.add(new Calc());
-        MODULES.add(new CurrencyConverter());
-        MODULES.add(new Dice());
-        MODULES.add(new GoogleSearch());
-        MODULES.add(new Joke());
-        MODULES.add(new Lookup());
-        MODULES.add(new Ping());
-        MODULES.add(new RockPaperScissors());
-        MODULES.add(new StockQuote());
+        addModule(new Calc());
+        addModule(new CurrencyConverter());
+        addModule(new Dice());
+        addModule(new GoogleSearch());
+        addModule(new Joke());
+        addModule(new Lookup());
+        addModule(new Ping());
+        addModule(new RockPaperScissors());
+        addModule(new StockQuote());
 
         twitterModule = new Twitter();
-        MODULES.add(twitterModule);
+        addModule(twitterModule);
         twitterHandle = p.getProperty(Constants.TWITTER_HANDLE_PROP, "");
-        twitterAutoPost = Boolean.parseBoolean(p.getProperty(Constants.TWITTER_AUTOPOST_PROP, "false"));
-
-        MODULES.add(new War());
-        MODULES.add(new Weather2());
-        MODULES.add(new WorldTime());
+        isTwitterAutoPost =
+                Boolean.parseBoolean(p.getProperty(Constants.TWITTER_AUTOPOST_PROP, "false"))
+                && twitterModule.isEnabled();
+        addModule(new War());
+        addModule(new Weather2());
+        addModule(new WorldTime());
 
         // Load the modules properties
-        MODULES.stream().filter(AbstractModule::hasProperties).forEach(module -> {
+        modules.stream().filter(AbstractModule::hasProperties).forEach(module -> {
             for (final String s : module.getPropertyKeys()) {
                 module.setProperty(s, p.getProperty(s, ""));
             }
@@ -299,15 +300,8 @@ public class Mobibot extends PircBot {
         // Get the tell command settings
         tell = new Tell(this, p.getProperty("tell-max-days"), p.getProperty("tell-max-size"));
 
-        // Set the tags
-        setTags(p.getProperty("tags", ""));
-        setTagsKeywords(p.getProperty("tags-keywords", ""));
-
-        // Set the ignored nicks
-        setIgnoredNicks(p.getProperty("ignore", ""));
-
         // Save the entries
-        saveEntries(true);
+        UrlMgr.saveEntries(this, true);
     }
 
     /**
@@ -323,18 +317,18 @@ public class Mobibot extends PircBot {
     public static void main(final String[] args) {
         // Setup the command line options
         final Options options = new Options()
-                                        .addOption(Commands.HELP_ARG.substring(0, 1),
-                                                   Commands.HELP_ARG,
+                                        .addOption(Constants.HELP_ARG.substring(0, 1),
+                                                   Constants.HELP_ARG,
                                                    false,
                                                    "print this help message")
-                                        .addOption(Commands.DEBUG_ARG.substring(0, 1), Commands.DEBUG_ARG, false,
+                                        .addOption(Constants.DEBUG_ARG.substring(0, 1), Constants.DEBUG_ARG, false,
                                                    "print debug & logging data directly to the console")
-                                        .addOption(Option.builder(Commands.PROPS_ARG.substring(0, 1)).hasArg()
+                                        .addOption(Option.builder(Constants.PROPS_ARG.substring(0, 1)).hasArg()
                                                          .argName("file")
                                                          .desc("use " + "alternate properties file")
-                                                         .longOpt(Commands.PROPS_ARG).build())
-                                        .addOption(Commands.VERSION_ARG.substring(0, 1),
-                                                   Commands.VERSION_ARG,
+                                                         .longOpt(Constants.PROPS_ARG).build())
+                                        .addOption(Constants.VERSION_ARG.substring(0, 1),
+                                                   Constants.VERSION_ARG,
                                                    false,
                                                    "print version info");
 
@@ -350,18 +344,18 @@ public class Mobibot extends PircBot {
             System.exit(1);
         }
 
-        if (line.hasOption(Commands.HELP_ARG.charAt(0))) {
+        if (line.hasOption(Constants.HELP_ARG.charAt(0))) {
             // Output the usage
             new HelpFormatter().printHelp(Mobibot.class.getName(), options);
-        } else if (line.hasOption(Commands.VERSION_ARG.charAt(0))) {
-            for (final String s : INFO_STRS) {
+        } else if (line.hasOption(Constants.VERSION_ARG.charAt(0))) {
+            for (final String s : INFO) {
                 System.out.println(s);
             }
         } else {
             final Properties p = new Properties();
 
             try (final InputStream fis = Files.newInputStream(
-                    Paths.get(line.getOptionValue(Commands.PROPS_ARG.charAt(0), "./mobibot.properties")))) {
+                    Paths.get(line.getOptionValue(Constants.PROPS_ARG.charAt(0), "./mobibot.properties")))) {
                 // Load the properties files
                 p.load(fis);
             } catch (FileNotFoundException e) {
@@ -379,7 +373,7 @@ public class Mobibot extends PircBot {
             final String logsDir = Utils.ensureDir(p.getProperty("logs", "."), false);
 
             // Redirect the stdout and stderr
-            if (!line.hasOption(Commands.DEBUG_ARG.charAt(0))) {
+            if (!line.hasOption(Constants.DEBUG_ARG.charAt(0))) {
                 try {
                     final PrintStream stdout = new PrintStream(
                             new FileOutputStream(logsDir + channel.substring(1) + '.' + Utils.today() + ".log", true));
@@ -409,19 +403,6 @@ public class Mobibot extends PircBot {
     }
 
     /**
-     * Sleeps for the specified number of seconds.
-     *
-     * @param secs The number of seconds to sleep for.
-     */
-    private static void sleep(final int secs) {
-        try {
-            Thread.sleep(secs * 1000L);
-        } catch (InterruptedException ignore) {
-            // Do nothing
-        }
-    }
-
-    /**
      * Sends an action to the current channel.
      *
      * @param action The action.
@@ -439,6 +420,27 @@ public class Mobibot extends PircBot {
     private void action(final String channel, final String action) {
         if (isNotBlank(channel) && isNotBlank(action)) {
             sendAction(channel, action);
+        }
+    }
+
+    /**
+     * Adds a module.
+     *
+     * @param module The module to add.
+     */
+    private void addModule(final AbstractModule module) {
+        modules.add(module);
+        modulesNames.add(module.getClass().getSimpleName());
+    }
+
+    /**
+     * Adds pin on pinboard.
+     *
+     * @param entry The entry to add.
+     */
+    public final void addPin(final EntryLink entry) {
+        if (pinboard != null) {
+            pinboard.addPost(entry);
         }
     }
 
@@ -470,12 +472,20 @@ public class Mobibot extends PircBot {
                 }
             }
         }
-
-        setVersion(INFO_STRS[0]);
-
+        setVersion(INFO.get(0));
         identify();
-
         joinChannel();
+    }
+
+    /**
+     * Deletes pin on pinboard.
+     *
+     * @param entry The entry to delete.
+     */
+    public final void deletePin(final EntryLink entry) {
+        if (pinboard != null) {
+            pinboard.deletePost(entry);
+        }
     }
 
     /**
@@ -489,24 +499,6 @@ public class Mobibot extends PircBot {
         } else {
             send(sender, "There is no weblog setup for this channel.");
         }
-    }
-
-    /**
-     * Returns the index of the specified duplicate entry, if any.
-     *
-     * @param link The link.
-     * @return The index or -1 if none.
-     */
-    private int findDupEntry(final String link) {
-        synchronized (entries) {
-            for (int i = 0; i < entries.size(); i++) {
-                if (link.equals(entries.get(i).getLink())) {
-                    return i;
-                }
-            }
-        }
-
-        return -1;
     }
 
     /**
@@ -565,6 +557,15 @@ public class Mobibot extends PircBot {
     }
 
     /**
+     * Returns the enabled modules names.
+     *
+     * @return The modules names.
+     */
+    public final List<String> getModulesNames() {
+        return modulesNames;
+    }
+
+    /**
      * Returns the bot's nickname regexp pattern.
      *
      * @return The nickname regexp pattern.
@@ -603,159 +604,114 @@ public class Mobibot extends PircBot {
     }
 
     /**
-     * Returns indented and bold help string.
+     * Responds with the commands help, if any.
      *
-     * @param help The help string.
-     * @return The indented help string.
+     * @param sender The nick of the person requesting Constants.
+     * @param topic  The help topic.
+     * @return {@code true} if the topic was found, {@code false} otherwise.
      */
-    public final String helpIndent(final String help) {
-        return helpIndent(help, true);
+    private boolean helpCommands(final String sender, final String topic) {
+        for (final AbstractCommand command : commands) {
+            if (command.isVisible() && command.getCommand().startsWith(topic)) {
+                return command.helpResponse(this, topic, sender, isOp(sender), true);
+            }
+        }
+        return false;
     }
 
     /**
-     * Returns indented help string.
+     * Responds with the default Constants.
      *
-     * @param help   The help string.
-     * @param isBold The bold flag.
-     * @return The indented help string.
+     * @param sender The nick of the person requesting Constants.
+     * @param isOp   The channel operator flag.
      */
-    public String helpIndent(final String help, final boolean isBold) {
-        return "        " + (isBold ? bold(help) : help);
+    public void helpDefault(final String sender, final boolean isOp) {
+        send(sender, Utils.bold("Type a URL on " + ircChannel + " to post it."));
+        send(sender, "For more information on a specific command, type:");
+        send(sender, Utils.helpIndent(getNick() + ": " + Constants.HELP_CMD + " <command>"));
+        send(sender, Utils.bold("The commands are:"));
+
+        if (commandsNames.isEmpty()) {
+            // Feed command
+            commandsNames.add(getChannelName());
+
+            // Commands
+            for (final AbstractCommand command : commands) {
+                if (command.isVisible()) {
+                    if (command.isOp()) {
+                        opsCommandsNames.add(command.getCommand());
+                    } else {
+                        commandsNames.add(command.getCommand());
+                    }
+                }
+            }
+
+            // Modules commands
+            modules.stream().filter(AbstractModule::isEnabled)
+                   .forEach(module -> commandsNames.addAll(module.getCommands()));
+
+            // Tell command
+            if (tell.isEnabled()) {
+                commandsNames.add(Tell.TELL_CMD);
+            }
+
+            Collections.sort(commandsNames);
+            Collections.sort(opsCommandsNames);
+        }
+
+        // Print 6 commands per line
+        final int chunk = 6;
+        for (int i = 0; i < commandsNames.size(); i += chunk) {
+            send(sender, Utils.helpIndent(
+                    String.join(" ", commandsNames.subList(i, Math.min(commandsNames.size(), i + chunk)))));
+        }
+
+        if (isOp) {
+            send(sender, Utils.bold("The op commands are:"));
+            send(sender, Utils.helpIndent(String.join(" ", opsCommandsNames)));
+        }
     }
 
     /**
-     * Responds with the bot's help.
+     * Responds with the modules help, if any.
+     *
+     * @param sender The nick of the person requesting Constants.
+     * @param topic  The help topic.
+     * @return {@code true} if the topic was found, {@code false} otherwise.
+     */
+    private boolean helpModules(final String sender, final String topic) {
+        for (final AbstractModule module : modules) {
+            for (final String cmd : module.getCommands()) {
+                if (topic.equals(cmd)) {
+                    module.helpResponse(this, sender, topic, true);
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Responds with the bot's Constants.
      *
      * @param sender The nick of the person who sent the private message.
      * @param topic  The help topic, if any.
      */
     private void helpResponse(final String sender, final String topic) {
-        final String lcTopic = topic.toLowerCase(Constants.LOCALE).trim();
-
-        if (Commands.HELP_POSTING_KEYWORD.equals(lcTopic)) {
-            send(sender, bold("Post a URL, by saying it on a line on its own:"));
-            send(sender, helpIndent("<url> [<title>] [" + TAGS_MARKER + "<+tag> [...]]"));
-            send(sender, "I will reply with a label, for example: " + bold(Commands.LINK_CMD + '1'));
-            send(sender, "To add a title, use a its label and a pipe:");
-            send(sender, helpIndent(Commands.LINK_CMD + "1:|This is the title"));
-            send(sender, "To add a comment: ");
-            send(sender, helpIndent(Commands.LINK_CMD + "1:This is a comment"));
-            send(sender, "I will reply with a label, for example: " + bold(Commands.LINK_CMD + "1.1"));
-            send(sender, "To edit a comment, use its label: ");
-            send(sender, helpIndent(Commands.LINK_CMD + "1.1:This is an edited comment"));
-            send(sender, "To delete a comment, use its label and a minus sign: ");
-            send(sender, helpIndent(Commands.LINK_CMD + "1.1:-"));
-            send(sender, "You can also view a posting by saying its label.");
-        } else if (Commands.HELP_TAGS_KEYWORD.equals(lcTopic)) {
-            send(sender, bold("To categorize or tag a URL, use its label and a T:"));
-            send(sender, helpIndent(Commands.LINK_CMD + "1T:<+tag|-tag> [...]"));
-        } else if (Commands.VIEW_CMD.equals(lcTopic)) {
-            send(sender, "To list or search the current URL posts:");
-            send(sender, helpIndent(getNick() + ": " + Commands.VIEW_CMD) + " [<start>] [<query>]");
-        } else if (lcTopic.equalsIgnoreCase(getChannelName())) {
-            send(sender, "To list the last 5 posts from the channel's weblog:");
-            send(sender, helpIndent(getNick() + ": " + getChannelName()));
-        } else if (Commands.RECAP_CMD.equals(lcTopic)) {
-            send(sender, "To list the last 10 public channel messages:");
-            send(sender, helpIndent(getNick() + ": " + Commands.RECAP_CMD));
-        } else if (Commands.USERS_CMD.equals(lcTopic)) {
-            send(sender, "To list the users present on the channel:");
-            send(sender, helpIndent(getNick() + ": " + Commands.USERS_CMD));
-        } else if (Commands.INFO_CMD.equals(lcTopic)) {
-            send(sender, "To view information about the bot:");
-            send(sender, helpIndent(getNick() + ": " + Commands.INFO_CMD));
+        final boolean isOp = isOp(sender);
+        if (StringUtils.isBlank(topic)) {
+            helpDefault(sender, isOp);
         } else {
-            final String msg = "/msg ";
-            if (Commands.CYCLE_CMD.equals(lcTopic) && isOp(sender)) {
-                send(sender, "To have the bot leave the channel and come back:");
-                send(sender, helpIndent(msg + getNick() + ' ' + Commands.CYCLE_CMD));
-            } else if (Commands.ME_CMD.equals(lcTopic) && isOp(sender)) {
-                send(sender, "To have the bot perform an action:");
-                send(sender, helpIndent(msg + getNick() + ' ' + Commands.ME_CMD + " <action>"));
-            } else if (Commands.SAY_CMD.equals(lcTopic) && isOp(sender)) {
-                send(sender, "To have the bot say something on the channel:");
-                send(sender, helpIndent(msg + getNick() + ' ' + Commands.SAY_CMD + " <text>"));
-            } else if (Commands.VERSION_CMD.equals(lcTopic) && isOp(sender)) {
-                send(sender, "To view the version data (bot, java, etc.):");
-                send(sender, helpIndent(msg + getNick() + ' ' + Commands.VERSION_CMD));
-            } else if (Commands.MSG_CMD.equals(lcTopic) && isOp(sender)) {
-                send(sender, "To have the bot send a private message to someone:");
-                send(sender, helpIndent(msg + getNick() + ' ' + Commands.MSG_CMD + " <nick> <text>"));
-            } else if (Commands.IGNORE_CMD.equals(lcTopic)) {
-                send(sender, "To check your ignore status:");
-                send(sender, helpIndent(getNick() + ": " + Commands.IGNORE_CMD));
-
-                send(sender, "To toggle your ignore status:");
-                send(sender, helpIndent(getNick() + ": " + Commands.IGNORE_CMD + ' ' + Commands.IGNORE_ME_KEYWORD));
+            final String lcTopic = topic.toLowerCase(Constants.LOCALE).trim();
+            if (lcTopic.equals(getChannelName())) {
+                send(sender, Utils.bold("To list the last 5 posts from the channel's weblog:"));
+                send(sender, Utils.helpIndent(getNick() + ": " + getChannelName()));
             } else if (Tell.TELL_CMD.equals(lcTopic) && tell.isEnabled()) {
                 tell.helpResponse(sender);
             } else {
-                for (final AbstractModule module : MODULES) {
-                    for (final String cmd : module.getCommands()) {
-                        if (lcTopic.equals(cmd)) {
-                            module.helpResponse(this, sender, topic, true);
-                            return;
-                        }
-                    }
-                }
-
-                send(sender, bold("Type a URL on " + ircChannel + " to post it."));
-                send(sender, "For more information on a specific command, type:");
-                send(sender, helpIndent(getNick() + ": " + Commands.HELP_CMD + " <command>"));
-                send(sender, "The commands are:");
-
-                if (commandsList.isEmpty()) {
-                    commandsList.add(Commands.IGNORE_CMD);
-                    commandsList.add(Commands.INFO_CMD);
-                    commandsList.add(getChannelName());
-                    commandsList.add(Commands.HELP_POSTING_KEYWORD);
-                    commandsList.add(Commands.HELP_TAGS_KEYWORD);
-                    commandsList.add(Commands.RECAP_CMD);
-                    commandsList.add(Commands.USERS_CMD);
-                    commandsList.add(Commands.VIEW_CMD);
-
-                    MODULES.stream().filter(AbstractModule::isEnabled)
-                           .forEach(module -> commandsList.addAll(module.getCommands()));
-
-                    if (tell.isEnabled()) {
-                        commandsList.add(Tell.TELL_CMD);
-                    }
-
-                    Collections.sort(commandsList);
-                }
-
-                final StringBuilder sb = new StringBuilder(0);
-
-                for (int i = 0, cmdCount = 1; i < commandsList.size(); i++, cmdCount++) {
-                    if (sb.length() > 0) {
-                        sb.append("  ");
-                    }
-
-                    sb.append(commandsList.get(i));
-
-                    // 6 commands per line or last command
-                    if (sb.length() > 0 && (cmdCount == 6 || i == (commandsList.size() - 1))) {
-                        send(sender, helpIndent(sb.toString()));
-
-                        sb.setLength(0);
-                        cmdCount = 0;
-                    }
-                }
-
-                if (isOp(sender)) {
-                    send(sender, "The op commands are:");
-                    send(sender,
-                         helpIndent(Commands.CYCLE_CMD
-                                    + "  "
-                                    + Commands.ME_CMD
-                                    + "  "
-                                    + Commands.MODULES_CMD
-                                    + "  "
-                                    + Commands.MSG_CMD
-                                    + "  "
-                                    + Commands.SAY_CMD
-                                    + "  "
-                                    + Commands.VERSION_CMD));
+                // Command, Modules or Default
+                if (!helpCommands(sender, topic) && !helpModules(sender, lcTopic)) {
+                    helpDefault(sender, isOp);
                 }
             }
         }
@@ -774,98 +730,6 @@ public class Mobibot extends PircBot {
         if (isNotBlank(identNick) && isNotBlank(identMsg)) {
             sendMessage(identNick, identMsg);
         }
-    }
-
-    /**
-     * Processes the {@link net.thauvin.erik.mobibot.Commands#IGNORE_CMD} command.
-     *
-     * @param sender The sender.
-     * @param args   The command arguments.
-     */
-    private void ignoreResponse(final String sender, final String args) {
-        if (!isOp(sender)) {
-            final String nick = sender.toLowerCase(Constants.LOCALE);
-            final boolean isMe = args.toLowerCase(Constants.LOCALE).startsWith(Commands.IGNORE_ME_KEYWORD);
-            if (isMe) {
-                if (ignoredNicks.remove(nick)) {
-                    send(sender, "You are no longer ignored.");
-                } else {
-                    ignoredNicks.add(nick);
-                    send(sender, "You are now ignored.");
-                }
-            } else {
-                if (ignoredNicks.contains(nick)) {
-                    send(sender, "You are currently ignored.");
-                } else {
-                    send(sender, "You are not currently ignored.");
-                }
-            }
-        } else {
-            if (args.length() > 0) {
-                final String[] nicks = args.toLowerCase(Constants.LOCALE).split(" ");
-
-                for (final String nick : nicks) {
-                    final String ignore;
-
-                    if (Commands.IGNORE_ME_KEYWORD.equals(nick)) {
-                        ignore = sender.toLowerCase(Constants.LOCALE);
-                    } else {
-                        ignore = nick;
-                    }
-
-                    if (!ignoredNicks.remove(ignore)) {
-                        ignoredNicks.add(ignore);
-                    }
-                }
-            }
-
-            send(sender, "The following nicks are ignored: " + ignoredNicks);
-        }
-    }
-
-    /**
-     * Responds with the bot's information.
-     *
-     * @param sender    The nick of the person who sent the message.
-     * @param isPrivate Set to <code>true</code> if the response should be sent as a private message.
-     */
-    private void infoResponse(final String sender, final boolean isPrivate) {
-        for (final String info : INFO_STRS) {
-            if (info.startsWith("https://")) {
-                send(sender, info, Colors.DARK_GREEN, isPrivate);
-            } else {
-                send(sender, info, isPrivate);
-            }
-        }
-
-        final StringBuilder info = new StringBuilder(29);
-
-        info.append("Uptime: ").append(Utils.uptime(ManagementFactory.getRuntimeMXBean().getUptime())).append(
-                " [Entries: ").append(entries.size());
-
-        if (isOp(sender)) {
-            if (tell.isEnabled()) {
-                info.append(", Messages: ").append(tell.size());
-            }
-
-            if (twitterAutoPost && twitterModule.isEnabled()) {
-                info.append(", Twitter: ").append(twitterAutoLinks.size());
-            }
-        }
-
-        info.append(", Recap: ").append(recap.size()).append(']');
-
-        send(sender, info.toString(), isPrivate);
-    }
-
-    /**
-     * Determines whether the specified nick should be ignored.
-     *
-     * @param nick The nick.
-     * @return <code>true</code> if the nick should be ignored, <code>false</code> otherwise.
-     */
-    private boolean isIgnoredNick(final String nick) {
-        return isNotBlank(nick) && ignoredNicks.contains(nick.toLowerCase(Constants.LOCALE));
     }
 
     /**
@@ -902,9 +766,7 @@ public class Mobibot extends PircBot {
         if (isNotBlank(weblogUrl)) {
             setVersion(weblogUrl);
         }
-
         sleep(5);
-
         connect();
     }
 
@@ -922,100 +784,7 @@ public class Mobibot extends PircBot {
 
         boolean isCommand = false;
 
-        // Capture URLs posted on the channel
-        if (message.matches(LINK_MATCH) && !isIgnoredNick(sender)) {
-            isCommand = true;
-
-            final String[] cmds = message.split(" ", 2);
-
-            if (cmds.length == 1 || (!cmds[1].contains(getNick()))) {
-                final String link = cmds[0].trim();
-                boolean isBackup = false;
-
-                final int dupIndex = findDupEntry(link);
-
-                if (dupIndex == -1) {
-                    if (!Utils.today().equals(today)) {
-                        isBackup = true;
-                        saveEntries(true);
-
-                        entries.clear();
-                        today = Utils.today();
-                    }
-
-                    final StringBuilder tags = new StringBuilder(defaultTags);
-                    String title = Constants.NO_TITLE;
-
-                    if (cmds.length == 2) {
-                        final String[] data = cmds[1].trim().split(TAGS_MARKER, 2);
-
-                        if (data.length == 1) {
-                            title = data[0].trim();
-                        } else {
-                            if (isNotBlank(data[0])) {
-                                title = data[0].trim();
-                            }
-
-                            tags.append(' ').append(data[1].trim());
-                        }
-                    }
-
-                    if (Constants.NO_TITLE.equals(title)) {
-                        try {
-                            final Document html = Jsoup.connect(link).userAgent("Mozilla").get();
-                            final String htmlTitle = html.title();
-
-                            if (isNotBlank(htmlTitle)) {
-                                final String[] split = htmlTitle.split("( \\| )", 2);
-                                if (split.length == 2) {
-                                    title = split[0];
-                                } else {
-                                    title = htmlTitle;
-                                }
-                            }
-                        } catch (IOException ignore) {
-                            // Do nothing
-                        }
-                    }
-
-                    if (!tagsKeywords.isEmpty()) {
-                        for (final String match : tagsKeywords) {
-                            final String m = match.trim();
-                            if (title.matches("(?i).*\\b" + m + "\\b.*")) {
-                                tags.append(' ').append(m);
-                            }
-                        }
-                    }
-
-                    entries.add(new EntryLink(link, title, sender, login, channel, tags.toString()));
-
-                    final int index = entries.size() - 1;
-                    final EntryLink entry = entries.get(index);
-                    send(channel, EntriesUtils.buildLink(index, entry));
-
-                    // Add link to pinboard
-                    if (pinboard != null) {
-                        pinboard.addPost(entry);
-                    }
-
-                    // Queue link for posting to twitter
-                    if (twitterAutoPost && twitterModule.isEnabled()) {
-                        twitterAutoLinks.add(index);
-                        timer.schedule(new TwitterTimer(this, index), Constants.TIMER_DELAY * 60L * 1000L);
-                    }
-
-                    saveEntries(isBackup);
-
-                    if (Constants.NO_TITLE.equals(entry.getTitle())) {
-                        send(sender, "Please specify a title, by typing:", true);
-                        send(sender, helpIndent(Commands.LINK_CMD + (index + 1) + ":|This is the title"), true);
-                    }
-                } else {
-                    final EntryLink entry = entries.get(dupIndex);
-                    send(sender, bold("Duplicate") + " >> " + EntriesUtils.buildLink(dupIndex, entry));
-                }
-            }
-        } else if (message.matches(getNickPattern() + ":.*")) { // mobibot: <command>
+        if (message.matches(getNickPattern() + ":.*")) { // mobibot: <command>
             isCommand = true;
 
             final String[] cmds = message.substring(message.indexOf(':') + 1).trim().split(" ", 2);
@@ -1027,209 +796,47 @@ public class Mobibot extends PircBot {
                 args = cmds[1].trim();
             }
 
-            if (cmd.startsWith(Commands.HELP_CMD)) { // mobibot: help
+            if (cmd.startsWith(Constants.HELP_CMD)) { // mobibot: help
                 helpResponse(sender, args);
-            } else if (Commands.RECAP_CMD.equals(cmd)) { // mobibot: recap
-                recapResponse(sender, false);
-            } else if (Commands.USERS_CMD.equals(cmd)) { // mobibot: users
-                usersResponse(sender, false);
-            } else if (Commands.INFO_CMD.equals(cmd)) { // mobibot: info
-                infoResponse(sender, false);
-            } else if (Commands.VERSION_CMD.equals(cmd)) { // mobbiot: version
-                versionResponse(sender, false);
             } else if (cmd.equalsIgnoreCase(getChannelName())) { // mobibot: <channel>
                 feedResponse(sender);
-            } else if (cmd.startsWith(Commands.VIEW_CMD)) { // mobibot: view
-                viewResponse(sender, args, false);
             } else if (cmd.startsWith(Tell.TELL_CMD) && tell.isEnabled()) { // mobibot: tell
                 tell.response(sender, args);
-            } else if (cmd.startsWith(Commands.IGNORE_CMD)) { // mobibot: ignore
-                ignoreResponse(sender, args);
             } else {
-                for (final AbstractModule module : MODULES) { // modules
-                    for (final String c : module.getCommands()) {
-                        if (cmd.startsWith(c)) {
-                            module.commandResponse(this, sender, cmd, args, false);
+                boolean skip = false;
+                // Commands
+                for (final AbstractCommand command : commands) {
+                    if (command.isPublic() && command.getCommand().startsWith(cmd)) {
+                        command.commandResponse(this, sender, login, args, isOp(sender), false);
+                        skip = true;
+                        break;
+                    }
+                }
+                if (!skip) {
+                    // Modules
+                    for (final AbstractModule module : modules) { // modules
+                        for (final String c : module.getCommands()) {
+                            if (cmd.startsWith(c)) {
+                                module.commandResponse(this, sender, cmd, args, false);
+                                break;
+                            }
                         }
                     }
                 }
             }
-        } else if (message.matches(Commands.LINK_CMD + "[0-9]+:.*")) { // L1:<comment>, L1:-, L1:|<title>, etc
-            isCommand = true;
-
-            final String[] cmds = message.substring(1).split(":", 2);
-            final int index = Integer.parseInt(cmds[0]) - 1;
-
-            // L1:<comment>
-            if (index < entries.size()) {
-                final String cmd = cmds[1].trim();
-
-                if (cmd.length() == 0) {
-                    final EntryLink entry = entries.get(index);
-                    send(channel, EntriesUtils.buildLink(index, entry));
-
-                    if (entry.hasTags()) {
-                        send(channel, EntriesUtils.buildTags(index, entry));
-                    }
-
-                    if (entry.hasComments()) {
-                        final EntryComment[] comments = entry.getComments();
-
-                        for (int i = 0; i < comments.length; i++) {
-                            send(channel, EntriesUtils.buildComment(index, i, comments[i]));
-                        }
-                    }
-                } else {
-                    // L1:-
-                    if ("-".equals(cmd)) {
-                        final EntryLink entry = entries.get(index);
-
-                        if (entry.getLogin().equals(login) || isOp(sender)) {
-                            if (pinboard != null) {
-                                pinboard.deletePost(entry);
-                            }
-
-                            if (twitterAutoPost && twitterModule.isEnabled()) {
-                                twitterAutoLinks.remove(index);
-                            }
-
-                            entries.remove(index);
-                            send(channel, "Entry " + Commands.LINK_CMD + (index + 1) + " removed.");
-                            saveEntries(false);
-                        } else {
-                            send(sender, "Please ask a channel op to remove this entry for you.");
-                        }
-                    } else if (cmd.charAt(0) == '|') { // L1:|<title>
-                        if (cmd.length() > 1) {
-                            final EntryLink entry = entries.get(index);
-                            entry.setTitle(cmd.substring(1).trim());
-
-                            if (pinboard != null) {
-                                pinboard.updatePost(entry.getLink(), entry);
-                            }
-
-                            send(channel, EntriesUtils.buildLink(index, entry));
-                            saveEntries(false);
-                        }
-                    } else if (cmd.charAt(0) == '=') { // L1:=<url>
-                        final EntryLink entry = entries.get(index);
-
-                        if (entry.getLogin().equals(login) || isOp(sender)) {
-                            final String link = cmd.substring(1);
-
-                            if (link.matches(LINK_MATCH)) {
-                                final String oldLink = entry.getLink();
-
-                                entry.setLink(link);
-
-                                if (pinboard != null) {
-                                    pinboard.updatePost(oldLink, entry);
-                                }
-
-                                send(channel, EntriesUtils.buildLink(index, entry));
-                                saveEntries(false);
-                            }
-                        } else {
-                            send(sender, "Please ask a channel op to change this link for you.");
-                        }
-                    } else if (cmd.charAt(0) == '?') { // L1:?<author>
-                        if (isOp(sender)) {
-                            if (cmd.length() > 1) {
-                                final EntryLink entry = entries.get(index);
-                                entry.setNick(cmd.substring(1));
-                                send(channel, EntriesUtils.buildLink(index, entry));
-                                saveEntries(false);
-                            }
-                        } else {
-                            send(sender, "Please ask a channel op to change the author of this link for you.");
-                        }
-                    } else {
-                        final EntryLink entry = entries.get(index);
-                        final int cindex = entry.addComment(cmd, sender);
-
-                        final EntryComment comment = entry.getComment(cindex);
-                        send(sender, EntriesUtils.buildComment(index, cindex, comment));
-                        saveEntries(false);
-                    }
-                }
-            }
-        } else if (message.matches(Commands.LINK_CMD + "[0-9]+T:.*")) { // L1T:<+-tag>
-            isCommand = true;
-
-            final String[] cmds = message.substring(1).split("T:", 2);
-            final int index = Integer.parseInt(cmds[0]) - 1;
-
-            if (index < entries.size()) {
-                final String cmd = cmds[1].trim();
-
-                final EntryLink entry = entries.get(index);
-
-                if (cmd.length() != 0) {
-                    if (entry.getLogin().equals(login) || isOp(sender)) {
-                        entry.setTags(cmd);
-
-                        if (pinboard != null) {
-                            pinboard.updatePost(entry.getLink(), entry);
-                        }
-
-                        send(channel, EntriesUtils.buildTags(index, entry));
-                        saveEntries(false);
-                    } else {
-                        send(sender, "Please ask a channel op to change the tags for you.");
-                    }
-                } else {
-                    if (entry.hasTags()) {
-                        send(channel, EntriesUtils.buildTags(index, entry));
-                    } else {
-                        send(sender, "The entry has no tags. Why don't add some?");
-                    }
-                }
-            }
-        } else if (message.matches(Commands.LINK_CMD + "[0-9]+\\.[0-9]+:.*")) { // L11:<command>
-            isCommand = true;
-
-            final String[] cmds = message.substring(1).split("[.:]", 3);
-            final int index = Integer.parseInt(cmds[0]) - 1;
-
-            if (index < entries.size()) {
-                final EntryLink entry = entries.get(index);
-                final int cindex = Integer.parseInt(cmds[1]) - 1;
-
-                if (cindex < entry.getCommentsCount()) {
-                    final String cmd = cmds[2].trim();
-
-                    // L11:
-                    if (cmd.length() == 0) {
-                        final EntryComment comment = entry.getComment(cindex);
-                        send(channel, EntriesUtils.buildComment(index, cindex, comment));
-                    } else if ("-".equals(cmd)) { // L11:-
-                        entry.deleteComment(cindex);
-                        send(channel, "Comment " + Commands.LINK_CMD + (index + 1) + '.' + (cindex + 1) + " removed.");
-                        saveEntries(false);
-                    } else if (cmd.charAt(0) == '?') { // L11:?<author>
-                        if (isOp(sender)) {
-                            if (cmd.length() > 1) {
-                                final EntryComment comment = entry.getComment(cindex);
-                                comment.setNick(cmd.substring(1));
-                                send(channel, EntriesUtils.buildComment(index, cindex, comment));
-                                saveEntries(false);
-                            }
-                        } else {
-                            send(sender, "Please ask a channel op to change the author of this comment for you.");
-                        }
-                    } else {
-                        entry.setComment(cindex, cmd, sender);
-
-                        final EntryComment comment = entry.getComment(cindex);
-                        send(sender, EntriesUtils.buildComment(index, cindex, comment));
-                        saveEntries(false);
-                    }
+        } else {
+            // Commands
+            for (final AbstractCommand command : commands) {
+                if (command.matches(message)) {
+                    command.commandResponse(this, sender, login, message, isOp(sender), false);
+                    isCommand = true;
+                    break;
                 }
             }
         }
 
         if (!isCommand) {
-            storeRecap(sender, message, false);
+            Recap.storeRecap(sender, message, false);
         }
 
         tell.send(sender, true);
@@ -1255,92 +862,48 @@ public class Mobibot extends PircBot {
             args = cmds[1].trim();
         }
 
-        if (cmd.startsWith(Commands.HELP_CMD)) {
+        final boolean isOp = isOp(sender);
+
+        if (cmd.startsWith(Constants.HELP_CMD)) {
             helpResponse(sender, args);
-        } else if ("kill".equals(cmd) && isOp(sender)) {
+        } else if (isOp && "kill".equals(cmd)) {
             sendRawLine("QUIT : Poof!");
             System.exit(0);
-        } else if (Commands.DIE_CMD.equals(cmd) && isOp(sender)) {
+        } else if (isOp && Constants.DIE_CMD.equals(cmd)) {
             send(ircChannel, sender + " has just signed my death sentence.");
             timer.cancel();
             twitterShutdown();
             twitterNotification("killed by  " + sender + " on " + ircChannel);
-            saveEntries(true);
+
             sleep(3);
             quitServer("The Bot Is Out There!");
             System.exit(0);
-        } else if (Commands.CYCLE_CMD.equals(cmd)) {
-            send(ircChannel, sender + " has just asked me to leave. I'll be back!");
-            sleep(0);
-            partChannel(ircChannel);
-            sleep(10);
-            joinChannel(ircChannel);
-        } else if (Commands.RECAP_CMD.equals(cmd)) {
-            recapResponse(sender, true);
-        } else if (Commands.USERS_CMD.equals(cmd)) {
-            usersResponse(sender, true);
-        } else if ((cmds.length > 1) && isOp(sender) && Commands.ADDLOG_CMD.equals(cmd)) {
+        } else if (isOp && (cmds.length > 1) && Constants.ADDLOG_CMD.equals(cmd)) {
             // e.g 2014-04-01
             final File backlog = new File(logsDir + args + EntriesMgr.XML_EXT);
             if (backlog.exists()) {
-                history.add(0, args);
-                send(sender, history.toString(), true);
+                UrlMgr.addHistory(0, args);
+                send(sender, UrlMgr.getHistory().toString(), true);
             } else {
                 send(sender, "The specified log could not be found.");
             }
-        } else if (Commands.ME_CMD.equals(cmd) && isOp(sender)) {
-            if (args.length() > 1) {
-                action(args);
-            } else {
-                helpResponse(sender, Commands.ME_CMD);
-            }
-        } else if (Commands.MODULES_CMD.equals(cmd) && isOp(sender)) {
-            if (MODULES.isEmpty()) {
-                send(sender, "There are not enabled modules.", true);
-            } else {
-                send(sender, "The enabled modules are: ");
-                for (final AbstractModule mod : MODULES) {
-                    send(sender, helpIndent(mod.getClass().getSimpleName()));
-                }
-            }
-        } else if ((cmds.length > 1) && isOp(sender) && Commands.NICK_CMD.equals(cmd)) {
-            changeNick(args);
-        } else if (Commands.SAY_CMD.equals(cmd) && isOp(sender)) {
-            if (cmds.length > 1) {
-                send(ircChannel, args, true);
-            } else {
-                helpResponse(sender, Commands.SAY_CMD);
-            }
-        } else if (Commands.MSG_CMD.equals(cmd) && isOp(sender)) {
-            if (cmds.length > 1) {
-                final String[] msg = args.split(" ", 2);
-
-                if (args.length() > 2) {
-                    send(msg[0], msg[1], true);
-                } else {
-                    helpResponse(sender, Commands.MSG_CMD);
-                }
-            } else {
-                helpResponse(sender, Commands.MSG_CMD);
-            }
-        } else if (Commands.VIEW_CMD.equals(cmd)) {
-            viewResponse(sender, args, true);
         } else if (Tell.TELL_CMD.equals(cmd) && tell.isEnabled()) {
             tell.response(sender, args);
-        } else if (Commands.INFO_CMD.equals(cmd)) {
-            infoResponse(sender, true);
-        } else if (Commands.VERSION_CMD.equals(cmd)) {
-            versionResponse(sender, true);
-        } else if (Commands.DEBUG_CMD.equals(cmd) && isOp(sender)) {
+        } else if (isOp && Constants.DEBUG_CMD.equals(cmd)) {
             if (logger.isDebugEnabled()) {
                 Configurator.setLevel(logger.getName(), loggerLevel);
             } else {
                 Configurator.setLevel(logger.getName(), Level.DEBUG);
-
             }
             send(sender, "Debug logging is " + (logger.isDebugEnabled() ? "enabled." : "disabled."), true);
         } else {
-            for (final AbstractModule module : MODULES) {
+            for (final AbstractCommand command : commands) {
+                if (command.getCommand().startsWith(cmd)) {
+                    command.commandResponse(this, sender, login, args, isOp, true);
+                    return;
+                }
+            }
+            for (final AbstractModule module : modules) {
                 if (module.isPrivateMsgEnabled()) {
                     for (final String c : module.getCommands()) {
                         if (cmd.equals(c)) {
@@ -1350,8 +913,7 @@ public class Mobibot extends PircBot {
                     }
                 }
             }
-
-            helpResponse(sender, "");
+            helpDefault(sender, isOp);
         }
     }
 
@@ -1362,7 +924,7 @@ public class Mobibot extends PircBot {
     protected final void onAction(final String sender, final String login, final String hostname, final String target,
                                   final String action) {
         if (target != null && target.equals(ircChannel)) {
-            storeRecap(sender, action, true);
+            Recap.storeRecap(sender, action, true);
         }
     }
 
@@ -1380,31 +942,6 @@ public class Mobibot extends PircBot {
     @Override
     protected void onNickChange(final String oldNick, final String login, final String hostname, final String newNick) {
         tell.send(newNick);
-    }
-
-    /**
-     * Responds with the last 10 public messages.
-     *
-     * @param sender    The nick of the person who sent the private message.
-     * @param isPrivate Set to <code>true</code> if the response should be sent as a private message.
-     */
-    private void recapResponse(final String sender, final boolean isPrivate) {
-        if (!recap.isEmpty()) {
-            for (final String r : recap) {
-                send(sender, r, isPrivate);
-            }
-        } else {
-            send(sender, "Sorry, nothing to recap.", true);
-        }
-    }
-
-    /**
-     * Saves the entries.
-     *
-     * @param isDayBackup Set the <code>true</code> if the daily backup file should also be created.
-     */
-    final void saveEntries(final boolean isDayBackup) {
-        EntriesMgr.saveEntries(this, entries, history, isDayBackup);
     }
 
     /**
@@ -1519,21 +1056,6 @@ public class Mobibot extends PircBot {
     }
 
     /**
-     * Sets the Ignored nicks.
-     *
-     * @param nicks The nicks to ignore
-     */
-    final void setIgnoredNicks(final String nicks) {
-        if (isNotBlank(nicks)) {
-            final StringTokenizer st = new StringTokenizer(nicks, ",");
-
-            while (st.hasMoreTokens()) {
-                ignoredNicks.add(st.nextToken().trim().toLowerCase(Constants.LOCALE));
-            }
-        }
-    }
-
-    /**
      * Sets the pinboard authentication.
      *
      * @param apiToken The API token
@@ -1541,28 +1063,6 @@ public class Mobibot extends PircBot {
     final void setPinboardAuth(final String apiToken) {
         if (isNotBlank(apiToken)) {
             pinboard = new Pinboard(this, apiToken, ircServer);
-        }
-    }
-
-    /**
-     * Sets the default tags/categories.
-     *
-     * @param tags The tags.
-     */
-    final void setTags(final String tags) {
-        defaultTags = tags;
-    }
-
-    /**
-     * Sets the tags keywords matches.
-     *
-     * @param matches The tags keywords.
-     */
-    final void setTagsKeywords(final String matches) {
-        if (isNotBlank(matches)) {
-            tagsKeywords.addAll(Arrays.asList(matches.split(", +?| +")));
-        } else {
-            tagsKeywords.clear();
         }
     }
 
@@ -1576,31 +1076,36 @@ public class Mobibot extends PircBot {
     }
 
     /**
-     * Stores the last 10 public messages and actions.
+     * Sleeps for the specified number of seconds.
      *
-     * @param sender   The nick of the person who sent the private message.
-     * @param message  The actual message sent.
-     * @param isAction Set to <code>true</code> if the message is an action.
+     * @param secs The number of seconds to sleep for.
      */
-    private void storeRecap(final String sender, final String message, final boolean isAction) {
-        recap.add(
-                Utils.utcDateTime(LocalDateTime.now(Clock.systemUTC())) + " -> " + sender + (isAction ? " " : ": ")
-                + message);
-
-        if (recap.size() > MAX_RECAP) {
-            recap.remove(0);
+    public final void sleep(final int secs) {
+        try {
+            Thread.sleep(secs * 1000L);
+        } catch (InterruptedException ignore) {
+            // Do nothing
         }
     }
 
     /**
-     * Auto-post to twitter.
+     * Add an entry to be posted on twitter.
+     *
+     * @param index The entry index.
+     */
+    public void twitterAddEntry(final int index) {
+        twitterEntries.add(index);
+    }
+
+    /**
+     * Post an entry to twitter.
      *
      * @param index The post entry index.
      */
-    final void twitterAutoPost(final int index) {
-        if (twitterAutoPost && twitterModule.isEnabled()
-            && twitterAutoLinks.contains(index) && entries.size() >= index) {
-            final EntryLink entry = entries.get(index);
+    @SuppressFBWarnings("SUI_CONTAINS_BEFORE_REMOVE")
+    public final void twitterEntryPost(final int index) {
+        if (isTwitterAutoPost && twitterEntries.contains(index) && UrlMgr.getEntriesCount() >= index) {
+            final EntryLink entry = UrlMgr.getEntry(index);
             final String msg =
                     entry.getTitle() + ' ' + entry.getLink() + " via " + entry.getNick() + " on " + getChannel();
             new Thread(() -> {
@@ -1608,12 +1113,21 @@ public class Mobibot extends PircBot {
                     twitterModule.post(twitterHandle, msg, false);
                 } catch (ModuleException e) {
                     if (logger.isWarnEnabled()) {
-                        logger.warn("Failed to post link on twitter.", e);
+                        logger.warn("Failed to post entry on twitter.", e);
                     }
                 }
             }).start();
-            twitterAutoLinks.remove((Object) index);
+            twitterEntries.remove(index);
         }
+    }
+
+    /**
+     * Return the total count of links to be posted to twitter.
+     *
+     * @return The count of twitter links.
+     */
+    public final int twitterLinksCount() {
+        return twitterEntries.size();
     }
 
     /**
@@ -1639,132 +1153,34 @@ public class Mobibot extends PircBot {
     }
 
     /**
+     * Removes entry from twitter auto-post.
+     *
+     * @param index The entry's index.
+     */
+    public final void twitterRemoveEntry(final int index) {
+        twitterEntries.remove(index);
+    }
+
+    /**
      * Post all the links on twitter on shutdown.
      */
     final void twitterShutdown() {
         if (twitterModule.isEnabled() && isNotBlank(twitterHandle)) {
-            for (final int i : twitterAutoLinks) {
-                twitterAutoPost(i);
+            for (final int i : twitterEntries) {
+                twitterEntryPost(i);
             }
         }
     }
 
     /**
-     * Responds with the users on a channel.
+     * Updates pin on pinboard.
      *
-     * @param sender    The nick of the person who sent the message.
-     * @param isPrivate Set to <code>true</code> if the response should be sent as a private message.
+     * @param oldUrl The old pin url.
+     * @param entry  The entry to update.
      */
-    private void usersResponse(final String sender, final boolean isPrivate) {
-        final User[] users = getUsers(ircChannel);
-        final String[] nicks = new String[users.length];
-
-        for (int i = 0; i < users.length; i++) {
-            final String nick = users[i].getNick();
-            if (isOp(nick)) {
-                nicks[i] = '@' + users[i].getNick();
-            } else {
-                nicks[i] = users[i].getNick();
-            }
-        }
-
-        Arrays.sort(nicks, String.CASE_INSENSITIVE_ORDER);
-
-        send(sender, String.join(" ", nicks), isPrivate);
-    }
-
-    /**
-     * Responds with the bot's version info.
-     *
-     * @param sender    The nick of the person who sent the message.
-     * @param isPrivate Set to <code>true</code> if the response should be sent as a private message.
-     */
-    private void versionResponse(final String sender, final boolean isPrivate) {
-        if (isOp(sender)) {
-            for (final String version : VERSION_STRS) {
-                send(sender, version, isPrivate);
-            }
-        }
-    }
-
-    /**
-     * Responds with the stored links.
-     *
-     * @param sender    The nick of the person who sent the message.
-     * @param args      The view command arguments.
-     * @param isPrivate Set to <code>true</code> if the response should be sent as a private message.
-     */
-    private void viewResponse(final String sender, final String args, final boolean isPrivate) {
-        if (!entries.isEmpty()) {
-            final int max = entries.size();
-            String lcArgs = args.toLowerCase(Constants.LOCALE);
-            int i = 0;
-
-            if ((lcArgs.length() <= 0) && (max > MAX_ENTRIES)) {
-                i = max - MAX_ENTRIES;
-            }
-
-            if (lcArgs.matches("^\\d+(| .*)")) {
-                final String[] split = lcArgs.split(" ", 2);
-
-                try {
-                    i = Integer.parseInt(split[0]);
-
-                    if (i > 0) {
-                        i--;
-                    }
-
-                    if (split.length == 2) {
-                        lcArgs = split[1].trim();
-                    } else {
-                        lcArgs = "";
-                    }
-
-                    if (i > max) {
-                        i = 0;
-                    }
-                } catch (NumberFormatException ignore) {
-                    // Do nothing
-                }
-            }
-
-            EntryLink entry;
-            int sent = 0;
-
-            for (; i < max; i++) {
-                entry = entries.get(i);
-
-                if (lcArgs.length() > 0) {
-                    if ((entry.getLink().toLowerCase(Constants.LOCALE).contains(lcArgs))
-                        || (entry.getTitle().toLowerCase(Constants.LOCALE).contains(lcArgs))
-                        || (entry.getNick().toLowerCase(Constants.LOCALE).contains(lcArgs))) {
-                        if (sent > MAX_ENTRIES) {
-                            send(sender,
-                                 "To view more, try: "
-                                 + bold(getNick() + ": " + Commands.VIEW_CMD + ' ' + (i + 1) + ' ' + lcArgs),
-                                 isPrivate);
-
-                            break;
-                        }
-
-                        send(sender, EntriesUtils.buildLink(i, entry, true), isPrivate);
-                        sent++;
-                    }
-                } else {
-                    if (sent > MAX_ENTRIES) {
-                        send(sender,
-                             "To view more, try: " + bold(getNick() + ": " + Commands.VIEW_CMD + ' ' + (i + 1)),
-                             isPrivate);
-
-                        break;
-                    }
-
-                    send(sender, EntriesUtils.buildLink(i, entry, true), isPrivate);
-                    sent++;
-                }
-            }
-        } else {
-            send(sender, "There is currently nothing to view. Why don't you post something?", isPrivate);
+    public final void updatePin(final String oldUrl, final EntryLink entry) {
+        if (pinboard != null) {
+            pinboard.updatePost(oldUrl, entry);
         }
     }
 }

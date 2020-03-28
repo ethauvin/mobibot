@@ -30,12 +30,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package net.thauvin.erik.mobibot.tell;
+package net.thauvin.erik.mobibot.commands.tell;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-import net.thauvin.erik.mobibot.Commands;
 import net.thauvin.erik.mobibot.Mobibot;
 import net.thauvin.erik.mobibot.Utils;
+import net.thauvin.erik.mobibot.commands.links.View;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
@@ -112,16 +112,16 @@ public class Tell {
     }
 
     /**
-     * Responds with help.
+     * Responds with Constants.
      *
      * @param sender The sender.
      */
     public void helpResponse(final String sender) {
         bot.send(sender, "To send a message to someone when they join the channel:");
-        bot.send(sender, bot.helpIndent(bot.getNick() + ": " + TELL_CMD + " <nick> <message>"));
+        bot.send(sender, Utils.helpIndent(bot.getNick() + ": " + TELL_CMD + " <nick> <message>"));
 
         bot.send(sender, "To view queued and sent messages:");
-        bot.send(sender, bot.helpIndent(bot.getNick() + ": " + TELL_CMD + ' ' + Commands.VIEW_CMD));
+        bot.send(sender, Utils.helpIndent(bot.getNick() + ": " + TELL_CMD + ' ' + View.VIEW_CMD));
 
         bot.send(sender, "Messages are kept for " + Utils.bold(maxDays) + Utils.plural(maxDays, " day.", " days."));
     }
@@ -141,19 +141,20 @@ public class Tell {
      * @param sender The sender's nick.
      * @param cmds   The commands string.
      */
-    @SuppressFBWarnings(value = "CC_CYCLOMATIC_COMPLEXITY", justification = "Working on it.")
+    @SuppressFBWarnings(value = "CC_CYCLOMATIC_COMPLEXITY",
+                        justification = "Working on it.")
     public void response(final String sender, final String cmds) {
         final String arrow = " --> ";
         if (StringUtils.isBlank(cmds)) {
             helpResponse(sender);
-        } else if (cmds.startsWith(Commands.VIEW_CMD)) {
-            if (bot.isOp(sender) && (Commands.VIEW_CMD + ' ' + TELL_ALL_KEYWORD).equals(cmds)) {
+        } else if (cmds.startsWith(View.VIEW_CMD)) {
+            if (bot.isOp(sender) && (View.VIEW_CMD + ' ' + TELL_ALL_KEYWORD).equals(cmds)) {
                 if (!messages.isEmpty()) {
                     for (final TellMessage message : messages) {
                         bot.send(sender, Utils.bold(message.getSender()) + arrow + Utils.bold(message.getRecipient())
-                                + " [ID: " + message.getId() + ", "
-                                + (message.isReceived() ? "DELIVERED" : "QUEUED") + ']',
-                            true);
+                                         + " [ID: " + message.getId() + ", "
+                                         + (message.isReceived() ? "DELIVERED" : "QUEUED") + ']',
+                                 true);
                     }
                 } else {
                     bot.send(sender, "There are no messages in the queue.", true);
@@ -170,20 +171,20 @@ public class Tell {
 
                         if (message.isReceived()) {
                             bot.send(sender,
-                                Utils.bold(message.getSender()) + arrow + Utils.bold(message.getRecipient())
-                                    + " [" + Utils.utcDateTime(message.getReceived()) + ", ID: "
-                                    + message.getId() + ", DELIVERED]",
-                                true);
+                                     Utils.bold(message.getSender()) + arrow + Utils.bold(message.getRecipient())
+                                     + " [" + Utils.utcDateTime(message.getReceived()) + ", ID: "
+                                     + message.getId() + ", DELIVERED]",
+                                     true);
 
                         } else {
                             bot.send(sender,
-                                Utils.bold(message.getSender()) + arrow + Utils.bold(message.getRecipient())
-                                    + " [" + Utils.utcDateTime(message.getQueued()) + ", ID: "
-                                    + message.getId() + ", QUEUED]",
-                                true);
+                                     Utils.bold(message.getSender()) + arrow + Utils.bold(message.getRecipient())
+                                     + " [" + Utils.utcDateTime(message.getQueued()) + ", ID: "
+                                     + message.getId() + ", QUEUED]",
+                                     true);
                         }
 
-                        bot.send(sender, bot.helpIndent(message.getMessage(), false), true);
+                        bot.send(sender, Utils.helpIndent(message.getMessage()), true);
                     }
                 }
 
@@ -192,10 +193,10 @@ public class Tell {
                 } else {
                     bot.send(sender, "To delete one or all delivered messages:");
                     bot.send(sender,
-                        bot.helpIndent(bot.getNick() + ": " + TELL_CMD + ' ' + TELL_DEL_KEYWORD + " <id|"
-                            + TELL_ALL_KEYWORD + '>'));
+                             Utils.helpIndent(bot.getNick() + ": " + TELL_CMD + ' ' + TELL_DEL_KEYWORD + " <id|"
+                                              + TELL_ALL_KEYWORD + '>'));
                     bot.send(sender, "Messages are kept for " + Utils.bold(maxDays)
-                        + Utils.plural(maxDays, " day.", " days."));
+                                     + Utils.plural(maxDays, " day.", " days."));
                 }
             }
         } else if (cmds.startsWith(TELL_DEL_KEYWORD + ' ')) {
@@ -259,7 +260,7 @@ public class Tell {
                     save();
 
                     bot.send(sender, "Message [ID " + message.getId() + "] was queued for "
-                        + Utils.bold(message.getRecipient()), true);
+                                     + Utils.bold(message.getRecipient()), true);
                 } else {
                     bot.send(sender, "Sorry, the messages queue is currently full.", true);
                 }
@@ -289,43 +290,42 @@ public class Tell {
      */
     public void send(final String nickname, final boolean isMessage) {
         if (!nickname.equals(bot.getNick()) && isEnabled()) {
-            messages.stream().filter(message -> message.isMatch(nickname)).forEach(
-                message -> {
-                    if (message.getRecipient().equalsIgnoreCase(nickname) && !message.isReceived()) {
-                        if (message.getSender().equals(nickname)) {
-                            if (!isMessage) {
-                                bot.send(nickname, Utils.bold("You") + " wanted me to remind you: "
-                                        + Utils.reverseColor(message.getMessage()),
-                                    true);
-
-                                message.setIsReceived();
-                                message.setIsNotified();
-
-                                save();
-                            }
-                        } else {
-                            bot.send(nickname, message.getSender() + " wanted me to tell you: "
-                                    + Utils.reverseColor(message.getMessage()),
-                                true);
+            messages.stream().filter(message -> message.isMatch(nickname)).forEach(message -> {
+                if (message.getRecipient().equalsIgnoreCase(nickname) && !message.isReceived()) {
+                    if (message.getSender().equals(nickname)) {
+                        if (!isMessage) {
+                            bot.send(nickname, Utils.bold("You") + " wanted me to remind you: "
+                                               + Utils.reverseColor(message.getMessage()),
+                                     true);
 
                             message.setIsReceived();
+                            message.setIsNotified();
 
                             save();
                         }
-                    } else if (message.getSender().equalsIgnoreCase(nickname) && message.isReceived()
-                        && !message.isNotified()) {
-                        bot.send(nickname,
-                            "Your message "
-                                + Utils.reverseColor("[ID " + message.getId() + ']') + " was sent to "
-                                + Utils.bold(message.getRecipient()) + " on "
-                                + Utils.utcDateTime(message.getReceived()),
-                            true);
+                    } else {
+                        bot.send(nickname, message.getSender() + " wanted me to tell you: "
+                                           + Utils.reverseColor(message.getMessage()),
+                                 true);
 
-                        message.setIsNotified();
+                        message.setIsReceived();
 
                         save();
                     }
-                });
+                } else if (message.getSender().equalsIgnoreCase(nickname) && message.isReceived()
+                           && !message.isNotified()) {
+                    bot.send(nickname,
+                             "Your message "
+                             + Utils.reverseColor("[ID " + message.getId() + ']') + " was sent to "
+                             + Utils.bold(message.getRecipient()) + " on "
+                             + Utils.utcDateTime(message.getReceived()),
+                             true);
+
+                    message.setIsNotified();
+
+                    save();
+                }
+            });
         }
     }
 

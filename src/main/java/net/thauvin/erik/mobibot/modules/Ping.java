@@ -33,10 +33,13 @@
 package net.thauvin.erik.mobibot.modules;
 
 import net.thauvin.erik.mobibot.Mobibot;
+import net.thauvin.erik.mobibot.Utils;
 
 import java.security.SecureRandom;
 import java.util.Arrays;
 import java.util.List;
+
+import static net.thauvin.erik.mobibot.Utils.bold;
 
 /**
  * The Ping module.
@@ -94,7 +97,7 @@ public class Ping extends AbstractModule {
      */
     @Override
     public void helpResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate) {
-        bot.send(sender, "To ping the bot:");
-        bot.send(sender, bot.helpIndent(bot.getNick() + ": " + PING_CMD));
+        bot.send(sender, bold("To ping the bot:"));
+        bot.send(sender, Utils.helpIndent(bot.getNick() + ": " + PING_CMD));
     }
 }

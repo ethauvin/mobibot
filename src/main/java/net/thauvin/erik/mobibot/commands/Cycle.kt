@@ -1,5 +1,5 @@
 /*
- * TwitterTimer.kt
+ * Cycle.kt
  *
  * Copyright (c) 2004-2020, Erik C. Thauvin (erik@thauvin.net)
  * All rights reserved.
@@ -30,12 +30,39 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package net.thauvin.erik.mobibot
+package net.thauvin.erik.mobibot.commands
 
-import java.util.*
+import net.thauvin.erik.mobibot.Mobibot
+import net.thauvin.erik.mobibot.Utils
 
-class TwitterTimer(var bot: Mobibot, private var index: Int) : TimerTask() {
-    override fun run() {
-        bot.twitterEntryPost(index)
+class Cycle : AbstractCommand() {
+    private val wait = 10
+    override val command = "cycle"
+    override val help = listOf(
+        Utils.bold("To have the bot leave the channel and come back:"),
+        Utils.helpIndent("/msg %s $command")
+    )
+    override val isOp = true
+    override val isPublic = false
+    override val isVisible = true
+
+
+    override fun commandResponse(
+        bot: Mobibot,
+        sender: String,
+        login: String,
+        args: String,
+        isOp: Boolean,
+        isPrivate: Boolean
+    ) {
+        if (isOp) {
+            bot.send(bot.channel, "$sender has just asked me to leave. I'll be back!")
+            bot.sleep(wait)
+            bot.partChannel(bot.channel)
+            bot.sleep(wait)
+            bot.joinChannel(bot.channel)
+        } else {
+            bot.helpDefault(sender, isOp)
+        }
     }
 }

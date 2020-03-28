@@ -33,12 +33,15 @@
 package net.thauvin.erik.mobibot.modules;
 
 import net.thauvin.erik.mobibot.Mobibot;
+import net.thauvin.erik.mobibot.Utils;
 import net.thauvin.erik.mobibot.msg.Message;
 import net.thauvin.erik.mobibot.msg.NoticeMessage;
 import twitter4j.DirectMessage;
 import twitter4j.Status;
 import twitter4j.TwitterFactory;
 import twitter4j.conf.ConfigurationBuilder;
+
+import static net.thauvin.erik.mobibot.Utils.bold;
 
 /**
  * The Twitter module.
@@ -115,8 +118,8 @@ public final class Twitter extends ThreadedModule {
     @Override
     public void helpResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate) {
         if (isEnabled()) {
-            bot.send(sender, "To post to Twitter:");
-            bot.send(sender, bot.helpIndent(bot.getNick() + ": " + TWITTER_CMD + " <message>"));
+            bot.send(sender, bold("To post to Twitter:"));
+            bot.send(sender, Utils.helpIndent(bot.getNick() + ": " + TWITTER_CMD + " <message>"));
         } else {
             bot.send(sender, "The Twitter posting facility is disabled.");
         }

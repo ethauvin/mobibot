@@ -160,6 +160,16 @@ public final class Utils {
     }
 
     /**
+     * Returns indented help string.
+     *
+     * @param help The help string.
+     * @return The indented help string.
+     */
+    public static String helpIndent(final String help) {
+        return "        " + help;
+    }
+
+    /**
      * Returns the specified date as an ISO local date string.
      *
      * @param date The date.

@@ -52,6 +52,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import static net.thauvin.erik.mobibot.Utils.bold;
+
 /**
  * The StockQuote module.
  *
@@ -82,9 +84,10 @@ public final class StockQuote extends ThreadedModule {
         properties.put(ALPHAVANTAGE_API_KEY_PROP, "");
     }
 
-    @SuppressFBWarnings(value = "NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE", justification = "false positive?")
+    @SuppressFBWarnings(value = "NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE",
+                        justification = "false positive?")
     private static JSONObject getJsonResponse(final Response response, final String debugMessage)
-        throws IOException, ModuleException {
+            throws IOException, ModuleException {
         if (response.isSuccessful()) {
             if (response.body() != null) {
                 final JSONObject json = new JSONObject(Objects.requireNonNull(response.body()).string());
@@ -132,7 +135,7 @@ public final class StockQuote extends ThreadedModule {
      * @return The {@link Message} array containing the stock quote.
      * @throws ModuleException If an errors occurs.
      */
-    @SuppressWarnings({"PMD.CloseResource"})
+    @SuppressWarnings({ "PMD.CloseResource" })
     static List<Message> getQuote(final String symbol, final String apiKey) throws ModuleException {
         if (StringUtils.isBlank(apiKey)) {
             throw new ModuleException(StringUtils.capitalize(STOCK_CMD) + " is disabled. The API key is missing.");
@@ -146,7 +149,7 @@ public final class StockQuote extends ThreadedModule {
             try {
                 // Search for symbol/keywords
                 Request request = new Request.Builder().url(
-                    ALAPHAVANTAGE_URL + "SYMBOL_SEARCH&keywords=" + symbol + "&apikey=" + apiKey).build();
+                        ALAPHAVANTAGE_URL + "SYMBOL_SEARCH&keywords=" + symbol + "&apikey=" + apiKey).build();
                 Response response = client.newCall(request).execute();
 
                 JSONObject json = getJsonResponse(response, debugMessage);
@@ -161,8 +164,8 @@ public final class StockQuote extends ThreadedModule {
 
                 // Get quote for symbol
                 request = new Request.Builder().url(
-                    ALAPHAVANTAGE_URL + "GLOBAL_QUOTE&symbol=" + symbolInfo.getString("1. symbol") + "&apikey="
-                    + apiKey).build();
+                        ALAPHAVANTAGE_URL + "GLOBAL_QUOTE&symbol=" + symbolInfo.getString("1. symbol") + "&apikey="
+                        + apiKey).build();
                 response = client.newCall(request).execute();
 
                 json = getJsonResponse(response, debugMessage);
@@ -175,20 +178,21 @@ public final class StockQuote extends ThreadedModule {
                 }
 
                 messages.add(new PublicMessage(
-                    "Symbol: " + Utils.unescapeXml(quote.getString("01. symbol")) + " [" + Utils
-                        .unescapeXml(symbolInfo.getString("2. name") + ']')));
+                        "Symbol: " + Utils.unescapeXml(quote.getString("01. symbol")) + " [" + Utils.unescapeXml(
+                                symbolInfo.getString("2. name") + ']')));
                 messages.add(new PublicMessage("    Price:     " + Utils.unescapeXml(quote.getString("05. price"))));
-                messages.add(
-                    new PublicMessage("    Previous:  " + Utils.unescapeXml(quote.getString("08. previous close"))));
+                messages.add(new PublicMessage(
+                        "    Previous:  "
+                        + Utils.unescapeXml(quote.getString("08. previous close"))));
                 messages.add(new NoticeMessage("    Open:      " + Utils.unescapeXml(quote.getString("02. open"))));
                 messages.add(new NoticeMessage("    High:      " + Utils.unescapeXml(quote.getString("03. high"))));
                 messages.add(new NoticeMessage("    Low:       " + Utils.unescapeXml(quote.getString("04. low"))));
                 messages.add(new NoticeMessage("    Volume:    " + Utils.unescapeXml(quote.getString("06. volume"))));
                 messages.add(new NoticeMessage(
-                    "    Latest:    " + Utils.unescapeXml(quote.getString("07. latest trading day"))));
+                        "    Latest:    " + Utils.unescapeXml(quote.getString("07. latest trading day"))));
                 messages.add(new NoticeMessage(
-                    "    Change:    " + Utils.unescapeXml(quote.getString("09. change")) + " [" + Utils
-                        .unescapeXml(quote.getString("10. change percent")) + ']'));
+                        "    Change:    " + Utils.unescapeXml(quote.getString("09. change")) + " [" + Utils.unescapeXml(
+                                quote.getString("10. change percent")) + ']'));
             } catch (IOException | NullPointerException e) {
                 throw new ModuleException(debugMessage, "An error has occurred retrieving a stock quote.", e);
             }
@@ -203,8 +207,8 @@ public final class StockQuote extends ThreadedModule {
      */
     @Override
     public void helpResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate) {
-        bot.send(sender, "To retrieve a stock quote:");
-        bot.send(sender, bot.helpIndent(bot.getNick() + ": " + STOCK_CMD + " <symbol|keywords>"));
+        bot.send(sender, bold("To retrieve a stock quote:"));
+        bot.send(sender, Utils.helpIndent(bot.getNick() + ": " + STOCK_CMD + " <symbol|keywords>"));
     }
 
     /**

@@ -1,5 +1,5 @@
 /*
- * TwitterTimer.kt
+ * Modules.kt
  *
  * Copyright (c) 2004-2020, Erik C. Thauvin (erik@thauvin.net)
  * All rights reserved.
@@ -30,12 +30,39 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package net.thauvin.erik.mobibot
+package net.thauvin.erik.mobibot.commands
 
-import java.util.*
+import net.thauvin.erik.mobibot.Mobibot
+import net.thauvin.erik.mobibot.Utils
 
-class TwitterTimer(var bot: Mobibot, private var index: Int) : TimerTask() {
-    override fun run() {
-        bot.twitterEntryPost(index)
+class Modules : AbstractCommand() {
+    override val command = "modules"
+    override val help = listOf(
+        Utils.bold("To view a list of enabled modules:"),
+        Utils.helpIndent("/msg %s $command")
+    )
+    override val isOp = true
+    override val isPublic = false
+    override val isVisible = true
+
+    override fun commandResponse(
+        bot: Mobibot,
+        sender: String,
+        login: String,
+        args: String,
+        isOp: Boolean,
+        isPrivate: Boolean
+    ) {
+        if (isOp) {
+            val modulesNames = bot.modulesNames
+            if (modulesNames.isEmpty()) {
+                bot.send(sender, "There are no enabled modules.", true)
+            } else {
+                bot.send(sender, Utils.bold("The enabled modules are: "))
+                bot.send(sender, Utils.helpIndent(modulesNames.joinToString(", ")))
+            }
+        } else {
+            bot.helpDefault(sender, isOp)
+        }
     }
 }

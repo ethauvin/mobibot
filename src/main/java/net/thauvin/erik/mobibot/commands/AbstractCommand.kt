@@ -1,5 +1,5 @@
 /*
- * TwitterTimer.kt
+ * AbstractCommand.kt
  *
  * Copyright (c) 2004-2020, Erik C. Thauvin (erik@thauvin.net)
  * All rights reserved.
@@ -30,12 +30,38 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package net.thauvin.erik.mobibot
+package net.thauvin.erik.mobibot.commands
 
-import java.util.*
+import net.thauvin.erik.mobibot.Mobibot
 
-class TwitterTimer(var bot: Mobibot, private var index: Int) : TimerTask() {
-    override fun run() {
-        bot.twitterEntryPost(index)
+abstract class AbstractCommand {
+    abstract val command: String
+    abstract val help: List<String>
+    abstract val isOp: Boolean
+    abstract val isPublic: Boolean
+    abstract val isVisible: Boolean
+
+    abstract fun commandResponse(
+        bot: Mobibot,
+        sender: String,
+        login: String,
+        args: String,
+        isOp: Boolean,
+        isPrivate: Boolean
+    )
+
+    open fun helpResponse(bot: Mobibot, command: String, sender: String, isOp: Boolean, isPrivate: Boolean): Boolean {
+        if (!this.isOp || this.isOp == isOp) {
+            for (h in help) {
+                bot.send(sender, String.format(h, bot.nick), isPrivate)
+            }
+            return true
+        }
+        return false
     }
+
+    open fun matches(message: String): Boolean {
+        return false
+    }
+
 }

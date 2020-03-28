@@ -35,9 +35,12 @@ package net.thauvin.erik.mobibot.modules;
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
 import net.thauvin.erik.mobibot.Mobibot;
+import net.thauvin.erik.mobibot.Utils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.text.DecimalFormat;
+
+import static net.thauvin.erik.mobibot.Utils.bold;
 
 /**
  * The Calc module.
@@ -88,7 +91,6 @@ public class Calc extends AbstractModule {
                                 final boolean isPrivate) {
         if (StringUtils.isNotBlank(args)) {
             bot.send(calc(args));
-
         } else {
             helpResponse(bot, sender, args, isPrivate);
         }
@@ -99,7 +101,7 @@ public class Calc extends AbstractModule {
      */
     @Override
     public void helpResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate) {
-        bot.send(sender, "To solve a mathematical calculation:");
-        bot.send(sender, bot.helpIndent(bot.getNick() + ": " + CALC_CMD + " <calculation>"));
+        bot.send(sender, bold("To solve a mathematical calculation:"));
+        bot.send(sender, Utils.helpIndent(bot.getNick() + ": " + CALC_CMD + " <calculation>"));
     }
 }

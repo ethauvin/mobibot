@@ -1,5 +1,5 @@
 /*
- * TwitterTimer.kt
+ * Msg.kt
  *
  * Copyright (c) 2004-2020, Erik C. Thauvin (erik@thauvin.net)
  * All rights reserved.
@@ -30,12 +30,38 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package net.thauvin.erik.mobibot
+package net.thauvin.erik.mobibot.commands
 
-import java.util.*
+import net.thauvin.erik.mobibot.Mobibot
+import net.thauvin.erik.mobibot.Utils
 
-class TwitterTimer(var bot: Mobibot, private var index: Int) : TimerTask() {
-    override fun run() {
-        bot.twitterEntryPost(index)
+class Msg : AbstractCommand() {
+    override val command = "msg"
+    override val help = listOf(
+        Utils.bold("To have the bot send a private message to someone:"),
+        Utils.helpIndent("/msg %s $command <nick> <text>")
+    )
+    override val isOp = true
+    override val isPublic = true
+    override val isVisible = true
+
+    override fun commandResponse(
+        bot: Mobibot,
+        sender: String,
+        login: String,
+        args: String,
+        isOp: Boolean,
+        isPrivate: Boolean
+    ) {
+        if (isOp) {
+            val msg = args.split(" ", limit = 2)
+            if (args.length > 2) {
+                bot.send(msg[0], msg[1], true)
+            } else {
+                helpResponse(bot, command, sender, isOp, isPrivate)
+            }
+        } else {
+            bot.helpDefault(sender, isOp)
+        }
     }
 }

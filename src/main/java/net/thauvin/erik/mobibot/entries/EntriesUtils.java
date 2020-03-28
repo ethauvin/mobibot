@@ -33,7 +33,6 @@
 package net.thauvin.erik.mobibot.entries;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-import net.thauvin.erik.mobibot.Commands;
 import net.thauvin.erik.mobibot.Constants;
 import net.thauvin.erik.mobibot.Utils;
 
@@ -61,8 +60,8 @@ public final class EntriesUtils {
      * @return The entry's comment.
      */
     public static String buildComment(final int entryIndex, final int commentIndex, final EntryComment comment) {
-        return (Commands.LINK_CMD + (entryIndex + 1) + '.' + (commentIndex + 1) + ": [" + comment.getNick() + "] "
-            + comment.getComment());
+        return (Constants.LINK_CMD + (entryIndex + 1) + '.' + (commentIndex + 1) + ": [" + comment.getNick() + "] "
+                + comment.getComment());
     }
 
     /**
@@ -87,8 +86,8 @@ public final class EntriesUtils {
      */
     @SuppressFBWarnings(value = "CE_CLASS_ENVY", justification = "Yes, it does.")
     public static String buildLink(final int index, final EntryLink entry, final boolean isView) {
-        final StringBuilder buff = new StringBuilder().append(Commands.LINK_CMD).append(index + 1)
-            .append(": ").append('[').append(entry.getNick()).append(']');
+        final StringBuilder buff = new StringBuilder().append(Constants.LINK_CMD).append(index + 1)
+                                                      .append(": ").append('[').append(entry.getNick()).append(']');
 
         if (isView && entry.hasComments()) {
             buff.append("[+").append(entry.getCommentsCount()).append(']');
@@ -115,6 +114,6 @@ public final class EntriesUtils {
      * @return The entry's tags.
      */
     public static String buildTags(final int entryIndex, final EntryLink entry) {
-        return (Commands.LINK_CMD + (entryIndex + 1) + "T: " + entry.getPinboardTags().replace(",", ", "));
+        return (Constants.LINK_CMD + (entryIndex + 1) + "T: " + entry.getPinboardTags().replace(",", ", "));
     }
 }

@@ -52,6 +52,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import static net.thauvin.erik.mobibot.Utils.bold;
+
 /**
  * The <code>Weather2</code> module.
  *
@@ -177,7 +179,7 @@ public class Weather2 extends ThreadedModule {
                                                                Colors.GREEN));
                             } else {
                                 final HttpUrl url = Objects.requireNonNull(HttpUrl.parse(
-                                    "https://openweathermap.org/find"))
+                                        "https://openweathermap.org/find"))
                                                            .newBuilder()
                                                            .addQueryParameter("q",
                                                                               city + ',' + country)
@@ -199,17 +201,22 @@ public class Weather2 extends ThreadedModule {
         return messages;
     }
 
+    private static String wind(final Double w) {
+        final double kmh = w * 1.60934;
+        return Math.round(w) + " mph, " + Math.round(kmh) + " km/h";
+    }
+
     /**
      * {@inheritDoc}
      */
     @Override
     public void helpResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate) {
-        bot.send(sender, "To display weather information:");
-        bot.send(sender, bot.helpIndent(bot.getNick() + ": " + WEATHER_CMD + " <city> [, <country code>]"));
+        bot.send(sender, bold("To display weather information:"));
+        bot.send(sender, Utils.helpIndent(bot.getNick() + ": " + WEATHER_CMD + " <city> [, <country code>]"));
         bot.send(sender, "For example:");
-        bot.send(sender, bot.helpIndent(bot.getNick() + ": " + WEATHER_CMD + " paris, fr"));
+        bot.send(sender, Utils.helpIndent(bot.getNick() + ": " + WEATHER_CMD + " paris, fr"));
         bot.send(sender,
-                 "The default ISO 3166 country code is " + Utils.bold("US")
+                 "The default ISO 3166 country code is " + bold("US")
                  + ". Zip codes are supported in most countries.");
     }
 
@@ -235,10 +242,5 @@ public class Weather2 extends ThreadedModule {
         } else {
             helpResponse(bot, sender, args, true);
         }
-    }
-
-    private static String wind(final Double w) {
-        final double kmh = w * 1.60934;
-        return Math.round(w) + " mph, " + Math.round(kmh) + " km/h";
     }
 }

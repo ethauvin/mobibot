@@ -88,7 +88,7 @@ spotbugs {
 
 tasks.withType(com.github.spotbugs.snom.SpotBugsTask) {
     reports {
-        xml.enabled = false
+        xml.enabled = true
         html.enabled = true
     }
     excludeFilter.set(file("$projectDir/config/spotbugs/excludeFilter.xml"))
@@ -140,7 +140,7 @@ clean {
 }
 
 run {
-    args '--v'
+    //args '--v'
 }
 
 incrementBuildMeta {

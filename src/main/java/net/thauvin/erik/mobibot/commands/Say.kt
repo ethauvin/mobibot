@@ -1,5 +1,5 @@
 /*
- * TwitterTimer.kt
+ * Say.kt
  *
  * Copyright (c) 2004-2020, Erik C. Thauvin (erik@thauvin.net)
  * All rights reserved.
@@ -30,12 +30,34 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package net.thauvin.erik.mobibot
+package net.thauvin.erik.mobibot.commands
 
-import java.util.*
+import net.thauvin.erik.mobibot.Mobibot
+import net.thauvin.erik.mobibot.Utils
 
-class TwitterTimer(var bot: Mobibot, private var index: Int) : TimerTask() {
-    override fun run() {
-        bot.twitterEntryPost(index)
+class Say : AbstractCommand() {
+    override val command = "say"
+    override val help = listOf(
+        Utils.bold("To have the bot say something on the channel:"),
+        Utils.helpIndent("/msg %s $command <text>")
+    )
+    override val isOp = true
+    override val isPublic = false
+    override val isVisible = true
+
+
+    override fun commandResponse(
+        bot: Mobibot,
+        sender: String,
+        login: String,
+        args: String,
+        isOp: Boolean,
+        isPrivate: Boolean
+    ) {
+        if (isOp) {
+            bot.send(bot.channel, args, true)
+        } else {
+            bot.helpDefault(sender, isOp)
+        }
     }
 }

@@ -30,7 +30,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package net.thauvin.erik.mobibot.tell;
+package net.thauvin.erik.mobibot.commands.tell;
 
 import org.testng.annotations.Test;
 

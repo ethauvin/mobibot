@@ -1,7 +1,7 @@
 /*
  * Constants.java
  *
- * Copyright (c) 2004-2019, Erik C. Thauvin (erik@thauvin.net)
+ * Copyright (c) 2004-2020, Erik C. Thauvin (erik@thauvin.net)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -43,9 +43,37 @@ import java.util.Locale;
  */
 public final class Constants {
     /**
+     * The add (back)log command.
+     */
+    public static final String ADDLOG_CMD = "addlog";
+    /**
      * The connect/read timeout in ms.
      */
     public static final int CONNECT_TIMEOUT = 5000;
+    /**
+     * Debug command line argument.
+     */
+    public static final String DEBUG_ARG = "debug";
+    /**
+     * The debug command.
+     */
+    public static final String DEBUG_CMD = "debug";
+    /**
+     * The die command.
+     */
+    public static final String DIE_CMD = "die";
+    /**
+     * Help command line argument.
+     */
+    public static final String HELP_ARG = "help";
+    /**
+     * The help command.
+     */
+    public static final String HELP_CMD = "help";
+    /**
+     * The link command.
+     */
+    public static final String LINK_CMD = "L";
     /**
      * Default locale.
      */
@@ -54,6 +82,10 @@ public final class Constants {
      * The empty title string.
      */
     public static final String NO_TITLE = "No Title";
+    /**
+     * Properties command line argument.
+     */
+    public static final String PROPS_ARG = "properties";
     /**
      * The timer delay in minutes.
      */
@@ -66,6 +98,10 @@ public final class Constants {
      * The Twitter handle property key.
      */
     public static final String TWITTER_HANDLE_PROP = "twitter-handle";
+    /**
+     * Properties version line argument.
+     */
+    public static final String VERSION_ARG = "version";
 
     /**
      * Disables the default constructor.

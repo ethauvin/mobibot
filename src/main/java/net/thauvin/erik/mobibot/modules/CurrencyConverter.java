@@ -56,6 +56,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
 
+import static net.thauvin.erik.mobibot.Utils.bold;
+
 /**
  * The CurrentConverter module.
  *
@@ -228,14 +230,14 @@ public final class CurrencyConverter extends ThreadedModule {
      */
     @Override
     public void helpResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate) {
-        bot.send(sender, "To convert from one currency to another:");
-        bot.send(sender, bot.helpIndent(bot.getNick() + ": " + CURRENCY_CMD + " [100 USD to EUR]"));
+        bot.send(sender, bold("To convert from one currency to another:"));
+        bot.send(sender, Utils.helpIndent(bot.getNick() + ": " + CURRENCY_CMD + " [100 USD to EUR]"));
 
         if (args.endsWith(CURRENCY_CMD)) {
-            bot.send(sender, "For a listing of currency rates:");
-            bot.send(sender, bot.helpIndent(bot.getNick() + ": " + CURRENCY_CMD) + ' ' + CURRENCY_RATES_KEYWORD);
-            bot.send(sender, "For a listing of supported currencies:");
-            bot.send(sender, bot.helpIndent(bot.getNick() + ": " + CURRENCY_CMD));
+            bot.send(sender, bold("For a listing of currency rates:"));
+            bot.send(sender, Utils.helpIndent(bot.getNick() + ": " + CURRENCY_CMD) + ' ' + CURRENCY_RATES_KEYWORD);
+            bot.send(sender, bold("For a listing of supported currencies:"));
+            bot.send(sender, Utils.helpIndent(bot.getNick() + ": " + CURRENCY_CMD));
         }
     }
 }

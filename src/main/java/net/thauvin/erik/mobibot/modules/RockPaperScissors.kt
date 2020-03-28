@@ -33,7 +33,10 @@
 package net.thauvin.erik.mobibot.modules
 
 import net.thauvin.erik.mobibot.Mobibot
-import net.thauvin.erik.mobibot.Utils
+import net.thauvin.erik.mobibot.Utils.bold
+import net.thauvin.erik.mobibot.Utils.green
+import net.thauvin.erik.mobibot.Utils.helpIndent
+import net.thauvin.erik.mobibot.Utils.red
 import kotlin.random.Random
 
 
@@ -71,7 +74,7 @@ class RockPaperScissors : AbstractModule() {
 
     companion object {
         // For testing.
-        fun winLoseOrDraw(player: String, bot: String ): String {
+        fun winLoseOrDraw(player: String, bot: String): String {
             val hand = Hands.valueOf(player.toUpperCase())
             val botHand = Hands.valueOf(bot.toUpperCase())
 
@@ -88,26 +91,26 @@ class RockPaperScissors : AbstractModule() {
         val botHand = Hands.values()[Random.nextInt(0, Hands.values().size)]
         when {
             hand == botHand -> {
-                bot.action("${Utils.green(hand.name)} vs. ${Utils.green(botHand.name)} ~ The game is tied ~")
+                bot.action("${green(hand.name)} vs. ${green(botHand.name)} ~ The game is tied ~")
             }
             hand.beats(botHand) -> {
                 bot.action(
-                    "${Utils.green(hand.name)} ${Utils.bold(hand.action)} ${Utils.red(botHand.name)} ~ You win ~"
+                    "${green(hand.name)} ${bold(hand.action)} ${red(botHand.name)} ~ You win ~"
                 )
             }
             else -> {
                 bot.action(
-                    "${Utils.green(botHand.name)} ${Utils.bold(botHand.action)} ${Utils.red(botHand.name)} ~ You lose ~"
+                    "${green(botHand.name)} ${bold(botHand.action)} ${red(botHand.name)} ~ You lose ~"
                 )
             }
         }
     }
 
     override fun helpResponse(bot: Mobibot, sender: String, args: String?, isPrivate: Boolean) {
-        bot.send(sender, "To play Rock Paper Scissors:")
+        bot.send(sender, bold("To play Rock Paper Scissors:"))
         bot.send(
             sender,
-            bot.helpIndent(
+            helpIndent(
                 "${bot.nick}: ${Hands.ROCK.name.toLowerCase()} or ${Hands.PAPER.name.toLowerCase()}"
                     + " or ${Hands.SCISSORS.name.toLowerCase()}"
             )

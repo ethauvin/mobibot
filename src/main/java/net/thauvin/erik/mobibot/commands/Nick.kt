@@ -1,5 +1,5 @@
 /*
- * TwitterTimer.kt
+ * Nick.kt
  *
  * Copyright (c) 2004-2020, Erik C. Thauvin (erik@thauvin.net)
  * All rights reserved.
@@ -30,12 +30,33 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package net.thauvin.erik.mobibot
+package net.thauvin.erik.mobibot.commands
 
-import java.util.*
+import net.thauvin.erik.mobibot.Mobibot
+import net.thauvin.erik.mobibot.Utils
 
-class TwitterTimer(var bot: Mobibot, private var index: Int) : TimerTask() {
-    override fun run() {
-        bot.twitterEntryPost(index)
+class Nick : AbstractCommand() {
+    override val command = "nick"
+    override val help = listOf(
+        Utils.bold("To change the bot's nickname:"),
+        Utils.helpIndent("/msg %s $command <nick>")
+    )
+    override val isOp = true
+    override val isPublic = true
+    override val isVisible = true
+
+    override fun commandResponse(
+        bot: Mobibot,
+        sender: String,
+        login: String,
+        args: String,
+        isOp: Boolean,
+        isPrivate: Boolean
+    ) {
+        if (isOp) {
+            bot.changeNick(args)
+        } else {
+            bot.helpDefault(sender, isOp)
+        }
     }
 }

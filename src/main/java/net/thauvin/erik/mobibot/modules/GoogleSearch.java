@@ -52,6 +52,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
+import static net.thauvin.erik.mobibot.Utils.bold;
+
 /**
  * The GoogleSearch module.
  *
@@ -80,13 +82,73 @@ public final class GoogleSearch extends ThreadedModule {
     }
 
     /**
+     * Performs a search on Google.
+     *
+     * @param query  The search query.
+     * @param apiKey The Google API key.
+     * @param cseKey The Google CSE key.
+     * @return The {@link Message} array containing the search results.
+     * @throws ModuleException If an error occurs while searching.
+     */
+    @SuppressFBWarnings({ "URLCONNECTION_SSRF_FD", "REC_CATCH_EXCEPTION" })
+    @SuppressWarnings(("PMD.AvoidInstantiatingObjectsInLoops"))
+    static List<Message> searchGoogle(final String query, final String apiKey, final String cseKey)
+            throws ModuleException {
+        if (StringUtils.isBlank(apiKey) || StringUtils.isBlank(cseKey)) {
+            throw new ModuleException(StringUtils.capitalize(GOOGLE_CMD) + " is disabled. The API keys are missing.");
+        }
+
+        if (StringUtils.isNotBlank(query)) {
+            final ArrayList<Message> results = new ArrayList<>();
+            try {
+                final String q = URLEncoder.encode(query, StandardCharsets.UTF_8.toString());
+
+                final URL url =
+                        new URL("https://www.googleapis.com/customsearch/v1?key="
+                                + apiKey
+                                + "&cx="
+                                + cseKey
+                                + "&q="
+                                + q
+                                + "&filter=1&num=5&alt=json");
+                final URLConnection conn = url.openConnection();
+
+                final StringBuilder sb = new StringBuilder();
+                try (final BufferedReader reader =
+                             new BufferedReader(new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8))) {
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        sb.append(line);
+                    }
+
+                    final JSONObject json = new JSONObject(sb.toString());
+                    final JSONArray ja = json.getJSONArray("items");
+
+                    for (int i = 0; i < ja.length(); i++) {
+                        final JSONObject j = ja.getJSONObject(i);
+                        results.add(new NoticeMessage(Utils.unescapeXml(j.getString("title"))));
+                        results.add(
+                                new NoticeMessage(TAB_INDENT + j.getString("link"), Colors.DARK_GREEN));
+                    }
+                }
+            } catch (IOException e) {
+                throw new ModuleException("searchGoogle(" + query + ')', "An error has occurred searching Google.", e);
+            }
+
+            return results;
+        } else {
+            throw new ModuleException("Invalid query.");
+        }
+    }
+
+    /**
      * {@inheritDoc}
      */
     @Override
     public void helpResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate) {
         if (isEnabled()) {
-            bot.send(sender, "To search Google:");
-            bot.send(sender, bot.helpIndent(bot.getNick() + ": " + GOOGLE_CMD + " <query>"));
+            bot.send(sender, bold("To search Google:"));
+            bot.send(sender, Utils.helpIndent(bot.getNick() + ": " + GOOGLE_CMD + " <query>"));
         } else {
             bot.send(sender, "The Google search module is disabled.");
         }
@@ -100,7 +162,7 @@ public final class GoogleSearch extends ThreadedModule {
         if (StringUtils.isNotBlank(query)) {
             try {
                 final List<Message> results = searchGoogle(query, properties.get(GOOGLE_API_KEY_PROP),
-                    properties.get(GOOGLE_CSE_KEY_PROP));
+                                                           properties.get(GOOGLE_CSE_KEY_PROP));
                 for (final Message msg : results) {
                     bot.send(sender, msg);
                 }
@@ -110,66 +172,6 @@ public final class GoogleSearch extends ThreadedModule {
             }
         } else {
             helpResponse(bot, sender, query, true);
-        }
-    }
-
-    /**
-     * Performs a search on Google.
-     *
-     * @param query  The search query.
-     * @param apiKey The Google API key.
-     * @param cseKey The Google CSE key.
-     * @return The {@link Message} array containing the search results.
-     * @throws ModuleException If an error occurs while searching.
-     */
-    @SuppressFBWarnings({"URLCONNECTION_SSRF_FD", "REC_CATCH_EXCEPTION"})
-    @SuppressWarnings(("PMD.AvoidInstantiatingObjectsInLoops"))
-    static List<Message> searchGoogle(final String query, final String apiKey, final String cseKey)
-        throws ModuleException {
-        if (StringUtils.isBlank(apiKey) || StringUtils.isBlank(cseKey)) {
-            throw new ModuleException(StringUtils.capitalize(GOOGLE_CMD) + " is disabled. The API keys are missing.");
-        }
-
-        if (StringUtils.isNotBlank(query)) {
-            final ArrayList<Message> results = new ArrayList<>();
-            try {
-                final String q = URLEncoder.encode(query, StandardCharsets.UTF_8.toString());
-
-                final URL url =
-                    new URL("https://www.googleapis.com/customsearch/v1?key="
-                        + apiKey
-                        + "&cx="
-                        + cseKey
-                        + "&q="
-                        + q
-                        + "&filter=1&num=5&alt=json");
-                final URLConnection conn = url.openConnection();
-
-                final StringBuilder sb = new StringBuilder();
-                try (final BufferedReader reader =
-                         new BufferedReader(new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8))) {
-                    String line;
-                    while ((line = reader.readLine()) != null) {
-                        sb.append(line);
-                    }
-
-                    final JSONObject json = new JSONObject(sb.toString());
-                    final JSONArray ja = json.getJSONArray("items");
-
-                    for (int i = 0; i < ja.length(); i++) {
-                        final JSONObject j = ja.getJSONObject(i);
-                        results.add(new NoticeMessage(Utils.unescapeXml(j.getString("title"))));
-                        results.add(
-                            new NoticeMessage(TAB_INDENT + j.getString("link"), Colors.DARK_GREEN));
-                    }
-                }
-            } catch (IOException e) {
-                throw new ModuleException("searchGoogle(" + query + ')', "An error has occurred searching Google.", e);
-            }
-
-            return results;
-        } else {
-            throw new ModuleException("Invalid query.");
         }
     }
 }

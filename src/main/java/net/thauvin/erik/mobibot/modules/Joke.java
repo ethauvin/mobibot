@@ -44,6 +44,8 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
 
+import static net.thauvin.erik.mobibot.Utils.bold;
+
 /**
  * The Joke module.
  *
@@ -126,7 +128,7 @@ public final class Joke extends ThreadedModule {
      */
     @Override
     public void helpResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate) {
-        bot.send(sender, "To retrieve a random joke:");
-        bot.send(sender, bot.helpIndent(bot.getNick() + ": " + JOKE_CMD));
+        bot.send(sender, bold("To retrieve a random joke:"));
+        bot.send(sender, Utils.helpIndent(bot.getNick() + ": " + JOKE_CMD));
     }
 }

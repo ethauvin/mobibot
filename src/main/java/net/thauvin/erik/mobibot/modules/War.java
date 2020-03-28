@@ -37,6 +37,8 @@ import net.thauvin.erik.mobibot.Utils;
 
 import java.security.SecureRandom;
 
+import static net.thauvin.erik.mobibot.Utils.bold;
+
 /**
  * The War module.
  *
@@ -80,14 +82,14 @@ public final class War extends AbstractModule {
             y = r.nextInt(WAR_DECK.length);
 
             bot.send(bot.getChannel(),
-                     sender + " drew the " + Utils.bold(WAR_DECK[i]) + " of " + WAR_SUITS[r.nextInt(WAR_SUITS.length)]);
-            bot.action("drew the " + Utils.bold(WAR_DECK[y]) + " of " + WAR_SUITS[r.nextInt(WAR_SUITS.length)]);
+                     sender + " drew the " + bold(WAR_DECK[i]) + " of " + WAR_SUITS[r.nextInt(WAR_SUITS.length)]);
+            bot.action("drew the " + bold(WAR_DECK[y]) + " of " + WAR_SUITS[r.nextInt(WAR_SUITS.length)]);
 
             if (i != y) {
                 break;
             }
 
-            bot.send("This means " + Utils.bold("WAR") + '!');
+            bot.send("This means " + bold("WAR") + '!');
         }
 
         if (i < y) {
@@ -102,7 +104,7 @@ public final class War extends AbstractModule {
      */
     @Override
     public void helpResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate) {
-        bot.send(sender, "To play war:");
-        bot.send(sender, bot.helpIndent(bot.getNick() + ": " + WAR_CMD));
+        bot.send(sender, bold("To play war:"));
+        bot.send(sender, Utils.helpIndent(bot.getNick() + ": " + WAR_CMD));
     }
 }

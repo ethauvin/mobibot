@@ -6,7 +6,7 @@
     <Match>
         <Or>
             <Package name="net.thauvin.erik.mobibot.*"/>
-            <Package name="net.thauvin.erik.mobibot.tell.*"/>
+            <Package name="net.thauvin.erik.mobibot.commands.tell.*"/>
             <Package name="net.thauvin.erik.mobibot.entries.*"/>
         </Or>
         <Or>
@@ -21,7 +21,7 @@
             <Class name="net.thauvin.erik.mobibot.Mobibot"/>
             <Class name="net.thauvin.erik.mobibot.Pinboard"/>
             <Class name="net.thauvin.erik.mobibot.FeedReader"/>
-            <Class name="net.thauvin.erik.mobibot.tell.Tell"/>
+            <Class name="net.thauvin.erik.mobibot.commands.tell.Tell"/>
             <Package name="net.thauvin.erik.mobibot.modules.*"/>
             <Package name="net.thauvin.erik.mobibot.entries.*"/>
         </Or>
@@ -32,5 +32,8 @@
         <Method name="main"/>
         <Bug pattern="PATH_TRAVERSAL_OUT"/>
         <Confidence value="1"/>
+    </Match>
+    <Match>
+        <Source name="~.*\.kt"/>
     </Match>
 </FindBugsFilter>

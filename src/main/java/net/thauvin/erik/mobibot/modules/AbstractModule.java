@@ -95,7 +95,7 @@ public abstract class AbstractModule {
     }
 
     /**
-     * Responds with the module's help.
+     * Responds with the module's Constants.
      *
      * @param bot       The bot's instance.
      * @param sender    The sender.

@@ -34,11 +34,14 @@ package net.thauvin.erik.mobibot.modules;
 
 import net.thauvin.erik.mobibot.Constants;
 import net.thauvin.erik.mobibot.Mobibot;
+import net.thauvin.erik.mobibot.Utils;
 import org.apache.commons.net.whois.WhoisClient;
 
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+
+import static net.thauvin.erik.mobibot.Utils.bold;
 
 /**
  * The Lookup module.
@@ -195,7 +198,7 @@ public final class Lookup extends AbstractModule {
      */
     @Override
     public void helpResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate) {
-        bot.send(sender, "To perform a DNS lookup query:");
-        bot.send(sender, bot.helpIndent(bot.getNick() + ": " + LOOKUP_CMD + " <ip address or hostname>"));
+        bot.send(sender, bold("To perform a DNS lookup query:"));
+        bot.send(sender, Utils.helpIndent(bot.getNick() + ": " + LOOKUP_CMD + " <ip address or hostname>"));
     }
 }

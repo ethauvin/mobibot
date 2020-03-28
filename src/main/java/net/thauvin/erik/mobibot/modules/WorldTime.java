@@ -35,6 +35,7 @@ package net.thauvin.erik.mobibot.modules;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import net.thauvin.erik.mobibot.Constants;
 import net.thauvin.erik.mobibot.Mobibot;
+import net.thauvin.erik.mobibot.Utils;
 import net.thauvin.erik.mobibot.msg.ErrorMessage;
 import net.thauvin.erik.mobibot.msg.Message;
 import net.thauvin.erik.mobibot.msg.PublicMessage;
@@ -46,6 +47,8 @@ import java.time.temporal.ChronoField;
 import java.util.Collections;
 import java.util.Map;
 import java.util.TreeMap;
+
+import static net.thauvin.erik.mobibot.Utils.bold;
 
 /**
  * The WorldTime module.
@@ -232,11 +235,11 @@ public final class WorldTime extends AbstractModule {
      */
     @Override
     public void helpResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate) {
-        bot.send(sender, "To display a country's current date/time:");
-        bot.send(sender, bot.helpIndent(bot.getNick() + ": " + TIME_CMD) + " [<country code>]");
+        bot.send(sender, bold("To display a country's current date/time:"));
+        bot.send(sender, Utils.helpIndent(bot.getNick() + ": " + TIME_CMD) + " [<country code>]");
 
-        bot.send(sender, "For a listing of the supported countries:");
-        bot.send(sender, bot.helpIndent(bot.getNick() + ": " + TIME_CMD));
+        bot.send(sender, bold("For a listing of the supported countries:"));
+        bot.send(sender, Utils.helpIndent(bot.getNick() + ": " + TIME_CMD));
     }
 
     /**
