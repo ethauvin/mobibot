@@ -2,21 +2,24 @@
 <SmellBaseline>
   <Blacklist></Blacklist>
   <Whitelist>
-    <ID>ComplexMethod:Links.kt$Links$commandResponse</ID>
+    <ID>ComplexCondition:UrlMgr.kt$UrlMgr$Ignore.isNotIgnored(sender) &amp;&amp; (cmds.size == 1 || !cmds[1].contains(bot.nick) || !cmds[1].endsWith(" (${Ignore.IGNORE_CMD}"))</ID>
+    <ID>ComplexMethod:Posting.kt$Posting$commandResponse</ID>
     <ID>ComplexMethod:UrlMgr.kt$UrlMgr$commandResponse</ID>
     <ID>ComplexMethod:View.kt$View$commandResponse</ID>
-    <ID>LongMethod:Links.kt$Links$commandResponse</ID>
+    <ID>LongMethod:Posting.kt$Posting$commandResponse</ID>
     <ID>LongMethod:UrlMgr.kt$UrlMgr$commandResponse</ID>
     <ID>LongMethod:View.kt$View$commandResponse</ID>
     <ID>LongParameterList:AbstractCommand.kt$AbstractCommand$( bot: Mobibot, sender: String, login: String, args: String, isOp: Boolean, isPrivate: Boolean )</ID>
     <ID>LoopWithTooManyJumpStatements:View.kt$View$while (i &lt; max) { entry = getEntry(i) if (lcArgs.isNotEmpty()) { if (entry.link.toLowerCase().contains(lcArgs) || entry.title.toLowerCase().contains(lcArgs) || entry.nick.toLowerCase().contains(lcArgs)) { if (sent &gt; maxEntries) { bot.send( sender, "To view more, try: " + Utils.bold("${bot.nick}: $command ${i + 1} $lcArgs"), isPrivate ) break } bot.send(sender, EntriesUtils.buildLink(i, entry, true), isPrivate) sent++ } } else { if (sent &gt; maxEntries) { bot.send( sender, "To view more, try: " + Utils.bold("${bot.nick}: $command ${i + 1}"), isPrivate ) break } bot.send(sender, EntriesUtils.buildLink(i, entry, true), isPrivate) sent++ } i++ }</ID>
-    <ID>MagicNumber:Comments.kt$Comments$3</ID>
+    <ID>MagicNumber:Comment.kt$Comment$3</ID>
     <ID>MagicNumber:Cycle.kt$Cycle$10</ID>
     <ID>MagicNumber:Recap.kt$Recap.Companion$10</ID>
+    <ID>MagicNumber:UrlMgr.kt$UrlMgr$1000L</ID>
+    <ID>MagicNumber:UrlMgr.kt$UrlMgr$60L</ID>
     <ID>MagicNumber:View.kt$View$8</ID>
-    <ID>NestedBlockDepth:Comments.kt$Comments$commandResponse</ID>
+    <ID>NestedBlockDepth:Comment.kt$Comment$commandResponse</ID>
     <ID>NestedBlockDepth:Ignore.kt$Ignore$commandResponse</ID>
-    <ID>NestedBlockDepth:Links.kt$Links$commandResponse</ID>
+    <ID>NestedBlockDepth:Posting.kt$Posting$commandResponse</ID>
     <ID>NestedBlockDepth:UrlMgr.kt$UrlMgr$commandResponse</ID>
     <ID>NestedBlockDepth:View.kt$View$commandResponse</ID>
   </Whitelist>

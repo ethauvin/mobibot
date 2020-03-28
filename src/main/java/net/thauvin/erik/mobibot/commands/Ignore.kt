@@ -45,7 +45,7 @@ class Ignore(defaultIgnore: String) : AbstractCommand() {
         }
     }
 
-    override val command = IGNORE
+    override val command = IGNORE_CMD
     override val help = listOf(
         Utils.bold("To check your ignore status:"),
         Utils.helpIndent("%s: $command"),
@@ -57,7 +57,7 @@ class Ignore(defaultIgnore: String) : AbstractCommand() {
     override val isVisible = true
 
     companion object {
-        const val IGNORE = "ignore"
+        const val IGNORE_CMD = "ignore"
         private val ignored = HashSet<String>()
 
         @JvmStatic

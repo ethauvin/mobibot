@@ -131,7 +131,7 @@ class UrlMgr(defaultTags: String, keywords: String) : AbstractCommand() {
 
         if (Ignore.isNotIgnored(sender) && (cmds.size == 1
                 || !cmds[1].contains(bot.nick)
-                || !cmds[1].endsWith(" (${Ignore.IGNORE}"))) {
+                || !cmds[1].endsWith(" (${Ignore.IGNORE_CMD}"))) {
             val link = cmds[0].trim()
             var isBackup = false
             val dupIndex: Int = findDupEntry(link)
