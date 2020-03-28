@@ -58,8 +58,8 @@ class Modules : AbstractCommand() {
             if (modulesNames.isEmpty()) {
                 bot.send(sender, "There are no enabled modules.", true)
             } else {
-                bot.send(sender, Utils.bold("The enabled modules are: "))
-                bot.send(sender, Utils.helpIndent(modulesNames.joinToString(", ")))
+                bot.send(sender, Utils.bold("The enabled modules are: "), false)
+                bot.sendCommandsList(sender, modulesNames, false )
             }
         } else {
             bot.helpDefault(sender, isOp)

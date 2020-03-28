@@ -650,16 +650,10 @@ public class Mobibot extends PircBot {
             Collections.sort(opsCommandsNames);
         }
 
-        // Print 6 commands per line
-        final int chunk = 6;
-        for (int i = 0; i < commandsNames.size(); i += chunk) {
-            send(sender, Utils.helpIndent(
-                    String.join(" ", commandsNames.subList(i, Math.min(commandsNames.size(), i + chunk)))));
-        }
-
+        sendCommandsList(sender, commandsNames, false);
         if (isOp) {
-            send(sender, Utils.bold("The op commands are:"));
-            send(sender, Utils.helpIndent(String.join(" ", opsCommandsNames)));
+            send(sender, Utils.bold("The op commands are:"), false);
+            sendCommandsList(sender, opsCommandsNames, false);
         }
     }
 
@@ -1016,6 +1010,20 @@ public class Mobibot extends PircBot {
     }
 
     /**
+     * Send a formatted commands/modules, etc. list.
+     *
+     * @param nick The nick to send the list to.
+     * @param list The list to format.
+     */
+    public final void sendCommandsList(final String nick, final List<String> list, final boolean isPrivate) {
+        final int chunk = 8; // 8 commands per line.
+        for (int i = 0; i < list.size(); i += chunk) {
+            send(nick, Utils.helpIndent(
+                    String.join(" ", list.subList(i, Math.min(list.size(), i + chunk)))), isPrivate);
+        }
+    }
+
+    /**
      * Sets the backlogs URL.
      *
      * @param url The backlogs URL.
@@ -1151,6 +1159,7 @@ public class Mobibot extends PircBot {
     public final void twitterRemoveEntry(final int index) {
         twitterEntries.remove(index);
     }
+
 
     /**
      * Post all the links on twitter on shutdown.
