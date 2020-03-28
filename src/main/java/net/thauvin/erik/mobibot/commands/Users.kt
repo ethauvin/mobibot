@@ -66,6 +66,6 @@ class Users : AbstractCommand() {
             }
         }
 
-        bot.send(sender, nicks.sorted().joinToString(" "), isPrivate)
+        bot.send(sender, nicks.sorted().joinToString(" "))
     }
 }

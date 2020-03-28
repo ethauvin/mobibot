@@ -88,7 +88,7 @@ public class Versions extends AbstractCommand {
                                 final boolean isPrivate) {
         if (isOp) {
             for (final String v : versions) {
-                bot.send(sender, v, isPrivate);
+                bot.send(sender, v);
             }
         } else {
             bot.helpDefault(sender, isOp);

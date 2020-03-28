@@ -83,6 +83,6 @@ class Info : AbstractCommand() {
             append(']')
         }
 
-        bot.send(sender, info.toString(), isPrivate)
+        bot.send(sender, info.toString())
     }
 }

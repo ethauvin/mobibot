@@ -116,8 +116,8 @@ class Comment : AbstractCommand() {
     ): Boolean {
         if (super.helpResponse(bot, command, sender, isOp, isPrivate)) {
             if (isOp) {
-                bot.send(sender, Utils.bold("To change a comment's author:"), isPrivate)
-                bot.send(sender, Utils.helpIndent("/msg ${bot.nick} ${Constants.LINK_CMD}1.1:?<nick>"), isPrivate)
+                bot.send(sender, Utils.bold("To change a comment's author:"))
+                bot.send(sender, Utils.helpIndent("/msg ${bot.nick} ${Constants.LINK_CMD}1.1:?<nick>"))
             }
             return true
         }

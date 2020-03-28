@@ -101,30 +101,28 @@ class View : AbstractCommand() {
                         if (sent > maxEntries) {
                             bot.send(
                                 sender, "To view more, try: "
-                                + Utils.bold("${bot.nick}: $command ${i + 1} $lcArgs"),
-                                isPrivate
+                                + Utils.bold("${bot.nick}: $command ${i + 1} $lcArgs")
                             )
                             break
                         }
-                        bot.send(sender, EntriesUtils.buildLink(i, entry, true), isPrivate)
+                        bot.send(sender, EntriesUtils.buildLink(i, entry, true))
                         sent++
                     }
                 } else {
                     if (sent > maxEntries) {
                         bot.send(
                             sender,
-                            "To view more, try: " + Utils.bold("${bot.nick}: $command ${i + 1}"),
-                            isPrivate
+                            "To view more, try: " + Utils.bold("${bot.nick}: $command ${i + 1}")
                         )
                         break
                     }
-                    bot.send(sender, EntriesUtils.buildLink(i, entry, true), isPrivate)
+                    bot.send(sender, EntriesUtils.buildLink(i, entry, true))
                     sent++
                 }
                 i++
             }
         } else {
-            bot.send(sender, "There is currently nothing to view. Why don't you post something?", isPrivate)
+            bot.send(sender, "There is currently nothing to view. Why don't you post something?")
         }
     }
 }

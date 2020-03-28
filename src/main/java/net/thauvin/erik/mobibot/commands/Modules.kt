@@ -56,7 +56,7 @@ class Modules : AbstractCommand() {
         if (isOp) {
             val modulesNames = bot.modulesNames
             if (modulesNames.isEmpty()) {
-                bot.send(sender, "There are no enabled modules.", true)
+                bot.send(sender, "There are no enabled modules.", isPrivate)
             } else {
                 bot.send(sender, Utils.bold("The enabled modules are: "), false)
                 bot.sendCommandsList(sender, modulesNames, false )

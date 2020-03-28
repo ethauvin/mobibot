@@ -196,11 +196,10 @@ class UrlMgr(defaultTags: String, keywords: String) : AbstractCommand() {
                 }
                 saveEntries(bot, isBackup)
                 if (Constants.NO_TITLE == entry.title) {
-                    bot.send(sender, Utils.bold("Please specify a title, by typing:"), true)
+                    bot.send(sender, Utils.bold("Please specify a title, by typing:"))
                     bot.send(
                         sender,
-                        Utils.helpIndent(Constants.LINK_CMD + (index + 1) + ":|This is the title"),
-                        true
+                        Utils.helpIndent(Constants.LINK_CMD + (index + 1) + ":|This is the title")
                     )
                 }
             } else {

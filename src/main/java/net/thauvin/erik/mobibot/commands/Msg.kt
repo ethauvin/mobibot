@@ -56,7 +56,7 @@ class Msg : AbstractCommand() {
         if (isOp) {
             val msg = args.split(" ", limit = 2)
             if (args.length > 2) {
-                bot.send(msg[0], msg[1], true)
+                bot.send(msg[0], msg[1], isPrivate)
             } else {
                 helpResponse(bot, command, sender, isOp, isPrivate)
             }
