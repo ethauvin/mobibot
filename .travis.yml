@@ -5,6 +5,12 @@ env:
   global:
     - CI=true
 
+matrix:
+  include:
+    - jdk: openjdk9
+    - env: JDK='OpenJDK 14'
+      install: . ./install-jdk.sh -F 14 -C
+
 install:
   - git fetch --unshallow --tags
 
@@ -12,15 +18,11 @@ addons:
   sonarcloud:
     organization: "ethauvin-github"
 
-jdk:
-  - oraclejdk8
-  - openjdk12
-
 before_install:
   - chmod +x gradlew
 
 after_success:
   - |
-      if [ "${TRAVIS_TEST_RESULT}" == 0 ] && [ "$TRAVIS_JDK_VERSION" == oraclejdk8 ]; then
+      if [ "${TRAVIS_TEST_RESULT}" == 0 ] && [ "$TRAVIS_JDK_VERSION" == oraclejdk9 ]; then
         ./gradlew sonarqube
       fi
