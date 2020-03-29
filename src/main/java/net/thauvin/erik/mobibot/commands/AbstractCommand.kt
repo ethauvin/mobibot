@@ -63,5 +63,4 @@ abstract class AbstractCommand {
     open fun matches(message: String): Boolean {
         return false
     }
-
 }

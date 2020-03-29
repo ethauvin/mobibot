@@ -69,73 +69,16 @@ class Posting : AbstractCommand() {
         val index = cmds[0].toInt() - 1
 
         if (index < UrlMgr.entriesCount) {
-            val cmd = cmds[1].trim()
-            if (cmd.isEmpty()) {
-                val entry: EntryLink = UrlMgr.getEntry(index)
-                bot.send(bot.channel, EntriesUtils.buildLink(index, entry))
-                if (entry.hasTags()) {
-                    bot.send(bot.channel, EntriesUtils.buildTags(index, entry))
-                }
-                if (entry.hasComments()) {
-                    val comments = entry.comments
-                    for (i in comments.indices) {
-                        bot.send(bot.channel, EntriesUtils.buildComment(index, i, comments[i]))
+            when (val cmd = cmds[1].trim()) {
+                "" -> showEntry(bot, index)
+                "-" -> removeEntry(bot, sender, login, isOp, index) // L1:-
+                else -> {
+                    when (cmd[0]) {
+                        '|' -> changeTitle(bot, cmd, index) // L1:|<title>
+                        '=' -> changeUrl(bot, cmd, login, isOp, index) // L1:=<url>
+                        '?' -> changeAuthor(bot, cmd, sender, isOp, index) // L1:?<author>
+                        else -> addComment(bot, cmd, sender, index)
                     }
-                }
-            } else {
-                // L1:-
-                if ("-" == cmd) {
-                    val entry: EntryLink = UrlMgr.getEntry(index)
-                    if (entry.login == login || isOp) {
-                        bot.deletePin(entry)
-                        if (bot.isTwitterAutoPost) {
-                            bot.twitterRemoveEntry(index)
-                        }
-                        UrlMgr.removeEntry(index)
-                        bot.send(bot.channel, "Entry ${Constants.LINK_CMD}${index + 1} removed.")
-                        UrlMgr.saveEntries(bot, false)
-                    } else {
-                        bot.send(sender, "Please ask a channel op to remove this entry for you.")
-                    }
-                } else if (cmd[0] == '|') { // L1:|<title>
-                    if (cmd.length > 1) {
-                        val entry: EntryLink = UrlMgr.getEntry(index)
-                        entry.title = cmd.substring(1).trim()
-                        bot.updatePin(entry.link, entry)
-                        bot.send(bot.channel, EntriesUtils.buildLink(index, entry))
-                        UrlMgr.saveEntries(bot, false)
-                    }
-                } else if (cmd[0] == '=') { // L1:=<url>
-                    val entry: EntryLink = UrlMgr.getEntry(index)
-                    if (entry.login == login || isOp) {
-                        val link = cmd.substring(1)
-                        if (link.matches(UrlMgr.LINK_MATCH.toRegex())) {
-                            val oldLink = entry.link
-                            entry.link = link
-                            bot.updatePin(oldLink, entry)
-                            bot.send(bot.channel, EntriesUtils.buildLink(index, entry))
-                            UrlMgr.saveEntries(bot, false)
-                        }
-                    } else {
-                        bot.send(sender, "Please ask channel op to change this link for you.")
-                    }
-                } else if (cmd[0] == '?') { // L1:?<author>
-                    if (isOp) {
-                        if (cmd.length > 1) {
-                            val entry: EntryLink = UrlMgr.getEntry(index)
-                            entry.nick = cmd.substring(1)
-                            bot.send(bot.channel, EntriesUtils.buildLink(index, entry))
-                            UrlMgr.saveEntries(bot, false)
-                        }
-                    } else {
-                        bot.send(sender, "Please ask a channel op to change the author of this link for you.")
-                    }
-                } else {
-                    val entry: EntryLink = UrlMgr.getEntry(index)
-                    val cindex = entry.addComment(cmd, sender)
-                    val comment = entry.getComment(cindex)
-                    bot.send(sender, EntriesUtils.buildComment(index, cindex, comment))
-                    UrlMgr.saveEntries(bot, false)
                 }
             }
         }
@@ -143,5 +86,79 @@ class Posting : AbstractCommand() {
 
     override fun matches(message: String): Boolean {
         return message.matches("${Constants.LINK_CMD}[0-9]+:.*".toRegex())
+    }
+
+    private fun addComment(bot: Mobibot, cmd: String, sender: String, index: Int) {
+        val entry: EntryLink = UrlMgr.getEntry(index)
+        val commentIndex = entry.addComment(cmd, sender)
+        val comment = entry.getComment(commentIndex)
+        bot.send(sender, EntriesUtils.buildComment(index, commentIndex, comment))
+        UrlMgr.saveEntries(bot, false)
+    }
+
+    private fun changeTitle(bot: Mobibot, cmd: String, index: Int) {
+        if (cmd.length > 1) {
+            val entry: EntryLink = UrlMgr.getEntry(index)
+            entry.title = cmd.substring(1).trim()
+            bot.updatePin(entry.link, entry)
+            bot.send(bot.channel, EntriesUtils.buildLink(index, entry))
+            UrlMgr.saveEntries(bot, false)
+        }
+    }
+
+    private fun changeUrl(bot: Mobibot, cmd: String, login: String, isOp: Boolean, index: Int) {
+        val entry: EntryLink = UrlMgr.getEntry(index)
+        if (entry.login == login || isOp) {
+            val link = cmd.substring(1)
+            if (link.matches(UrlMgr.LINK_MATCH.toRegex())) {
+                val oldLink = entry.link
+                entry.link = link
+                bot.updatePin(oldLink, entry)
+                bot.send(bot.channel, EntriesUtils.buildLink(index, entry))
+                UrlMgr.saveEntries(bot, false)
+            }
+        }
+    }
+
+    private fun changeAuthor(bot: Mobibot, cmd: String, sender: String, isOp: Boolean, index: Int) {
+        if (isOp) {
+            if (cmd.length > 1) {
+                val entry: EntryLink = UrlMgr.getEntry(index)
+                entry.nick = cmd.substring(1)
+                bot.send(bot.channel, EntriesUtils.buildLink(index, entry))
+                UrlMgr.saveEntries(bot, false)
+            }
+        } else {
+            bot.send(sender, "Please ask a channel op to change the author of this link for you.")
+        }
+    }
+
+    private fun removeEntry(bot: Mobibot, sender: String, login: String, isOp: Boolean, index: Int) {
+        val entry: EntryLink = UrlMgr.getEntry(index)
+        if (entry.login == login || isOp) {
+            bot.deletePin(entry)
+            if (bot.isTwitterAutoPost) {
+                bot.twitterRemoveEntry(index)
+            }
+            UrlMgr.removeEntry(index)
+            bot.send(bot.channel, "Entry ${Constants.LINK_CMD}${index + 1} removed.")
+            UrlMgr.saveEntries(bot, false)
+        } else {
+            bot.send(sender, "Please ask a channel op to remove this entry for you.")
+        }
+    }
+
+    private fun showEntry(bot: Mobibot, index: Int) {
+        val entry: EntryLink = UrlMgr.getEntry(index)
+        bot.send(bot.channel, EntriesUtils.buildLink(index, entry))
+        if (entry.hasTags()) {
+            bot.send(bot.channel, EntriesUtils.buildTags(index, entry))
+        }
+        if (entry.hasComments()) {
+            val comments = entry.comments
+            for (i in comments.indices) {
+                bot.send(bot.channel, EntriesUtils.buildComment(index, i, comments[i]))
+            }
+        }
     }
 }

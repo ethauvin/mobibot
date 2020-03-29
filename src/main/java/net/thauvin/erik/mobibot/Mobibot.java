@@ -212,7 +212,7 @@ public class Mobibot extends PircBot {
             UrlMgr.startup(logsDir + EntriesMgr.CURRENT_XML, logsDir + EntriesMgr.NAV_XML, ircChannel);
 
             if (logger.isDebugEnabled()) {
-                logger.debug("Last feed: {}", UrlMgr.getToday());
+                logger.debug("Last feed: {}", UrlMgr.getStartDate());
             }
         } catch (Exception e) {
             if (logger.isErrorEnabled()) {

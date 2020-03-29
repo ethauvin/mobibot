@@ -71,37 +71,13 @@ class Comment : AbstractCommand() {
 
         if (index < UrlMgr.entriesCount) {
             val entry: EntryLink = UrlMgr.getEntry(index)
-            val cindex = cmds[1].toInt() - 1
-            if (cindex < entry.commentsCount) {
-                val cmd = cmds[2].trim()
-
-                // L1.1:
-                if (cmd.isEmpty()) {
-                    val comment = entry.getComment(cindex)
-                    bot.send(bot.channel, EntriesUtils.buildComment(index, cindex, comment))
-                } else if ("-" == cmd) { // L11:-
-                    entry.deleteComment(cindex)
-                    bot.send(
-                        bot.channel,
-                        "Comment ${Constants.LINK_CMD}${index + 1}.${cindex + 1} removed."
-                    )
-                    UrlMgr.saveEntries(bot, false)
-                } else if (cmd[0] == '?') { // L1.1:?<author>
-                    if (isOp) {
-                        if (cmd.length > 1) {
-                            val comment = entry.getComment(cindex)
-                            comment.nick = cmd.substring(1)
-                            bot.send(bot.channel, EntriesUtils.buildComment(index, cindex, comment))
-                            UrlMgr.saveEntries(bot, false)
-                        }
-                    } else {
-                        bot.send(sender, "Please ask a channel op to change the author of this comment for you.")
-                    }
-                } else {
-                    entry.setComment(cindex, cmd, sender)
-                    val comment = entry.getComment(cindex)
-                    bot.send(sender, EntriesUtils.buildComment(index, cindex, comment))
-                    UrlMgr.saveEntries(bot, false)
+            val commentIndex = cmds[1].toInt() - 1
+            if (commentIndex < entry.commentsCount) {
+                when (val cmd = cmds[2].trim()) {
+                    "" -> showComment(bot, entry, index, commentIndex) // L1.1:
+                    "-" -> deleteComment(bot, entry, index, commentIndex) // L11:-
+                    "?" -> changeAuthor(bot, cmd, sender, isOp, entry, index, commentIndex) // L1.1:?<author>
+                    else -> setComment(bot, cmd, sender, entry, index, commentIndex)
                 }
             }
         }
@@ -126,5 +102,41 @@ class Comment : AbstractCommand() {
 
     override fun matches(message: String): Boolean {
         return message.matches("^${Constants.LINK_CMD}[0-9]+\\.[0-9]+:.*".toRegex())
+    }
+
+    private fun changeAuthor(
+        bot: Mobibot,
+        cmd: String,
+        sender: String,
+        isOp: Boolean,
+        entry: EntryLink,
+        index: Int,
+        commentIndex: Int
+    ) {
+        if (isOp && cmd.length > 1) {
+            val comment = entry.getComment(commentIndex)
+            comment.nick = cmd.substring(1)
+            bot.send(bot.channel, EntriesUtils.buildComment(index, commentIndex, comment))
+            UrlMgr.saveEntries(bot, false)
+        } else {
+            bot.send(sender, "Please ask a channel op to change the author of this comment for you.")
+        }
+    }
+
+    private fun deleteComment(bot: Mobibot, entry: EntryLink, index: Int, commentIndex: Int) {
+        entry.deleteComment(commentIndex)
+        bot.send(bot.channel, "Comment ${Constants.LINK_CMD}${index + 1}.${commentIndex + 1} removed.")
+        UrlMgr.saveEntries(bot, false)
+    }
+
+    private fun setComment(bot: Mobibot, cmd: String, sender: String, entry: EntryLink, index: Int, commentIndex: Int) {
+        entry.setComment(commentIndex, cmd, sender)
+        val comment = entry.getComment(commentIndex)
+        bot.send(sender, EntriesUtils.buildComment(index, commentIndex, comment))
+        UrlMgr.saveEntries(bot, false)
+    }
+
+    private fun showComment(bot: Mobibot, entry: EntryLink, index: Int, commentIndex: Int) {
+        bot.send(bot.channel, EntriesUtils.buildComment(index, commentIndex, entry.getComment(commentIndex)))
     }
 }

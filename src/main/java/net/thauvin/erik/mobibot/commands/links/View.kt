@@ -65,57 +65,56 @@ class View : AbstractCommand() {
         isPrivate: Boolean
     ) {
         if (entriesCount != 0) {
-            val max = entriesCount
-            var lcArgs = args.toLowerCase(Constants.LOCALE)
-            var i = 0
-            if (lcArgs.isEmpty() && max > maxEntries) {
-                i = max - maxEntries
-            }
-            if (lcArgs.matches("^\\d+(| .*)".toRegex())) {
-                val split = lcArgs.split(" ", limit = 2)
-                try {
-                    i = split[0].toInt()
-                    if (i > 0) {
-                        i--
-                    }
-                    lcArgs = if (split.size == 2) {
-                        split[1].trim()
-                    } else {
-                        ""
-                    }
-                    if (i > max) {
-                        i = 0
-                    }
-                } catch (ignore: NumberFormatException) {
-                    // Do nothing
-                }
-            }
-
-            var entry: EntryLink
-            var sent = 0
-            while (i < max && sent < maxEntries) {
-                entry = getEntry(i)
-                if (lcArgs.isNotEmpty()) {
-                    if (entry.link.toLowerCase().contains(lcArgs)
-                        || entry.title.toLowerCase().contains(lcArgs)
-                        || entry.nick.toLowerCase().contains(lcArgs)) {
-                        bot.send(sender, EntriesUtils.buildLink(i, entry, true))
-                        sent++
-                    }
-                } else {
-                    bot.send(sender, EntriesUtils.buildLink(i, entry, true))
-                    sent++
-                }
-                i++
-                if (sent == maxEntries) {
-                    bot.send(
-                        sender,
-                        "To view more, try: " + Utils.bold("${bot.nick}: $command ${i + 1} $lcArgs")
-                    )
-                }
-            }
+            showPosts(bot, args, sender)
         } else {
             bot.send(sender, "There is currently nothing to view. Why don't you post something?")
         }
+    }
+
+    private fun showPosts(bot: Mobibot, args: String, sender: String) {
+        val max = entriesCount
+        var lcArgs = args.toLowerCase(Constants.LOCALE)
+        var i = 0
+        if (lcArgs.isEmpty() && max > maxEntries) {
+            i = max - maxEntries
+        }
+        if (lcArgs.matches("^\\d+(| .*)".toRegex())) {
+            val split = lcArgs.split(" ", limit = 2)
+            try {
+                i = split[0].toInt() - 1
+                lcArgs = if (split.size == 2) {
+                    split[1].trim()
+                } else {
+                    ""
+                }
+                if (i > max) {
+                    i = 0
+                }
+            } catch (ignore: NumberFormatException) {
+                // Do nothing
+            }
+        }
+
+        var entry: EntryLink
+        var sent = 0
+        while (i < max && sent < maxEntries) {
+            entry = getEntry(i)
+            if (lcArgs.isNotBlank()) {
+                if (entry.matches(lcArgs)) {
+                    bot.send(sender, EntriesUtils.buildLink(i, entry, true))
+                    sent++
+                }
+            } else {
+                bot.send(sender, EntriesUtils.buildLink(i, entry, true))
+                sent++
+            }
+            i++
+            if (sent == maxEntries && i < max) {
+                bot.send(
+                    sender, "To view more, try: " + Utils.bold("${bot.nick}: $command ${i + 1} $lcArgs")
+                )
+            }
+        }
+
     }
 }
