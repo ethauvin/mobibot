@@ -90,36 +90,29 @@ class View : AbstractCommand() {
                     // Do nothing
                 }
             }
+
             var entry: EntryLink
             var sent = 0
-            while (i < max) {
+            while (i < max && sent < maxEntries) {
                 entry = getEntry(i)
                 if (lcArgs.isNotEmpty()) {
                     if (entry.link.toLowerCase().contains(lcArgs)
                         || entry.title.toLowerCase().contains(lcArgs)
                         || entry.nick.toLowerCase().contains(lcArgs)) {
-                        if (sent > maxEntries) {
-                            bot.send(
-                                sender, "To view more, try: "
-                                + Utils.bold("${bot.nick}: $command ${i + 1} $lcArgs")
-                            )
-                            break
-                        }
                         bot.send(sender, EntriesUtils.buildLink(i, entry, true))
                         sent++
                     }
                 } else {
-                    if (sent > maxEntries) {
-                        bot.send(
-                            sender,
-                            "To view more, try: " + Utils.bold("${bot.nick}: $command ${i + 1}")
-                        )
-                        break
-                    }
                     bot.send(sender, EntriesUtils.buildLink(i, entry, true))
                     sent++
                 }
                 i++
+                if (sent == maxEntries) {
+                    bot.send(
+                        sender,
+                        "To view more, try: " + Utils.bold("${bot.nick}: $command ${i + 1} $lcArgs")
+                    )
+                }
             }
         } else {
             bot.send(sender, "There is currently nothing to view. Why don't you post something?")
