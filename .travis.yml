@@ -5,18 +5,16 @@ env:
   global:
     - CI=true
 
-matrix:
-  include:
-    - jdk: openjdk9
-    - env: JDK='OpenJDK 14'
-      install: . ./install-jdk.sh -F 14 -C
-
 install:
   - git fetch --unshallow --tags
 
 addons:
   sonarcloud:
     organization: "ethauvin-github"
+
+jdk:
+  - oraclejdk9
+  - openjdk14
 
 before_install:
   - chmod +x gradlew
