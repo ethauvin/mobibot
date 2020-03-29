@@ -36,6 +36,7 @@ import com.rometools.rome.feed.synd.SyndCategory;
 import com.rometools.rome.feed.synd.SyndCategoryImpl;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import net.thauvin.erik.mobibot.Constants;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.Serializable;
 import java.util.Calendar;
@@ -162,16 +163,6 @@ public class EntryLink implements Serializable {
     }
 
     /**
-     * Sets the channel.
-     *
-     * @param channel The channel.
-     */
-    @SuppressWarnings("UnusedDeclaration")
-    public final void setChannel(final String channel) {
-        this.channel = channel;
-    }
-
-    /**
      * Returns a comment.
      *
      * @param index The comment's index.
@@ -218,15 +209,6 @@ public class EntryLink implements Serializable {
     }
 
     /**
-     * Sets the comment's link.
-     *
-     * @param link The new link.
-     */
-    public final void setLink(final String link) {
-        this.link = link;
-    }
-
-    /**
      * Returns the comment's author login.
      *
      * @return The login;
@@ -236,31 +218,12 @@ public class EntryLink implements Serializable {
     }
 
     /**
-     * Sets the comment's author login.
-     *
-     * @param login The new login.
-     */
-    @SuppressWarnings("UnusedDeclaration")
-    public final void setLogin(final String login) {
-        this.login = login;
-    }
-
-    /**
      * Returns the comment's author nickname.
      *
      * @return The nickname.
      */
     public final String getNick() {
         return nick;
-    }
-
-    /**
-     * Sets the comment's author nickname.
-     *
-     * @param nick The new nickname.
-     */
-    public final void setNick(final String nick) {
-        this.nick = nick;
     }
 
     /**
@@ -286,6 +249,96 @@ public class EntryLink implements Serializable {
      */
     public final List<SyndCategory> getTags() {
         return tags;
+    }
+
+    /**
+     * Returns the comment's title.
+     *
+     * @return The title.
+     */
+    public final String getTitle() {
+        return title;
+    }
+
+    /**
+     * Returns true if the entry has comments.
+     *
+     * @return true if there are comments, false otherwise.
+     */
+    public final boolean hasComments() {
+        return !comments.isEmpty();
+    }
+
+    /**
+     * Returns true if the entry has tags.
+     *
+     * @return true if there are tags, false otherwise.
+     */
+    public final boolean hasTags() {
+        return !tags.isEmpty();
+    }
+
+    /**
+     * Returns true if a string is contained in the link, title, or nick.
+     *
+     * @param match The string to match.
+     * @return {@code true} if matched, {@code false} otherwise.
+     */
+    public Boolean matches(final String match) {
+        return (StringUtils.containsIgnoreCase(link, match)
+                || StringUtils.containsIgnoreCase(title, match)
+                || StringUtils.containsIgnoreCase(nick, match));
+    }
+
+    /**
+     * Sets the channel.
+     *
+     * @param channel The channel.
+     */
+    @SuppressWarnings("UnusedDeclaration")
+    public final void setChannel(final String channel) {
+        this.channel = channel;
+    }
+
+    /**
+     * /** Sets a comment.
+     *
+     * @param index   The comment's index.
+     * @param comment The actual comment.
+     * @param nick    The nickname of the author of the comment.
+     */
+    public final void setComment(final int index, final String comment, final String nick) {
+        if (index < comments.size()) {
+            comments.set(index, new EntryComment(comment, nick));
+        }
+    }
+
+    /**
+     * Sets the comment's link.
+     *
+     * @param link The new link.
+     */
+    public final void setLink(final String link) {
+        this.link = link;
+    }
+
+    /**
+     * Sets the comment's author login.
+     *
+     * @param login The new login.
+     */
+    @SuppressWarnings("UnusedDeclaration")
+    public final void setLogin(final String login) {
+        this.login = login;
+    }
+
+    /**
+     * Sets the comment's author nickname.
+     *
+     * @param nick The new nickname.
+     */
+    public final void setNick(final String nick) {
+        this.nick = nick;
     }
 
     /**
@@ -343,52 +396,12 @@ public class EntryLink implements Serializable {
     }
 
     /**
-     * Returns the comment's title.
-     *
-     * @return The title.
-     */
-    public final String getTitle() {
-        return title;
-    }
-
-    /**
      * Sets the comment's title.
      *
      * @param title The new title.
      */
     public final void setTitle(final String title) {
         this.title = title;
-    }
-
-    /**
-     * Returns true if the entry has comments.
-     *
-     * @return true if there are comments, false otherwise.
-     */
-    public final boolean hasComments() {
-        return (!comments.isEmpty());
-    }
-
-    /**
-     * Returns true if the entry has tags.
-     *
-     * @return true if there are tags, false otherwise.
-     */
-    public final boolean hasTags() {
-        return (!tags.isEmpty());
-    }
-
-    /**
-     * /** Sets a comment.
-     *
-     * @param index   The comment's index.
-     * @param comment The actual comment.
-     * @param nick    The nickname of the author of the comment.
-     */
-    public final void setComment(final int index, final String comment, final String nick) {
-        if (index < comments.size()) {
-            comments.set(index, new EntryComment(comment, nick));
-        }
     }
 
     /**
@@ -400,7 +413,7 @@ public class EntryLink implements Serializable {
     public final String toString() {
 
         return super.toString() + "[ channel -> '" + channel + '\'' + ", comments -> " + comments + ", date -> " + date
-            + ", link -> '" + link + '\'' + ", login -> '" + login + '\'' + ", nick -> '" + nick + '\''
-            + ", tags -> " + tags + ", title -> '" + title + '\'' + " ]";
+               + ", link -> '" + link + '\'' + ", login -> '" + login + '\'' + ", nick -> '" + nick + '\''
+               + ", tags -> " + tags + ", title -> '" + title + '\'' + " ]";
     }
 }
