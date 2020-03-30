@@ -41,8 +41,6 @@ import twitter4j.Status;
 import twitter4j.TwitterFactory;
 import twitter4j.conf.ConfigurationBuilder;
 
-import static net.thauvin.erik.mobibot.Utils.bold;
-
 /**
  * The Twitter module.
  *
@@ -116,12 +114,12 @@ public final class Twitter extends ThreadedModule {
      * {@inheritDoc}
      */
     @Override
-    public void helpResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate) {
+    public void helpResponse(final Mobibot bot, final String sender, final boolean isPrivate) {
         if (isEnabled()) {
-            bot.send(sender, bold("To post to Twitter:"));
-            bot.send(sender, Utils.helpIndent(bot.getNick() + ": " + TWITTER_CMD + " <message>"));
+            bot.send(sender, "To post to Twitter:", isPrivate);
+            bot.send(sender, Utils.helpIndent(bot.getNick() + ": " + TWITTER_CMD + " <message>"), isPrivate);
         } else {
-            bot.send(sender, "The Twitter posting facility is disabled.");
+            bot.send(sender, "The Twitter posting facility is " + Utils.bold("disabled") + '.', isPrivate);
         }
     }
 
@@ -149,13 +147,14 @@ public final class Twitter extends ThreadedModule {
      * Posts to twitter.
      */
     @Override
-    void run(final Mobibot bot, final String sender, final String cmd, final String message) {
+    void run(final Mobibot bot, final String sender, final String cmd, final String message, final boolean isPrivate) {
         try {
             bot.send(sender,
-                     post(sender, message + " (by " + sender + " on " + bot.getChannel() + ')', false).getMessage());
+                     post(sender, message + " (by " + sender + " on " + bot.getChannel() + ')', false).getMessage(),
+                     isPrivate);
         } catch (ModuleException e) {
             bot.getLogger().warn(e.getDebugMessage(), e);
-            bot.send(sender, e.getMessage());
+            bot.send(sender, e.getMessage(), isPrivate);
         }
     }
 }

@@ -52,8 +52,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
-import static net.thauvin.erik.mobibot.Utils.bold;
-
 /**
  * The GoogleSearch module.
  *
@@ -145,12 +143,12 @@ public final class GoogleSearch extends ThreadedModule {
      * {@inheritDoc}
      */
     @Override
-    public void helpResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate) {
+    public void helpResponse(final Mobibot bot, final String sender, final boolean isPrivate) {
         if (isEnabled()) {
-            bot.send(sender, bold("To search Google:"));
-            bot.send(sender, Utils.helpIndent(bot.getNick() + ": " + GOOGLE_CMD + " <query>"));
+            bot.send(sender, "To search Google:", isPrivate);
+            bot.send(sender, Utils.helpIndent(bot.getNick() + ": " + GOOGLE_CMD + " <query>"), isPrivate);
         } else {
-            bot.send(sender, "The Google search module is disabled.");
+            bot.send(sender, "The Google search module is disabled.", isPrivate);
         }
     }
 
@@ -158,7 +156,7 @@ public final class GoogleSearch extends ThreadedModule {
      * Searches Google.
      */
     @Override
-    void run(final Mobibot bot, final String sender, final String cmd, final String query) {
+    void run(final Mobibot bot, final String sender, final String cmd, final String query, final boolean isPrivate) {
         if (StringUtils.isNotBlank(query)) {
             try {
                 final List<Message> results = searchGoogle(query, properties.get(GOOGLE_API_KEY_PROP),
@@ -168,10 +166,10 @@ public final class GoogleSearch extends ThreadedModule {
                 }
             } catch (ModuleException e) {
                 bot.getLogger().warn(e.getDebugMessage(), e);
-                bot.send(sender, e.getMessage());
+                bot.send(sender, e.getMessage(), isPrivate);
             }
         } else {
-            helpResponse(bot, sender, query, true);
+            helpResponse(bot, sender, isPrivate);
         }
     }
 }

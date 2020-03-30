@@ -38,8 +38,8 @@ import net.thauvin.erik.mobibot.Utils
 class Say : AbstractCommand() {
     override val command = "say"
     override val help = listOf(
-        Utils.bold("To have the bot say something on the channel:"),
-        Utils.helpIndent("/msg %s $command <text>")
+        "To have the bot say something on the channel:",
+        Utils.helpIndent("%s $command <text>")
     )
     override val isOp = true
     override val isPublic = false
@@ -55,9 +55,9 @@ class Say : AbstractCommand() {
         isPrivate: Boolean
     ) {
         if (isOp) {
-            bot.send(bot.channel, args, true)
+            bot.send(args)
         } else {
-            bot.helpDefault(sender, isOp)
+            bot.helpDefault(sender, isOp, isPrivate)
         }
     }
 }

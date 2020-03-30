@@ -39,8 +39,6 @@ import java.security.SecureRandom;
 import java.util.Arrays;
 import java.util.List;
 
-import static net.thauvin.erik.mobibot.Utils.bold;
-
 /**
  * The Ping module.
  *
@@ -96,8 +94,8 @@ public class Ping extends AbstractModule {
      * {@inheritDoc}
      */
     @Override
-    public void helpResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate) {
-        bot.send(sender, bold("To ping the bot:"));
-        bot.send(sender, Utils.helpIndent(bot.getNick() + ": " + PING_CMD));
+    public void helpResponse(final Mobibot bot, final String sender, final boolean isPrivate) {
+        bot.send(sender, "To ping the bot:", isPrivate);
+        bot.send(sender, Utils.helpIndent(bot.getNick() + ": " + PING_CMD), isPrivate);
     }
 }

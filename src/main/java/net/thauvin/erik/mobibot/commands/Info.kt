@@ -40,8 +40,8 @@ import java.lang.management.ManagementFactory
 class Info : AbstractCommand() {
     override val command = "info"
     override val help = listOf(
-        Utils.bold("To view information about the bot:"),
-        Utils.helpIndent("%s: $command")
+        "To view information about the bot:",
+        Utils.helpIndent("%s $command")
     )
     override val isOp = false
     override val isPublic = true
@@ -82,6 +82,6 @@ class Info : AbstractCommand() {
             append(']')
         }
 
-        bot.send(sender, info.toString())
+        bot.send(sender, info.toString(), isPrivate)
     }
 }

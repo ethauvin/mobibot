@@ -42,7 +42,7 @@ import net.thauvin.erik.mobibot.entries.EntryLink
 class Tags : AbstractCommand() {
     override val command = COMMAND
     override val help = listOf(
-        Utils.bold("To categorize or tag a URL, use its label and a T:"),
+        "To categorize or tag a URL, use its label and a T:",
         Utils.helpIndent("${Constants.LINK_CMD}1T:<+tag|-tag> [...]")
     )
     override val isOp = false
@@ -71,16 +71,16 @@ class Tags : AbstractCommand() {
                 if (entry.login == login || isOp) {
                     entry.setTags(cmd)
                     bot.updatePin(entry.link, entry)
-                    bot.send(bot.channel, EntriesUtils.buildTags(index, entry))
+                    bot.send(EntriesUtils.buildTags(index, entry))
                     UrlMgr.saveEntries(bot, false)
                 } else {
-                    bot.send(sender, "Please ask a channel op to change the tags for you.")
+                    bot.send(sender, "Please ask a channel op to change the tags for you.",isPrivate)
                 }
             } else {
                 if (entry.hasTags()) {
-                    bot.send(bot.channel, EntriesUtils.buildTags(index, entry))
+                    bot.send(EntriesUtils.buildTags(index, entry))
                 } else {
-                    bot.send(sender, "The entry has no tags. Why don't add some?")
+                    bot.send(sender, "The entry has no tags. Why don't add some?", isPrivate)
                 }
             }
         }

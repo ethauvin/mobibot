@@ -42,16 +42,16 @@ import net.thauvin.erik.mobibot.entries.EntryLink
 class Posting : AbstractCommand() {
     override val command = "posting"
     override val help = listOf(
-        Utils.bold("Post a URL, by saying it on a line on its own:"),
+        "Post a URL, by saying it on a line on its own:",
         Utils.helpIndent("<url> [<title>] ${Tags.COMMAND}}: <+tag> [...]]"),
-        "I will reply with a label, for example:" + Utils.bold("${Constants.LINK_CMD}1"),
-        Utils.bold("To add a title, use its label and a pipe:"),
+        "I will reply with a label, for example: ${Utils.bold(Constants.LINK_CMD)}1",
+        "To add a title, use its label and a pipe:",
         Utils.helpIndent("${Constants.LINK_CMD}1:|This is the title"),
-        Utils.bold("To add a comment:"),
+        "To add a comment:",
         Utils.helpIndent("${Constants.LINK_CMD}1:This is a comment"),
         "I will reply with a label, for example: ${Utils.bold(Constants.LINK_CMD)}1.1",
-        Utils.bold("To edit a comment, see: "),
-        Utils.helpIndent("/msg %s ${Constants.HELP_CMD} ${Comment.COMMAND}")
+        "To edit a comment, see: ",
+        Utils.helpIndent("%s ${Constants.HELP_CMD} ${Comment.COMMAND}")
     )
     override val isOp = false
     override val isPublic = true
@@ -77,7 +77,7 @@ class Posting : AbstractCommand() {
                         '|' -> changeTitle(bot, cmd, index) // L1:|<title>
                         '=' -> changeUrl(bot, cmd, login, isOp, index) // L1:=<url>
                         '?' -> changeAuthor(bot, cmd, sender, isOp, index) // L1:?<author>
-                        else -> addComment(bot, cmd, sender, index)
+                        else -> addComment(bot, cmd, sender, index) // L1:<comment>
                     }
                 }
             }
@@ -92,7 +92,7 @@ class Posting : AbstractCommand() {
         val entry: EntryLink = UrlMgr.getEntry(index)
         val commentIndex = entry.addComment(cmd, sender)
         val comment = entry.getComment(commentIndex)
-        bot.send(sender, EntriesUtils.buildComment(index, commentIndex, comment))
+        bot.send(sender, EntriesUtils.buildComment(index, commentIndex, comment), false)
         UrlMgr.saveEntries(bot, false)
     }
 
@@ -101,7 +101,7 @@ class Posting : AbstractCommand() {
             val entry: EntryLink = UrlMgr.getEntry(index)
             entry.title = cmd.substring(1).trim()
             bot.updatePin(entry.link, entry)
-            bot.send(bot.channel, EntriesUtils.buildLink(index, entry))
+            bot.send(EntriesUtils.buildLink(index, entry))
             UrlMgr.saveEntries(bot, false)
         }
     }
@@ -114,7 +114,7 @@ class Posting : AbstractCommand() {
                 val oldLink = entry.link
                 entry.link = link
                 bot.updatePin(oldLink, entry)
-                bot.send(bot.channel, EntriesUtils.buildLink(index, entry))
+                bot.send(EntriesUtils.buildLink(index, entry))
                 UrlMgr.saveEntries(bot, false)
             }
         }
@@ -125,11 +125,11 @@ class Posting : AbstractCommand() {
             if (cmd.length > 1) {
                 val entry: EntryLink = UrlMgr.getEntry(index)
                 entry.nick = cmd.substring(1)
-                bot.send(bot.channel, EntriesUtils.buildLink(index, entry))
+                bot.send(EntriesUtils.buildLink(index, entry))
                 UrlMgr.saveEntries(bot, false)
             }
         } else {
-            bot.send(sender, "Please ask a channel op to change the author of this link for you.")
+            bot.send(sender, "Please ask a channel op to change the author of this link for you.", false)
         }
     }
 
@@ -141,23 +141,23 @@ class Posting : AbstractCommand() {
                 bot.twitterRemoveEntry(index)
             }
             UrlMgr.removeEntry(index)
-            bot.send(bot.channel, "Entry ${Constants.LINK_CMD}${index + 1} removed.")
+            bot.send("Entry ${Constants.LINK_CMD}${index + 1} removed.")
             UrlMgr.saveEntries(bot, false)
         } else {
-            bot.send(sender, "Please ask a channel op to remove this entry for you.")
+            bot.send(sender, "Please ask a channel op to remove this entry for you.", false)
         }
     }
 
     private fun showEntry(bot: Mobibot, index: Int) {
         val entry: EntryLink = UrlMgr.getEntry(index)
-        bot.send(bot.channel, EntriesUtils.buildLink(index, entry))
+        bot.send(EntriesUtils.buildLink(index, entry))
         if (entry.hasTags()) {
-            bot.send(bot.channel, EntriesUtils.buildTags(index, entry))
+            bot.send(EntriesUtils.buildTags(index, entry))
         }
         if (entry.hasComments()) {
             val comments = entry.comments
             for (i in comments.indices) {
-                bot.send(bot.channel, EntriesUtils.buildComment(index, i, comments[i]))
+                bot.send(EntriesUtils.buildComment(index, i, comments[i]))
             }
         }
     }

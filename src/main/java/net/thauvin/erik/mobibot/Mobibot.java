@@ -482,13 +482,13 @@ public class Mobibot extends PircBot {
     /**
      * Responds with the title and links from the RSS feed.
      *
-     * @param sender The nick of the person who sent the private message.
+     * @param sender The nick of the person who sent the message.
      */
     private void feedResponse(final String sender) {
         if (isNotBlank(feedUrl)) {
             new Thread(new FeedReader(this, sender, feedUrl)).start();
         } else {
-            send(sender, "There is no weblog setup for this channel.");
+            send(sender, "There is no weblog setup for this channel.", false);
         }
     }
 
@@ -597,14 +597,15 @@ public class Mobibot extends PircBot {
     /**
      * Responds with the commands help, if any.
      *
-     * @param sender The nick of the person requesting Constants.
-     * @param topic  The help topic.
+     * @param sender    The nick of the person requesting Constants.
+     * @param topic     The help topic.
+     * @param isPrivate The private flag.
      * @return {@code true} if the topic was found, {@code false} otherwise.
      */
-    private boolean helpCommands(final String sender, final String topic) {
+    private boolean helpCommands(final String sender, final String topic, final boolean isPrivate) {
         for (final AbstractCommand command : commands) {
             if (command.isVisible() && command.getCommand().startsWith(topic)) {
-                return command.helpResponse(this, topic, sender, isOp(sender), true);
+                return command.helpResponse(this, topic, sender, isOp(sender), isPrivate);
             }
         }
         return false;
@@ -613,14 +614,18 @@ public class Mobibot extends PircBot {
     /**
      * Responds with the default Constants.
      *
-     * @param sender The nick of the person requesting Constants.
-     * @param isOp   The channel operator flag.
+     * @param sender    The nick of the person requesting Constants.
+     * @param isOp      The channel operator flag.
+     * @param isPrivate The private flag.
      */
-    public void helpDefault(final String sender, final boolean isOp) {
-        send(sender, Utils.bold("Type a URL on " + ircChannel + " to post it."));
-        send(sender, "For more information on a specific command, type:");
-        send(sender, Utils.helpIndent(getNick() + ": " + Constants.HELP_CMD + " <command>"));
-        send(sender, Utils.bold("The commands are:"));
+    public void helpDefault(final String sender, final boolean isOp, final boolean isPrivate) {
+        send(sender, "Type a URL on " + ircChannel + " to post it.", isPrivate);
+        send(sender, "For more information on a specific command, type:", isPrivate);
+        send(sender,
+             Utils.helpIndent(
+                     ((isPrivate) ? "/msg " + getNick() : getNick() + ':') + " " + Constants.HELP_CMD + " <command>"),
+             isPrivate);
+        send(sender, "The commands are:", isPrivate);
 
         if (commandsNames.isEmpty()) {
             // Feed command
@@ -650,26 +655,29 @@ public class Mobibot extends PircBot {
             Collections.sort(opsCommandsNames);
         }
 
-        sendCommandsList(sender, commandsNames, false);
+        sendCommandsList(sender, commandsNames, 8, isPrivate, true);
         if (isOp) {
-            send(sender, Utils.bold("The op commands are:"), false);
-            sendCommandsList(sender, opsCommandsNames, false);
+            send(sender, "The op commands are:", isPrivate);
+            sendCommandsList(sender, opsCommandsNames, 8, isPrivate, true);
         }
     }
 
     /**
      * Responds with the modules help, if any.
      *
-     * @param sender The nick of the person requesting Constants.
-     * @param topic  The help topic.
+     * @param sender    The nick of the person requesting Constants.
+     * @param topic     The help topic.
+     * @param isPrivate The private flag.
      * @return {@code true} if the topic was found, {@code false} otherwise.
      */
-    private boolean helpModules(final String sender, final String topic) {
+    private boolean helpModules(final String sender, final String topic, final boolean isPrivate) {
         for (final AbstractModule module : modules) {
-            for (final String cmd : module.getCommands()) {
-                if (topic.equals(cmd)) {
-                    module.helpResponse(this, sender, topic, true);
-                    return true;
+            if (module.isEnabled()) {
+                for (final String cmd : module.getCommands()) {
+                    if (topic.equals(cmd)) {
+                        module.helpResponse(this, sender, isPrivate);
+                        return true;
+                    }
                 }
             }
         }
@@ -679,24 +687,25 @@ public class Mobibot extends PircBot {
     /**
      * Responds with the bot's Constants.
      *
-     * @param sender The nick of the person who sent the private message.
-     * @param topic  The help topic, if any.
+     * @param sender    The nick of the person who sent the private message.
+     * @param topic     The help topic, if any.
+     * @param isPrivate The private flag.
      */
-    private void helpResponse(final String sender, final String topic) {
+    private void helpResponse(final String sender, final String topic, final boolean isPrivate) {
         final boolean isOp = isOp(sender);
         if (StringUtils.isBlank(topic)) {
-            helpDefault(sender, isOp);
+            helpDefault(sender, isOp, isPrivate);
         } else {
             final String lcTopic = topic.toLowerCase(Constants.LOCALE).trim();
             if (lcTopic.equals(getChannelName())) {
-                send(sender, Utils.bold("To list the last 5 posts from the channel's weblog:"));
-                send(sender, Utils.helpIndent(getNick() + ": " + getChannelName()));
+                send(sender, "To list the last 5 posts from the channel's weblog:", isPrivate);
+                send(sender, Utils.helpIndent(getNick() + ": " + getChannelName()), isPrivate);
             } else if (Tell.TELL_CMD.equals(lcTopic) && tell.isEnabled()) {
-                tell.helpResponse(sender);
+                tell.helpResponse(sender, isPrivate);
             } else {
                 // Command, Modules or Default
-                if (!helpCommands(sender, topic) && !helpModules(sender, lcTopic)) {
-                    helpDefault(sender, isOp);
+                if (!helpCommands(sender, topic, isPrivate) && !helpModules(sender, lcTopic, isPrivate)) {
+                    helpDefault(sender, isOp, isPrivate);
                 }
             }
         }
@@ -782,11 +791,11 @@ public class Mobibot extends PircBot {
             }
 
             if (cmd.startsWith(Constants.HELP_CMD)) { // mobibot: help
-                helpResponse(sender, args);
+                helpResponse(sender, args, false);
             } else if (cmd.equalsIgnoreCase(getChannelName())) { // mobibot: <channel>
                 feedResponse(sender);
             } else if (cmd.startsWith(Tell.TELL_CMD) && tell.isEnabled()) { // mobibot: tell
-                tell.response(sender, args);
+                tell.response(sender, args, false);
             } else {
                 boolean skip = false;
                 // Commands
@@ -850,12 +859,12 @@ public class Mobibot extends PircBot {
         final boolean isOp = isOp(sender);
 
         if (cmd.startsWith(Constants.HELP_CMD)) {
-            helpResponse(sender, args);
+            helpResponse(sender, args, true);
         } else if (isOp && "kill".equals(cmd)) {
             sendRawLine("QUIT : Poof!");
             System.exit(0);
         } else if (isOp && Constants.DIE_CMD.equals(cmd)) {
-            send(ircChannel, sender + " has just signed my death sentence.");
+            send(sender + " has just signed my death sentence.");
             timer.cancel();
             twitterShutdown();
             twitterNotification("killed by  " + sender + " on " + ircChannel);
@@ -870,10 +879,10 @@ public class Mobibot extends PircBot {
                 UrlMgr.addHistory(0, args);
                 send(sender, UrlMgr.getHistory().toString(), true);
             } else {
-                send(sender, "The specified log could not be found.");
+                send(sender, "The specified log could not be found.", true);
             }
         } else if (Tell.TELL_CMD.equals(cmd) && tell.isEnabled()) {
-            tell.response(sender, args);
+            tell.response(sender, args, true);
         } else if (isOp && Constants.DEBUG_CMD.equals(cmd)) {
             if (logger.isDebugEnabled()) {
                 Configurator.setLevel(logger.getName(), loggerLevel);
@@ -898,7 +907,7 @@ public class Mobibot extends PircBot {
                     }
                 }
             }
-            helpDefault(sender, isOp);
+            helpDefault(sender, isOp, true);
         }
     }
 
@@ -961,18 +970,8 @@ public class Mobibot extends PircBot {
      * @param notice The notice message.
      */
     public final void send(final String notice) {
-        send(getChannel(), notice);
+        send(getChannel(), notice, false);
 
-    }
-
-    /**
-     * Sends a message.
-     *
-     * @param who     The channel or nick of the person who sent the command.
-     * @param message The actual message.
-     */
-    public final void send(final String who, final String message) {
-        send(who, message, false);
     }
 
     /**
@@ -998,28 +997,22 @@ public class Mobibot extends PircBot {
     }
 
     /**
-     * Sends a message.
-     *
-     * @param who     The channel or nick of the person who sent the command.
-     * @param message The actual message.
-     * @param color   The message's color.
-     */
-    @SuppressWarnings("unused")
-    public final void send(final String who, final String message, final String color) {
-        send(who, Utils.colorize(message, color), false);
-    }
-
-    /**
      * Send a formatted commands/modules, etc. list.
      *
-     * @param nick The nick to send the list to.
-     * @param list The list to format.
+     * @param nick      The nick to send the list to.
+     * @param list      The list to format.
+     * @param size      The number of items per line.
+     * @param isPrivate The private flag.
+     * @param isBold    The bold flag
      */
-    public final void sendCommandsList(final String nick, final List<String> list, final boolean isPrivate) {
-        final int chunk = 8; // 8 commands per line.
-        for (int i = 0; i < list.size(); i += chunk) {
+    public final void sendCommandsList(final String nick,
+                                       final List<String> list,
+                                       final int size,
+                                       final boolean isPrivate,
+                                       final boolean isBold) {
+        for (int i = 0; i < list.size(); i += size) {
             send(nick, Utils.helpIndent(
-                    String.join(" ", list.subList(i, Math.min(list.size(), i + chunk)))), isPrivate);
+                    String.join(" ", list.subList(i, Math.min(list.size(), i + size))), isBold), isPrivate);
         }
     }
 

@@ -45,8 +45,8 @@ class View : AbstractCommand() {
     private val maxEntries = 8
     override val command = VIEW_CMD
     override val help = listOf(
-        Utils.bold("To list or search the current URL posts:"),
-        Utils.helpIndent("%s: $command [<start>] [<query>]")
+        "To list or search the current URL posts:",
+        Utils.helpIndent("%s $command [<start>] [<query>]")
     )
     override val isOp = false
     override val isPublic = true
@@ -67,7 +67,7 @@ class View : AbstractCommand() {
         if (entriesCount != 0) {
             showPosts(bot, args, sender)
         } else {
-            bot.send(sender, "There is currently nothing to view. Why don't you post something?")
+            bot.send(sender, "There is currently nothing to view. Why don't you post something?", isPrivate)
         }
     }
 
@@ -101,17 +101,17 @@ class View : AbstractCommand() {
             entry = getEntry(i)
             if (lcArgs.isNotBlank()) {
                 if (entry.matches(lcArgs)) {
-                    bot.send(sender, EntriesUtils.buildLink(i, entry, true))
+                    bot.send(sender, EntriesUtils.buildLink(i, entry, true), false)
                     sent++
                 }
             } else {
-                bot.send(sender, EntriesUtils.buildLink(i, entry, true))
+                bot.send(sender, EntriesUtils.buildLink(i, entry, true), false)
                 sent++
             }
             i++
             if (sent == maxEntries && i < max) {
                 bot.send(
-                    sender, "To view more, try: " + Utils.bold("${bot.nick}: $command ${i + 1} $lcArgs")
+                    sender, "To view more, try: " + Utils.bold("${bot.nick}: $command ${i + 1} $lcArgs"), false
                 )
             }
         }

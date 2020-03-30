@@ -38,8 +38,8 @@ import net.thauvin.erik.mobibot.Utils
 class Nick : AbstractCommand() {
     override val command = "nick"
     override val help = listOf(
-        Utils.bold("To change the bot's nickname:"),
-        Utils.helpIndent("/msg %s $command <nick>")
+        "To change the bot's nickname:",
+        Utils.helpIndent("%s $command <nick>")
     )
     override val isOp = true
     override val isPublic = true
@@ -56,7 +56,7 @@ class Nick : AbstractCommand() {
         if (isOp) {
             bot.changeNick(args)
         } else {
-            bot.helpDefault(sender, isOp)
+            bot.helpDefault(sender, isOp, isPrivate)
         }
     }
 }

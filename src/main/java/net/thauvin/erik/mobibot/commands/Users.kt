@@ -40,8 +40,8 @@ import java.util.*
 class Users : AbstractCommand() {
     override val command = "users"
     override val help = listOf(
-        Utils.bold("To list the users present on the channel:"),
-        Utils.helpIndent("/msg %s $command")
+        "To list the users present on the channel:",
+        Utils.helpIndent("%s $command")
     )
     override val isOp = false
     override val isPublic = true
@@ -66,6 +66,6 @@ class Users : AbstractCommand() {
             }
         }
 
-        bot.send(sender, nicks.sorted().joinToString(" "))
+        bot.send(sender, nicks.sorted().joinToString(" "), isPrivate)
     }
 }

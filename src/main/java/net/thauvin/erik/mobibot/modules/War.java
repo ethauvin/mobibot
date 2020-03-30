@@ -81,9 +81,8 @@ public final class War extends AbstractModule {
             i = r.nextInt(WAR_DECK.length);
             y = r.nextInt(WAR_DECK.length);
 
-            bot.send(bot.getChannel(),
-                     sender + " drew the " + bold(WAR_DECK[i]) + " of " + WAR_SUITS[r.nextInt(WAR_SUITS.length)]);
-            bot.action("drew the " + bold(WAR_DECK[y]) + " of " + WAR_SUITS[r.nextInt(WAR_SUITS.length)]);
+            bot.send(sender + " drew the " + bold(WAR_DECK[i]) + " of " + bold(WAR_SUITS[r.nextInt(WAR_SUITS.length)]));
+            bot.action("drew the " + bold(WAR_DECK[y]) + " of " + bold(WAR_SUITS[r.nextInt(WAR_SUITS.length)]));
 
             if (i != y) {
                 break;
@@ -103,8 +102,8 @@ public final class War extends AbstractModule {
      * {@inheritDoc}
      */
     @Override
-    public void helpResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate) {
-        bot.send(sender, bold("To play war:"));
-        bot.send(sender, Utils.helpIndent(bot.getNick() + ": " + WAR_CMD));
+    public void helpResponse(final Mobibot bot, final String sender, final boolean isPrivate) {
+        bot.send(sender, "To play war:", isPrivate);
+        bot.send(sender, Utils.helpIndent(bot.getNick() + ": " + WAR_CMD), isPrivate);
     }
 }

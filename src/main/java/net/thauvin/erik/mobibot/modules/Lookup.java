@@ -41,8 +41,6 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
-import static net.thauvin.erik.mobibot.Utils.bold;
-
 /**
  * The Lookup module.
  *
@@ -189,7 +187,7 @@ public final class Lookup extends AbstractModule {
                 }
             }
         } else {
-            helpResponse(bot, sender, args, true);
+            helpResponse(bot, sender, true);
         }
     }
 
@@ -197,8 +195,8 @@ public final class Lookup extends AbstractModule {
      * {@inheritDoc}
      */
     @Override
-    public void helpResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate) {
-        bot.send(sender, bold("To perform a DNS lookup query:"));
-        bot.send(sender, Utils.helpIndent(bot.getNick() + ": " + LOOKUP_CMD + " <ip address or hostname>"));
+    public void helpResponse(final Mobibot bot, final String sender, final boolean isPrivate) {
+        bot.send(sender, "To perform a DNS lookup query:", isPrivate);
+        bot.send(sender, Utils.helpIndent(bot.getNick() + ": " + LOOKUP_CMD + " <ip address or hostname>"), isPrivate);
     }
 }

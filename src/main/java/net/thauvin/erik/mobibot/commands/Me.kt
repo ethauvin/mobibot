@@ -38,8 +38,8 @@ import net.thauvin.erik.mobibot.Utils
 class Me : AbstractCommand() {
     override val command = "me"
     override val help = listOf(
-        Utils.bold("To have the bot perform an action:"),
-        Utils.helpIndent("/msg %s $command <action>")
+        "To have the bot perform an action:",
+        Utils.helpIndent("%s $command <action>")
     )
     override val isOp = true
     override val isPublic = false
@@ -56,7 +56,7 @@ class Me : AbstractCommand() {
         if (isOp) {
             bot.action(args)
         } else {
-            bot.helpDefault(sender, isOp)
+            bot.helpDefault(sender, isOp, isPrivate)
         }
     }
 }

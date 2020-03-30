@@ -75,7 +75,7 @@ public final class Dice extends AbstractModule {
 
         bot.send(bot.getChannel(),
                  sender + " rolled two dice: " + bold(i) + " and " + bold(y) + " for a total of "
-                 + bold(playerTotal));
+                 + bold(playerTotal), isPrivate);
 
         i = r.nextInt(6) + 1;
         y = r.nextInt(6) + 1;
@@ -97,8 +97,8 @@ public final class Dice extends AbstractModule {
      * {@inheritDoc}
      */
     @Override
-    public void helpResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate) {
-        bot.send(sender, bold("To roll the dice:"));
-        bot.send(sender, Utils.helpIndent(bot.getNick() + ": " + DICE_CMD));
+    public void helpResponse(final Mobibot bot, final String sender, final boolean isPrivate) {
+        bot.send(sender, "To roll the dice:", isPrivate);
+        bot.send(sender, Utils.helpIndent(bot.getNick() + ": " + DICE_CMD), isPrivate);
     }
 }

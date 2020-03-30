@@ -128,7 +128,7 @@ class UrlMgr(defaultTags: String, keywords: String) : AbstractCommand() {
 
         if (Ignore.isNotIgnored(sender) && (cmds.size == 1 || !cmds[1].contains(bot.nick))) {
             val link = cmds[0].trim()
-            if (!isDupEntry(bot, sender, link)) {
+            if (!isDupEntry(bot, sender, link, isPrivate)) {
                 val isBackup = saveDayBackup(bot)
                 val tags: StringBuilder = StringBuilder(defaultTags)
                 var title = Constants.NO_TITLE
@@ -145,7 +145,7 @@ class UrlMgr(defaultTags: String, keywords: String) : AbstractCommand() {
                 entries.add(EntryLink(link, title, sender, login, bot.channel, tags.toString()))
                 val index: Int = entries.size - 1
                 val entry: EntryLink = entries[index]
-                bot.send(bot.channel, EntriesUtils.buildLink(index, entry))
+                bot.send(EntriesUtils.buildLink(index, entry))
 
                 // Add Entry to pinboard.
                 bot.addPin(entry)
@@ -156,10 +156,11 @@ class UrlMgr(defaultTags: String, keywords: String) : AbstractCommand() {
                 saveEntries(bot, isBackup)
 
                 if (Constants.NO_TITLE == entry.title) {
-                    bot.send(sender, Utils.bold("Please specify a title, by typing:"))
+                    bot.send(sender, "Please specify a title, by typing:", isPrivate)
                     bot.send(
                         sender,
-                        Utils.helpIndent(Constants.LINK_CMD + (index + 1) + ":|This is the title")
+                        Utils.helpIndent(Constants.LINK_CMD + (index + 1) + ":|This is the title"),
+                        isPrivate
                     )
                 }
             }
@@ -196,12 +197,12 @@ class UrlMgr(defaultTags: String, keywords: String) : AbstractCommand() {
         return title
     }
 
-    private fun isDupEntry(bot: Mobibot, sender: String, link: String): Boolean {
+    private fun isDupEntry(bot: Mobibot, sender: String, link: String, isPrivate: Boolean): Boolean {
         synchronized(entries) {
             for (i in entries.indices) {
                 if (link == entries[i].link) {
                     val entry: EntryLink = entries[i]
-                    bot.send(sender, Utils.bold("Duplicate") + " >> " + EntriesUtils.buildLink(i, entry))
+                    bot.send(sender, Utils.bold("Duplicate") + " >> " + EntriesUtils.buildLink(i, entry), isPrivate)
                     return true
                 }
             }

@@ -52,14 +52,18 @@ public abstract class ThreadedModule extends AbstractModule {
                                 final String args,
                                 final boolean isPrivate) {
         if (isEnabled() && args.length() > 0) {
-            new Thread(() -> run(bot, sender, cmd, args)).start();
+            new Thread(() -> run(bot, sender, cmd, args, isPrivate)).start();
         } else {
-            helpResponse(bot, sender, args, isPrivate);
+            helpResponse(bot, sender, isPrivate);
         }
     }
 
     /**
      * Runs the thread.
      */
-    abstract void run(Mobibot bot, String sender, @SuppressWarnings("unused") String cmd, String args);
+    abstract void run(Mobibot bot,
+                      String sender,
+                      @SuppressWarnings("unused") String cmd,
+                      String args,
+                      boolean isPrivate);
 }

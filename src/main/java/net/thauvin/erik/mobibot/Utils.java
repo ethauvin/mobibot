@@ -164,9 +164,21 @@ public final class Utils {
      *
      * @param help The help string.
      * @return The indented help string.
+     * @see #helpIndent(String, boolean)
      */
     public static String helpIndent(final String help) {
-        return "        " + help;
+        return helpIndent(help, true);
+    }
+
+    /**
+     * Returns indented help string.
+     *
+     * @param help   The help string.
+     * @param isBold The bold flag.
+     * @return The indented help string.
+     */
+    public static String helpIndent(final String help, final boolean isBold) {
+        return "      " + (isBold ? bold(help) : help);
     }
 
     /**

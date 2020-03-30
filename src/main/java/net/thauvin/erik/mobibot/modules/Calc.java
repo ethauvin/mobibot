@@ -40,8 +40,6 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.text.DecimalFormat;
 
-import static net.thauvin.erik.mobibot.Utils.bold;
-
 /**
  * The Calc module.
  *
@@ -74,7 +72,7 @@ public class Calc extends AbstractModule {
 
         try {
             final Expression calc = new ExpressionBuilder(query).build();
-            return query.replace(" ", "") + " = " + decimalFormat.format(calc.evaluate());
+            return query.replace(" ", "") + " = " + Utils.bold(decimalFormat.format(calc.evaluate()));
         } catch (Exception e) {
             return "No idea. This is the kind of math I don't get.";
         }
@@ -92,7 +90,7 @@ public class Calc extends AbstractModule {
         if (StringUtils.isNotBlank(args)) {
             bot.send(calc(args));
         } else {
-            helpResponse(bot, sender, args, isPrivate);
+            helpResponse(bot, sender, isPrivate);
         }
     }
 
@@ -100,8 +98,8 @@ public class Calc extends AbstractModule {
      * {@inheritDoc}
      */
     @Override
-    public void helpResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate) {
-        bot.send(sender, bold("To solve a mathematical calculation:"));
-        bot.send(sender, Utils.helpIndent(bot.getNick() + ": " + CALC_CMD + " <calculation>"));
+    public void helpResponse(final Mobibot bot, final String sender, final boolean isPrivate) {
+        bot.send(sender, "To solve a mathematical calculation:", isPrivate);
+        bot.send(sender, Utils.helpIndent(bot.getNick() + ": " + CALC_CMD + " <calculation>"), isPrivate);
     }
 }

@@ -47,18 +47,18 @@ class Ignore(defaultIgnore: String) : AbstractCommand() {
 
     override val command = IGNORE_CMD
     override val help = listOf(
-        Utils.bold("To ignore a link posted to the channel:"),
+        "To ignore a link posted to the channel:",
         Utils.helpIndent("https://www.foo.bar %s"),
-        Utils.bold("To check your ignore status:"),
-        Utils.helpIndent("%s: $command"),
-        Utils.bold("To toggle your ignore status:"),
-        Utils.helpIndent("%s: $command $me")
+        "To check your ignore status:",
+        Utils.helpIndent("%s $command"),
+        "To toggle your ignore status:",
+        Utils.helpIndent("%s $command $me")
     )
     private val helpOp = listOf(
-        Utils.bold("To ignore a link posted to the channel:"),
+        "To ignore a link posted to the channel:",
         Utils.helpIndent("https://www.foo.bar %s"),
-        Utils.bold("To add/remove nicks from the ignored list:"),
-        Utils.helpIndent("/msg %s $command <nick>|$me [<nick> ...]")
+        "To add/remove nicks from the ignored list:",
+        Utils.helpIndent("%s $command <nick>|$me [<nick> ...]")
     )
 
     override val isOp = false
@@ -86,9 +86,9 @@ class Ignore(defaultIgnore: String) : AbstractCommand() {
         if (!isOp) {
             val nick = sender.toLowerCase()
             val isMe = args.toLowerCase().startsWith(me)
-            ignoreNick(bot, nick, isMe)
+            ignoreNick(bot, nick, isMe, isPrivate)
         } else {
-            ignoreOp(bot, sender, args)
+            ignoreOp(bot, sender, args, isPrivate)
         }
     }
 
@@ -101,7 +101,7 @@ class Ignore(defaultIgnore: String) : AbstractCommand() {
     ): Boolean {
         return if (isOp) {
             for (h in helpOp) {
-                bot.send(sender, String.format(h, bot.nick))
+                bot.send(sender, String.format(h, bot.nick), isPrivate)
             }
             true
         } else {
@@ -109,24 +109,24 @@ class Ignore(defaultIgnore: String) : AbstractCommand() {
         }
     }
 
-    private fun ignoreNick(bot: Mobibot, sender: String, isMe: Boolean) {
+    private fun ignoreNick(bot: Mobibot, sender: String, isMe: Boolean, isPrivate: Boolean) {
         if (isMe) {
             if (ignored.remove(sender)) {
-                bot.send(sender, "You are no longer ignored.")
+                bot.send(sender, "You are no longer ignored.", isPrivate)
             } else {
                 ignored.add(sender)
-                bot.send(sender, "You are now ignored.")
+                bot.send(sender, "You are now ignored.", isPrivate)
             }
         } else {
             if (ignored.contains(sender)) {
-                bot.send(sender, "You are currently ignored.")
+                bot.send(sender, "You are currently ignored.", isPrivate)
             } else {
-                bot.send(sender, "You are not currently ignored.")
+                bot.send(sender, "You are not currently ignored.", isPrivate)
             }
         }
     }
 
-    private fun ignoreOp(bot: Mobibot, sender: String, args: String) {
+    private fun ignoreOp(bot: Mobibot, sender: String, args: String, isPrivate: Boolean) {
         if (args.isNotEmpty()) {
             val nicks = args.toLowerCase().split(" ")
             for (nick in nicks) {
@@ -142,10 +142,10 @@ class Ignore(defaultIgnore: String) : AbstractCommand() {
         }
 
         if (ignored.size > 0) {
-            bot.send(sender, Utils.bold("The following nicks are ignored:"))
-            bot.sendCommandsList(sender, ignored.toList(), false)
+            bot.send(sender, "The following nicks are ignored:", isPrivate)
+            bot.sendCommandsList(sender, ignored.toList(), 8, isPrivate, true)
         } else {
-            bot.send(sender, "No one is currently ${Utils.bold("ignored")}.")
+            bot.send(sender, "No one is currently ${Utils.bold("ignored")}.", isPrivate)
         }
     }
 }

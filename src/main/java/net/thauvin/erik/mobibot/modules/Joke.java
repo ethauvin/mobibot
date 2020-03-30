@@ -44,8 +44,6 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
 
-import static net.thauvin.erik.mobibot.Utils.bold;
-
 /**
  * The Joke module.
  *
@@ -107,19 +105,19 @@ public final class Joke extends ThreadedModule {
                                 final String cmd,
                                 final String args,
                                 final boolean isPrivate) {
-        new Thread(() -> run(bot, sender, cmd, args)).start();
+        new Thread(() -> run(bot, sender, cmd, args, isPrivate)).start();
     }
 
     /**
      * Returns a random joke from <a href="http://www.icndb.com/">The Internet Chuck Norris Database</a>.
      */
     @Override
-    void run(final Mobibot bot, final String sender, final String cmd, final String arg) {
+    void run(final Mobibot bot, final String sender, final String cmd, final String arg, final boolean isPrivate) {
         try {
             bot.send(Utils.cyan(randomJoke().getMessage()));
         } catch (ModuleException e) {
             bot.getLogger().warn(e.getDebugMessage(), e);
-            bot.send(sender, e.getMessage());
+            bot.send(sender, e.getMessage(), isPrivate);
         }
     }
 
@@ -127,8 +125,8 @@ public final class Joke extends ThreadedModule {
      * {@inheritDoc}
      */
     @Override
-    public void helpResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate) {
-        bot.send(sender, bold("To retrieve a random joke:"));
-        bot.send(sender, Utils.helpIndent(bot.getNick() + ": " + JOKE_CMD));
+    public void helpResponse(final Mobibot bot, final String sender, final boolean isPrivate) {
+        bot.send(sender, "To retrieve a random joke:", isPrivate);
+        bot.send(sender, Utils.helpIndent(bot.getNick() + ": " + JOKE_CMD), isPrivate);
     }
 }

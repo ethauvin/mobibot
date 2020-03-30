@@ -60,8 +60,8 @@ public class Versions extends AbstractCommand {
     @NotNull
     @Override
     public List<String> getHelp() {
-        return List.of(Utils.bold("To view the versions data (bot, java, etc.):"),
-                       Utils.helpIndent("/msg %s $command"));
+        return List.of("To view the versions data (bot, java, etc.):",
+                       Utils.helpIndent("%s " + getCommand()));
     }
 
     @Override
@@ -88,10 +88,10 @@ public class Versions extends AbstractCommand {
                                 final boolean isPrivate) {
         if (isOp) {
             for (final String v : versions) {
-                bot.send(sender, v);
+                bot.send(sender, v, isPrivate);
             }
         } else {
-            bot.helpDefault(sender, false);
+            bot.helpDefault(sender, false, isPrivate);
         }
 
     }

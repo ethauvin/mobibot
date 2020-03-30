@@ -39,8 +39,8 @@ class Cycle : AbstractCommand() {
     private val wait = 10
     override val command = "cycle"
     override val help = listOf(
-        Utils.bold("To have the bot leave the channel and come back:"),
-        Utils.helpIndent("/msg %s $command")
+       "To have the bot leave the channel and come back:",
+        Utils.helpIndent("%s $command")
     )
     override val isOp = true
     override val isPublic = false
@@ -56,13 +56,13 @@ class Cycle : AbstractCommand() {
         isPrivate: Boolean
     ) {
         if (isOp) {
-            bot.send(bot.channel, "$sender has just asked me to leave. I'll be back!")
+            bot.send("$sender has just asked me to leave. I'll be back!")
             bot.sleep(wait)
             bot.partChannel(bot.channel)
             bot.sleep(wait)
             bot.joinChannel(bot.channel)
         } else {
-            bot.helpDefault(sender, isOp)
+            bot.helpDefault(sender, isOp, isPrivate)
         }
     }
 }

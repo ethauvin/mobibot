@@ -41,9 +41,8 @@ import java.util.*
 class Recap : AbstractCommand() {
     override val command = "recap"
     override val help = listOf(
-        Utils.bold("To list the last 10 public channel messages:"),
-        Utils.helpIndent("%s: $command"),
-        Utils.helpIndent("/msg %s $command")
+        "To list the last 10 public channel messages:",
+        Utils.helpIndent("%s $command")
     )
     override val isOp = false
     override val isPublic = true
@@ -89,7 +88,7 @@ class Recap : AbstractCommand() {
                 bot.send(sender, r, isPrivate)
             }
         } else {
-            bot.send(sender, "Sorry, nothing to recap.", true)
+            bot.send(sender, "Sorry, nothing to recap.", isPrivate)
         }
     }
 }

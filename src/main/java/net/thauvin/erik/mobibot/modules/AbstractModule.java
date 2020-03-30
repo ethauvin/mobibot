@@ -96,16 +96,13 @@ public abstract class AbstractModule {
 
     /**
      * Responds with the module's Constants.
-     *
-     * @param bot       The bot's instance.
+     *  @param bot       The bot's instance.
      * @param sender    The sender.
-     * @param args      The help arguments.
      * @param isPrivate Set to <code>true</code> if the response should be sent as a private message.
      */
     public abstract void helpResponse(final Mobibot bot,
                                       final String sender,
-                                      final String args,
-                                      @SuppressWarnings("unused") final boolean isPrivate);
+                                      final boolean isPrivate);
 
     /**
      * Returns <code>true</code> if the module is enabled.

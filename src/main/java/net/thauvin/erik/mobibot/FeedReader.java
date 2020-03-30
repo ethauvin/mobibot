@@ -89,20 +89,20 @@ class FeedReader implements Runnable {
             SyndEntry item;
             final List<SyndEntry> items = feed.getEntries();
             if (items.isEmpty()) {
-                bot.send(sender, "There is currently nothing to view. Why don't you post something?");
+                bot.send(sender, "There is currently nothing to view. Why don't you post something?", false);
             } else {
                 for (int i = 0; (i < items.size()) && (i < MAX_ITEMS); i++) {
                     item = items.get(i);
-                    bot.send(sender, item.getTitle());
-                    bot.send(sender, TAB_INDENT + Utils.green(item.getLink()));
+                    bot.send(sender, item.getTitle(), false);
+                    bot.send(sender, TAB_INDENT + Utils.green(item.getLink()), false);
                 }
             }
         } catch (MalformedURLException e) {
             bot.getLogger().debug("Invalid feed URL.", e);
-            bot.send(sender, "The feed URL is invalid.");
+            bot.send(sender, "The feed URL is invalid.", false);
         } catch (Exception e) {
             bot.getLogger().debug("Unable to fetch the feed.", e);
-            bot.send(sender, "An error has occurred while fetching the feed: " + e.getMessage());
+            bot.send(sender, "An error has occurred while fetching the feed: " + e.getMessage(), false);
         }
     }
 }
