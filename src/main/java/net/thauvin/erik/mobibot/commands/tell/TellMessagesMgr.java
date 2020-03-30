@@ -100,9 +100,7 @@ final class TellMessagesMgr {
             }
         } catch (FileNotFoundException ignore) {
             // Do nothing
-        } catch (IOException e) {
-            logger.error("An IO error occurred loading the messages queue.", e);
-        } catch (Exception e) {
+        } catch (IOException | ClassNotFoundException e) {
             logger.error("An error occurred loading the messages queue.", e);
         }
 
