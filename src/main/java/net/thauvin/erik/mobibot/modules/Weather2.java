@@ -92,7 +92,7 @@ public class Weather2 extends ThreadedModule {
     @SuppressWarnings("AvoidEscapedUnicodeCharacters")
     private static String getTemps(final Double d) {
         final double c = (d - 32) * 5 / 9;
-        return Math.round(d) + " \u00B0F, " + Math.round(c) + " \u00B0C";
+        return Math.round(d) + " °F, " + Math.round(c) + " °C";
     }
 
     /**
@@ -138,7 +138,8 @@ public class Weather2 extends ThreadedModule {
                         cwd = owm.currentWeatherByCityName(city, getCountry(country));
                     }
                     if (cwd.hasCityName()) {
-                        messages.add(new PublicMessage("City: " + cwd.getCityName() + " [" + country + "]"));
+                        messages.add(new PublicMessage(
+                                "City: " + cwd.getCityName() + " [" + StringUtils.upperCase(country) + "]"));
 
                         final Main main = cwd.getMainData();
                         if (main != null) {
@@ -159,15 +160,13 @@ public class Weather2 extends ThreadedModule {
                         }
 
                         if (cwd.hasWeatherList()) {
-                            final StringBuilder condition = new StringBuilder("Condition: ");
+                            final StringBuilder condition = new StringBuilder("Condition:");
                             final List<Weather> list = cwd.getWeatherList();
                             if (list != null) {
                                 for (final Weather w : list) {
-                                    if (condition.indexOf(",") == -1) {
-                                        condition.append(StringUtils.capitalize(w.getDescription()));
-                                    } else {
-                                        condition.append(", ").append(w.getDescription());
-                                    }
+                                    condition.append(' ')
+                                             .append(StringUtils.capitalize(w.getDescription()))
+                                             .append('.');
                                 }
                                 messages.add(new NoticeMessage(condition.toString()));
                             }
@@ -182,7 +181,8 @@ public class Weather2 extends ThreadedModule {
                                         "https://openweathermap.org/find"))
                                                            .newBuilder()
                                                            .addQueryParameter("q",
-                                                                              city + ',' + country)
+                                                                              city + ','
+                                                                              + StringUtils.upperCase(country))
                                                            .build();
                                 messages.add(new NoticeMessage(url.toString(), Colors.GREEN));
                             }
@@ -210,26 +210,28 @@ public class Weather2 extends ThreadedModule {
      * {@inheritDoc}
      */
     @Override
-    public void helpResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate) {
-        bot.send(sender, bold("To display weather information:"));
-        bot.send(sender, Utils.helpIndent(bot.getNick() + ": " + WEATHER_CMD + " <city> [, <country code>]"));
-        bot.send(sender, "For example:");
-        bot.send(sender, Utils.helpIndent(bot.getNick() + ": " + WEATHER_CMD + " paris, fr"));
+    public void helpResponse(final Mobibot bot, final String sender, final boolean isPrivate) {
+        bot.send(sender, "To display weather information:", isPrivate);
+        bot.send(sender,
+                 Utils.helpIndent(bot.getNick() + ": " + WEATHER_CMD + " <city> [, <country code>]"),
+                 isPrivate);
+        bot.send(sender, "For example:", isPrivate);
+        bot.send(sender, Utils.helpIndent(bot.getNick() + ": " + WEATHER_CMD + " paris, fr"), isPrivate);
         bot.send(sender,
                  "The default ISO 3166 country code is " + bold("US")
-                 + ". Zip codes are supported in most countries.");
+                 + ". Zip codes are supported in most countries.", isPrivate);
     }
 
     /**
      * Fetches the weather data from a specific city.
      */
     @Override
-    void run(final Mobibot bot, final String sender, final String cmd, final String args) {
+    void run(final Mobibot bot, final String sender, final String cmd, final String args, final boolean isPrivate) {
         if (StringUtils.isNotBlank(args)) {
             try {
                 final List<Message> messages = getWeather(args, properties.get(OWM_API_KEY_PROP));
                 if (messages.get(0).isError()) {
-                    helpResponse(bot, sender, args, true);
+                    helpResponse(bot, sender, isPrivate);
                 } else {
                     for (final Message msg : messages) {
                         bot.send(sender, msg);
@@ -240,7 +242,7 @@ public class Weather2 extends ThreadedModule {
                 bot.send(e.getMessage());
             }
         } else {
-            helpResponse(bot, sender, args, true);
+            helpResponse(bot, sender, isPrivate);
         }
     }
 }

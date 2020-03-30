@@ -44,11 +44,10 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoField;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Map;
 import java.util.TreeMap;
-
-import static net.thauvin.erik.mobibot.Utils.bold;
 
 /**
  * The WorldTime module.
@@ -195,14 +194,16 @@ public final class WorldTime extends AbstractModule {
 
         if (tz != null) {
             if (BEATS_KEYWORD.equals(tz)) {
-                response = ("The current Internet Time is: " + internetTime() + ' ' + BEATS_KEYWORD);
+                response = ("The current Internet Time is: " + Utils.bold(internetTime() + ' ' + BEATS_KEYWORD));
             } else {
                 response = ZonedDateTime.now().withZoneSameInstant(ZoneId.of(tz)).format(
-                        DateTimeFormatter.ofPattern("'The time is 'HH:mm' on 'EEEE, d MMMM yyyy' in '"))
-                           + tz.substring(tz.indexOf('/') + 1).replace('_', ' ');
+                        DateTimeFormatter
+                                .ofPattern("'The time is " + Utils.bold("'HH:mm'") + " on " + Utils.bold(
+                                        "'EEEE, d MMMM yyyy'") + " in '"))
+                           + Utils.bold(tz.substring(tz.indexOf('/') + 1).replace('_', ' '));
             }
         } else {
-            return new ErrorMessage("The supported countries/zones are: " + COUNTRIES_MAP.keySet());
+            return new ErrorMessage("Unsupported country/zone. Please try again.");
         }
 
         return new PublicMessage(response);
@@ -217,15 +218,19 @@ public final class WorldTime extends AbstractModule {
                                 final String cmd,
                                 final String args,
                                 final boolean isPrivate) {
-        final Message msg = worldTime(args);
-
-        if (isPrivate) {
-            bot.send(sender, msg.getMessage(), true);
+        if (args.length() == 0) {
+            bot.send(sender, "The supported countries/zones are: ", isPrivate);
+            bot.sendCommandsList(sender, new ArrayList<>(COUNTRIES_MAP.keySet()), 17, false, false);
         } else {
-            if (msg.isError()) {
-                bot.send(sender, msg.getMessage());
+            final Message msg = worldTime(args);
+            if (isPrivate) {
+                bot.send(sender, msg.getMessage(), true);
             } else {
-                bot.send(msg.getMessage());
+                if (msg.isError()) {
+                    bot.send(sender, msg.getMessage(), false);
+                } else {
+                    bot.send(msg.getMessage());
+                }
             }
         }
     }
@@ -234,12 +239,12 @@ public final class WorldTime extends AbstractModule {
      * {@inheritDoc}
      */
     @Override
-    public void helpResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate) {
-        bot.send(sender, bold("To display a country's current date/time:"));
-        bot.send(sender, Utils.helpIndent(bot.getNick() + ": " + TIME_CMD) + " [<country code>]");
+    public void helpResponse(final Mobibot bot, final String sender, final boolean isPrivate) {
+        bot.send(sender, "To display a country's current date/time:", isPrivate);
+        bot.send(sender, Utils.helpIndent(bot.getNick() + ": " + TIME_CMD) + " [<country code>]", isPrivate);
 
-        bot.send(sender, bold("For a listing of the supported countries:"));
-        bot.send(sender, Utils.helpIndent(bot.getNick() + ": " + TIME_CMD));
+        bot.send(sender, "For a listing of the supported countries:", isPrivate);
+        bot.send(sender, Utils.helpIndent(bot.getNick() + ": " + TIME_CMD), isPrivate);
     }
 
     /**
