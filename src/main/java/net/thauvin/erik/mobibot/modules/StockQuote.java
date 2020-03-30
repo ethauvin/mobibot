@@ -52,8 +52,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import static net.thauvin.erik.mobibot.Utils.bold;
-
 /**
  * The StockQuote module.
  *
@@ -206,16 +204,16 @@ public final class StockQuote extends ThreadedModule {
      * {@inheritDoc}
      */
     @Override
-    public void helpResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate) {
-        bot.send(sender, bold("To retrieve a stock quote:"));
-        bot.send(sender, Utils.helpIndent(bot.getNick() + ": " + STOCK_CMD + " <symbol|keywords>"));
+    public void helpResponse(final Mobibot bot, final String sender, final boolean isPrivate) {
+        bot.send(sender, "To retrieve a stock quote:", isPrivate);
+        bot.send(sender, Utils.helpIndent(bot.getNick() + ": " + STOCK_CMD + " <symbol|keywords>"), isPrivate);
     }
 
     /**
-     * Returns the specified stock quote from Alpha Advantage.
+     * Returns the specified stock quote from Alpha Avantage.
      */
     @Override
-    void run(final Mobibot bot, final String sender, final String cmd, final String symbol) {
+    void run(final Mobibot bot, final String sender, final String cmd, final String symbol, final boolean isPrivate) {
         if (StringUtils.isNotBlank(symbol)) {
             try {
                 final List<Message> messages = getQuote(symbol, properties.get(ALPHAVANTAGE_API_KEY_PROP));
@@ -227,7 +225,7 @@ public final class StockQuote extends ThreadedModule {
                 bot.send(e.getMessage());
             }
         } else {
-            helpResponse(bot, sender, symbol, true);
+            helpResponse(bot, sender, isPrivate);
         }
     }
 }
