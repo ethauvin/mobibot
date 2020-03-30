@@ -38,7 +38,6 @@ import net.thauvin.erik.mobibot.Mobibot;
 import net.thauvin.erik.mobibot.Utils;
 import net.thauvin.erik.mobibot.msg.ErrorMessage;
 import net.thauvin.erik.mobibot.msg.Message;
-import net.thauvin.erik.mobibot.msg.NoticeMessage;
 import net.thauvin.erik.mobibot.msg.PublicMessage;
 import org.apache.commons.lang3.StringUtils;
 import org.jdom2.Document;
@@ -51,12 +50,10 @@ import javax.xml.XMLConstants;
 import java.io.IOException;
 import java.net.URL;
 import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
-
-import static net.thauvin.erik.mobibot.Utils.bold;
 
 /**
  * The CurrentConverter module.
@@ -67,13 +64,12 @@ import static net.thauvin.erik.mobibot.Utils.bold;
  */
 @SuppressWarnings("PMD.UseConcurrentHashMap")
 public final class CurrencyConverter extends ThreadedModule {
-    /**
-     * The rates keyword.
-     */
-    static final String CURRENCY_RATES_KEYWORD = "rates";
-
     // Currency command
     private static final String CURRENCY_CMD = "currency";
+    // Rates keyword
+    private static final String CURRENCY_RATES_KEYWORD = "rates";
+    // Empty rate table.
+    private static final String EMPTY_RATE_TABLE = "Sorry, but the exchange rate table is empty.";
     // Exchange rates
     private static final Map<String, String> EXCHANGE_RATES = new TreeMap<>();
     // Exchange rates table URL
@@ -96,9 +92,54 @@ public final class CurrencyConverter extends ThreadedModule {
      *
      * @param query The query.
      * @return The {@link Message} contained the converted currency.
-     * @throws ModuleException If an error occurs while converting.
      */
-    static Message convertCurrency(final String query) throws ModuleException {
+    static Message convertCurrency(final String query) {
+        final String[] cmds = query.split(" ");
+
+        if (cmds.length == 4) {
+            if (cmds[3].equals(cmds[1]) || "0".equals(cmds[0])) {
+                return new PublicMessage("You're kidding, right?");
+            } else {
+                final String to = cmds[1].toUpperCase(Constants.LOCALE);
+                final String from = cmds[3].toUpperCase(Constants.LOCALE);
+
+                if (EXCHANGE_RATES.containsKey(to) && EXCHANGE_RATES.containsKey(from)) {
+                    try {
+                        final double amt = Double.parseDouble(cmds[0].replace(",", ""));
+                        final double doubleFrom = Double.parseDouble(EXCHANGE_RATES.get(to));
+                        final double doubleTo = Double.parseDouble(EXCHANGE_RATES.get(from));
+
+                        return new PublicMessage(
+                                NumberFormat.getCurrencyInstance(Constants.LOCALE).format(amt).substring(1)
+                                + ' '
+                                + cmds[1].toUpperCase(Constants.LOCALE)
+                                + " = "
+                                + NumberFormat.getCurrencyInstance(Constants.LOCALE)
+                                              .format((amt * doubleTo) / doubleFrom)
+                                              .substring(1)
+                                + ' '
+                                + cmds[3].toUpperCase(Constants.LOCALE));
+                    } catch (NumberFormatException e) {
+                        return new ErrorMessage("Let's try with some real numbers next time, okay?");
+                    }
+                } else {
+                    return new ErrorMessage("Sounds like monopoly money to me!");
+                }
+            }
+        }
+        return new ErrorMessage("Invalid query. Let's try again.");
+    }
+
+    static List<String> currencyRates() {
+        final List<String> rates = new ArrayList<>(33);
+        for (final Map.Entry<String, String> rate : EXCHANGE_RATES.entrySet()) {
+            rates.add("  " + rate.getKey() + ": " + StringUtils.leftPad(rate.getValue(), 8));
+        }
+
+        return rates;
+    }
+
+    static void loadRates() throws ModuleException {
         if (EXCHANGE_RATES.isEmpty()) {
             try {
                 final SAXBuilder builder = new SAXBuilder();
@@ -116,71 +157,20 @@ public final class CurrencyConverter extends ThreadedModule {
                 pubDate = cubeTime.getAttribute("time").getValue();
 
                 final List<Element> cubes = cubeTime.getChildren();
-                Element cube;
 
-                for (final Element rawCube : cubes) {
-                    cube = rawCube;
+                for (final Element cube : cubes) {
                     EXCHANGE_RATES.put(
                             cube.getAttribute("currency").getValue(),
                             cube.getAttribute("rate").getValue());
                 }
 
                 EXCHANGE_RATES.put("EUR", "1");
-            } catch (JDOMException e) {
-                throw new ModuleException(query, "An error has occurred while parsing the exchange rates table.", e);
-            } catch (IOException e) {
-                throw new ModuleException(
-                        query, "An error has occurred while fetching the exchange rates table.", e);
+            } catch (JDOMException | IOException e) {
+                throw new ModuleException(e.getMessage(),
+                                          "An error has occurred while parsing the exchange rates table.",
+                                          e);
             }
         }
-
-        if (EXCHANGE_RATES.isEmpty()) {
-            return new ErrorMessage("Sorry, but the exchange rate table is empty.");
-        } else {
-            final String[] cmds = query.split(" ");
-
-            if (cmds.length == 4) {
-                if (cmds[3].equals(cmds[1]) || "0".equals(cmds[0])) {
-                    return new ErrorMessage("You're kidding, right?");
-                } else {
-                    try {
-                        final double amt = Double.parseDouble(cmds[0].replace(",", ""));
-                        final double from =
-                                Double.parseDouble(EXCHANGE_RATES.get(cmds[1].toUpperCase(Constants.LOCALE)));
-                        final double to = Double.parseDouble(EXCHANGE_RATES.get(cmds[3].toUpperCase(Constants.LOCALE)));
-
-                        return new PublicMessage(
-                                NumberFormat.getCurrencyInstance(Locale.US).format(amt).substring(1)
-                                + ' '
-                                + cmds[1].toUpperCase(Constants.LOCALE)
-                                + " = "
-                                + NumberFormat.getCurrencyInstance(Locale.US)
-                                              .format((amt * to) / from)
-                                              .substring(1)
-                                + ' '
-                                + cmds[3].toUpperCase(Constants.LOCALE));
-                    } catch (Exception e) {
-                        throw new ModuleException("convertCurrency(" + query + ')',
-                                                  "The supported currencies are: " + EXCHANGE_RATES.keySet(), e);
-                    }
-                }
-            } else if (CURRENCY_RATES_KEYWORD.equals(query)) {
-
-                final StringBuilder buff = new StringBuilder().append('[').append(pubDate).append("]: ");
-
-                int i = 0;
-                for (final Map.Entry<String, String> rate : EXCHANGE_RATES.entrySet()) {
-                    if (i > 0) {
-                        buff.append(", ");
-                    }
-                    buff.append(rate.getKey()).append(": ").append(rate.getValue());
-                    i++;
-                }
-
-                return new NoticeMessage(buff.toString());
-            }
-        }
-        return new ErrorMessage("The supported currencies are: " + EXCHANGE_RATES.keySet());
     }
 
     /**
@@ -206,22 +196,28 @@ public final class CurrencyConverter extends ThreadedModule {
      */
     @SuppressFBWarnings("REDOS")
     @Override
-    void run(final Mobibot bot, final String sender, final String cmd, final String query) {
-        if (StringUtils.isNotBlank(sender) && StringUtils.isNotBlank(query)) {
-            if (query.matches("\\d+([,\\d]+)?(\\.\\d+)? [a-zA-Z]{3}+ to [a-zA-Z]{3}+")) {
-                try {
-                    final Message msg = convertCurrency(query);
-                    if (msg.isError()) {
-                        helpResponse(bot, sender, CURRENCY_CMD + ' ' + query, false);
-                    }
-                    bot.send(sender, msg);
-                } catch (ModuleException e) {
-                    bot.getLogger().warn(e.getDebugMessage(), e);
-                    bot.send(sender, e.getMessage());
-                }
-            } else {
-                helpResponse(bot, sender, CURRENCY_CMD + ' ' + query, true);
+    void run(final Mobibot bot, final String sender, final String cmd, final String query, final boolean isPrivate) {
+        if (EXCHANGE_RATES.isEmpty()) {
+            try {
+                loadRates();
+            } catch (ModuleException e) {
+                bot.getLogger().warn(e.getDebugMessage(), e);
             }
+        }
+
+        if (EXCHANGE_RATES.isEmpty()) {
+            bot.send(sender, EMPTY_RATE_TABLE, true);
+        } else if (query.matches("\\d+([,\\d]+)?(\\.\\d+)? [a-zA-Z]{3}+ to [a-zA-Z]{3}+")) {
+            final Message msg = convertCurrency(query);
+            bot.send(sender, msg);
+            if (msg.isError()) {
+                helpResponse(bot, sender, isPrivate);
+            }
+        } else if (query.contains(CURRENCY_RATES_KEYWORD)) {
+            bot.send(sender, "The currency rates for " + Utils.bold(pubDate) + " are:", isPrivate);
+            bot.sendCommandsList(sender, currencyRates(), 3, isPrivate, false);
+        } else {
+            helpResponse(bot, sender, isPrivate);
         }
     }
 
@@ -229,15 +225,25 @@ public final class CurrencyConverter extends ThreadedModule {
      * {@inheritDoc}
      */
     @Override
-    public void helpResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate) {
-        bot.send(sender, bold("To convert from one currency to another:"));
-        bot.send(sender, Utils.helpIndent(bot.getNick() + ": " + CURRENCY_CMD + " [100 USD to EUR]"));
-
-        if (args.endsWith(CURRENCY_CMD)) {
-            bot.send(sender, bold("For a listing of currency rates:"));
-            bot.send(sender, Utils.helpIndent(bot.getNick() + ": " + CURRENCY_CMD) + ' ' + CURRENCY_RATES_KEYWORD);
-            bot.send(sender, bold("For a listing of supported currencies:"));
-            bot.send(sender, Utils.helpIndent(bot.getNick() + ": " + CURRENCY_CMD));
+    public void helpResponse(final Mobibot bot, final String sender, final boolean isPrivate) {
+        if (EXCHANGE_RATES.isEmpty()) {
+            try {
+                loadRates();
+            } catch (ModuleException e) {
+                bot.getLogger().debug(e.getDebugMessage(), e);
+            }
+        }
+        if (EXCHANGE_RATES.isEmpty()) {
+            bot.send(sender, EMPTY_RATE_TABLE, isPrivate);
+        } else {
+            bot.send(sender, "To convert from one currency to another:", isPrivate);
+            bot.send(sender, Utils.helpIndent(bot.getNick() + ": " + CURRENCY_CMD + " 100 USD to EUR"), isPrivate);
+            bot.send(sender, "For a listing of current rates:", isPrivate);
+            bot.send(sender,
+                     Utils.helpIndent(bot.getNick() + ": " + CURRENCY_CMD) + ' ' + CURRENCY_RATES_KEYWORD,
+                     isPrivate);
+            bot.send(sender, "The supported currencies are: ", isPrivate);
+            bot.sendCommandsList(sender, new ArrayList<>(EXCHANGE_RATES.keySet()), 11, isPrivate, false);
         }
     }
 }
