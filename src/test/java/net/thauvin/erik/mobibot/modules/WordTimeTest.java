@@ -32,6 +32,7 @@
 
 package net.thauvin.erik.mobibot.modules;
 
+import net.thauvin.erik.mobibot.Utils;
 import org.testng.annotations.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -46,7 +47,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class WordTimeTest {
     @Test
     public void testWorldTime() {
-        assertThat(WorldTime.worldTime("PST").getMessage()).as("PST").endsWith("Los Angeles");
+        assertThat(WorldTime.worldTime("PST").getMessage()).as("PST").endsWith(Utils.bold("Los Angeles"));
         assertThat(WorldTime.worldTime("BLAH").isError()).as("BLAH").isTrue();
         assertThat(WorldTime.worldTime("BEATS").getMessage()).as("BEATS").contains("@");
     }

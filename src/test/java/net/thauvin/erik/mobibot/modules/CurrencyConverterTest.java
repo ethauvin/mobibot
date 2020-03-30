@@ -33,7 +33,7 @@
 package net.thauvin.erik.mobibot.modules;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-import net.thauvin.erik.mobibot.msg.ErrorMessage;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -46,26 +46,28 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @since 1.0
  */
 public class CurrencyConverterTest {
-    @Test
-    public void testCurrencyConvertererImpl() {
-        AbstractModuleTest.testAbstractModule(new CurrencyConverter());
-    }
-
-    @Test(expectedExceptions = ModuleException.class)
-    public void testException() throws ModuleException {
-        CurrencyConverter.convertCurrency("100 BLA to USD");
+    @BeforeClass
+    public void before() throws ModuleException {
+        CurrencyConverter.loadRates();
     }
 
     @Test
     @SuppressFBWarnings("PRMC_POSSIBLY_REDUNDANT_METHOD_CALLS")
-    public void testConvertCurrency() throws ModuleException {
+    public void testConvertCurrency() {
         assertThat(CurrencyConverter.convertCurrency("100 USD to EUR").getMessage())
-            .as("100 USD to EUR").startsWith("100.00 USD = ");
-        assertThat(CurrencyConverter.convertCurrency("100 USD to USD"))
-            .as("100 USD to USD").isInstanceOf(ErrorMessage.class);
-        assertThat(CurrencyConverter.convertCurrency(CurrencyConverter.CURRENCY_RATES_KEYWORD).isNotice())
-            .as(CurrencyConverter.CURRENCY_RATES_KEYWORD + " is notice").isTrue();
-        assertThat(CurrencyConverter.convertCurrency(CurrencyConverter.CURRENCY_RATES_KEYWORD).getMessage())
-            .as(CurrencyConverter.CURRENCY_RATES_KEYWORD).contains("USD: ");
+                .as("100 USD to EUR").matches("100\\.00 USD = \\d{2,3}\\.\\d{2} EUR");
+        assertThat(CurrencyConverter.convertCurrency("100 USD to USD").getMessage())
+                .as("100 USD to USD").contains("You're kidding, right?");
+        assertThat(CurrencyConverter.convertCurrency("100 USD").getMessage())
+                .as("100 USD").contains("Invalid query.");
+        assertThat(CurrencyConverter.currencyRates().size())
+                .as("currencyRates().size() == 33").isEqualTo(33);
+        assertThat(CurrencyConverter.currencyRates())
+                .as("currencyRates().get(EUR)").contains("  EUR:        1");
+    }
+
+    @Test
+    public void testCurrencyConvertererImpl() {
+        AbstractModuleTest.testAbstractModule(new CurrencyConverter());
     }
 }

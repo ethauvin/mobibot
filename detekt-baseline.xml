@@ -4,13 +4,17 @@
   <Whitelist>
     <ID>LongParameterList:AbstractCommand.kt$AbstractCommand$( bot: Mobibot, sender: String, login: String, args: String, isOp: Boolean, isPrivate: Boolean )</ID>
     <ID>LongParameterList:Comment.kt$Comment$( bot: Mobibot, cmd: String, sender: String, isOp: Boolean, entry: EntryLink, index: Int, commentIndex: Int )</ID>
+    <ID>LongParameterList:Comment.kt$Comment$( bot: Mobibot, sender: String, isOp: Boolean, entry: EntryLink, index: Int, commentIndex: Int )</ID>
     <ID>LongParameterList:Comment.kt$Comment$(bot: Mobibot, cmd: String, sender: String, entry: EntryLink, index: Int, commentIndex: Int)</ID>
     <ID>MagicNumber:Comment.kt$Comment$3</ID>
     <ID>MagicNumber:Cycle.kt$Cycle$10</ID>
+    <ID>MagicNumber:Ignore.kt$Ignore$8</ID>
+    <ID>MagicNumber:Modules.kt$Modules$7</ID>
     <ID>MagicNumber:Recap.kt$Recap.Companion$10</ID>
     <ID>MagicNumber:UrlMgr.kt$UrlMgr$1000L</ID>
     <ID>MagicNumber:UrlMgr.kt$UrlMgr$60L</ID>
     <ID>MagicNumber:View.kt$View$8</ID>
+    <ID>NestedBlockDepth:Comment.kt$Comment$commandResponse</ID>
     <ID>NestedBlockDepth:UrlMgr.kt$UrlMgr$commandResponse</ID>
   </Whitelist>
 </SmellBaseline>

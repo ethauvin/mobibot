@@ -32,6 +32,7 @@
 
 package net.thauvin.erik.mobibot.modules;
 
+import net.thauvin.erik.mobibot.Utils;
 import org.testng.annotations.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -46,9 +47,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class CalcTest {
     @Test
     public void testCalc() {
-        assertThat(Calc.calc("1 + 1")).as("calc(1+1)").isEqualTo("1+1 = 2");
-        assertThat(Calc.calc("1 -3")).as("calc(1 -3)").isEqualTo("1-3 = -2");
-        assertThat(Calc.calc("pi+π+e+φ")).as("calc(pi+π+e+φ)").isEqualTo("pi+π+e+φ = 10.62");
+        assertThat(Calc.calc("1 + 1")).as("calc(1+1)").isEqualTo("1+1 = %s", Utils.bold(2));
+        assertThat(Calc.calc("1 -3")).as("calc(1 -3)").isEqualTo("1-3 = %s", Utils.bold(-2));
+        assertThat(Calc.calc("pi+π+e+φ")).as("calc(pi+π+e+φ)").isEqualTo("pi+π+e+φ = %s", Utils.bold("10.62"));
         assertThat(Calc.calc("one + one")).as("calc(one + one)").startsWith("No idea.");
     }
 
