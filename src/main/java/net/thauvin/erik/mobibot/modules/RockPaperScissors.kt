@@ -100,20 +100,21 @@ class RockPaperScissors : AbstractModule() {
             }
             else -> {
                 bot.action(
-                    "${green(botHand.name)} ${bold(botHand.action)} ${red(botHand.name)} ~ You lose ~"
+                    "${green(botHand.name)} ${bold(botHand.action)} ${red(hand.name)} ~ You lose ~"
                 )
             }
         }
     }
 
-    override fun helpResponse(bot: Mobibot, sender: String, args: String?, isPrivate: Boolean) {
-        bot.send(sender, bold("To play Rock Paper Scissors:"))
+    override fun helpResponse(bot: Mobibot, sender: String, isPrivate: Boolean) {
+        bot.send(sender, "To play Rock Paper Scissors:", isPrivate)
         bot.send(
             sender,
             helpIndent(
-                "${bot.nick}: ${Hands.ROCK.name.toLowerCase()} or ${Hands.PAPER.name.toLowerCase()}"
-                    + " or ${Hands.SCISSORS.name.toLowerCase()}"
-            )
+                "${bot.nick}: ${Hands.ROCK.name.toLowerCase()} | ${Hands.PAPER.name.toLowerCase()}"
+                    + " | ${Hands.SCISSORS.name.toLowerCase()}"
+            ),
+            isPrivate
         )
     }
 }
