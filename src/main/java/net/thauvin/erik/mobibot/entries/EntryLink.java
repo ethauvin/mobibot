@@ -35,7 +35,6 @@ package net.thauvin.erik.mobibot.entries;
 import com.rometools.rome.feed.synd.SyndCategory;
 import com.rometools.rome.feed.synd.SyndCategoryImpl;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-import net.thauvin.erik.mobibot.Constants;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.Serializable;
@@ -361,7 +360,7 @@ public class EntryLink implements Serializable {
 
                 if (part.length() >= 2) {
                     tag = new SyndCategoryImpl();
-                    tag.setName(part.substring(1).toLowerCase(Constants.LOCALE));
+                    tag.setName(StringUtils.lowerCase(part.substring(1)));
 
                     mod = part.charAt(0);
 
@@ -375,7 +374,7 @@ public class EntryLink implements Serializable {
                             this.tags.add(tag);
                         }
                     } else {
-                        tag.setName(part.trim().toLowerCase(Constants.LOCALE));
+                        tag.setName(StringUtils.lowerCase(part.trim()));
 
                         if (!this.tags.contains(tag)) {
                             this.tags.add(tag);

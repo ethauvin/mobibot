@@ -55,6 +55,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import static org.apache.commons.lang3.StringUtils.upperCase;
+
 /**
  * The CurrentConverter module.
  *
@@ -100,8 +102,8 @@ public final class CurrencyConverter extends ThreadedModule {
             if (cmds[3].equals(cmds[1]) || "0".equals(cmds[0])) {
                 return new PublicMessage("You're kidding, right?");
             } else {
-                final String to = cmds[1].toUpperCase(Constants.LOCALE);
-                final String from = cmds[3].toUpperCase(Constants.LOCALE);
+                final String to = upperCase(cmds[1]);
+                final String from = upperCase(cmds[3]);
 
                 if (EXCHANGE_RATES.containsKey(to) && EXCHANGE_RATES.containsKey(from)) {
                     try {
@@ -112,13 +114,13 @@ public final class CurrencyConverter extends ThreadedModule {
                         return new PublicMessage(
                                 NumberFormat.getCurrencyInstance(Constants.LOCALE).format(amt).substring(1)
                                 + ' '
-                                + cmds[1].toUpperCase(Constants.LOCALE)
+                                + upperCase(cmds[1])
                                 + " = "
                                 + NumberFormat.getCurrencyInstance(Constants.LOCALE)
                                               .format((amt * doubleTo) / doubleFrom)
                                               .substring(1)
                                 + ' '
-                                + cmds[3].toUpperCase(Constants.LOCALE));
+                                + upperCase(cmds[3]));
                     } catch (NumberFormatException e) {
                         return new ErrorMessage("Let's try with some real numbers next time, okay?");
                     }

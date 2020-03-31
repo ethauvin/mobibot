@@ -32,7 +32,6 @@
 
 package net.thauvin.erik.mobibot.commands.links
 
-import net.thauvin.erik.mobibot.Constants
 import net.thauvin.erik.mobibot.Mobibot
 import net.thauvin.erik.mobibot.Utils
 import net.thauvin.erik.mobibot.commands.AbstractCommand
@@ -73,7 +72,7 @@ class View : AbstractCommand() {
 
     private fun showPosts(bot: Mobibot, args: String, sender: String) {
         val max = entriesCount
-        var lcArgs = args.toLowerCase(Constants.LOCALE)
+        var lcArgs = args.toLowerCase()
         var i = 0
         if (lcArgs.isEmpty() && max > maxEntries) {
             i = max - maxEntries

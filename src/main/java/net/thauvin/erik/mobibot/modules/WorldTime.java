@@ -33,12 +33,12 @@
 package net.thauvin.erik.mobibot.modules;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-import net.thauvin.erik.mobibot.Constants;
 import net.thauvin.erik.mobibot.Mobibot;
 import net.thauvin.erik.mobibot.Utils;
 import net.thauvin.erik.mobibot.msg.ErrorMessage;
 import net.thauvin.erik.mobibot.msg.Message;
 import net.thauvin.erik.mobibot.msg.PublicMessage;
+import org.apache.commons.lang3.StringUtils;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -188,8 +188,7 @@ public final class WorldTime extends AbstractModule {
      */
     @SuppressFBWarnings("STT_STRING_PARSING_A_FIELD")
     static Message worldTime(final String query) {
-        final String tz = (COUNTRIES_MAP.get((query.substring(query.indexOf(' ') + 1).trim()
-                                                   .toUpperCase(Constants.LOCALE))));
+        final String tz = (COUNTRIES_MAP.get((StringUtils.upperCase(query.substring(query.indexOf(' ') + 1).trim()))));
         final String response;
 
         if (tz != null) {

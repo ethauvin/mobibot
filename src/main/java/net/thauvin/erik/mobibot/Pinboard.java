@@ -35,7 +35,7 @@ package net.thauvin.erik.mobibot;
 import net.thauvin.erik.mobibot.entries.EntryLink;
 import net.thauvin.erik.pinboard.PinboardPoster;
 
-import javax.swing.SwingWorker;
+import javax.swing.*;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;

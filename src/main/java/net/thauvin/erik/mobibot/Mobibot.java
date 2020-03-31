@@ -102,6 +102,7 @@ import java.util.Set;
 import java.util.Timer;
 
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
+import static org.apache.commons.lang3.StringUtils.lowerCase;
 
 /**
  * Implements the #mobitopia bot.
@@ -360,7 +361,7 @@ public class Mobibot extends PircBot {
                 System.exit(1);
             }
 
-            final String nickname = p.getProperty("nick", Mobibot.class.getName().toLowerCase(Constants.LOCALE));
+            final String nickname = p.getProperty("nick", lowerCase(Mobibot.class.getName()));
             final String channel = p.getProperty("channel");
             final String logsDir = Utils.ensureDir(p.getProperty("logs", "."), false);
 
@@ -567,8 +568,8 @@ public class Mobibot extends PircBot {
 
         for (final char c : getNick().toCharArray()) {
             if (Character.isLetter(c)) {
-                buff.append('[').append(String.valueOf(c).toLowerCase(Constants.LOCALE)).append(
-                        String.valueOf(c).toUpperCase(Constants.LOCALE)).append(']');
+                buff.append('[').append(lowerCase(String.valueOf(c))).append(StringUtils.upperCase(String.valueOf(c)))
+                    .append(']');
             } else {
                 buff.append(c);
             }
@@ -697,7 +698,7 @@ public class Mobibot extends PircBot {
         if (StringUtils.isBlank(topic)) {
             helpDefault(sender, isOp, isPrivate);
         } else {
-            final String lcTopic = topic.toLowerCase(Constants.LOCALE).trim();
+            final String lcTopic = lowerCase(topic).trim();
             if (lcTopic.equals(getChannelName())) {
                 send(sender, "To list the last 5 posts from the channel's weblog:", isPrivate);
                 send(sender, Utils.helpIndent(getNick() + ": " + getChannelName()), isPrivate);
@@ -783,7 +784,7 @@ public class Mobibot extends PircBot {
             isCommand = true;
 
             final String[] cmds = message.substring(message.indexOf(':') + 1).trim().split(" ", 2);
-            final String cmd = cmds[0].toLowerCase(Constants.LOCALE);
+            final String cmd = lowerCase(cmds[0]);
 
             String args = "";
 
@@ -850,7 +851,7 @@ public class Mobibot extends PircBot {
         }
 
         final String[] cmds = message.split(" ", 2);
-        final String cmd = cmds[0].toLowerCase(Constants.LOCALE);
+        final String cmd = lowerCase(cmds[0]);
         String args = "";
 
         if (cmds.length > 1) {
