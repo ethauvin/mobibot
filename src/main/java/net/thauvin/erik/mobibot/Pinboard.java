@@ -60,11 +60,10 @@ class Pinboard {
      *
      * @param bot       The bot's instance.
      * @param apiToken  The API end point.
-     * @param ircServer The IRC server.
      */
-    Pinboard(final Mobibot bot, final String apiToken, final String ircServer) {
+    Pinboard(final Mobibot bot, final String apiToken) {
         pinboard = new PinboardPoster(apiToken);
-        this.ircServer = ircServer;
+        ircServer = bot.getIrcServer();
 
         if (bot.getLogger().isDebugEnabled()) {
             final ConsoleHandler consoleHandler = new ConsoleHandler();
