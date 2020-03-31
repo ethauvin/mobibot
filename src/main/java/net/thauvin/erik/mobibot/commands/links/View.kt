@@ -115,6 +115,8 @@ class View : AbstractCommand() {
                 )
             }
         }
-
+        if (sent == 0) {
+            bot.send(sender, "No matches. Please try again.", false)
+        }
     }
 }
