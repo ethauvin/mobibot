@@ -35,7 +35,7 @@ package net.thauvin.erik.mobibot;
 import net.thauvin.erik.mobibot.entries.EntryLink;
 import net.thauvin.erik.pinboard.PinboardPoster;
 
-import javax.swing.*;
+import javax.swing.SwingWorker;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -58,8 +58,8 @@ class Pinboard {
     /**
      * Creates a new {@link Pinboard} instance.
      *
-     * @param bot       The bot's instance.
-     * @param apiToken  The API end point.
+     * @param bot      The bot's instance.
+     * @param apiToken The API end point.
      */
     Pinboard(final Mobibot bot, final String apiToken) {
         pinboard = new PinboardPoster(apiToken);

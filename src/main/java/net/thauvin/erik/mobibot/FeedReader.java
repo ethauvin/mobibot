@@ -52,9 +52,6 @@ class FeedReader implements Runnable {
     // Maximum number of feed items to display
     private static final int MAX_ITEMS = 5;
 
-    // Tab indent (4 spaces)
-    private static final String TAB_INDENT = "    ";
-
     // Bot
     private final Mobibot bot;
 
@@ -94,7 +91,7 @@ class FeedReader implements Runnable {
                 for (int i = 0; (i < items.size()) && (i < MAX_ITEMS); i++) {
                     item = items.get(i);
                     bot.send(sender, item.getTitle(), false);
-                    bot.send(sender, TAB_INDENT + Utils.green(item.getLink()), false);
+                    bot.send(sender, Utils.helpIndent(Utils.green(item.getLink()), false), false);
                 }
             }
         } catch (MalformedURLException e) {

@@ -141,7 +141,7 @@ public class Mobibot extends PircBot {
     // Tell object
     public final Tell tell;
     // Commands
-    private final List<AbstractCommand> commands = new ArrayList<>();
+    private final List<AbstractCommand> commands = new ArrayList<>(20);
     // Commands Names
     private final List<String> commandsNames = new ArrayList<>();
     // Main channel

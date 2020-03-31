@@ -32,7 +32,6 @@
 
 package net.thauvin.erik.mobibot.commands.tell;
 
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import net.thauvin.erik.mobibot.Mobibot;
 import net.thauvin.erik.mobibot.Utils;
 import net.thauvin.erik.mobibot.commands.links.View;
@@ -53,7 +52,8 @@ public class Tell {
      * The tell command.
      */
     public static final String TELL_CMD = "tell";
-
+    // Arrow
+    private static final String ARROW = " --> ";
     // Default maximum number of days to keep messages
     private static final int DEFAULT_TELL_MAX_DAYS = 7;
     // Default message max queue size
@@ -64,7 +64,6 @@ public class Tell {
     private static final String TELL_ALL_KEYWORD = "all";
     //T he delete command.
     private static final String TELL_DEL_KEYWORD = "del";
-
     // Bot instance
     private final Mobibot bot;
     // Maximum number of days to keep messages
@@ -111,6 +110,58 @@ public class Tell {
         return TellMessagesMgr.clean(messages, maxDays);
     }
 
+    // Delete message.
+    private void deleteMessage(final String sender, final String cmds, final boolean isPrivate) {
+        final String[] split = cmds.split(" ");
+
+        if (split.length == 2) {
+            final String id = split[1];
+            boolean deleted = false;
+
+            if (TELL_ALL_KEYWORD.equalsIgnoreCase(id)) {
+                for (final TellMessage message : messages) {
+                    if (message.getSender().equalsIgnoreCase(sender) && message.isReceived()) {
+                        messages.remove(message);
+                        deleted = true;
+                    }
+                }
+
+                if (deleted) {
+                    save();
+                    bot.send(sender, "Delivered messages have been deleted.", isPrivate);
+                } else {
+                    bot.send(sender, "No delivered messages were found.", isPrivate);
+                }
+
+            } else {
+                boolean found = false;
+
+                for (final TellMessage message : messages) {
+                    found = message.isMatchId(id);
+
+                    if (found && (message.getSender().equalsIgnoreCase(sender) || bot.isOp(sender))) {
+                        messages.remove(message);
+
+                        save();
+                        bot.send(sender, "Your message was deleted from the queue.", isPrivate);
+                        deleted = true;
+                        break;
+                    }
+                }
+
+                if (!deleted) {
+                    if (found) {
+                        bot.send(sender, "Only messages that you sent can be deleted.", isPrivate);
+                    } else {
+                        bot.send(sender, "The specified message [ID " + id + "] could not be found.", isPrivate);
+                    }
+                }
+            }
+        } else {
+            helpResponse(sender, isPrivate);
+        }
+    }
+
     /**
      * Responds with Constants.
      *
@@ -138,6 +189,28 @@ public class Tell {
         return maxSize > 0 && maxDays > 0;
     }
 
+    // New message.
+    private void newMessage(final String sender, final String cmds, final boolean isPrivate) {
+        final String[] split = cmds.split(" ", 2);
+
+        if (split.length == 2 && (StringUtils.isNotBlank(split[1]) && split[1].contains(" "))) {
+            if (messages.size() < maxSize) {
+                final TellMessage message = new TellMessage(sender, split[0], split[1].trim());
+
+                messages.add(message);
+
+                save();
+
+                bot.send(sender, "Message [ID " + message.getId() + "] was queued for "
+                                 + Utils.bold(message.getRecipient()), true);
+            } else {
+                bot.send(sender, "Sorry, the messages queue is currently full.", true);
+            }
+        } else {
+            helpResponse(sender, isPrivate);
+        }
+    }
+
     /**
      * Processes the commands.
      *
@@ -145,133 +218,19 @@ public class Tell {
      * @param cmds      The commands string.
      * @param isPrivate The private flag.
      */
-    @SuppressFBWarnings(value = "CC_CYCLOMATIC_COMPLEXITY",
-                        justification = "Working on it.")
     public void response(final String sender, final String cmds, final boolean isPrivate) {
-        final String arrow = " --> ";
         if (StringUtils.isBlank(cmds)) {
             helpResponse(sender, isPrivate);
         } else if (cmds.startsWith(View.VIEW_CMD)) {
             if (bot.isOp(sender) && (View.VIEW_CMD + ' ' + TELL_ALL_KEYWORD).equals(cmds)) {
-                if (!messages.isEmpty()) {
-                    for (final TellMessage message : messages) {
-                        bot.send(sender, Utils.bold(message.getSender()) + arrow + Utils.bold(message.getRecipient())
-                                         + " [ID: " + message.getId() + ", "
-                                         + (message.isReceived() ? "DELIVERED" : "QUEUED") + ']',
-                                 isPrivate);
-                    }
-                } else {
-                    bot.send(sender, "There are no messages in the queue.", isPrivate);
-                }
+                viewAll(sender, isPrivate);
             } else {
-                boolean hasMessage = false;
-
-                for (final TellMessage message : messages) {
-                    if (message.isMatch(sender)) {
-                        if (!hasMessage) {
-                            hasMessage = true;
-                            bot.send(sender, "Here are your messages: ", isPrivate);
-                        }
-
-                        if (message.isReceived()) {
-                            bot.send(sender,
-                                     Utils.bold(message.getSender()) + arrow + Utils.bold(message.getRecipient())
-                                     + " [" + Utils.utcDateTime(message.getReceived()) + ", ID: "
-                                     + message.getId() + ", DELIVERED]",
-                                     isPrivate);
-
-                        } else {
-                            bot.send(sender,
-                                     Utils.bold(message.getSender()) + arrow + Utils.bold(message.getRecipient())
-                                     + " [" + Utils.utcDateTime(message.getQueued()) + ", ID: "
-                                     + message.getId() + ", QUEUED]",
-                                     isPrivate);
-                        }
-
-                        bot.send(sender, Utils.helpIndent(message.getMessage()), isPrivate);
-                    }
-                }
-
-                if (!hasMessage) {
-                    bot.send(sender, "You have no messages in the queue.", isPrivate);
-                } else {
-                    bot.send(sender, "To delete one or all delivered messages:", isPrivate);
-                    bot.send(sender,
-                             Utils.helpIndent(bot.getNick() + ": " + TELL_CMD + ' ' + TELL_DEL_KEYWORD + " <id|"
-                                              + TELL_ALL_KEYWORD + '>'), isPrivate);
-                    bot.send(sender,
-                             "Messages are kept for " + Utils.bold(maxDays) + Utils.plural(maxDays, " day.", " days."),
-                             isPrivate);
-                }
+                viewMessages(sender, isPrivate);
             }
         } else if (cmds.startsWith(TELL_DEL_KEYWORD + ' ')) {
-            final String[] split = cmds.split(" ");
-
-            if (split.length == 2) {
-                final String id = split[1];
-                boolean deleted = false;
-
-                if (TELL_ALL_KEYWORD.equalsIgnoreCase(id)) {
-                    for (final TellMessage message : messages) {
-                        if (message.getSender().equalsIgnoreCase(sender) && message.isReceived()) {
-                            messages.remove(message);
-                            deleted = true;
-                        }
-                    }
-
-                    if (deleted) {
-                        save();
-                        bot.send(sender, "Delivered messages have been deleted.", isPrivate);
-                    } else {
-                        bot.send(sender, "No delivered messages were found.", isPrivate);
-                    }
-
-                } else {
-                    boolean found = false;
-
-                    for (final TellMessage message : messages) {
-                        found = message.isMatchId(id);
-
-                        if (found && (message.getSender().equalsIgnoreCase(sender) || bot.isOp(sender))) {
-                            messages.remove(message);
-
-                            save();
-                            bot.send(sender, "Your message was deleted from the queue.", isPrivate);
-                            deleted = true;
-                            break;
-                        }
-                    }
-
-                    if (!deleted) {
-                        if (found) {
-                            bot.send(sender, "Only messages that you sent can be deleted.", isPrivate);
-                        } else {
-                            bot.send(sender, "The specified message [ID " + id + "] could not be found.", isPrivate);
-                        }
-                    }
-                }
-            } else {
-                helpResponse(sender, isPrivate);
-            }
+            deleteMessage(sender, cmds, isPrivate);
         } else {
-            final String[] split = cmds.split(" ", 2);
-
-            if (split.length == 2 && (StringUtils.isNotBlank(split[1]) && split[1].contains(" "))) {
-                if (messages.size() < maxSize) {
-                    final TellMessage message = new TellMessage(sender, split[0], split[1].trim());
-
-                    messages.add(message);
-
-                    save();
-
-                    bot.send(sender, "Message [ID " + message.getId() + "] was queued for "
-                                     + Utils.bold(message.getRecipient()), true);
-                } else {
-                    bot.send(sender, "Sorry, the messages queue is currently full.", true);
-                }
-            } else {
-                helpResponse(sender, isPrivate);
-            }
+            newMessage(sender, cmds, isPrivate);
         }
 
         if (clean()) {
@@ -350,5 +309,62 @@ public class Tell {
      */
     public int size() {
         return messages.size();
+    }
+
+    // View all messages.
+    private void viewAll(final String sender, final boolean isPrivate) {
+        if (!messages.isEmpty()) {
+            for (final TellMessage message : messages) {
+                bot.send(sender, Utils.bold(message.getSender()) + ARROW + Utils.bold(message.getRecipient())
+                                 + " [ID: " + message.getId() + ", "
+                                 + (message.isReceived() ? "DELIVERED" : "QUEUED") + ']',
+                         isPrivate);
+            }
+        } else {
+            bot.send(sender, "There are no messages in the queue.", isPrivate);
+        }
+    }
+
+    // View messages.
+    private void viewMessages(final String sender, final boolean isPrivate) {
+        boolean hasMessage = false;
+
+        for (final TellMessage message : messages) {
+            if (message.isMatch(sender)) {
+                if (!hasMessage) {
+                    hasMessage = true;
+                    bot.send(sender, "Here are your messages: ", isPrivate);
+                }
+
+                if (message.isReceived()) {
+                    bot.send(sender,
+                             Utils.bold(message.getSender()) + ARROW + Utils.bold(message.getRecipient())
+                             + " [" + Utils.utcDateTime(message.getReceived()) + ", ID: "
+                             + Utils.bold(message.getId()) + ", DELIVERED]",
+                             isPrivate);
+
+                } else {
+                    bot.send(sender,
+                             Utils.bold(message.getSender()) + ARROW + Utils.bold(message.getRecipient())
+                             + " [" + Utils.utcDateTime(message.getQueued()) + ", ID: "
+                             + Utils.bold(message.getId()) + ", QUEUED]",
+                             isPrivate);
+                }
+
+                bot.send(sender, Utils.helpIndent(message.getMessage()), isPrivate);
+            }
+        }
+
+        if (!hasMessage) {
+            bot.send(sender, "You have no messages in the queue.", isPrivate);
+        } else {
+            bot.send(sender, "To delete one or all delivered messages:", isPrivate);
+            bot.send(sender,
+                     Utils.helpIndent(bot.getNick() + ": " + TELL_CMD + ' ' + TELL_DEL_KEYWORD + " <id|"
+                                      + TELL_ALL_KEYWORD + '>'), isPrivate);
+            bot.send(sender,
+                     "Messages are kept for " + Utils.bold(maxDays) + Utils.plural(maxDays, " day.", " days."),
+                     isPrivate);
+        }
     }
 }

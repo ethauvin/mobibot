@@ -66,8 +66,6 @@ public final class GoogleSearch extends ThreadedModule {
     static final String GOOGLE_CSE_KEY_PROP = "google-cse-cx";
     // Google command
     private static final String GOOGLE_CMD = "google";
-    // Tab indent (4 spaces)
-    private static final String TAB_INDENT = "    ";
 
     /**
      * Creates a new {@link GoogleSearch} instance.
@@ -126,7 +124,7 @@ public final class GoogleSearch extends ThreadedModule {
                         final JSONObject j = ja.getJSONObject(i);
                         results.add(new NoticeMessage(Utils.unescapeXml(j.getString("title"))));
                         results.add(
-                                new NoticeMessage(TAB_INDENT + j.getString("link"), Colors.DARK_GREEN));
+                                new NoticeMessage(Utils.helpIndent(j.getString("link"), false), Colors.DARK_GREEN));
                     }
                 }
             } catch (IOException e) {
@@ -135,7 +133,7 @@ public final class GoogleSearch extends ThreadedModule {
 
             return results;
         } else {
-            throw new ModuleException("Invalid query.");
+            throw new ModuleException("Invalid query. Please try again.");
         }
     }
 
