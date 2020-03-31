@@ -43,10 +43,6 @@ import java.util.Locale;
  */
 public final class Constants {
     /**
-     * The add (back)log command.
-     */
-    public static final String ADDLOG_CMD = "addlog";
-    /**
      * The connect/read timeout in ms.
      */
     public static final int CONNECT_TIMEOUT = 5000;

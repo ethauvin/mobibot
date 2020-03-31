@@ -34,6 +34,7 @@ package net.thauvin.erik.mobibot;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import net.thauvin.erik.mobibot.commands.AbstractCommand;
+import net.thauvin.erik.mobibot.commands.AddLog;
 import net.thauvin.erik.mobibot.commands.Cycle;
 import net.thauvin.erik.mobibot.commands.Ignore;
 import net.thauvin.erik.mobibot.commands.Info;
@@ -85,7 +86,6 @@ import org.apache.logging.log4j.core.config.Configurator;
 import org.jibble.pircbot.PircBot;
 import org.jibble.pircbot.User;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -240,6 +240,7 @@ public class Mobibot extends PircBot {
         ignoreCommand = new Ignore(p.getProperty("ignore", ""));
 
         // Load the commands
+        commands.add(new AddLog());
         commands.add(new Cycle());
         commands.add(ignoreCommand);
         commands.add(new Info());
@@ -858,38 +859,28 @@ public class Mobibot extends PircBot {
 
         final boolean isOp = isOp(sender);
 
-        if (cmd.startsWith(Constants.HELP_CMD)) {
+        if (cmd.startsWith(Constants.HELP_CMD)) { // help
             helpResponse(sender, args, true);
-        } else if (isOp && "kill".equals(cmd)) {
+        } else if (isOp && "kill".equals(cmd)) { // kill
             sendRawLine("QUIT : Poof!");
             System.exit(0);
-        } else if (isOp && Constants.DIE_CMD.equals(cmd)) {
-            send(sender + " has just signed my death sentence.");
-            timer.cancel();
-            twitterShutdown();
-            twitterNotification("killed by  " + sender + " on " + ircChannel);
-
-            sleep(3);
-            quitServer("The Bot Is Out There!");
-            System.exit(0);
-        } else if (isOp && (cmds.length > 1) && Constants.ADDLOG_CMD.equals(cmd)) {
-            // e.g 2014-04-01
-            final File backlog = new File(logsDir + args + EntriesMgr.XML_EXT);
-            if (backlog.exists()) {
-                UrlMgr.addHistory(0, args);
-                send(sender, UrlMgr.getHistory().toString(), true);
-            } else {
-                send(sender, "The specified log could not be found.", true);
-            }
-        } else if (Tell.TELL_CMD.equals(cmd) && tell.isEnabled()) {
-            tell.response(sender, args, true);
-        } else if (isOp && Constants.DEBUG_CMD.equals(cmd)) {
+        } else if (isOp && Constants.DEBUG_CMD.equals(cmd)) { // debug
             if (logger.isDebugEnabled()) {
                 Configurator.setLevel(logger.getName(), loggerLevel);
             } else {
                 Configurator.setLevel(logger.getName(), Level.DEBUG);
             }
             send(sender, "Debug logging is " + (logger.isDebugEnabled() ? "enabled." : "disabled."), true);
+        } else if (isOp && Constants.DIE_CMD.equals(cmd)) { // die
+            send(sender + " has just signed my death sentence.");
+            timer.cancel();
+            twitterShutdown();
+            twitterNotification("killed by  " + sender + " on " + ircChannel);
+            sleep(3);
+            quitServer("The Bot Is Out There!");
+            System.exit(0);
+        } else if (Tell.TELL_CMD.equals(cmd) && tell.isEnabled()) { // tell
+            tell.response(sender, args, true);
         } else {
             for (final AbstractCommand command : commands) {
                 if (command.getCommand().startsWith(cmd)) {
@@ -1054,7 +1045,7 @@ public class Mobibot extends PircBot {
      */
     final void setPinboardAuth(final String apiToken) {
         if (isNotBlank(apiToken)) {
-            pinboard = new Pinboard(this, apiToken, ircServer);
+            pinboard = new Pinboard(this, apiToken);
         }
     }
 
