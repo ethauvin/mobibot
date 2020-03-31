@@ -335,4 +335,14 @@ public final class Utils {
     public static String utcDateTime(final LocalDateTime date) {
         return date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
     }
+
+    public static String botCommand(final String name, boolean isPrivate) {
+        if (isPrivate) {
+            return String.format(Constants.BOT_PRIVATE_CMD, name);
+        } else {
+            return String.format(Constants.BOT_PUB_CMD, name);
+        }
+
+    }
+
 }

@@ -43,6 +43,14 @@ import java.util.Locale;
  */
 public final class Constants {
     /**
+     * The bot's private message command format.
+     */
+    public static final String BOT_PRIVATE_CMD = "/msg %s ";
+    /**
+     * The bot's public message command format.
+     */
+    public static final String BOT_PUB_CMD = "%s: ";
+    /**
      * The connect/read timeout in ms.
      */
     public static final int CONNECT_TIMEOUT = 5000;

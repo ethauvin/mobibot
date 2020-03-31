@@ -33,6 +33,7 @@
 package net.thauvin.erik.mobibot.commands
 
 import net.thauvin.erik.mobibot.Mobibot
+import net.thauvin.erik.mobibot.Utils
 
 abstract class AbstractCommand {
     abstract val command: String
@@ -53,12 +54,7 @@ abstract class AbstractCommand {
     open fun helpResponse(bot: Mobibot, command: String, sender: String, isOp: Boolean, isPrivate: Boolean): Boolean {
         if (!this.isOp || this.isOp == isOp) {
             for (h in help) {
-                if (isPrivate) {
-                    bot.send(sender, String.format(h, "/msg ${bot.nick}"), true)
-                } else if (isPublic) {
-                    bot.send(sender, String.format(h, "${bot.nick}:"), false)
-                }
-
+                bot.send(sender, String.format(h, Utils.botCommand(bot.nick, isPrivate)), isPrivate)
             }
             return true
         }
