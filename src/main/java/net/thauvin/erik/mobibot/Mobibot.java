@@ -258,6 +258,9 @@ public class Mobibot extends PircBot {
         commands.add(new Comment());
         commands.add(new Posting());
         commands.add(new Tags());
+        // Get the tell command settings
+        tell = new Tell(this, p.getProperty("tell-max-days"), p.getProperty("tell-max-size"));
+        commands.add(tell);
         commands.add(new UrlMgr(p.getProperty("tags", ""), p.getProperty("tags-keywords", "")));
         commands.add(new View());
 
@@ -289,9 +292,6 @@ public class Mobibot extends PircBot {
                 module.setProperty(s, p.getProperty(s, ""));
             }
         });
-
-        // Get the tell command settings
-        tell = new Tell(this, p.getProperty("tell-max-days"), p.getProperty("tell-max-size"));
 
         // Save the entries
         UrlMgr.saveEntries(this, true);
@@ -624,8 +624,7 @@ public class Mobibot extends PircBot {
         send(sender, "Type a URL on " + ircChannel + " to post it.", isPrivate);
         send(sender, "For more information on a specific command, type:", isPrivate);
         send(sender,
-             Utils.helpIndent(
-                     ((isPrivate) ? "/msg " + getNick() : getNick() + ':') + " " + Constants.HELP_CMD + " <command>"),
+             Utils.helpIndent(Utils.botCommand(getNick(), isPrivate) + Constants.HELP_CMD + " <command>"),
              isPrivate);
         send(sender, "The commands are:", isPrivate);
 
@@ -702,8 +701,6 @@ public class Mobibot extends PircBot {
             if (lcTopic.equals(getChannelName())) {
                 send(sender, "To list the last 5 posts from the channel's weblog:", isPrivate);
                 send(sender, Utils.helpIndent(getNick() + ": " + getChannelName()), isPrivate);
-            } else if (Tell.TELL_CMD.equals(lcTopic) && tell.isEnabled()) {
-                tell.helpResponse(sender, isPrivate);
             } else {
                 // Command, Modules or Default
                 if (!helpCommands(sender, topic, isPrivate) && !helpModules(sender, lcTopic, isPrivate)) {
@@ -796,8 +793,6 @@ public class Mobibot extends PircBot {
                 helpResponse(sender, args, false);
             } else if (cmd.equalsIgnoreCase(getChannelName())) { // mobibot: <channel>
                 feedResponse(sender);
-            } else if (cmd.startsWith(Tell.TELL_CMD) && tell.isEnabled()) { // mobibot: tell
-                tell.response(sender, args, false);
             } else {
                 boolean skip = false;
                 // Commands
@@ -820,8 +815,7 @@ public class Mobibot extends PircBot {
                     }
                 }
             }
-        } else {
-            // Commands
+        } else { // Commands
             for (final AbstractCommand command : commands) {
                 if (command.matches(message)) {
                     command.commandResponse(this, sender, login, message, isOp(sender), false);
@@ -880,8 +874,6 @@ public class Mobibot extends PircBot {
             sleep(3);
             quitServer("The Bot Is Out There!");
             System.exit(0);
-        } else if (Tell.TELL_CMD.equals(cmd) && tell.isEnabled()) { // tell
-            tell.response(sender, args, true);
         } else {
             for (final AbstractCommand command : commands) {
                 if (command.getCommand().startsWith(cmd)) {

@@ -34,8 +34,10 @@ package net.thauvin.erik.mobibot.commands.tell;
 
 import net.thauvin.erik.mobibot.Mobibot;
 import net.thauvin.erik.mobibot.Utils;
+import net.thauvin.erik.mobibot.commands.AbstractCommand;
 import net.thauvin.erik.mobibot.commands.links.View;
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -47,7 +49,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * @created 2016-07-02
  * @since 1.0
  */
-public class Tell {
+public class Tell extends AbstractCommand {
     /**
      * The tell command.
      */
@@ -111,8 +113,8 @@ public class Tell {
     }
 
     // Delete message.
-    private void deleteMessage(final String sender, final String cmds, final boolean isPrivate) {
-        final String[] split = cmds.split(" ");
+    private void deleteMessage(final String sender, final String args, final boolean isOp, final boolean isPrivate) {
+        final String[] split = args.split(" ");
 
         if (split.length == 2) {
             final String id = split[1];
@@ -158,26 +160,65 @@ public class Tell {
                 }
             }
         } else {
-            helpResponse(sender, isPrivate);
+            helpResponse(bot, args, sender, isOp, isPrivate);
         }
     }
 
-    /**
-     * Responds with Constants.
-     *
-     * @param sender    The sender.
-     * @param isPrivate The private flag.
-     */
-    public void helpResponse(final String sender, final boolean isPrivate) {
-        bot.send(sender, "To send a message to someone when they join the channel:", isPrivate);
-        bot.send(sender, Utils.helpIndent(bot.getNick() + ": " + TELL_CMD + " <nick> <message>"), isPrivate);
+    @NotNull
+    @Override
+    public String getCommand() {
+        return TELL_CMD;
+    }
 
-        bot.send(sender, "To view queued and sent messages:", isPrivate);
-        bot.send(sender, Utils.helpIndent(bot.getNick() + ": " + TELL_CMD + ' ' + View.VIEW_CMD), isPrivate);
+    @NotNull
+    @Override
+    public List<String> getHelp() {
+        return List.of("To send a message to someone when they join the channel:",
+                       Utils.helpIndent("%s " + TELL_CMD + " <nick> <message>"),
+                       "To view queued and sent messages:",
+                       Utils.helpIndent("%s " + TELL_CMD + ' ' + View.VIEW_CMD),
+                       "Messages are kept for " + Utils.bold(maxDays) + Utils.plural(maxDays, " day.", " days."));
+    }
 
-        bot.send(sender,
-                 "Messages are kept for " + Utils.bold(maxDays) + Utils.plural(maxDays, " day.", " days."),
-                 isPrivate);
+    @Override
+    public boolean isOp() {
+        return false;
+    }
+
+    @Override
+    public boolean isPublic() {
+        return true;
+    }
+
+    @Override
+    public boolean isVisible() {
+        return true;
+    }
+
+    @Override
+    public void commandResponse(@NotNull final Mobibot bot,
+                                @NotNull final String sender,
+                                @NotNull final String login,
+                                @NotNull final String args,
+                                final boolean isOp,
+                                final boolean isPrivate) {
+        if (StringUtils.isBlank(args)) {
+            helpResponse(bot, args, sender, isOp, isPrivate);
+        } else if (args.startsWith(View.VIEW_CMD)) {
+            if (bot.isOp(sender) && (View.VIEW_CMD + ' ' + TELL_ALL_KEYWORD).equals(args)) {
+                viewAll(sender, isPrivate);
+            } else {
+                viewMessages(sender, isPrivate);
+            }
+        } else if (args.startsWith(TELL_DEL_KEYWORD + ' ')) {
+            deleteMessage(sender, args, isOp, isPrivate);
+        } else {
+            newMessage(sender, args, isOp, isPrivate);
+        }
+
+        if (clean()) {
+            save();
+        }
     }
 
     /**
@@ -190,8 +231,8 @@ public class Tell {
     }
 
     // New message.
-    private void newMessage(final String sender, final String cmds, final boolean isPrivate) {
-        final String[] split = cmds.split(" ", 2);
+    private void newMessage(final String sender, final String args, final boolean isOp, final boolean isPrivate) {
+        final String[] split = args.split(" ", 2);
 
         if (split.length == 2 && (StringUtils.isNotBlank(split[1]) && split[1].contains(" "))) {
             if (messages.size() < maxSize) {
@@ -202,39 +243,12 @@ public class Tell {
                 save();
 
                 bot.send(sender, "Message [ID " + message.getId() + "] was queued for "
-                                 + Utils.bold(message.getRecipient()), true);
+                                 + Utils.bold(message.getRecipient()), isPrivate);
             } else {
-                bot.send(sender, "Sorry, the messages queue is currently full.", true);
+                bot.send(sender, "Sorry, the messages queue is currently full.", isPrivate);
             }
         } else {
-            helpResponse(sender, isPrivate);
-        }
-    }
-
-    /**
-     * Processes the commands.
-     *
-     * @param sender    The sender's nick.
-     * @param cmds      The commands string.
-     * @param isPrivate The private flag.
-     */
-    public void response(final String sender, final String cmds, final boolean isPrivate) {
-        if (StringUtils.isBlank(cmds)) {
-            helpResponse(sender, isPrivate);
-        } else if (cmds.startsWith(View.VIEW_CMD)) {
-            if (bot.isOp(sender) && (View.VIEW_CMD + ' ' + TELL_ALL_KEYWORD).equals(cmds)) {
-                viewAll(sender, isPrivate);
-            } else {
-                viewMessages(sender, isPrivate);
-            }
-        } else if (cmds.startsWith(TELL_DEL_KEYWORD + ' ')) {
-            deleteMessage(sender, cmds, isPrivate);
-        } else {
-            newMessage(sender, cmds, isPrivate);
-        }
-
-        if (clean()) {
-            save();
+            helpResponse(bot, args, sender, isOp, isPrivate);
         }
     }
 
@@ -360,8 +374,10 @@ public class Tell {
         } else {
             bot.send(sender, "To delete one or all delivered messages:", isPrivate);
             bot.send(sender,
-                     Utils.helpIndent(bot.getNick() + ": " + TELL_CMD + ' ' + TELL_DEL_KEYWORD + " <id|"
-                                      + TELL_ALL_KEYWORD + '>'), isPrivate);
+                     Utils.helpIndent(
+                             Utils.botCommand(bot.getNick(), isPrivate) + TELL_CMD + ' ' + TELL_DEL_KEYWORD + " <id|"
+                             + TELL_ALL_KEYWORD + '>'),
+                     isPrivate);
             bot.send(sender,
                      "Messages are kept for " + Utils.bold(maxDays) + Utils.plural(maxDays, " day.", " days."),
                      isPrivate);
