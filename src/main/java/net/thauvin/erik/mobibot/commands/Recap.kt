@@ -42,7 +42,7 @@ class Recap : AbstractCommand() {
     override val command = "recap"
     override val help = listOf(
         "To list the last 10 public channel messages:",
-        Utils.helpIndent("%s $command")
+        Utils.helpIndent("%c $command")
     )
     override val isOp = false
     override val isPublic = true
@@ -67,7 +67,7 @@ class Recap : AbstractCommand() {
         fun storeRecap(sender: String, message: String, isAction: Boolean) {
             recaps.add(
                 Utils.utcDateTime(LocalDateTime.now(Clock.systemUTC()))
-                    + " -> ${sender}: " + (if (isAction) " " else ": ") + message
+                    + " - $sender" + (if (isAction) " " else ": ") + message
             )
             if (recaps.size > 10) {
                 recaps.removeAt(0)

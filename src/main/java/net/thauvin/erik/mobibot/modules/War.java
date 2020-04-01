@@ -60,7 +60,11 @@ public final class War extends AbstractModule {
      */
     public War() {
         super();
+
         commands.add(WAR_CMD);
+
+        help.add("To play war:");
+        help.add(Utils.helpIndent("%c " + WAR_CMD));
     }
 
     /**
@@ -96,14 +100,5 @@ public final class War extends AbstractModule {
         } else {
             bot.action("wins.");
         }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void helpResponse(final Mobibot bot, final String sender, final boolean isPrivate) {
-        bot.send(sender, "To play war:", isPrivate);
-        bot.send(sender, Utils.helpIndent(bot.getNick() + ": " + WAR_CMD), isPrivate);
     }
 }

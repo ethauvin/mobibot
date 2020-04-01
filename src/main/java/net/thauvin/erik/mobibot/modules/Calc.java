@@ -56,7 +56,11 @@ public class Calc extends AbstractModule {
      */
     public Calc() {
         super();
+
         commands.add(CALC_CMD);
+
+        help.add("To solve a mathematical calculation:");
+        help.add(Utils.helpIndent("%c " + CALC_CMD + " <calculation>"));
     }
 
     /**
@@ -92,14 +96,5 @@ public class Calc extends AbstractModule {
         } else {
             helpResponse(bot, sender, isPrivate);
         }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void helpResponse(final Mobibot bot, final String sender, final boolean isPrivate) {
-        bot.send(sender, "To solve a mathematical calculation:", isPrivate);
-        bot.send(sender, Utils.helpIndent(bot.getNick() + ": " + CALC_CMD + " <calculation>"), isPrivate);
     }
 }

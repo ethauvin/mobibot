@@ -72,7 +72,12 @@ public final class GoogleSearch extends ThreadedModule {
      */
     public GoogleSearch() {
         super();
+
         commands.add(GOOGLE_CMD);
+
+        help.add("To search Google:");
+        help.add(Utils.helpIndent("%c " + GOOGLE_CMD + " <query>"));
+
         properties.put(GOOGLE_API_KEY_PROP, "");
         properties.put(GOOGLE_CSE_KEY_PROP, "");
     }
@@ -134,19 +139,6 @@ public final class GoogleSearch extends ThreadedModule {
             return results;
         } else {
             throw new ModuleException("Invalid query. Please try again.");
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void helpResponse(final Mobibot bot, final String sender, final boolean isPrivate) {
-        if (isEnabled()) {
-            bot.send(sender, "To search Google:", isPrivate);
-            bot.send(sender, Utils.helpIndent(bot.getNick() + ": " + GOOGLE_CMD + " <query>"), isPrivate);
-        } else {
-            bot.send(sender, "The Google search module is disabled.", isPrivate);
         }
     }
 

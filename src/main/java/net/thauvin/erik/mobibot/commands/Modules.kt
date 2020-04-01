@@ -39,7 +39,7 @@ class Modules : AbstractCommand() {
     override val command = "modules"
     override val help = listOf(
         "To view a list of enabled modules:",
-        Utils.helpIndent("%s $command")
+        Utils.helpIndent("%c $command")
     )
     override val isOp = true
     override val isPublic = false

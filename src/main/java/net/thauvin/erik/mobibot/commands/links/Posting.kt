@@ -51,7 +51,7 @@ class Posting : AbstractCommand() {
         Utils.helpIndent("${Constants.LINK_CMD}1:This is a comment"),
         "I will reply with a label, for example: ${Utils.bold(Constants.LINK_CMD)}1.1",
         "To edit a comment, see: ",
-        Utils.helpIndent("%s ${Constants.HELP_CMD} ${Comment.COMMAND}")
+        Utils.helpIndent("%c ${Constants.HELP_CMD} ${Comment.COMMAND}")
     )
     override val isOp = false
     override val isPublic = true

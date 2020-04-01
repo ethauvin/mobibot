@@ -54,7 +54,7 @@ abstract class AbstractCommand {
     open fun helpResponse(bot: Mobibot, command: String, sender: String, isOp: Boolean, isPrivate: Boolean): Boolean {
         if (!this.isOp || this.isOp == isOp) {
             for (h in help) {
-                bot.send(sender, String.format(h, Utils.botCommand(bot.nick, isPrivate)), isPrivate)
+                bot.send(sender, Utils.helpFormat(h, bot.nick, isPrivate), isPrivate)
             }
             return true
         }

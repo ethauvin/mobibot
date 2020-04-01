@@ -55,7 +55,11 @@ public final class Dice extends AbstractModule {
      */
     public Dice() {
         super();
+
         commands.add(DICE_CMD);
+
+        help.add("To roll the dice:");
+        help.add(Utils.helpIndent("%c " + DICE_CMD));
     }
 
     /**
@@ -91,14 +95,5 @@ public final class Dice extends AbstractModule {
         } else {
             bot.action("tied.");
         }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void helpResponse(final Mobibot bot, final String sender, final boolean isPrivate) {
-        bot.send(sender, "To roll the dice:", isPrivate);
-        bot.send(sender, Utils.helpIndent(bot.getNick() + ": " + DICE_CMD), isPrivate);
     }
 }

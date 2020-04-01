@@ -79,6 +79,10 @@ public final class StockQuote extends ThreadedModule {
     public StockQuote() {
         super();
         commands.add(STOCK_CMD);
+
+        help.add("To retrieve a stock quote:");
+        help.add(Utils.helpIndent("%c " + STOCK_CMD + " <symbol|keywords>"));
+
         properties.put(ALPHAVANTAGE_API_KEY_PROP, "");
     }
 
@@ -198,15 +202,6 @@ public final class StockQuote extends ThreadedModule {
         } else {
             throw new ModuleException(INVALID_SYMBOL);
         }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void helpResponse(final Mobibot bot, final String sender, final boolean isPrivate) {
-        bot.send(sender, "To retrieve a stock quote:", isPrivate);
-        bot.send(sender, Utils.helpIndent(bot.getNick() + ": " + STOCK_CMD + " <symbol|keywords>"), isPrivate);
     }
 
     /**

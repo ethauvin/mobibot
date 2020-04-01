@@ -41,7 +41,7 @@ class Users : AbstractCommand() {
     override val command = "users"
     override val help = listOf(
         "To list the users present on the channel:",
-        Utils.helpIndent("%s $command")
+        Utils.helpIndent("%c $command")
     )
     override val isOp = false
     override val isPublic = true

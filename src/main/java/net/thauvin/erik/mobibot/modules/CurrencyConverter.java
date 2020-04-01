@@ -84,6 +84,7 @@ public final class CurrencyConverter extends ThreadedModule {
      */
     public CurrencyConverter() {
         super();
+
         commands.add(CURRENCY_CMD);
     }
 
@@ -239,11 +240,15 @@ public final class CurrencyConverter extends ThreadedModule {
             bot.send(sender, EMPTY_RATE_TABLE, isPrivate);
         } else {
             bot.send(sender, "To convert from one currency to another:", isPrivate);
-            bot.send(sender, Utils.helpIndent(bot.getNick() + ": " + CURRENCY_CMD + " 100 USD to EUR"), isPrivate);
+            bot.send(sender,
+                     Utils.helpIndent(Utils.helpFormat("%c " + CURRENCY_CMD + " 100 USD to EUR",
+                                                       bot.getNick(),
+                                                       isPrivate)), isPrivate);
             bot.send(sender, "For a listing of current rates:", isPrivate);
             bot.send(sender,
-                     Utils.helpIndent(bot.getNick() + ": " + CURRENCY_CMD) + ' ' + CURRENCY_RATES_KEYWORD,
-                     isPrivate);
+                     Utils.helpIndent(Utils.helpFormat("%c " + CURRENCY_CMD + ' ' + CURRENCY_RATES_KEYWORD,
+                                                       bot.getNick(),
+                                                       isPrivate)), isPrivate);
             bot.send(sender, "The supported currencies are: ", isPrivate);
             bot.sendCommandsList(sender, new ArrayList<>(EXCHANGE_RATES.keySet()), 11, isPrivate, false);
         }

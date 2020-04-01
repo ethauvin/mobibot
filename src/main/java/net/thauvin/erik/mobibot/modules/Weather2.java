@@ -75,7 +75,15 @@ public class Weather2 extends ThreadedModule {
      */
     public Weather2() {
         super();
+
         commands.add(WEATHER_CMD);
+
+        help.add("To display weather information:");
+        help.add(Utils.helpIndent("%c " + WEATHER_CMD + " <city> [, <country code>]"));
+        help.add("For example:");
+        help.add(Utils.helpIndent("%c " + WEATHER_CMD + " paris, fr"));
+        help.add("The default ISO 3166 country code is " + bold("US") + ". Zip codes supported in most countries.");
+
         properties.put(OWM_API_KEY_PROP, "");
     }
 
@@ -204,22 +212,6 @@ public class Weather2 extends ThreadedModule {
     private static String wind(final Double w) {
         final double kmh = w * 1.60934;
         return Math.round(w) + " mph, " + Math.round(kmh) + " km/h";
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void helpResponse(final Mobibot bot, final String sender, final boolean isPrivate) {
-        bot.send(sender, "To display weather information:", isPrivate);
-        bot.send(sender,
-                 Utils.helpIndent(bot.getNick() + ": " + WEATHER_CMD + " <city> [, <country code>]"),
-                 isPrivate);
-        bot.send(sender, "For example:", isPrivate);
-        bot.send(sender, Utils.helpIndent(bot.getNick() + ": " + WEATHER_CMD + " paris, fr"), isPrivate);
-        bot.send(sender,
-                 "The default ISO 3166 country code is " + bold("US")
-                 + ". Zip codes are supported in most countries.", isPrivate);
     }
 
     /**

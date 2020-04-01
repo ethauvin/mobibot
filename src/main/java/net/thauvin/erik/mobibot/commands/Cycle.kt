@@ -40,7 +40,7 @@ class Cycle : AbstractCommand() {
     override val command = "cycle"
     override val help = listOf(
        "To have the bot leave the channel and come back:",
-        Utils.helpIndent("%s $command")
+        Utils.helpIndent("%c $command")
     )
     override val isOp = true
     override val isPublic = false

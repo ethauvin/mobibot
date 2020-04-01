@@ -41,24 +41,24 @@ class Ignore(defaultIgnore: String) : AbstractCommand() {
 
     init {
         if (defaultIgnore.isNotBlank()) {
-            ignored.addAll(defaultIgnore.split(", +?| +"))
+            ignored.addAll(defaultIgnore.split(", *| +".toRegex()))
         }
     }
 
     override val command = IGNORE_CMD
     override val help = listOf(
         "To ignore a link posted to the channel:",
-        Utils.helpIndent("https://www.foo.bar %s"),
+        Utils.helpIndent("https://www.foo.bar %n"),
         "To check your ignore status:",
-        Utils.helpIndent("%s $command"),
+        Utils.helpIndent("%c $command"),
         "To toggle your ignore status:",
-        Utils.helpIndent("%s $command $me")
+        Utils.helpIndent("%c $command $me")
     )
     private val helpOp = listOf(
         "To ignore a link posted to the channel:",
-        Utils.helpIndent("https://www.foo.bar %s"),
+        Utils.helpIndent("https://www.foo.bar " + Utils.bold("%n"), false),
         "To add/remove nicks from the ignored list:",
-        Utils.helpIndent("%s $command <nick>|$me [<nick> ...]")
+        Utils.helpIndent("%c $command <nick> [<nick> ...]")
     )
 
     override val isOp = false
@@ -67,7 +67,7 @@ class Ignore(defaultIgnore: String) : AbstractCommand() {
 
     companion object {
         const val IGNORE_CMD = "ignore"
-        private val ignored = HashSet<String>()
+        private val ignored = TreeSet<String>()
 
         @JvmStatic
         fun isNotIgnored(nick: String): Boolean {
@@ -101,7 +101,7 @@ class Ignore(defaultIgnore: String) : AbstractCommand() {
     ): Boolean {
         return if (isOp) {
             for (h in helpOp) {
-                bot.send(sender, String.format(h, bot.nick), isPrivate)
+                bot.send(sender, Utils.helpFormat(h, bot.nick, isPrivate), isPrivate)
             }
             true
         } else {

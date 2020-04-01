@@ -51,6 +51,8 @@ import java.util.concurrent.TimeUnit;
  * @since 1.0
  */
 public final class Utils {
+    private static final String[] searchFlags = { "%c", "%n" };
+
     /**
      * Disables the default constructor.
      *
@@ -157,6 +159,20 @@ public final class Utils {
      */
     public static String green(final String s) {
         return colorize(s, Colors.DARK_GREEN);
+    }
+
+    /**
+     * Formats a help command by replacing {@code %c} with the bot's pub/priv command, and {@code %n} with the bot's
+     * nick.
+     *
+     * @param text      The help command text.
+     * @param botNick   The bot's nick.
+     * @param isPrivate The private flag.
+     * @return The formatted help command.
+     */
+    public static String helpFormat(final String text, final String botNick, final boolean isPrivate) {
+        final String[] replace = { (isPrivate) ? "/msg " + botNick : botNick + ':', botNick };
+        return StringUtils.replaceEach(text, searchFlags, replace);
     }
 
     /**
@@ -334,15 +350,6 @@ public final class Utils {
      */
     public static String utcDateTime(final LocalDateTime date) {
         return date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
-    }
-
-    public static String botCommand(final String name, boolean isPrivate) {
-        if (isPrivate) {
-            return String.format(Constants.BOT_PRIVATE_CMD, name);
-        } else {
-            return String.format(Constants.BOT_PUB_CMD, name);
-        }
-
     }
 
 }

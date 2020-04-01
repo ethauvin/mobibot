@@ -63,7 +63,6 @@ public final class WorldTime extends AbstractModule {
     // Supported countries
     private static final Map<String, String> COUNTRIES_MAP;
 
-
     /**
      * The time command.
      */
@@ -160,8 +159,15 @@ public final class WorldTime extends AbstractModule {
      */
     public WorldTime() {
         super();
+
+        help.add("To display a country's current date/time:");
+        help.add(Utils.helpIndent("%c " + TIME_CMD) + " [<country code>]");
+        help.add("For a listing of the supported countries:");
+        help.add(Utils.helpIndent("%c " + TIME_CMD));
+
         commands.add(TIME_CMD);
     }
+
 
     /**
      * Returns the current Internet (beat) Time.
@@ -232,18 +238,6 @@ public final class WorldTime extends AbstractModule {
                 }
             }
         }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void helpResponse(final Mobibot bot, final String sender, final boolean isPrivate) {
-        bot.send(sender, "To display a country's current date/time:", isPrivate);
-        bot.send(sender, Utils.helpIndent(bot.getNick() + ": " + TIME_CMD) + " [<country code>]", isPrivate);
-
-        bot.send(sender, "For a listing of the supported countries:", isPrivate);
-        bot.send(sender, Utils.helpIndent(bot.getNick() + ": " + TIME_CMD), isPrivate);
     }
 
     /**

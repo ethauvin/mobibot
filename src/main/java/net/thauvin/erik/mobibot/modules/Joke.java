@@ -63,7 +63,11 @@ public final class Joke extends ThreadedModule {
      */
     public Joke() {
         super();
+
         commands.add(JOKE_CMD);
+
+        help.add("To retrieve a random joke:");
+        help.add(Utils.helpIndent("%c " + JOKE_CMD));
     }
 
     /**
@@ -119,14 +123,5 @@ public final class Joke extends ThreadedModule {
             bot.getLogger().warn(e.getDebugMessage(), e);
             bot.send(sender, e.getMessage(), isPrivate);
         }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void helpResponse(final Mobibot bot, final String sender, final boolean isPrivate) {
-        bot.send(sender, "To retrieve a random joke:", isPrivate);
-        bot.send(sender, Utils.helpIndent(bot.getNick() + ": " + JOKE_CMD), isPrivate);
     }
 }

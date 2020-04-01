@@ -626,7 +626,7 @@ public class Mobibot extends PircBot {
         send(sender, "Type a URL on " + ircChannel + " to post it.", isPrivate);
         send(sender, "For more information on a specific command, type:", isPrivate);
         send(sender,
-             Utils.helpIndent(Utils.botCommand(getNick(), isPrivate) + Constants.HELP_CMD + " <command>"),
+             Utils.helpIndent(Utils.helpFormat("%c " + Constants.HELP_CMD + " <command>", getNick(), isPrivate)),
              isPrivate);
         send(sender, "The commands are:", isPrivate);
 

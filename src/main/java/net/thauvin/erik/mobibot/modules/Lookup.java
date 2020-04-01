@@ -62,7 +62,11 @@ public final class Lookup extends AbstractModule {
      */
     public Lookup() {
         super();
+
         commands.add(LOOKUP_CMD);
+
+        help.add("To perform a DNS lookup query:");
+        help.add(Utils.helpIndent("%c " + LOOKUP_CMD + " <ip address or hostname>"));
     }
 
     /**
@@ -189,14 +193,5 @@ public final class Lookup extends AbstractModule {
         } else {
             helpResponse(bot, sender, true);
         }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void helpResponse(final Mobibot bot, final String sender, final boolean isPrivate) {
-        bot.send(sender, "To perform a DNS lookup query:", isPrivate);
-        bot.send(sender, Utils.helpIndent(bot.getNick() + ": " + LOOKUP_CMD + " <ip address or hostname>"), isPrivate);
     }
 }

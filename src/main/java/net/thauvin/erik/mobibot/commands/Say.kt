@@ -39,7 +39,7 @@ class Say : AbstractCommand() {
     override val command = "say"
     override val help = listOf(
         "To have the bot say something on the channel:",
-        Utils.helpIndent("%s $command <text>")
+        Utils.helpIndent("%c $command <text>")
     )
     override val isOp = true
     override val isPublic = false

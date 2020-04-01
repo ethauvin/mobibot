@@ -41,7 +41,7 @@ class Info : AbstractCommand() {
     override val command = "info"
     override val help = listOf(
         "To view information about the bot:",
-        Utils.helpIndent("%s $command")
+        Utils.helpIndent("%c $command")
     )
     override val isOp = false
     override val isPublic = true

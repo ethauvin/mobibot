@@ -62,7 +62,12 @@ public final class Twitter extends ThreadedModule {
      */
     public Twitter() {
         super();
+
         commands.add(TWITTER_CMD);
+
+        help.add("To post to Twitter:");
+        help.add(Utils.helpIndent("%c " + TWITTER_CMD + " <message>"));
+
         properties.put(CONSUMER_SECRET_PROP, "");
         properties.put(CONSUMER_KEY_PROP, "");
         properties.put(TOKEN_PROP, "");
@@ -107,19 +112,6 @@ public final class Twitter extends ThreadedModule {
             }
         } catch (Exception e) {
             throw new ModuleException("twitterPost(" + message + ")", "An error has occurred: " + e.getMessage(), e);
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void helpResponse(final Mobibot bot, final String sender, final boolean isPrivate) {
-        if (isEnabled()) {
-            bot.send(sender, "To post to Twitter:", isPrivate);
-            bot.send(sender, Utils.helpIndent(bot.getNick() + ": " + TWITTER_CMD + " <message>"), isPrivate);
-        } else {
-            bot.send(sender, "The Twitter posting facility is " + Utils.bold("disabled") + '.', isPrivate);
         }
     }
 

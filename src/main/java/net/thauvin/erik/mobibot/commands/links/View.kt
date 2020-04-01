@@ -45,7 +45,7 @@ class View : AbstractCommand() {
     override val command = VIEW_CMD
     override val help = listOf(
         "To list or search the current URL posts:",
-        Utils.helpIndent("%s $command [<start>] [<query>]")
+        Utils.helpIndent("%c $command [<start>] [<query>]")
     )
     override val isOp = false
     override val isPublic = true

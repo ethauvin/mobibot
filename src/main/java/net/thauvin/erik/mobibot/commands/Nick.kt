@@ -39,7 +39,7 @@ class Nick : AbstractCommand() {
     override val command = "nick"
     override val help = listOf(
         "To change the bot's nickname:",
-        Utils.helpIndent("%s $command <nick>")
+        Utils.helpIndent("%c $command <nick>")
     )
     override val isOp = true
     override val isPublic = true

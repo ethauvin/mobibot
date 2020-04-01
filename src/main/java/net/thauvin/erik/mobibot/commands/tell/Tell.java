@@ -377,9 +377,10 @@ public class Tell extends AbstractCommand {
         } else {
             bot.send(sender, "To delete one or all delivered messages:", isPrivate);
             bot.send(sender,
-                     Utils.helpIndent(
-                             Utils.botCommand(bot.getNick(), isPrivate) + TELL_CMD + ' ' + TELL_DEL_KEYWORD + " <id|"
-                             + TELL_ALL_KEYWORD + '>'),
+                     Utils.helpIndent(Utils.helpFormat(
+                             "%c " + TELL_CMD + ' ' + TELL_DEL_KEYWORD + " <id|" + TELL_ALL_KEYWORD + '>',
+                             bot.getNick(),
+                             isPrivate)),
                      isPrivate);
             bot.send(sender,
                      "Messages are kept for " + Utils.bold(maxDays) + Utils.plural(maxDays, " day.", " days."),

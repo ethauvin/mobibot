@@ -33,6 +33,7 @@
 package net.thauvin.erik.mobibot.modules;
 
 import net.thauvin.erik.mobibot.Mobibot;
+import net.thauvin.erik.mobibot.Utils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
@@ -50,6 +51,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public abstract class AbstractModule {
     final List<String> commands = new ArrayList<>();
+    final List<String> help = new ArrayList<>();
     final Map<String, String> properties = new ConcurrentHashMap<>();
 
     /**
@@ -95,14 +97,17 @@ public abstract class AbstractModule {
     }
 
     /**
-     * Responds with the module's Constants.
-     *  @param bot       The bot's instance.
+     * Responds with the module's help.
+     *
+     * @param bot       The bot's instance.
      * @param sender    The sender.
      * @param isPrivate Set to <code>true</code> if the response should be sent as a private message.
      */
-    public abstract void helpResponse(final Mobibot bot,
-                                      final String sender,
-                                      final boolean isPrivate);
+    public void helpResponse(final Mobibot bot, final String sender, final boolean isPrivate) {
+        for (final String h : help) {
+            bot.send(sender, Utils.helpFormat(h, bot.getNick(), isPrivateMsgEnabled() && isPrivate), isPrivate);
+        }
+    }
 
     /**
      * Returns <code>true</code> if the module is enabled.
