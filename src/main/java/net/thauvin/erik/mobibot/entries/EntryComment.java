@@ -42,7 +42,7 @@ import java.time.LocalDateTime;
  * @created Jan 31, 2004
  * @since 1.0
  */
-@SuppressWarnings({"PMD.DataClass"})
+@SuppressWarnings({ "PMD.DataClass" })
 public class EntryComment implements Serializable {
     // Serial version UID
     static final long serialVersionUID = 1L;
@@ -82,16 +82,6 @@ public class EntryComment implements Serializable {
     }
 
     /**
-     * Sets the comment.
-     *
-     * @param comment The actual comment.
-     */
-    @SuppressWarnings("UnusedDeclaration")
-    public final void setComment(final String comment) {
-        this.comment = comment;
-    }
-
-    /**
      * Returns the comment's creation date.
      *
      * @return The date.
@@ -111,11 +101,30 @@ public class EntryComment implements Serializable {
     }
 
     /**
+     * Sets the comment.
+     *
+     * @param comment The actual comment.
+     */
+    @SuppressWarnings("UnusedDeclaration")
+    public final void setComment(final String comment) {
+        this.comment = comment;
+    }
+
+    /**
      * Sets the nickname of the author of the comment.
      *
      * @param nick The new nickname.
      */
     public final void setNick(final String nick) {
         this.nick = nick;
+    }
+
+    @Override
+    public String toString() {
+        return "EntryComment{"
+               + "comment='" + comment + '\''
+               + ", date=" + date
+               + ", nick='" + nick + '\''
+               + '}';
     }
 }

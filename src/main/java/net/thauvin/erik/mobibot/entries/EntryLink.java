@@ -404,15 +404,15 @@ public class EntryLink implements Serializable {
      */
     @Override
     public String toString() {
-        return "EntryLink{" +
-               "comments=" + comments +
-               ", tags=" + tags +
-               ", channel='" + channel + '\'' +
-               ", date=" + date +
-               ", link='" + link + '\'' +
-               ", login='" + login + '\'' +
-               ", nick='" + nick + '\'' +
-               ", title='" + title + '\'' +
-               '}';
+        return "EntryLink{"
+               + "channel='" + channel + '\''
+               + ", comments=" + comments
+               + ", date=" + date
+               + ", link='" + link + '\''
+               + ", login='" + login + '\''
+               + ", nick='" + nick + '\''
+               + ", tags=" + tags
+               + ", title='" + title + '\''
+               + '}';
     }
 }

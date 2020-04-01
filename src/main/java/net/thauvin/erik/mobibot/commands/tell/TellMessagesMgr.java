@@ -89,7 +89,6 @@ final class TellMessagesMgr {
     @SuppressWarnings("unchecked")
     public static List<TellMessage> load(final String file, final Logger logger) {
         try {
-
             try (final ObjectInput input = new ObjectInputStream(
                 new BufferedInputStream(Files.newInputStream(Paths.get(file))))) {
                 if (logger.isDebugEnabled()) {
@@ -116,7 +115,6 @@ final class TellMessagesMgr {
      */
     public static void save(final String file, final List<TellMessage> messages, final Logger logger) {
         try {
-
             try (final ObjectOutput output = new ObjectOutputStream(
                 new BufferedOutputStream(Files.newOutputStream(Paths.get(file))))) {
                 if (logger.isDebugEnabled()) {

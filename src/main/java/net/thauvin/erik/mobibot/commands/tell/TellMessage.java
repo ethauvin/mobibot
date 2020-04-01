@@ -178,4 +178,18 @@ public class TellMessage implements Serializable {
         received = LocalDateTime.now(Clock.systemUTC());
         isReceived = true;
     }
+
+    @Override
+    public String toString() {
+        return "TellMessage{"
+               + "id='" + id + '\''
+               + ", isNotified=" + isNotified
+               + ", isReceived=" + isReceived
+               + ", message='" + message + '\''
+               + ", queued=" + queued
+               + ", received=" + received
+               + ", recipient='" + recipient + '\''
+               + ", sender='" + sender + '\''
+               + '}';
+    }
 }
