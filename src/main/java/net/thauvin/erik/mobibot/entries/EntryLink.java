@@ -362,7 +362,7 @@ public class EntryLink implements Serializable {
             SyndCategoryImpl category;
 
             for (final String tag : tags) {
-                if (!tag.isBlank()) {
+                if (StringUtils.isNoneBlank(tag)) {
                     final String t = StringUtils.lowerCase(tag);
                     final char mod = t.charAt(0);
                     if (mod == '-') {
@@ -403,10 +403,16 @@ public class EntryLink implements Serializable {
      * @return A string representation of the object.
      */
     @Override
-    public final String toString() {
-
-        return super.toString() + "[ channel -> '" + channel + '\'' + ", comments -> " + comments + ", date -> " + date
-               + ", link -> '" + link + '\'' + ", login -> '" + login + '\'' + ", nick -> '" + nick + '\''
-               + ", tags -> " + tags + ", title -> '" + title + '\'' + " ]";
+    public String toString() {
+        return "EntryLink{" +
+               "comments=" + comments +
+               ", tags=" + tags +
+               ", channel='" + channel + '\'' +
+               ", date=" + date +
+               ", link='" + link + '\'' +
+               ", login='" + login + '\'' +
+               ", nick='" + nick + '\'' +
+               ", title='" + title + '\'' +
+               '}';
     }
 }
