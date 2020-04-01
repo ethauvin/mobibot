@@ -130,8 +130,6 @@ public class Mobibot extends PircBot {
     private static final String DEFAULT_SERVER = "irc.freenode.net";
     // Maximum number of times the bot will try to reconnect, if disconnected
     private static final int MAX_RECONNECT = 10;
-    // Number of milliseconds to delay between consecutive messages
-    private static final long MESSAGE_DELAY = 1000L;
     // Logger
     private static final Logger logger = LogManager.getLogger(Mobibot.class);
     // Ignore command
@@ -226,7 +224,7 @@ public class Mobibot extends PircBot {
         setAutoNickChange(true);
         setLogin(p.getProperty("login", getName()));
         setVersion(p.getProperty("weblog", ""));
-        setMessageDelay(MESSAGE_DELAY);
+        // setMessageDelay(1000);
         setIdentity(p.getProperty("ident", ""), p.getProperty("ident-nick", ""), p.getProperty("ident-msg", ""));
 
         // Set the URLs
@@ -278,12 +276,10 @@ public class Mobibot extends PircBot {
         addModule(new RockPaperScissors());
         addModule(new StockQuote());
 
+        // Twitter
         twitterModule = new Twitter();
         addModule(twitterModule);
-        twitterHandle = p.getProperty(Constants.TWITTER_HANDLE_PROP, "");
-        isTwitterAutoPost =
-                Boolean.parseBoolean(p.getProperty(Constants.TWITTER_AUTOPOST_PROP, "false"))
-                && twitterModule.isEnabled();
+
         addModule(new War());
         addModule(new Weather2());
         addModule(new WorldTime());
@@ -294,6 +290,12 @@ public class Mobibot extends PircBot {
                 module.setProperty(s, p.getProperty(s, ""));
             }
         });
+
+        // Twitter extra properties
+        twitterHandle = p.getProperty(Constants.TWITTER_HANDLE_PROP, "");
+        isTwitterAutoPost =
+                Boolean.parseBoolean(p.getProperty(Constants.TWITTER_AUTOPOST_PROP, "false"))
+                && twitterModule.isEnabled();
 
         // Save the entries
         UrlMgr.saveEntries(this, true);
@@ -492,7 +494,7 @@ public class Mobibot extends PircBot {
         if (isNotBlank(feedUrl)) {
             new Thread(new FeedReader(this, sender, feedUrl)).start();
         } else {
-            send(sender, "There is no weblog setup for this channel.", false);
+            send(sender, "There is no feed setup for this channel.", false);
         }
     }
 
