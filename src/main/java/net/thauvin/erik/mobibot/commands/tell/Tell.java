@@ -85,6 +85,7 @@ public class Tell extends AbstractCommand {
      * @param maxSize Max size.
      */
     public Tell(final Mobibot bot, final String maxDays, final String maxSize) {
+        super();
         this.bot = bot;
         this.maxDays = Utils.getIntProperty(maxDays, DEFAULT_TELL_MAX_DAYS);
         this.maxSize = Utils.getIntProperty(maxSize, DEFAULT_TELL_MAX_SIZE);
@@ -187,12 +188,12 @@ public class Tell extends AbstractCommand {
 
     @Override
     public boolean isPublic() {
-        return true;
+        return isEnabled();
     }
 
     @Override
     public boolean isVisible() {
-        return true;
+        return isEnabled();
     }
 
     @Override
@@ -202,22 +203,24 @@ public class Tell extends AbstractCommand {
                                 @NotNull final String args,
                                 final boolean isOp,
                                 final boolean isPrivate) {
-        if (StringUtils.isBlank(args)) {
-            helpResponse(bot, args, sender, isOp, isPrivate);
-        } else if (args.startsWith(View.VIEW_CMD)) {
-            if (bot.isOp(sender) && (View.VIEW_CMD + ' ' + TELL_ALL_KEYWORD).equals(args)) {
-                viewAll(sender, isPrivate);
+        if (isEnabled()) {
+            if (StringUtils.isBlank(args)) {
+                helpResponse(bot, args, sender, isOp, isPrivate);
+            } else if (args.startsWith(View.VIEW_CMD)) {
+                if (bot.isOp(sender) && (View.VIEW_CMD + ' ' + TELL_ALL_KEYWORD).equals(args)) {
+                    viewAll(sender, isPrivate);
+                } else {
+                    viewMessages(sender, isPrivate);
+                }
+            } else if (args.startsWith(TELL_DEL_KEYWORD + ' ')) {
+                deleteMessage(sender, args, isOp, isPrivate);
             } else {
-                viewMessages(sender, isPrivate);
+                newMessage(sender, args, isOp, isPrivate);
             }
-        } else if (args.startsWith(TELL_DEL_KEYWORD + ' ')) {
-            deleteMessage(sender, args, isOp, isPrivate);
-        } else {
-            newMessage(sender, args, isOp, isPrivate);
-        }
 
-        if (clean()) {
-            save();
+            if (clean()) {
+                save();
+            }
         }
     }
 

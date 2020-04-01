@@ -254,16 +254,18 @@ public class Mobibot extends PircBot {
         commands.add(new Users());
         commands.add(new Versions());
 
+        // Tell
+        tell = new Tell(this, p.getProperty("tell-max-days"), p.getProperty("tell-max-size"));
+        if (tell.isEnabled()) {
+            commands.add(tell);
+        }
+
         // Load the links commands
         commands.add(new Comment());
         commands.add(new Posting());
         commands.add(new Tags());
-        // Get the tell command settings
-        tell = new Tell(this, p.getProperty("tell-max-days"), p.getProperty("tell-max-size"));
-        commands.add(tell);
         commands.add(new UrlMgr(p.getProperty("tags", ""), p.getProperty("tags-keywords", "")));
         commands.add(new View());
-
 
         // Load the modules
         addModule(new Calc());
@@ -647,11 +649,6 @@ public class Mobibot extends PircBot {
             modules.stream().filter(AbstractModule::isEnabled)
                    .forEach(module -> commandsNames.addAll(module.getCommands()));
 
-            // Tell command
-            if (tell.isEnabled()) {
-                commandsNames.add(Tell.TELL_CMD);
-            }
-
             Collections.sort(commandsNames);
             Collections.sort(opsCommandsNames);
         }
@@ -829,7 +826,9 @@ public class Mobibot extends PircBot {
             Recap.storeRecap(sender, message, false);
         }
 
-        tell.send(sender, true);
+        if (tell.isEnabled()) {
+            tell.send(sender, true);
+        }
     }
 
     /**
@@ -911,7 +910,9 @@ public class Mobibot extends PircBot {
      */
     @Override
     protected void onJoin(final String channel, final String sender, final String login, final String hostname) {
-        tell.send(sender);
+        if (tell.isEnabled()) {
+            tell.send(sender);
+        }
     }
 
     /**
@@ -919,7 +920,9 @@ public class Mobibot extends PircBot {
      */
     @Override
     protected void onNickChange(final String oldNick, final String login, final String hostname, final String newNick) {
-        tell.send(newNick);
+        if (tell.isEnabled()) {
+            tell.send(newNick);
+        }
     }
 
     /**
