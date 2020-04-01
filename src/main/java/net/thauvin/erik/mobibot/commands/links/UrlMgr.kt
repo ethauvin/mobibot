@@ -45,7 +45,8 @@ import org.jsoup.Jsoup
 import java.io.IOException
 
 class UrlMgr(defaultTags: String, keywords: String) : AbstractCommand() {
-    private val tagsKeywords = ArrayList<String>()
+    private val keywords = ArrayList<String>()
+    private val tags = ArrayList<String>()
     override val command = Constants.LINK_CMD
     override val help = emptyList<String>()
     override val isOp = false
@@ -53,19 +54,19 @@ class UrlMgr(defaultTags: String, keywords: String) : AbstractCommand() {
     override val isVisible = false
 
     init {
-        tagsKeywords.addAll(keywords.split(", +?| +"))
-        Companion.defaultTags = defaultTags
+        this.keywords.addAll(keywords.split(TAG_MATCH.toRegex()))
+        tags.addAll(defaultTags.split(TAG_MATCH.toRegex()))
     }
 
     companion object {
         const val LINK_MATCH = "^[hH][tT][tT][pP](|[sS])://.*"
+        const val TAG_MATCH = ", *| +"
 
         // Entries array
         private val entries = ArrayList<EntryLink>(0)
 
         // History/backlogs array
         private val history = ArrayList<String>(0)
-        private lateinit var defaultTags: String
 
         @JvmStatic
         val entriesCount
@@ -130,19 +131,18 @@ class UrlMgr(defaultTags: String, keywords: String) : AbstractCommand() {
             val link = cmds[0].trim()
             if (!isDupEntry(bot, sender, link, isPrivate)) {
                 val isBackup = saveDayBackup(bot)
-                val tags: StringBuilder = StringBuilder(defaultTags)
                 var title = Constants.NO_TITLE
                 if (cmds.size == 2) {
                     val data = cmds[1].trim().split("${Tags.COMMAND}:", limit = 2)
                     title = data[0].trim()
                     if (data.size > 1) {
-                        tags.append(' ').append(data[1].trim())
+                        tags.addAll(data[1].split(TAG_MATCH.toRegex()))
                     }
                 }
-                tags.append(matchTagKeywords(title))
                 title = fetchTitle(link, title)
+                tags.addAll(matchTagKeywords(title))
 
-                entries.add(EntryLink(link, title, sender, login, bot.channel, tags.toString()))
+                entries.add(EntryLink(link, title, sender, login, bot.channel, tags))
                 val index: Int = entries.size - 1
                 val entry: EntryLink = entries[index]
                 bot.send(EntriesUtils.buildLink(index, entry))
@@ -210,17 +210,17 @@ class UrlMgr(defaultTags: String, keywords: String) : AbstractCommand() {
         return false
     }
 
-    private fun matchTagKeywords(title: String): String {
+    private fun matchTagKeywords(title: String): List<String> {
         val matches = ArrayList<String>()
-        if (tagsKeywords.isNotEmpty()) {
-            for (match in tagsKeywords) {
+        if (keywords.isNotEmpty()) {
+            for (match in keywords) {
                 val m = match.trim()
                 if (title.matches("(?i).*\\b$m\\b.*".toRegex())) {
                     matches.add(m)
                 }
             }
         }
-        return matches.joinToString(" ")
+        return matches
     }
 
     private fun saveDayBackup(bot: Mobibot): Boolean {

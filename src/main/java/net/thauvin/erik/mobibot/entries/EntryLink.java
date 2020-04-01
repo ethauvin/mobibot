@@ -35,9 +35,11 @@ package net.thauvin.erik.mobibot.entries;
 import com.rometools.rome.feed.synd.SyndCategory;
 import com.rometools.rome.feed.synd.SyndCategoryImpl;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import net.thauvin.erik.mobibot.commands.links.UrlMgr;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -93,7 +95,7 @@ public class EntryLink implements Serializable {
                      final String nick,
                      final String login,
                      final String channel,
-                     final String tags) {
+                     final List<String> tags) {
         this.link = link;
         this.title = title;
         this.nick = nick;
@@ -124,8 +126,7 @@ public class EntryLink implements Serializable {
         this.nick = nick;
         this.channel = channel;
         this.date = new Date(date.getTime());
-
-        setTags(tags);
+        this.tags.addAll(tags);
     }
 
     /**
@@ -345,53 +346,46 @@ public class EntryLink implements Serializable {
      *
      * @param tags The space-delimited tags.
      */
-    @SuppressFBWarnings("STT_STRING_PARSING_A_FIELD")
-    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     public final void setTags(final String tags) {
-        if (tags != null) {
-            final String[] parts = tags.replace(", ", " ").replace(',', ' ').split(" ");
-
-            SyndCategoryImpl tag;
-            String part;
-            char mod;
-
-            for (final String rawPart : parts) {
-                part = rawPart.trim();
-
-                if (part.length() >= 2) {
-                    tag = new SyndCategoryImpl();
-                    tag.setName(StringUtils.lowerCase(part.substring(1)));
-
-                    mod = part.charAt(0);
-
-                    if (mod == '-') {
-                        // Don't remove the channel tag, if any
-                        if (!channel.substring(1).equals(tag.getName())) {
-                            this.tags.remove(tag);
-                        }
-                    } else if (mod == '+') {
-                        if (!this.tags.contains(tag)) {
-                            this.tags.add(tag);
-                        }
-                    } else {
-                        tag.setName(StringUtils.lowerCase(part.trim()));
-
-                        if (!this.tags.contains(tag)) {
-                            this.tags.add(tag);
-                        }
-                    }
-                }
-            }
-        }
+        setTags(Arrays.asList(tags.split(UrlMgr.TAG_MATCH)));
     }
 
     /**
      * Sets the tags.
      *
-     * @param tags The tags.
+     * @param tags The tags list.
      */
-    final void setTags(final List<SyndCategory> tags) {
-        this.tags.addAll(tags);
+    @SuppressFBWarnings("STT_STRING_PARSING_A_FIELD")
+    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
+    public final void setTags(final List<String> tags) {
+        if (!tags.isEmpty()) {
+            SyndCategoryImpl category;
+
+            for (final String tag : tags) {
+                if (!tag.isBlank()) {
+                    final String t = StringUtils.lowerCase(tag);
+                    final char mod = t.charAt(0);
+                    if (mod == '-') {
+                        // Don't remove the channel tag
+                        if (!channel.substring(1).equals(t.substring(1))) {
+                            category = new SyndCategoryImpl();
+                            category.setName(t.substring(1));
+                            this.tags.remove(category);
+                        }
+                    } else {
+                        category = new SyndCategoryImpl();
+                        if (mod == '+') {
+                            category.setName(t.substring(1));
+                        } else {
+                            category.setName(t);
+                        }
+                        if (!this.tags.contains(category)) {
+                            this.tags.add(category);
+                        }
+                    }
+                }
+            }
+        }
     }
 
     /**

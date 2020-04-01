@@ -49,7 +49,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 public class EntryLinkTest {
     private final EntryLink entryLink = new EntryLink("https://www.mobitopia.org/", "Mobitopia", "Skynx",
-        "JimH", "#mobitopia", "tag1, tag2,tag3 TAG4   tag5");
+        "JimH", "#mobitopia", List.of("tag1", "tag2", "tag3", "TAG4", "Tag5"));
 
 
     @Test
