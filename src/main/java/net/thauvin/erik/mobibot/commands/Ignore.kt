@@ -34,6 +34,7 @@ package net.thauvin.erik.mobibot.commands
 
 import net.thauvin.erik.mobibot.Mobibot
 import net.thauvin.erik.mobibot.Utils
+import net.thauvin.erik.mobibot.commands.links.UrlMgr
 import java.util.*
 
 class Ignore(defaultIgnore: String) : AbstractCommand() {
@@ -41,7 +42,7 @@ class Ignore(defaultIgnore: String) : AbstractCommand() {
 
     init {
         if (defaultIgnore.isNotBlank()) {
-            ignored.addAll(defaultIgnore.split(", *| +".toRegex()))
+            ignored.addAll(defaultIgnore.split(UrlMgr.LINK_MATCH.toRegex()))
         }
     }
 
