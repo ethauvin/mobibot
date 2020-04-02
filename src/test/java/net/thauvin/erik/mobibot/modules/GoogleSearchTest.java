@@ -63,20 +63,20 @@ public class GoogleSearchTest extends LocalProperties {
         try {
             List<Message> messages = GoogleSearch.searchGoogle("mobibot site:github.com", apiKey, cseKey);
             assertThat(messages).as("mobibot results not empty").isNotEmpty();
-            assertThat(messages.get(0).getMessage()).as("found mobitopia").contains("mobibot");
+            assertThat(messages.get(0).getText()).as("found mobitopia").contains("mobibot");
 
             messages = GoogleSearch.searchGoogle("aapl", apiKey, cseKey);
             assertThat(messages).as("aapl results not empty").isNotEmpty();
-            assertThat(messages.get(0).getMessage()).as("found apple").containsIgnoringCase("apple");
+            assertThat(messages.get(0).getText()).as("found apple").containsIgnoringCase("apple");
 
             assertThatThrownBy(() -> GoogleSearch.searchGoogle("test", "", "apiKey")).as("no API key").isInstanceOf(
-                ModuleException.class).hasNoCause();
+                    ModuleException.class).hasNoCause();
 
             assertThatThrownBy(() -> GoogleSearch.searchGoogle("test", "apiKey", "")).as("no CSE API key").isInstanceOf(
-                ModuleException.class).hasNoCause();
+                    ModuleException.class).hasNoCause();
 
             assertThatThrownBy(() -> GoogleSearch.searchGoogle("", "apikey", "apiKey")).as("no query").isInstanceOf(
-                ModuleException.class).hasNoCause();
+                    ModuleException.class).hasNoCause();
         } catch (ModuleException e) {
             // Avoid displaying api keys in CI logs
             if ("true".equals(System.getenv("CI"))) {

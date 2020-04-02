@@ -142,7 +142,7 @@ public final class Twitter extends ThreadedModule {
     void run(final Mobibot bot, final String sender, final String cmd, final String message, final boolean isPrivate) {
         try {
             bot.send(sender,
-                     post(sender, message + " (by " + sender + " on " + bot.getChannel() + ')', false).getMessage(),
+                     post(sender, message + " (by " + sender + " on " + bot.getChannel() + ')', false).getText(),
                      isPrivate);
         } catch (ModuleException e) {
             bot.getLogger().warn(e.getDebugMessage(), e);

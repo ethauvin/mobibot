@@ -1,5 +1,5 @@
 /*
- * ErrorMessage.java
+ * NoticeMessage.java
  *
  * Copyright (c) 2004-2019, Erik C. Thauvin (erik@thauvin.net)
  * All rights reserved.
@@ -29,41 +29,35 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
-package net.thauvin.erik.mobibot.msg;
+package net.thauvin.erik.mobibot.msg
 
 /**
- * The <code>ErrorMessage</code> class.
+ * The `NoticeMessage` class.
  *
- * @author <a href="https://erik.thauvin.net/" target="_blank">Erik C. Thauvin</a>
+ * @author [Erik C. Thauvin](https://erik.thauvin.net/)
  * @created 2019-04-07
  * @since 1.0
  */
-public class ErrorMessage extends Message {
+class NoticeMessage : Message {
     /**
-     * Creates a new error message.
+     * Creates a new notice.
      *
-     * @param message The error message.
+     * @param text The notice's message.
      */
-    public ErrorMessage(final String message) {
-        super();
-        this.setMessage(message);
-        this.setError(true);
-        this.setNotice(true);
+    constructor(text: String) : super() {
+        this.text = text
+        isNotice = true
     }
 
     /**
-     * Creates a new error message.
+     * Create a new notice.
      *
-     * @param message The message.
-     * @param color   The message color.
+     * @param text The notice's message.
+     * @param color The color.
      */
-    @SuppressWarnings("unused")
-    public ErrorMessage(final String message, final String color) {
-        super();
-        this.setMessage(message);
-        this.setError(true);
-        this.setNotice(true);
-        this.setColor(color);
+    constructor(text: String, color: String) : super() {
+        this.text = text
+        isNotice = true
+        this.color = color
     }
 }

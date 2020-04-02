@@ -1,5 +1,5 @@
 /*
- * PublicMessage.java
+ * ErrorMessage.java
  *
  * Copyright (c) 2004-2019, Erik C. Thauvin (erik@thauvin.net)
  * All rights reserved.
@@ -29,32 +29,38 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
-package net.thauvin.erik.mobibot.msg;
+package net.thauvin.erik.mobibot.msg
 
 /**
- * The <code>PublicMessage</code> class.
+ * The `ErrorMessage` class.
  *
- * @author <a href="https://erik.thauvin.net/" target="_blank">Erik C. Thauvin</a>
+ * @author [Erik C. Thauvin](https://erik.thauvin.net/)
  * @created 2019-04-07
  * @since 1.0
  */
-public class PublicMessage extends Message {
-    public PublicMessage(final String message) {
-        super();
-        this.setMessage(message);
+class ErrorMessage : Message {
+    /**
+     * Creates a new error message.
+     *
+     * @param text The error message.
+     */
+    constructor(text: String) : super() {
+        this.text = text
+        isError = true
+        isNotice = true
     }
 
     /**
-     * Creates a new public message.
+     * Creates a new error message.
      *
-     * @param message The message.
-     * @param color   The message color.
+     * @param text The message.
+     * @param color The message color.
      */
-    @SuppressWarnings("unused")
-    public PublicMessage(final String message, final String color) {
-        super();
-        this.setMessage(message);
-        this.setColor(color);
+    @Suppress("unused")
+    constructor(text: String, color: String) : super() {
+        this.text = text
+        isError = true
+        isNotice = true
+        this.color = color
     }
 }

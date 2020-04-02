@@ -1,5 +1,5 @@
 /*
- * NoticeMessage.java
+ * PrivateMessage.java
  *
  * Copyright (c) 2004-2019, Erik C. Thauvin (erik@thauvin.net)
  * All rights reserved.
@@ -29,38 +29,36 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
-package net.thauvin.erik.mobibot.msg;
+package net.thauvin.erik.mobibot.msg
 
 /**
- * The <code>NoticeMessage</code> class.
+ * The `PrivateMessage` class.
  *
- * @author <a href="https://erik.thauvin.net/" target="_blank">Erik C. Thauvin</a>
- * @created 2019-04-07
+ * @author [Erik C. Thauvin](https://erik.thauvin.net/)
+ * @created 2019-04-09
  * @since 1.0
  */
-public class NoticeMessage extends Message {
+@Suppress("unused")
+class PrivateMessage : Message {
     /**
-     * Creates a new notice.
+     * Creates a new private message.
      *
-     * @param message The notice's message.
+     * @param text The message.
      */
-    public NoticeMessage(final String message) {
-        super();
-        this.setMessage(message);
-        this.setNotice(true);
+    constructor(text: String) : super() {
+        this.text = text
+        isPrivate = true
     }
 
     /**
-     * Create a new notice.
+     * Creates a new private message.
      *
-     * @param message The notice's message.
-     * @param color   The color.
+     * @param text The message.
+     * @param color The message color.
      */
-    public NoticeMessage(final String message, final String color) {
-        super();
-        this.setMessage(message);
-        this.setNotice(true);
-        this.setColor(color);
+    constructor(text: String, color: String) : super() {
+        this.text = text
+        this.color = color
+        isPrivate = true
     }
 }

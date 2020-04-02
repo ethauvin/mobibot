@@ -58,7 +58,7 @@ public class StockQuoteTest extends LocalProperties {
         try {
             final List<Message> messages = StockQuote.getQuote("apple inc", apiKey);
             assertThat(messages).as("response not empty").isNotEmpty();
-            assertThat(messages.get(0).getMessage()).as("same stock symbol").contains("AAPL").contains("Apple Inc.");
+            assertThat(messages.get(0).getText()).as("same stock symbol").contains("AAPL").contains("Apple Inc.");
 
             try {
                 StockQuote.getQuote("012", apiKey);

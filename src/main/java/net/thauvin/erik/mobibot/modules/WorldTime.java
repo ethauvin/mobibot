@@ -229,12 +229,12 @@ public final class WorldTime extends AbstractModule {
         } else {
             final Message msg = worldTime(args);
             if (isPrivate) {
-                bot.send(sender, msg.getMessage(), true);
+                bot.send(sender, msg.getText(), true);
             } else {
                 if (msg.isError()) {
-                    bot.send(sender, msg.getMessage(), false);
+                    bot.send(sender, msg.getText(), false);
                 } else {
-                    bot.send(msg.getMessage());
+                    bot.send(msg.getText());
                 }
             }
         }

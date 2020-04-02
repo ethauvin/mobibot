@@ -54,11 +54,11 @@ public class CurrencyConverterTest {
     @Test
     @SuppressFBWarnings("PRMC_POSSIBLY_REDUNDANT_METHOD_CALLS")
     public void testConvertCurrency() {
-        assertThat(CurrencyConverter.convertCurrency("100 USD to EUR").getMessage())
+        assertThat(CurrencyConverter.convertCurrency("100 USD to EUR").getText())
                 .as("100 USD to EUR").matches("100\\.00 USD = \\d{2,3}\\.\\d{2} EUR");
-        assertThat(CurrencyConverter.convertCurrency("100 USD to USD").getMessage())
+        assertThat(CurrencyConverter.convertCurrency("100 USD to USD").getText())
                 .as("100 USD to USD").contains("You're kidding, right?");
-        assertThat(CurrencyConverter.convertCurrency("100 USD").getMessage())
+        assertThat(CurrencyConverter.convertCurrency("100 USD").getText())
                 .as("100 USD").contains("Invalid query.");
         assertThat(CurrencyConverter.currencyRates().size())
                 .as("currencyRates().size() == 33").isEqualTo(33);

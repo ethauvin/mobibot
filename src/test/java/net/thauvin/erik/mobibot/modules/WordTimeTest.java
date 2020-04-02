@@ -47,9 +47,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class WordTimeTest {
     @Test
     public void testWorldTime() {
-        assertThat(WorldTime.worldTime("PST").getMessage()).as("PST").endsWith(Utils.bold("Los Angeles"));
+        assertThat(WorldTime.worldTime("PST").getText()).as("PST").endsWith(Utils.bold("Los Angeles"));
         assertThat(WorldTime.worldTime("BLAH").isError()).as("BLAH").isTrue();
-        assertThat(WorldTime.worldTime("BEATS").getMessage()).as("BEATS").contains("@");
+        assertThat(WorldTime.worldTime("BEATS").getText()).as("BEATS").contains("@");
     }
 
     @Test

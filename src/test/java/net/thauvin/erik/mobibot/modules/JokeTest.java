@@ -51,7 +51,7 @@ public class JokeTest {
 
     @Test
     public void testRamdomJoke() throws ModuleException {
-        assertThat(Joke.randomJoke().getMessage().length() > 0).as("randomJoke() > 0").isTrue();
-        assertThat(Joke.randomJoke().getMessage()).as("randomJoke()").containsIgnoringCase("chuck");
+        assertThat(Joke.randomJoke().getText().length() > 0).as("randomJoke() > 0").isTrue();
+        assertThat(Joke.randomJoke().getText()).as("randomJoke()").containsIgnoringCase("chuck");
     }
 }
