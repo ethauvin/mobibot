@@ -83,6 +83,17 @@ test {
     }
 }
 
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_9
+    targetCompatibility = JavaVersion.VERSION_1_9
+}
+
+compileKotlin {
+    kotlinOptions {
+        jvmTarget = '9'
+    }
+}
+
 spotbugs {
     toolVersion.set("$versions.spotbugs")
 }
