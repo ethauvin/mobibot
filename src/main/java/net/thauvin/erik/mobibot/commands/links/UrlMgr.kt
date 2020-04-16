@@ -131,7 +131,7 @@ class UrlMgr(defaultTags: String, keywords: String) : AbstractCommand() {
             val link = cmds[0].trim()
             if (!isDupEntry(bot, sender, link, isPrivate)) {
                 val isBackup = saveDayBackup(bot)
-                var title = Constants.NO_TITLE
+                var title = ""
                 val tags = ArrayList<String>(defaultTags)
                 if (cmds.size == 2) {
                     val data = cmds[1].trim().split("${Tags.COMMAND}:", limit = 2)
@@ -140,8 +140,14 @@ class UrlMgr(defaultTags: String, keywords: String) : AbstractCommand() {
                         tags.addAll(data[1].split(TAG_MATCH.toRegex()))
                     }
                 }
-                title = fetchTitle(link, title)
-                matchTagKeywords(title, tags)
+
+                if (title.isBlank()) {
+                    title = fetchTitle(link)
+                }
+
+                if (title != Constants.NO_TITLE) {
+                    matchTagKeywords(title, tags)
+                }
 
                 entries.add(EntryLink(link, title, sender, login, bot.channel, tags))
                 val index: Int = entries.size - 1
@@ -180,26 +186,19 @@ class UrlMgr(defaultTags: String, keywords: String) : AbstractCommand() {
         return message.matches(LINK_MATCH.toRegex())
     }
 
-    private fun fetchTitle(link: String, title: String): String {
-        if (Constants.NO_TITLE == title) {
-            try {
-                val html = Jsoup.connect(link)
-                    .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:74.0) Gecko/20100101 Firefox/74.0")
-                    .get()
-                val htmlTitle = html.title()
-                val split = htmlTitle.split("( \\| )".toRegex(), 2)
-                return if (split.size == 2 && split[0].isNotBlank()) {
-                    split[0]
-                } else if (htmlTitle.isNotBlank()) {
-                    htmlTitle
-                } else {
-                    title
-                }
-            } catch (ignore: IOException) {
-                // Do nothing
+    private fun fetchTitle(link: String): String {
+        try {
+            val html = Jsoup.connect(link)
+                .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:74.0) Gecko/20100101 Firefox/74.0")
+                .get()
+            val title = html.title()
+            if (title.isNotBlank()) {
+                return title
             }
+        } catch (ignore: IOException) {
+            // Do nothing
         }
-        return title
+        return Constants.NO_TITLE
     }
 
     private fun isDupEntry(bot: Mobibot, sender: String, link: String, isPrivate: Boolean): Boolean {
@@ -217,9 +216,9 @@ class UrlMgr(defaultTags: String, keywords: String) : AbstractCommand() {
 
     private fun matchTagKeywords(title: String, tags: ArrayList<String>) {
         for (match in keywords) {
-            val m = Regex.escape(match.trim())
+            val m = Regex.escape(match)
             if (title.matches("(?i).*\\b$m\\b.*".toRegex())) {
-                tags.add(m)
+                tags.add(match)
             }
         }
     }
