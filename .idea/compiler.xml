@@ -21,10 +21,6 @@
         <module name="mobibot.main" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="mobibot" target="14" />
-      <module name="mobibot.main" target="14" />
-      <module name="mobibot.test" target="14" />
-    </bytecodeTargetLevel>
+    <bytecodeTargetLevel target="1.9" />
   </component>
 </project>
