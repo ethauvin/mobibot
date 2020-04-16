@@ -225,7 +225,7 @@ public final class WorldTime extends AbstractModule {
                                 final boolean isPrivate) {
         if (args.length() == 0) {
             bot.send(sender, "The supported countries/zones are: ", isPrivate);
-            bot.sendCommandsList(sender, new ArrayList<>(COUNTRIES_MAP.keySet()), 17, false, false);
+            bot.sendList(sender, new ArrayList<>(COUNTRIES_MAP.keySet()), 17, false, false);
         } else {
             final Message msg = worldTime(args);
             if (isPrivate) {

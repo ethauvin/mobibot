@@ -218,7 +218,7 @@ public final class CurrencyConverter extends ThreadedModule {
             }
         } else if (query.contains(CURRENCY_RATES_KEYWORD)) {
             bot.send(sender, "The currency rates for " + Utils.bold(pubDate) + " are:", isPrivate);
-            bot.sendCommandsList(sender, currencyRates(), 3, isPrivate, false);
+            bot.sendList(sender, currencyRates(), 3, isPrivate, false);
         } else {
             helpResponse(bot, sender, isPrivate);
         }
@@ -250,7 +250,7 @@ public final class CurrencyConverter extends ThreadedModule {
                                                        bot.getNick(),
                                                        isPrivate)), isPrivate);
             bot.send(sender, "The supported currencies are: ", isPrivate);
-            bot.sendCommandsList(sender, new ArrayList<>(EXCHANGE_RATES.keySet()), 11, isPrivate, false);
+            bot.sendList(sender, new ArrayList<>(EXCHANGE_RATES.keySet()), 11, isPrivate, false);
         }
     }
 }

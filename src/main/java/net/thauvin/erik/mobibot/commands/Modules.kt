@@ -59,7 +59,7 @@ class Modules : AbstractCommand() {
                 bot.send(sender, "There are no enabled modules.", isPrivate)
             } else {
                 bot.send(sender, "The enabled modules are: ", isPrivate)
-                bot.sendCommandsList(sender, modulesNames, 7, isPrivate, false)
+                bot.sendList(sender, modulesNames, 7, isPrivate, false)
             }
         } else {
             bot.helpDefault(sender, isOp, isPrivate)

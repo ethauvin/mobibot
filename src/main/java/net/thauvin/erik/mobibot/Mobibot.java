@@ -655,10 +655,10 @@ public class Mobibot extends PircBot {
             Collections.sort(opsCommandsNames);
         }
 
-        sendCommandsList(sender, commandsNames, 8, isPrivate, true);
+        sendList(sender, commandsNames, 8, isPrivate, true);
         if (isOp) {
             send(sender, "The op commands are:", isPrivate);
-            sendCommandsList(sender, opsCommandsNames, 8, isPrivate, true);
+            sendList(sender, opsCommandsNames, 8, isPrivate, true);
         }
     }
 
@@ -994,11 +994,11 @@ public class Mobibot extends PircBot {
      * @param isPrivate The private flag.
      * @param isBold    The bold flag
      */
-    public final void sendCommandsList(final String nick,
-                                       final List<String> list,
-                                       final int size,
-                                       final boolean isPrivate,
-                                       final boolean isBold) {
+    public final void sendList(final String nick,
+                               final List<String> list,
+                               final int size,
+                               final boolean isPrivate,
+                               final boolean isBold) {
         for (int i = 0; i < list.size(); i += size) {
             send(nick, Utils.helpIndent(
                     String.join(" ", list.subList(i, Math.min(list.size(), i + size))), isBold), isPrivate);

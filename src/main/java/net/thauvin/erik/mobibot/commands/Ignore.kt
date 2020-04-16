@@ -144,7 +144,7 @@ class Ignore(defaultIgnore: String) : AbstractCommand() {
 
         if (ignored.size > 0) {
             bot.send(sender, "The following nicks are ignored:", isPrivate)
-            bot.sendCommandsList(sender, ignored.toList(), 8, isPrivate, true)
+            bot.sendList(sender, ignored.toList(), 8, isPrivate, true)
         } else {
             bot.send(sender, "No one is currently ${Utils.bold("ignored")}.", isPrivate)
         }

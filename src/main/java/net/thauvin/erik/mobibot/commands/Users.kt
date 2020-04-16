@@ -60,12 +60,12 @@ class Users : AbstractCommand() {
         val nicks = ArrayList<String>()
         users.forEach { user ->
             if (bot.isOp(user.nick)) {
-                nicks.add('@'.toString() + user.nick)
+                nicks.add("@${user.nick}")
             } else {
                 nicks.add(user.nick)
             }
         }
 
-        bot.send(sender, nicks.sorted().joinToString(" "), isPrivate)
+        bot.sendList(sender, nicks.sorted(), 8, isPrivate, false)
     }
 }
