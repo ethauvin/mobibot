@@ -48,7 +48,7 @@ import java.util.List;
  * @created Feb 1, 2004
  * @since 1.0
  */
-class FeedReader implements Runnable {
+public class FeedReader implements Runnable {
     // Maximum number of feed items to display
     private static final int MAX_ITEMS = 5;
 
@@ -68,7 +68,7 @@ class FeedReader implements Runnable {
      * @param sender The nick of the person who sent the message.
      * @param url    The URL to fetch.
      */
-    FeedReader(final Mobibot bot, final String sender, final String url) {
+    public FeedReader(final Mobibot bot, final String sender, final String url) {
         this.bot = bot;
         this.sender = sender;
         this.url = url;

@@ -168,8 +168,6 @@ public class Mobibot extends PircBot {
     private final Twitter twitterModule;
     // Backlogs URL
     private String backLogsUrl = "";
-    // Feed URL
-    private String feedUrl = "";
     // Ident message
     private String identMsg = "";
     // Ident nick
@@ -229,41 +227,41 @@ public class Mobibot extends PircBot {
 
         // Set the URLs
         setWeblogUrl(getVersion());
-        setFeedUrl(p.getProperty("feed", ""));
         setBacklogsUrl(Utils.ensureDir(p.getProperty("backlogs", weblogUrl), true));
 
         // Set the pinboard authentication
         setPinboardAuth(p.getProperty("pinboard-api-token"));
 
-        // Set the ignored nicks
-        ignoreCommand = new Ignore(p.getProperty("ignore", ""));
-
         // Load the commands
-        commands.add(new AddLog());
-        commands.add(new Cycle());
-        commands.add(ignoreCommand);
-        commands.add(new Info());
-        commands.add(new Me());
-        commands.add(new Modules());
-        commands.add(new Msg());
-        commands.add(new Nick());
-        commands.add(new Recap());
-        commands.add(new Say());
-        commands.add(new Users());
-        commands.add(new Versions());
+        addCommand(new AddLog());
+        addCommand(new ChannelFeed(getChannelName(), p.getProperty("feed", "")));
+        addCommand(new Cycle());
+        addCommand(new Info());
+        addCommand(new Me());
+        addCommand(new Modules());
+        addCommand(new Msg());
+        addCommand(new Nick());
+        addCommand(new Recap());
+        addCommand(new Say());
+        addCommand(new Users());
+        addCommand(new Versions());
 
-        // Tell
+        // Ignore command
+        ignoreCommand = new Ignore(p.getProperty("ignore", ""));
+        addCommand(ignoreCommand);
+
+        // Tell command
         tell = new Tell(this, p.getProperty("tell-max-days"), p.getProperty("tell-max-size"));
         if (tell.isEnabled()) {
-            commands.add(tell);
+            addCommand(tell);
         }
 
         // Load the links commands
-        commands.add(new Comment());
-        commands.add(new Posting());
-        commands.add(new Tags());
-        commands.add(new UrlMgr(p.getProperty("tags", ""), p.getProperty("tags-keywords", "")));
-        commands.add(new View());
+        addCommand(new Comment());
+        addCommand(new Posting());
+        addCommand(new Tags());
+        addCommand(new UrlMgr(p.getProperty("tags", ""), p.getProperty("tags-keywords", "")));
+        addCommand(new View());
 
         // Load the modules
         addModule(new Calc());
@@ -486,19 +484,6 @@ public class Mobibot extends PircBot {
     }
 
     /**
-     * Responds with the title and links from the RSS feed.
-     *
-     * @param sender The nick of the person who sent the message.
-     */
-    private void feedResponse(final String sender) {
-        if (isNotBlank(feedUrl)) {
-            new Thread(new FeedReader(this, sender, feedUrl)).start();
-        } else {
-            send(sender, "There is no feed setup for this channel.", false);
-        }
-    }
-
-    /**
      * Returns the backlogs URL.
      *
      * @return The backlogs URL.
@@ -696,15 +681,9 @@ public class Mobibot extends PircBot {
         if (StringUtils.isBlank(topic)) {
             helpDefault(sender, isOp, isPrivate);
         } else {
-            final String lcTopic = lowerCase(topic).trim();
-            if (lcTopic.equals(getChannelName())) {
-                send(sender, "To list the last 5 posts from the channel's weblog:", isPrivate);
-                send(sender, Utils.helpIndent(getNick() + ": " + getChannelName()), isPrivate);
-            } else {
-                // Command, Modules or Default
-                if (!helpCommands(sender, topic, isPrivate) && !helpModules(sender, lcTopic, isPrivate)) {
-                    helpDefault(sender, isOp, isPrivate);
-                }
+            // Command, Modules or Default
+            if (!helpCommands(sender, topic, isPrivate) && !helpModules(sender, lowerCase(topic).trim(), isPrivate)) {
+                helpDefault(sender, isOp, isPrivate);
             }
         }
     }
@@ -790,47 +769,35 @@ public class Mobibot extends PircBot {
 
             if (cmd.startsWith(Constants.HELP_CMD)) { // mobibot: help
                 helpResponse(sender, args, false);
-            } else if (cmd.equalsIgnoreCase(getChannelName())) { // mobibot: <channel>
-                feedResponse(sender);
             } else {
-                boolean skip = false;
                 // Commands
                 for (final AbstractCommand command : commands) {
                     if (command.isPublic() && command.getCommand().startsWith(cmd)) {
                         command.commandResponse(this, sender, login, args, isOp(sender), false);
-                        skip = true;
-                        break;
+                        return;
                     }
                 }
-                if (!skip) {
-                    // Modules
-                    for (final AbstractModule module : modules) { // modules
-                        for (final String c : module.getCommands()) {
-                            if (cmd.startsWith(c)) {
-                                module.commandResponse(this, sender, cmd, args, false);
-                                break;
-                            }
+                // Modules
+                for (final AbstractModule module : modules) { // modules
+                    for (final String c : module.getCommands()) {
+                        if (cmd.startsWith(c)) {
+                            module.commandResponse(this, sender, cmd, args, false);
+                            return;
                         }
                     }
                 }
             }
-        } else { // Commands
+        } else {
+            // Commands, e.g.: https://www.example.com/
             for (final AbstractCommand command : commands) {
                 if (command.matches(message)) {
                     command.commandResponse(this, sender, login, message, isOp(sender), false);
-                    isCommand = true;
-                    break;
+                    return;
                 }
             }
         }
 
-        if (!isCommand) {
-            Recap.storeRecap(sender, message, false);
-        }
-
-        if (tell.isEnabled()) {
-            tell.send(sender, true);
-        }
+        Recap.storeRecap(sender, message, false);
     }
 
     /**
@@ -1012,15 +979,6 @@ public class Mobibot extends PircBot {
      */
     final void setBacklogsUrl(final String url) {
         backLogsUrl = url;
-    }
-
-    /**
-     * Sets the feed URL.
-     *
-     * @param feedUrl The feed URL.
-     */
-    final void setFeedUrl(final String feedUrl) {
-        this.feedUrl = feedUrl;
     }
 
     /**
