@@ -53,21 +53,19 @@ public class Weather2Test extends LocalProperties {
     @SuppressFBWarnings("PRMC_POSSIBLY_REDUNDANT_METHOD_CALLS")
     @Test
     public void testWeather() throws ModuleException {
-        List<Message> messages = Weather2.getWeather("98204", LocalProperties.getProperty(Weather2.OWM_API_KEY_PROP));
+        List<Message> messages = Weather2.getWeather("98204", getProperty(Weather2.OWM_API_KEY_PROP));
         assertThat(messages.get(0).getText()).as("is Everett").contains("Everett").contains("US");
         assertThat(messages.get(messages.size() - 1).getText()).as("is City Search").endsWith("98204%2CUS");
 
-        messages = Weather2.getWeather("London, UK", LocalProperties.getProperty(Weather2.OWM_API_KEY_PROP));
+        messages = Weather2.getWeather("London, UK", getProperty(Weather2.OWM_API_KEY_PROP));
         assertThat(messages.get(0).getText()).as("is UK").contains("London").contains("UK");
         assertThat(messages.get(messages.size() - 1).getText()).as("is City Code").endsWith("4517009");
 
-        assertThatThrownBy(
-            () -> Weather2.getWeather("Montpellier, FR", LocalProperties.getProperty(Weather2.OWM_API_KEY_PROP))).as(
-            "Montpellier not found").hasCauseInstanceOf(APIException.class);
+        assertThatThrownBy(() -> Weather2.getWeather("Montpellier, FR", getProperty(Weather2.OWM_API_KEY_PROP)))
+                .as("Montpellier not found").hasCauseInstanceOf(APIException.class);
 
-        assertThatThrownBy(
-            () -> Weather2.getWeather("test", "")).as(
-            "no API key").isInstanceOf(ModuleException.class).hasNoCause();
+        assertThatThrownBy(() -> Weather2.getWeather("test", ""))
+                .as("no API key").isInstanceOf(ModuleException.class).hasNoCause();
 
         messages = Weather2.getWeather("", "apikey");
         assertThat(messages.get(0).isError()).as("no query").isTrue();

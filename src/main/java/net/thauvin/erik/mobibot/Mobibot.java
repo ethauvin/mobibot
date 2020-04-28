@@ -35,6 +35,7 @@ package net.thauvin.erik.mobibot;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import net.thauvin.erik.mobibot.commands.AbstractCommand;
 import net.thauvin.erik.mobibot.commands.AddLog;
+import net.thauvin.erik.mobibot.commands.ChannelFeed;
 import net.thauvin.erik.mobibot.commands.Cycle;
 import net.thauvin.erik.mobibot.commands.Ignore;
 import net.thauvin.erik.mobibot.commands.Info;
@@ -122,16 +123,12 @@ public class Mobibot extends PircBot {
                     ReleaseInfo.PROJECT + " v" + ReleaseInfo.VERSION
                     + " (" + Utils.green("https://www.mobitopia.org/mobibot/") + ')',
                     "Written by Erik C. Thauvin (" + Utils.green("https://erik.thauvin.net/") + ')');
-    // Timer
-    public static final Timer timer = new Timer(true);
-    // Default port
-    private static final int DEFAULT_PORT = 6667;
-    // Default server
-    private static final String DEFAULT_SERVER = "irc.freenode.net";
+    // Logger
+    private static final Logger LOGGER = LogManager.getLogger(Mobibot.class);
     // Maximum number of times the bot will try to reconnect, if disconnected
     private static final int MAX_RECONNECT = 10;
-    // Logger
-    private static final Logger logger = LogManager.getLogger(Mobibot.class);
+    // Timer
+    private static final Timer TIMER = new Timer(true);
     // Ignore command
     public final Ignore ignoreCommand;
     // Automatically post links to Twitter
@@ -179,6 +176,7 @@ public class Mobibot extends PircBot {
     // Weblog URL
     private String weblogUrl = "";
 
+
     /**
      * Creates a new {@link Mobibot} instance.
      *
@@ -196,25 +194,20 @@ public class Mobibot extends PircBot {
 
         setName(nickname);
 
-        ircServer = p.getProperty("server", DEFAULT_SERVER);
-        ircPort = Utils.getIntProperty(p.getProperty("port"), DEFAULT_PORT);
+        ircServer = p.getProperty("server", Constants.DEFAULT_SERVER);
+        ircPort = Utils.getIntProperty(p.getProperty("port"), Constants.DEFAULT_PORT);
         ircChannel = channel;
         logsDir = logsDirPath;
 
         // Set the logger level
-        loggerLevel = logger.getLevel();
+        loggerLevel = LOGGER.getLevel();
 
         // Load the current entries and backlogs, if any
         try {
             UrlMgr.startup(logsDir + EntriesMgr.CURRENT_XML, logsDir + EntriesMgr.NAV_XML, ircChannel);
-
-            if (logger.isDebugEnabled()) {
-                logger.debug("Last feed: {}", UrlMgr.getStartDate());
-            }
+            LOGGER.debug("Last feed: {}", UrlMgr.getStartDate());
         } catch (Exception e) {
-            if (logger.isErrorEnabled()) {
-                logger.error("An error occurred while loading the logs.", e);
-            }
+            LOGGER.error("An error occurred while loading the logs.", e);
         }
 
         // Initialize the bot
@@ -273,14 +266,13 @@ public class Mobibot extends PircBot {
         addModule(new Ping());
         addModule(new RockPaperScissors());
         addModule(new StockQuote());
-
-        // Twitter
-        twitterModule = new Twitter();
-        addModule(twitterModule);
-
         addModule(new War());
         addModule(new Weather2());
         addModule(new WorldTime());
+
+        // Twitter module
+        twitterModule = new Twitter();
+        addModule(twitterModule);
 
         // Load the modules properties
         modules.stream().filter(AbstractModule::hasProperties).forEach(module -> {
@@ -294,6 +286,11 @@ public class Mobibot extends PircBot {
         isTwitterAutoPost =
                 Boolean.parseBoolean(p.getProperty(Constants.TWITTER_AUTOPOST_PROP, "false"))
                 && twitterModule.isEnabled();
+
+        // Sort the command & module names
+        Collections.sort(commandsNames);
+        Collections.sort(opsCommandsNames);
+        Collections.sort(modulesNames);
 
         // Save the entries
         UrlMgr.saveEntries(this, true);
@@ -419,6 +416,22 @@ public class Mobibot extends PircBot {
     }
 
     /**
+     * Adds a command.
+     *
+     * @param command The command to add.
+     */
+    private void addCommand(final AbstractCommand command) {
+        commands.add(command);
+        if (command.isVisible()) {
+            if (command.isOp()) {
+                opsCommandsNames.add(command.getCommand());
+            } else {
+                commandsNames.add(command.getCommand());
+            }
+        }
+    }
+
+    /**
      * Adds a module.
      *
      * @param module The module to add.
@@ -426,6 +439,7 @@ public class Mobibot extends PircBot {
     private void addModule(final AbstractModule module) {
         modules.add(module);
         modulesNames.add(module.getClass().getSimpleName());
+        commandsNames.addAll(module.getCommands());
     }
 
     /**
@@ -456,11 +470,7 @@ public class Mobibot extends PircBot {
                     connect(ircServer, ircPort);
                 } catch (Exception ex) {
                     if (retries == MAX_RECONNECT) {
-                        if (logger.isDebugEnabled()) {
-                            logger.debug(
-                                    "Unable to reconnect to {} after {} retries.", ircServer, MAX_RECONNECT, ex);
-                        }
-
+                        LOGGER.debug("Unable to reconnect to {} after {} retries.", ircServer, MAX_RECONNECT, ex);
                         e.printStackTrace(System.err);
                         System.exit(1);
                     }
@@ -526,7 +536,7 @@ public class Mobibot extends PircBot {
      * @return The bot's logger.
      */
     public final Logger getLogger() {
-        return logger;
+        return LOGGER;
     }
 
     /**
@@ -565,6 +575,15 @@ public class Mobibot extends PircBot {
         }
 
         return buff.toString();
+    }
+
+    /**
+     * Returns the bot's timer.
+     *
+     * @return The timer.
+     */
+    public final Timer getTimer() {
+        return TIMER;
     }
 
     /**
@@ -616,30 +635,6 @@ public class Mobibot extends PircBot {
              Utils.helpIndent(Utils.helpFormat("%c " + Constants.HELP_CMD + " <command>", getNick(), isPrivate)),
              isPrivate);
         send(sender, "The commands are:", isPrivate);
-
-        if (commandsNames.isEmpty()) {
-            // Feed command
-            commandsNames.add(getChannelName());
-
-            // Commands
-            for (final AbstractCommand command : commands) {
-                if (command.isVisible()) {
-                    if (command.isOp()) {
-                        opsCommandsNames.add(command.getCommand());
-                    } else {
-                        commandsNames.add(command.getCommand());
-                    }
-                }
-            }
-
-            // Modules commands
-            modules.stream().filter(AbstractModule::isEnabled)
-                   .forEach(module -> commandsNames.addAll(module.getCommands()));
-
-            Collections.sort(commandsNames);
-            Collections.sort(opsCommandsNames);
-        }
-
         sendList(sender, commandsNames, 8, isPrivate, true);
         if (isOp) {
             send(sender, "The op commands are:", isPrivate);
@@ -749,15 +744,13 @@ public class Mobibot extends PircBot {
     @Override
     protected final void onMessage(final String channel, final String sender, final String login, final String hostname,
                                    final String message) {
-        if (logger.isDebugEnabled()) {
-            logger.debug(">>> {} : {}", sender, message);
+        LOGGER.debug(">>> {} : {}", sender, message);
+
+        if (tell.isEnabled()) {
+            tell.send(sender, true);
         }
 
-        boolean isCommand = false;
-
         if (message.matches(getNickPattern() + ":.*")) { // mobibot: <command>
-            isCommand = true;
-
             final String[] cmds = message.substring(message.indexOf(':') + 1).trim().split(" ", 2);
             final String cmd = lowerCase(cmds[0]);
 
@@ -808,9 +801,7 @@ public class Mobibot extends PircBot {
     @Override
     protected final void onPrivateMessage(final String sender, final String login, final String hostname,
                                           final String message) {
-        if (logger.isDebugEnabled()) {
-            logger.debug(">>> {} : {}", sender, message);
-        }
+        LOGGER.debug(">>> {} : {}", sender, message);
 
         final String[] cmds = message.split(" ", 2);
         final String cmd = lowerCase(cmds[0]);
@@ -828,15 +819,15 @@ public class Mobibot extends PircBot {
             sendRawLine("QUIT : Poof!");
             System.exit(0);
         } else if (isOp && Constants.DEBUG_CMD.equals(cmd)) { // debug
-            if (logger.isDebugEnabled()) {
-                Configurator.setLevel(logger.getName(), loggerLevel);
+            if (LOGGER.isDebugEnabled()) {
+                Configurator.setLevel(LOGGER.getName(), loggerLevel);
             } else {
-                Configurator.setLevel(logger.getName(), Level.DEBUG);
+                Configurator.setLevel(LOGGER.getName(), Level.DEBUG);
             }
-            send(sender, "Debug logging is " + (logger.isDebugEnabled() ? "enabled." : "disabled."), true);
+            send(sender, "Debug logging is " + (LOGGER.isDebugEnabled() ? "enabled." : "disabled."), true);
         } else if (isOp && Constants.DIE_CMD.equals(cmd)) { // die
             send(sender + " has just signed my death sentence.");
-            timer.cancel();
+            TIMER.cancel();
             twitterShutdown();
             twitterNotification("killed by  " + sender + " on " + ircChannel);
             sleep(3);
@@ -869,7 +860,7 @@ public class Mobibot extends PircBot {
     @Override
     protected final void onAction(final String sender, final String login, final String hostname, final String target,
                                   final String action) {
-        if (target != null && target.equals(ircChannel)) {
+        if (ircChannel.equals(target)) {
             Recap.storeRecap(sender, action, true);
         }
     }
@@ -905,16 +896,10 @@ public class Mobibot extends PircBot {
     public final void send(final String sender, final String message, final boolean isPrivate) {
         if (isNotBlank(message) && isNotBlank(sender)) {
             if (isPrivate) {
-                if (logger.isDebugEnabled()) {
-                    logger.debug("Sending message to {} : {}", sender, message);
-                }
-
+                LOGGER.debug("Sending message to {} : {}", sender, message);
                 sendMessage(sender, message);
             } else {
-                if (logger.isDebugEnabled()) {
-                    logger.debug("Sending notice to {} : {}", sender, message);
-                }
-
+                LOGGER.debug("Sending notice to {} : {}", sender, message);
                 sendNotice(sender, message);
             }
         }
@@ -1028,7 +1013,7 @@ public class Mobibot extends PircBot {
     }
 
     /**
-     * Add an entry to be posted on twitter.
+     * Add an entry to be posted on Twitter.
      *
      * @param index The entry index.
      */
@@ -1049,11 +1034,12 @@ public class Mobibot extends PircBot {
                     entry.getTitle() + ' ' + entry.getLink() + " via " + entry.getNick() + " on " + getChannel();
             new Thread(() -> {
                 try {
+                    if (LOGGER.isDebugEnabled()) {
+                        LOGGER.debug("Posting {}{} to Twitter.", Constants.LINK_CMD, index + 1);
+                    }
                     twitterModule.post(twitterHandle, msg, false);
                 } catch (ModuleException e) {
-                    if (logger.isWarnEnabled()) {
-                        logger.warn("Failed to post entry on twitter.", e);
-                    }
+                    LOGGER.warn("Failed to post entry on Twitter.", e);
                 }
             }).start();
             twitterEntries.remove(index);
@@ -1083,16 +1069,14 @@ public class Mobibot extends PircBot {
                             getName() + ' ' + ReleaseInfo.VERSION + " " + msg,
                             true);
                 } catch (ModuleException e) {
-                    if (logger.isWarnEnabled()) {
-                        logger.warn("Failed to notify @{}: {}", twitterHandle, msg, e);
-                    }
+                    LOGGER.warn("Failed to notify @{}: {}", twitterHandle, msg, e);
                 }
             }).start();
         }
     }
 
     /**
-     * Removes entry from twitter auto-post.
+     * Removes entry from Twitter auto-post.
      *
      * @param index The entry's index.
      */
@@ -1106,6 +1090,7 @@ public class Mobibot extends PircBot {
      */
     final void twitterShutdown() {
         if (twitterModule.isEnabled() && isNotBlank(twitterHandle)) {
+            LOGGER.debug("Twitter shutdown.");
             for (final int i : twitterEntries) {
                 twitterEntryPost(i);
             }

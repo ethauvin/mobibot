@@ -180,10 +180,7 @@ public final class Lookup extends AbstractModule {
                             bot.send("Unknown host.");
                         }
                     } catch (IOException ioe) {
-                        if (bot.getLogger().isDebugEnabled()) {
-                            bot.getLogger().debug("Unable to perform whois IP lookup: {}", args, ioe);
-                        }
-
+                        bot.getLogger().debug("Unable to perform whois IP lookup: {}", args, ioe);
                         bot.send("Unable to perform whois IP lookup: " + ioe.getMessage());
                     }
                 } else {

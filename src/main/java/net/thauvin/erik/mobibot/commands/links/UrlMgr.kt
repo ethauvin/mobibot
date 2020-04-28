@@ -237,7 +237,8 @@ class UrlMgr(defaultTags: String, keywords: String) : AbstractCommand() {
     private fun twitterPost(bot: Mobibot, index: Int) {
         if (bot.isTwitterAutoPost) {
             bot.twitterAddEntry(index)
-            Mobibot.timer.schedule(TwitterTimer(bot, index), Constants.TIMER_DELAY * 60L * 1000L)
+            bot.logger.debug("Scheduling ${Constants.LINK_CMD}${index + 1} for posting on Twitter.")
+            bot.timer.schedule(TwitterTimer(bot, index), Constants.TIMER_DELAY * 60L * 1000L)
         }
     }
 }

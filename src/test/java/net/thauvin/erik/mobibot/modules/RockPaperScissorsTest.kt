@@ -40,18 +40,25 @@ class RockPaperScissorsTest {
     @Test
     fun testWinLoseOrDraw() {
         assertThat(
-            RockPaperScissors.winLoseOrDraw("scissors", "paper")).`as`("scissors vs. paper").isEqualTo("win")
+            RockPaperScissors.winLoseOrDraw("scissors", "paper")
+        ).`as`("scissors vs. paper").isEqualTo("win")
         assertThat(
-            RockPaperScissors.winLoseOrDraw("paper", "rock")).`as`("paper vs. rock").isEqualTo("win")
+            RockPaperScissors.winLoseOrDraw("paper", "rock")
+        ).`as`("paper vs. rock").isEqualTo("win")
         assertThat(
-            RockPaperScissors.winLoseOrDraw("rock", "scissors")).`as`("rock vs. scissors").isEqualTo("win")
+            RockPaperScissors.winLoseOrDraw("rock", "scissors")
+        ).`as`("rock vs. scissors").isEqualTo("win")
         assertThat(
-            RockPaperScissors.winLoseOrDraw("paper", "scissors")).`as`("paper vs. scissors").isEqualTo("lose")
+            RockPaperScissors.winLoseOrDraw("paper", "scissors")
+        ).`as`("paper vs. scissors").isEqualTo("lose")
         assertThat(
-            RockPaperScissors.winLoseOrDraw("rock", "paper")).`as`("rock vs. paper").isEqualTo("lose")
+            RockPaperScissors.winLoseOrDraw("rock", "paper")
+        ).`as`("rock vs. paper").isEqualTo("lose")
         assertThat(
-            RockPaperScissors.winLoseOrDraw("scissors", "rock")).`as`("scissors vs. rock").isEqualTo("lose")
+            RockPaperScissors.winLoseOrDraw("scissors", "rock")
+        ).`as`("scissors vs. rock").isEqualTo("lose")
         assertThat(
-            RockPaperScissors.winLoseOrDraw("scissors", "scissors")).`as`("scissors vs. scissors").isEqualTo("draw")
+            RockPaperScissors.winLoseOrDraw("scissors", "scissors")
+        ).`as`("scissors vs. scissors").isEqualTo("draw")
     }
 }

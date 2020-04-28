@@ -48,7 +48,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @created 2019-04-19
  * @since 1.0
  */
-public class TwitterTest {
+public class TwitterTest extends LocalProperties {
     @SuppressFBWarnings("MDM")
     private String getCi() {
         if ("true".equals(System.getenv("CIRCLECI"))) {
@@ -68,12 +68,12 @@ public class TwitterTest {
     public void testPostTwitter() throws ModuleException {
         final String msg = "Testing Twitter API from " + getCi();
         assertThat(Twitter.twitterPost(
-            LocalProperties.getProperty(Twitter.CONSUMER_KEY_PROP),
-            LocalProperties.getProperty(Twitter.CONSUMER_SECRET_PROP),
-            LocalProperties.getProperty(Twitter.TOKEN_PROP),
-            LocalProperties.getProperty(Twitter.TOKEN_SECRET_PROP),
-            LocalProperties.getProperty(Constants.TWITTER_HANDLE_PROP),
-            msg,
-            true).getText()).as("twitterPost(" + msg + ')').isEqualTo(msg);
+                getProperty(Twitter.CONSUMER_KEY_PROP),
+                getProperty(Twitter.CONSUMER_SECRET_PROP),
+                getProperty(Twitter.TOKEN_PROP),
+                getProperty(Twitter.TOKEN_SECRET_PROP),
+                getProperty(Constants.TWITTER_HANDLE_PROP),
+                msg,
+                true).getText()).as("twitterPost(" + msg + ')').isEqualTo(msg);
     }
 }

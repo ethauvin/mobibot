@@ -91,9 +91,7 @@ final class TellMessagesMgr {
         try {
             try (final ObjectInput input = new ObjectInputStream(
                 new BufferedInputStream(Files.newInputStream(Paths.get(file))))) {
-                if (logger.isDebugEnabled()) {
-                    logger.debug("Loading the messages.");
-                }
+                logger.debug("Loading the messages.");
 
                 return ((List<TellMessage>) input.readObject());
             }
@@ -117,10 +115,7 @@ final class TellMessagesMgr {
         try {
             try (final ObjectOutput output = new ObjectOutputStream(
                 new BufferedOutputStream(Files.newOutputStream(Paths.get(file))))) {
-                if (logger.isDebugEnabled()) {
-                    logger.debug("Saving the messages.");
-                }
-
+                logger.debug("Saving the messages.");
                 output.writeObject(messages);
             }
         } catch (IOException e) {

@@ -55,6 +55,14 @@ public final class Constants {
      */
     public static final String DEBUG_CMD = "debug";
     /**
+     * Default IRC Port.
+     */
+    public static final int DEFAULT_PORT = 6667;
+    /**
+     * Default IRC Server.
+     */
+    public static final String DEFAULT_SERVER = "irc.freenode.net";
+    /**
      * The die command.
      */
     public static final String DIE_CMD = "die";

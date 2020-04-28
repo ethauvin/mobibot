@@ -58,8 +58,8 @@ public class GoogleSearchTest extends LocalProperties {
     @SuppressWarnings("PMD.PreserveStackTrace")
     @Test
     public void testSearchGoogle() throws ModuleException {
-        final String apiKey = LocalProperties.getProperty(GoogleSearch.GOOGLE_API_KEY_PROP);
-        final String cseKey = LocalProperties.getProperty(GoogleSearch.GOOGLE_CSE_KEY_PROP);
+        final String apiKey = getProperty(GoogleSearch.GOOGLE_API_KEY_PROP);
+        final String cseKey = getProperty(GoogleSearch.GOOGLE_CSE_KEY_PROP);
         try {
             List<Message> messages = GoogleSearch.searchGoogle("mobibot site:github.com", apiKey, cseKey);
             assertThat(messages).as("mobibot results not empty").isNotEmpty();

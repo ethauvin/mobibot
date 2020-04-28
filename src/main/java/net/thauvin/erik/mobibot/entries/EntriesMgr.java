@@ -102,13 +102,13 @@ public final class EntriesMgr {
      * @throws FeedException If an error occurred while reading the feed.
      */
     public static void loadBacklogs(final String file, final Collection<String> history)
-        throws IOException, FeedException {
+            throws IOException, FeedException {
         history.clear();
 
         final SyndFeedInput input = new SyndFeedInput();
 
         try (final InputStreamReader reader =
-                 new InputStreamReader(Files.newInputStream(Paths.get(file)), StandardCharsets.UTF_8)) {
+                     new InputStreamReader(Files.newInputStream(Paths.get(file)), StandardCharsets.UTF_8)) {
 
             final SyndFeed feed = input.build(reader);
 
@@ -134,7 +134,7 @@ public final class EntriesMgr {
      */
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     public static String loadEntries(final String file, final String channel, final Collection<EntryLink> entries)
-        throws IOException, FeedException {
+            throws IOException, FeedException {
         entries.clear();
 
         final SyndFeedInput input = new SyndFeedInput();
@@ -142,7 +142,7 @@ public final class EntriesMgr {
         final String today;
 
         try (final InputStreamReader reader = new InputStreamReader(
-            Files.newInputStream(Paths.get(file)), StandardCharsets.UTF_8)) {
+                Files.newInputStream(Paths.get(file)), StandardCharsets.UTF_8)) {
             final SyndFeed feed = input.build(reader);
 
             today = Utils.isoLocalDate(feed.getPublishedDate());
@@ -157,13 +157,13 @@ public final class EntriesMgr {
             for (int i = items.size() - 1; i >= 0; i--) {
                 item = items.get(i);
                 author = item.getAuthor()
-                    .substring(item.getAuthor().lastIndexOf('(') + 1, item.getAuthor().length() - 1);
+                             .substring(item.getAuthor().lastIndexOf('(') + 1, item.getAuthor().length() - 1);
                 entry = new EntryLink(item.getLink(),
-                    item.getTitle(),
-                    author,
-                    channel,
-                    item.getPublishedDate(),
-                    item.getCategories());
+                                      item.getTitle(),
+                                      author,
+                                      channel,
+                                      item.getPublishedDate(),
+                                      item.getCategories());
                 description = item.getDescription();
                 comments = description.getValue().split("<br/>");
 
@@ -191,15 +191,14 @@ public final class EntriesMgr {
      * @param history     The history array.
      * @param isDayBackup Set the true if the daily backup file should also be created.
      */
-    @SuppressFBWarnings(value = {"CE_CLASS_ENVY", "CC_CYCLOMATIC_COMPLEXITY"}, justification = "Yes, it does.")
+    @SuppressFBWarnings(value = { "CE_CLASS_ENVY", "CC_CYCLOMATIC_COMPLEXITY" },
+                        justification = "Yes, it does.")
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     public static void saveEntries(final Mobibot bot,
                                    final List<EntryLink> entries,
                                    final List<String> history,
                                    final boolean isDayBackup) {
-        if (bot.getLogger().isDebugEnabled()) {
-            bot.getLogger().debug("Saving the feeds...");
-        }
+        bot.getLogger().debug("Saving the feeds...");
 
         if (StringUtils.isNotBlank(bot.getLogsDir()) && StringUtils.isNotBlank(bot.getWeblogUrl())) {
             try {
@@ -209,7 +208,7 @@ public final class EntriesMgr {
                 SyndEntry item;
                 SyndContent description;
                 try (final Writer fw = new OutputStreamWriter(
-                    Files.newOutputStream(Paths.get(bot.getLogsDir() + CURRENT_XML)), StandardCharsets.UTF_8)) {
+                        Files.newOutputStream(Paths.get(bot.getLogsDir() + CURRENT_XML)), StandardCharsets.UTF_8)) {
                     rss.setFeedType("rss_2.0");
                     rss.setTitle(bot.getChannel() + " IRC Links");
                     rss.setDescription("Links from " + bot.getIrcServer() + " on " + bot.getChannel());
@@ -225,14 +224,14 @@ public final class EntriesMgr {
                         entry = entries.get(i);
 
                         buff = new StringBuilder()
-                            .append("Posted by <b>")
-                            .append(entry.getNick())
-                            .append("</b> on <a href=\"irc://")
-                            .append(bot.getIrcServer()).append('/')
-                            .append(entry.getChannel())
-                            .append("\"><b>")
-                            .append(entry.getChannel())
-                            .append("</b></a>");
+                                       .append("Posted by <b>")
+                                       .append(entry.getNick())
+                                       .append("</b> on <a href=\"irc://")
+                                       .append(bot.getIrcServer()).append('/')
+                                       .append(entry.getChannel())
+                                       .append("\"><b>")
+                                       .append(entry.getChannel())
+                                       .append("</b></a>");
 
                         if (entry.getCommentsCount() > 0) {
                             buff.append(" <br/><br/>");
@@ -258,7 +257,8 @@ public final class EntriesMgr {
                         item.setTitle(entry.getTitle());
                         item.setPublishedDate(entry.getDate());
                         item.setAuthor(
-                            bot.getChannel().substring(1) + '@' + bot.getIrcServer() + " (" + entry.getNick() + ')');
+                                bot.getChannel().substring(1) + '@' + bot.getIrcServer() + " (" + entry.getNick()
+                                + ')');
                         item.setCategories(entry.getTags());
 
                         items.add(item);
@@ -266,16 +266,13 @@ public final class EntriesMgr {
 
                     rss.setEntries(items);
 
-                    if (bot.getLogger().isDebugEnabled()) {
-                        bot.getLogger().debug("Writing the entries feed.");
-                    }
-
+                    bot.getLogger().debug("Writing the entries feed.");
                     output.output(rss, fw);
                 }
 
                 try (final Writer fw = new OutputStreamWriter(
-                    Files.newOutputStream(Paths.get(
-                        bot.getLogsDir() + bot.getToday() + XML_EXT)), StandardCharsets.UTF_8)) {
+                        Files.newOutputStream(Paths.get(
+                                bot.getLogsDir() + bot.getToday() + XML_EXT)), StandardCharsets.UTF_8)) {
                     output.output(rss, fw);
                 }
 
@@ -290,12 +287,12 @@ public final class EntriesMgr {
                         }
 
                         try (final Writer fw = new OutputStreamWriter(
-                            Files.newOutputStream(Paths.get(bot.getLogsDir() + NAV_XML)), StandardCharsets.UTF_8)) {
+                                Files.newOutputStream(Paths.get(bot.getLogsDir() + NAV_XML)), StandardCharsets.UTF_8)) {
                             rss = new SyndFeedImpl();
                             rss.setFeedType("rss_2.0");
                             rss.setTitle(bot.getChannel() + " IRC Links Backlogs");
                             rss.setDescription("Backlogs of Links from " + bot.getIrcServer() + " on "
-                                + bot.getChannel());
+                                               + bot.getChannel());
                             rss.setLink(bot.getBacklogsUrl());
                             rss.setPublishedDate(Calendar.getInstance().getTime());
 
@@ -317,10 +314,7 @@ public final class EntriesMgr {
 
                             rss.setEntries(items);
 
-                            if (bot.getLogger().isDebugEnabled()) {
-                                bot.getLogger().debug("Writing the backlog feed.");
-                            }
-
+                            bot.getLogger().debug("Writing the backlog feed.");
                             output.output(rss, fw);
                         }
                     } else {
@@ -331,8 +325,7 @@ public final class EntriesMgr {
                 bot.getLogger().warn("Unable to generate the entries feed.", e);
             }
         } else {
-            bot.getLogger()
-                .warn("Unable to generate the entries feed. At least one of the required property is missing.");
+            bot.getLogger().warn("Unable to generate the entries feed. A required property is missing.");
         }
     }
 }

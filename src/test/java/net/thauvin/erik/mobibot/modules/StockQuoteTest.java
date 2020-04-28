@@ -61,7 +61,7 @@ public class StockQuoteTest extends LocalProperties {
             assertThat(messages.get(0).getText()).as("same stock symbol").contains("AAPL").contains("Apple Inc.");
 
             try {
-                StockQuote.getQuote("012", apiKey);
+                StockQuote.getQuote("blahfoo", apiKey);
             } catch (ModuleException e) {
                 assertThat(e.getMessage()).as("invalid symbol").containsIgnoringCase(StockQuote.INVALID_SYMBOL);
             }
