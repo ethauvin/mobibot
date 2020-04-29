@@ -38,11 +38,7 @@ import net.thauvin.erik.mobibot.msg.Message;
 import net.thauvin.erik.mobibot.msg.PublicMessage;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.net.URL;
-import java.net.URLConnection;
-import java.nio.charset.StandardCharsets;
 
 /**
  * The Joke module.
@@ -79,22 +75,10 @@ public final class Joke extends ThreadedModule {
     static Message randomJoke() throws ModuleException {
         try {
             final URL url = new URL(JOKE_URL);
-            final URLConnection conn = url.openConnection();
-
-            final StringBuilder sb = new StringBuilder();
-            try (final BufferedReader reader =
-                         new BufferedReader(new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8))) {
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    sb.append(line);
-                }
-
-                final JSONObject json = new JSONObject(sb.toString());
-
-                return new PublicMessage(
-                        json.getJSONObject("value").get("joke").toString().replace("\\'", "'")
-                            .replace("\\\"", "\""));
-            }
+            final JSONObject json = new JSONObject(Utils.urlReader(url));
+            return new PublicMessage(
+                    json.getJSONObject("value").get("joke").toString().replace("\\'", "'")
+                        .replace("\\\"", "\""));
         } catch (Exception e) {
             throw new ModuleException("randomJoke()", "An error has occurred retrieving a random joke.", e);
         }

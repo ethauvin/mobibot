@@ -32,16 +32,23 @@
 
 package net.thauvin.erik.mobibot;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.apache.commons.lang3.StringUtils;
 import org.jibble.pircbot.Colors;
 import org.jsoup.Jsoup;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 /**
  * Miscellaneous utilities class.
@@ -330,6 +337,21 @@ public final class Utils {
         info.append(minutes).append(plural(minutes, " minute", " minutes"));
 
         return info.toString();
+    }
+
+    /**
+     * Reads contents of a URL.
+     *
+     * @param url The URL to read.
+     * @return The URL contents.
+     * @throws IOException If an IO error occurs.
+     */
+    @SuppressFBWarnings("SECSSSRFUC")
+    public static String urlReader(final URL url) throws IOException {
+        try (final BufferedReader reader = new BufferedReader(
+                new InputStreamReader(url.openStream(), StandardCharsets.UTF_8))) {
+            return reader.lines().collect(Collectors.joining(System.lineSeparator()));
+        }
     }
 
     /**

@@ -38,6 +38,8 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import java.io.File;
+import java.io.IOException;
+import java.net.URL;
 import java.time.LocalDateTime;
 import java.util.Calendar;
 
@@ -52,7 +54,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 public class UtilsTest {
     private static final String ASCII =
-        " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~";
+            " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~";
 
     private final Calendar cal = Calendar.getInstance();
     private final LocalDateTime localDateTime = LocalDateTime.of(1952, 2, 17, 12, 30, 0);
@@ -71,7 +73,7 @@ public class UtilsTest {
     @Test
     public void testColorize() {
         assertThat(Utils.colorize(ASCII, Colors.REVERSE)).as("colorize(reverse)").isEqualTo(
-            Colors.REVERSE + ASCII + Colors.REVERSE);
+                Colors.REVERSE + ASCII + Colors.REVERSE);
         assertThat(Utils.colorize(ASCII, Colors.RED)).as("colorize(red)").isEqualTo(Colors.RED + ASCII + Colors.NORMAL);
         assertThat(Utils.colorize(null, Colors.RED)).as("colorize(null)").isEqualTo(Colors.NORMAL);
     }
@@ -85,7 +87,7 @@ public class UtilsTest {
     public void testEnsureDir() {
         assertThat(Utils.ensureDir("dir", false)).as("ensureDir(dir, false)").isEqualTo("dir" + File.separatorChar);
         assertThat(Utils.ensureDir("https://erik.thauvin.net", true)).as("ensureDir(erik.thauvin.net, true)").isEqualTo(
-            "https://erik.thauvin.net/");
+                "https://erik.thauvin.net/");
     }
 
     @Test
@@ -136,12 +138,18 @@ public class UtilsTest {
     @Test
     public void testUnescapeXml() {
         assertThat(Utils.unescapeXml("&lt;a name=&quot;test &amp; &apos;&#39;&quot;&gt;")).isEqualTo(
-            "<a name=\"test & ''\">");
+                "<a name=\"test & ''\">");
     }
 
     @Test
     public void testUptime() {
         assertThat("17 years 2 months 2 weeks 1 day 6 hours 45 minutes").isEqualTo(Utils.uptime(547800300076L));
+    }
+
+    @Test
+    public void testUrlReader() throws IOException {
+        assertThat(Utils.urlReader(new URL("https://postman-echo.com/status/200"))).as("urlReader()").isEqualTo(
+                "{\"status\":200}");
     }
 
     @Test

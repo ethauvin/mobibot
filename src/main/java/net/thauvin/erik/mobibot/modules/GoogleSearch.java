@@ -42,11 +42,8 @@ import org.jibble.pircbot.Colors;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.URL;
-import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -111,25 +108,15 @@ public final class GoogleSearch extends ThreadedModule {
                                 + "&q="
                                 + q
                                 + "&filter=1&num=5&alt=json");
-                final URLConnection conn = url.openConnection();
 
-                final StringBuilder sb = new StringBuilder();
-                try (final BufferedReader reader =
-                             new BufferedReader(new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8))) {
-                    String line;
-                    while ((line = reader.readLine()) != null) {
-                        sb.append(line);
-                    }
+                final JSONObject json = new JSONObject(Utils.urlReader(url));
+                final JSONArray ja = json.getJSONArray("items");
 
-                    final JSONObject json = new JSONObject(sb.toString());
-                    final JSONArray ja = json.getJSONArray("items");
-
-                    for (int i = 0; i < ja.length(); i++) {
-                        final JSONObject j = ja.getJSONObject(i);
-                        results.add(new NoticeMessage(Utils.unescapeXml(j.getString("title"))));
-                        results.add(
-                                new NoticeMessage(Utils.helpIndent(j.getString("link"), false), Colors.DARK_GREEN));
-                    }
+                for (int i = 0; i < ja.length(); i++) {
+                    final JSONObject j = ja.getJSONObject(i);
+                    results.add(new NoticeMessage(Utils.unescapeXml(j.getString("title"))));
+                    results.add(
+                            new NoticeMessage(Utils.helpIndent(j.getString("link"), false), Colors.DARK_GREEN));
                 }
             } catch (IOException e) {
                 throw new ModuleException("searchGoogle(" + query + ')', "An error has occurred searching Google.", e);
