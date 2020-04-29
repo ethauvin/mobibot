@@ -104,7 +104,7 @@ tasks.withType(com.github.spotbugs.snom.SpotBugsTask) {
 }
 
 pmd {
-    toolVersion = '6.22.0'
+    toolVersion = '6.23.0'
     ignoreFailures = true
     ruleSets = []
     ruleSetFiles = files("${projectDir}/config/pmd.xml")
