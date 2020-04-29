@@ -240,12 +240,12 @@ public final class CurrencyConverter extends ThreadedModule {
         } else {
             bot.send(sender, "To convert from one currency to another:", isPrivate);
             bot.send(sender,
-                     Utils.helpIndent(Utils.helpFormat("%c " + CURRENCY_CMD + " 100 USD to EUR", bot.getNick(), false)),
-                     isPrivate);
+                     Utils.helpIndent(Utils.helpFormat("%c " + CURRENCY_CMD + " 100 USD to EUR",
+                                                       bot.getNick(), isPrivateMsgEnabled())), isPrivate);
             bot.send(sender, "For a listing of current rates:", isPrivate);
             bot.send(sender,
                      Utils.helpIndent(Utils.helpFormat("%c " + CURRENCY_CMD + ' ' + CURRENCY_RATES_KEYWORD,
-                                                       bot.getNick(), false)), isPrivate);
+                                                       bot.getNick(), isPrivateMsgEnabled())), isPrivate);
             bot.send(sender, "The supported currencies are: ", isPrivate);
             bot.sendList(sender, new ArrayList<>(EXCHANGE_RATES.keySet()), 11, isPrivate, false);
         }

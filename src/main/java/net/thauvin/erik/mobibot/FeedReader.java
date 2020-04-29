@@ -85,7 +85,7 @@ public class FeedReader implements Runnable {
 
             final List<SyndEntry> items = feed.getEntries();
             if (items.isEmpty()) {
-                bot.send(sender, "There is currently nothing to view. Why don't you post something?", false);
+                bot.send(sender, "There is currently nothing to view.", false);
             } else {
                 SyndEntry item;
                 for (int i = 0; (i < items.size()) && (i < MAX_ITEMS); i++) {
