@@ -68,6 +68,6 @@ public class CurrencyConverterTest {
 
     @Test
     public void testCurrencyConvertererImpl() {
-        AbstractModuleTest.testAbstractModule(new CurrencyConverter());
+        AbstractModuleTest.testAbstractModule(new CurrencyConverter(null));
     }
 }

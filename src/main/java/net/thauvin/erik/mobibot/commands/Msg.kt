@@ -35,18 +35,17 @@ package net.thauvin.erik.mobibot.commands
 import net.thauvin.erik.mobibot.Mobibot
 import net.thauvin.erik.mobibot.Utils
 
-class Msg : AbstractCommand() {
-    override val command = "msg"
+class Msg(bot: Mobibot) : AbstractCommand(bot) {
+    override val name = "msg"
     override val help = listOf(
         "To have the bot send a private message to someone:",
-        Utils.helpIndent("%c $command <nick> <text>")
+        Utils.helpIndent("%c $name <nick> <text>")
     )
     override val isOp = true
     override val isPublic = true
     override val isVisible = true
 
     override fun commandResponse(
-        bot: Mobibot,
         sender: String,
         login: String,
         args: String,
@@ -58,7 +57,7 @@ class Msg : AbstractCommand() {
             if (args.length > 2) {
                 bot.send(msg[0], msg[1], isPrivate)
             } else {
-                helpResponse(bot, command, sender, isOp, isPrivate)
+                helpResponse(name, sender, isOp, isPrivate)
             }
         } else {
             bot.helpDefault(sender, isOp, isPrivate)

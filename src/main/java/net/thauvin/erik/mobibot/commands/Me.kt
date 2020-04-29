@@ -35,18 +35,17 @@ package net.thauvin.erik.mobibot.commands
 import net.thauvin.erik.mobibot.Mobibot
 import net.thauvin.erik.mobibot.Utils
 
-class Me : AbstractCommand() {
-    override val command = "me"
+class Me(bot: Mobibot) : AbstractCommand(bot) {
+    override val name = "me"
     override val help = listOf(
         "To have the bot perform an action:",
-        Utils.helpIndent("%c $command <action>")
+        Utils.helpIndent("%c $name <action>")
     )
     override val isOp = true
     override val isPublic = false
     override val isVisible = true
 
     override fun commandResponse(
-        bot: Mobibot,
         sender: String,
         login: String,
         args: String,

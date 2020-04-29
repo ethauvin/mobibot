@@ -54,6 +54,6 @@ public class WordTimeTest {
 
     @Test
     public void testWorldTimeImpl() {
-        AbstractModuleTest.testAbstractModule(new Lookup());
+        AbstractModuleTest.testAbstractModule(new Lookup(null));
     }
 }

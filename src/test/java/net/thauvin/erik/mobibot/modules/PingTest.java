@@ -46,7 +46,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class PingTest {
     @Test
     public void testPingImpl() {
-        AbstractModuleTest.testAbstractModule(new Ping());
+        AbstractModuleTest.testAbstractModule(new Ping(null));
     }
 
     @Test

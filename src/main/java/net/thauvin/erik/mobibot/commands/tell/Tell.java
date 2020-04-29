@@ -51,44 +51,42 @@ import java.util.concurrent.CopyOnWriteArrayList;
  */
 public class Tell extends AbstractCommand {
     /**
+     * Max days property.
+     */
+    public static final String MAX_DAYS_PROP = "tell-max-days";
+    /**
+     * Max size proeprty.
+     */
+    public static final String MAX_SIZE_PROP = "tell-max-size";
+    /**
      * The tell command.
      */
     public static final String TELL_CMD = "tell";
     // Arrow
     private static final String ARROW = " --> ";
-    // Default maximum number of days to keep messages
-    private static final int DEFAULT_TELL_MAX_DAYS = 7;
-    // Default message max queue size
-    private static final int DEFAULT_TELL_MAX_SIZE = 50;
     // Serialized object file extension
     private static final String SER_EXT = ".ser";
     // All keyword
     private static final String TELL_ALL_KEYWORD = "all";
     //T he delete command.
     private static final String TELL_DEL_KEYWORD = "del";
-    // Bot instance
-    private final Mobibot bot;
-    // Maximum number of days to keep messages
-    private final int maxDays;
-    // Message maximum queue size
-    private final int maxSize;
     // Messages queue
     private final List<TellMessage> messages = new CopyOnWriteArrayList<>();
     // Serialized object file
     private final String serializedObject;
+    // Maximum number of days to keep messages
+    private int maxDays = 7;
+    // Message maximum queue size
+    private int maxSize = 50;
 
     /**
      * Creates a new instance.
      *
-     * @param bot     The bot.
-     * @param maxDays Max days.
-     * @param maxSize Max size.
+     * @param bot The bot.
      */
-    public Tell(final Mobibot bot, final String maxDays, final String maxSize) {
-        super();
-        this.bot = bot;
-        this.maxDays = Utils.getIntProperty(maxDays, DEFAULT_TELL_MAX_DAYS);
-        this.maxSize = Utils.getIntProperty(maxSize, DEFAULT_TELL_MAX_SIZE);
+    public Tell(final Mobibot bot) {
+        super(bot);
+        initProperties(MAX_DAYS_PROP, MAX_SIZE_PROP);
 
         // Load the message queue
         serializedObject = bot.getLogsDir() + bot.getName() + SER_EXT;
@@ -106,7 +104,7 @@ public class Tell extends AbstractCommand {
      */
     @SuppressWarnings("WeakerAccess")
     final boolean clean() {
-        bot.getLogger().debug("Cleaning the messages.");
+        getBot().getLogger().debug("Cleaning the messages.");
         return TellMessagesMgr.clean(messages, maxDays);
     }
 
@@ -128,9 +126,9 @@ public class Tell extends AbstractCommand {
 
                 if (deleted) {
                     save();
-                    bot.send(sender, "Delivered messages have been deleted.", isPrivate);
+                    getBot().send(sender, "Delivered messages have been deleted.", isPrivate);
                 } else {
-                    bot.send(sender, "No delivered messages were found.", isPrivate);
+                    getBot().send(sender, "No delivered messages were found.", isPrivate);
                 }
 
             } else {
@@ -139,11 +137,11 @@ public class Tell extends AbstractCommand {
                 for (final TellMessage message : messages) {
                     found = message.isMatchId(id);
 
-                    if (found && (message.getSender().equalsIgnoreCase(sender) || bot.isOp(sender))) {
+                    if (found && (message.getSender().equalsIgnoreCase(sender) || getBot().isOp(sender))) {
                         messages.remove(message);
 
                         save();
-                        bot.send(sender, "Your message was deleted from the queue.", isPrivate);
+                        getBot().send(sender, "Your message was deleted from the queue.", isPrivate);
                         deleted = true;
                         break;
                     }
@@ -151,20 +149,20 @@ public class Tell extends AbstractCommand {
 
                 if (!deleted) {
                     if (found) {
-                        bot.send(sender, "Only messages that you sent can be deleted.", isPrivate);
+                        getBot().send(sender, "Only messages that you sent can be deleted.", isPrivate);
                     } else {
-                        bot.send(sender, "The specified message [ID " + id + "] could not be found.", isPrivate);
+                        getBot().send(sender, "The specified message [ID " + id + "] could not be found.", isPrivate);
                     }
                 }
             }
         } else {
-            helpResponse(bot, args, sender, isOp, isPrivate);
+            helpResponse(args, sender, isOp, isPrivate);
         }
     }
 
     @NotNull
     @Override
-    public String getCommand() {
+    public String getName() {
         return TELL_CMD;
     }
 
@@ -172,9 +170,9 @@ public class Tell extends AbstractCommand {
     @Override
     public List<String> getHelp() {
         return List.of("To send a message to someone when they join the channel:",
-                       Utils.helpIndent("%s " + TELL_CMD + " <nick> <message>"),
+                       Utils.helpIndent("%c " + TELL_CMD + " <nick> <message>"),
                        "To view queued and sent messages:",
-                       Utils.helpIndent("%s " + TELL_CMD + ' ' + View.VIEW_CMD),
+                       Utils.helpIndent("%c " + TELL_CMD + ' ' + View.VIEW_CMD),
                        "Messages are kept for " + Utils.bold(maxDays) + Utils.plural(maxDays, " day.", " days."));
     }
 
@@ -194,17 +192,16 @@ public class Tell extends AbstractCommand {
     }
 
     @Override
-    public void commandResponse(@NotNull final Mobibot bot,
-                                @NotNull final String sender,
+    public void commandResponse(@NotNull final String sender,
                                 @NotNull final String login,
                                 @NotNull final String args,
                                 final boolean isOp,
                                 final boolean isPrivate) {
         if (isEnabled()) {
             if (StringUtils.isBlank(args)) {
-                helpResponse(bot, args, sender, isOp, isPrivate);
+                helpResponse(args, sender, isOp, isPrivate);
             } else if (args.startsWith(View.VIEW_CMD)) {
-                if (bot.isOp(sender) && (View.VIEW_CMD + ' ' + TELL_ALL_KEYWORD).equals(args)) {
+                if (getBot().isOp(sender) && (View.VIEW_CMD + ' ' + TELL_ALL_KEYWORD).equals(args)) {
                     viewAll(sender, isPrivate);
                 } else {
                     viewMessages(sender, isPrivate);
@@ -221,13 +218,19 @@ public class Tell extends AbstractCommand {
         }
     }
 
-    /**
-     * Returns <code>true</code> if enabled.
-     *
-     * @return <code>true</code> or <code>false</code>
-     */
+    @Override
     public boolean isEnabled() {
         return maxSize > 0 && maxDays > 0;
+    }
+
+    @Override
+    public void setProperty(@NotNull final String key, @NotNull final String value) {
+        super.setProperty(key, value);
+        if (MAX_DAYS_PROP.equals(key)) {
+            this.maxDays = Utils.getIntProperty(value, maxDays);
+        } else if (MAX_SIZE_PROP.equals(key)) {
+            this.maxSize = Utils.getIntProperty(value, maxSize);
+        }
     }
 
     // New message.
@@ -242,13 +245,13 @@ public class Tell extends AbstractCommand {
 
                 save();
 
-                bot.send(sender, "Message [ID " + message.getId() + "] was queued for "
-                                 + Utils.bold(message.getRecipient()), isPrivate);
+                getBot().send(sender, "Message [ID " + message.getId() + "] was queued for "
+                                      + Utils.bold(message.getRecipient()), isPrivate);
             } else {
-                bot.send(sender, "Sorry, the messages queue is currently full.", isPrivate);
+                getBot().send(sender, "Sorry, the messages queue is currently full.", isPrivate);
             }
         } else {
-            helpResponse(bot, args, sender, isOp, isPrivate);
+            helpResponse(args, sender, isOp, isPrivate);
         }
     }
 
@@ -257,7 +260,7 @@ public class Tell extends AbstractCommand {
      */
     @SuppressWarnings("WeakerAccess")
     final void save() {
-        TellMessagesMgr.save(serializedObject, messages, bot.getLogger());
+        TellMessagesMgr.save(serializedObject, messages, getBot().getLogger());
     }
 
     /**
@@ -267,14 +270,14 @@ public class Tell extends AbstractCommand {
      * @param isMessage The message flag.
      */
     public void send(final String nickname, final boolean isMessage) {
-        if (!nickname.equals(bot.getNick()) && isEnabled()) {
+        if (isEnabled() && !nickname.equals(getBot().getNick())) {
             messages.stream().filter(message -> message.isMatch(nickname)).forEach(message -> {
                 if (message.getRecipient().equalsIgnoreCase(nickname) && !message.isReceived()) {
                     if (message.getSender().equals(nickname)) {
                         if (!isMessage) {
-                            bot.send(nickname, Utils.bold("You") + " wanted me to remind you: "
-                                               + Utils.reverseColor(message.getMessage()),
-                                     true);
+                            getBot().send(nickname, Utils.bold("You") + " wanted me to remind you: "
+                                                    + Utils.reverseColor(message.getMessage()),
+                                          true);
 
                             message.setIsReceived();
                             message.setIsNotified();
@@ -282,9 +285,9 @@ public class Tell extends AbstractCommand {
                             save();
                         }
                     } else {
-                        bot.send(nickname, message.getSender() + " wanted me to tell you: "
-                                           + Utils.reverseColor(message.getMessage()),
-                                 true);
+                        getBot().send(nickname, message.getSender() + " wanted me to tell you: "
+                                                + Utils.reverseColor(message.getMessage()),
+                                      true);
 
                         message.setIsReceived();
 
@@ -292,12 +295,12 @@ public class Tell extends AbstractCommand {
                     }
                 } else if (message.getSender().equalsIgnoreCase(nickname) && message.isReceived()
                            && !message.isNotified()) {
-                    bot.send(nickname,
-                             "Your message "
-                             + Utils.reverseColor("[ID " + message.getId() + ']') + " was sent to "
-                             + Utils.bold(message.getRecipient()) + " on "
-                             + Utils.utcDateTime(message.getReceived()),
-                             true);
+                    getBot().send(nickname,
+                                  "Your message "
+                                  + Utils.reverseColor("[ID " + message.getId() + ']') + " was sent to "
+                                  + Utils.bold(message.getRecipient()) + " on "
+                                  + Utils.utcDateTime(message.getReceived()),
+                                  true);
 
                     message.setIsNotified();
 
@@ -329,13 +332,13 @@ public class Tell extends AbstractCommand {
     private void viewAll(final String sender, final boolean isPrivate) {
         if (!messages.isEmpty()) {
             for (final TellMessage message : messages) {
-                bot.send(sender, Utils.bold(message.getSender()) + ARROW + Utils.bold(message.getRecipient())
-                                 + " [ID: " + message.getId() + ", "
-                                 + (message.isReceived() ? "DELIVERED" : "QUEUED") + ']',
-                         isPrivate);
+                getBot().send(sender, Utils.bold(message.getSender()) + ARROW + Utils.bold(message.getRecipient())
+                                      + " [ID: " + message.getId() + ", "
+                                      + (message.isReceived() ? "DELIVERED" : "QUEUED") + ']',
+                              isPrivate);
             }
         } else {
-            bot.send(sender, "There are no messages in the queue.", isPrivate);
+            getBot().send(sender, "There are no messages in the queue.", isPrivate);
         }
     }
 
@@ -347,41 +350,41 @@ public class Tell extends AbstractCommand {
             if (message.isMatch(sender)) {
                 if (!hasMessage) {
                     hasMessage = true;
-                    bot.send(sender, "Here are your messages: ", isPrivate);
+                    getBot().send(sender, "Here are your messages: ", isPrivate);
                 }
 
                 if (message.isReceived()) {
-                    bot.send(sender,
-                             Utils.bold(message.getSender()) + ARROW + Utils.bold(message.getRecipient())
-                             + " [" + Utils.utcDateTime(message.getReceived()) + ", ID: "
-                             + Utils.bold(message.getId()) + ", DELIVERED]",
-                             isPrivate);
+                    getBot().send(sender,
+                                  Utils.bold(message.getSender()) + ARROW + Utils.bold(message.getRecipient())
+                                  + " [" + Utils.utcDateTime(message.getReceived()) + ", ID: "
+                                  + Utils.bold(message.getId()) + ", DELIVERED]",
+                                  isPrivate);
 
                 } else {
-                    bot.send(sender,
-                             Utils.bold(message.getSender()) + ARROW + Utils.bold(message.getRecipient())
-                             + " [" + Utils.utcDateTime(message.getQueued()) + ", ID: "
-                             + Utils.bold(message.getId()) + ", QUEUED]",
-                             isPrivate);
+                    getBot().send(sender,
+                                  Utils.bold(message.getSender()) + ARROW + Utils.bold(message.getRecipient())
+                                  + " [" + Utils.utcDateTime(message.getQueued()) + ", ID: "
+                                  + Utils.bold(message.getId()) + ", QUEUED]",
+                                  isPrivate);
                 }
 
-                bot.send(sender, Utils.helpIndent(message.getMessage()), isPrivate);
+                getBot().send(sender, Utils.helpIndent(message.getMessage()), isPrivate);
             }
         }
 
         if (!hasMessage) {
-            bot.send(sender, "You have no messages in the queue.", isPrivate);
+            getBot().send(sender, "You have no messages in the queue.", isPrivate);
         } else {
-            bot.send(sender, "To delete one or all delivered messages:", isPrivate);
-            bot.send(sender,
-                     Utils.helpIndent(Utils.helpFormat(
-                             "%c " + TELL_CMD + ' ' + TELL_DEL_KEYWORD + " <id|" + TELL_ALL_KEYWORD + '>',
-                             bot.getNick(),
-                             isPrivate)),
-                     isPrivate);
-            bot.send(sender,
-                     "Messages are kept for " + Utils.bold(maxDays) + Utils.plural(maxDays, " day.", " days."),
-                     isPrivate);
+            getBot().send(sender, "To delete one or all delivered messages:", isPrivate);
+            getBot().send(sender,
+                          Utils.helpIndent(Utils.helpFormat(
+                                  "%c " + TELL_CMD + ' ' + TELL_DEL_KEYWORD + " <id|" + TELL_ALL_KEYWORD + '>',
+                                  getBot().getNick(),
+                                  isPrivate)),
+                          isPrivate);
+            getBot().send(sender,
+                          "Messages are kept for " + Utils.bold(maxDays) + Utils.plural(maxDays, " day.", " days."),
+                          isPrivate);
         }
     }
 }

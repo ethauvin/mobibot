@@ -37,29 +37,27 @@ import net.thauvin.erik.mobibot.Utils
 import net.thauvin.erik.mobibot.commands.links.UrlMgr
 import java.util.*
 
-class Ignore(defaultIgnore: String) : AbstractCommand() {
+class Ignore(bot: Mobibot) : AbstractCommand(bot) {
     private val me = "me"
 
     init {
-        if (defaultIgnore.isNotBlank()) {
-            ignored.addAll(defaultIgnore.split(UrlMgr.LINK_MATCH.toRegex()))
-        }
+        initProperties(IGNORE_PROP)
     }
 
-    override val command = IGNORE_CMD
+    override val name = IGNORE_CMD
     override val help = listOf(
         "To ignore a link posted to the channel:",
         Utils.helpIndent("https://www.foo.bar %n"),
         "To check your ignore status:",
-        Utils.helpIndent("%c $command"),
+        Utils.helpIndent("%c $name"),
         "To toggle your ignore status:",
-        Utils.helpIndent("%c $command $me")
+        Utils.helpIndent("%c $name $me")
     )
     private val helpOp = listOf(
         "To ignore a link posted to the channel:",
         Utils.helpIndent("https://www.foo.bar " + Utils.bold("%n"), false),
         "To add/remove nicks from the ignored list:",
-        Utils.helpIndent("%c $command <nick> [<nick> ...]")
+        Utils.helpIndent("%c $name <nick> [<nick> ...]")
     )
 
     override val isOp = false
@@ -68,6 +66,7 @@ class Ignore(defaultIgnore: String) : AbstractCommand() {
 
     companion object {
         const val IGNORE_CMD = "ignore"
+        const val IGNORE_PROP = IGNORE_CMD
         private val ignored = TreeSet<String>()
 
         @JvmStatic
@@ -77,7 +76,6 @@ class Ignore(defaultIgnore: String) : AbstractCommand() {
     }
 
     override fun commandResponse(
-        bot: Mobibot,
         sender: String,
         login: String,
         args: String,
@@ -94,7 +92,6 @@ class Ignore(defaultIgnore: String) : AbstractCommand() {
     }
 
     override fun helpResponse(
-        bot: Mobibot,
         command: String,
         sender: String,
         isOp: Boolean,
@@ -106,7 +103,7 @@ class Ignore(defaultIgnore: String) : AbstractCommand() {
             }
             true
         } else {
-            super.helpResponse(bot, command, sender, isOp, isPrivate)
+            super.helpResponse(command, sender, isOp, isPrivate)
         }
     }
 
@@ -149,4 +146,12 @@ class Ignore(defaultIgnore: String) : AbstractCommand() {
             bot.send(sender, "No one is currently ${Utils.bold("ignored")}.", isPrivate)
         }
     }
+
+    override fun setProperty(key: String, value: String) {
+        super.setProperty(key, value)
+        if (IGNORE_PROP == key) {
+            ignored.addAll(value.split(UrlMgr.LINK_MATCH.toRegex()))
+        }
+    }
+
 }

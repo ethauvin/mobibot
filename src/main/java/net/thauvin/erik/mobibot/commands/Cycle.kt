@@ -35,12 +35,12 @@ package net.thauvin.erik.mobibot.commands
 import net.thauvin.erik.mobibot.Mobibot
 import net.thauvin.erik.mobibot.Utils
 
-class Cycle : AbstractCommand() {
+class Cycle(bot: Mobibot) : AbstractCommand(bot) {
     private val wait = 10
-    override val command = "cycle"
+    override val name = "cycle"
     override val help = listOf(
        "To have the bot leave the channel and come back:",
-        Utils.helpIndent("%c $command")
+        Utils.helpIndent("%c $name")
     )
     override val isOp = true
     override val isPublic = false
@@ -48,7 +48,6 @@ class Cycle : AbstractCommand() {
 
 
     override fun commandResponse(
-        bot: Mobibot,
         sender: String,
         login: String,
         args: String,

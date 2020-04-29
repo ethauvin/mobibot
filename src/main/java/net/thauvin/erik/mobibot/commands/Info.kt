@@ -37,18 +37,17 @@ import net.thauvin.erik.mobibot.Utils
 import net.thauvin.erik.mobibot.commands.links.UrlMgr
 import java.lang.management.ManagementFactory
 
-class Info : AbstractCommand() {
-    override val command = "info"
+class Info(bot: Mobibot) : AbstractCommand(bot) {
+    override val name = "info"
     override val help = listOf(
         "To view information about the bot:",
-        Utils.helpIndent("%c $command")
+        Utils.helpIndent("%c $name")
     )
     override val isOp = false
     override val isPublic = true
     override val isVisible = true
 
     override fun commandResponse(
-        bot: Mobibot,
         sender: String,
         login: String,
         args: String,
@@ -56,7 +55,7 @@ class Info : AbstractCommand() {
         isPrivate: Boolean
     ) {
         for (info in Mobibot.INFO) {
-                bot.send(sender, info, isPrivate)
+            bot.send(sender, info, isPrivate)
         }
 
         val info = StringBuilder("Uptime: ")
@@ -67,13 +66,13 @@ class Info : AbstractCommand() {
             append(UrlMgr.entriesCount)
 
             if (isOp) {
-                if (bot.tell.isEnabled) {
+                if (bot.tell.isEnabled()) {
                     append(", Messages: ")
                     append(bot.tell.size())
                 }
-                if (bot.isTwitterAutoPost) {
+                if (bot.twitter.isAutoPost) {
                     append(", Twitter: ")
-                    append(bot.twitterLinksCount())
+                    append(bot.twitter.entriesCount())
                 }
             }
 

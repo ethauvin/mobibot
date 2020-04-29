@@ -50,21 +50,24 @@ import java.util.concurrent.ConcurrentHashMap;
  * @since 1.0
  */
 public abstract class AbstractModule {
+    final Mobibot bot;
     final List<String> commands = new ArrayList<>();
     final List<String> help = new ArrayList<>();
     final Map<String, String> properties = new ConcurrentHashMap<>();
 
+    AbstractModule(final Mobibot bot) {
+        this.bot = bot;
+    }
+
     /**
      * Responds to a command.
      *
-     * @param bot       The bot's instance.
      * @param sender    The sender.
      * @param cmd       The command.
      * @param args      The command arguments.
      * @param isPrivate Set to <code>true</code> if the response should be sent as a private message.
      */
-    public abstract void commandResponse(final Mobibot bot,
-                                         final String sender,
+    public abstract void commandResponse(final String sender,
                                          final String cmd,
                                          final String args,
                                          final boolean isPrivate);
@@ -99,13 +102,23 @@ public abstract class AbstractModule {
     /**
      * Responds with the module's help.
      *
-     * @param bot       The bot's instance.
      * @param sender    The sender.
      * @param isPrivate Set to <code>true</code> if the response should be sent as a private message.
      */
-    public void helpResponse(final Mobibot bot, final String sender, final boolean isPrivate) {
+    public void helpResponse(final String sender, final boolean isPrivate) {
         for (final String h : help) {
             bot.send(sender, Utils.helpFormat(h, bot.getNick(), isPrivateMsgEnabled() && isPrivate), isPrivate);
+        }
+    }
+
+    /**
+     * Initializes the properties.
+     *
+     * @param keys The properties keys to initialize.
+     */
+    public void initProperties(final String... keys) {
+        for (final String key : keys) {
+            properties.put(key, "");
         }
     }
 

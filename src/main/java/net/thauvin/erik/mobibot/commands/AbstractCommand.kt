@@ -34,16 +34,18 @@ package net.thauvin.erik.mobibot.commands
 
 import net.thauvin.erik.mobibot.Mobibot
 import net.thauvin.erik.mobibot.Utils
+import java.util.concurrent.ConcurrentHashMap
 
-abstract class AbstractCommand {
-    abstract val command: String
+abstract class AbstractCommand(val bot: Mobibot) {
+    abstract val name: String
     abstract val help: List<String>
     abstract val isOp: Boolean
     abstract val isPublic: Boolean
     abstract val isVisible: Boolean
 
+    private val properties: MutableMap<String, String> = ConcurrentHashMap()
+
     abstract fun commandResponse(
-        bot: Mobibot,
         sender: String,
         login: String,
         args: String,
@@ -51,7 +53,7 @@ abstract class AbstractCommand {
         isPrivate: Boolean
     )
 
-    open fun helpResponse(bot: Mobibot, command: String, sender: String, isOp: Boolean, isPrivate: Boolean): Boolean {
+    open fun helpResponse(command: String, sender: String, isOp: Boolean, isPrivate: Boolean): Boolean {
         if (!this.isOp || this.isOp == isOp) {
             for (h in help) {
                 bot.send(sender, Utils.helpFormat(h, bot.nick, isPrivate), isPrivate)
@@ -61,7 +63,32 @@ abstract class AbstractCommand {
         return false
     }
 
+    open fun getProperty(key: String) : String? {
+        return properties[key]
+    }
+    open fun getPropertyKeys(): Set<String> {
+        return properties.keys
+    }
+
+    open fun hasProperties(): Boolean {
+        return properties.isNotEmpty()
+    }
+
+    open fun initProperties(vararg keys: String) {
+        keys.forEach {
+            properties[it] = ""
+        }
+    }
+
+    open fun isEnabled(): Boolean {
+        return true
+    }
+
     open fun matches(message: String): Boolean {
         return false
+    }
+
+    open fun setProperty(key: String, value: String) {
+        properties[key] = value
     }
 }

@@ -53,8 +53,8 @@ public final class Dice extends AbstractModule {
     /**
      * The default constructor.
      */
-    public Dice() {
-        super();
+    public Dice(final Mobibot bot) {
+        super(bot);
 
         commands.add(DICE_CMD);
 
@@ -66,8 +66,7 @@ public final class Dice extends AbstractModule {
      * {@inheritDoc}
      */
     @Override
-    public void commandResponse(final Mobibot bot,
-                                final String sender,
+    public void commandResponse(final String sender,
                                 final String cmd,
                                 final String args,
                                 final boolean isPrivate) {

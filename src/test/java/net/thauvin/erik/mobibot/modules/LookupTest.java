@@ -49,7 +49,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class LookupTest {
     @Test
     public void testLookupImpl() {
-        AbstractModuleTest.testAbstractModule(new Lookup());
+        AbstractModuleTest.testAbstractModule(new Lookup(null));
     }
 
     @Test

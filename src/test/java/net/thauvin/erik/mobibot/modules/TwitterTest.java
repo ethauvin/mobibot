@@ -33,7 +33,6 @@
 package net.thauvin.erik.mobibot.modules;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-import net.thauvin.erik.mobibot.Constants;
 import org.testng.annotations.Test;
 
 import java.net.InetAddress;
@@ -72,7 +71,7 @@ public class TwitterTest extends LocalProperties {
                 getProperty(Twitter.CONSUMER_SECRET_PROP),
                 getProperty(Twitter.TOKEN_PROP),
                 getProperty(Twitter.TOKEN_SECRET_PROP),
-                getProperty(Constants.TWITTER_HANDLE_PROP),
+                getProperty(Twitter.HANDLE_PROP),
                 msg,
                 true).getText()).as("twitterPost(" + msg + ')').isEqualTo(msg);
     }

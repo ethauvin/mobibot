@@ -54,8 +54,8 @@ public class Calc extends AbstractModule {
     /**
      * The default constructor.
      */
-    public Calc() {
-        super();
+    public Calc(final Mobibot bot) {
+        super(bot);
 
         commands.add(CALC_CMD);
 
@@ -86,15 +86,14 @@ public class Calc extends AbstractModule {
      * {@inheritDoc}
      */
     @Override
-    public void commandResponse(final Mobibot bot,
-                                final String sender,
+    public void commandResponse(final String sender,
                                 final String cmd,
                                 final String args,
                                 final boolean isPrivate) {
         if (StringUtils.isNotBlank(args)) {
             bot.send(calc(args));
         } else {
-            helpResponse(bot, sender, isPrivate);
+            helpResponse(sender, isPrivate);
         }
     }
 }

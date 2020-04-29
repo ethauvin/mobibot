@@ -38,15 +38,14 @@ import net.thauvin.erik.mobibot.commands.links.UrlMgr.Companion.getHistory
 import net.thauvin.erik.mobibot.entries.EntriesMgr
 import java.io.File
 
-class AddLog : AbstractCommand() {
-    override val command = "addlog"
+class AddLog(bot: Mobibot) : AbstractCommand(bot) {
+    override val name = "addlog"
     override val help = emptyList<String>()
     override val isOp = true
     override val isPublic = false
     override val isVisible = false
 
     override fun commandResponse(
-        bot: Mobibot,
         sender: String,
         login: String,
         args: String,

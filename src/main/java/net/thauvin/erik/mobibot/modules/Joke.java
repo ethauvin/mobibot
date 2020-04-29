@@ -61,8 +61,8 @@ public final class Joke extends ThreadedModule {
     /**
      * Creates a new {@link Joke} instance.
      */
-    public Joke() {
-        super();
+    public Joke(final Mobibot bot) {
+        super(bot);
 
         commands.add(JOKE_CMD);
 
@@ -104,19 +104,18 @@ public final class Joke extends ThreadedModule {
      * {@inheritDoc}
      */
     @Override
-    public void commandResponse(final Mobibot bot,
-                                final String sender,
+    public void commandResponse(final String sender,
                                 final String cmd,
                                 final String args,
                                 final boolean isPrivate) {
-        new Thread(() -> run(bot, sender, cmd, args, isPrivate)).start();
+        new Thread(() -> run(sender, cmd, args, isPrivate)).start();
     }
 
     /**
      * Returns a random joke from <a href="http://www.icndb.com/">The Internet Chuck Norris Database</a>.
      */
     @Override
-    void run(final Mobibot bot, final String sender, final String cmd, final String arg, final boolean isPrivate) {
+    void run(final String sender, final String cmd, final String arg, final boolean isPrivate) {
         try {
             bot.send(Utils.cyan(randomJoke().getText()));
         } catch (ModuleException e) {

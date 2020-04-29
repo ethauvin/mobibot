@@ -36,6 +36,6 @@ import java.util.*
 
 class TwitterTimer(var bot: Mobibot, private var index: Int) : TimerTask() {
     override fun run() {
-        bot.twitterEntryPost(index)
+        bot.twitter.postEntry(index)
     }
 }

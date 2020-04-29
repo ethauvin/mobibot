@@ -60,8 +60,8 @@ public final class Lookup extends AbstractModule {
     /**
      * The default constructor.
      */
-    public Lookup() {
-        super();
+    public Lookup(final Mobibot bot) {
+        super(bot);
 
         commands.add(LOOKUP_CMD);
 
@@ -151,8 +151,7 @@ public final class Lookup extends AbstractModule {
      * {@inheritDoc}
      */
     @Override
-    public void commandResponse(final Mobibot bot,
-                                final String sender,
+    public void commandResponse(final String sender,
                                 final String cmd,
                                 final String args,
                                 final boolean isPrivate) {
@@ -188,7 +187,7 @@ public final class Lookup extends AbstractModule {
                 }
             }
         } else {
-            helpResponse(bot, sender, true);
+            helpResponse(sender, true);
         }
     }
 }

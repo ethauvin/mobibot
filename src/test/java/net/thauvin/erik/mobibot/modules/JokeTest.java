@@ -46,7 +46,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class JokeTest {
     @Test
     public void testJokeImpl() {
-        AbstractModuleTest.testAbstractModule(new Joke());
+        AbstractModuleTest.testAbstractModule(new Joke(null));
     }
 
     @Test

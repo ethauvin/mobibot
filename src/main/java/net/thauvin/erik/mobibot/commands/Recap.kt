@@ -38,11 +38,11 @@ import java.time.Clock
 import java.time.LocalDateTime
 import java.util.*
 
-class Recap : AbstractCommand() {
-    override val command = "recap"
+class Recap(bot: Mobibot) : AbstractCommand(bot) {
+    override val name = "recap"
     override val help = listOf(
         "To list the last 10 public channel messages:",
-        Utils.helpIndent("%c $command")
+        Utils.helpIndent("%c $name")
     )
     override val isOp = false
     override val isPublic = true
@@ -76,7 +76,6 @@ class Recap : AbstractCommand() {
     }
 
     override fun commandResponse(
-        bot: Mobibot,
         sender: String,
         login: String,
         args: String,

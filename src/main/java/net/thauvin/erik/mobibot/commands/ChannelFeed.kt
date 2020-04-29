@@ -35,10 +35,9 @@ package net.thauvin.erik.mobibot.commands
 import net.thauvin.erik.mobibot.FeedReader
 import net.thauvin.erik.mobibot.Mobibot
 import net.thauvin.erik.mobibot.Utils
-import org.apache.commons.lang3.StringUtils.isNotBlank
 
-class ChannelFeed(channel: String, private val feedUrl: String) : AbstractCommand() {
-    override val command = channel
+class ChannelFeed(bot: Mobibot, channel: String) : AbstractCommand(bot) {
+    override val name = channel
     override val help = listOf(
         "To list the last 5 posts from the channel's weblog feed:",
         Utils.helpIndent("%c $channel")
@@ -47,18 +46,23 @@ class ChannelFeed(channel: String, private val feedUrl: String) : AbstractComman
     override val isPublic = true
     override val isVisible = true
 
+    companion object {
+        const val FEED_PROP = "feed"
+    }
+
     override fun commandResponse(
-        bot: Mobibot,
         sender: String,
         login: String,
         args: String,
         isOp: Boolean,
         isPrivate: Boolean
     ) {
-        if (isNotBlank(feedUrl)) {
-            Thread(FeedReader(bot, sender, feedUrl)).start()
-        } else {
-            bot.send(sender, "There is no feed setup for this channel.", false)
+        with(getProperty(FEED_PROP)) {
+            if (!this.isNullOrBlank()) {
+                Thread(FeedReader(bot, sender, this)).start()
+            } else {
+                bot.send(sender, "There is no feed setup for this channel.", false)
+            }
         }
     }
 }

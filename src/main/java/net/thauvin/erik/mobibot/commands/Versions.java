@@ -50,9 +50,13 @@ public class Versions extends AbstractCommand {
                     + ", "
                     + System.getProperty("java.vm.info") + ')');
 
+    public Versions(@NotNull final Mobibot bot) {
+        super(bot);
+    }
+
     @NotNull
     @Override
-    public String getCommand() {
+    public String getName() {
         return "versions";
     }
 
@@ -61,7 +65,7 @@ public class Versions extends AbstractCommand {
     @Override
     public List<String> getHelp() {
         return List.of("To view the versions data (bot, java, etc.):",
-                       Utils.helpIndent("%s " + getCommand()));
+                       Utils.helpIndent("%s " + getName()));
     }
 
     @Override
@@ -80,18 +84,17 @@ public class Versions extends AbstractCommand {
     }
 
     @Override
-    public void commandResponse(@NotNull final Mobibot bot,
-                                @NotNull final String sender,
+    public void commandResponse(@NotNull final String sender,
                                 @NotNull final String login,
                                 @NotNull final String args,
                                 final boolean isOp,
                                 final boolean isPrivate) {
         if (isOp) {
             for (final String v : versions) {
-                bot.send(sender, v, isPrivate);
+                getBot().send(sender, v, isPrivate);
             }
         } else {
-            bot.helpDefault(sender, false, isPrivate);
+            getBot().helpDefault(sender, false, isPrivate);
         }
 
     }

@@ -43,7 +43,7 @@ import kotlin.random.Random
 /**
  * Simple module example in Kotlin.
  */
-class RockPaperScissors : AbstractModule() {
+class RockPaperScissors(bot: Mobibot) : AbstractModule(bot) {
     init {
         with(commands) {
             add(Hands.ROCK.name.toLowerCase())
@@ -96,22 +96,21 @@ class RockPaperScissors : AbstractModule() {
         }
     }
 
-    override fun commandResponse(bot: Mobibot, sender: String, cmd: String, args: String?, isPrivate: Boolean) {
+    override fun commandResponse(sender: String, cmd: String, args: String?, isPrivate: Boolean) {
         val hand = Hands.valueOf(cmd.toUpperCase())
         val botHand = Hands.values()[Random.nextInt(0, Hands.values().size)]
         when {
             hand == botHand -> {
-                bot.action("${green(hand.name)} vs. ${green(botHand.name)} ~ The game is tied ~")
+                bot.send("${green(hand.name)} vs. ${green(botHand.name)}")
+                bot.action("tied.")
             }
             hand.beats(botHand) -> {
-                bot.action(
-                    "${green(hand.name)} ${bold(hand.action)} ${red(botHand.name)} ~ You win ~"
-                )
+                bot.send("${green(hand.name)} ${bold(hand.action)} ${red(botHand.name)}")
+                bot.action("lost.")
             }
             else -> {
-                bot.action(
-                    "${green(botHand.name)} ${bold(botHand.action)} ${red(hand.name)} ~ You lose ~"
-                )
+                bot.send("${green(botHand.name)} ${bold(botHand.action)} ${red(hand.name)}")
+                bot.action("wins.")
             }
         }
     }

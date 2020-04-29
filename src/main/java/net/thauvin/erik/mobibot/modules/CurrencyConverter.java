@@ -82,8 +82,8 @@ public final class CurrencyConverter extends ThreadedModule {
     /**
      * Creates a new {@link CurrencyConverter} instance.
      */
-    public CurrencyConverter() {
-        super();
+    public CurrencyConverter(final Mobibot bot) {
+        super(bot);
 
         commands.add(CURRENCY_CMD);
     }
@@ -180,8 +180,7 @@ public final class CurrencyConverter extends ThreadedModule {
      * {@inheritDoc}
      */
     @Override
-    public void commandResponse(final Mobibot bot,
-                                final String sender,
+    public void commandResponse(final String sender,
                                 final String cmd,
                                 final String args,
                                 final boolean isPrivate) {
@@ -191,7 +190,7 @@ public final class CurrencyConverter extends ThreadedModule {
             }
         }
 
-        super.commandResponse(bot, sender, cmd, args, isPrivate);
+        super.commandResponse(sender, cmd, args, isPrivate);
     }
 
     /**
@@ -199,7 +198,7 @@ public final class CurrencyConverter extends ThreadedModule {
      */
     @SuppressFBWarnings("REDOS")
     @Override
-    void run(final Mobibot bot, final String sender, final String cmd, final String query, final boolean isPrivate) {
+    void run(final String sender, final String cmd, final String query, final boolean isPrivate) {
         if (EXCHANGE_RATES.isEmpty()) {
             try {
                 loadRates();
@@ -214,13 +213,13 @@ public final class CurrencyConverter extends ThreadedModule {
             final Message msg = convertCurrency(query);
             bot.send(sender, msg);
             if (msg.isError()) {
-                helpResponse(bot, sender, isPrivate);
+                helpResponse(sender, isPrivate);
             }
         } else if (query.contains(CURRENCY_RATES_KEYWORD)) {
             bot.send(sender, "The currency rates for " + Utils.bold(pubDate) + " are:", isPrivate);
             bot.sendList(sender, currencyRates(), 3, isPrivate, false);
         } else {
-            helpResponse(bot, sender, isPrivate);
+            helpResponse(sender, isPrivate);
         }
     }
 
@@ -228,7 +227,7 @@ public final class CurrencyConverter extends ThreadedModule {
      * {@inheritDoc}
      */
     @Override
-    public void helpResponse(final Mobibot bot, final String sender, final boolean isPrivate) {
+    public void helpResponse(final String sender, final boolean isPrivate) {
         if (EXCHANGE_RATES.isEmpty()) {
             try {
                 loadRates();
@@ -241,14 +240,12 @@ public final class CurrencyConverter extends ThreadedModule {
         } else {
             bot.send(sender, "To convert from one currency to another:", isPrivate);
             bot.send(sender,
-                     Utils.helpIndent(Utils.helpFormat("%c " + CURRENCY_CMD + " 100 USD to EUR",
-                                                       bot.getNick(),
-                                                       isPrivate)), isPrivate);
+                     Utils.helpIndent(Utils.helpFormat("%c " + CURRENCY_CMD + " 100 USD to EUR", bot.getNick(), false)),
+                     isPrivate);
             bot.send(sender, "For a listing of current rates:", isPrivate);
             bot.send(sender,
                      Utils.helpIndent(Utils.helpFormat("%c " + CURRENCY_CMD + ' ' + CURRENCY_RATES_KEYWORD,
-                                                       bot.getNick(),
-                                                       isPrivate)), isPrivate);
+                                                       bot.getNick(), false)), isPrivate);
             bot.send(sender, "The supported currencies are: ", isPrivate);
             bot.sendList(sender, new ArrayList<>(EXCHANGE_RATES.keySet()), 11, isPrivate, false);
         }

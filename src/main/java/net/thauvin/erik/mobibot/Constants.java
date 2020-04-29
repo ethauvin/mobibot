@@ -94,14 +94,7 @@ public final class Constants {
      * The timer delay in minutes.
      */
     public static final long TIMER_DELAY = 10L;
-    /**
-     * The twitter post flag property key.
-     */
-    public static final String TWITTER_AUTOPOST_PROP = "twitter-auto-post";
-    /**
-     * The Twitter handle property key.
-     */
-    public static final String TWITTER_HANDLE_PROP = "twitter-handle";
+
     /**
      * Properties version line argument.
      */

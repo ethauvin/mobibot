@@ -37,11 +37,11 @@ import net.thauvin.erik.mobibot.Utils
 import org.jibble.pircbot.User
 import java.util.*
 
-class Users : AbstractCommand() {
-    override val command = "users"
+class Users(bot: Mobibot) : AbstractCommand(bot) {
+    override val name = "users"
     override val help = listOf(
         "To list the users present on the channel:",
-        Utils.helpIndent("%c $command")
+        Utils.helpIndent("%c $name")
     )
     override val isOp = false
     override val isPublic = true
@@ -49,7 +49,6 @@ class Users : AbstractCommand() {
 
 
     override fun commandResponse(
-        bot: Mobibot,
         sender: String,
         login: String,
         args: String,

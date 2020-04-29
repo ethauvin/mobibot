@@ -35,18 +35,17 @@ package net.thauvin.erik.mobibot.commands
 import net.thauvin.erik.mobibot.Mobibot
 import net.thauvin.erik.mobibot.Utils
 
-class Modules : AbstractCommand() {
-    override val command = "modules"
+class Modules(bot: Mobibot) : AbstractCommand(bot) {
+    override val name = "modules"
     override val help = listOf(
         "To view a list of enabled modules:",
-        Utils.helpIndent("%c $command")
+        Utils.helpIndent("%c $name")
     )
     override val isOp = true
     override val isPublic = false
     override val isVisible = true
 
     override fun commandResponse(
-        bot: Mobibot,
         sender: String,
         login: String,
         args: String,
@@ -54,12 +53,13 @@ class Modules : AbstractCommand() {
         isPrivate: Boolean
     ) {
         if (isOp) {
-            val modulesNames = bot.modulesNames
-            if (modulesNames.isEmpty()) {
-                bot.send(sender, "There are no enabled modules.", isPrivate)
-            } else {
-                bot.send(sender, "The enabled modules are: ", isPrivate)
-                bot.sendList(sender, modulesNames, 7, isPrivate, false)
+            with(bot.modulesNames) {
+                if (isEmpty()) {
+                    bot.send(sender, "There are no enabled modules.", isPrivate)
+                } else {
+                    bot.send(sender, "The enabled modules are: ", isPrivate)
+                    bot.sendList(sender, this, 7, isPrivate, false)
+                }
             }
         } else {
             bot.helpDefault(sender, isOp, isPrivate)

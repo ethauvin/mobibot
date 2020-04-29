@@ -39,8 +39,8 @@ import net.thauvin.erik.mobibot.commands.AbstractCommand
 import net.thauvin.erik.mobibot.entries.EntriesUtils
 import net.thauvin.erik.mobibot.entries.EntryLink
 
-class Tags : AbstractCommand() {
-    override val command = COMMAND
+class Tags(bot: Mobibot) : AbstractCommand(bot) {
+    override val name = COMMAND
     override val help = listOf(
         "To categorize or tag a URL, use its label and a T:",
         Utils.helpIndent("${Constants.LINK_CMD}1T:<+tag|-tag> [...]")
@@ -54,7 +54,6 @@ class Tags : AbstractCommand() {
     }
 
     override fun commandResponse(
-        bot: Mobibot,
         sender: String,
         login: String,
         args: String,

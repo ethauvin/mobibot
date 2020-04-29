@@ -51,7 +51,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 public class GoogleSearchTest extends LocalProperties {
     @Test
     public void testGoogleSearchImpl() {
-        AbstractModuleTest.testAbstractModule(new GoogleSearch());
+        AbstractModuleTest.testAbstractModule(new GoogleSearch(null));
     }
 
     @SuppressFBWarnings("LEST_LOST_EXCEPTION_STACK_TRACE")

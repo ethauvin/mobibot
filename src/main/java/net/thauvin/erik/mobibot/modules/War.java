@@ -58,8 +58,8 @@ public final class War extends AbstractModule {
     /**
      * The default constructor.
      */
-    public War() {
-        super();
+    public War(final Mobibot bot) {
+        super(bot);
 
         commands.add(WAR_CMD);
 
@@ -71,8 +71,7 @@ public final class War extends AbstractModule {
      * {@inheritDoc}
      */
     @Override
-    public void commandResponse(final Mobibot bot,
-                                final String sender,
+    public void commandResponse(final String sender,
                                 final String cmd,
                                 final String args,
                                 final boolean isPrivate) {

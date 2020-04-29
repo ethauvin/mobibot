@@ -42,27 +42,26 @@ import net.thauvin.erik.mobibot.Mobibot;
  * @since 1.0
  */
 public abstract class ThreadedModule extends AbstractModule {
-    /**
-     * {@inheritDoc}
-     */
+    ThreadedModule(final Mobibot bot) {
+        super(bot);
+    }
+
     @Override
-    public void commandResponse(final Mobibot bot,
-                                final String sender,
+    public void commandResponse(final String sender,
                                 final String cmd,
                                 final String args,
                                 final boolean isPrivate) {
         if (isEnabled() && args.length() > 0) {
-            new Thread(() -> run(bot, sender, cmd, args, isPrivate)).start();
+            new Thread(() -> run(sender, cmd, args, isPrivate)).start();
         } else {
-            helpResponse(bot, sender, isPrivate);
+            helpResponse(sender, isPrivate);
         }
     }
 
     /**
      * Runs the thread.
      */
-    abstract void run(Mobibot bot,
-                      String sender,
+    abstract void run(String sender,
                       @SuppressWarnings("unused") String cmd,
                       String args,
                       boolean isPrivate);

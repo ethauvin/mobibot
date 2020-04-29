@@ -63,9 +63,7 @@ public final class WorldTime extends AbstractModule {
     // Supported countries
     private static final Map<String, String> COUNTRIES_MAP;
 
-    /**
-     * The time command.
-     */
+    // The Time command
     private static final String TIME_CMD = "time";
 
     static {
@@ -157,8 +155,8 @@ public final class WorldTime extends AbstractModule {
     /**
      * Creates a new {@link WorldTime} instance.
      */
-    public WorldTime() {
-        super();
+    public WorldTime(final Mobibot bot) {
+        super(bot);
 
         help.add("To display a country's current date/time:");
         help.add(Utils.helpIndent("%c " + TIME_CMD) + " [<country code>]");
@@ -218,8 +216,7 @@ public final class WorldTime extends AbstractModule {
      * {@inheritDoc}
      */
     @Override
-    public void commandResponse(final Mobibot bot,
-                                final String sender,
+    public void commandResponse(final String sender,
                                 final String cmd,
                                 final String args,
                                 final boolean isPrivate) {

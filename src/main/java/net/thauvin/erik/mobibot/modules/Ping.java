@@ -72,8 +72,8 @@ public class Ping extends AbstractModule {
     /**
      * The default constructor.
      */
-    public Ping() {
-        super();
+    public Ping(final Mobibot bot) {
+        super(bot);
 
         commands.add(PING_CMD);
 
@@ -85,8 +85,7 @@ public class Ping extends AbstractModule {
      * {@inheritDoc}
      */
     @Override
-    public void commandResponse(final Mobibot bot,
-                                final String sender,
+    public void commandResponse(final String sender,
                                 final String cmd,
                                 final String args,
                                 final boolean isPrivate) {

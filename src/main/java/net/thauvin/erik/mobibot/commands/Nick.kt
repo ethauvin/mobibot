@@ -35,18 +35,17 @@ package net.thauvin.erik.mobibot.commands
 import net.thauvin.erik.mobibot.Mobibot
 import net.thauvin.erik.mobibot.Utils
 
-class Nick : AbstractCommand() {
-    override val command = "nick"
+class Nick(bot: Mobibot) : AbstractCommand(bot) {
+    override val name = "nick"
     override val help = listOf(
         "To change the bot's nickname:",
-        Utils.helpIndent("%c $command <nick>")
+        Utils.helpIndent("%c $name <nick>")
     )
     override val isOp = true
     override val isPublic = true
     override val isVisible = true
 
     override fun commandResponse(
-        bot: Mobibot,
         sender: String,
         login: String,
         args: String,

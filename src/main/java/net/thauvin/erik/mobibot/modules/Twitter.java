@@ -32,14 +32,26 @@
 
 package net.thauvin.erik.mobibot.modules;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import net.thauvin.erik.mobibot.Constants;
 import net.thauvin.erik.mobibot.Mobibot;
+import net.thauvin.erik.mobibot.ReleaseInfo;
+import net.thauvin.erik.mobibot.TwitterTimer;
 import net.thauvin.erik.mobibot.Utils;
+import net.thauvin.erik.mobibot.commands.links.UrlMgr;
+import net.thauvin.erik.mobibot.entries.EntryLink;
 import net.thauvin.erik.mobibot.msg.Message;
 import net.thauvin.erik.mobibot.msg.NoticeMessage;
+import org.apache.commons.lang3.StringUtils;
 import twitter4j.DirectMessage;
 import twitter4j.Status;
 import twitter4j.TwitterFactory;
 import twitter4j.conf.ConfigurationBuilder;
+
+import java.util.HashSet;
+import java.util.Set;
+
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 /**
  * The Twitter module.
@@ -50,28 +62,31 @@ import twitter4j.conf.ConfigurationBuilder;
  */
 public final class Twitter extends ThreadedModule {
     // Property keys
+    static final String AUTOPOST_PROP = "twitter-auto-post";
     static final String CONSUMER_KEY_PROP = "twitter-consumerKey";
     static final String CONSUMER_SECRET_PROP = "twitter-consumerSecret";
+    static final String HANDLE_PROP = "twitter-handle";
     static final String TOKEN_PROP = "twitter-token";
     static final String TOKEN_SECRET_PROP = "twitter-tokenSecret";
     // Twitter command
     private static final String TWITTER_CMD = "twitter";
 
+    // Twitter auto-posts.
+    private final Set<Integer> entries = new HashSet<>();
+
     /**
      * Creates a new {@link Twitter} instance.
      */
-    public Twitter() {
-        super();
+    public Twitter(final Mobibot bot) {
+        super(bot);
 
         commands.add(TWITTER_CMD);
 
         help.add("To post to Twitter:");
         help.add(Utils.helpIndent("%c " + TWITTER_CMD + " <message>"));
 
-        properties.put(CONSUMER_SECRET_PROP, "");
-        properties.put(CONSUMER_KEY_PROP, "");
-        properties.put(TOKEN_PROP, "");
-        properties.put(TOKEN_SECRET_PROP, "");
+        properties.put(AUTOPOST_PROP, "false");
+        initProperties(CONSUMER_KEY_PROP,CONSUMER_SECRET_PROP,HANDLE_PROP,TOKEN_PROP,TOKEN_SECRET_PROP);
     }
 
     /**
@@ -116,6 +131,70 @@ public final class Twitter extends ThreadedModule {
     }
 
     /**
+     * Add an entry to be posted on Twitter.
+     *
+     * @param index The entry index.
+     */
+    public final void addEntry(final int index) {
+        entries.add(index);
+    }
+
+    public final int entriesCount() {
+        return entries.size();
+    }
+
+    public String getHandle() {
+        return properties.get(HANDLE_PROP);
+    }
+
+    public final boolean hasEntry(final int index) {
+        return entries.contains(index);
+    }
+
+    public boolean isAutoPost() {
+        return isEnabled() && Boolean.parseBoolean(properties.get(AUTOPOST_PROP));
+    }
+
+    @Override
+    boolean isValidProperties() {
+        for (final String s : getPropertyKeys()) {
+            if (!AUTOPOST_PROP.equals(s) && !HANDLE_PROP.equals(s) && StringUtils.isBlank(properties.get(s))) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Send a notification to the registered Twitter handle.
+     *
+     * @param msg The twitter message.
+     */
+    public final void notification(final String msg) {
+        if (isEnabled() && isNotBlank(getHandle())) {
+            new Thread(() -> {
+                try {
+                    post(String.format(msg, bot.getName(), ReleaseInfo.VERSION, bot.getChannel()), true);
+                } catch (ModuleException e) {
+                    bot.getLogger().warn("Failed to notify @{}: {}", getHandle(), msg, e);
+                }
+            }).start();
+        }
+    }
+
+    /**
+     * Posts on Twitter.
+     *
+     * @param message The message to post.
+     * @param isDm    The direct message flag.
+     * @throws ModuleException If an error occurs while posting.
+     */
+    public void post(final String message, final boolean isDm)
+            throws ModuleException {
+        post(properties.get(HANDLE_PROP), message, isDm);
+    }
+
+    /**
      * Posts on Twitter.
      *
      * @param handle  The Twitter handle (dm) or nickname.
@@ -136,10 +215,47 @@ public final class Twitter extends ThreadedModule {
     }
 
     /**
+     * Post an entry to twitter.
+     *
+     * @param index The post entry index.
+     */
+    @SuppressFBWarnings("SUI_CONTAINS_BEFORE_REMOVE")
+    public final void postEntry(final int index) {
+        if (isAutoPost() && hasEntry(index) && UrlMgr.getEntriesCount() >= index) {
+            final EntryLink entry = UrlMgr.getEntry(index);
+            final String msg =
+                    entry.getTitle() + ' ' + entry.getLink() + " via " + entry.getNick() + " on " + bot.getChannel();
+            new Thread(() -> {
+                try {
+                    if (bot.getLogger().isDebugEnabled()) {
+                        bot.getLogger().debug("Posting {}{} to Twitter.", Constants.LINK_CMD, index + 1);
+                    }
+                    post(msg, false);
+                } catch (ModuleException e) {
+                    bot.getLogger().warn("Failed to post entry on Twitter.", e);
+                }
+            }).start();
+            removeEntry(index);
+        }
+    }
+
+    public void queueEntry(final int index) {
+        if (isAutoPost()) {
+            addEntry(index);
+            bot.getLogger().debug("Scheduling ${Constants.LINK_CMD}${index + 1} for posting on Twitter.");
+            bot.getTimer().schedule(new TwitterTimer(bot, index), Constants.TIMER_DELAY * 60L * 1000L);
+        }
+    }
+
+    public final void removeEntry(final int index) {
+        entries.remove(index);
+    }
+
+    /**
      * Posts to twitter.
      */
     @Override
-    void run(final Mobibot bot, final String sender, final String cmd, final String message, final boolean isPrivate) {
+    void run(final String sender, final String cmd, final String message, final boolean isPrivate) {
         try {
             bot.send(sender,
                      post(sender, message + " (by " + sender + " on " + bot.getChannel() + ')', false).getText(),
@@ -147,6 +263,15 @@ public final class Twitter extends ThreadedModule {
         } catch (ModuleException e) {
             bot.getLogger().warn(e.getDebugMessage(), e);
             bot.send(sender, e.getMessage(), isPrivate);
+        }
+    }
+
+    /**
+     * Post all the entries to Twitter on shutdown.
+     */
+    public final void shutdown() {
+        for (final int index : entries) {
+            postEntry(index);
         }
     }
 }

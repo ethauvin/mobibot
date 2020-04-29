@@ -74,6 +74,6 @@ public class Weather2Test extends LocalProperties {
 
     @Test
     public void testWeather2Impl() {
-        AbstractModuleTest.testAbstractModule(new Weather2());
+        AbstractModuleTest.testAbstractModule(new Weather2(null));
     }
 }

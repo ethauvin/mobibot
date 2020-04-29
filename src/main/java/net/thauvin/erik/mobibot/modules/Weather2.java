@@ -73,8 +73,8 @@ public class Weather2 extends ThreadedModule {
     /**
      * Creates a new {@link Weather2} instance.
      */
-    public Weather2() {
-        super();
+    public Weather2(final Mobibot bot) {
+        super(bot);
 
         commands.add(WEATHER_CMD);
 
@@ -84,7 +84,7 @@ public class Weather2 extends ThreadedModule {
         help.add(Utils.helpIndent("%c " + WEATHER_CMD + " paris, fr"));
         help.add("The default ISO 3166 country code is " + bold("US") + ". Zip codes supported in most countries.");
 
-        properties.put(OWM_API_KEY_PROP, "");
+        initProperties(OWM_API_KEY_PROP);
     }
 
     private static OWM.Country getCountry(final String countryCode) {
@@ -218,12 +218,12 @@ public class Weather2 extends ThreadedModule {
      * Fetches the weather data from a specific city.
      */
     @Override
-    void run(final Mobibot bot, final String sender, final String cmd, final String args, final boolean isPrivate) {
+    void run(final String sender, final String cmd, final String args, final boolean isPrivate) {
         if (StringUtils.isNotBlank(args)) {
             try {
                 final List<Message> messages = getWeather(args, properties.get(OWM_API_KEY_PROP));
                 if (messages.get(0).isError()) {
-                    helpResponse(bot, sender, isPrivate);
+                    helpResponse(sender, isPrivate);
                 } else {
                     for (final Message msg : messages) {
                         bot.send(sender, msg);
@@ -234,7 +234,7 @@ public class Weather2 extends ThreadedModule {
                 bot.send(e.getMessage());
             }
         } else {
-            helpResponse(bot, sender, isPrivate);
+            helpResponse(sender, isPrivate);
         }
     }
 }

@@ -62,7 +62,6 @@ import net.thauvin.erik.mobibot.modules.Dice;
 import net.thauvin.erik.mobibot.modules.GoogleSearch;
 import net.thauvin.erik.mobibot.modules.Joke;
 import net.thauvin.erik.mobibot.modules.Lookup;
-import net.thauvin.erik.mobibot.modules.ModuleException;
 import net.thauvin.erik.mobibot.modules.Ping;
 import net.thauvin.erik.mobibot.modules.RockPaperScissors;
 import net.thauvin.erik.mobibot.modules.StockQuote;
@@ -94,12 +93,8 @@ import java.io.InputStream;
 import java.io.PrintStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Properties;
-import java.util.Set;
 import java.util.Timer;
 
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
@@ -116,7 +111,9 @@ import static org.apache.commons.lang3.StringUtils.lowerCase;
 @Version(properties = "version.properties",
          className = "ReleaseInfo")
 public class Mobibot extends PircBot {
-    // Info strings
+    /**
+     * Info Strings.
+     */
     @SuppressWarnings("indentation")
     public static final List<String> INFO =
             List.of(
@@ -129,16 +126,8 @@ public class Mobibot extends PircBot {
     private static final int MAX_RECONNECT = 10;
     // Timer
     private static final Timer TIMER = new Timer(true);
-    // Ignore command
-    public final Ignore ignoreCommand;
-    // Automatically post links to Twitter
-    public final boolean isTwitterAutoPost;
-    // Tell object
-    public final Tell tell;
-    // Commands
-    private final List<AbstractCommand> commands = new ArrayList<>(20);
-    // Commands Names
-    private final List<String> commandsNames = new ArrayList<>();
+    // Commands and Modules
+    private final Addons addons = new Addons();
     // Main channel
     private final String ircChannel;
     // IRC port
@@ -149,20 +138,12 @@ public class Mobibot extends PircBot {
     private final Level loggerLevel;
     // Log directory
     private final String logsDir;
-    // Modules
-    private final List<AbstractModule> modules = new ArrayList<>(0);
-    // Modules
-    private final List<String> modulesNames = new ArrayList<>(0);
-    // Operators commands names
-    private final List<String> opsCommandsNames = new ArrayList<>();
+    // Tell command
+    private final Tell tell;
     // Today's date
     private final String today = Utils.today();
-    // Twitter auto-posts.
-    private final Set<Integer> twitterEntries = new HashSet<>();
-    // Twitter handle for channel join notifications
-    private final String twitterHandle;
     // Twitter module
-    private final Twitter twitterModule;
+    private final Twitter twitter;
     // Backlogs URL
     private String backLogsUrl = "";
     // Ident message
@@ -175,7 +156,6 @@ public class Mobibot extends PircBot {
     private Pinboard pinboard;
     // Weblog URL
     private String weblogUrl = "";
-
 
     /**
      * Creates a new {@link Mobibot} instance.
@@ -226,71 +206,51 @@ public class Mobibot extends PircBot {
         setPinboardAuth(p.getProperty("pinboard-api-token"));
 
         // Load the commands
-        addCommand(new AddLog());
-        addCommand(new ChannelFeed(getChannelName(), p.getProperty("feed", "")));
-        addCommand(new Cycle());
-        addCommand(new Info());
-        addCommand(new Me());
-        addCommand(new Modules());
-        addCommand(new Msg());
-        addCommand(new Nick());
-        addCommand(new Recap());
-        addCommand(new Say());
-        addCommand(new Users());
-        addCommand(new Versions());
-
-        // Ignore command
-        ignoreCommand = new Ignore(p.getProperty("ignore", ""));
-        addCommand(ignoreCommand);
+        addons.add(new AddLog(this), p);
+        addons.add(new ChannelFeed(this, getChannelName()), p);
+        addons.add(new Cycle(this), p);
+        addons.add(new Ignore(this), p);
+        addons.add(new Info(this), p);
+        addons.add(new Me(this), p);
+        addons.add(new Modules(this), p);
+        addons.add(new Msg(this), p);
+        addons.add(new Nick(this), p);
+        addons.add(new Recap(this), p);
+        addons.add(new Say(this), p);
+        addons.add(new Users(this), p);
+        addons.add(new Versions(this), p);
 
         // Tell command
-        tell = new Tell(this, p.getProperty("tell-max-days"), p.getProperty("tell-max-size"));
-        if (tell.isEnabled()) {
-            addCommand(tell);
-        }
+        tell = new Tell(this);
+        addons.add(tell, p);
 
         // Load the links commands
-        addCommand(new Comment());
-        addCommand(new Posting());
-        addCommand(new Tags());
-        addCommand(new UrlMgr(p.getProperty("tags", ""), p.getProperty("tags-keywords", "")));
-        addCommand(new View());
+        addons.add(new Comment(this), p);
+        addons.add(new Posting(this), p);
+        addons.add(new Tags(this), p);
+        addons.add(new UrlMgr(this), p);
+        addons.add(new View(this), p);
 
         // Load the modules
-        addModule(new Calc());
-        addModule(new CurrencyConverter());
-        addModule(new Dice());
-        addModule(new GoogleSearch());
-        addModule(new Joke());
-        addModule(new Lookup());
-        addModule(new Ping());
-        addModule(new RockPaperScissors());
-        addModule(new StockQuote());
-        addModule(new War());
-        addModule(new Weather2());
-        addModule(new WorldTime());
+        addons.add(new Calc(this), p);
+        addons.add(new CurrencyConverter(this), p);
+        addons.add(new Dice(this), p);
+        addons.add(new GoogleSearch(this), p);
+        addons.add(new Joke(this), p);
+        addons.add(new Lookup(this), p);
+        addons.add(new Ping(this), p);
+        addons.add(new RockPaperScissors(this), p);
+        addons.add(new StockQuote(this), p);
+        addons.add(new War(this), p);
+        addons.add(new Weather2(this), p);
+        addons.add(new WorldTime(this), p);
 
         // Twitter module
-        twitterModule = new Twitter();
-        addModule(twitterModule);
+        twitter = new Twitter(this);
+        addons.add(twitter, p);
 
-        // Load the modules properties
-        modules.stream().filter(AbstractModule::hasProperties).forEach(module -> {
-            for (final String s : module.getPropertyKeys()) {
-                module.setProperty(s, p.getProperty(s, ""));
-            }
-        });
-
-        // Twitter extra properties
-        twitterHandle = p.getProperty(Constants.TWITTER_HANDLE_PROP, "");
-        isTwitterAutoPost =
-                Boolean.parseBoolean(p.getProperty(Constants.TWITTER_AUTOPOST_PROP, "false"))
-                && twitterModule.isEnabled();
-
-        // Sort the command & module names
-        Collections.sort(commandsNames);
-        Collections.sort(opsCommandsNames);
-        Collections.sort(modulesNames);
+        // Sort the addons
+        addons.sort();
 
         // Save the entries
         UrlMgr.saveEntries(this, true);
@@ -416,33 +376,6 @@ public class Mobibot extends PircBot {
     }
 
     /**
-     * Adds a command.
-     *
-     * @param command The command to add.
-     */
-    private void addCommand(final AbstractCommand command) {
-        commands.add(command);
-        if (command.isVisible()) {
-            if (command.isOp()) {
-                opsCommandsNames.add(command.getCommand());
-            } else {
-                commandsNames.add(command.getCommand());
-            }
-        }
-    }
-
-    /**
-     * Adds a module.
-     *
-     * @param module The module to add.
-     */
-    private void addModule(final AbstractModule module) {
-        modules.add(module);
-        modulesNames.add(module.getClass().getSimpleName());
-        commandsNames.addAll(module.getCommands());
-    }
-
-    /**
      * Adds pin on pinboard.
      *
      * @param entry The entry to add.
@@ -487,9 +420,12 @@ public class Mobibot extends PircBot {
      *
      * @param entry The entry to delete.
      */
-    public final void deletePin(final EntryLink entry) {
+    public final void deletePin(final int index, final EntryLink entry) {
         if (pinboard != null) {
             pinboard.deletePost(entry);
+        }
+        if (twitter.isAutoPost()) {
+            twitter.removeEntry(index);
         }
     }
 
@@ -554,7 +490,7 @@ public class Mobibot extends PircBot {
      * @return The modules names.
      */
     public final List<String> getModulesNames() {
-        return modulesNames;
+        return addons.getModulesNames();
     }
 
     /**
@@ -578,6 +514,15 @@ public class Mobibot extends PircBot {
     }
 
     /**
+     * Returns the Tell command.
+     *
+     * @return The tell command.
+     */
+    public final Tell getTell() {
+        return tell;
+    }
+
+    /**
      * Returns the bot's timer.
      *
      * @return The timer.
@@ -593,6 +538,15 @@ public class Mobibot extends PircBot {
      */
     public String getToday() {
         return today;
+    }
+
+    /**
+     * Returns the Twitter command.
+     *
+     * @return The Twitter command.
+     */
+    public final Twitter getTwitter() {
+        return twitter;
     }
 
     /**
@@ -613,9 +567,9 @@ public class Mobibot extends PircBot {
      * @return {@code true} if the topic was found, {@code false} otherwise.
      */
     private boolean helpCommands(final String sender, final String topic, final boolean isPrivate) {
-        for (final AbstractCommand command : commands) {
-            if (command.isVisible() && command.getCommand().startsWith(topic)) {
-                return command.helpResponse(this, topic, sender, isOp(sender), isPrivate);
+        for (final AbstractCommand command : addons.getCommands()) {
+            if (command.isVisible() && command.getName().startsWith(topic)) {
+                return command.helpResponse(topic, sender, isOp(sender), isPrivate);
             }
         }
         return false;
@@ -635,10 +589,10 @@ public class Mobibot extends PircBot {
              Utils.helpIndent(Utils.helpFormat("%c " + Constants.HELP_CMD + " <command>", getNick(), isPrivate)),
              isPrivate);
         send(sender, "The commands are:", isPrivate);
-        sendList(sender, commandsNames, 8, isPrivate, true);
+        sendList(sender, addons.getNames(), 8, isPrivate, true);
         if (isOp) {
             send(sender, "The op commands are:", isPrivate);
-            sendList(sender, opsCommandsNames, 8, isPrivate, true);
+            sendList(sender, addons.getOps(), 8, isPrivate, true);
         }
     }
 
@@ -651,13 +605,11 @@ public class Mobibot extends PircBot {
      * @return {@code true} if the topic was found, {@code false} otherwise.
      */
     private boolean helpModules(final String sender, final String topic, final boolean isPrivate) {
-        for (final AbstractModule module : modules) {
-            if (module.isEnabled()) {
-                for (final String cmd : module.getCommands()) {
-                    if (topic.equals(cmd)) {
-                        module.helpResponse(this, sender, isPrivate);
-                        return true;
-                    }
+        for (final AbstractModule module : addons.getModules()) {
+            for (final String cmd : module.getCommands()) {
+                if (topic.equals(cmd)) {
+                    module.helpResponse(sender, isPrivate);
+                    return true;
                 }
             }
         }
@@ -721,7 +673,7 @@ public class Mobibot extends PircBot {
      */
     public final void joinChannel() {
         joinChannel(ircChannel);
-        twitterNotification("has joined " + ircChannel);
+        twitter.notification("%1$s %2$s has joined %3$s");
     }
 
     /**
@@ -746,9 +698,7 @@ public class Mobibot extends PircBot {
                                    final String message) {
         LOGGER.debug(">>> {} : {}", sender, message);
 
-        if (tell.isEnabled()) {
-            tell.send(sender, true);
-        }
+        tell.send(sender, true);
 
         if (message.matches(getNickPattern() + ":.*")) { // mobibot: <command>
             final String[] cmds = message.substring(message.indexOf(':') + 1).trim().split(" ", 2);
@@ -764,17 +714,17 @@ public class Mobibot extends PircBot {
                 helpResponse(sender, args, false);
             } else {
                 // Commands
-                for (final AbstractCommand command : commands) {
-                    if (command.isPublic() && command.getCommand().startsWith(cmd)) {
-                        command.commandResponse(this, sender, login, args, isOp(sender), false);
+                for (final AbstractCommand command : addons.getCommands()) {
+                    if (command.isPublic() && command.getName().startsWith(cmd)) {
+                        command.commandResponse(sender, login, args, isOp(sender), false);
                         return;
                     }
                 }
                 // Modules
-                for (final AbstractModule module : modules) { // modules
+                for (final AbstractModule module : addons.getModules()) { // modules
                     for (final String c : module.getCommands()) {
                         if (cmd.startsWith(c)) {
-                            module.commandResponse(this, sender, cmd, args, false);
+                            module.commandResponse(sender, cmd, args, false);
                             return;
                         }
                     }
@@ -782,9 +732,9 @@ public class Mobibot extends PircBot {
             }
         } else {
             // Commands, e.g.: https://www.example.com/
-            for (final AbstractCommand command : commands) {
+            for (final AbstractCommand command : addons.getCommands()) {
                 if (command.matches(message)) {
-                    command.commandResponse(this, sender, login, message, isOp(sender), false);
+                    command.commandResponse(sender, login, message, isOp(sender), false);
                     return;
                 }
             }
@@ -816,6 +766,7 @@ public class Mobibot extends PircBot {
         if (cmd.startsWith(Constants.HELP_CMD)) { // help
             helpResponse(sender, args, true);
         } else if (isOp && "kill".equals(cmd)) { // kill
+            twitter.notification("%1$s killed by " + sender + "on %3$s");
             sendRawLine("QUIT : Poof!");
             System.exit(0);
         } else if (isOp && Constants.DEBUG_CMD.equals(cmd)) { // debug
@@ -828,23 +779,23 @@ public class Mobibot extends PircBot {
         } else if (isOp && Constants.DIE_CMD.equals(cmd)) { // die
             send(sender + " has just signed my death sentence.");
             TIMER.cancel();
-            twitterShutdown();
-            twitterNotification("killed by  " + sender + " on " + ircChannel);
+            twitter.shutdown();
+            twitter.notification("%1$s stopped by " + sender + "on %3$s");
             sleep(3);
             quitServer("The Bot Is Out There!");
             System.exit(0);
         } else {
-            for (final AbstractCommand command : commands) {
-                if (command.getCommand().startsWith(cmd)) {
-                    command.commandResponse(this, sender, login, args, isOp, true);
+            for (final AbstractCommand command : addons.getCommands()) {
+                if (command.getName().startsWith(cmd)) {
+                    command.commandResponse(sender, login, args, isOp, true);
                     return;
                 }
             }
-            for (final AbstractModule module : modules) {
+            for (final AbstractModule module : addons.getModules()) {
                 if (module.isPrivateMsgEnabled()) {
                     for (final String c : module.getCommands()) {
                         if (cmd.equals(c)) {
-                            module.commandResponse(this, sender, cmd, args, true);
+                            module.commandResponse(sender, cmd, args, true);
                             return;
                         }
                     }
@@ -870,9 +821,7 @@ public class Mobibot extends PircBot {
      */
     @Override
     protected void onJoin(final String channel, final String sender, final String login, final String hostname) {
-        if (tell.isEnabled()) {
-            tell.send(sender);
-        }
+        tell.send(sender);
     }
 
     /**
@@ -880,9 +829,7 @@ public class Mobibot extends PircBot {
      */
     @Override
     protected void onNickChange(final String oldNick, final String login, final String hostname, final String newNick) {
-        if (tell.isEnabled()) {
-            tell.send(newNick);
-        }
+        tell.send(newNick);
     }
 
     /**
@@ -1009,91 +956,6 @@ public class Mobibot extends PircBot {
             Thread.sleep(secs * 1000L);
         } catch (InterruptedException ignore) {
             // Do nothing
-        }
-    }
-
-    /**
-     * Add an entry to be posted on Twitter.
-     *
-     * @param index The entry index.
-     */
-    public void twitterAddEntry(final int index) {
-        twitterEntries.add(index);
-    }
-
-    /**
-     * Post an entry to twitter.
-     *
-     * @param index The post entry index.
-     */
-    @SuppressFBWarnings("SUI_CONTAINS_BEFORE_REMOVE")
-    public final void twitterEntryPost(final int index) {
-        if (isTwitterAutoPost && twitterEntries.contains(index) && UrlMgr.getEntriesCount() >= index) {
-            final EntryLink entry = UrlMgr.getEntry(index);
-            final String msg =
-                    entry.getTitle() + ' ' + entry.getLink() + " via " + entry.getNick() + " on " + getChannel();
-            new Thread(() -> {
-                try {
-                    if (LOGGER.isDebugEnabled()) {
-                        LOGGER.debug("Posting {}{} to Twitter.", Constants.LINK_CMD, index + 1);
-                    }
-                    twitterModule.post(twitterHandle, msg, false);
-                } catch (ModuleException e) {
-                    LOGGER.warn("Failed to post entry on Twitter.", e);
-                }
-            }).start();
-            twitterEntries.remove(index);
-        }
-    }
-
-    /**
-     * Return the total count of links to be posted to twitter.
-     *
-     * @return The count of twitter links.
-     */
-    public final int twitterLinksCount() {
-        return twitterEntries.size();
-    }
-
-    /**
-     * Send a notification to the registered Twitter handle.
-     *
-     * @param msg The twitter message.
-     */
-    final void twitterNotification(final String msg) {
-        if (twitterModule.isEnabled() && isNotBlank(twitterHandle)) {
-            new Thread(() -> {
-                try {
-                    twitterModule.post(
-                            twitterHandle,
-                            getName() + ' ' + ReleaseInfo.VERSION + " " + msg,
-                            true);
-                } catch (ModuleException e) {
-                    LOGGER.warn("Failed to notify @{}: {}", twitterHandle, msg, e);
-                }
-            }).start();
-        }
-    }
-
-    /**
-     * Removes entry from Twitter auto-post.
-     *
-     * @param index The entry's index.
-     */
-    public final void twitterRemoveEntry(final int index) {
-        twitterEntries.remove(index);
-    }
-
-
-    /**
-     * Post all the links on twitter on shutdown.
-     */
-    final void twitterShutdown() {
-        if (twitterModule.isEnabled() && isNotBlank(twitterHandle)) {
-            LOGGER.debug("Twitter shutdown.");
-            for (final int i : twitterEntries) {
-                twitterEntryPost(i);
-            }
         }
     }
 

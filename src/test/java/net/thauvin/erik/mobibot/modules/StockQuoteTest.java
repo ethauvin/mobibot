@@ -84,6 +84,6 @@ public class StockQuoteTest extends LocalProperties {
 
     @Test
     public void testStockQuoteImpl() {
-        AbstractModuleTest.testAbstractModule(new StockQuote());
+        AbstractModuleTest.testAbstractModule(new StockQuote(null));
     }
 }

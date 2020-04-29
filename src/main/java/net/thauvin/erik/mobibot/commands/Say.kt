@@ -35,11 +35,11 @@ package net.thauvin.erik.mobibot.commands
 import net.thauvin.erik.mobibot.Mobibot
 import net.thauvin.erik.mobibot.Utils
 
-class Say : AbstractCommand() {
-    override val command = "say"
+class Say(bot: Mobibot) : AbstractCommand(bot) {
+    override val name = "say"
     override val help = listOf(
         "To have the bot say something on the channel:",
-        Utils.helpIndent("%c $command <text>")
+        Utils.helpIndent("%c $name <text>")
     )
     override val isOp = true
     override val isPublic = false
@@ -47,7 +47,6 @@ class Say : AbstractCommand() {
 
 
     override fun commandResponse(
-        bot: Mobibot,
         sender: String,
         login: String,
         args: String,

@@ -39,8 +39,8 @@ import net.thauvin.erik.mobibot.commands.AbstractCommand
 import net.thauvin.erik.mobibot.entries.EntriesUtils
 import net.thauvin.erik.mobibot.entries.EntryLink
 
-class Comment : AbstractCommand() {
-    override val command = COMMAND
+class Comment(bot: Mobibot) : AbstractCommand(bot) {
+    override val name = COMMAND
     override val help = listOf(
         "To add a comment:",
         Utils.helpIndent("${Constants.LINK_CMD}1:This is a comment"),
@@ -59,7 +59,6 @@ class Comment : AbstractCommand() {
     }
 
     override fun commandResponse(
-        bot: Mobibot,
         sender: String,
         login: String,
         args: String,
@@ -89,13 +88,12 @@ class Comment : AbstractCommand() {
     }
 
     override fun helpResponse(
-        bot: Mobibot,
         command: String,
         sender: String,
         isOp: Boolean,
         isPrivate: Boolean
     ): Boolean {
-        if (super.helpResponse(bot, command, sender, isOp, isPrivate)) {
+        if (super.helpResponse(command, sender, isOp, isPrivate)) {
             if (isOp) {
                 bot.send(sender, "To change a comment's author:", isPrivate)
                 bot.send(

@@ -55,6 +55,6 @@ public class CalcTest {
 
     @Test
     public void testCalcImpl() {
-        AbstractModuleTest.testAbstractModule(new Calc());
+        AbstractModuleTest.testAbstractModule(new Calc(null));
     }
 }

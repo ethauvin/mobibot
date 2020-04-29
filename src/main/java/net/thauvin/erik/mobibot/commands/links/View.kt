@@ -40,12 +40,12 @@ import net.thauvin.erik.mobibot.commands.links.UrlMgr.Companion.getEntry
 import net.thauvin.erik.mobibot.entries.EntriesUtils
 import net.thauvin.erik.mobibot.entries.EntryLink
 
-class View : AbstractCommand() {
+class View(bot: Mobibot) : AbstractCommand(bot) {
     private val maxEntries = 8
-    override val command = VIEW_CMD
+    override val name = VIEW_CMD
     override val help = listOf(
         "To list or search the current URL posts:",
-        Utils.helpIndent("%c $command [<start>] [<query>]")
+        Utils.helpIndent("%c $name [<start>] [<query>]")
     )
     override val isOp = false
     override val isPublic = true
@@ -56,7 +56,6 @@ class View : AbstractCommand() {
     }
 
     override fun commandResponse(
-        bot: Mobibot,
         sender: String,
         login: String,
         args: String,
@@ -110,7 +109,7 @@ class View : AbstractCommand() {
             i++
             if (sent == maxEntries && i < max) {
                 bot.send(
-                    sender, "To view more, try: " + Utils.bold("${bot.nick}: $command ${i + 1} $lcArgs"), false
+                    sender, "To view more, try: " + Utils.bold("${bot.nick}: $name ${i + 1} $lcArgs"), false
                 )
             }
         }

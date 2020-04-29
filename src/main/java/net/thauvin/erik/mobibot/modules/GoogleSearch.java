@@ -70,16 +70,15 @@ public final class GoogleSearch extends ThreadedModule {
     /**
      * Creates a new {@link GoogleSearch} instance.
      */
-    public GoogleSearch() {
-        super();
+    public GoogleSearch(final Mobibot bot) {
+        super(bot);
 
         commands.add(GOOGLE_CMD);
 
         help.add("To search Google:");
         help.add(Utils.helpIndent("%c " + GOOGLE_CMD + " <query>"));
 
-        properties.put(GOOGLE_API_KEY_PROP, "");
-        properties.put(GOOGLE_CSE_KEY_PROP, "");
+        initProperties(GOOGLE_API_KEY_PROP, GOOGLE_CSE_KEY_PROP);
     }
 
     /**
@@ -146,7 +145,7 @@ public final class GoogleSearch extends ThreadedModule {
      * Searches Google.
      */
     @Override
-    void run(final Mobibot bot, final String sender, final String cmd, final String query, final boolean isPrivate) {
+    void run(final String sender, final String cmd, final String query, final boolean isPrivate) {
         if (StringUtils.isNotBlank(query)) {
             try {
                 final List<Message> results = searchGoogle(query, properties.get(GOOGLE_API_KEY_PROP),
@@ -159,7 +158,7 @@ public final class GoogleSearch extends ThreadedModule {
                 bot.send(sender, e.getMessage(), isPrivate);
             }
         } else {
-            helpResponse(bot, sender, isPrivate);
+            helpResponse(sender, isPrivate);
         }
     }
 }

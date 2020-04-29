@@ -34,7 +34,6 @@ package net.thauvin.erik.mobibot.commands.links
 
 import net.thauvin.erik.mobibot.Constants
 import net.thauvin.erik.mobibot.Mobibot
-import net.thauvin.erik.mobibot.TwitterTimer
 import net.thauvin.erik.mobibot.Utils
 import net.thauvin.erik.mobibot.commands.AbstractCommand
 import net.thauvin.erik.mobibot.commands.Ignore
@@ -44,22 +43,24 @@ import net.thauvin.erik.mobibot.entries.EntryLink
 import org.jsoup.Jsoup
 import java.io.IOException
 
-class UrlMgr(defaultTags: String, keywords: String) : AbstractCommand() {
-    private val keywords: List<String>
-    private val defaultTags: List<String>
-    override val command = Constants.LINK_CMD
+class UrlMgr(bot: Mobibot) : AbstractCommand(bot) {
+    private val keywords: MutableList<String> = ArrayList()
+    private val defaultTags: MutableList<String> = ArrayList()
+
+    override val name = Constants.LINK_CMD
     override val help = emptyList<String>()
     override val isOp = false
     override val isPublic = false
     override val isVisible = false
 
     init {
-        this.keywords = keywords.split(TAG_MATCH.toRegex())
-        this.defaultTags = defaultTags.split(TAG_MATCH.toRegex())
+        initProperties(TAGS_PROP, KEYWORDS_PROP)
     }
 
     companion object {
         const val LINK_MATCH = "^[hH][tT][tT][pP](|[sS])://.*"
+        const val KEYWORDS_PROP = "tags-keywords"
+        const val TAGS_PROP = "tags"
         const val TAG_MATCH = ", *| +"
 
         // Entries array
@@ -118,7 +119,6 @@ class UrlMgr(defaultTags: String, keywords: String) : AbstractCommand() {
     }
 
     override fun commandResponse(
-        bot: Mobibot,
         sender: String,
         login: String,
         args: String,
@@ -157,8 +157,8 @@ class UrlMgr(defaultTags: String, keywords: String) : AbstractCommand() {
                 // Add Entry to pinboard.
                 bot.addPin(entry)
 
-                // Queue link for posting to twitter
-                twitterPost(bot, index)
+                // Queue link for posting to Twitter.
+                bot.twitter.queueEntry(index)
 
                 saveEntries(bot, isBackup)
 
@@ -175,7 +175,6 @@ class UrlMgr(defaultTags: String, keywords: String) : AbstractCommand() {
     }
 
     override fun helpResponse(
-        bot: Mobibot,
         command: String,
         sender: String,
         isOp: Boolean,
@@ -234,11 +233,12 @@ class UrlMgr(defaultTags: String, keywords: String) : AbstractCommand() {
         return false
     }
 
-    private fun twitterPost(bot: Mobibot, index: Int) {
-        if (bot.isTwitterAutoPost) {
-            bot.twitterAddEntry(index)
-            bot.logger.debug("Scheduling ${Constants.LINK_CMD}${index + 1} for posting on Twitter.")
-            bot.timer.schedule(TwitterTimer(bot, index), Constants.TIMER_DELAY * 60L * 1000L)
+    override fun setProperty(key: String, value: String) {
+        super.setProperty(key, value)
+        if (KEYWORDS_PROP == key) {
+            keywords.addAll(value.split(TAG_MATCH.toRegex()))
+        } else if (KEYWORDS_PROP == key) {
+            defaultTags.addAll(value.split(TAG_MATCH.toRegex()))
         }
     }
 }

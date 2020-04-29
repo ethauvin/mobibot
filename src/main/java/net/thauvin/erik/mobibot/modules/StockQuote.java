@@ -76,14 +76,14 @@ public final class StockQuote extends ThreadedModule {
     /**
      * Creates a new {@link StockQuote} instance.
      */
-    public StockQuote() {
-        super();
+    public StockQuote(final Mobibot bot) {
+        super(bot);
         commands.add(STOCK_CMD);
 
         help.add("To retrieve a stock quote:");
         help.add(Utils.helpIndent("%c " + STOCK_CMD + " <symbol|keywords>"));
 
-        properties.put(ALPHAVANTAGE_API_KEY_PROP, "");
+        initProperties(ALPHAVANTAGE_API_KEY_PROP);
     }
 
     @SuppressFBWarnings(value = "NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE",
@@ -208,7 +208,7 @@ public final class StockQuote extends ThreadedModule {
      * Returns the specified stock quote from Alpha Avantage.
      */
     @Override
-    void run(final Mobibot bot, final String sender, final String cmd, final String symbol, final boolean isPrivate) {
+    void run(final String sender, final String cmd, final String symbol, final boolean isPrivate) {
         if (StringUtils.isNotBlank(symbol)) {
             try {
                 final List<Message> messages = getQuote(symbol, properties.get(ALPHAVANTAGE_API_KEY_PROP));
@@ -220,7 +220,7 @@ public final class StockQuote extends ThreadedModule {
                 bot.send(e.getMessage());
             }
         } else {
-            helpResponse(bot, sender, isPrivate);
+            helpResponse(sender, isPrivate);
         }
     }
 }
