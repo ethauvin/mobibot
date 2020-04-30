@@ -35,7 +35,7 @@ package net.thauvin.erik.mobibot.entries;
 import com.rometools.rome.feed.synd.SyndCategory;
 import com.rometools.rome.feed.synd.SyndCategoryImpl;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-import net.thauvin.erik.mobibot.commands.links.UrlMgr;
+import net.thauvin.erik.mobibot.commands.links.LinksMgr;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.Serializable;
@@ -347,7 +347,7 @@ public class EntryLink implements Serializable {
      * @param tags The space-delimited tags.
      */
     public final void setTags(final String tags) {
-        setTags(Arrays.asList(tags.split(UrlMgr.TAG_MATCH)));
+        setTags(Arrays.asList(tags.split(LinksMgr.TAG_MATCH)));
     }
 
     /**

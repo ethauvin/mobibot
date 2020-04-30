@@ -68,8 +68,8 @@ class Comment(bot: Mobibot) : AbstractCommand(bot) {
         val cmds = args.substring(1).split("[.:]".toRegex(), 3)
         val index = cmds[0].toInt() - 1
 
-        if (index < UrlMgr.entriesCount) {
-            val entry: EntryLink = UrlMgr.getEntry(index)
+        if (index < LinksMgr.entriesCount) {
+            val entry: EntryLink = LinksMgr.getEntry(index)
             val commentIndex = cmds[1].toInt() - 1
             if (commentIndex < entry.commentsCount) {
                 when (val cmd = cmds[2].trim()) {
@@ -124,7 +124,7 @@ class Comment(bot: Mobibot) : AbstractCommand(bot) {
             val comment = entry.getComment(commentIndex)
             comment.nick = cmd.substring(1)
             bot.send(EntriesUtils.buildComment(index, commentIndex, comment))
-            UrlMgr.saveEntries(bot, false)
+            LinksMgr.saveEntries(bot, false)
         } else {
             bot.send(sender, "Please ask a channel op to change the author of this comment for you.", false)
         }
@@ -141,7 +141,7 @@ class Comment(bot: Mobibot) : AbstractCommand(bot) {
         if (isOp || sender == entry.getComment(commentIndex).nick) {
             entry.deleteComment(commentIndex)
             bot.send("Comment ${Constants.LINK_CMD}${index + 1}.${commentIndex + 1} removed.")
-            UrlMgr.saveEntries(bot, false)
+            LinksMgr.saveEntries(bot, false)
         } else {
             bot.send(sender, "Please ask a channel op to delete this comment for you.", false)
         }
@@ -151,7 +151,7 @@ class Comment(bot: Mobibot) : AbstractCommand(bot) {
         entry.setComment(commentIndex, cmd, sender)
         val comment = entry.getComment(commentIndex)
         bot.send(sender, EntriesUtils.buildComment(index, commentIndex, comment), false)
-        UrlMgr.saveEntries(bot, false)
+        LinksMgr.saveEntries(bot, false)
     }
 
     private fun showComment(bot: Mobibot, entry: EntryLink, index: Int, commentIndex: Int) {

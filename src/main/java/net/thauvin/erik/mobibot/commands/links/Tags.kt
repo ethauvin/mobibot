@@ -63,15 +63,15 @@ class Tags(bot: Mobibot) : AbstractCommand(bot) {
         val cmds = args.substring(1).split("T:", limit = 2)
         val index = cmds[0].toInt() - 1
 
-        if (index < UrlMgr.entriesCount) {
+        if (index < LinksMgr.entriesCount) {
             val cmd = cmds[1].trim()
-            val entry: EntryLink = UrlMgr.getEntry(index)
+            val entry: EntryLink = LinksMgr.getEntry(index)
             if (cmd.isNotEmpty()) {
                 if (entry.login == login || isOp) {
                     entry.setTags(cmd)
                     bot.updatePin(entry.link, entry)
                     bot.send(EntriesUtils.buildTags(index, entry))
-                    UrlMgr.saveEntries(bot, false)
+                    LinksMgr.saveEntries(bot, false)
                 } else {
                     bot.send(sender, "Please ask a channel op to change the tags for you.",isPrivate)
                 }

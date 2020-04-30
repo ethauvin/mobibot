@@ -33,8 +33,8 @@
 package net.thauvin.erik.mobibot.commands
 
 import net.thauvin.erik.mobibot.Mobibot
-import net.thauvin.erik.mobibot.commands.links.UrlMgr.Companion.addHistory
-import net.thauvin.erik.mobibot.commands.links.UrlMgr.Companion.getHistory
+import net.thauvin.erik.mobibot.commands.links.LinksMgr.Companion.addHistory
+import net.thauvin.erik.mobibot.commands.links.LinksMgr.Companion.getHistory
 import net.thauvin.erik.mobibot.entries.EntriesMgr
 import java.io.File
 

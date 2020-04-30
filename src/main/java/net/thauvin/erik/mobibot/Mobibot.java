@@ -48,9 +48,9 @@ import net.thauvin.erik.mobibot.commands.Say;
 import net.thauvin.erik.mobibot.commands.Users;
 import net.thauvin.erik.mobibot.commands.Versions;
 import net.thauvin.erik.mobibot.commands.links.Comment;
+import net.thauvin.erik.mobibot.commands.links.LinksMgr;
 import net.thauvin.erik.mobibot.commands.links.Posting;
 import net.thauvin.erik.mobibot.commands.links.Tags;
-import net.thauvin.erik.mobibot.commands.links.UrlMgr;
 import net.thauvin.erik.mobibot.commands.links.View;
 import net.thauvin.erik.mobibot.commands.tell.Tell;
 import net.thauvin.erik.mobibot.entries.EntriesMgr;
@@ -96,6 +96,7 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.Properties;
 import java.util.Timer;
+import java.util.regex.Pattern;
 
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.apache.commons.lang3.StringUtils.lowerCase;
@@ -184,8 +185,8 @@ public class Mobibot extends PircBot {
 
         // Load the current entries and backlogs, if any
         try {
-            UrlMgr.startup(logsDir + EntriesMgr.CURRENT_XML, logsDir + EntriesMgr.NAV_XML, ircChannel);
-            LOGGER.debug("Last feed: {}", UrlMgr.getStartDate());
+            LinksMgr.startup(logsDir + EntriesMgr.CURRENT_XML, logsDir + EntriesMgr.NAV_XML, ircChannel);
+            LOGGER.debug("Last feed: {}", LinksMgr.getStartDate());
         } catch (Exception e) {
             LOGGER.error("An error occurred while loading the logs.", e);
         }
@@ -228,7 +229,7 @@ public class Mobibot extends PircBot {
         addons.add(new Comment(this), p);
         addons.add(new Posting(this), p);
         addons.add(new Tags(this), p);
-        addons.add(new UrlMgr(this), p);
+        addons.add(new LinksMgr(this), p);
         addons.add(new View(this), p);
 
         // Load the modules
@@ -253,7 +254,7 @@ public class Mobibot extends PircBot {
         addons.sort();
 
         // Save the entries
-        UrlMgr.saveEntries(this, true);
+        LinksMgr.saveEntries(this, true);
     }
 
     /**
@@ -286,20 +287,20 @@ public class Mobibot extends PircBot {
 
         // Parse the command line
         final CommandLineParser parser = new DefaultParser();
-        CommandLine line = null;
+        CommandLine commandLine = null;
 
         try {
-            line = parser.parse(options, args);
+            commandLine = parser.parse(options, args);
         } catch (ParseException e) {
             System.err.println("CLI Parsing failed.  Reason: " + e.getMessage());
             e.printStackTrace(System.err);
             System.exit(1);
         }
 
-        if (line.hasOption(Constants.HELP_ARG.charAt(0))) {
+        if (commandLine.hasOption(Constants.HELP_ARG.charAt(0))) {
             // Output the usage
             new HelpFormatter().printHelp(Mobibot.class.getName(), options);
-        } else if (line.hasOption(Constants.VERSION_ARG.charAt(0))) {
+        } else if (commandLine.hasOption(Constants.VERSION_ARG.charAt(0))) {
             for (final String s : INFO) {
                 System.out.println(s);
             }
@@ -307,7 +308,7 @@ public class Mobibot extends PircBot {
             final Properties p = new Properties();
 
             try (final InputStream fis = Files.newInputStream(
-                    Paths.get(line.getOptionValue(Constants.PROPS_ARG.charAt(0), "./mobibot.properties")))) {
+                    Paths.get(commandLine.getOptionValue(Constants.PROPS_ARG.charAt(0), "./mobibot.properties")))) {
                 // Load the properties files
                 p.load(fis);
             } catch (FileNotFoundException e) {
@@ -325,7 +326,7 @@ public class Mobibot extends PircBot {
             final String logsDir = Utils.ensureDir(p.getProperty("logs", "."), false);
 
             // Redirect the stdout and stderr
-            if (!line.hasOption(Constants.DEBUG_ARG.charAt(0))) {
+            if (!commandLine.hasOption(Constants.DEBUG_ARG.charAt(0))) {
                 try {
                     final PrintStream stdout = new PrintStream(
                             new FileOutputStream(logsDir + channel.substring(1) + '.' + Utils.today() + ".log", true));
@@ -491,26 +492,6 @@ public class Mobibot extends PircBot {
      */
     public final List<String> getModulesNames() {
         return addons.getModulesNames();
-    }
-
-    /**
-     * Returns the bot's nickname regexp pattern.
-     *
-     * @return The nickname regexp pattern.
-     */
-    private String getNickPattern() {
-        final StringBuilder buff = new StringBuilder(0);
-
-        for (final char c : getNick().toCharArray()) {
-            if (Character.isLetter(c)) {
-                buff.append('[').append(lowerCase(String.valueOf(c))).append(StringUtils.upperCase(String.valueOf(c)))
-                    .append(']');
-            } else {
-                buff.append(c);
-            }
-        }
-
-        return buff.toString();
     }
 
     /**
@@ -700,7 +681,7 @@ public class Mobibot extends PircBot {
 
         tell.send(sender, true);
 
-        if (message.matches(getNickPattern() + ":.*")) { // mobibot: <command>
+        if (message.matches("(?i)" + Pattern.quote(getNick()) + ":.*")) { // mobibot: <command>
             final String[] cmds = message.substring(message.indexOf(':') + 1).trim().split(" ", 2);
             final String cmd = lowerCase(cmds[0]);
 

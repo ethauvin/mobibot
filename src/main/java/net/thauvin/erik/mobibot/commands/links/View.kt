@@ -35,8 +35,8 @@ package net.thauvin.erik.mobibot.commands.links
 import net.thauvin.erik.mobibot.Mobibot
 import net.thauvin.erik.mobibot.Utils
 import net.thauvin.erik.mobibot.commands.AbstractCommand
-import net.thauvin.erik.mobibot.commands.links.UrlMgr.Companion.entriesCount
-import net.thauvin.erik.mobibot.commands.links.UrlMgr.Companion.getEntry
+import net.thauvin.erik.mobibot.commands.links.LinksMgr.Companion.entriesCount
+import net.thauvin.erik.mobibot.commands.links.LinksMgr.Companion.getEntry
 import net.thauvin.erik.mobibot.entries.EntriesUtils
 import net.thauvin.erik.mobibot.entries.EntryLink
 

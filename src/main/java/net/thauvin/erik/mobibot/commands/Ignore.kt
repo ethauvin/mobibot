@@ -34,7 +34,7 @@ package net.thauvin.erik.mobibot.commands
 
 import net.thauvin.erik.mobibot.Mobibot
 import net.thauvin.erik.mobibot.Utils
-import net.thauvin.erik.mobibot.commands.links.UrlMgr
+import net.thauvin.erik.mobibot.commands.links.LinksMgr
 import java.util.*
 
 class Ignore(bot: Mobibot) : AbstractCommand(bot) {
@@ -150,7 +150,7 @@ class Ignore(bot: Mobibot) : AbstractCommand(bot) {
     override fun setProperty(key: String, value: String) {
         super.setProperty(key, value)
         if (IGNORE_PROP == key) {
-            ignored.addAll(value.split(UrlMgr.LINK_MATCH.toRegex()))
+            ignored.addAll(value.split(LinksMgr.LINK_MATCH.toRegex()))
         }
     }
 

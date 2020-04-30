@@ -38,7 +38,7 @@ import net.thauvin.erik.mobibot.Mobibot;
 import net.thauvin.erik.mobibot.ReleaseInfo;
 import net.thauvin.erik.mobibot.TwitterTimer;
 import net.thauvin.erik.mobibot.Utils;
-import net.thauvin.erik.mobibot.commands.links.UrlMgr;
+import net.thauvin.erik.mobibot.commands.links.LinksMgr;
 import net.thauvin.erik.mobibot.entries.EntryLink;
 import net.thauvin.erik.mobibot.msg.Message;
 import net.thauvin.erik.mobibot.msg.NoticeMessage;
@@ -221,8 +221,8 @@ public final class Twitter extends ThreadedModule {
      */
     @SuppressFBWarnings("SUI_CONTAINS_BEFORE_REMOVE")
     public final void postEntry(final int index) {
-        if (isAutoPost() && hasEntry(index) && UrlMgr.getEntriesCount() >= index) {
-            final EntryLink entry = UrlMgr.getEntry(index);
+        if (isAutoPost() && hasEntry(index) && LinksMgr.getEntriesCount() >= index) {
+            final EntryLink entry = LinksMgr.getEntry(index);
             final String msg =
                     entry.getTitle() + ' ' + entry.getLink() + " via " + entry.getNick() + " on " + bot.getChannel();
             new Thread(() -> {

@@ -34,7 +34,7 @@ package net.thauvin.erik.mobibot.commands
 
 import net.thauvin.erik.mobibot.Mobibot
 import net.thauvin.erik.mobibot.Utils
-import net.thauvin.erik.mobibot.commands.links.UrlMgr
+import net.thauvin.erik.mobibot.commands.links.LinksMgr
 import java.lang.management.ManagementFactory
 
 class Info(bot: Mobibot) : AbstractCommand(bot) {
@@ -63,7 +63,7 @@ class Info(bot: Mobibot) : AbstractCommand(bot) {
         with(info) {
             append(Utils.uptime(ManagementFactory.getRuntimeMXBean().uptime))
             append(" [Entries: ")
-            append(UrlMgr.entriesCount)
+            append(LinksMgr.entriesCount)
 
             if (isOp) {
                 if (bot.tell.isEnabled()) {

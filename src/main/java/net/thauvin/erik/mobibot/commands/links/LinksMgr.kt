@@ -43,7 +43,7 @@ import net.thauvin.erik.mobibot.entries.EntryLink
 import org.jsoup.Jsoup
 import java.io.IOException
 
-class UrlMgr(bot: Mobibot) : AbstractCommand(bot) {
+class LinksMgr(bot: Mobibot) : AbstractCommand(bot) {
     private val keywords: MutableList<String> = ArrayList()
     private val defaultTags: MutableList<String> = ArrayList()
 

@@ -14,6 +14,6 @@
     <ID>MagicNumber:View.kt$View$8</ID>
     <ID>NestedBlockDepth:Addons.kt$Addons$add</ID>
     <ID>NestedBlockDepth:Comment.kt$Comment$commandResponse</ID>
-    <ID>NestedBlockDepth:UrlMgr.kt$UrlMgr$commandResponse</ID>
+    <ID>NestedBlockDepth:LinksMgr.kt$LinksMgr$commandResponse</ID>
   </Whitelist>
 </SmellBaseline>
