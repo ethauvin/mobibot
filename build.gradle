@@ -2,7 +2,7 @@ plugins {
     id 'application'
     id 'checkstyle'
     id 'com.github.ben-manes.versions' version '0.28.0'
-    id 'com.github.spotbugs' version '4.0.7'
+    id 'com.github.spotbugs' version '4.0.8'
     id 'idea'
     id 'io.gitlab.arturbosch.detekt' version '1.8.0'
     id 'jacoco'
@@ -48,7 +48,7 @@ dependencies {
     implementation 'commons-cli:commons-cli:1.4'
 
     implementation 'commons-net:commons-net:3.6'
-    implementation 'com.squareup.okhttp3:okhttp:4.5.0'
+    implementation 'com.squareup.okhttp3:okhttp:4.6.0'
 
     implementation 'com.rometools:rome:1.12.2'
 
@@ -113,10 +113,6 @@ pmd {
 
 detekt {
     baseline = file("detekt-baseline.xml")
-}
-
-tasks.withType(io.gitlab.arturbosch.detekt.Detekt) {
-    exclude("**/**.java")
 }
 
 tasks.withType(JavaCompile) {
