@@ -237,7 +237,7 @@ class LinksMgr(bot: Mobibot) : AbstractCommand(bot) {
         super.setProperty(key, value)
         if (KEYWORDS_PROP == key) {
             keywords.addAll(value.split(TAG_MATCH.toRegex()))
-        } else if (KEYWORDS_PROP == key) {
+        } else if (TAGS_PROP == key) {
             defaultTags.addAll(value.split(TAG_MATCH.toRegex()))
         }
     }
