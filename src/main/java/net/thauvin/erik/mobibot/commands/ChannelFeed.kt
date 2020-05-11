@@ -50,6 +50,10 @@ class ChannelFeed(bot: Mobibot, channel: String) : AbstractCommand(bot) {
         const val FEED_PROP = "feed"
     }
 
+    init {
+        initProperties(FEED_PROP)
+    }
+
     override fun commandResponse(
         sender: String,
         login: String,
