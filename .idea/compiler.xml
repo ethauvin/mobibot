@@ -4,19 +4,10 @@
     <annotationProcessing>
       <profile name="Gradle Imported" enabled="true">
         <outputRelativeToContentRoot value="true" />
-        <option name="semver.project.dir" value="K:\java\mobibot" />
+        <option name="semver.project.dir" value="$PROJECT_DIR$" />
         <processorPath useClasspath="false">
-          <entry name="$MAVEN_REPOSITORY$/net/thauvin/erik/semver/1.2.0/semver-1.2.0.jar" />
-          <entry name="$MAVEN_REPOSITORY$/com/github/spullara/mustache/java/compiler/0.9.6/compiler-0.9.6.jar" />
-        </processorPath>
-        <module name="mobibot.main" />
-      </profile>
-      <profile name="Gradle Imported" enabled="true">
-        <outputRelativeToContentRoot value="true" />
-        <option name="semver.project.dir" value="K:\java\mobibot" />
-        <processorPath useClasspath="false">
-          <entry name="$MAVEN_REPOSITORY$/net/thauvin/erik/semver/1.2.0/semver-1.2.0.jar" />
-          <entry name="$MAVEN_REPOSITORY$/com/github/spullara/mustache/java/compiler/0.9.6/compiler-0.9.6.jar" />
+          <entry name="$USER_HOME$/.gradle/caches/modules-2/files-2.1/net.thauvin.erik/semver/1.2.0/1009ce8f284d9d9e839aae2d7a6e0bf2a2b401bf/semver-1.2.0.jar" />
+          <entry name="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.spullara.mustache.java/compiler/0.9.6/1b8707299c34406ed0ba40bbf8513352ac4765c9/compiler-0.9.6.jar" />
         </processorPath>
         <module name="mobibot.main" />
       </profile>
