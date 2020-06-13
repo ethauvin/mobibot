@@ -73,6 +73,6 @@ public class TwitterTest extends LocalProperties {
                 getProperty(Twitter.TOKEN_SECRET_PROP),
                 getProperty(Twitter.HANDLE_PROP),
                 msg,
-                true).getText()).as("twitterPost(" + msg + ')').isEqualTo(msg);
+                true).getMsg()).as("twitterPost(" + msg + ')').isEqualTo(msg);
     }
 }

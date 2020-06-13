@@ -101,7 +101,7 @@ public final class Joke extends ThreadedModule {
     @Override
     void run(final String sender, final String cmd, final String arg, final boolean isPrivate) {
         try {
-            bot.send(Utils.cyan(randomJoke().getText()));
+            bot.send(Utils.cyan(randomJoke().getMsg()));
         } catch (ModuleException e) {
             bot.getLogger().warn(e.getDebugMessage(), e);
             bot.send(sender, e.getMessage(), isPrivate);

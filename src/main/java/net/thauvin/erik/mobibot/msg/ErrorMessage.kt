@@ -38,29 +38,11 @@ package net.thauvin.erik.mobibot.msg
  * @created 2019-04-07
  * @since 1.0
  */
-class ErrorMessage : Message {
-    /**
-     * Creates a new error message.
-     *
-     * @param text The error message.
-     */
-    constructor(text: String) : super() {
-        this.text = text
-        isError = true
-        isNotice = true
-    }
-
-    /**
-     * Creates a new error message.
-     *
-     * @param text The message.
-     * @param color The message color.
-     */
-    @Suppress("unused")
-    constructor(text: String, color: String) : super() {
-        this.text = text
-        isError = true
-        isNotice = true
+class ErrorMessage @JvmOverloads constructor(msg: String, color: String = DEFAULT_COLOR) : Message() {
+    init {
+        this.msg = msg
         this.color = color
+        isError = true
+        isNotice = true
     }
 }

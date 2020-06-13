@@ -39,25 +39,9 @@ package net.thauvin.erik.mobibot.msg
  * @since 1.0
  */
 @Suppress("unused")
-class PrivateMessage : Message {
-    /**
-     * Creates a new private message.
-     *
-     * @param text The message.
-     */
-    constructor(text: String) : super() {
-        this.text = text
-        isPrivate = true
-    }
-
-    /**
-     * Creates a new private message.
-     *
-     * @param text The message.
-     * @param color The message color.
-     */
-    constructor(text: String, color: String) : super() {
-        this.text = text
+class PrivateMessage @JvmOverloads constructor(msg: String, color: String = DEFAULT_COLOR) : Message() {
+    init {
+        this.msg = msg
         this.color = color
         isPrivate = true
     }

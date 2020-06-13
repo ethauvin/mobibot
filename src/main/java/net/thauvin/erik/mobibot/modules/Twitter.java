@@ -258,7 +258,7 @@ public final class Twitter extends ThreadedModule {
     void run(final String sender, final String cmd, final String message, final boolean isPrivate) {
         try {
             bot.send(sender,
-                     post(sender, message + " (by " + sender + " on " + bot.getChannel() + ')', false).getText(),
+                     post(sender, message + " (by " + sender + " on " + bot.getChannel() + ')', false).getMsg(),
                      isPrivate);
         } catch (ModuleException e) {
             bot.getLogger().warn(e.getDebugMessage(), e);

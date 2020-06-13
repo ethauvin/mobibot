@@ -38,25 +38,9 @@ package net.thauvin.erik.mobibot.msg
  * @created 2019-04-07
  * @since 1.0
  */
-class PublicMessage : Message {
-    /**
-     * Creates a new public message.
-     *
-     * @param text The message.
-     */
-    constructor(text: String) : super() {
-        this.text = text
-    }
-
-    /**
-     * Creates a new public message.
-     *
-     * @param text The message.
-     * @param color The message color.
-     */
-    @Suppress("unused")
-    constructor(text: String, color: String) : super() {
-        this.text = text
+class PublicMessage @JvmOverloads constructor(msg: String, color: String = DEFAULT_COLOR) : Message() {
+    init {
+        this.msg = msg
         this.color = color
     }
 }

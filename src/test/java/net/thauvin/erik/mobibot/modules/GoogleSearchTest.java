@@ -63,11 +63,11 @@ public class GoogleSearchTest extends LocalProperties {
         try {
             List<Message> messages = GoogleSearch.searchGoogle("mobibot site:github.com", apiKey, cseKey);
             assertThat(messages).as("mobibot results not empty").isNotEmpty();
-            assertThat(messages.get(0).getText()).as("found mobitopia").contains("mobibot");
+            assertThat(messages.get(0).getMsg()).as("found mobitopia").contains("mobibot");
 
             messages = GoogleSearch.searchGoogle("aapl", apiKey, cseKey);
             assertThat(messages).as("aapl results not empty").isNotEmpty();
-            assertThat(messages.get(0).getText()).as("found apple").containsIgnoringCase("apple");
+            assertThat(messages.get(0).getMsg()).as("found apple").containsIgnoringCase("apple");
 
             assertThatThrownBy(() -> GoogleSearch.searchGoogle("test", "", "apiKey")).as("no API key").isInstanceOf(
                     ModuleException.class).hasNoCause();

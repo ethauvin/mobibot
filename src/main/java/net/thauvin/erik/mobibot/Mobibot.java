@@ -850,7 +850,7 @@ public class Mobibot extends PircBot {
      * @param message The message.
      */
     public final void send(final String who, final Message message) {
-        send(message.isNotice() ? who : getChannel(), message.getText(), message.getColor(), message.isPrivate());
+        send(message.isNotice() ? who : getChannel(), message.getMsg(), message.getColor(), message.isPrivate());
     }
 
     /**

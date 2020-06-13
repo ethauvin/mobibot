@@ -38,26 +38,10 @@ package net.thauvin.erik.mobibot.msg
  * @created 2019-04-07
  * @since 1.0
  */
-class NoticeMessage : Message {
-    /**
-     * Creates a new notice.
-     *
-     * @param text The notice's message.
-     */
-    constructor(text: String) : super() {
-        this.text = text
-        isNotice = true
-    }
-
-    /**
-     * Create a new notice.
-     *
-     * @param text The notice's message.
-     * @param color The color.
-     */
-    constructor(text: String, color: String) : super() {
-        this.text = text
-        isNotice = true
+class NoticeMessage @JvmOverloads constructor(msg: String, color: String = DEFAULT_COLOR) : Message() {
+    init {
+        this.msg = msg
         this.color = color
+        isNotice = true
     }
 }

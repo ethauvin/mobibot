@@ -41,8 +41,12 @@ import org.jibble.pircbot.Colors
  * @since 1.0
  */
 open class Message {
+    companion object {
+        var DEFAULT_COLOR = Colors.NORMAL
+    }
+
     /** Color */
-    var color = Colors.NORMAL
+    var color = DEFAULT_COLOR
 
     /** Error */
     var isError = false
@@ -54,7 +58,7 @@ open class Message {
     var isPrivate = false
 
     /** Message text*/
-    var text = ""
+    var msg = ""
 
     /** Creates a new message. */
     constructor() {
@@ -64,42 +68,18 @@ open class Message {
     /**
      * Creates a new message.
      *
-     * @param text The message.
-     * @param isNotice The notice flag.
-     * @param isError The error flag.
-     * @param isPrivate The Private message
-     */
-    constructor(text: String, isNotice: Boolean, isError: Boolean, isPrivate: Boolean) {
-        this.text = text
-        this.isNotice = isNotice
-        this.isError = isError
-        this.isPrivate = isPrivate
-    }
-
-    /**
-     * Creates a new message.
-     *
-     * @param text The message.
-     * @param isNotice The notice flag.
-     * @param isError The error flag.
-     * @param isPrivate The Private message
+     * @param msg The message.
      * @param color The color.
+     * @param isNotice The notice flag.
+     * @param isError The error flag.
+     * @param isPrivate The private flag.
      */
-    constructor(
-        text: String,
-        isNotice: Boolean,
-        isError: Boolean,
-        isPrivate: Boolean,
-        color: String
-    ) {
-        this.text = text
+    @JvmOverloads
+    constructor(msg: String, color: String = DEFAULT_COLOR, isNotice: Boolean, isError: Boolean, isPrivate: Boolean) {
+        this.msg = msg
+        this.color = color
         this.isNotice = isNotice
         this.isError = isError
         this.isPrivate = isPrivate
-        this.color = color
-    }
-
-    override fun toString(): String {
-        return "Message(color='$color', isError=$isError, isNotice=$isNotice, isPrivate=$isPrivate, message='$text')"
     }
 }
