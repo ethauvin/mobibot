@@ -13,7 +13,7 @@ addons:
     organization: "ethauvin-github"
 
 jdk:
-  - oraclejdk9
+  - openjdk11
   - openjdk14
 
 before_install:
@@ -21,6 +21,6 @@ before_install:
 
 after_success:
   - |
-      if [ "${TRAVIS_TEST_RESULT}" == 0 ] && [ "$TRAVIS_JDK_VERSION" == oraclejdk9 ]; then
+      if [ "${TRAVIS_TEST_RESULT}" == 0 ] && [ "$TRAVIS_JDK_VERSION" == openjdk11 ]; then
         ./gradlew sonarqube
       fi

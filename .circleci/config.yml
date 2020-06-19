@@ -34,15 +34,15 @@ jobs:
     <<: *defaults
 
     docker:
-      - image: cimg/openjdk:14.0
+      - image: cimg/openjdk:14.0.1
 
     <<: *defaults_gradle
 
-  build_gradle_jdk9:
+  build_gradle_jdk11:
     <<: *defaults
 
     docker:
-      - image: circleci/openjdk:9
+      - image: circleci/openjdk:11.0.7
 
     <<: *defaults_gradle
 
@@ -50,6 +50,6 @@ workflows:
   version: 2
   gradle:
         jobs:
-        - build_gradle_jdk9
+        - build_gradle_jdk11
         - build_gradle_jdk14
 

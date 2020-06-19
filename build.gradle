@@ -74,7 +74,6 @@ dependencies {
 
     compileOnly "com.github.spotbugs:spotbugs-annotations:$versions.spotbugs"
     testCompileOnly "com.github.spotbugs:spotbugs-annotations:$versions.spotbugs"
-
 }
 
 test {

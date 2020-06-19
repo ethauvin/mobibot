@@ -36,18 +36,12 @@ import net.thauvin.erik.mobibot.entries.EntryLink
 import net.thauvin.erik.pinboard.PinboardPoster
 import org.testng.Assert
 import org.testng.annotations.Test
-import java.io.IOException
-import java.net.URI
-import java.net.URISyntaxException
+import java.net.URL
 import java.net.URLEncoder
-import java.net.http.HttpClient
-import java.net.http.HttpRequest
-import java.net.http.HttpResponse
 import java.nio.charset.StandardCharsets
 
 class PinboardUtilsTest : LocalProperties() {
     @Test
-    @Throws(InterruptedException::class, IOException::class, URISyntaxException::class)
     fun pinboardTest() {
         val apiToken = getProperty("pinboard-api-token")
         val pinboard = PinboardPoster(apiToken)
@@ -66,21 +60,10 @@ class PinboardUtilsTest : LocalProperties() {
         Assert.assertFalse(validatePin(apiToken, url = entry.link), "delete")
     }
 
-    @Throws(IOException::class, URISyntaxException::class, InterruptedException::class)
     private fun validatePin(apiToken: String, ircServer: String = "", url: String): Boolean {
-        val request = HttpRequest.newBuilder().uri(
-            URI(
-                "https://api.pinboard.in/v1/posts/get?auth_token=${apiToken}&tag=test&"
-                    + URLEncoder.encode(url, StandardCharsets.UTF_8)
-            )
-        ).GET().build()
+        val response = Utils.urlReader(URL("https://api.pinboard.in/v1/posts/get?auth_token=${apiToken}&tag=test&"
+                                + URLEncoder.encode(url, StandardCharsets.UTF_8)))
 
-        val response = HttpClient.newBuilder()
-            .build()
-            .send(request, HttpResponse.BodyHandlers.ofString())
-
-        return if (response.statusCode() == 200) {
-            response.body().contains(url) && response.body().contains(ircServer)
-        } else false
+        return response.contains(url) && response.contains(ircServer)
     }
 }

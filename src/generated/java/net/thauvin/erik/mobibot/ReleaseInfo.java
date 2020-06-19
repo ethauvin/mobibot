@@ -14,13 +14,13 @@ import java.time.*;
 public final class ReleaseInfo {
     public static final String PROJECT = "mobibot";
     public static final LocalDateTime BUILDDATE =
-        LocalDateTime.ofInstant(Instant.ofEpochMilli(1592043035449L), ZoneId.systemDefault());
+        LocalDateTime.ofInstant(Instant.ofEpochMilli(1592615322387L), ZoneId.systemDefault());
     public static final int MAJOR = 0;
     public static final int MINOR = 8;
     public static final int PATCH = 0;
     public static final String PRERELEASE = "beta";
-    public static final String BUILDMETA = "004";
-    public static final String VERSION = "0.8.0-beta+004";
+    public static final String BUILDMETA = "046";
+    public static final String VERSION = "0.8.0-beta+046";
 
     /**
      * Disables the default constructor.
