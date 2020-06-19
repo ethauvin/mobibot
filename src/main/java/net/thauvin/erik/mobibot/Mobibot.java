@@ -70,6 +70,7 @@ import net.thauvin.erik.mobibot.modules.War;
 import net.thauvin.erik.mobibot.modules.Weather2;
 import net.thauvin.erik.mobibot.modules.WorldTime;
 import net.thauvin.erik.mobibot.msg.Message;
+import net.thauvin.erik.pinboard.PinboardPoster;
 import net.thauvin.erik.semver.Version;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -96,6 +97,7 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.Properties;
 import java.util.Timer;
+import java.util.logging.ConsoleHandler;
 import java.util.regex.Pattern;
 
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
@@ -154,7 +156,7 @@ public class Mobibot extends PircBot {
     // NickServ ident password
     private String identPwd = "";
     // Pinboard posts handler
-    private Pinboard pinboard;
+    private PinboardPoster pinboard;
     // Weblog URL
     private String weblogUrl = "";
 
@@ -383,7 +385,7 @@ public class Mobibot extends PircBot {
      */
     public final void addPin(final EntryLink entry) {
         if (pinboard != null) {
-            pinboard.addPost(entry);
+            PinboardUtils.addPin(pinboard, ircServer, entry);
         }
     }
 
@@ -423,7 +425,7 @@ public class Mobibot extends PircBot {
      */
     public final void deletePin(final int index, final EntryLink entry) {
         if (pinboard != null) {
-            pinboard.deletePost(entry);
+            PinboardUtils.deletePin(pinboard, entry);
         }
         if (twitter.isAutoPost()) {
             twitter.removeEntry(index);
@@ -914,7 +916,13 @@ public class Mobibot extends PircBot {
      */
     final void setPinboardAuth(final String apiToken) {
         if (isNotBlank(apiToken)) {
-            pinboard = new Pinboard(this, apiToken);
+            pinboard = new PinboardPoster(apiToken);
+            if (LOGGER.isDebugEnabled()) {
+                final ConsoleHandler consoleHandler = new ConsoleHandler();
+                consoleHandler.setLevel(java.util.logging.Level.FINE);
+                pinboard.getLogger().addHandler(consoleHandler);
+                pinboard.getLogger().setLevel(java.util.logging.Level.FINE);
+            }
         }
     }
 
@@ -948,7 +956,7 @@ public class Mobibot extends PircBot {
      */
     public final void updatePin(final String oldUrl, final EntryLink entry) {
         if (pinboard != null) {
-            pinboard.updatePost(oldUrl, entry);
+            PinboardUtils.updatePin(pinboard, ircServer, oldUrl, entry);
         }
     }
 }

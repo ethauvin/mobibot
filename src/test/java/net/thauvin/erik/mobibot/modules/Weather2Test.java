@@ -34,6 +34,7 @@ package net.thauvin.erik.mobibot.modules;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import net.aksingh.owmjapis.api.APIException;
+import net.thauvin.erik.mobibot.LocalProperties;
 import net.thauvin.erik.mobibot.msg.Message;
 import org.testng.annotations.Test;
 

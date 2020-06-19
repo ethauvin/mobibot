@@ -1,7 +1,7 @@
 /*
  * LocalProperties.java
  *
- * Copyright (c) 2004-2019, Erik C. Thauvin (erik@thauvin.net)
+ * Copyright (c) 2004-2020, Erik C. Thauvin (erik@thauvin.net)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -30,7 +30,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package net.thauvin.erik.mobibot.modules;
+package net.thauvin.erik.mobibot;
 
 import org.apache.commons.lang3.StringUtils;
 import org.testng.annotations.BeforeSuite;
@@ -49,10 +49,10 @@ import java.util.Properties;
  * @created 2019-04-08
  * @since 1.0
  */
-class LocalProperties {
+public class LocalProperties {
     private static final Properties localProps = new Properties();
 
-    static String getProperty(final String key) {
+    public static String getProperty(final String key) {
         if (localProps.containsKey(key)) {
             return localProps.getProperty(key);
         } else {

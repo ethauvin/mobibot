@@ -1,7 +1,7 @@
 <?xml version="1.0" ?>
 <SmellBaseline>
-  <Blacklist></Blacklist>
-  <Whitelist>
+  <ManuallySuppressedIssues></ManuallySuppressedIssues>
+  <CurrentIssues>
     <ID>LongParameterList:Comment.kt$Comment$( bot: Mobibot, cmd: String, sender: String, isOp: Boolean, entry: EntryLink, index: Int, commentIndex: Int )</ID>
     <ID>LongParameterList:Comment.kt$Comment$( bot: Mobibot, sender: String, isOp: Boolean, entry: EntryLink, index: Int, commentIndex: Int )</ID>
     <ID>LongParameterList:Comment.kt$Comment$(bot: Mobibot, cmd: String, sender: String, entry: EntryLink, index: Int, commentIndex: Int)</ID>
@@ -12,8 +12,8 @@
     <ID>MagicNumber:Recap.kt$Recap.Companion$10</ID>
     <ID>MagicNumber:Users.kt$Users$8</ID>
     <ID>MagicNumber:View.kt$View$8</ID>
-    <ID>NestedBlockDepth:Addons.kt$Addons$add</ID>
-    <ID>NestedBlockDepth:Comment.kt$Comment$commandResponse</ID>
-    <ID>NestedBlockDepth:LinksMgr.kt$LinksMgr$commandResponse</ID>
-  </Whitelist>
+    <ID>NestedBlockDepth:Addons.kt$Addons$ fun add(command: AbstractCommand, props: Properties)</ID>
+    <ID>NestedBlockDepth:Comment.kt$Comment$override fun commandResponse( sender: String, login: String, args: String, isOp: Boolean, isPrivate: Boolean )</ID>
+    <ID>NestedBlockDepth:LinksMgr.kt$LinksMgr$override fun commandResponse( sender: String, login: String, args: String, isOp: Boolean, isPrivate: Boolean )</ID>
+  </CurrentIssues>
 </SmellBaseline>
