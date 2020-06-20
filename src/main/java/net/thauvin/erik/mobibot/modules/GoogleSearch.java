@@ -44,8 +44,6 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.net.URL;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -98,15 +96,13 @@ public final class GoogleSearch extends ThreadedModule {
         if (StringUtils.isNotBlank(query)) {
             final ArrayList<Message> results = new ArrayList<>();
             try {
-                final String q = URLEncoder.encode(query, StandardCharsets.UTF_8.toString());
-
                 final URL url =
                         new URL("https://www.googleapis.com/customsearch/v1?key="
                                 + apiKey
                                 + "&cx="
                                 + cseKey
                                 + "&q="
-                                + q
+                                + Utils.encodeUrl(query)
                                 + "&filter=1&num=5&alt=json");
 
                 final JSONObject json = new JSONObject(Utils.urlReader(url));

@@ -42,6 +42,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -114,6 +115,16 @@ public final class Utils {
      */
     public static String cyan(final String s) {
         return colorize(s, Colors.CYAN);
+    }
+
+    /**
+     * URL encodes the given string.
+     *
+     * @param s The string to encode.
+     * @return The encoded string.
+     */
+    public static String encodeUrl(final String s) {
+        return URLEncoder.encode(s, StandardCharsets.UTF_8);
     }
 
     /**

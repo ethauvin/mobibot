@@ -44,13 +44,11 @@ import net.thauvin.erik.mobibot.msg.ErrorMessage;
 import net.thauvin.erik.mobibot.msg.Message;
 import net.thauvin.erik.mobibot.msg.NoticeMessage;
 import net.thauvin.erik.mobibot.msg.PublicMessage;
-import okhttp3.HttpUrl;
 import org.apache.commons.lang3.StringUtils;
 import org.jibble.pircbot.Colors;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import static net.thauvin.erik.mobibot.Utils.bold;
 
@@ -185,14 +183,9 @@ public class Weather2 extends ThreadedModule {
                                 messages.add(new NoticeMessage("https://openweathermap.org/city/" + cwd.getCityId(),
                                                                Colors.GREEN));
                             } else {
-                                final HttpUrl url = Objects.requireNonNull(HttpUrl.parse(
-                                        "https://openweathermap.org/find"))
-                                                           .newBuilder()
-                                                           .addQueryParameter("q",
-                                                                              city + ','
-                                                                              + StringUtils.upperCase(country))
-                                                           .build();
-                                messages.add(new NoticeMessage(url.toString(), Colors.GREEN));
+                                final String url = "https://openweathermap.org/find?q=" +
+                                                   Utils.encodeUrl(city + ',' + StringUtils.upperCase(country));
+                                messages.add(new NoticeMessage(url, Colors.GREEN));
                             }
                         }
                     }
