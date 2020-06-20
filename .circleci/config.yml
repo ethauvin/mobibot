@@ -42,7 +42,7 @@ jobs:
     <<: *defaults
 
     docker:
-      - image: circleci/openjdk:11.0.7
+      - image: cimg/openjdk:11.0.7
 
     <<: *defaults_gradle
 
