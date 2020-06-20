@@ -1,5 +1,5 @@
 /*
- * PinboardTest.kt
+ * PinboardUtilsTest.kt
  *
  * Copyright (c) 2004-2020, Erik C. Thauvin (erik@thauvin.net)
  * All rights reserved.
@@ -62,7 +62,7 @@ class PinboardUtilsTest : LocalProperties() {
 
     private fun validatePin(apiToken: String, ircServer: String = "", url: String): Boolean {
         val response = Utils.urlReader(URL("https://api.pinboard.in/v1/posts/get?auth_token=${apiToken}&tag=test&"
-                                + URLEncoder.encode(url, StandardCharsets.UTF_8)))
+                                + Utils.encodeUrl(url)))
 
         return response.contains(url) && response.contains(ircServer)
     }
