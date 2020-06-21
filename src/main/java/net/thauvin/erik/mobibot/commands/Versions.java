@@ -40,7 +40,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 public class Versions extends AbstractCommand {
-    private final List<String> versions =
+    private final List<String> verList =
             List.of("Version: " + ReleaseInfo.VERSION + " (" + Utils.isoLocalDate(ReleaseInfo.BUILDDATE) + ')',
                     "Platform: " + System.getProperty("os.name") + " (" + System.getProperty("os.version") + ", "
                     + System.getProperty("os.arch") + ", " + System.getProperty("user.country") + ')',
@@ -64,8 +64,7 @@ public class Versions extends AbstractCommand {
     @NotNull
     @Override
     public List<String> getHelp() {
-        return List.of("To view the versions data (bot, java, etc.):",
-                       Utils.helpIndent("%s " + getName()));
+        return List.of("To view the versions data (bot, platform, java, etc.):", Utils.helpIndent("%c " + getName()));
     }
 
     @Override
@@ -90,7 +89,7 @@ public class Versions extends AbstractCommand {
                                 final boolean isOp,
                                 final boolean isPrivate) {
         if (isOp) {
-            for (final String v : versions) {
+            for (final String v : verList) {
                 getBot().send(sender, v, isPrivate);
             }
         } else {

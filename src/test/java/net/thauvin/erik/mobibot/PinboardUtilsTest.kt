@@ -37,8 +37,6 @@ import net.thauvin.erik.pinboard.PinboardPoster
 import org.testng.Assert
 import org.testng.annotations.Test
 import java.net.URL
-import java.net.URLEncoder
-import java.nio.charset.StandardCharsets
 
 class PinboardUtilsTest : LocalProperties() {
     @Test
@@ -61,8 +59,12 @@ class PinboardUtilsTest : LocalProperties() {
     }
 
     private fun validatePin(apiToken: String, ircServer: String = "", url: String): Boolean {
-        val response = Utils.urlReader(URL("https://api.pinboard.in/v1/posts/get?auth_token=${apiToken}&tag=test&"
-                                + Utils.encodeUrl(url)))
+        val response = Utils.urlReader(
+            URL(
+                "https://api.pinboard.in/v1/posts/get?auth_token=${apiToken}&tag=test&"
+                    + Utils.encodeUrl(url)
+            )
+        )
 
         return response.contains(url) && response.contains(ircServer)
     }
