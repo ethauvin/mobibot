@@ -39,18 +39,15 @@ import net.thauvin.erik.mobibot.msg.ErrorMessage;
 import net.thauvin.erik.mobibot.msg.Message;
 import net.thauvin.erik.mobibot.msg.NoticeMessage;
 import net.thauvin.erik.mobibot.msg.PublicMessage;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * The StockQuote module.
@@ -88,43 +85,39 @@ public final class StockQuote extends ThreadedModule {
 
     @SuppressFBWarnings(value = "NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE",
                         justification = "false positive?")
-    private static JSONObject getJsonResponse(final Response response, final String debugMessage)
-            throws IOException, ModuleException {
-        if (response.isSuccessful()) {
-            if (response.body() != null) {
-                final JSONObject json = new JSONObject(Objects.requireNonNull(response.body()).string());
+    private static JSONObject getJsonResponse(final String response, final String debugMessage)
+            throws ModuleException {
+        if (StringUtils.isNotBlank(response)) {
+            final JSONObject json = new JSONObject(response);
 
-                try {
-                    final String info = json.getString("Information");
-                    if (!info.isEmpty()) {
-                        throw new ModuleException(debugMessage, Utils.unescapeXml(info));
-                    }
-                } catch (JSONException ignore) {
-                    // Do nothing
+            try {
+                final String info = json.getString("Information");
+                if (!info.isEmpty()) {
+                    throw new ModuleException(debugMessage, Utils.unescapeXml(info));
                 }
-
-                try {
-                    final String error = json.getString("Note");
-                    if (!error.isEmpty()) {
-                        throw new ModuleException(debugMessage, Utils.unescapeXml(error));
-                    }
-                } catch (JSONException ignore) {
-                    // Do nothing
-                }
-
-                try {
-                    final String error = json.getString("Error Message");
-                    if (!error.isEmpty()) {
-                        throw new ModuleException(debugMessage, Utils.unescapeXml(error));
-                    }
-                } catch (JSONException ignore) {
-                    // Do nothing
-                }
-
-                return json;
-            } else {
-                throw new ModuleException(debugMessage, "Invalid Response (" + response.code() + ')');
+            } catch (JSONException ignore) {
+                // Do nothing
             }
+
+            try {
+                final String error = json.getString("Note");
+                if (!error.isEmpty()) {
+                    throw new ModuleException(debugMessage, Utils.unescapeXml(error));
+                }
+            } catch (JSONException ignore) {
+                // Do nothing
+            }
+
+            try {
+                final String error = json.getString("Error Message");
+                if (!error.isEmpty()) {
+                    throw new ModuleException(debugMessage, Utils.unescapeXml(error));
+                }
+            } catch (JSONException ignore) {
+                // Do nothing
+            }
+
+            return json;
         } else {
             throw new ModuleException(debugMessage, "Empty Response.");
         }
@@ -146,13 +139,13 @@ public final class StockQuote extends ThreadedModule {
         if (StringUtils.isNotBlank(symbol)) {
             final String debugMessage = "getQuote(" + symbol + ')';
             final ArrayList<Message> messages = new ArrayList<>();
-            final OkHttpClient client = new OkHttpClient();
 
+            String response;
             try {
                 // Search for symbol/keywords
-                Request request = new Request.Builder().url(
-                        ALAPHAVANTAGE_URL + "SYMBOL_SEARCH&keywords=" + symbol + "&apikey=" + apiKey).build();
-                Response response = client.newCall(request).execute();
+                response = Utils.urlReader(new URL(
+                        ALAPHAVANTAGE_URL + "SYMBOL_SEARCH&keywords=" + Utils.encodeUrl(symbol) + "&apikey="
+                        + Utils.encodeUrl(apiKey)));
 
                 JSONObject json = getJsonResponse(response, debugMessage);
 
@@ -165,10 +158,9 @@ public final class StockQuote extends ThreadedModule {
                 final JSONObject symbolInfo = symbols.getJSONObject(0);
 
                 // Get quote for symbol
-                request = new Request.Builder().url(
-                        ALAPHAVANTAGE_URL + "GLOBAL_QUOTE&symbol=" + symbolInfo.getString("1. symbol") + "&apikey="
-                        + apiKey).build();
-                response = client.newCall(request).execute();
+                response = Utils.urlReader(new URL(
+                        ALAPHAVANTAGE_URL + "GLOBAL_QUOTE&symbol=" + Utils.encodeUrl(symbolInfo.getString("1. symbol"))
+                        + "&apikey=" + Utils.encodeUrl(apiKey)));
 
                 json = getJsonResponse(response, debugMessage);
 

@@ -183,9 +183,8 @@ public class Weather2 extends ThreadedModule {
                                 messages.add(new NoticeMessage("https://openweathermap.org/city/" + cwd.getCityId(),
                                                                Colors.GREEN));
                             } else {
-                                final String url = "https://openweathermap.org/find?q=" +
-                                                   Utils.encodeUrl(city + ',' + StringUtils.upperCase(country));
-                                messages.add(new NoticeMessage(url, Colors.GREEN));
+                                messages.add(new NoticeMessage("https://openweathermap.org/find?q=" + Utils.encodeUrl(
+                                        city + ',' + StringUtils.upperCase(country)), Colors.GREEN));
                             }
                         }
                     }
