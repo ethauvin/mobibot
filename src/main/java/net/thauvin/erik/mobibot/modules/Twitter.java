@@ -86,7 +86,7 @@ public final class Twitter extends ThreadedModule {
         help.add(Utils.helpIndent("%c " + TWITTER_CMD + " <message>"));
 
         properties.put(AUTOPOST_PROP, "false");
-        initProperties(CONSUMER_KEY_PROP,CONSUMER_SECRET_PROP,HANDLE_PROP,TOKEN_PROP,TOKEN_SECRET_PROP);
+        initProperties(CONSUMER_KEY_PROP, CONSUMER_SECRET_PROP, HANDLE_PROP, TOKEN_PROP, TOKEN_SECRET_PROP);
     }
 
     /**
@@ -270,8 +270,10 @@ public final class Twitter extends ThreadedModule {
      * Post all the entries to Twitter on shutdown.
      */
     public final void shutdown() {
-        for (final int index : entries) {
-            postEntry(index);
+        if (isAutoPost()) {
+            for (final int index : entries) {
+                postEntry(index);
+            }
         }
     }
 }
