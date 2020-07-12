@@ -2,9 +2,9 @@ plugins {
     id 'application'
     id 'checkstyle'
     id 'com.github.ben-manes.versions' version '0.28.0'
-    id 'com.github.spotbugs' version '4.4.1'
+    id 'com.github.spotbugs' version '4.4.4'
     id 'idea'
-    id 'io.gitlab.arturbosch.detekt' version '1.10.0-RC1'
+    id 'io.gitlab.arturbosch.detekt' version '1.10.0'
     id 'jacoco'
     id 'java'
     id 'net.thauvin.erik.gradle.semver' version '1.0.4'
@@ -23,7 +23,7 @@ mainClassName = packageName + '.Mobibot'
 
 ext.versions = [
     log4j   : '2.13.3',
-    spotbugs: '4.0.4'
+    spotbugs: '4.0.6'
 ]
 
 repositories {
@@ -50,7 +50,7 @@ dependencies {
     implementation 'commons-net:commons-net:3.6'
     //implementation 'com.squareup.okhttp3:okhttp:4.7.2'
 
-    implementation 'com.rometools:rome:1.13.1'
+    implementation 'com.rometools:rome:1.14.1'
 
     implementation 'org.json:json:20200518'
     implementation 'org.jsoup:jsoup:1.13.1'
@@ -67,7 +67,7 @@ dependencies {
 
     testImplementation 'org.testng:testng:7.2.0'
     testImplementation 'org.assertj:assertj-core:3.16.1'
-    testImplementation 'org.mockito:mockito-core:3.3.3'
+    testImplementation 'org.mockito:mockito-core:3.4.0'
 
     spotbugsPlugins 'com.h3xstream.findsecbugs:findsecbugs-plugin:1.10.1'
     spotbugsPlugins 'com.mebigfatguy.sb-contrib:sb-contrib:7.4.7'
@@ -106,7 +106,7 @@ tasks.withType(com.github.spotbugs.snom.SpotBugsTask) {
 }
 
 pmd {
-    toolVersion = '6.24.0'
+    toolVersion = '6.25.0'
     ignoreFailures = true
     ruleSets = []
     ruleSetFiles = files("${projectDir}/config/pmd.xml")

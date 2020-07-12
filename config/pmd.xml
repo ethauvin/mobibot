@@ -17,10 +17,9 @@
     <rule ref="category/java/bestpractices.xml/MissingOverride">
         <properties>
             <property name="violationSuppressXPath"
-                      value="./MethodDeclarator[@Image='hashCode' or @Image='equals' or @Image='toString']"/>
+                      value="//MethodDeclaration[@Name='hashCode' or @Name='equals' or @Name='toString']"/>
         </properties>
     </rule>
-    <rule ref="category/java/bestpractices.xml/LiteralsFirstInComparisons"/>
     <rule ref="category/java/bestpractices.xml/PreserveStackTrace"/>
     <rule ref="category/java/bestpractices.xml/ReplaceEnumerationWithIterator"/>
     <!-- <rule ref="category/java/bestpractices.xml/ReplaceHashtableWithMap"/>
