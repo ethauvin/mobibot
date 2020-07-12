@@ -73,7 +73,7 @@ class Tags(bot: Mobibot) : AbstractCommand(bot) {
                     bot.send(EntriesUtils.buildTags(index, entry))
                     LinksMgr.saveEntries(bot, false)
                 } else {
-                    bot.send(sender, "Please ask a channel op to change the tags for you.",isPrivate)
+                    bot.send(sender, "Please ask a channel op to change the tags for you.", isPrivate)
                 }
             } else {
                 if (entry.hasTags()) {
