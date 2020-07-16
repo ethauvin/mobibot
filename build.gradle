@@ -50,7 +50,7 @@ dependencies {
     implementation 'commons-net:commons-net:3.6'
     //implementation 'com.squareup.okhttp3:okhttp:4.7.2'
 
-    implementation 'com.rometools:rome:1.14.1'
+    implementation 'com.rometools:rome:1.15.0'
 
     implementation 'org.json:json:20200518'
     implementation 'org.jsoup:jsoup:1.13.1'
