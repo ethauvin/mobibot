@@ -114,15 +114,6 @@ import static org.apache.commons.lang3.StringUtils.lowerCase;
 @Version(properties = "version.properties",
          className = "ReleaseInfo")
 public class Mobibot extends PircBot {
-    /**
-     * Info Strings.
-     */
-    @SuppressWarnings("indentation")
-    public static final List<String> INFO =
-            List.of(
-                    ReleaseInfo.PROJECT + " v" + ReleaseInfo.VERSION
-                    + " (" + Utils.green("https://www.mobitopia.org/mobibot/") + ')',
-                    "Written by Erik C. Thauvin (" + Utils.green("https://erik.thauvin.net/") + ')');
     // Logger
     private static final Logger LOGGER = LogManager.getLogger(Mobibot.class);
     // Maximum number of times the bot will try to reconnect, if disconnected
@@ -303,9 +294,9 @@ public class Mobibot extends PircBot {
             // Output the usage
             new HelpFormatter().printHelp(Mobibot.class.getName(), options);
         } else if (commandLine.hasOption(Constants.VERSION_ARG.charAt(0))) {
-            for (final String s : INFO) {
-                System.out.println(s);
-            }
+            System.out.println(ReleaseInfo.PROJECT + ' ' + ReleaseInfo.VERSION
+                               + " (" + Utils.isoLocalDate(ReleaseInfo.BUILDDATE) + ')');
+            System.out.println(ReleaseInfo.WEBSITE);
         } else {
             final Properties p = new Properties();
 
@@ -413,7 +404,7 @@ public class Mobibot extends PircBot {
                 }
             }
         }
-        setVersion(INFO.get(0));
+        setVersion(ReleaseInfo.PROJECT + ' ' + ReleaseInfo.VERSION);
         identify();
         joinChannel();
     }
@@ -749,7 +740,7 @@ public class Mobibot extends PircBot {
         if (cmd.startsWith(Constants.HELP_CMD)) { // help
             helpResponse(sender, args, true);
         } else if (isOp && "kill".equals(cmd)) { // kill
-            twitter.notification("%1$s killed by " + sender + "on %3$s");
+            twitter.notification("%1$s killed by " + sender + " on %3$s");
             sendRawLine("QUIT : Poof!");
             System.exit(0);
         } else if (isOp && Constants.DEBUG_CMD.equals(cmd)) { // debug
@@ -763,7 +754,7 @@ public class Mobibot extends PircBot {
             send(sender + " has just signed my death sentence.");
             TIMER.cancel();
             twitter.shutdown();
-            twitter.notification("%1$s stopped by " + sender + "on %3$s");
+            twitter.notification("%1$s stopped by " + sender + " on %3$s");
             sleep(3);
             quitServer("The Bot Is Out There!");
             System.exit(0);
