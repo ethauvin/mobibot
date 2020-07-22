@@ -1,7 +1,7 @@
 plugins {
     id 'application'
     id 'checkstyle'
-    id 'com.github.ben-manes.versions' version '0.28.0'
+    id 'com.github.ben-manes.versions' version '0.29.0'
     id 'com.github.spotbugs' version '4.4.4'
     id 'idea'
     id 'io.gitlab.arturbosch.detekt' version '1.10.0'
@@ -43,7 +43,7 @@ dependencies {
     implementation "org.apache.logging.log4j:log4j-core:$versions.log4j"
     implementation "org.apache.logging.log4j:log4j-slf4j-impl:$versions.log4j"
 
-    implementation 'org.apache.commons:commons-lang3:3.10'
+    implementation 'org.apache.commons:commons-lang3:3.11'
     //implementation 'org.apache.commons:commons-text:1.8'
     implementation 'commons-cli:commons-cli:1.4'
 
@@ -67,7 +67,7 @@ dependencies {
 
     testImplementation 'org.testng:testng:7.2.0'
     testImplementation 'org.assertj:assertj-core:3.16.1'
-    testImplementation 'org.mockito:mockito-core:3.4.0'
+    testImplementation 'org.mockito:mockito-core:3.4.4'
 
     spotbugsPlugins 'com.h3xstream.findsecbugs:findsecbugs-plugin:1.10.1'
     spotbugsPlugins 'com.mebigfatguy.sb-contrib:sb-contrib:7.4.7'
