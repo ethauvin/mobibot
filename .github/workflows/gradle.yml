@@ -1,22 +1,30 @@
 name: Java CI with Gradle
 
 on: [push, pull_request, workflow_dispatch]
-    
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up JDK 11
-      uses: actions/setup-java@v1
-      with:
-        java-version: 11
-    - name: Grant execute permission for gradlew
-      run: chmod +x gradlew
-      env:
-        CI_NAME: "GitHub CI"
-    - name: Test with Gradle
-      run: ./gradlew check
+      - uses: actions/checkout@v2
+      - name: Set up JDK 11
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+        env:
+          CI_NAME: "GitHub CI"
+          ALPHAVANTAGE_API_KEY: ${{ secrets.ALPHAVANTAGE_API_KEY }}
+          GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+          GOOGLE_CSE_CX: ${{ secrets.GOOGLE_CSE_CX }}
+          OWM_API_KEY: ${{ secrets.OWM_API_KEY }}
+          PINBOARD_API_TOKEN: ${{ secrets.PINBOARD_API_TOKEN }}
+          TWITTER_CONSUMERKEY: ${{ secrets.TWITTER_CONSUMERKEY }}
+          TWITTER_CONSUMERSECRET: ${{ secrets.TWITTER_CONSUMERSECRET }}
+          TWITTER_HANDLE: ${{ secrets.TWITTER_HANDLE }}
+          TWITTER_TOKEN: ${{ secrets.TWITTER_TOKEN }}
+          TWITTER_TOKENSECRET: ${{ secrets.TWITTER_TOKENSECRET }}
+      - name: Test with Gradle
+        run: ./gradlew check
