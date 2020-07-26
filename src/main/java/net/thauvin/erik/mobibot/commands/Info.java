@@ -44,8 +44,8 @@ import java.util.List;
 
 public class Info extends AbstractCommand {
     private final List<String> version = List.of(
-            StringUtils.capitalize(ReleaseInfo.PROJECT) + " " + ReleaseInfo.VERSION + " ("
-            + Utils.green(ReleaseInfo.WEBSITE) + ')',
+            StringUtils.capitalize(ReleaseInfo.PROJECT) + " " + ReleaseInfo.VERSION
+            + " (" + Utils.green(ReleaseInfo.WEBSITE) + ')',
             "Written by " + ReleaseInfo.AUTHOR + " (" + Utils.green(ReleaseInfo.AUTHOR_URL) + ')');
 
     public Info(@NotNull final Mobibot bot) {

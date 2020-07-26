@@ -188,12 +188,12 @@ public class Mobibot extends PircBot {
         setVerbose(true);
         setAutoNickChange(true);
         setLogin(p.getProperty("login", getName()));
-        setVersion(p.getProperty("weblog", ""));
+        setVersion(ReleaseInfo.PROJECT + ' ' + ReleaseInfo.VERSION);
         // setMessageDelay(1000);
         setIdentity(p.getProperty("ident", ""), p.getProperty("ident-nick", ""), p.getProperty("ident-msg", ""));
 
         // Set the URLs
-        setWeblogUrl(getVersion());
+        setWeblogUrl(p.getProperty("weblog", ""));
         setBacklogsUrl(Utils.ensureDir(p.getProperty("backlogs", weblogUrl), true));
 
         // Set the pinboard authentication
@@ -404,7 +404,6 @@ public class Mobibot extends PircBot {
                 }
             }
         }
-        setVersion(ReleaseInfo.PROJECT + ' ' + ReleaseInfo.VERSION);
         identify();
         joinChannel();
     }

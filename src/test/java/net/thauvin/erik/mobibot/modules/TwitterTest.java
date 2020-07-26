@@ -51,10 +51,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class TwitterTest extends LocalProperties {
     @SuppressFBWarnings("MDM")
     private String getCi() {
-        if ("true".equals(System.getenv("CIRCLECI"))) {
-            return "CircleCI";
-        } else if ("true".equals(System.getenv("TRAVIS"))) {
-            return "Travis CI";
+        final String ciName = System.getenv("CI_NAME");
+        if (ciName != null) {
+            return ciName;
         } else {
             try {
                 return InetAddress.getLocalHost().getHostName();

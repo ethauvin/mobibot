@@ -3,7 +3,7 @@ dist: trusty
 
 env:
   global:
-    - CI=true
+    - CI_NAME: "Travis CI"
 
 install:
   - git fetch --unshallow --tags

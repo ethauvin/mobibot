@@ -42,13 +42,10 @@ import java.util.List;
 public class Versions extends AbstractCommand {
     private final List<String> verList =
             List.of("Version: " + ReleaseInfo.VERSION + " (" + Utils.isoLocalDate(ReleaseInfo.BUILDDATE) + ')',
-                    "Platform: " + System.getProperty("os.name") + " (" + System.getProperty("os.version") + ", "
-                    + System.getProperty("os.arch") + ", " + System.getProperty("user.country") + ')',
-                    "Runtime: " + System.getProperty("java.runtime.name") + " (build " + System.getProperty(
-                            "java.runtime.version") + ')',
-                    "VM: " + System.getProperty("java.vm.name") + " (build " + System.getProperty("java.vm.version")
-                    + ", "
-                    + System.getProperty("java.vm.info") + ')');
+                    "Platform: " + System.getProperty("os.name") + ' ' + System.getProperty("os.version")
+                    + " (" + System.getProperty("os.arch") + ')',
+                    "Runtime: " + System.getProperty("java.runtime.name")
+                    + ' ' + System.getProperty("java.runtime.version"));
 
     public Versions(@NotNull final Mobibot bot) {
         super(bot);

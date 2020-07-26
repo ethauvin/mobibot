@@ -62,7 +62,7 @@ class ChannelFeed(bot: Mobibot, channel: String) : AbstractCommand(bot) {
         isPrivate: Boolean
     ) {
         with(getProperty(FEED_PROP)) {
-            if (!this.isNullOrBlank()) {
+            if (!isNullOrBlank()) {
                 Thread(FeedReader(bot, sender, this)).start()
             } else {
                 bot.send(sender, "There is no feed setup for this channel.", false)

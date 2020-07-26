@@ -1,0 +1,9 @@
+image: openjdk:11
+
+pipelines:
+  default:
+    - step:
+        caches:
+          - gradle
+        script:
+          - bash ./gradlew check
