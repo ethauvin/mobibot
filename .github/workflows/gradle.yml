@@ -14,6 +14,8 @@ jobs:
           java-version: 11
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
+      - name: Test with Gradle
+        run: ./gradlew check
         env:
           CI_NAME: "GitHub CI"
           ALPHAVANTAGE_API_KEY: ${{ secrets.ALPHAVANTAGE_API_KEY }}
@@ -26,5 +28,3 @@ jobs:
           TWITTER_HANDLE: ${{ secrets.TWITTER_HANDLE }}
           TWITTER_TOKEN: ${{ secrets.TWITTER_TOKEN }}
           TWITTER_TOKENSECRET: ${{ secrets.TWITTER_TOKENSECRET }}
-      - name: Test with Gradle
-        run: ./gradlew check
