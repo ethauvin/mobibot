@@ -3,7 +3,7 @@ dist: trusty
 
 env:
   global:
-    - CI_NAME: "Travis CI"
+    - CI_NAME="Travis CI"
 
 install:
   - git fetch --unshallow --tags
@@ -21,6 +21,6 @@ before_install:
 
 after_success:
   - |
-      if [ "${TRAVIS_TEST_RESULT}" == 0 ] && [ "$TRAVIS_JDK_VERSION" == openjdk11 ]; then
-        ./gradlew sonarqube
-      fi
+    if [ "${TRAVIS_TEST_RESULT}" == 0 ] && [ "$TRAVIS_JDK_VERSION" == openjdk11 ]; then
+      ./gradlew sonarqube
+    fi
