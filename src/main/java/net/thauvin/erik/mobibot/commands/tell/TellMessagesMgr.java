@@ -90,7 +90,7 @@ final class TellMessagesMgr {
     public static List<TellMessage> load(final String file, final Logger logger) {
         try {
             try (final ObjectInput input = new ObjectInputStream(
-                new BufferedInputStream(Files.newInputStream(Paths.get(file))))) {
+                    new BufferedInputStream(Files.newInputStream(Paths.get(file))))) {
                 logger.debug("Loading the messages.");
 
                 return ((List<TellMessage>) input.readObject());
@@ -113,10 +113,11 @@ final class TellMessagesMgr {
      */
     public static void save(final String file, final List<TellMessage> messages, final Logger logger) {
         try {
-            try (final ObjectOutput output = new ObjectOutputStream(
-                new BufferedOutputStream(Files.newOutputStream(Paths.get(file))))) {
-                logger.debug("Saving the messages.");
-                output.writeObject(messages);
+            try (final BufferedOutputStream bos = new BufferedOutputStream(Files.newOutputStream(Paths.get(file)))) {
+                try (final ObjectOutput output = new ObjectOutputStream(bos)) {
+                    logger.debug("Saving the messages.");
+                    output.writeObject(messages);
+                }
             }
         } catch (IOException e) {
             logger.error("Unable to save messages queue.", e);

@@ -81,17 +81,19 @@ public class FeedReader implements Runnable {
     public final void run() {
         try {
             final SyndFeedInput input = new SyndFeedInput();
-            final SyndFeed feed = input.build(new XmlReader(new URL(url)));
+            try (final XmlReader reader = new XmlReader(new URL(url))) {
+                final SyndFeed feed = input.build(reader);
 
-            final List<SyndEntry> items = feed.getEntries();
-            if (items.isEmpty()) {
-                bot.send(sender, "There is currently nothing to view.", false);
-            } else {
-                SyndEntry item;
-                for (int i = 0; (i < items.size()) && (i < MAX_ITEMS); i++) {
-                    item = items.get(i);
-                    bot.send(sender, item.getTitle(), false);
-                    bot.send(sender, Utils.helpIndent(Utils.green(item.getLink()), false), false);
+                final List<SyndEntry> items = feed.getEntries();
+                if (items.isEmpty()) {
+                    bot.send(sender, "There is currently nothing to view.", false);
+                } else {
+                    SyndEntry item;
+                    for (int i = 0; (i < items.size()) && (i < MAX_ITEMS); i++) {
+                        item = items.get(i);
+                        bot.send(sender, item.getTitle(), false);
+                        bot.send(sender, Utils.helpIndent(Utils.green(item.getLink()), false), false);
+                    }
                 }
             }
         } catch (MalformedURLException e) {
