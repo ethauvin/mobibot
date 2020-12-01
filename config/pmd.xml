@@ -1,31 +1,34 @@
 <?xml version="1.0"?>
 <ruleset name="erik"
-         xmlns="http://pmd.sourceforge.net/ruleset/2.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://pmd.sourceforge.net/ruleset/2.0.0 https://pmd.sourceforge.io/ruleset_2_0_0.xsd">
+    xmlns="http://pmd.sourceforge.net/ruleset/2.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pmd.sourceforge.net/ruleset/2.0.0 https://pmd.sourceforge.io/ruleset_2_0_0.xsd">
     <description>Erik's Ruleset</description>
     <!-- BEST PRACTICES -->
-    <!--    <rule ref="category/java/bestpractices.xml/AvoidStringBufferField"/>-->
+    <rule ref="category/java/bestpractices.xml/AvoidMessageDigestField"/>
+    <!-- <rule ref="category/java/bestpractices.xml/AvoidStringBufferField"/> -->
     <rule ref="category/java/bestpractices.xml/AvoidUsingHardCodedIP"/>
     <rule ref="category/java/bestpractices.xml/CheckResultSet"/>
     <rule ref="category/java/bestpractices.xml/ConstantsInInterface"/>
     <rule ref="category/java/bestpractices.xml/DefaultLabelNotLastInSwitchStmt"/>
+    <rule ref="category/java/bestpractices.xml/DoubleBraceInitialization"/>
     <rule ref="category/java/bestpractices.xml/ForLoopCanBeForeach"/>
     <rule ref="category/java/bestpractices.xml/GuardLogStatement"/>
+    <rule ref="category/java/bestpractices.xml/LiteralsFirstInComparisons" />
     <!-- <rule ref="category/java/bestpractices.xml/LooseCoupling"/> -->
     <rule ref="category/java/bestpractices.xml/MethodReturnsInternalArray"/>
     <rule ref="category/java/bestpractices.xml/MissingOverride">
         <properties>
-            <property name="violationSuppressXPath"
-                      value="//MethodDeclaration[@Name='hashCode' or @Name='equals' or @Name='toString']"/>
+            <property name="violationSuppressXPath" value="//MethodDeclaration[@Name='hashCode' or @Name='equals' or @Name='toString']"/>
         </properties>
     </rule>
+    <rule ref="category/java/bestpractices.xml/OneDeclarationPerLine"/>
     <rule ref="category/java/bestpractices.xml/PreserveStackTrace"/>
     <rule ref="category/java/bestpractices.xml/ReplaceEnumerationWithIterator"/>
     <!-- <rule ref="category/java/bestpractices.xml/ReplaceHashtableWithMap"/>
     <rule ref="category/java/bestpractices.xml/ReplaceVectorWithList"/> -->
     <rule ref="category/java/bestpractices.xml/SwitchStmtsShouldHaveDefault"/>
     <rule ref="category/java/bestpractices.xml/SystemPrintln"/>
+    <rule ref="category/java/bestpractices.xml/UnusedAssignment"/>
     <rule ref="category/java/bestpractices.xml/UnusedFormalParameter"/>
     <rule ref="category/java/bestpractices.xml/UnusedImports"/>
     <rule ref="category/java/bestpractices.xml/UnusedLocalVariable"/>
@@ -40,11 +43,12 @@
 
 
     <!-- NAMING CONVENTIONS -->
+    <!-- <rule ref="category/java/codestyle.xml/ClassNamingConventions"/> -->
     <rule ref="category/java/codestyle.xml/FormalParameterNamingConventions"/>
     <rule ref="category/java/codestyle.xml/GenericsNaming"/>
     <rule ref="category/java/codestyle.xml/LocalVariableNamingConventions"/>
     <rule ref="category/java/codestyle.xml/MethodNamingConventions"/>
-    <!--    <rule ref="category/java/codestyle.xml/PackageCase"/>-->
+    <!-- <rule ref="category/java/codestyle.xml/PackageCase"/> -->
 
 
     <!-- OTHER -->
@@ -71,7 +75,9 @@
     <rule ref="category/java/codestyle.xml/UnnecessaryConstructor"/>
     <rule ref="category/java/codestyle.xml/UnnecessaryFullyQualifiedName"/>
     <rule ref="category/java/codestyle.xml/UnnecessaryLocalBeforeReturn"/>
+    <!-- <rule ref="category/java/codestyle.xml/UnnecessaryModifier"/> -->
     <rule ref="category/java/codestyle.xml/UnnecessaryReturn"/>
+    <!-- <rule ref="category/java/codestyle.xml/UselessParentheses"/> -->
     <rule ref="category/java/codestyle.xml/UselessQualifiedThis"/>
 
 
@@ -87,7 +93,7 @@
     <rule ref="category/java/design.xml/DataClass"/>
     <rule ref="category/java/design.xml/DoNotExtendJavaLangError"/>
     <rule ref="category/java/design.xml/ExceptionAsFlowControl"/>
-    <!--    <rule ref="category/java/design.xml/ExcessivePublicCount"/>-->
+    <!-- <rule ref="category/java/design.xml/ExcessivePublicCount"/> -->
     <rule ref="category/java/design.xml/FinalFieldCouldBeStatic"/>
     <rule ref="category/java/design.xml/ImmutableField"/>
     <rule ref="category/java/design.xml/LogicInversion"/>
@@ -144,7 +150,7 @@
     <rule ref="category/java/errorprone.xml/CloneThrowsCloneNotSupportedException"/>
     <rule ref="category/java/errorprone.xml/CloseResource"/>
     <rule ref="category/java/errorprone.xml/CompareObjectsWithEquals"/>
-    <rule ref="category/java/errorprone.xml/ConstructorCallsOverridableMethod"/>>
+    <rule ref="category/java/errorprone.xml/ConstructorCallsOverridableMethod"/>
     <rule ref="category/java/errorprone.xml/DoNotCallGarbageCollectionExplicitly"/>
     <rule ref="category/java/errorprone.xml/DoNotExtendJavaLangThrowable"/>
     <rule ref="category/java/errorprone.xml/DoNotHardCodeSDCard"/>
@@ -171,7 +177,7 @@
     <rule ref="category/java/errorprone.xml/MoreThanOneLogger"/>
     <rule ref="category/java/errorprone.xml/NonCaseLabelInSwitchStatement"/>
     <rule ref="category/java/errorprone.xml/NonStaticInitializer"/>
-    <!--    <rule ref="category/java/errorprone.xml/NullAssignment"/>-->
+    <!-- <rule ref="category/java/errorprone.xml/NullAssignment"/> -->
     <rule ref="category/java/errorprone.xml/OverrideBothEqualsAndHashcode"/>
     <rule ref="category/java/errorprone.xml/ProperCloneImplementation"/>
     <rule ref="category/java/errorprone.xml/ProperLogger"/>
@@ -221,6 +227,7 @@
     <rule ref="category/java/multithreading.xml/DontCallThreadRun"/>
     <rule ref="category/java/multithreading.xml/DoubleCheckedLocking"/>
     <rule ref="category/java/multithreading.xml/NonThreadSafeSingleton"/>
+    <rule ref="category/java/multithreading.xml/UnsynchronizedStaticFormatter"/>
     <rule ref="category/java/multithreading.xml/UseConcurrentHashMap"/>
     <rule ref="category/java/multithreading.xml/UseNotifyAllInsteadOfNotify"/>
 
