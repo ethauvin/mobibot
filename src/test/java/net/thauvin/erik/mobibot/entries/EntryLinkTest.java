@@ -67,7 +67,7 @@ public class EntryLinkTest {
         }
 
         final SecureRandom r = new SecureRandom();
-        for (i = 0; entryLink.getCommentsCount() > 0; i++) {
+        while (entryLink.getCommentsCount() > 0) {
             entryLink.deleteComment(r.nextInt(entryLink.getCommentsCount()));
         }
         assertThat(entryLink.hasComments()).as("hasComments()").isFalse();

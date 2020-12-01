@@ -32,6 +32,7 @@
 
 package net.thauvin.erik.mobibot.commands.tell;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.apache.logging.log4j.Logger;
 
 import java.io.BufferedInputStream;
@@ -48,6 +49,7 @@ import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
 
 /**
  * The Tell Messages Manager.
@@ -87,6 +89,7 @@ final class TellMessagesMgr {
      * @return The {@link TellMessage} array.
      */
     @SuppressWarnings("unchecked")
+    @SuppressFBWarnings("OBJECT_DESERIALIZATION")
     public static List<TellMessage> load(final String file, final Logger logger) {
         try {
             try (final ObjectInput input = new ObjectInputStream(
