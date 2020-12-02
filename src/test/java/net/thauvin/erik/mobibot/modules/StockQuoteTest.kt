@@ -63,7 +63,7 @@ class StockQuoteTest : LocalProperties() {
                 .isInstanceOf(ModuleException::class.java).hasNoCause()
         } catch (e: ModuleException) {
             // Avoid displaying api keys in CI logs
-            if ("true" == System.getenv("CI")) {
+            if ("true" == System.getenv("CI") && !apiKey.isNullOrBlank()) {
                 throw ModuleException(e.debugMessage, e.getSanitizedMessage(apiKey))
             } else {
                 throw e

@@ -52,7 +52,9 @@ class Lookup(bot: Mobibot) : AbstractModule(bot) {
         if (args.matches("(\\S.)+(\\S)+".toRegex())) {
             with(bot) {
                 try {
-                    send(lookup(args))
+                    lookup(args).split(',').forEach {
+                        send(it.trim())
+                    }
                 } catch (ignore: UnknownHostException) {
                     if (args.matches(
                             ("(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\." +

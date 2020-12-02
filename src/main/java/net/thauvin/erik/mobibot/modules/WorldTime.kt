@@ -36,7 +36,6 @@ import net.thauvin.erik.mobibot.Utils
 import net.thauvin.erik.mobibot.msg.ErrorMessage
 import net.thauvin.erik.mobibot.msg.Message
 import net.thauvin.erik.mobibot.msg.PublicMessage
-import org.apache.commons.lang3.StringUtils
 import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
@@ -72,7 +71,7 @@ class WorldTime(bot: Mobibot) : AbstractModule(bot) {
          */
         @JvmStatic
         fun worldTime(query: String): Message {
-            val tz = COUNTRIES_MAP[StringUtils.upperCase(query.substring(query.indexOf(' ') + 1).trim())]
+            val tz = COUNTRIES_MAP[(query.substring(query.indexOf(' ') + 1).trim()).toUpperCase()]
             val response: String = if (tz != null) {
                 if (BEATS_KEYWORD == tz) {
                     "The current Internet Time is: " + Utils.bold(internetTime() + ' ' + BEATS_KEYWORD)

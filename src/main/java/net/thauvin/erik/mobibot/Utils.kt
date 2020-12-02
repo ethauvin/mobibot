@@ -76,7 +76,7 @@ class Utils private constructor() {
          */
         @JvmStatic
         fun colorize(s: String?, color: String): String {
-            if (s == null) {
+            if (s.isNullOrBlank()) {
                 return Colors.NORMAL
             } else if (Colors.BOLD == color || Colors.REVERSE == color) {
                 return color + s + color
@@ -95,7 +95,7 @@ class Utils private constructor() {
         /**
          * URL encodes the given string.
          */
-        fun encodeUrl(s: String?): String {
+        fun encodeUrl(s: String): String {
             return URLEncoder.encode(s, StandardCharsets.UTF_8)
         }
 
@@ -127,11 +127,15 @@ class Utils private constructor() {
          * Returns a property as an int.
          */
         @JvmStatic
-        fun getIntProperty(property: String, def: Int): Int {
-            return try {
-                property.toInt()
-            } catch (ignore: NumberFormatException) {
+        fun getIntProperty(property: String?, def: Int): Int {
+            return if (property == null) {
                 def
+            } else {
+                try {
+                    property.toInt()
+                } catch (ignore: NumberFormatException) {
+                    def
+                }
             }
         }
 
@@ -148,7 +152,7 @@ class Utils private constructor() {
          * nick.
          */
         @JvmStatic
-        fun helpFormat(text: String?, botNick: String, isPrivate: Boolean): String {
+        fun helpFormat(text: String, botNick: String, isPrivate: Boolean): String {
             val replace = arrayOf(if (isPrivate) "/msg $botNick" else "$botNick:", botNick)
             return StringUtils.replaceEach(text, searchFlags, replace)
         }
@@ -158,7 +162,7 @@ class Utils private constructor() {
          */
         @JvmStatic
         @JvmOverloads
-        fun helpIndent(help: String?, isBold: Boolean = true): String {
+        fun helpIndent(help: String, isBold: Boolean = true): String {
             return "      " + if (isBold) bold(help) else help
         }
 
@@ -182,8 +186,8 @@ class Utils private constructor() {
          * Obfuscates the given string.
          */
         @JvmStatic
-        fun obfuscate(s: String?): String {
-            return if (s!!.isNotBlank()) {
+        fun obfuscate(s: String): String {
+            return if (s.isNotBlank()) {
                 StringUtils.repeat('x', s.length)
             } else s
         }
@@ -228,7 +232,7 @@ class Utils private constructor() {
          * Converts XML/XHTML entities to plain text.
          */
         @JvmStatic
-        fun unescapeXml(str: String?): String {
+        fun unescapeXml(str: String): String {
             return Jsoup.parse(str).text()
         }
 

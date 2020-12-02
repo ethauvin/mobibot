@@ -122,10 +122,10 @@ class StockQuote(bot: Mobibot) : ThreadedModule(bot) {
         @JvmStatic
         @Throws(ModuleException::class)
         fun getQuote(symbol: String, apiKey: String?): List<Message> {
-            if (StringUtils.isBlank(apiKey)) {
+            if (apiKey.isNullOrBlank()) {
                 throw ModuleException("${STOCK_CMD.capitalize()} is disabled. The API key is missing.")
             }
-            return if (StringUtils.isNotBlank(symbol)) {
+            return if (symbol.isNotBlank()) {
                 val debugMessage = "getQuote($symbol)"
                 val messages = ArrayList<Message>()
                 var response: String

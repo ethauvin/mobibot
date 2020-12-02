@@ -87,10 +87,10 @@ class GoogleSearch(bot: Mobibot) : ThreadedModule(bot) {
         @JvmStatic
         @Throws(ModuleException::class)
         fun searchGoogle(query: String, apiKey: String?, cseKey: String?): List<Message> {
-            if (StringUtils.isBlank(apiKey) || StringUtils.isBlank(cseKey)) {
+            if (apiKey.isNullOrBlank() || cseKey.isNullOrBlank()) {
                 throw ModuleException("${StringUtils.capitalize(GOOGLE_CMD)} is disabled. The API keys are missing.")
             }
-            return if (StringUtils.isNotBlank(query)) {
+            return if (query.isNotBlank()) {
                 val results = ArrayList<Message>()
                 try {
                     val url = URL(

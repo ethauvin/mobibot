@@ -101,17 +101,17 @@ class Weather2(bot: Mobibot) : ThreadedModule(bot) {
         @JvmStatic
         @Throws(ModuleException::class)
         fun getWeather(query: String, apiKey: String?): List<Message> {
-            if (StringUtils.isBlank(apiKey)) {
+            if (apiKey.isNullOrBlank()) {
                 throw ModuleException("${WEATHER_CMD.capitalize()} is disabled. The API key is missing.")
             }
-            val owm = OWM(apiKey!!)
+            val owm = OWM(apiKey)
             val messages = ArrayList<Message>()
             owm.unit = OWM.Unit.IMPERIAL
-            if (StringUtils.isNotBlank(query)) {
+            if (query.isNotBlank()) {
                 val argv = query.split(",").toTypedArray()
                 if (argv.size in 1..2) {
                     val city = argv[0].trim()
-                    val country: String = if (argv.size > 1 && StringUtils.isNotBlank(argv[1])) {
+                    val country: String = if (argv.size > 1 && argv[1].isNotBlank()) {
                         argv[1].trim()
                     } else {
                         "US"

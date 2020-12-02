@@ -67,12 +67,17 @@ class ModuleException : Exception {
     /**
      * Return the sanitized message (e.g. remove API keys, etc.)
      */
-    fun getSanitizedMessage(vararg sanitize: String?): String {
-        val obfuscate = arrayOfNulls<String>(sanitize.size)
-        for (i in sanitize.indices) {
-            obfuscate[i] = Utils.obfuscate(sanitize[i])
+    fun getSanitizedMessage(vararg sanitize: String): String {
+        val obfuscate = sanitize.map { Utils.obfuscate(it) }.toTypedArray()
+        return when {
+            cause != null -> {
+                cause.javaClass.name + ": " + StringUtils.replaceEach(cause.message, sanitize, obfuscate)
+            }
+            message != null -> {
+                message.javaClass.name + ": " + StringUtils.replaceEach(message, sanitize, obfuscate)
+            }
+            else -> ""
         }
-        return cause!!.javaClass.name + ": " + StringUtils.replaceEach(cause.message, sanitize, obfuscate)
     }
 
     /**
