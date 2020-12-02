@@ -1,5 +1,5 @@
 /*
- * CalcTest.java
+ * LookupTest.kt
  *
  * Copyright (c) 2004-2019, Erik C. Thauvin (erik@thauvin.net)
  * All rights reserved.
@@ -29,32 +29,30 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+package net.thauvin.erik.mobibot.modules
 
-package net.thauvin.erik.mobibot.modules;
-
-import net.thauvin.erik.mobibot.Utils;
-import org.testng.annotations.Test;
-
-import static org.assertj.core.api.Assertions.assertThat;
+import net.thauvin.erik.mobibot.modules.Lookup.Companion.lookup
+import net.thauvin.erik.mobibot.modules.Lookup.Companion.whois
+import org.assertj.core.api.Assertions
+import org.testng.annotations.Test
+import java.util.*
 
 /**
- * The <code>CalcTest</code> class.
- *
- * @author <a href="https://erik.thauvin.net/" target="_blank">Erik C. Thauvin</a>
- * @created 2019-04-07
- * @since 1.0
+ * The `Lookup Test` class.
  */
-public class CalcTest {
+class LookupTest {
     @Test
-    public void testCalc() {
-        assertThat(Calc.calc("1 + 1")).as("calc(1+1)").isEqualTo("1+1 = %s", Utils.bold(2));
-        assertThat(Calc.calc("1 -3")).as("calc(1 -3)").isEqualTo("1-3 = %s", Utils.bold(-2));
-        assertThat(Calc.calc("pi+π+e+φ")).as("calc(pi+π+e+φ)").isEqualTo("pi+π+e+φ = %s", Utils.bold("10.62"));
-        assertThat(Calc.calc("one + one")).as("calc(one + one)").startsWith("No idea.");
+    @Throws(Exception::class)
+    fun testLookup() {
+        val result = lookup("erik.thauvin.net")
+        Assertions.assertThat(result).`as`("lookup(erik.thauvin.net/104.31.77.12)").contains("104.31.77.12")
     }
 
     @Test
-    public void testCalcImpl() {
-        AbstractModuleTest.testAbstractModule(new Calc(null));
+    @Throws(Exception::class)
+    fun testWhois() {
+        val result = whois("17.178.96.59", Lookup.WHOIS_HOST)
+        Assertions.assertThat(Arrays.stream(result).anyMatch { m: String -> m.contains("Apple Inc.") })
+            .`as`("whois(17.178.96.59/Apple Inc.").isTrue
     }
 }

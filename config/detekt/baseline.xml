@@ -2,18 +2,64 @@
 <SmellBaseline>
   <ManuallySuppressedIssues></ManuallySuppressedIssues>
   <CurrentIssues>
+    <ID>ComplexMethod:Weather2.kt$Weather2.Companion$ @JvmStatic @Throws(ModuleException::class) fun getWeather(query: String, apiKey: String?): List&lt;Message&gt;</ID>
+    <ID>LongMethod:StockQuote.kt$StockQuote.Companion$ @JvmStatic @Throws(ModuleException::class) fun getQuote(symbol: String, apiKey: String?): List&lt;Message&gt;</ID>
+    <ID>LongMethod:Weather2.kt$Weather2.Companion$ @JvmStatic @Throws(ModuleException::class) fun getWeather(query: String, apiKey: String?): List&lt;Message&gt;</ID>
     <ID>LongParameterList:Comment.kt$Comment$( bot: Mobibot, cmd: String, sender: String, isOp: Boolean, entry: EntryLink, index: Int, commentIndex: Int )</ID>
     <ID>LongParameterList:Comment.kt$Comment$( bot: Mobibot, sender: String, isOp: Boolean, entry: EntryLink, index: Int, commentIndex: Int )</ID>
     <ID>LongParameterList:Comment.kt$Comment$(bot: Mobibot, cmd: String, sender: String, entry: EntryLink, index: Int, commentIndex: Int)</ID>
+    <ID>LongParameterList:Twitter.kt$Twitter.Companion$( consumerKey: String?, consumerSecret: String?, token: String?, tokenSecret: String?, handle: String?, message: String, isDm: Boolean )</ID>
     <ID>MagicNumber:Comment.kt$Comment$3</ID>
+    <ID>MagicNumber:CurrencyConverter.kt$CurrencyConverter$11</ID>
+    <ID>MagicNumber:CurrencyConverter.kt$CurrencyConverter$3</ID>
+    <ID>MagicNumber:CurrencyConverter.kt$CurrencyConverter.Companion$3</ID>
+    <ID>MagicNumber:CurrencyConverter.kt$CurrencyConverter.Companion$33</ID>
+    <ID>MagicNumber:CurrencyConverter.kt$CurrencyConverter.Companion$4</ID>
+    <ID>MagicNumber:CurrencyConverter.kt$CurrencyConverter.Companion$8</ID>
     <ID>MagicNumber:Cycle.kt$Cycle$10</ID>
+    <ID>MagicNumber:Dice.kt$Dice$7</ID>
     <ID>MagicNumber:Ignore.kt$Ignore$8</ID>
     <ID>MagicNumber:Modules.kt$Modules$7</ID>
     <ID>MagicNumber:Recap.kt$Recap.Companion$10</ID>
+    <ID>MagicNumber:Twitter.kt$Twitter$1000L</ID>
+    <ID>MagicNumber:Twitter.kt$Twitter$60L</ID>
     <ID>MagicNumber:Users.kt$Users$8</ID>
+    <ID>MagicNumber:Utils.kt$Utils.Companion$30</ID>
+    <ID>MagicNumber:Utils.kt$Utils.Companion$365</ID>
+    <ID>MagicNumber:Utils.kt$Utils.Companion$7</ID>
     <ID>MagicNumber:View.kt$View$8</ID>
+    <ID>MagicNumber:Weather2.kt$Weather2.Companion$1.60934</ID>
+    <ID>MagicNumber:Weather2.kt$Weather2.Companion$32</ID>
+    <ID>MagicNumber:Weather2.kt$Weather2.Companion$5</ID>
+    <ID>MagicNumber:Weather2.kt$Weather2.Companion$9</ID>
+    <ID>MagicNumber:WorldTime.kt$WorldTime$17</ID>
+    <ID>MagicNumber:WorldTime.kt$WorldTime.Companion$3</ID>
+    <ID>MagicNumber:WorldTime.kt$WorldTime.Companion$3600</ID>
+    <ID>MagicNumber:WorldTime.kt$WorldTime.Companion$60</ID>
+    <ID>MagicNumber:WorldTime.kt$WorldTime.Companion$86.4</ID>
+    <ID>MemberNameEqualsClassName:Calc.kt$Calc.Companion$ @JvmStatic fun calc(query: String): String</ID>
+    <ID>MemberNameEqualsClassName:Lookup.kt$Lookup.Companion$ @JvmStatic @Throws(UnknownHostException::class) fun lookup(query: String): String</ID>
+    <ID>MemberNameEqualsClassName:WorldTime.kt$WorldTime.Companion$ @JvmStatic fun worldTime(query: String): Message</ID>
     <ID>NestedBlockDepth:Addons.kt$Addons$ fun add(command: AbstractCommand, props: Properties)</ID>
     <ID>NestedBlockDepth:Comment.kt$Comment$override fun commandResponse( sender: String, login: String, args: String, isOp: Boolean, isPrivate: Boolean )</ID>
+    <ID>NestedBlockDepth:CurrencyConverter.kt$CurrencyConverter.Companion$ @JvmStatic fun convertCurrency(query: String): Message</ID>
+    <ID>NestedBlockDepth:FeedReader.kt$FeedReader$ override fun run()</ID>
+    <ID>NestedBlockDepth:GoogleSearch.kt$GoogleSearch$ override fun run(sender: String, cmd: String, args: String, isPrivate: Boolean)</ID>
     <ID>NestedBlockDepth:LinksMgr.kt$LinksMgr$override fun commandResponse( sender: String, login: String, args: String, isOp: Boolean, isPrivate: Boolean )</ID>
+    <ID>NestedBlockDepth:Lookup.kt$Lookup$override fun commandResponse( sender: String, cmd: String, args: String, isPrivate: Boolean )</ID>
+    <ID>NestedBlockDepth:StockQuote.kt$StockQuote$ override fun run(sender: String, cmd: String, args: String, isPrivate: Boolean)</ID>
+    <ID>NestedBlockDepth:StockQuote.kt$StockQuote.Companion$ @JvmStatic @Throws(ModuleException::class) fun getQuote(symbol: String, apiKey: String?): List&lt;Message&gt;</ID>
+    <ID>NestedBlockDepth:Weather2.kt$Weather2$ override fun run(sender: String, cmd: String, args: String, isPrivate: Boolean)</ID>
+    <ID>NestedBlockDepth:Weather2.kt$Weather2.Companion$ @JvmStatic @Throws(ModuleException::class) fun getWeather(query: String, apiKey: String?): List&lt;Message&gt;</ID>
+    <ID>NestedBlockDepth:WorldTime.kt$WorldTime$override fun commandResponse( sender: String, cmd: String, args: String, isPrivate: Boolean )</ID>
+    <ID>ReturnCount:Utils.kt$Utils.Companion$ @JvmStatic fun colorize(s: String?, color: String): String</ID>
+    <ID>ThrowsCount:GoogleSearch.kt$GoogleSearch.Companion$ @JvmStatic @Throws(ModuleException::class) fun searchGoogle(query: String, apiKey: String?, cseKey: String?): List&lt;Message&gt;</ID>
+    <ID>ThrowsCount:StockQuote.kt$StockQuote.Companion$ @JvmStatic @Throws(ModuleException::class) fun getQuote(symbol: String, apiKey: String?): List&lt;Message&gt;</ID>
+    <ID>ThrowsCount:StockQuote.kt$StockQuote.Companion$@Throws(ModuleException::class) private fun getJsonResponse(response: String, debugMessage: String): JSONObject</ID>
+    <ID>ThrowsCount:Weather2.kt$Weather2.Companion$ @JvmStatic @Throws(ModuleException::class) fun getWeather(query: String, apiKey: String?): List&lt;Message&gt;</ID>
+    <ID>TooGenericExceptionCaught:FeedReader.kt$FeedReader$e: Exception</ID>
+    <ID>TooGenericExceptionCaught:StockQuote.kt$StockQuote.Companion$e: NullPointerException</ID>
+    <ID>TooGenericExceptionCaught:Weather2.kt$Weather2.Companion$e: NullPointerException</ID>
+    <ID>TooManyFunctions:Utils.kt$Utils$Companion</ID>
   </CurrentIssues>
 </SmellBaseline>

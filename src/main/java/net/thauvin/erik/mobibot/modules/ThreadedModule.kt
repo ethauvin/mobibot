@@ -1,7 +1,7 @@
 /*
- * NoticeMessage.kt
+ * ThreadedModule.java
  *
- * Copyright (c) 2004-2019, Erik C. Thauvin (erik@thauvin.net)
+ * Copyright (c) 2004-2020, Erik C. Thauvin (erik@thauvin.net)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,15 +29,34 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.thauvin.erik.mobibot.msg
+package net.thauvin.erik.mobibot.modules
+
+import net.thauvin.erik.mobibot.Mobibot
 
 /**
- * The `NoticeMessage` class.
+ * The `ThreadedModule` class.
  */
-class NoticeMessage @JvmOverloads constructor(msg: String, color: String = DEFAULT_COLOR) : Message() {
-    init {
-        this.msg = msg
-        this.color = color
-        isNotice = true
+abstract class ThreadedModule(bot: Mobibot) : AbstractModule(bot) {
+    override fun commandResponse(
+        sender: String,
+        cmd: String,
+        args: String,
+        isPrivate: Boolean
+    ) {
+        if (isEnabled && args.isNotEmpty()) {
+            Thread { run(sender, cmd, args, isPrivate) }.start()
+        } else {
+            helpResponse(sender, isPrivate)
+        }
     }
+
+    /**
+     * Runs the thread.
+     */
+    abstract fun run(
+        sender: String,
+        cmd: String,
+        args: String,
+        isPrivate: Boolean
+    )
 }

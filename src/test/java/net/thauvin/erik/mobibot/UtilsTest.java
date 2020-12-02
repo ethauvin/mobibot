@@ -66,7 +66,7 @@ public class UtilsTest {
 
     @Test
     public void testBold() {
-        assertThat(Utils.bold(1)).as("bold(1)").isEqualTo(Colors.BOLD + "1" + Colors.BOLD);
+        assertThat(Utils.bold(Integer.toString(1))).as("bold(1)").isEqualTo(Colors.BOLD + "1" + Colors.BOLD);
         assertThat(Utils.bold(ASCII)).as("bold(ascii").isEqualTo(Colors.BOLD + ASCII + Colors.BOLD);
     }
 

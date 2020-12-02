@@ -1,5 +1,5 @@
 /*
- * JokeTest.java
+ * CalcTest.kt
  *
  * Copyright (c) 2004-2019, Erik C. Thauvin (erik@thauvin.net)
  * All rights reserved.
@@ -29,29 +29,26 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+package net.thauvin.erik.mobibot.modules
 
-package net.thauvin.erik.mobibot.modules;
-
-import org.testng.annotations.Test;
-
-import static org.assertj.core.api.Assertions.assertThat;
+import net.thauvin.erik.mobibot.Utils
+import net.thauvin.erik.mobibot.modules.Calc.Companion.calc
+import org.assertj.core.api.Assertions
+import org.testng.annotations.Test
 
 /**
- * The <code>JokeTest</code> class.
- *
- * @author <a href="https://erik.thauvin.net/" target="_blank">Erik C. Thauvin</a>
- * @created 2019-04-07
- * @since 1.0
+ * The `CalcTest` class.
  */
-public class JokeTest {
+class CalcTest {
     @Test
-    public void testJokeImpl() {
-        AbstractModuleTest.testAbstractModule(new Joke(null));
-    }
-
-    @Test
-    public void testRamdomJoke() throws ModuleException {
-        assertThat(Joke.randomJoke().getMsg().length() > 0).as("randomJoke() > 0").isTrue();
-        assertThat(Joke.randomJoke().getMsg()).as("randomJoke()").containsIgnoringCase("chuck");
+    fun testCalc() {
+        Assertions.assertThat(calc("1 + 1")).`as`("calc(1+1)")
+            .isEqualTo("1+1 = %s", Utils.bold(2))
+        Assertions.assertThat(calc("1 -3")).`as`("calc(1 -3)")
+            .isEqualTo("1-3 = %s", Utils.bold(-2))
+        Assertions.assertThat(calc("pi+π+e+φ")).`as`("calc(pi+π+e+φ)")
+            .isEqualTo("pi+π+e+φ = %s", Utils.bold("10.62"))
+        Assertions.assertThat(calc("one + one")).`as`("calc(one + one)")
+            .startsWith("No idea.")
     }
 }

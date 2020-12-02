@@ -63,9 +63,10 @@ abstract class AbstractCommand(val bot: Mobibot) {
         return false
     }
 
-    open fun getProperty(key: String) : String? {
+    open fun getProperty(key: String): String? {
         return properties[key]
     }
+
     open fun getPropertyKeys(): Set<String> {
         return properties.keys
     }

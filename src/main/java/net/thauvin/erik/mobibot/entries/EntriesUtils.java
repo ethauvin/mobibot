@@ -84,7 +84,8 @@ public final class EntriesUtils {
      * @param isView Set to true to display the number of comments.
      * @return The entry's link.
      */
-    @SuppressFBWarnings(value = "CE_CLASS_ENVY", justification = "Yes, it does.")
+    @SuppressFBWarnings(value = "CE_CLASS_ENVY",
+                        justification = "Yes, it does.")
     public static String buildLink(final int index, final EntryLink entry, final boolean isView) {
         final StringBuilder buff = new StringBuilder().append(Constants.LINK_CMD).append(index + 1)
                                                       .append(": ").append('[').append(entry.getNick()).append(']');

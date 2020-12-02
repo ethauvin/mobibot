@@ -1,7 +1,7 @@
 /*
- * ThreadedModule.java
+ * PingTest.kt
  *
- * Copyright (c) 2004-2020, Erik C. Thauvin (erik@thauvin.net)
+ * Copyright (c) 2004-2019, Erik C. Thauvin (erik@thauvin.net)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,40 +29,25 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+package net.thauvin.erik.mobibot.modules
 
-package net.thauvin.erik.mobibot.modules;
-
-import net.thauvin.erik.mobibot.Mobibot;
+import net.thauvin.erik.mobibot.modules.Ping.Companion.randomPing
+import org.assertj.core.api.Assertions
+import org.testng.annotations.Test
 
 /**
- * The <code>ThreadedModule</code> class.
- *
- * @author <a href="https://erik.thauvin.net/" target="_blank">Erik C. Thauvin</a>
- * @created 2019-04-03
- * @since 1.0
+ * The `PingTest` class.
  */
-public abstract class ThreadedModule extends AbstractModule {
-    ThreadedModule(final Mobibot bot) {
-        super(bot);
+class PingTest {
+    @Test
+    fun testPingsArray() {
+        Assertions.assertThat(Ping.PINGS).`as`("Pings array is not empty.").isNotEmpty
     }
 
-    @Override
-    public void commandResponse(final String sender,
-                                final String cmd,
-                                final String args,
-                                final boolean isPrivate) {
-        if (isEnabled() && args.length() > 0) {
-            new Thread(() -> run(sender, cmd, args, isPrivate)).start();
-        } else {
-            helpResponse(sender, isPrivate);
+    @Test
+    fun testRandomPing() {
+        for (i in 0..9) {
+            Assertions.assertThat(randomPing()).`as`("Random ping $i").isIn(Ping.PINGS)
         }
     }
-
-    /**
-     * Runs the thread.
-     */
-    abstract void run(String sender,
-                      @SuppressWarnings("unused") String cmd,
-                      String args,
-                      boolean isPrivate);
 }

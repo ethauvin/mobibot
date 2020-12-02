@@ -1,5 +1,5 @@
 /*
- * RockPaperScissorsTest.kt
+ * StockQuoteTest.kt
  *
  * Copyright (c) 2004-2020, Erik C. Thauvin (erik@thauvin.net)
  * All rights reserved.
@@ -29,35 +29,45 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package net.thauvin.erik.mobibot.modules
 
-import org.assertj.core.api.Assertions.assertThat
+import net.thauvin.erik.mobibot.LocalProperties
+import net.thauvin.erik.mobibot.modules.StockQuote.Companion.getQuote
+import org.assertj.core.api.Assertions
 import org.testng.annotations.Test
 
-class RockPaperScissorsTest {
+/**
+ * The `StockQuoteTest` class.
+ */
+class StockQuoteTest : LocalProperties() {
     @Test
-    fun testWinLoseOrDraw() {
-        assertThat(
-            RockPaperScissors.winLoseOrDraw("scissors", "paper")
-        ).`as`("scissors vs. paper").isEqualTo("win")
-        assertThat(
-            RockPaperScissors.winLoseOrDraw("paper", "rock")
-        ).`as`("paper vs. rock").isEqualTo("win")
-        assertThat(
-            RockPaperScissors.winLoseOrDraw("rock", "scissors")
-        ).`as`("rock vs. scissors").isEqualTo("win")
-        assertThat(
-            RockPaperScissors.winLoseOrDraw("paper", "scissors")
-        ).`as`("paper vs. scissors").isEqualTo("lose")
-        assertThat(
-            RockPaperScissors.winLoseOrDraw("rock", "paper")
-        ).`as`("rock vs. paper").isEqualTo("lose")
-        assertThat(
-            RockPaperScissors.winLoseOrDraw("scissors", "rock")
-        ).`as`("scissors vs. rock").isEqualTo("lose")
-        assertThat(
-            RockPaperScissors.winLoseOrDraw("scissors", "scissors")
-        ).`as`("scissors vs. scissors").isEqualTo("draw")
+    @Throws(ModuleException::class)
+    fun testGetQuote() {
+        val apiKey = getProperty(StockQuote.ALPHAVANTAGE_API_KEY_PROP)
+        try {
+            val messages = getQuote("apple inc", apiKey)
+            Assertions.assertThat(messages).`as`("response not empty").isNotEmpty
+            Assertions.assertThat(messages[0].msg).`as`("same stock symbol")
+                .isEqualTo("Symbol: AAPL [Apple Inc.]")
+            Assertions.assertThat(messages[1].msg).`as`("price label")
+                .startsWith("    Price:     ")
+            try {
+                getQuote("blahfoo", apiKey)
+            } catch (e: ModuleException) {
+                Assertions.assertThat(e.message).`as`("invalid symbol")
+                    .containsIgnoringCase(StockQuote.INVALID_SYMBOL)
+            }
+            Assertions.assertThatThrownBy { getQuote("test", "") }.`as`("no API key")
+                .isInstanceOf(ModuleException::class.java).hasNoCause()
+            Assertions.assertThatThrownBy { getQuote("", "apikey") }.`as`("no symbol")
+                .isInstanceOf(ModuleException::class.java).hasNoCause()
+        } catch (e: ModuleException) {
+            // Avoid displaying api keys in CI logs
+            if ("true" == System.getenv("CI")) {
+                throw ModuleException(e.debugMessage, e.getSanitizedMessage(apiKey))
+            } else {
+                throw e
+            }
+        }
     }
 }

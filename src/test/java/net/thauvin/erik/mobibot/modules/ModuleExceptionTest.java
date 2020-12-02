@@ -42,10 +42,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * The <code>ModuleExceptionTest</code> class.
- *
- * @author <a href="https://erik.thauvin.net/" target="_blank">Erik C. Thauvin</a>
- * @created 2019-04-09
- * @since 1.0
  */
 public class ModuleExceptionTest {
     static final String debugMessage = "debugMessage";
@@ -53,13 +49,13 @@ public class ModuleExceptionTest {
 
     @DataProvider(name = "dp")
     Object[][] createData(final Method m) {
-        return new Object[][]{new Object[]{new ModuleException(debugMessage,
-                                                               message,
-                                                               new IOException("URL http://foobar.com"))},
-                              new Object[]{new ModuleException(debugMessage,
-                                                               message,
-                                                               new IOException("URL http://foobar.com?"))},
-                              new Object[]{new ModuleException(debugMessage, message)}};
+        return new Object[][]{ new Object[]{ new ModuleException(debugMessage,
+                                                                 message,
+                                                                 new IOException("URL http://foobar.com")) },
+                               new Object[]{ new ModuleException(debugMessage,
+                                                                 message,
+                                                                 new IOException("URL http://foobar.com?")) },
+                               new Object[]{ new ModuleException(debugMessage, message) } };
     }
 
     @Test(dataProvider = "dp")
@@ -78,7 +74,7 @@ public class ModuleExceptionTest {
         final ModuleException e = new ModuleException(debugMessage,
                                                       message,
                                                       new IOException(
-                                                          "URL http://foo.com?apiKey=" + apiKey + "&userID=me"));
+                                                              "URL http://foo.com?apiKey=" + apiKey + "&userID=me"));
         assertThat(e.getSanitizedMessage(apiKey)).as("sanitized url").contains("xxxxxxxxxx").doesNotContain(apiKey);
     }
 }

@@ -34,6 +34,7 @@ package net.thauvin.erik.mobibot.modules;
 
 import net.thauvin.erik.mobibot.Mobibot;
 import net.thauvin.erik.mobibot.Utils;
+import org.jetbrains.annotations.NotNull;
 
 import java.security.SecureRandom;
 
@@ -71,9 +72,9 @@ public final class War extends AbstractModule {
      * {@inheritDoc}
      */
     @Override
-    public void commandResponse(final String sender,
-                                final String cmd,
-                                final String args,
+    public void commandResponse(@NotNull final String sender,
+                                @NotNull final String cmd,
+                                @NotNull final String args,
                                 final boolean isPrivate) {
         final SecureRandom r = new SecureRandom();
 
@@ -84,20 +85,21 @@ public final class War extends AbstractModule {
             i = r.nextInt(WAR_DECK.length);
             y = r.nextInt(WAR_DECK.length);
 
-            bot.send(sender + " drew the " + bold(WAR_DECK[i]) + " of " + bold(WAR_SUITS[r.nextInt(WAR_SUITS.length)]));
-            bot.action("drew the " + bold(WAR_DECK[y]) + " of " + bold(WAR_SUITS[r.nextInt(WAR_SUITS.length)]));
+            getBot().send(sender + " drew the " + bold(WAR_DECK[i]) + " of "
+                          + bold(WAR_SUITS[r.nextInt(WAR_SUITS.length)]));
+            getBot().action("drew the " + bold(WAR_DECK[y]) + " of " + bold(WAR_SUITS[r.nextInt(WAR_SUITS.length)]));
 
             if (i != y) {
                 break;
             }
 
-            bot.send("This means " + bold("WAR") + '!');
+            getBot().send("This means " + bold("WAR") + '!');
         }
 
         if (i < y) {
-            bot.action("lost.");
+            getBot().action("lost.");
         } else {
-            bot.action("wins.");
+            getBot().action("wins.");
         }
     }
 }

@@ -1,5 +1,5 @@
 /*
- * LookupTest.java
+ * JokeTest.kt
  *
  * Copyright (c) 2004-2019, Erik C. Thauvin (erik@thauvin.net)
  * All rights reserved.
@@ -29,40 +29,20 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+package net.thauvin.erik.mobibot.modules
 
-package net.thauvin.erik.mobibot.modules;
-
-import org.testng.annotations.Test;
-
-import java.util.Arrays;
-
-import static org.assertj.core.api.Assertions.assertThat;
+import net.thauvin.erik.mobibot.modules.Joke.Companion.randomJoke
+import org.assertj.core.api.Assertions
+import org.testng.annotations.Test
 
 /**
- * The <code>Lookup Test</code> class.
- *
- * @author <a href="https://erik.thauvin.net/" target="_blank">Erik C. Thauvin</a>
- * @created 2017-05-30
- * @since 1.0
+ * The `JokeTest` class.
  */
-@SuppressWarnings("PMD.AvoidUsingHardCodedIP")
-public class LookupTest {
+class JokeTest {
     @Test
-    public void testLookupImpl() {
-        AbstractModuleTest.testAbstractModule(new Lookup(null));
-    }
-
-    @Test
-    public void testLookup() throws Exception {
-        final String result = Lookup.lookup("erik.thauvin.net");
-        assertThat(result).as("lookup(erik.thauvin.net/104.31.77.12)").contains("104.31.77.12");
-    }
-
-    @Test
-    public void testWhois() throws Exception {
-        final String[] result = Lookup.whois("17.178.96.59", Lookup.WHOIS_HOST);
-
-        assertThat(Arrays.stream(result).anyMatch(m -> m.contains("Apple Inc.")))
-            .as("whois(17.178.96.59/Apple Inc.").isTrue();
+    @Throws(ModuleException::class)
+    fun testRamdomJoke() {
+        Assertions.assertThat(randomJoke().msg.isNotEmpty()).`as`("randomJoke() > 0").isTrue
+        Assertions.assertThat(randomJoke().msg).`as`("randomJoke()").containsIgnoringCase("chuck")
     }
 }

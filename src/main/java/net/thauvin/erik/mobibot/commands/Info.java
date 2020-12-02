@@ -48,7 +48,7 @@ public class Info extends AbstractCommand {
             + " (" + Utils.green(ReleaseInfo.WEBSITE) + ')',
             "Written by " + ReleaseInfo.AUTHOR + " (" + Utils.green(ReleaseInfo.AUTHOR_URL) + ')');
 
-    public Info(@NotNull final Mobibot bot) {
+    public Info(final Mobibot bot) {
         super(bot);
     }
 
@@ -97,18 +97,14 @@ public class Info extends AbstractCommand {
 
         if (isOp) {
             if (getBot().getTell().isEnabled()) {
-                info.append(", Messages: ")
-                    .append(getBot().getTell().size());
+                info.append(", Messages: ").append(getBot().getTell().size());
             }
             if (getBot().getTwitter().isAutoPost()) {
-                info.append(", Twitter: ")
-                    .append(getBot().getTwitter().entriesCount());
+                info.append(", Twitter: ").append(getBot().getTwitter().entriesCount());
             }
         }
 
-        info.append(", Recap: ")
-            .append(Recap.recapCount())
-            .append(']');
+        info.append(", Recap: ").append(Recap.recapCount()).append(']');
 
         getBot().send(sender, info.toString(), isPrivate);
     }

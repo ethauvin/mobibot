@@ -1,5 +1,5 @@
 /*
- * PingTest.java
+ * ModuleException.kit
  *
  * Copyright (c) 2004-2019, Erik C. Thauvin (erik@thauvin.net)
  * All rights reserved.
@@ -29,28 +29,61 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+package net.thauvin.erik.mobibot.modules
 
-package net.thauvin.erik.mobibot.modules;
-
-import org.testng.annotations.Test;
-
-import static org.assertj.core.api.Assertions.assertThat;
+import net.thauvin.erik.mobibot.Utils
+import org.apache.commons.lang3.StringUtils
 
 /**
- * The <code>PingTest</code> class.
- *
- * @author <a href="https://erik.thauvin.net/" target="_blank">Erik C. Thauvin</a>
- * @created 2019-04-07
- * @since 1.0
+ * The `ModuleException` class.
  */
-public class PingTest {
-    @Test
-    public void testPingImpl() {
-        AbstractModuleTest.testAbstractModule(new Ping(null));
+class ModuleException : Exception {
+    /**
+     * Returns the debug message.
+     */
+    val debugMessage: String?
+
+    /**
+     * Creates a new exception.
+     */
+    constructor(message: String?) : super(message) {
+        debugMessage = message
     }
 
-    @Test
-    public void testPingsArray() {
-        assertThat(Ping.PINGS).as("Pings array is not empty.").isNotEmpty();
+    /**
+     * Creates a new exception.
+     */
+    constructor(debugMessage: String?, message: String?, cause: Throwable?) : super(message, cause) {
+        this.debugMessage = debugMessage
+    }
+
+    /**
+     * Creates a new exception.
+     */
+    constructor(debugMessage: String?, message: String?) : super(message) {
+        this.debugMessage = debugMessage
+    }
+
+    /**
+     * Return the sanitized message (e.g. remove API keys, etc.)
+     */
+    fun getSanitizedMessage(vararg sanitize: String?): String {
+        val obfuscate = arrayOfNulls<String>(sanitize.size)
+        for (i in sanitize.indices) {
+            obfuscate[i] = Utils.obfuscate(sanitize[i])
+        }
+        return cause!!.javaClass.name + ": " + StringUtils.replaceEach(cause.message, sanitize, obfuscate)
+    }
+
+    /**
+     * Return `true` if the exception has a cause.
+     */
+    @Suppress("unused")
+    fun hasCause(): Boolean {
+        return cause != null
+    }
+
+    companion object {
+        private const val serialVersionUID = 1L
     }
 }

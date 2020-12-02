@@ -34,9 +34,6 @@ package net.thauvin.erik.mobibot.modules
 
 import net.thauvin.erik.mobibot.Mobibot
 import net.thauvin.erik.mobibot.Utils
-import net.thauvin.erik.mobibot.Utils.bold
-import net.thauvin.erik.mobibot.Utils.green
-import net.thauvin.erik.mobibot.Utils.red
 import kotlin.random.Random
 
 
@@ -96,21 +93,23 @@ class RockPaperScissors(bot: Mobibot) : AbstractModule(bot) {
         }
     }
 
-    override fun commandResponse(sender: String, cmd: String, args: String?, isPrivate: Boolean) {
+    override fun commandResponse(sender: String, cmd: String, args: String, isPrivate: Boolean) {
         val hand = Hands.valueOf(cmd.toUpperCase())
         val botHand = Hands.values()[Random.nextInt(0, Hands.values().size)]
-        when {
-            hand == botHand -> {
-                bot.send("${green(hand.name)} vs. ${green(botHand.name)}")
-                bot.action("tied.")
-            }
-            hand.beats(botHand) -> {
-                bot.send("${green(hand.name)} ${bold(hand.action)} ${red(botHand.name)}")
-                bot.action("lost.")
-            }
-            else -> {
-                bot.send("${green(botHand.name)} ${bold(botHand.action)} ${red(hand.name)}")
-                bot.action("wins.")
+        with(bot) {
+            when {
+                hand == botHand -> {
+                    send("${Utils.green(hand.name)} vs. ${Utils.green(botHand.name)}")
+                    action("tied.")
+                }
+                hand.beats(botHand) -> {
+                    send("${Utils.green(hand.name)} ${Utils.bold(hand.action)} ${Utils.red(botHand.name)}")
+                    action("lost.")
+                }
+                else -> {
+                    send("${Utils.green(botHand.name)} ${Utils.bold(botHand.action)} ${Utils.red(hand.name)}")
+                    action("wins.")
+                }
             }
         }
     }

@@ -1,5 +1,5 @@
 /*
- * CurrencyConverterTest.java
+ * WordTimeTest.kt
  *
  * Copyright (c) 2004-2019, Erik C. Thauvin (erik@thauvin.net)
  * All rights reserved.
@@ -29,45 +29,21 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+package net.thauvin.erik.mobibot.modules
 
-package net.thauvin.erik.mobibot.modules;
-
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
-
-import static org.assertj.core.api.Assertions.assertThat;
+import net.thauvin.erik.mobibot.Utils
+import net.thauvin.erik.mobibot.modules.WorldTime.Companion.worldTime
+import org.assertj.core.api.Assertions
+import org.testng.annotations.Test
 
 /**
- * The <code>CurrencyConvertTest</code> class.
- *
- * @author <a href="https://erik.thauvin.net/" target="_blank">Erik C. Thauvin</a>
- * @created 2019-04-07
- * @since 1.0
+ * The `WordTimeTest` class.
  */
-public class CurrencyConverterTest {
-    @BeforeClass
-    public void before() throws ModuleException {
-        CurrencyConverter.loadRates();
-    }
-
+class WordTimeTest {
     @Test
-    @SuppressFBWarnings("PRMC_POSSIBLY_REDUNDANT_METHOD_CALLS")
-    public void testConvertCurrency() {
-        assertThat(CurrencyConverter.convertCurrency("100 USD to EUR").getMsg())
-                .as("100 USD to EUR").matches("100\\.00 USD = \\d{2,3}\\.\\d{2} EUR");
-        assertThat(CurrencyConverter.convertCurrency("100 USD to USD").getMsg())
-                .as("100 USD to USD").contains("You're kidding, right?");
-        assertThat(CurrencyConverter.convertCurrency("100 USD").getMsg())
-                .as("100 USD").contains("Invalid query.");
-        assertThat(CurrencyConverter.currencyRates().size())
-                .as("currencyRates().size() == 33").isEqualTo(33);
-        assertThat(CurrencyConverter.currencyRates())
-                .as("currencyRates().get(EUR)").contains("  EUR:        1");
-    }
-
-    @Test
-    public void testCurrencyConvertererImpl() {
-        AbstractModuleTest.testAbstractModule(new CurrencyConverter(null));
+    fun testWorldTime() {
+        Assertions.assertThat(worldTime("PST").msg).`as`("PST").endsWith(Utils.bold("Los Angeles"))
+        Assertions.assertThat(worldTime("BLAH").isError).`as`("BLAH").isTrue
+        Assertions.assertThat(worldTime("BEATS").msg).`as`("BEATS").contains("@")
     }
 }

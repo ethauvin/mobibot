@@ -1,7 +1,7 @@
 /*
- * NoticeMessage.kt
+ * DiceTest.kt
  *
- * Copyright (c) 2004-2019, Erik C. Thauvin (erik@thauvin.net)
+ * Copyright (c) 2004-2020, Erik C. Thauvin (erik@thauvin.net)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,15 +29,24 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.thauvin.erik.mobibot.msg
 
-/**
- * The `NoticeMessage` class.
- */
-class NoticeMessage @JvmOverloads constructor(msg: String, color: String = DEFAULT_COLOR) : Message() {
-    init {
-        this.msg = msg
-        this.color = color
-        isNotice = true
+package net.thauvin.erik.mobibot.modules
+
+
+import org.assertj.core.api.Assertions.assertThat
+import org.testng.annotations.Test
+
+class DiceTest {
+    @Test
+    fun testWinLoseOrTie() {
+        assertThat(
+            Dice.winLoseOrTie(6, 6)
+        ).`as`("6 vs. 6").isEqualTo(Dice.Result.TIE)
+        assertThat(
+            Dice.winLoseOrTie(6, 5)
+        ).`as`("6 vs. 5").isEqualTo(Dice.Result.WIN)
+        assertThat(
+            Dice.winLoseOrTie(5, 6)
+        ).`as`("5 vs. 6").isEqualTo(Dice.Result.LOSE)
     }
 }

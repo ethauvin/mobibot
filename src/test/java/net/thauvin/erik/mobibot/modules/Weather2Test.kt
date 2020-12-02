@@ -1,7 +1,7 @@
 /*
- * AbstractModuleTest.java
+ * Weather2Test.kt
  *
- * Copyright (c) 2004-2020, Erik C. Thauvin (erik@thauvin.net)
+ * Copyright (c) 2004-2019, Erik C. Thauvin (erik@thauvin.net)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,41 +29,32 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+package net.thauvin.erik.mobibot.modules
 
-package net.thauvin.erik.mobibot.modules;
-
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-
-import static org.assertj.core.api.Assertions.assertThat;
+import net.aksingh.owmjapis.api.APIException
+import net.thauvin.erik.mobibot.LocalProperties
+import net.thauvin.erik.mobibot.modules.Weather2.Companion.getWeather
+import org.assertj.core.api.Assertions
+import org.testng.annotations.Test
 
 /**
- * The <code>AbstractModuleTest</code> class.
- *
- * @author <a href="https://erik.thauvin.net/" target="_blank">Erik C. Thauvin</a>
- * @created 2019-04-07
- * @since 1.0
+ * The `Weather2Test` class.
  */
-
-final class AbstractModuleTest {
-    private AbstractModuleTest() {
-        throw new UnsupportedOperationException("Illegal constructor call.");
-    }
-
-    @SuppressFBWarnings("CE_CLASS_ENVY")
-    static void testAbstractModule(final AbstractModule module) {
-        final String name = module.getClass().getName();
-
-        assertThat(module.isEnabled()).as(name + ": enabled").isNotEqualTo(module.hasProperties());
-        assertThat(module.getCommands().size()).as(name + ": commands > 0").isGreaterThan(0);
-        if (!module.hasProperties()) {
-            assertThat(module.getPropertyKeys().size()).as(name + ": no properties").isEqualTo(0);
-            module.setProperty("test", "test");
-            module.setProperty("", "invalid");
-        }
-
-        assertThat(module.getPropertyKeys().size()).as(name + ": properties > 0").isGreaterThan(0);
-
-        module.setProperty("invalid", "");
-        assertThat(module.isValidProperties()).as(name + ": invalid properties").isFalse();
+class Weather2Test : LocalProperties() {
+    @Test
+    @Throws(ModuleException::class)
+    fun testWeather() {
+        var messages = getWeather("98204", getProperty(Weather2.OWM_API_KEY_PROP))
+        Assertions.assertThat(messages[0].msg).`as`("is Everett").contains("Everett").contains("US")
+        Assertions.assertThat(messages[messages.size - 1].msg).`as`("is City Search").endsWith("98204%2CUS")
+        messages = getWeather("London, UK", getProperty(Weather2.OWM_API_KEY_PROP))
+        Assertions.assertThat(messages[0].msg).`as`("is UK").contains("London").contains("UK")
+        Assertions.assertThat(messages[messages.size - 1].msg).`as`("is City Code").endsWith("4517009")
+        Assertions.assertThatThrownBy { getWeather("Montpellier, FR", getProperty(Weather2.OWM_API_KEY_PROP)) }
+            .`as`("Montpellier not found").hasCauseInstanceOf(APIException::class.java)
+        Assertions.assertThatThrownBy { getWeather("test", "") }
+            .`as`("no API key").isInstanceOf(ModuleException::class.java).hasNoCause()
+        messages = getWeather("", "apikey")
+        Assertions.assertThat(messages[0].isError).`as`("no query").isTrue
     }
 }

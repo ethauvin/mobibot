@@ -1,5 +1,5 @@
 /*
- * PublicMessage.java
+ * PublicMessage.kt
  *
  * Copyright (c) 2004-2019, Erik C. Thauvin (erik@thauvin.net)
  * All rights reserved.
@@ -33,10 +33,6 @@ package net.thauvin.erik.mobibot.msg
 
 /**
  * The `PublicMessage` class.
- *
- * @author [Erik C. Thauvin](https://erik.thauvin.net/)
- * @created 2019-04-07
- * @since 1.0
  */
 class PublicMessage @JvmOverloads constructor(msg: String, color: String = DEFAULT_COLOR) : Message() {
     init {

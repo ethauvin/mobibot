@@ -1,5 +1,5 @@
 /*
- * NoticeMessage.kt
+ * TwitterTest.kt
  *
  * Copyright (c) 2004-2019, Erik C. Thauvin (erik@thauvin.net)
  * All rights reserved.
@@ -29,15 +29,43 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.thauvin.erik.mobibot.msg
+package net.thauvin.erik.mobibot.modules
+
+import net.thauvin.erik.mobibot.LocalProperties
+import net.thauvin.erik.mobibot.modules.Twitter.Companion.twitterPost
+import org.assertj.core.api.Assertions
+import org.testng.annotations.Test
+import java.net.InetAddress
+import java.net.UnknownHostException
 
 /**
- * The `NoticeMessage` class.
+ * The `TwitterTest` class.
  */
-class NoticeMessage @JvmOverloads constructor(msg: String, color: String = DEFAULT_COLOR) : Message() {
-    init {
-        this.msg = msg
-        this.color = color
-        isNotice = true
+class TwitterTest : LocalProperties() {
+    private val ci: String
+        get() {
+            val ciName = System.getenv("CI_NAME")
+            return ciName ?: try {
+                InetAddress.getLocalHost().hostName
+            } catch (e: UnknownHostException) {
+                "Unknown Host"
+            }
+        }
+
+    @Test
+    @Throws(ModuleException::class)
+    fun testPostTwitter() {
+        val msg = "Testing Twitter API from $ci"
+        Assertions.assertThat(
+            twitterPost(
+                getProperty(Twitter.CONSUMER_KEY_PROP),
+                getProperty(Twitter.CONSUMER_SECRET_PROP),
+                getProperty(Twitter.TOKEN_PROP),
+                getProperty(Twitter.TOKEN_SECRET_PROP),
+                getProperty(Twitter.HANDLE_PROP),
+                msg,
+                true
+            ).msg
+        ).`as`("twitterPost($msg)").isEqualTo(msg)
     }
 }

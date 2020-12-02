@@ -1,5 +1,5 @@
 /*
- * NoticeMessage.kt
+ * CurrencyConverterTest.kt
  *
  * Copyright (c) 2004-2019, Erik C. Thauvin (erik@thauvin.net)
  * All rights reserved.
@@ -29,15 +29,36 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.thauvin.erik.mobibot.msg
+package net.thauvin.erik.mobibot.modules
+
+import net.thauvin.erik.mobibot.modules.CurrencyConverter.Companion.convertCurrency
+import net.thauvin.erik.mobibot.modules.CurrencyConverter.Companion.currencyRates
+import net.thauvin.erik.mobibot.modules.CurrencyConverter.Companion.loadRates
+import org.assertj.core.api.Assertions
+import org.testng.annotations.BeforeClass
+import org.testng.annotations.Test
 
 /**
- * The `NoticeMessage` class.
+ * The `CurrencyConvertTest` class.
  */
-class NoticeMessage @JvmOverloads constructor(msg: String, color: String = DEFAULT_COLOR) : Message() {
-    init {
-        this.msg = msg
-        this.color = color
-        isNotice = true
+class CurrencyConverterTest {
+    @BeforeClass
+    @Throws(ModuleException::class)
+    fun before() {
+        loadRates()
+    }
+
+    @Test
+    fun testConvertCurrency() {
+        Assertions.assertThat(convertCurrency("100 USD to EUR").msg)
+            .`as`("100 USD to EUR").matches("100\\.00 USD = \\d{2,3}\\.\\d{2} EUR")
+        Assertions.assertThat(convertCurrency("100 USD to USD").msg)
+            .`as`("100 USD to USD").contains("You're kidding, right?")
+        Assertions.assertThat(convertCurrency("100 USD").msg)
+            .`as`("100 USD").contains("Invalid query.")
+        Assertions.assertThat(currencyRates().size)
+            .`as`("currencyRates().size() == 33").isEqualTo(33)
+        Assertions.assertThat(currencyRates())
+            .`as`("currencyRates().get(EUR)").contains("  EUR:        1")
     }
 }

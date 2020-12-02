@@ -1,7 +1,7 @@
 /*
- * NoticeMessage.kt
+ * Ping.kt
  *
- * Copyright (c) 2004-2019, Erik C. Thauvin (erik@thauvin.net)
+ * Copyright (c) 2004-2020, Erik C. Thauvin (erik@thauvin.net)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,15 +29,62 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.thauvin.erik.mobibot.msg
+package net.thauvin.erik.mobibot.modules
+
+import net.thauvin.erik.mobibot.Mobibot
+import net.thauvin.erik.mobibot.Utils
+import kotlin.random.Random
 
 /**
- * The `NoticeMessage` class.
+ * The Ping module.
  */
-class NoticeMessage @JvmOverloads constructor(msg: String, color: String = DEFAULT_COLOR) : Message() {
+class Ping(bot: Mobibot) : AbstractModule(bot) {
+    /**
+     * {@inheritDoc}
+     */
+    override fun commandResponse(
+        sender: String,
+        cmd: String,
+        args: String,
+        isPrivate: Boolean
+    ) {
+        bot.action(randomPing())
+    }
+
+    companion object {
+        /**
+         * The ping responses.
+         */
+        @JvmField
+        val PINGS = listOf(
+            "is barely alive.",
+            "is trying to stay awake.",
+            "has gone fishing.",
+            "is somewhere over the rainbow.",
+            "has fallen and can't get up.",
+            "is running. You better go chase it.",
+            "has just spontaneously combusted.",
+            "is talking to itself... don't interrupt. That's rude.",
+            "is bartending at an AA meeting.",
+            "is hibernating.",
+            "is saving energy: apathetic mode activated.",
+            "is busy. Go away!"
+        )
+
+        @JvmStatic
+        fun randomPing(): String {
+            return PINGS[Random.nextInt(PINGS.size)]
+        }
+
+        /**
+         * The ping command.
+         */
+        private const val PING_CMD = "ping"
+    }
+
     init {
-        this.msg = msg
-        this.color = color
-        isNotice = true
+        commands.add(PING_CMD)
+        help.add("To ping the bot:")
+        help.add(Utils.helpIndent("%c $PING_CMD"))
     }
 }

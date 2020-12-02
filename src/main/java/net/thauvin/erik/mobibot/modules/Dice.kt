@@ -1,5 +1,5 @@
 /*
- * Cycle.kt
+ * Dice.kt
  *
  * Copyright (c) 2004-2020, Erik C. Thauvin (erik@thauvin.net)
  * All rights reserved.
@@ -29,36 +29,75 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
-package net.thauvin.erik.mobibot.commands
+package net.thauvin.erik.mobibot.modules
 
 import net.thauvin.erik.mobibot.Mobibot
 import net.thauvin.erik.mobibot.Utils
+import kotlin.random.Random
 
-class Cycle(bot: Mobibot) : AbstractCommand(bot) {
-    private val wait = 10
-    override val name = "cycle"
-    override val help = listOf("To have the bot leave the channel and come back:", Utils.helpIndent("%c $name"))
-    override val isOp = true
-    override val isPublic = false
-    override val isVisible = true
-
-
+/**
+ * The Dice module.
+ */
+class Dice(bot: Mobibot) : AbstractModule(bot) {
     override fun commandResponse(
         sender: String,
-        login: String,
+        cmd: String,
         args: String,
-        isOp: Boolean,
         isPrivate: Boolean
     ) {
-        if (isOp) {
-            bot.send("$sender has just asked me to leave. I'll be back!")
-            bot.sleep(wait)
-            bot.partChannel(bot.channel)
-            bot.sleep(wait)
-            bot.joinChannel(bot.channel)
-        } else {
-            bot.helpDefault(sender, isOp, isPrivate)
+        val roll = roll()
+        val playerRoll = roll()
+        val total = roll.first + roll.second
+        val playerTotal = playerRoll.first + playerRoll.second
+        with(bot) {
+            send(
+                channel,
+                "$sender rolled two dice: ${Utils.bold(playerRoll.first)} and ${Utils.bold(playerRoll.second)}"
+                    + " for a total of ${Utils.bold(playerTotal)}",
+                isPrivate
+            )
+            action(
+                "rolled two dice: ${Utils.bold(roll.first)} and ${Utils.bold(roll.second)}" +
+                    " for a total of ${Utils.bold(total)}"
+            )
+            when (winLoseOrTie(total, playerTotal)) {
+                Result.WIN -> action("wins.")
+                Result.LOSE -> action("lost.")
+                else -> action("tied.")
+            }
         }
+    }
+
+    enum class Result {
+        WIN, LOSE, TIE
+    }
+
+    private fun roll(): Pair<Int, Int> {
+        return Pair(Random.nextInt(1, 7), Random.nextInt(1, 7))
+    }
+
+    companion object {
+        // Dice command
+        private const val DICE_CMD = "dice"
+
+        fun winLoseOrTie(bot: Int, player: Int): Result {
+            return when {
+                bot > player -> {
+                    Result.WIN
+                }
+                bot < player -> {
+                    Result.LOSE
+                }
+                else -> {
+                    Result.TIE
+                }
+            }
+        }
+    }
+
+    init {
+        commands.add(DICE_CMD)
+        help.add("To roll the dice:")
+        help.add(Utils.helpIndent("%c $DICE_CMD"))
     }
 }

@@ -1,7 +1,7 @@
 /*
- * WordTimeTest.java
+ * Constants.kt
  *
- * Copyright (c) 2004-2019, Erik C. Thauvin (erik@thauvin.net)
+ * Copyright (c) 2004-2020, Erik C. Thauvin (erik@thauvin.net)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,31 +29,81 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+package net.thauvin.erik.mobibot
 
-package net.thauvin.erik.mobibot.modules;
-
-import net.thauvin.erik.mobibot.Utils;
-import org.testng.annotations.Test;
-
-import static org.assertj.core.api.Assertions.assertThat;
+import java.util.*
 
 /**
- * The <code>WordTimeTest</code> class.
- *
- * @author <a href="https://erik.thauvin.net/" target="_blank">Erik C. Thauvin</a>
- * @created 2019-04-07
- * @since 1.0
+ * The `Constants` class.
  */
-public class WordTimeTest {
-    @Test
-    public void testWorldTime() {
-        assertThat(WorldTime.worldTime("PST").getMsg()).as("PST").endsWith(Utils.bold("Los Angeles"));
-        assertThat(WorldTime.worldTime("BLAH").isError()).as("BLAH").isTrue();
-        assertThat(WorldTime.worldTime("BEATS").getMsg()).as("BEATS").contains("@");
-    }
+object Constants {
+    /**
+     * The connect/read timeout in ms.
+     */
+    const val CONNECT_TIMEOUT = 5000
 
-    @Test
-    public void testWorldTimeImpl() {
-        AbstractModuleTest.testAbstractModule(new Lookup(null));
-    }
+    /**
+     * Debug command line argument.
+     */
+    const val DEBUG_ARG = "debug"
+
+    /**
+     * The debug command.
+     */
+    const val DEBUG_CMD = "debug"
+
+    /**
+     * Default IRC Port.
+     */
+    const val DEFAULT_PORT = 6667
+
+    /**
+     * Default IRC Server.
+     */
+    const val DEFAULT_SERVER = "irc.freenode.net"
+
+    /**
+     * The die command.
+     */
+    const val DIE_CMD = "die"
+
+    /**
+     * Help command line argument.
+     */
+    const val HELP_ARG = "help"
+
+    /**
+     * The help command.
+     */
+    const val HELP_CMD = "help"
+
+    /**
+     * The link command.
+     */
+    const val LINK_CMD = "L"
+
+    /**
+     * Default locale.
+     */
+    val LOCALE: Locale = Locale.getDefault()
+
+    /**
+     * The empty title string.
+     */
+    const val NO_TITLE = "No Title"
+
+    /**
+     * Properties command line argument.
+     */
+    const val PROPS_ARG = "properties"
+
+    /**
+     * The timer delay in minutes.
+     */
+    const val TIMER_DELAY = 10L
+
+    /**
+     * Properties version line argument.
+     */
+    const val VERSION_ARG = "version"
 }

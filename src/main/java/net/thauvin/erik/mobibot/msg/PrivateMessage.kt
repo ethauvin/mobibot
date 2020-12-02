@@ -1,5 +1,5 @@
 /*
- * PrivateMessage.java
+ * PrivateMessage.kt
  *
  * Copyright (c) 2004-2019, Erik C. Thauvin (erik@thauvin.net)
  * All rights reserved.
@@ -33,10 +33,6 @@ package net.thauvin.erik.mobibot.msg
 
 /**
  * The `PrivateMessage` class.
- *
- * @author [Erik C. Thauvin](https://erik.thauvin.net/)
- * @created 2019-04-09
- * @since 1.0
  */
 @Suppress("unused")
 class PrivateMessage @JvmOverloads constructor(msg: String, color: String = DEFAULT_COLOR) : Message() {

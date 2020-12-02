@@ -69,8 +69,8 @@ public final class TwitterOAuth {
      * @throws TwitterException If an error occurs.
      * @throws IOException      If an IO error occurs.
      */
-    @SuppressFBWarnings({"DM_DEFAULT_ENCODING", "IMC_IMMATURE_CLASS_PRINTSTACKTRACE"})
-    @SuppressWarnings({"PMD.AvoidPrintStackTrace", "PMD.SystemPrintln"})
+    @SuppressFBWarnings({ "DM_DEFAULT_ENCODING", "IMC_IMMATURE_CLASS_PRINTSTACKTRACE" })
+    @SuppressWarnings({ "PMD.AvoidPrintStackTrace", "PMD.SystemPrintln" })
     public static void main(final String[] args) throws TwitterException, IOException {
         if (args.length == 2) {
             final twitter4j.Twitter twitter = new TwitterFactory().getInstance();
@@ -91,9 +91,10 @@ public final class TwitterOAuth {
                         }
 
                         System.out.println(
-                            "Please add the following to the bot's property file:" + "\n\n" + "twitter-consumerKey="
-                            + args[0] + '\n' + "twitter-consumerSecret=" + args[1] + '\n' + "twitter-token="
-                            + accessToken.getToken() + '\n' + "twitter-tokenSecret=" + accessToken.getTokenSecret());
+                                "Please add the following to the bot's property file:" + "\n\n" + "twitter-consumerKey="
+                                + args[0] + '\n' + "twitter-consumerSecret=" + args[1] + '\n' + "twitter-token="
+                                + accessToken.getToken() + '\n' + "twitter-tokenSecret=" + accessToken
+                                                                                                   .getTokenSecret());
                     } catch (TwitterException te) {
                         if (401 == te.getStatusCode()) {
                             System.out.println("Unable to get the access token.");

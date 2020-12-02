@@ -173,7 +173,8 @@ public class Tell extends AbstractCommand {
                        Utils.helpIndent("%c " + TELL_CMD + " <nick> <message>"),
                        "To view queued and sent messages:",
                        Utils.helpIndent("%c " + TELL_CMD + ' ' + View.VIEW_CMD),
-                       "Messages are kept for " + Utils.bold(maxDays) + Utils.plural(maxDays, " day.", " days."));
+                       "Messages are kept for " + Utils.bold(maxDays)
+                       + Utils.plural(maxDays, " day.", " days."));
     }
 
     @Override
@@ -383,8 +384,8 @@ public class Tell extends AbstractCommand {
                                   isPrivate)),
                           isPrivate);
             getBot().send(sender,
-                          "Messages are kept for " + Utils.bold(maxDays) + Utils.plural(maxDays, " day.", " days."),
-                          isPrivate);
+                          "Messages are kept for " + Utils.bold(maxDays)
+                          + Utils.plural(maxDays, " day.", " days."), isPrivate);
         }
     }
 }

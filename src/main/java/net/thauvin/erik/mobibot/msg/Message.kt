@@ -35,10 +35,6 @@ import org.jibble.pircbot.Colors
 
 /**
  * The `Message` class.
- *
- * @author [Erik C. Thauvin](https://erik.thauvin.net/)
- * @created 2019-04-07
- * @since 1.0
  */
 open class Message {
     companion object {
@@ -67,12 +63,6 @@ open class Message {
 
     /**
      * Creates a new message.
-     *
-     * @param msg The message.
-     * @param color The color.
-     * @param isNotice The notice flag.
-     * @param isError The error flag.
-     * @param isPrivate The private flag.
      */
     @JvmOverloads
     constructor(msg: String, color: String = DEFAULT_COLOR, isNotice: Boolean, isError: Boolean, isPrivate: Boolean) {

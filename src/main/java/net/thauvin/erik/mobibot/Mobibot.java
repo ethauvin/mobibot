@@ -579,7 +579,7 @@ public class Mobibot extends PircBot {
      */
     private boolean helpModules(final String sender, final String topic, final boolean isPrivate) {
         for (final AbstractModule module : addons.getModules()) {
-            for (final String cmd : module.getCommands()) {
+            for (final String cmd : module.commands) {
                 if (topic.equals(cmd)) {
                     module.helpResponse(sender, isPrivate);
                     return true;
@@ -646,7 +646,7 @@ public class Mobibot extends PircBot {
      */
     public final void joinChannel() {
         joinChannel(ircChannel);
-        twitter.notification("%1$s %2$s has joined %3$s");
+        twitter.notification(getName() + " " + ReleaseInfo.VERSION + " has joined " + getChannel());
     }
 
     /**
@@ -695,7 +695,7 @@ public class Mobibot extends PircBot {
                 }
                 // Modules
                 for (final AbstractModule module : addons.getModules()) { // modules
-                    for (final String c : module.getCommands()) {
+                    for (final String c : module.commands) {
                         if (cmd.startsWith(c)) {
                             module.commandResponse(sender, cmd, args, false);
                             return;
@@ -739,7 +739,7 @@ public class Mobibot extends PircBot {
         if (cmd.startsWith(Constants.HELP_CMD)) { // help
             helpResponse(sender, args, true);
         } else if (isOp && "kill".equals(cmd)) { // kill
-            twitter.notification("%1$s killed by " + sender + " on %3$s");
+            twitter.notification(getName() + " killed by " + sender + " on " + getChannel());
             sendRawLine("QUIT : Poof!");
             System.exit(0);
         } else if (isOp && Constants.DEBUG_CMD.equals(cmd)) { // debug
@@ -753,7 +753,7 @@ public class Mobibot extends PircBot {
             send(sender + " has just signed my death sentence.");
             TIMER.cancel();
             twitter.shutdown();
-            twitter.notification("%1$s stopped by " + sender + " on %3$s");
+            twitter.notification(getName() + " stopped by " + sender + " on " + getChannel());
             sleep(3);
             quitServer("The Bot Is Out There!");
             System.exit(0);
@@ -766,7 +766,7 @@ public class Mobibot extends PircBot {
             }
             for (final AbstractModule module : addons.getModules()) {
                 if (module.isPrivateMsgEnabled()) {
-                    for (final String c : module.getCommands()) {
+                    for (final String c : module.commands) {
                         if (cmd.equals(c)) {
                             module.commandResponse(sender, cmd, args, true);
                             return;

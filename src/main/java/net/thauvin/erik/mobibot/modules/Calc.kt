@@ -1,7 +1,7 @@
 /*
- * TwitterTest.java
+ * Calc.kt
  *
- * Copyright (c) 2004-2019, Erik C. Thauvin (erik@thauvin.net)
+ * Copyright (c) 2004-2020, Erik C. Thauvin (erik@thauvin.net)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,50 +29,53 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+package net.thauvin.erik.mobibot.modules
 
-package net.thauvin.erik.mobibot.modules;
-
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-import net.thauvin.erik.mobibot.LocalProperties;
-import org.testng.annotations.Test;
-
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-
-import static org.assertj.core.api.Assertions.assertThat;
+import net.objecthunter.exp4j.ExpressionBuilder
+import net.thauvin.erik.mobibot.Mobibot
+import net.thauvin.erik.mobibot.Utils
+import org.apache.commons.lang3.StringUtils
+import java.text.DecimalFormat
 
 /**
- * The <code>TwitterTest</code> class.
- *
- * @author <a href="https://erik.thauvin.net/" target="_blank">Erik C. Thauvin</a>
- * @created 2019-04-19
- * @since 1.0
+ * The Calc module.
  */
-public class TwitterTest extends LocalProperties {
-    @SuppressFBWarnings("MDM")
-    private String getCi() {
-        final String ciName = System.getenv("CI_NAME");
-        if (ciName != null) {
-            return ciName;
+class Calc(bot: Mobibot) : AbstractModule(bot) {
+    override fun commandResponse(
+        sender: String,
+        cmd: String,
+        args: String,
+        isPrivate: Boolean
+    ) {
+        if (StringUtils.isNotBlank(args)) {
+            bot.send(calc(args))
         } else {
-            try {
-                return InetAddress.getLocalHost().getHostName();
-            } catch (UnknownHostException e) {
-                return "Unknown Host";
+            helpResponse(sender, isPrivate)
+        }
+    }
+
+    companion object {
+        // Calc command
+        private const val CALC_CMD = "calc"
+
+        /**
+         * Performs a calculation. e.g.: 1 + 1 * 2
+         */
+        @JvmStatic
+        fun calc(query: String): String {
+            val decimalFormat = DecimalFormat("#.##")
+            return try {
+                val calc = ExpressionBuilder(query).build()
+                query.replace(" ", "") + " = " + Utils.bold(decimalFormat.format(calc.evaluate()))
+            } catch (e: IllegalArgumentException) {
+                "No idea. This is the kind of math I don't get."
             }
         }
     }
 
-    @Test
-    public void testPostTwitter() throws ModuleException {
-        final String msg = "Testing Twitter API from " + getCi();
-        assertThat(Twitter.twitterPost(
-                getProperty(Twitter.CONSUMER_KEY_PROP),
-                getProperty(Twitter.CONSUMER_SECRET_PROP),
-                getProperty(Twitter.TOKEN_PROP),
-                getProperty(Twitter.TOKEN_SECRET_PROP),
-                getProperty(Twitter.HANDLE_PROP),
-                msg,
-                true).getMsg()).as("twitterPost(" + msg + ')').isEqualTo(msg);
+    init {
+        commands.add(CALC_CMD)
+        help.add("To solve a mathematical calculation:")
+        help.add(Utils.helpIndent("%c $CALC_CMD <calculation>"))
     }
 }
