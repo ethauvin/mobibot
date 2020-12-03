@@ -137,7 +137,7 @@ class Posting(bot: Mobibot) : AbstractCommand(bot) {
         if (entry.login == login || isOp) {
             bot.deletePin(index, entry)
             LinksMgr.removeEntry(index)
-            bot.send("Entry ${Constants.LINK_CMD}${index + 1} removed.")
+            bot.send("Entry ${EntriesUtils.buildLinkCmd(index)} removed.")
             LinksMgr.saveEntries(bot, false)
         } else {
             bot.send(sender, "Please ask a channel op to remove this entry for you.", false)

@@ -37,6 +37,7 @@ import net.thauvin.erik.mobibot.TwitterTimer
 import net.thauvin.erik.mobibot.Utils
 import net.thauvin.erik.mobibot.commands.links.LinksMgr.Companion.entriesCount
 import net.thauvin.erik.mobibot.commands.links.LinksMgr.Companion.getEntry
+import net.thauvin.erik.mobibot.entries.EntriesUtils
 import net.thauvin.erik.mobibot.msg.Message
 import net.thauvin.erik.mobibot.msg.NoticeMessage
 import org.apache.commons.lang3.StringUtils
@@ -76,7 +77,7 @@ class Twitter(bot: Mobibot) : ThreadedModule(bot) {
     override val isValidProperties: Boolean
         get() {
             for (s in propertyKeys) {
-                if (AUTOPOST_PROP != s && HANDLE_PROP != s && properties[s]!!.isBlank()) {
+                if (AUTOPOST_PROP != s && HANDLE_PROP != s && properties[s].isNullOrBlank()) {
                     return false
                 }
             }
@@ -130,7 +131,7 @@ class Twitter(bot: Mobibot) : ThreadedModule(bot) {
                 Thread {
                     try {
                         if (logger.isDebugEnabled) {
-                            logger.debug("Posting {}{} to Twitter.", Constants.LINK_CMD, index + 1)
+                            logger.debug("Posting {} to Twitter.", EntriesUtils.buildLinkCmd(index))
                         }
                         post(message = msg, isDm = false)
                     } catch (e: ModuleException) {
@@ -146,7 +147,7 @@ class Twitter(bot: Mobibot) : ThreadedModule(bot) {
         if (isAutoPost) {
             addEntry(index)
             if (bot.logger.isDebugEnabled) {
-                bot.logger.debug("Scheduling {}{} for posting on Twitter.", Constants.LINK_CMD, index + 1)
+                bot.logger.debug("Scheduling {} for posting on Twitter.", EntriesUtils.buildLinkCmd(index))
             }
             bot.timer.schedule(TwitterTimer(bot, index), Constants.TIMER_DELAY * 60L * 1000L)
         }

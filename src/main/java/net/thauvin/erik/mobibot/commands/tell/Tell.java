@@ -104,7 +104,9 @@ public class Tell extends AbstractCommand {
      */
     @SuppressWarnings("WeakerAccess")
     final boolean clean() {
-        getBot().getLogger().debug("Cleaning the messages.");
+        if (getBot().getLogger().isDebugEnabled()) {
+            getBot().getLogger().debug("Cleaning the messages.");
+        }
         return TellMessagesMgr.clean(messages, maxDays);
     }
 

@@ -138,8 +138,8 @@ class Weather2(bot: Mobibot) : ThreadedModule(bot) {
                             }
                             if (cwd.hasWindData()) {
                                 with(cwd.windData) {
-                                    if (this != null && hasSpeed()) {
-                                        messages.add(NoticeMessage("Wind: ${wind(speed)}"))
+                                    if (this != null && hasSpeed() && speed != null) {
+                                        messages.add(NoticeMessage("Wind: ${wind(speed!!)}"))
                                     }
                                 }
                             }
@@ -148,7 +148,9 @@ class Weather2(bot: Mobibot) : ThreadedModule(bot) {
                                 val list = cwd.weatherList
                                 if (list != null) {
                                     for (w in list) {
-                                        condition.append(' ').append(w!!.getDescription().capitalize()).append('.')
+                                        if (w != null) {
+                                            condition.append(' ').append(w.getDescription().capitalize()).append('.')
+                                        }
                                     }
                                     messages.add(NoticeMessage(condition.toString()))
                                 }
@@ -182,9 +184,9 @@ class Weather2(bot: Mobibot) : ThreadedModule(bot) {
             return messages
         }
 
-        private fun wind(w: Double?): String {
-            val kmh = w!! * 1.60934
-            return "${Math.round(w)} mph, ${kmh.roundToInt()} km/h"
+        private fun wind(w: Double): String {
+            val kmh = w * 1.60934
+            return "${w.roundToInt()} mph, ${kmh.roundToInt()} km/h"
         }
     }
 

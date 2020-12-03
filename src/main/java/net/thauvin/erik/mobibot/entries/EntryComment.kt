@@ -1,5 +1,5 @@
 /*
- * LocalProperties.java
+ * EntryComment.kt
  *
  * Copyright (c) 2004-2020, Erik C. Thauvin (erik@thauvin.net)
  * All rights reserved.
@@ -29,54 +29,26 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+package net.thauvin.erik.mobibot.entries
 
-package net.thauvin.erik.mobibot;
-
-import org.apache.commons.lang3.StringUtils;
-import org.testng.annotations.BeforeSuite;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Properties;
+import java.io.Serializable
+import java.time.LocalDateTime
 
 /**
- * The <code>properties</code> class.
- *
- * @author <a href="https://erik.thauvin.net/" target="_blank">Erik C. Thauvin</a>
- * @created 2019-04-08
- * @since 1.0
+ * Entry comments data class.
  */
-public class LocalProperties {
-    private static final Properties localProps = new Properties();
+data class EntryComment(var comment: String, var nick: String) : Serializable {
+    /**
+     * Creation date.
+     */
+    val date: LocalDateTime = LocalDateTime.now()
 
-    public static String getProperty(final String key) {
-        if (localProps.containsKey(key)) {
-            return localProps.getProperty(key);
-        } else {
-            final String env = System.getenv(keyToEnv(key));
-            if (env != null) {
-                localProps.setProperty(key, env);
-            }
-            return env;
-        }
+    override fun toString(): String {
+        return ("EntryComment{comment='$comment', date=$date, nick='$nick'}")
     }
 
-    private static String keyToEnv(final String key) {
-        return StringUtils.upperCase(key.replace('-', '_'));
-    }
-
-    @BeforeSuite(alwaysRun = true)
-    public void loadProperties() {
-        final Path localPath = Paths.get("local.properties");
-        if (Files.exists(localPath)) {
-            try (final InputStream stream = Files.newInputStream(localPath)) {
-                localProps.load(stream);
-            } catch (IOException ignore) {
-                // Do nothing
-            }
-        }
+    companion object {
+        // Serial version UID
+        const val serialVersionUID = 1L
     }
 }

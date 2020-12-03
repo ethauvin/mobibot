@@ -1,5 +1,5 @@
 /*
- * Modules.kt
+ * LocalProperties.kt
  *
  * Copyright (c) 2004-2020, Erik C. Thauvin (erik@thauvin.net)
  * All rights reserved.
@@ -29,40 +29,47 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+package net.thauvin.erik.mobibot
 
-package net.thauvin.erik.mobibot.commands
+import org.testng.annotations.BeforeSuite
+import java.io.IOException
+import java.nio.file.Files
+import java.nio.file.Paths
+import java.util.*
 
-import net.thauvin.erik.mobibot.Mobibot
-import net.thauvin.erik.mobibot.Utils
-
-class Modules(bot: Mobibot) : AbstractCommand(bot) {
-    override val name = "modules"
-    override val help = listOf(
-        "To view a list of enabled modules:",
-        Utils.helpIndent("%c $name")
-    )
-    override val isOp = true
-    override val isPublic = false
-    override val isVisible = true
-
-    override fun commandResponse(
-        sender: String,
-        login: String,
-        args: String,
-        isOp: Boolean,
-        isPrivate: Boolean
-    ) {
-        with(bot) {
-            if (isOp) {
-                if (modulesNames.isEmpty()) {
-                    send(sender, "There are no enabled modules.", isPrivate)
-                } else {
-                    send(sender, "The enabled modules are: ", isPrivate)
-                    sendList(sender, modulesNames, 7, isPrivate, false)
-                }
-            } else {
-                helpDefault(sender, isOp, isPrivate)
+/**
+ * Access to `local.properties`.
+ */
+open class LocalProperties {
+    @BeforeSuite(alwaysRun = true)
+    fun loadProperties() {
+        val localPath = Paths.get("local.properties")
+        if (Files.exists(localPath)) {
+            try {
+                Files.newInputStream(localPath).use { stream -> localProps.load(stream) }
+            } catch (ignore: IOException) {
+                // Do nothing
             }
+        }
+    }
+
+    companion object {
+        private val localProps = Properties()
+
+        fun getProperty(key: String): String {
+            return if (localProps.containsKey(key)) {
+                localProps.getProperty(key)
+            } else {
+                val env = System.getenv(keyToEnv(key))
+                if (env != null) {
+                    localProps.setProperty(key, env)
+                }
+                env
+            }
+        }
+
+        private fun keyToEnv(key: String): String {
+            return key.replace('-', '_').toUpperCase()
         }
     }
 }

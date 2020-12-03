@@ -94,8 +94,9 @@ final class TellMessagesMgr {
         try {
             try (final ObjectInput input = new ObjectInputStream(
                     new BufferedInputStream(Files.newInputStream(Paths.get(file))))) {
-                logger.debug("Loading the messages.");
-
+                if (logger.isDebugEnabled()) {
+                    logger.debug("Loading the messages.");
+                }
                 return ((List<TellMessage>) input.readObject());
             }
         } catch (FileNotFoundException ignore) {
@@ -118,7 +119,9 @@ final class TellMessagesMgr {
         try {
             try (final BufferedOutputStream bos = new BufferedOutputStream(Files.newOutputStream(Paths.get(file)))) {
                 try (final ObjectOutput output = new ObjectOutputStream(bos)) {
-                    logger.debug("Saving the messages.");
+                    if (logger.isDebugEnabled()) {
+                        logger.debug("Saving the messages.");
+                    }
                     output.writeObject(messages);
                 }
             }

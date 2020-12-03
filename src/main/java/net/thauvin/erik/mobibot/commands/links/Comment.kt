@@ -71,7 +71,7 @@ class Comment(bot: Mobibot) : AbstractCommand(bot) {
         if (index < LinksMgr.entriesCount) {
             val entry: EntryLink = LinksMgr.getEntry(index)
             val commentIndex = cmds[1].toInt() - 1
-            if (commentIndex < entry.commentsCount) {
+            if (commentIndex < entry.comments.size) {
                 when (val cmd = cmds[2].trim()) {
                     "" -> showComment(bot, entry, index, commentIndex) // L1.1:
                     "-" -> deleteComment(bot, sender, isOp, entry, index, commentIndex) // L11:-
@@ -140,7 +140,7 @@ class Comment(bot: Mobibot) : AbstractCommand(bot) {
     ) {
         if (isOp || sender == entry.getComment(commentIndex).nick) {
             entry.deleteComment(commentIndex)
-            bot.send("Comment ${Constants.LINK_CMD}${index + 1}.${commentIndex + 1} removed.")
+            bot.send("Comment ${EntriesUtils.buildLinkCmd(index)}.${commentIndex + 1} removed.")
             LinksMgr.saveEntries(bot, false)
         } else {
             bot.send(sender, "Please ask a channel op to delete this comment for you.", false)

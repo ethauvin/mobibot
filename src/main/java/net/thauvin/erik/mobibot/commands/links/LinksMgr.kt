@@ -40,6 +40,7 @@ import net.thauvin.erik.mobibot.commands.Ignore
 import net.thauvin.erik.mobibot.entries.EntriesMgr
 import net.thauvin.erik.mobibot.entries.EntriesUtils
 import net.thauvin.erik.mobibot.entries.EntryLink
+import org.apache.logging.log4j.LogManager
 import org.jsoup.Jsoup
 import java.io.IOException
 
@@ -166,7 +167,7 @@ class LinksMgr(bot: Mobibot) : AbstractCommand(bot) {
                     bot.send(sender, "Please specify a title, by typing:", isPrivate)
                     bot.send(
                         sender,
-                        Utils.helpIndent(Constants.LINK_CMD + (index + 1) + ":|This is the title"),
+                        Utils.helpIndent("${EntriesUtils.buildLinkCmd(index)}:|This is the title"),
                         isPrivate
                     )
                 }

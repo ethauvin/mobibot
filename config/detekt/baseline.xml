@@ -2,7 +2,9 @@
 <SmellBaseline>
   <ManuallySuppressedIssues></ManuallySuppressedIssues>
   <CurrentIssues>
+    <ID>ComplexMethod:EntriesMgr.kt$EntriesMgr.Companion$ fun saveEntries( bot: Mobibot, entries: List&lt;EntryLink&gt;, history: MutableList&lt;String&gt;, isDayBackup: Boolean )</ID>
     <ID>ComplexMethod:Weather2.kt$Weather2.Companion$ @JvmStatic @Throws(ModuleException::class) fun getWeather(query: String, apiKey: String?): List&lt;Message&gt;</ID>
+    <ID>LongMethod:EntriesMgr.kt$EntriesMgr.Companion$ fun saveEntries( bot: Mobibot, entries: List&lt;EntryLink&gt;, history: MutableList&lt;String&gt;, isDayBackup: Boolean )</ID>
     <ID>LongMethod:StockQuote.kt$StockQuote.Companion$ @JvmStatic @Throws(ModuleException::class) fun getQuote(symbol: String, apiKey: String?): List&lt;Message&gt;</ID>
     <ID>LongMethod:Weather2.kt$Weather2.Companion$ @JvmStatic @Throws(ModuleException::class) fun getWeather(query: String, apiKey: String?): List&lt;Message&gt;</ID>
     <ID>LongParameterList:Comment.kt$Comment$( bot: Mobibot, cmd: String, sender: String, isOp: Boolean, entry: EntryLink, index: Int, commentIndex: Int )</ID>
@@ -43,6 +45,9 @@
     <ID>NestedBlockDepth:Addons.kt$Addons$ fun add(command: AbstractCommand, props: Properties)</ID>
     <ID>NestedBlockDepth:Comment.kt$Comment$override fun commandResponse( sender: String, login: String, args: String, isOp: Boolean, isPrivate: Boolean )</ID>
     <ID>NestedBlockDepth:CurrencyConverter.kt$CurrencyConverter.Companion$ @JvmStatic fun convertCurrency(query: String): Message</ID>
+    <ID>NestedBlockDepth:EntriesMgr.kt$EntriesMgr.Companion$ @Throws(IOException::class, FeedException::class) fun loadEntries(file: String, channel: String, entries: ArrayList&lt;EntryLink&gt;): String</ID>
+    <ID>NestedBlockDepth:EntriesMgr.kt$EntriesMgr.Companion$ fun saveEntries( bot: Mobibot, entries: List&lt;EntryLink&gt;, history: MutableList&lt;String&gt;, isDayBackup: Boolean )</ID>
+    <ID>NestedBlockDepth:EntryLink.kt$EntryLink$ fun setTags(tags: List&lt;String?&gt;)</ID>
     <ID>NestedBlockDepth:FeedReader.kt$FeedReader$ override fun run()</ID>
     <ID>NestedBlockDepth:GoogleSearch.kt$GoogleSearch$ override fun run(sender: String, cmd: String, args: String, isPrivate: Boolean)</ID>
     <ID>NestedBlockDepth:LinksMgr.kt$LinksMgr$override fun commandResponse( sender: String, login: String, args: String, isOp: Boolean, isPrivate: Boolean )</ID>

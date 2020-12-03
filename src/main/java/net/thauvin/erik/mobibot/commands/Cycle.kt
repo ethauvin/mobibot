@@ -51,14 +51,16 @@ class Cycle(bot: Mobibot) : AbstractCommand(bot) {
         isOp: Boolean,
         isPrivate: Boolean
     ) {
-        if (isOp) {
-            bot.send("$sender has just asked me to leave. I'll be back!")
-            bot.sleep(wait)
-            bot.partChannel(bot.channel)
-            bot.sleep(wait)
-            bot.joinChannel(bot.channel)
-        } else {
-            bot.helpDefault(sender, isOp, isPrivate)
+        with(bot) {
+            if (isOp) {
+                send("$sender has just asked me to leave. I'll be back!")
+                sleep(wait)
+                partChannel(channel)
+                sleep(wait)
+                joinChannel(channel)
+            } else {
+                helpDefault(sender, isOp, isPrivate)
+            }
         }
     }
 }

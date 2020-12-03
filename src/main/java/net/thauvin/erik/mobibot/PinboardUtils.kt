@@ -44,17 +44,10 @@ import java.util.*
 
 /**
  * The class to handle posts to pinboard.in.
- *
- * @author [Erik C. Thauvin](https://erik.thauvin.net)
- * @created 2017-05-17
- * @since 1.0
  */
 object PinboardUtils {
     /**
      * Adds a pin.
-     *
-     * @param poster The PinboardPoster instance.
-     * @param entry The entry to add.
      */
     @JvmStatic
     fun addPin(poster: PinboardPoster, ircServer: String, entry: EntryLink) = runBlocking {
@@ -72,9 +65,6 @@ object PinboardUtils {
 
     /**
      * Deletes a pin.
-     *
-     * @param poster The PinboardPoster instance.
-     * @param entry The entry to delete.
      */
     @JvmStatic
     fun deletePin(poster: PinboardPoster, entry: EntryLink) = runBlocking {
@@ -86,33 +76,31 @@ object PinboardUtils {
 
     /**
      * Updates a pin.
-     *
-     * @param poster The PinboardPoster instance.
-     * @param oldUrl The old post URL.
-     * @param entry  The entry to add.
      */
     @JvmStatic
     fun updatePin(poster: PinboardPoster, ircServer: String, oldUrl: String, entry: EntryLink) = runBlocking {
         val update = GlobalScope.async {
-            if (oldUrl != entry.link) {
-                poster.deletePin(oldUrl)
-                poster.addPin(
-                    entry.link,
-                    entry.title,
-                    postedBy(entry, ircServer),
-                    entry.pinboardTags,
-                    formatDate(entry.date)
-                )
-            } else {
-                poster.addPin(
-                    entry.link,
-                    entry.title,
-                    postedBy(entry, ircServer),
-                    entry.pinboardTags,
-                    formatDate(entry.date),
-                    replace = true,
-                    shared = true
-                )
+            with(entry) {
+                if (oldUrl != link) {
+                    poster.deletePin(oldUrl)
+                    poster.addPin(
+                        link,
+                        title,
+                        postedBy(entry, ircServer),
+                        pinboardTags,
+                        formatDate(date)
+                    )
+                } else {
+                    poster.addPin(
+                        link,
+                        title,
+                        postedBy(entry, ircServer),
+                        pinboardTags,
+                        formatDate(date),
+                        replace = true,
+                        shared = true
+                    )
+                }
             }
         }
         update.await()
@@ -120,19 +108,13 @@ object PinboardUtils {
 
     /**
      * Format a date to a UTC timestamp.
-     *
-     * @param date The date.
-     * @return The date in [DateTimeFormatter.ISO_INSTANT] format.
      */
     private fun formatDate(date: Date): String {
         return ZonedDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault()).format(DateTimeFormatter.ISO_INSTANT)
     }
 
     /**
-     * Returns he pinboard.in extended attribution line.
-     *
-     * @param entry The entry.
-     * @return The extended attribution line.
+     * Returns the pinboard.in extended attribution line.
      */
     private fun postedBy(entry: EntryLink, ircServer: String): String {
         return "Posted by ${entry.nick} on ${entry.channel} ( $ircServer )"
