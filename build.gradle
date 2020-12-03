@@ -19,8 +19,6 @@ final def packageName = 'net.thauvin.erik.mobibot'
 final def deployDir = 'deploy'
 final def semverProcessor = "net.thauvin.erik:semver:1.2.0"
 
-mainClassName = packageName + '.Mobibot'
-
 ext.versions = [
     jacoco  : '0.8.6',
     log4j   : '2.14.0',
@@ -77,6 +75,10 @@ test {
 java {
     sourceCompatibility = JavaVersion.VERSION_11
     targetCompatibility = JavaVersion.VERSION_11
+}
+
+application {
+    mainClassName = packageName + '.Mobibot'
 }
 
 tasks.withType(JavaCompile) {
@@ -142,7 +144,7 @@ clean {
 }
 
 run {
-    //args '--v'
+    args '-d'
 }
 
 incrementBuildMeta {
