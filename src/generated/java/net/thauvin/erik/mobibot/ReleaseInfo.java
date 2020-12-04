@@ -13,14 +13,14 @@ import java.time.*;
  */
 public final class ReleaseInfo {
     public static final String PROJECT = "mobibot";
-    public static final String VERSION = "0.8.0-beta+302";
+    public static final String VERSION = "0.8.0-beta+305";
     public static final LocalDateTime BUILDDATE =
-        LocalDateTime.ofInstant(Instant.ofEpochMilli(1607079230723L), ZoneId.systemDefault());
+        LocalDateTime.ofInstant(Instant.ofEpochMilli(1607122730368L), ZoneId.systemDefault());
 
     public static final int MAJOR = 0;
     public static final int MINOR = 8;
     public static final int PATCH = 0;
-    public static final String BUILDMETA = "302";
+    public static final String BUILDMETA = "305";
     public static final String PRERELEASE = "beta";
 
     public static final String WEBSITE = "https://www.mobitopia.org/mobibot/";
