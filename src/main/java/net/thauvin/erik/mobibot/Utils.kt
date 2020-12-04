@@ -298,8 +298,12 @@ class Utils private constructor() {
          * Returns the specified date formatted as `yyyy-MM-dd HH:mm`.
          */
         @JvmStatic
-        fun utcDateTime(date: LocalDateTime): String {
-            return date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))
+        fun utcDateTime(date: LocalDateTime?): String {
+            return if (date != null) {
+                date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))
+            } else {
+                ""
+            }
         }
     }
 }

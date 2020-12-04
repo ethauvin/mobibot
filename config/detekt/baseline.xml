@@ -24,6 +24,8 @@
     <ID>MagicNumber:Ignore.kt$Ignore$8</ID>
     <ID>MagicNumber:Modules.kt$Modules$7</ID>
     <ID>MagicNumber:Recap.kt$Recap.Companion$10</ID>
+    <ID>MagicNumber:Tell.kt$Tell$50</ID>
+    <ID>MagicNumber:Tell.kt$Tell$7</ID>
     <ID>MagicNumber:Twitter.kt$Twitter$1000L</ID>
     <ID>MagicNumber:Twitter.kt$Twitter$60L</ID>
     <ID>MagicNumber:Users.kt$Users$8</ID>
@@ -55,6 +57,9 @@
     <ID>NestedBlockDepth:Lookup.kt$Lookup$override fun commandResponse( sender: String, cmd: String, args: String, isPrivate: Boolean )</ID>
     <ID>NestedBlockDepth:StockQuote.kt$StockQuote$ override fun run(sender: String, cmd: String, args: String, isPrivate: Boolean)</ID>
     <ID>NestedBlockDepth:StockQuote.kt$StockQuote.Companion$ @JvmStatic @Throws(ModuleException::class) fun getQuote(symbol: String, apiKey: String?): List&lt;Message&gt;</ID>
+    <ID>NestedBlockDepth:Tell.kt$Tell$ @JvmOverloads fun send(nickname: String, isMessage: Boolean = false)</ID>
+    <ID>NestedBlockDepth:Tell.kt$Tell$// Delete message. private fun deleteMessage(sender: String, args: String, isOp: Boolean, isPrivate: Boolean)</ID>
+    <ID>NestedBlockDepth:TellMessagesMgr.kt$TellMessagesMgr.Companion$ fun save(file: String, messages: List&lt;TellMessage?&gt;?, logger: Logger)</ID>
     <ID>NestedBlockDepth:Weather2.kt$Weather2$ override fun run(sender: String, cmd: String, args: String, isPrivate: Boolean)</ID>
     <ID>NestedBlockDepth:Weather2.kt$Weather2.Companion$ @JvmStatic @Throws(ModuleException::class) fun getWeather(query: String, apiKey: String?): List&lt;Message&gt;</ID>
     <ID>NestedBlockDepth:WorldTime.kt$WorldTime$override fun commandResponse( sender: String, cmd: String, args: String, isPrivate: Boolean )</ID>
@@ -66,6 +71,7 @@
     <ID>TooGenericExceptionCaught:FeedReader.kt$FeedReader$e: Exception</ID>
     <ID>TooGenericExceptionCaught:StockQuote.kt$StockQuote.Companion$e: NullPointerException</ID>
     <ID>TooGenericExceptionCaught:Weather2.kt$Weather2.Companion$e: NullPointerException</ID>
+    <ID>TooManyFunctions:Tell.kt$Tell : AbstractCommand</ID>
     <ID>TooManyFunctions:Utils.kt$Utils$Companion</ID>
   </CurrentIssues>
 </SmellBaseline>
