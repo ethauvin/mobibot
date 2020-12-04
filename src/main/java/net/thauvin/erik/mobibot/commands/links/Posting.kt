@@ -44,7 +44,7 @@ class Posting(bot: Mobibot) : AbstractCommand(bot) {
     override val name = "posting"
     override val help = listOf(
         "Post a URL, by saying it on a line on its own:",
-        Utils.helpIndent("<url> [<title>] ${Tags.COMMAND}}: <+tag> [...]]"),
+        Utils.helpIndent("<url> [<title>] ${Tags.COMMAND}: <+tag> [...]]"),
         "I will reply with a label, for example: ${Utils.bold(Constants.LINK_CMD)}1",
         "To add a title, use its label and a pipe:",
         Utils.helpIndent("${Constants.LINK_CMD}1:|This is the title"),
