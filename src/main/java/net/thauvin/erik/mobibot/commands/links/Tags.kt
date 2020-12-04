@@ -63,9 +63,9 @@ class Tags(bot: Mobibot) : AbstractCommand(bot) {
         val cmds = args.substring(1).split("T:", limit = 2)
         val index = cmds[0].toInt() - 1
 
-        if (index < LinksMgr.entriesCount) {
+        if (index < LinksMgr.entries.size) {
             val cmd = cmds[1].trim()
-            val entry: EntryLink = LinksMgr.getEntry(index)
+            val entry: EntryLink = LinksMgr.entries[index]
             if (cmd.isNotEmpty()) {
                 if (entry.login == login || isOp) {
                     entry.setTags(cmd)

@@ -68,8 +68,8 @@ class Comment(bot: Mobibot) : AbstractCommand(bot) {
         val cmds = args.substring(1).split("[.:]".toRegex(), 3)
         val index = cmds[0].toInt() - 1
 
-        if (index < LinksMgr.entriesCount) {
-            val entry: EntryLink = LinksMgr.getEntry(index)
+        if (index < LinksMgr.entries.size) {
+            val entry: EntryLink = LinksMgr.entries[index]
             val commentIndex = cmds[1].toInt() - 1
             if (commentIndex < entry.comments.size) {
                 when (val cmd = cmds[2].trim()) {

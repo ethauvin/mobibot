@@ -33,8 +33,8 @@
 package net.thauvin.erik.mobibot.commands
 
 import net.thauvin.erik.mobibot.Mobibot
-import net.thauvin.erik.mobibot.commands.links.LinksMgr.Companion.addHistory
-import net.thauvin.erik.mobibot.commands.links.LinksMgr.Companion.getHistory
+
+import net.thauvin.erik.mobibot.commands.links.LinksMgr.Companion.history
 import net.thauvin.erik.mobibot.entries.EntriesMgr
 import java.io.File
 
@@ -52,15 +52,18 @@ class AddLog(bot: Mobibot) : AbstractCommand(bot) {
         isOp: Boolean,
         isPrivate: Boolean
     ) {
-        if (isOp && args.isNotBlank()) {
-            // e.g: 2014-04-01
-            val backlog = File("${bot.logsDir}$args${EntriesMgr.XML_EXT}")
-            if (backlog.exists()) {
-                addHistory(0, args)
-                bot.send(sender, getHistory().toString(), isPrivate)
-            } else {
-                bot.send(sender, "The specified log could not be found.", isPrivate)
+        if (isOp) {
+            if (args.isNotBlank()) {
+                // e.g: 2014-04-01
+                val backlog = File("${bot.logsDir}$args${EntriesMgr.XML_EXT}")
+                if (backlog.exists()) {
+                    history.add(0, args)
+                } else {
+                    bot.send(sender, "The specified log could not be found.", isPrivate)
+                    return
+                }
             }
+            bot.sendList(sender, history, 4, isPrivate, false)
         }
     }
 }

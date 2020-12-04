@@ -35,8 +35,7 @@ import net.thauvin.erik.mobibot.Constants
 import net.thauvin.erik.mobibot.Mobibot
 import net.thauvin.erik.mobibot.TwitterTimer
 import net.thauvin.erik.mobibot.Utils
-import net.thauvin.erik.mobibot.commands.links.LinksMgr.Companion.entriesCount
-import net.thauvin.erik.mobibot.commands.links.LinksMgr.Companion.getEntry
+import net.thauvin.erik.mobibot.commands.links.LinksMgr
 import net.thauvin.erik.mobibot.entries.EntriesUtils
 import net.thauvin.erik.mobibot.msg.Message
 import net.thauvin.erik.mobibot.msg.NoticeMessage
@@ -125,8 +124,8 @@ class Twitter(bot: Mobibot) : ThreadedModule(bot) {
      */
     fun postEntry(index: Int) {
         with(bot) {
-            if (isAutoPost && hasEntry(index) && entriesCount >= index) {
-                val entry = getEntry(index)
+            if (isAutoPost && hasEntry(index) && LinksMgr.entries.size >= index) {
+                val entry = LinksMgr.entries[index]
                 val msg = "${entry.title} ${entry.link} via ${entry.nick} on $channel"
                 Thread {
                     try {

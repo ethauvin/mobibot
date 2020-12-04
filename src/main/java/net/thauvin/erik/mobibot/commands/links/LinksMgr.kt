@@ -40,7 +40,6 @@ import net.thauvin.erik.mobibot.commands.Ignore
 import net.thauvin.erik.mobibot.entries.EntriesMgr
 import net.thauvin.erik.mobibot.entries.EntriesUtils
 import net.thauvin.erik.mobibot.entries.EntryLink
-import org.apache.logging.log4j.LogManager
 import org.jsoup.Jsoup
 import java.io.IOException
 
@@ -65,23 +64,22 @@ class LinksMgr(bot: Mobibot) : AbstractCommand(bot) {
         const val TAG_MATCH = ", *| +"
 
         // Entries array
-        private val entries = ArrayList<EntryLink>(0)
+        @JvmField
+        val entries = ArrayList<EntryLink>(0)
 
         // History/backlogs array
-        private val history = ArrayList<String>(0)
+        @JvmField
+        val history = ArrayList<String>(0)
 
-        @JvmStatic
-        val entriesCount
-            get() = entries.size
 
         @JvmStatic
         var startDate: String = Utils.today()
             private set
 
-        @JvmStatic
-        fun addHistory(index: Int, entry: String) {
-            history.add(index, entry)
-        }
+        //        @JvmStatic
+        //        fun addHistory(index: Int, entry: String) {
+        //            history.add(index, entry)
+        //        }
 
         /**
          * Saves the entries.
@@ -93,20 +91,15 @@ class LinksMgr(bot: Mobibot) : AbstractCommand(bot) {
             EntriesMgr.saveEntries(bot, entries, history, isDayBackup)
         }
 
-        @JvmStatic
-        fun removeEntry(index: Int) {
-            entries.removeAt(index)
-        }
-
-        @JvmStatic
-        fun getEntry(index: Int): EntryLink {
-            return entries[index]
-        }
-
-        @JvmStatic
-        fun getHistory(): List<String> {
-            return history
-        }
+        //        @JvmStatic
+        //        fun removeEntry(index: Int) {
+        //            entries.removeAt(index)
+        //        }
+        //
+        //        @JvmStatic
+        //        fun getEntry(index: Int): EntryLink {
+        //            return entries[index]
+        //        }
 
         @JvmStatic
         fun startup(current: String, backlogs: String, channel: String) {

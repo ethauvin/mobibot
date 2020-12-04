@@ -11,6 +11,7 @@
     <ID>LongParameterList:Comment.kt$Comment$( bot: Mobibot, sender: String, isOp: Boolean, entry: EntryLink, index: Int, commentIndex: Int )</ID>
     <ID>LongParameterList:Comment.kt$Comment$(bot: Mobibot, cmd: String, sender: String, entry: EntryLink, index: Int, commentIndex: Int)</ID>
     <ID>LongParameterList:Twitter.kt$Twitter.Companion$( consumerKey: String?, consumerSecret: String?, token: String?, tokenSecret: String?, handle: String?, message: String, isDm: Boolean )</ID>
+    <ID>MagicNumber:AddLog.kt$AddLog$4</ID>
     <ID>MagicNumber:Comment.kt$Comment$3</ID>
     <ID>MagicNumber:CurrencyConverter.kt$CurrencyConverter$11</ID>
     <ID>MagicNumber:CurrencyConverter.kt$CurrencyConverter$3</ID>

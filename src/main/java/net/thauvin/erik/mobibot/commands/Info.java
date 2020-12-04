@@ -93,7 +93,7 @@ public class Info extends AbstractCommand {
 
         info.append(Utils.uptime(ManagementFactory.getRuntimeMXBean().getUptime()))
             .append(" [Entries: ")
-            .append(LinksMgr.getEntriesCount());
+            .append(LinksMgr.entries.size());
 
         if (isOp) {
             if (getBot().getTell().isEnabled()) {

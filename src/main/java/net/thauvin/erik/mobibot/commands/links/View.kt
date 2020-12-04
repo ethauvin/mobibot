@@ -35,8 +35,7 @@ package net.thauvin.erik.mobibot.commands.links
 import net.thauvin.erik.mobibot.Mobibot
 import net.thauvin.erik.mobibot.Utils
 import net.thauvin.erik.mobibot.commands.AbstractCommand
-import net.thauvin.erik.mobibot.commands.links.LinksMgr.Companion.entriesCount
-import net.thauvin.erik.mobibot.commands.links.LinksMgr.Companion.getEntry
+import net.thauvin.erik.mobibot.commands.links.LinksMgr.Companion.entries
 import net.thauvin.erik.mobibot.entries.EntriesUtils
 import net.thauvin.erik.mobibot.entries.EntryLink
 
@@ -62,7 +61,7 @@ class View(bot: Mobibot) : AbstractCommand(bot) {
         isOp: Boolean,
         isPrivate: Boolean
     ) {
-        if (entriesCount != 0) {
+        if (entries.size != 0) {
             showPosts(bot, args, sender)
         } else {
             bot.send(sender, "There is currently nothing to view. Why don't you post something?", isPrivate)
@@ -70,7 +69,7 @@ class View(bot: Mobibot) : AbstractCommand(bot) {
     }
 
     private fun showPosts(bot: Mobibot, args: String, sender: String) {
-        val max = entriesCount
+        val max = entries.size
         var lcArgs = args.toLowerCase()
         var i = 0
         if (lcArgs.isEmpty() && max > maxEntries) {
@@ -96,7 +95,7 @@ class View(bot: Mobibot) : AbstractCommand(bot) {
         var entry: EntryLink
         var sent = 0
         while (i < max && sent < maxEntries) {
-            entry = getEntry(i)
+            entry = entries[i]
             if (lcArgs.isNotBlank()) {
                 if (entry.matches(lcArgs)) {
                     bot.send(sender, EntriesUtils.buildLink(i, entry, true), false)

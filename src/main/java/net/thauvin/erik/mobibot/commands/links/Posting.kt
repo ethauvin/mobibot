@@ -36,6 +36,7 @@ import net.thauvin.erik.mobibot.Constants
 import net.thauvin.erik.mobibot.Mobibot
 import net.thauvin.erik.mobibot.Utils
 import net.thauvin.erik.mobibot.commands.AbstractCommand
+import net.thauvin.erik.mobibot.commands.links.LinksMgr.Companion.entries
 import net.thauvin.erik.mobibot.entries.EntriesUtils
 import net.thauvin.erik.mobibot.entries.EntryLink
 
@@ -67,7 +68,7 @@ class Posting(bot: Mobibot) : AbstractCommand(bot) {
         val cmds = args.substring(1).split(":", limit = 2)
         val index = cmds[0].toInt() - 1
 
-        if (index < LinksMgr.entriesCount) {
+        if (index < entries.size) {
             when (val cmd = cmds[1].trim()) {
                 "" -> showEntry(index)
                 "-" -> removeEntry(sender, login, isOp, index) // L1:-
@@ -88,7 +89,7 @@ class Posting(bot: Mobibot) : AbstractCommand(bot) {
     }
 
     private fun addComment(cmd: String, sender: String, index: Int) {
-        val entry: EntryLink = LinksMgr.getEntry(index)
+        val entry: EntryLink = entries[index]
         val commentIndex = entry.addComment(cmd, sender)
         val comment = entry.getComment(commentIndex)
         bot.send(sender, EntriesUtils.buildComment(index, commentIndex, comment), false)
@@ -97,7 +98,7 @@ class Posting(bot: Mobibot) : AbstractCommand(bot) {
 
     private fun changeTitle(cmd: String, index: Int) {
         if (cmd.length > 1) {
-            val entry: EntryLink = LinksMgr.getEntry(index)
+            val entry: EntryLink = entries[index]
             entry.title = cmd.substring(1).trim()
             bot.updatePin(entry.link, entry)
             bot.send(EntriesUtils.buildLink(index, entry))
@@ -106,7 +107,7 @@ class Posting(bot: Mobibot) : AbstractCommand(bot) {
     }
 
     private fun changeUrl(cmd: String, login: String, isOp: Boolean, index: Int) {
-        val entry: EntryLink = LinksMgr.getEntry(index)
+        val entry: EntryLink = entries[index]
         if (entry.login == login || isOp) {
             val link = cmd.substring(1)
             if (link.matches(LinksMgr.LINK_MATCH.toRegex())) {
@@ -122,7 +123,7 @@ class Posting(bot: Mobibot) : AbstractCommand(bot) {
     private fun changeAuthor(cmd: String, sender: String, isOp: Boolean, index: Int) {
         if (isOp) {
             if (cmd.length > 1) {
-                val entry: EntryLink = LinksMgr.getEntry(index)
+                val entry: EntryLink = entries[index]
                 entry.nick = cmd.substring(1)
                 bot.send(EntriesUtils.buildLink(index, entry))
                 LinksMgr.saveEntries(bot, false)
@@ -133,10 +134,10 @@ class Posting(bot: Mobibot) : AbstractCommand(bot) {
     }
 
     private fun removeEntry(sender: String, login: String, isOp: Boolean, index: Int) {
-        val entry: EntryLink = LinksMgr.getEntry(index)
+        val entry: EntryLink = LinksMgr.entries[index]
         if (entry.login == login || isOp) {
             bot.deletePin(index, entry)
-            LinksMgr.removeEntry(index)
+            entries.removeAt(index)
             bot.send("Entry ${EntriesUtils.buildLinkCmd(index)} removed.")
             LinksMgr.saveEntries(bot, false)
         } else {
@@ -145,7 +146,7 @@ class Posting(bot: Mobibot) : AbstractCommand(bot) {
     }
 
     private fun showEntry(index: Int) {
-        val entry: EntryLink = LinksMgr.getEntry(index)
+        val entry: EntryLink = entries[index]
         bot.send(EntriesUtils.buildLink(index, entry))
         if (entry.hasTags()) {
             bot.send(EntriesUtils.buildTags(index, entry))
