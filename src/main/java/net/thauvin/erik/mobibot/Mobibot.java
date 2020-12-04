@@ -87,6 +87,7 @@ import org.apache.logging.log4j.core.config.Configurator;
 import org.jibble.pircbot.PircBot;
 import org.jibble.pircbot.User;
 
+import java.io.BufferedOutputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -299,7 +300,6 @@ public class Mobibot extends PircBot {
             System.out.println(ReleaseInfo.WEBSITE);
         } else {
             final Properties p = new Properties();
-
             try (final InputStream fis = Files.newInputStream(
                     Paths.get(commandLine.getOptionValue(Constants.PROPS_ARG.charAt(0), "./mobibot.properties")))) {
                 // Load the properties files
@@ -321,8 +321,8 @@ public class Mobibot extends PircBot {
             // Redirect the stdout and stderr
             if (!commandLine.hasOption(Constants.DEBUG_ARG.charAt(0))) {
                 try {
-                    final PrintStream stdout = new PrintStream(
-                            new FileOutputStream(logsDir + channel.substring(1) + '.' + Utils.today() + ".log", true));
+                    final PrintStream stdout = new PrintStream(new BufferedOutputStream(new FileOutputStream(
+                            logsDir + channel.substring(1) + '.' + Utils.today() + ".log", true)), true);
                     System.setOut(stdout);
                 } catch (IOException e) {
                     System.err.println("Unable to open output (stdout) log file.");
@@ -331,7 +331,9 @@ public class Mobibot extends PircBot {
                 }
 
                 try {
-                    final PrintStream stderr = new PrintStream(new FileOutputStream(logsDir + nickname + ".err", true));
+                    final PrintStream stderr =
+                            new PrintStream(new BufferedOutputStream(
+                                    new FileOutputStream(logsDir + nickname + ".err", true)), true);
                     System.setErr(stderr);
                 } catch (IOException e) {
                     System.err.println("Unable to open error (stderr) log file.");
@@ -724,7 +726,9 @@ public class Mobibot extends PircBot {
     @Override
     protected final void onPrivateMessage(final String sender, final String login, final String hostname,
                                           final String message) {
-        LOGGER.debug(">>> {} : {}", sender, message);
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug(">>> {} : {}", sender, message);
+        }
 
         final String[] cmds = message.split(" ", 2);
         final String cmd = lowerCase(cmds[0]);
