@@ -152,7 +152,7 @@ class CurrencyConverter(bot: Mobibot) : ThreadedModule(bot) {
          */
         @JvmStatic
         fun convertCurrency(query: String): Message {
-            val cmds = query.split(" ").toTypedArray()
+            val cmds = query.split(" ")
             return if (cmds.size == 4) {
                 if (cmds[3] == cmds[1] || "0" == cmds[0]) {
                     PublicMessage("You're kidding, right?")

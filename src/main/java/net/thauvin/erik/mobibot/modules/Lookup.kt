@@ -126,13 +126,9 @@ class Lookup(bot: Mobibot) : AbstractModule(bot) {
 
         /**
          * Performs a whois IP query.
-         *
-         * @param query The IP address.
-         * @return The IP whois data, if any.
-         * @throws java.io.IOException If a connection error occurs.
          */
         @Throws(IOException::class)
-        private fun whois(query: String): Array<String> {
+        private fun whois(query: String): List<String> {
             return whois(query, WHOIS_HOST)
         }
 
@@ -141,9 +137,9 @@ class Lookup(bot: Mobibot) : AbstractModule(bot) {
          */
         @JvmStatic
         @Throws(IOException::class)
-        fun whois(query: String, host: String): Array<String> {
+        fun whois(query: String, host: String): List<String> {
             val whoisClient = WhoisClient()
-            val lines: Array<String>
+            val lines: List<String>
             with(whoisClient) {
                 try {
                     defaultTimeout = Constants.CONNECT_TIMEOUT
@@ -151,9 +147,9 @@ class Lookup(bot: Mobibot) : AbstractModule(bot) {
                     soTimeout = Constants.CONNECT_TIMEOUT
                     setSoLinger(false, 0)
                     lines = if (WHOIS_HOST == host) {
-                        query("n - $query").split("\n").toTypedArray()
+                        query("n - $query").split("\n")
                     } else {
-                        query(query).split("\n").toTypedArray()
+                        query(query).split("\n")
                     }
                 } finally {
                     disconnect()

@@ -255,7 +255,7 @@ class Mobibot(nickname: String, channel: String, logsDirPath: String, p: Propert
         send(sender, "For more information on a specific command, type:", isPrivate)
         send(
             sender,
-            helpIndent(helpFormat("""%c ${Constants.HELP_CMD} <command>""", nick, isPrivate)),
+            helpIndent(helpFormat("%c ${Constants.HELP_CMD} <command>", nick, isPrivate)),
             isPrivate
         )
         send(sender, "The commands are:", isPrivate)
@@ -353,7 +353,7 @@ class Mobibot(nickname: String, channel: String, logsDirPath: String, p: Propert
         logger.debug(">>> $sender: $message")
         tell.send(sender, true)
         if (message.matches("(?i)${Pattern.quote(nick)}:.*".toRegex())) { // mobibot: <command>
-            val cmds = message.substring(message.indexOf(':') + 1).trim().split(" ".toRegex(), 2).toTypedArray()
+            val cmds = message.substring(message.indexOf(':') + 1).trim().split(" ".toRegex(), 2)
             val cmd = cmds[0].toLowerCase()
             val args = if (cmds.size > 1) {
                 cmds[1].trim()
@@ -399,7 +399,7 @@ class Mobibot(nickname: String, channel: String, logsDirPath: String, p: Propert
         if (logger.isDebugEnabled) {
             logger.debug(">>> $sender : $message")
         }
-        val cmds = message.split(" ".toRegex(), 2).toTypedArray()
+        val cmds = message.split(" ".toRegex(), 2)
         val cmd = cmds[0].toLowerCase()
         val args = if (cmds.size > 1) {
             cmds[1].trim()
@@ -503,7 +503,7 @@ class Mobibot(nickname: String, channel: String, logsDirPath: String, p: Propert
     fun sendList(
         nick: String,
         list: List<String>,
-        size: Int,
+        maxPerLine: Int,
         isPrivate: Boolean,
         isBold: Boolean
     ) {
@@ -511,20 +511,14 @@ class Mobibot(nickname: String, channel: String, logsDirPath: String, p: Propert
         while (i < list.size) {
             send(
                 nick,
-                helpIndent(list.subList(i, list.size.coerceAtMost(i + size)).joinToString(" ", truncated = ""), isBold),
+                helpIndent(
+                    list.subList(i, list.size.coerceAtMost(i + maxPerLine)).joinToString(" ", truncated = ""),
+                    isBold
+                ),
                 isPrivate
             )
-            i += size
+            i += maxPerLine
         }
-    }
-
-    /**
-     * Sets the bot's identification.
-     */
-    private fun setIdentity(pwd: String, nick: String, msg: String) {
-        identPwd = pwd
-        identNick = nick
-        identMsg = msg
     }
 
     /**
@@ -690,7 +684,7 @@ class Mobibot(nickname: String, channel: String, logsDirPath: String, p: Propert
         this.channel = channel
         logsDir = logsDirPath
 
-        // Set the logger level
+        // Set the default logger level
         loggerLevel = logger.level
 
         // Load the current entries and backlogs, if any
@@ -707,7 +701,11 @@ class Mobibot(nickname: String, channel: String, logsDirPath: String, p: Propert
         login = p.getProperty("login", name)
         version = ReleaseInfo.PROJECT + ' ' + ReleaseInfo.VERSION
         // setMessageDelay(1000);
-        setIdentity(p.getProperty("ident", ""), p.getProperty("ident-nick", ""), p.getProperty("ident-msg", ""))
+
+        // Set NICKSERV identification
+        identPwd = p.getProperty("ident", "")
+        identNick = p.getProperty("ident-nick", "")
+        identMsg = p.getProperty("ident-msg", "")
 
         // Set the URLs
         weblogUrl = p.getProperty("weblog", "")

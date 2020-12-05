@@ -107,7 +107,7 @@ class Weather2(bot: Mobibot) : ThreadedModule(bot) {
             val messages = ArrayList<Message>()
             owm.unit = OWM.Unit.IMPERIAL
             if (query.isNotBlank()) {
-                val argv = query.split(",").toTypedArray()
+                val argv = query.split(",")
                 if (argv.size in 1..2) {
                     val city = argv[0].trim()
                     val country: String = if (argv.size > 1 && argv[1].isNotBlank()) {

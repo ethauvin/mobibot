@@ -52,7 +52,7 @@ class LookupTest {
     @Throws(Exception::class)
     fun testWhois() {
         val result = whois("17.178.96.59", Lookup.WHOIS_HOST)
-        Assertions.assertThat(Arrays.stream(result).anyMatch { m: String -> m.contains("Apple Inc.") })
+        Assertions.assertThat(result.stream().anyMatch { m: String -> m.contains("Apple Inc.") })
             .`as`("whois(17.178.96.59/Apple Inc.").isTrue
     }
 }

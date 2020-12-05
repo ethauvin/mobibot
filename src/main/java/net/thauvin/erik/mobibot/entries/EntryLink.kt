@@ -172,7 +172,7 @@ class EntryLink : Serializable {
      * Sets the tags.
      */
     fun setTags(tags: String) {
-        setTags(tags.split(LinksMgr.TAG_MATCH).toTypedArray().toList())
+        setTags(tags.split(LinksMgr.TAG_MATCH))
     }
 
     /**

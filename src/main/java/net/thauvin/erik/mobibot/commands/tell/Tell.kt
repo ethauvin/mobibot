@@ -71,7 +71,7 @@ class Tell(bot: Mobibot) : AbstractCommand(bot) {
 
     // Delete message.
     private fun deleteMessage(sender: String, args: String, isOp: Boolean, isPrivate: Boolean) {
-        val split = args.split(" ").toTypedArray()
+        val split = args.split(" ")
         if (split.size == 2) {
             val id = split[1]
             var deleted = false
@@ -176,7 +176,7 @@ class Tell(bot: Mobibot) : AbstractCommand(bot) {
 
     // New message.
     private fun newMessage(sender: String, args: String, isOp: Boolean, isPrivate: Boolean) {
-        val split = args.split(" ".toRegex(), 2).toTypedArray()
+        val split = args.split(" ".toRegex(), 2)
         if (split.size == 2 && split[1].isNotBlank() && split[1].contains(" ")) {
             if (messages.size < maxSize) {
                 val message = TellMessage(sender, split[0], split[1].trim())
