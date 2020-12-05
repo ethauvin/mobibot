@@ -74,12 +74,12 @@ class TellMessage internal constructor(
      * Returns {@code true) if the message was received.
      */
     var isReceived = false
-       set(value) {
-           if (value) {
-               receptionDate = LocalDateTime.now(Clock.systemUTC())
-           }
-           field = value
-       }
+        set(value) {
+            if (value) {
+                receptionDate = LocalDateTime.now(Clock.systemUTC())
+            }
+            field = value
+        }
 
     /**
      * Return the message creating date.

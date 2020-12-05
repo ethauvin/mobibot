@@ -3,8 +3,10 @@
   <ManuallySuppressedIssues></ManuallySuppressedIssues>
   <CurrentIssues>
     <ID>ComplexMethod:EntriesMgr.kt$EntriesMgr.Companion$ fun saveEntries( bot: Mobibot, entries: List&lt;EntryLink&gt;, history: MutableList&lt;String&gt;, isDayBackup: Boolean )</ID>
+    <ID>ComplexMethod:Mobibot.kt$Mobibot$override fun onPrivateMessage( sender: String, login: String, hostname: String, message: String )</ID>
     <ID>ComplexMethod:Weather2.kt$Weather2.Companion$ @JvmStatic @Throws(ModuleException::class) fun getWeather(query: String, apiKey: String?): List&lt;Message&gt;</ID>
     <ID>LongMethod:EntriesMgr.kt$EntriesMgr.Companion$ fun saveEntries( bot: Mobibot, entries: List&lt;EntryLink&gt;, history: MutableList&lt;String&gt;, isDayBackup: Boolean )</ID>
+    <ID>LongMethod:Mobibot.kt$Mobibot.Companion$ @JvmStatic fun main(args: Array&lt;String&gt;)</ID>
     <ID>LongMethod:StockQuote.kt$StockQuote.Companion$ @JvmStatic @Throws(ModuleException::class) fun getQuote(symbol: String, apiKey: String?): List&lt;Message&gt;</ID>
     <ID>LongMethod:Weather2.kt$Weather2.Companion$ @JvmStatic @Throws(ModuleException::class) fun getWeather(query: String, apiKey: String?): List&lt;Message&gt;</ID>
     <ID>LongParameterList:Comment.kt$Comment$( bot: Mobibot, cmd: String, sender: String, isOp: Boolean, entry: EntryLink, index: Int, commentIndex: Int )</ID>
@@ -22,6 +24,11 @@
     <ID>MagicNumber:Cycle.kt$Cycle$10</ID>
     <ID>MagicNumber:Dice.kt$Dice$7</ID>
     <ID>MagicNumber:Ignore.kt$Ignore$8</ID>
+    <ID>MagicNumber:Mobibot.kt$Mobibot$10</ID>
+    <ID>MagicNumber:Mobibot.kt$Mobibot$1000L</ID>
+    <ID>MagicNumber:Mobibot.kt$Mobibot$3</ID>
+    <ID>MagicNumber:Mobibot.kt$Mobibot$5</ID>
+    <ID>MagicNumber:Mobibot.kt$Mobibot$8</ID>
     <ID>MagicNumber:Modules.kt$Modules$7</ID>
     <ID>MagicNumber:Recap.kt$Recap.Companion$10</ID>
     <ID>MagicNumber:Tell.kt$Tell$50</ID>
@@ -50,11 +57,14 @@
     <ID>NestedBlockDepth:CurrencyConverter.kt$CurrencyConverter.Companion$ @JvmStatic fun convertCurrency(query: String): Message</ID>
     <ID>NestedBlockDepth:EntriesMgr.kt$EntriesMgr.Companion$ @Throws(IOException::class, FeedException::class) fun loadEntries(file: String, channel: String, entries: ArrayList&lt;EntryLink&gt;): String</ID>
     <ID>NestedBlockDepth:EntriesMgr.kt$EntriesMgr.Companion$ fun saveEntries( bot: Mobibot, entries: List&lt;EntryLink&gt;, history: MutableList&lt;String&gt;, isDayBackup: Boolean )</ID>
-    <ID>NestedBlockDepth:EntryLink.kt$EntryLink$ fun setTags(tags: List&lt;String?&gt;)</ID>
+    <ID>NestedBlockDepth:EntryLink.kt$EntryLink$ private fun setTags(tags: List&lt;String?&gt;)</ID>
     <ID>NestedBlockDepth:FeedReader.kt$FeedReader$ override fun run()</ID>
     <ID>NestedBlockDepth:GoogleSearch.kt$GoogleSearch$ override fun run(sender: String, cmd: String, args: String, isPrivate: Boolean)</ID>
     <ID>NestedBlockDepth:LinksMgr.kt$LinksMgr$override fun commandResponse( sender: String, login: String, args: String, isOp: Boolean, isPrivate: Boolean )</ID>
     <ID>NestedBlockDepth:Lookup.kt$Lookup$override fun commandResponse( sender: String, cmd: String, args: String, isPrivate: Boolean )</ID>
+    <ID>NestedBlockDepth:Mobibot.kt$Mobibot$ fun connect()</ID>
+    <ID>NestedBlockDepth:Mobibot.kt$Mobibot$override fun onMessage( channel: String, sender: String, login: String, hostname: String, message: String )</ID>
+    <ID>NestedBlockDepth:Mobibot.kt$Mobibot$override fun onPrivateMessage( sender: String, login: String, hostname: String, message: String )</ID>
     <ID>NestedBlockDepth:StockQuote.kt$StockQuote$ override fun run(sender: String, cmd: String, args: String, isPrivate: Boolean)</ID>
     <ID>NestedBlockDepth:StockQuote.kt$StockQuote.Companion$ @JvmStatic @Throws(ModuleException::class) fun getQuote(symbol: String, apiKey: String?): List&lt;Message&gt;</ID>
     <ID>NestedBlockDepth:Tell.kt$Tell$ @JvmOverloads fun send(nickname: String, isMessage: Boolean = false)</ID>
@@ -63,14 +73,18 @@
     <ID>NestedBlockDepth:Weather2.kt$Weather2$ override fun run(sender: String, cmd: String, args: String, isPrivate: Boolean)</ID>
     <ID>NestedBlockDepth:Weather2.kt$Weather2.Companion$ @JvmStatic @Throws(ModuleException::class) fun getWeather(query: String, apiKey: String?): List&lt;Message&gt;</ID>
     <ID>NestedBlockDepth:WorldTime.kt$WorldTime$override fun commandResponse( sender: String, cmd: String, args: String, isPrivate: Boolean )</ID>
+    <ID>ReturnCount:Mobibot.kt$Mobibot$override fun onMessage( channel: String, sender: String, login: String, hostname: String, message: String )</ID>
     <ID>ReturnCount:Utils.kt$Utils.Companion$ @JvmStatic fun colorize(s: String?, color: String): String</ID>
     <ID>ThrowsCount:GoogleSearch.kt$GoogleSearch.Companion$ @JvmStatic @Throws(ModuleException::class) fun searchGoogle(query: String, apiKey: String?, cseKey: String?): List&lt;Message&gt;</ID>
     <ID>ThrowsCount:StockQuote.kt$StockQuote.Companion$ @JvmStatic @Throws(ModuleException::class) fun getQuote(symbol: String, apiKey: String?): List&lt;Message&gt;</ID>
     <ID>ThrowsCount:StockQuote.kt$StockQuote.Companion$@Throws(ModuleException::class) private fun getJsonResponse(response: String, debugMessage: String): JSONObject</ID>
     <ID>ThrowsCount:Weather2.kt$Weather2.Companion$ @JvmStatic @Throws(ModuleException::class) fun getWeather(query: String, apiKey: String?): List&lt;Message&gt;</ID>
     <ID>TooGenericExceptionCaught:FeedReader.kt$FeedReader$e: Exception</ID>
+    <ID>TooGenericExceptionCaught:Mobibot.kt$Mobibot$e: Exception</ID>
+    <ID>TooGenericExceptionCaught:Mobibot.kt$Mobibot$ex: Exception</ID>
     <ID>TooGenericExceptionCaught:StockQuote.kt$StockQuote.Companion$e: NullPointerException</ID>
     <ID>TooGenericExceptionCaught:Weather2.kt$Weather2.Companion$e: NullPointerException</ID>
+    <ID>TooManyFunctions:Mobibot.kt$Mobibot : PircBot</ID>
     <ID>TooManyFunctions:Tell.kt$Tell : AbstractCommand</ID>
     <ID>TooManyFunctions:Utils.kt$Utils$Companion</ID>
   </CurrentIssues>

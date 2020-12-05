@@ -53,7 +53,7 @@ class EntryLink : Serializable {
     var channel: String
 
     // Creation date
-    var date = Calendar.getInstance().time
+    var date: Date = Calendar.getInstance().time
 
     // Link's URL
     var link: String
@@ -178,12 +178,12 @@ class EntryLink : Serializable {
     /**
      * Sets the tags.
      */
-    fun setTags(tags: List<String?>) {
-        if (!tags.isEmpty()) {
+    private fun setTags(tags: List<String?>) {
+        if (tags.isNotEmpty()) {
             var category: SyndCategoryImpl
             for (tag in tags) {
-                if (StringUtils.isNoneBlank(tag)) {
-                    val t = StringUtils.lowerCase(tag)
+                if (!tag.isNullOrBlank()) {
+                    val t = tag.toLowerCase()
                     val mod = t[0]
                     if (mod == '-') {
                         // Don't remove the channel tag

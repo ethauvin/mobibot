@@ -33,7 +33,6 @@ package net.thauvin.erik.mobibot.modules
 
 import net.thauvin.erik.mobibot.Mobibot
 import net.thauvin.erik.mobibot.Utils
-import org.apache.commons.lang3.StringUtils
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 
@@ -113,7 +112,7 @@ abstract class AbstractModule(val bot: Mobibot) {
     open val isValidProperties: Boolean
         get() {
             for (s in propertyKeys) {
-                if (StringUtils.isBlank(properties[s])) {
+                if (properties[s].isNullOrBlank()) {
                     return false
                 }
             }
@@ -124,7 +123,7 @@ abstract class AbstractModule(val bot: Mobibot) {
      * Sets a property key and value.
      */
     fun setProperty(key: String, value: String) {
-        if (StringUtils.isNotBlank(key)) {
+        if (key.isNotBlank()) {
             properties[key] = value
         }
     }

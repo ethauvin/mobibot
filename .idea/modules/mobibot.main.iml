@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<module external.linked.project.id="mobibot:main" external.linked.project.path="$MODULE_DIR$/../.." external.root.project.path="$MODULE_DIR$/../.." external.system.id="GRADLE" external.system.module.group="" external.system.module.type="sourceSet" external.system.module.version="0.8.0-beta+287" type="JAVA_MODULE" version="4">
+<module external.linked.project.id="mobibot:main" external.linked.project.path="$MODULE_DIR$/../.." external.root.project.path="$MODULE_DIR$/../.." external.system.id="GRADLE" external.system.module.group="" external.system.module.type="sourceSet" external.system.module.version="0.8.0-beta+327" type="JAVA_MODULE" version="4">
   <component name="FacetManager">
     <facet type="kotlin-language" name="Kotlin">
       <configuration version="3" platform="JVM 11" allPlatforms="JVM [11]" useProjectSettings="false">
@@ -8,7 +8,7 @@
         </compilerSettings>
         <compilerArguments>
           <option name="destination" value="$MODULE_DIR$/../../build/classes/kotlin/main" />
-          <option name="classpath" value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/net.aksingh/owm-japis/2.5.3.0/c3aca5d34ba937e0c8e9776cec906003b0703044/owm-japis-2.5.3.0.jar:/media/erik/Projects/maven/repository/net/thauvin/erik/pinboard-poster/1.0.1/pinboard-poster-1.0.1.jar:/home/erik/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib-jdk8/1.4.20/756521338269950c2a276f1abe6fef8e1a5e5528/kotlin-stdlib-jdk8-1.4.20.jar:/home/erik/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlinx/kotlinx-coroutines-core-jvm/1.4.2/4b9c6b2de7cabfb2c9ad7a5c709b1ddb7bbfd2ad/kotlinx-coroutines-core-jvm-1.4.2.jar:/home/erik/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib-jdk7/1.4.20/9de2c79e95d4b4699a455e88ba285a95352e0bea/kotlin-stdlib-jdk7-1.4.20.jar:/home/erik/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/1.4.20/9be77b243a362b745e365f286627b8724337009c/kotlin-stdlib-1.4.20.jar:/media/erik/Projects/maven/repository/net/thauvin/erik/semver/1.2.0/semver-1.2.0.jar:/home/erik/.gradle/caches/modules-2/files-2.1/pircbot/pircbot/1.5.0/cc27715d1c9c8246beb6a33ea099a9ca5d4e5da1/pircbot-1.5.0-sources.jar:/home/erik/.gradle/caches/modules-2/files-2.1/pircbot/pircbot/1.5.0/7a9dd235e6e81db733212202cc4067b5625650cf/pircbot-1.5.0.jar:/home/erik/.gradle/caches/modules-2/files-2.1/com.github.spotbugs/spotbugs-annotations/4.2.0/39d2a464e63fd44bcdbc2332b12a80df274dac83/spotbugs-annotations-4.2.0.jar:/home/erik/.gradle/caches/modules-2/files-2.1/com.rometools/rome/1.15.0/d3614542b857eccc0555d1ee8dfc36d2043d9c1f/rome-1.15.0.jar:/home/erik/.gradle/caches/modules-2/files-2.1/commons-cli/commons-cli/1.4/c51c00206bb913cd8612b24abd9fa98ae89719b1/commons-cli-1.4.jar:/home/erik/.gradle/caches/modules-2/files-2.1/commons-net/commons-net/3.7.2/fc22868c06d0b59dc97f23dc93ca77efd9381ab2/commons-net-3.7.2.jar:/home/erik/.gradle/caches/modules-2/files-2.1/net.objecthunter/exp4j/0.4.8/cf1cfc0f958077d86ac7452c7e36d944689b2ec4/exp4j-0.4.8.jar:/home/erik/.gradle/caches/modules-2/files-2.1/org.apache.commons/commons-lang3/3.11/68e9a6adf7cf8eb7e9d31bbc554c7c75eeaac568/commons-lang3-3.11.jar:/home/erik/.gradle/caches/modules-2/files-2.1/org.json/json/20201115/f8e7a9953822c90e0701c3cd50764b5e9063f85c/json-20201115.jar:/home/erik/.gradle/caches/modules-2/files-2.1/org.jsoup/jsoup/1.13.1/f9577f3732bb7caa4fee8aba5053158f4010c118/jsoup-1.13.1.jar:/home/erik/.gradle/caches/modules-2/files-2.1/org.twitter4j/twitter4j-core/4.0.7/5fdb375ccfb3eda7354efb262cbe9b53abccff2/twitter4j-core-4.0.7.jar:/home/erik/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-core/2.14.0/e257b0562453f73eabac1bc3181ba33e79d193ed/log4j-core-2.14.0.jar:/home/erik/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-slf4j-impl/2.14.0/d6003a3b3f24fdb476848f4ecabdb2a43354e410/log4j-slf4j-impl-2.14.0.jar:/home/erik/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-api/2.14.0/23cdb2c6babad9b2b0dcf47c6a2c29d504e4c7a8/log4j-api-2.14.0.jar:/home/erik/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib-common/1.4.20/c6761d7805b5312302f2bbd78cda68c976ce0c70/kotlin-stdlib-common-1.4.20.jar:/media/erik/Projects/maven/repository/org/jetbrains/annotations/13.0/annotations-13.0.jar:/home/erik/.gradle/caches/modules-2/files-2.1/com.google.code.findbugs/jsr305/3.0.2/25ea2e8b0c338a877313bd4672d3fe056ea78f0d/jsr305-3.0.2.jar:/home/erik/.gradle/caches/modules-2/files-2.1/com.rometools/rome-utils/1.15.0/ab1cb95382bf9a8dec81165d328bcbbf1acfb3ae/rome-utils-1.15.0.jar:/media/erik/Projects/maven/repository/org/jdom/jdom2/2.0.6/jdom2-2.0.6.jar:/home/erik/.gradle/caches/modules-2/files-2.1/org.slf4j/slf4j-api/1.7.25/da76ca59f6a57ee3102f8f9bd9cee742973efa8a/slf4j-api-1.7.25.jar:/home/erik/.gradle/caches/modules-2/files-2.1/com.squareup.retrofit2/converter-gson/2.5.0/1c96fc5d0230f57d36cd09e2541d10829a3352a7/converter-gson-2.5.0.jar:/home/erik/.gradle/caches/modules-2/files-2.1/com.google.code.gson/gson/2.8.5/f645ed69d595b24d4cf8b3fbb64cc505bede8829/gson-2.8.5.jar:/home/erik/.gradle/caches/modules-2/files-2.1/com.squareup.retrofit2/retrofit/2.5.0/713ce36037bf24a76a3974c05cb85c3f754b1cc3/retrofit-2.5.0.jar:/home/erik/.gradle/caches/modules-2/files-2.1/com.squareup.okhttp3/okhttp/3.14.2/eaed79ed6bc1e14fad462172b6a09524545b165c/okhttp-3.14.2.jar:/home/erik/.gradle/caches/modules-2/files-2.1/com.squareup.okio/okio/1.17.2/78c7820b205002da4d2d137f6f312bd64b3d6049/okio-1.17.2.jar" />
+          <option name="classpath" value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/net.aksingh/owm-japis/2.5.3.0/c3aca5d34ba937e0c8e9776cec906003b0703044/owm-japis-2.5.3.0.jar:/media/erik/Projects/maven/repository/net/thauvin/erik/pinboard-poster/1.0.1/pinboard-poster-1.0.1.jar:/home/erik/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib-jdk8/1.4.20/756521338269950c2a276f1abe6fef8e1a5e5528/kotlin-stdlib-jdk8-1.4.20.jar:/home/erik/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlinx/kotlinx-coroutines-core-jvm/1.4.2/4b9c6b2de7cabfb2c9ad7a5c709b1ddb7bbfd2ad/kotlinx-coroutines-core-jvm-1.4.2.jar:/home/erik/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib-jdk7/1.4.20/9de2c79e95d4b4699a455e88ba285a95352e0bea/kotlin-stdlib-jdk7-1.4.20.jar:/home/erik/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/1.4.20/9be77b243a362b745e365f286627b8724337009c/kotlin-stdlib-1.4.20.jar:/home/erik/.gradle/caches/modules-2/files-2.1/pircbot/pircbot/1.5.0/cc27715d1c9c8246beb6a33ea099a9ca5d4e5da1/pircbot-1.5.0-sources.jar:/home/erik/.gradle/caches/modules-2/files-2.1/pircbot/pircbot/1.5.0/7a9dd235e6e81db733212202cc4067b5625650cf/pircbot-1.5.0.jar:/home/erik/.gradle/caches/modules-2/files-2.1/com.github.spotbugs/spotbugs-annotations/4.2.0/39d2a464e63fd44bcdbc2332b12a80df274dac83/spotbugs-annotations-4.2.0.jar:/media/erik/Projects/maven/repository/net/thauvin/erik/semver/1.2.0/semver-1.2.0.jar:/home/erik/.gradle/caches/modules-2/files-2.1/com.rometools/rome/1.15.0/d3614542b857eccc0555d1ee8dfc36d2043d9c1f/rome-1.15.0.jar:/home/erik/.gradle/caches/modules-2/files-2.1/commons-cli/commons-cli/1.4/c51c00206bb913cd8612b24abd9fa98ae89719b1/commons-cli-1.4.jar:/home/erik/.gradle/caches/modules-2/files-2.1/commons-net/commons-net/3.7.2/fc22868c06d0b59dc97f23dc93ca77efd9381ab2/commons-net-3.7.2.jar:/home/erik/.gradle/caches/modules-2/files-2.1/net.objecthunter/exp4j/0.4.8/cf1cfc0f958077d86ac7452c7e36d944689b2ec4/exp4j-0.4.8.jar:/home/erik/.gradle/caches/modules-2/files-2.1/org.apache.commons/commons-lang3/3.11/68e9a6adf7cf8eb7e9d31bbc554c7c75eeaac568/commons-lang3-3.11.jar:/home/erik/.gradle/caches/modules-2/files-2.1/org.json/json/20201115/f8e7a9953822c90e0701c3cd50764b5e9063f85c/json-20201115.jar:/home/erik/.gradle/caches/modules-2/files-2.1/org.jsoup/jsoup/1.13.1/f9577f3732bb7caa4fee8aba5053158f4010c118/jsoup-1.13.1.jar:/home/erik/.gradle/caches/modules-2/files-2.1/org.twitter4j/twitter4j-core/4.0.7/5fdb375ccfb3eda7354efb262cbe9b53abccff2/twitter4j-core-4.0.7.jar:/home/erik/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-core/2.14.0/e257b0562453f73eabac1bc3181ba33e79d193ed/log4j-core-2.14.0.jar:/home/erik/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-slf4j-impl/2.14.0/d6003a3b3f24fdb476848f4ecabdb2a43354e410/log4j-slf4j-impl-2.14.0.jar:/home/erik/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-api/2.14.0/23cdb2c6babad9b2b0dcf47c6a2c29d504e4c7a8/log4j-api-2.14.0.jar:/home/erik/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib-common/1.4.20/c6761d7805b5312302f2bbd78cda68c976ce0c70/kotlin-stdlib-common-1.4.20.jar:/media/erik/Projects/maven/repository/org/jetbrains/annotations/13.0/annotations-13.0.jar:/home/erik/.gradle/caches/modules-2/files-2.1/com.google.code.findbugs/jsr305/3.0.2/25ea2e8b0c338a877313bd4672d3fe056ea78f0d/jsr305-3.0.2.jar:/home/erik/.gradle/caches/modules-2/files-2.1/com.rometools/rome-utils/1.15.0/ab1cb95382bf9a8dec81165d328bcbbf1acfb3ae/rome-utils-1.15.0.jar:/media/erik/Projects/maven/repository/org/jdom/jdom2/2.0.6/jdom2-2.0.6.jar:/home/erik/.gradle/caches/modules-2/files-2.1/org.slf4j/slf4j-api/1.7.25/da76ca59f6a57ee3102f8f9bd9cee742973efa8a/slf4j-api-1.7.25.jar:/home/erik/.gradle/caches/modules-2/files-2.1/com.squareup.retrofit2/converter-gson/2.5.0/1c96fc5d0230f57d36cd09e2541d10829a3352a7/converter-gson-2.5.0.jar:/home/erik/.gradle/caches/modules-2/files-2.1/com.google.code.gson/gson/2.8.5/f645ed69d595b24d4cf8b3fbb64cc505bede8829/gson-2.8.5.jar:/home/erik/.gradle/caches/modules-2/files-2.1/com.squareup.retrofit2/retrofit/2.5.0/713ce36037bf24a76a3974c05cb85c3f754b1cc3/retrofit-2.5.0.jar:/home/erik/.gradle/caches/modules-2/files-2.1/com.squareup.okhttp3/okhttp/3.14.2/eaed79ed6bc1e14fad462172b6a09524545b165c/okhttp-3.14.2.jar:/home/erik/.gradle/caches/modules-2/files-2.1/com.squareup.okio/okio/1.17.2/78c7820b205002da4d2d137f6f312bd64b3d6049/okio-1.17.2.jar" />
           <option name="noStdlib" value="true" />
           <option name="noReflect" value="true" />
           <option name="moduleName" value="mobibot" />
@@ -20,6 +20,9 @@
           </option>
           <option name="pluginClasspaths">
             <array>
+              <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-compiler-embeddable/1.4.20/fc1d26586910b32d676480c75acd3e922e5e81fa/kotlin-compiler-embeddable-1.4.20.jar" />
+              <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-daemon-embeddable/1.4.20/a051291fb01bf2397759625626fec670cd57b3f0/kotlin-daemon-embeddable-1.4.20.jar" />
+              <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-reflect/1.4.20/411fc46e908bfa9c034f52b0d31b2e1f61f06127/kotlin-reflect-1.4.20.jar" />
               <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-script-runtime/1.4.20/9793d2f6b262847a2d8127951c5786cf907cc7b1/kotlin-script-runtime-1.4.20.jar" />
               <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-scripting-common/1.4.20/2e2bf29688a76cec111df56bc5e358c5bbc5057/kotlin-scripting-common-1.4.20.jar" />
               <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-scripting-jvm/1.4.20/83704fbbe39946cc2ac6d0f07f41947abeb8dc20/kotlin-scripting-jvm-1.4.20.jar" />
@@ -27,6 +30,7 @@
               <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/1.4.20/9be77b243a362b745e365f286627b8724337009c/kotlin-stdlib-1.4.20.jar" />
               <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlinx/kotlinx-coroutines-core/1.3.7/8e2eb78158638b33793d204ffef0b65c4a578e1c/kotlinx-coroutines-core-1.3.7.jar" />
               <option value="$MAVEN_REPOSITORY$/org/jetbrains/annotations/13.0/annotations-13.0.jar" />
+              <option value="$MAVEN_REPOSITORY$/org/jetbrains/intellij/deps/trove4j/1.0.20181211/trove4j-1.0.20181211.jar" />
             </array>
           </option>
           <option name="errors">
@@ -39,46 +43,59 @@
   <component name="NewModuleRootManager">
     <output url="file://$MODULE_DIR$/../../build/classes/java/main" />
     <exclude-output />
-    <content url="file://$MODULE_DIR$/../../src/generated/java">
-      <sourceFolder url="file://$MODULE_DIR$/../../src/generated/java" isTestSource="false" generated="true" />
+    <content url="file://$MODULE_DIR$/../../build/generated/source/kapt/main">
+      <sourceFolder url="file://$MODULE_DIR$/../../build/generated/source/kapt/main" isTestSource="false" generated="true" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../build/generated/source/kaptKotlin/main">
+      <sourceFolder url="file://$MODULE_DIR$/../../build/generated/source/kaptKotlin/main" isTestSource="false" generated="true" />
     </content>
     <content url="file://$MODULE_DIR$/../../src/main">
       <sourceFolder url="file://$MODULE_DIR$/../../src/main/java" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/../../src/main/resources" type="java-resource" />
     </content>
     <orderEntry type="inheritedJdk" />
+    <orderEntry type="library" name="Gradle: commons-cli:commons-cli:1.4" level="project" />
+    <orderEntry type="library" name="Gradle: pircbot:pircbot:1.5.0" level="project" />
+    <orderEntry type="library" name="Gradle: com.squareup.okio:okio:1.17.2" level="project" />
+    <orderEntry type="library" name="Gradle: org.jsoup:jsoup:1.13.1" level="project" />
+    <orderEntry type="library" name="Gradle: net.objecthunter:exp4j:0.4.8" level="project" />
+    <orderEntry type="library" name="Gradle: com.rometools:rome-utils:1.15.0" level="project" />
+    <orderEntry type="library" name="Gradle: org.apache.logging.log4j:log4j-api:2.14.0" level="project" />
+    <orderEntry type="library" name="Gradle: org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.4.2" level="project" />
+    <orderEntry type="library" name="Gradle: com.squareup.retrofit2:converter-gson:2.5.0" level="project" />
+    <orderEntry type="library" name="Gradle: com.rometools:rome:1.15.0" level="project" />
+    <orderEntry type="library" name="Gradle: org.apache.logging.log4j:log4j-slf4j-impl:2.14.0" level="project" />
+    <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib-common:1.4.20" level="project" />
+    <orderEntry type="library" name="Gradle: org.slf4j:slf4j-api:1.7.25" level="project" />
+    <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.4.20" level="project" />
+    <orderEntry type="library" name="Gradle: org.twitter4j:twitter4j-core:4.0.7" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: pircbot:pircbot:sources:1.5.0" level="project" />
+    <orderEntry type="library" name="Gradle: com.squareup.retrofit2:retrofit:2.5.0" level="project" />
+    <orderEntry type="library" name="Gradle: org.apache.commons:commons-lang3:3.11" level="project" />
+    <orderEntry type="library" name="Gradle: org.apache.logging.log4j:log4j-core:2.14.0" level="project" />
+    <orderEntry type="library" name="Gradle: org.json:json:20201115" level="project" />
+    <orderEntry type="library" name="Gradle: com.squareup.okhttp3:okhttp:3.14.2" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: com.google.code.findbugs:jsr305:3.0.2" level="project" />
+    <orderEntry type="library" name="Gradle: org.jetbrains:annotations:13.0" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: com.github.spotbugs:spotbugs-annotations:4.2.0" level="project" />
+    <orderEntry type="library" name="Gradle: com.google.code.gson:gson:2.8.5" level="project" />
+    <orderEntry type="library" name="Gradle: org.jdom:jdom2:2.0.6" level="project" />
+    <orderEntry type="library" name="Gradle: commons-net:commons-net:3.7.2" level="project" />
+    <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.4.20" level="project" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module-library">
+      <library name="Gradle: kaptGeneratedClasses">
+        <CLASSES>
+          <root url="file://$MODULE_DIR$/../../build/tmp/kapt3/classes/main" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
     <orderEntry type="library" name="Gradle: net.aksingh:owm-japis:2.5.3.0" level="project" />
     <orderEntry type="library" name="Gradle: net.thauvin.erik:pinboard-poster:1.0.1" level="project" />
     <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib:1.4.20" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Gradle: net.thauvin.erik:semver:1.2.0" level="project" />
-    <orderEntry type="library" name="Gradle: pircbot:pircbot:1.5.0" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Gradle: pircbot:pircbot:sources:1.5.0" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Gradle: com.github.spotbugs:spotbugs-annotations:4.2.0" level="project" />
-    <orderEntry type="library" name="Gradle: com.rometools:rome:1.15.0" level="project" />
-    <orderEntry type="library" name="Gradle: commons-cli:commons-cli:1.4" level="project" />
-    <orderEntry type="library" name="Gradle: commons-net:commons-net:3.7.2" level="project" />
-    <orderEntry type="library" name="Gradle: net.objecthunter:exp4j:0.4.8" level="project" />
-    <orderEntry type="library" name="Gradle: org.apache.commons:commons-lang3:3.11" level="project" />
-    <orderEntry type="library" name="Gradle: org.json:json:20201115" level="project" />
-    <orderEntry type="library" name="Gradle: org.jsoup:jsoup:1.13.1" level="project" />
-    <orderEntry type="library" name="Gradle: org.twitter4j:twitter4j-core:4.0.7" level="project" />
-    <orderEntry type="library" name="Gradle: org.apache.logging.log4j:log4j-core:2.14.0" level="project" />
-    <orderEntry type="library" name="Gradle: org.apache.logging.log4j:log4j-slf4j-impl:2.14.0" level="project" />
-    <orderEntry type="library" name="Gradle: org.apache.logging.log4j:log4j-api:2.14.0" level="project" />
-    <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.4.20" level="project" />
-    <orderEntry type="library" name="Gradle: com.squareup.retrofit2:converter-gson:2.5.0" level="project" />
-    <orderEntry type="library" name="Gradle: com.google.code.gson:gson:2.8.5" level="project" />
-    <orderEntry type="library" name="Gradle: com.squareup.retrofit2:retrofit:2.5.0" level="project" />
-    <orderEntry type="library" name="Gradle: com.squareup.okhttp3:okhttp:3.14.2" level="project" />
-    <orderEntry type="library" name="Gradle: org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.4.2" level="project" />
-    <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib-common:1.4.20" level="project" />
-    <orderEntry type="library" name="Gradle: org.jetbrains:annotations:13.0" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Gradle: com.google.code.findbugs:jsr305:3.0.2" level="project" />
-    <orderEntry type="library" name="Gradle: com.rometools:rome-utils:1.15.0" level="project" />
-    <orderEntry type="library" name="Gradle: org.jdom:jdom2:2.0.6" level="project" />
-    <orderEntry type="library" name="Gradle: org.slf4j:slf4j-api:1.7.25" level="project" />
-    <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.4.20" level="project" />
-    <orderEntry type="library" name="Gradle: com.squareup.okio:okio:1.17.2" level="project" />
+    <orderEntry type="library" name="Gradle: net.thauvin.erik:semver:1.2.0" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Gradle: com.github.spullara.mustache.java:compiler:0.9.6" level="project" />
   </component>
 </module>

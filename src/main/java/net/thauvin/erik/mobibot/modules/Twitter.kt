@@ -39,7 +39,6 @@ import net.thauvin.erik.mobibot.commands.links.LinksMgr
 import net.thauvin.erik.mobibot.entries.EntriesUtils
 import net.thauvin.erik.mobibot.msg.Message
 import net.thauvin.erik.mobibot.msg.NoticeMessage
-import org.apache.commons.lang3.StringUtils
 import twitter4j.TwitterException
 import twitter4j.TwitterFactory
 import twitter4j.conf.ConfigurationBuilder
@@ -88,7 +87,7 @@ class Twitter(bot: Mobibot) : ThreadedModule(bot) {
      */
     fun notification(msg: String) {
         with(bot) {
-            if (isEnabled && StringUtils.isNotBlank(handle)) {
+            if (isEnabled && !handle.isNullOrBlank()) {
                 Thread {
                     try {
                         post(message = msg, isDm = true)

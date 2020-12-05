@@ -31,11 +31,11 @@
  */
 package net.thauvin.erik.mobibot.commands.tell
 
-import java.time.temporal.Temporal
-import java.time.LocalDateTime
 import org.assertj.core.api.Assertions
 import org.testng.annotations.Test
 import java.time.Duration
+import java.time.LocalDateTime
+import java.time.temporal.Temporal
 
 /**
  * The `TellMessageTest` class.

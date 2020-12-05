@@ -34,7 +34,6 @@ package net.thauvin.erik.mobibot.modules
 import net.objecthunter.exp4j.ExpressionBuilder
 import net.thauvin.erik.mobibot.Mobibot
 import net.thauvin.erik.mobibot.Utils
-import org.apache.commons.lang3.StringUtils
 import java.text.DecimalFormat
 
 /**
@@ -47,7 +46,7 @@ class Calc(bot: Mobibot) : AbstractModule(bot) {
         args: String,
         isPrivate: Boolean
     ) {
-        if (StringUtils.isNotBlank(args)) {
+        if (args.isNotBlank()) {
             bot.send(calc(args))
         } else {
             helpResponse(sender, isPrivate)

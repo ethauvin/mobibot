@@ -134,7 +134,7 @@ class Posting(bot: Mobibot) : AbstractCommand(bot) {
     }
 
     private fun removeEntry(sender: String, login: String, isOp: Boolean, index: Int) {
-        val entry: EntryLink = LinksMgr.entries[index]
+        val entry: EntryLink = entries[index]
         if (entry.login == login || isOp) {
             bot.deletePin(index, entry)
             entries.removeAt(index)

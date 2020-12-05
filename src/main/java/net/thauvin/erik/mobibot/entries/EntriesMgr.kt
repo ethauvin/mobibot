@@ -41,7 +41,6 @@ import com.rometools.rome.io.SyndFeedInput
 import com.rometools.rome.io.SyndFeedOutput
 import net.thauvin.erik.mobibot.Mobibot
 import net.thauvin.erik.mobibot.Utils.Companion.isoLocalDate
-import org.apache.commons.lang3.StringUtils
 import java.io.IOException
 import java.io.InputStreamReader
 import java.io.OutputStreamWriter
@@ -143,7 +142,7 @@ class EntriesMgr private constructor() {
             if (bot.logger.isDebugEnabled) {
                 bot.logger.debug("Saving the feeds...")
             }
-            if (StringUtils.isNotBlank(bot.logsDir) && StringUtils.isNotBlank(bot.weblogUrl)) {
+            if (bot.logsDir.isNotBlank() && bot.weblogUrl.isNotBlank()) {
                 try {
                     val output = SyndFeedOutput()
                     var rss: SyndFeed = SyndFeedImpl()
@@ -208,7 +207,7 @@ class EntriesMgr private constructor() {
                         ), StandardCharsets.UTF_8
                     ).use { fw -> output.output(rss, fw) }
                     if (isDayBackup) {
-                        if (StringUtils.isNotBlank(bot.backlogsUrl)) {
+                        if (bot.backlogsUrl.isNotBlank()) {
                             if (!history.contains(bot.today)) {
                                 history.add(bot.today)
                                 while (history.size > MAX_BACKLOGS) {

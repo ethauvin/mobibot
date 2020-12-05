@@ -37,7 +37,6 @@ import net.thauvin.erik.mobibot.msg.ErrorMessage
 import net.thauvin.erik.mobibot.msg.Message
 import net.thauvin.erik.mobibot.msg.NoticeMessage
 import net.thauvin.erik.mobibot.msg.PublicMessage
-import org.apache.commons.lang3.StringUtils
 import org.json.JSONException
 import org.json.JSONObject
 import java.io.IOException
@@ -53,7 +52,7 @@ class StockQuote(bot: Mobibot) : ThreadedModule(bot) {
      */
     override fun run(sender: String, cmd: String, args: String, isPrivate: Boolean) {
         with(bot) {
-            if (StringUtils.isNotBlank(args)) {
+            if (args.isNotBlank()) {
                 try {
                     val messages = getQuote(args, properties[ALPHAVANTAGE_API_KEY_PROP])
                     for (msg in messages) {
@@ -88,7 +87,7 @@ class StockQuote(bot: Mobibot) : ThreadedModule(bot) {
 
         @Throws(ModuleException::class)
         private fun getJsonResponse(response: String, debugMessage: String): JSONObject {
-            return if (StringUtils.isNotBlank(response)) {
+            return if (response.isNotBlank()) {
                 val json = JSONObject(response)
                 try {
                     val info = json.getString("Information")

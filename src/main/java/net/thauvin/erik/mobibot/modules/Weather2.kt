@@ -41,7 +41,6 @@ import net.thauvin.erik.mobibot.msg.ErrorMessage
 import net.thauvin.erik.mobibot.msg.Message
 import net.thauvin.erik.mobibot.msg.NoticeMessage
 import net.thauvin.erik.mobibot.msg.PublicMessage
-import org.apache.commons.lang3.StringUtils
 import org.jibble.pircbot.Colors
 import java.util.*
 import kotlin.math.roundToInt
@@ -54,7 +53,7 @@ class Weather2(bot: Mobibot) : ThreadedModule(bot) {
      * Fetches the weather data from a specific city.
      */
     override fun run(sender: String, cmd: String, args: String, isPrivate: Boolean) {
-        if (StringUtils.isNotBlank(args)) {
+        if (args.isNotBlank()) {
             try {
                 val messages = getWeather(args, properties[OWM_API_KEY_PROP])
                 if (messages[0].isError) {

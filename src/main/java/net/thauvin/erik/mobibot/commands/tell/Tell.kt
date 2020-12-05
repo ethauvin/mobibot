@@ -41,7 +41,6 @@ import net.thauvin.erik.mobibot.Utils.Companion.reverseColor
 import net.thauvin.erik.mobibot.Utils.Companion.utcDateTime
 import net.thauvin.erik.mobibot.commands.AbstractCommand
 import net.thauvin.erik.mobibot.commands.links.View
-import org.apache.commons.lang3.StringUtils
 import java.util.concurrent.CopyOnWriteArrayList
 
 /**
@@ -143,7 +142,7 @@ class Tell(bot: Mobibot) : AbstractCommand(bot) {
         isPrivate: Boolean
     ) {
         if (isEnabled()) {
-            if (StringUtils.isBlank(args)) {
+            if (args.isBlank()) {
                 helpResponse(args, sender, isOp, isPrivate)
             } else if (args.startsWith(View.VIEW_CMD)) {
                 if (bot.isOp(sender) && "${View.VIEW_CMD} $TELL_ALL_KEYWORD" == args) {
@@ -178,12 +177,13 @@ class Tell(bot: Mobibot) : AbstractCommand(bot) {
     // New message.
     private fun newMessage(sender: String, args: String, isOp: Boolean, isPrivate: Boolean) {
         val split = args.split(" ".toRegex(), 2).toTypedArray()
-        if (split.size == 2 && StringUtils.isNotBlank(split[1]) && split[1].contains(" ")) {
+        if (split.size == 2 && split[1].isNotBlank() && split[1].contains(" ")) {
             if (messages.size < maxSize) {
                 val message = TellMessage(sender, split[0], split[1].trim())
                 messages.add(message)
                 save()
-                bot.send(sender, "Message [ID ${message.id}] was queued for ${bold(message.recipient)}", isPrivate
+                bot.send(
+                    sender, "Message [ID ${message.id}] was queued for ${bold(message.recipient)}", isPrivate
                 )
             } else {
                 bot.send(sender, "Sorry, the messages queue is currently full.", isPrivate)

@@ -32,18 +32,17 @@
 package net.thauvin.erik.mobibot.commands.tell
 
 import org.apache.logging.log4j.Logger
-import java.time.LocalDateTime
-import java.io.ObjectInputStream
 import java.io.BufferedInputStream
+import java.io.BufferedOutputStream
 import java.io.FileNotFoundException
 import java.io.IOException
-import java.lang.ClassNotFoundException
-import java.io.BufferedOutputStream
+import java.io.ObjectInputStream
 import java.io.ObjectOutputStream
 import java.nio.file.Files
 import java.nio.file.Paths
 import java.time.Clock
-import java.util.ArrayList
+import java.time.LocalDateTime
+import java.util.*
 
 /**
  * The Tell Messages Manager.

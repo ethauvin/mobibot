@@ -157,8 +157,8 @@ class CurrencyConverter(bot: Mobibot) : ThreadedModule(bot) {
                 if (cmds[3] == cmds[1] || "0" == cmds[0]) {
                     PublicMessage("You're kidding, right?")
                 } else {
-                    val to = StringUtils.upperCase(cmds[1])
-                    val from = StringUtils.upperCase(cmds[3])
+                    val to = cmds[1].toUpperCase()
+                    val from = cmds[3].toUpperCase()
                     if (EXCHANGE_RATES.containsKey(to) && EXCHANGE_RATES.containsKey(from)) {
                         try {
                             val amt = cmds[0].replace(",", "").toDouble()
@@ -166,10 +166,10 @@ class CurrencyConverter(bot: Mobibot) : ThreadedModule(bot) {
                             val doubleTo = EXCHANGE_RATES[from]!!.toDouble()
                             PublicMessage(
                                 NumberFormat.getCurrencyInstance(Constants.LOCALE).format(amt).substring(1)
-                                    + " ${StringUtils.upperCase(cmds[1])} = "
+                                    + " ${cmds[1].toUpperCase()} = "
                                     + NumberFormat.getCurrencyInstance(Constants.LOCALE)
                                     .format(amt * doubleTo / doubleFrom).substring(1)
-                                    + " ${StringUtils.upperCase(cmds[3])}"
+                                    + " ${cmds[3].toUpperCase()}"
                             )
                         } catch (e: NumberFormatException) {
                             ErrorMessage("Let's try with some real numbers next time, okay?")
