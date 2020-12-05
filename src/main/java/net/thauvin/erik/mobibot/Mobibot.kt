@@ -99,7 +99,6 @@ import java.io.FileNotFoundException
 import java.io.FileOutputStream
 import java.io.IOException
 import java.io.PrintStream
-import java.lang.String.join
 import java.nio.file.Files
 import java.nio.file.Paths
 import java.util.*
@@ -512,7 +511,7 @@ class Mobibot(nickname: String, channel: String, logsDirPath: String, p: Propert
         while (i < list.size) {
             send(
                 nick,
-                helpIndent(join(" ", list.subList(i, list.size.coerceAtMost(i + size))), isBold),
+                helpIndent(list.subList(i, list.size.coerceAtMost(i + size)).joinToString(" ", truncated = ""), isBold),
                 isPrivate
             )
             i += size
@@ -588,7 +587,7 @@ class Mobibot(nickname: String, channel: String, logsDirPath: String, p: Propert
                 .addOption(
                     Option.builder(Constants.PROPS_ARG.substring(0, 1)).hasArg()
                         .argName("file")
-                        .desc("use " + "alternate properties file")
+                        .desc("use alternate properties file")
                         .longOpt(Constants.PROPS_ARG).build()
                 )
                 .addOption(
@@ -683,14 +682,8 @@ class Mobibot(nickname: String, channel: String, logsDirPath: String, p: Propert
      * Initialize the bot.
      */
     init {
-        System.getProperties().setProperty(
-            "sun.net.client.defaultConnectTimeout",
-            java.lang.String.valueOf(Constants.CONNECT_TIMEOUT)
-        )
-        System.getProperties().setProperty(
-            "sun.net.client.defaultReadTimeout",
-            java.lang.String.valueOf(Constants.CONNECT_TIMEOUT)
-        )
+        System.getProperties().setProperty("sun.net.client.defaultConnectTimeout", Constants.CONNECT_TIMEOUT.toString())
+        System.getProperties().setProperty("sun.net.client.defaultReadTimeout", Constants.CONNECT_TIMEOUT.toString())
         name = nickname
         ircServer = p.getProperty("server", Constants.DEFAULT_SERVER)
         ircPort = getIntProperty(p.getProperty("port"), Constants.DEFAULT_PORT)
