@@ -136,13 +136,13 @@ class Mobibot(nickname: String, channel: String, logsDirPath: String, p: Propert
     private val pinboard: PinboardPoster = PinboardPoster()
 
     /** Tell command. */
-    val tell: Tell = Tell(this)
+    val tell: Tell
 
     /** Today's date. */
     val today = today()
 
     /** Twitter module. */
-    val twitter: Twitter = Twitter(this)
+    val twitter: Twitter
 
     /** The backlogs URL. */
     val backlogsUrl: String
@@ -730,6 +730,7 @@ class Mobibot(nickname: String, channel: String, logsDirPath: String, p: Propert
         addons.add(Versions(this), p)
 
         // Tell command
+        tell = Tell(this)
         addons.add(tell, p)
 
         // Load the links commands
@@ -754,6 +755,7 @@ class Mobibot(nickname: String, channel: String, logsDirPath: String, p: Propert
         addons.add(WorldTime(this), p)
 
         // Twitter module
+        twitter = Twitter(this)
         addons.add(twitter, p)
 
         // Sort the addons
