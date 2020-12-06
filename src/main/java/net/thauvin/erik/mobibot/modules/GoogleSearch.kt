@@ -41,7 +41,6 @@ import org.json.JSONException
 import org.json.JSONObject
 import java.io.IOException
 import java.net.URL
-import java.util.*
 
 /**
  * The GoogleSearch module.
@@ -62,7 +61,7 @@ class GoogleSearch(bot: Mobibot) : ThreadedModule(bot) {
                         send(sender, msg)
                     }
                 } catch (e: ModuleException) {
-                    logger.warn(e.debugMessage, e)
+                    if (logger.isWarnEnabled) logger.warn(e.debugMessage, e)
                     send(sender, e.message, isPrivate)
                 }
             } else {
@@ -91,7 +90,7 @@ class GoogleSearch(bot: Mobibot) : ThreadedModule(bot) {
                 throw ModuleException("${StringUtils.capitalize(GOOGLE_CMD)} is disabled. The API keys are missing.")
             }
             return if (query.isNotBlank()) {
-                val results = ArrayList<Message>()
+                val results = mutableListOf<Message>()
                 try {
                     val url = URL(
                         "https://www.googleapis.com/customsearch/v1?key=$apiKey&cx=$cseKey" +

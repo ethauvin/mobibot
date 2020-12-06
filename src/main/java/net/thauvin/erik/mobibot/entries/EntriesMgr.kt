@@ -48,7 +48,6 @@ import java.nio.charset.StandardCharsets
 import java.nio.file.Files
 import java.nio.file.Paths
 import java.util.*
-import kotlin.collections.ArrayList
 
 /**
  * Manages the feed entries.
@@ -79,7 +78,7 @@ class EntriesMgr private constructor() {
          * Loads the backlogs.
          */
         @Throws(IOException::class, FeedException::class)
-        fun loadBacklogs(file: String, history: ArrayList<String>) {
+        fun loadBacklogs(file: String, history: MutableList<String>) {
             history.clear()
             val input = SyndFeedInput()
             InputStreamReader(Files.newInputStream(Paths.get(file)), StandardCharsets.UTF_8).use { reader ->
@@ -95,7 +94,7 @@ class EntriesMgr private constructor() {
          * Loads the current entries.
          */
         @Throws(IOException::class, FeedException::class)
-        fun loadEntries(file: String, channel: String, entries: ArrayList<EntryLink>): String {
+        fun loadEntries(file: String, channel: String, entries: MutableList<EntryLink>): String {
             entries.clear()
             val input = SyndFeedInput()
             var today: String
@@ -139,14 +138,12 @@ class EntriesMgr private constructor() {
             history: MutableList<String>,
             isDayBackup: Boolean
         ) {
-            if (bot.logger.isDebugEnabled) {
-                bot.logger.debug("Saving the feeds...")
-            }
+            if (bot.logger.isDebugEnabled) bot.logger.debug("Saving the feeds...")
             if (bot.logsDir.isNotBlank() && bot.weblogUrl.isNotBlank()) {
                 try {
                     val output = SyndFeedOutput()
                     var rss: SyndFeed = SyndFeedImpl()
-                    val items: MutableList<SyndEntry> = ArrayList(0)
+                    val items: MutableList<SyndEntry> = mutableListOf()
                     var item: SyndEntry
                     OutputStreamWriter(
                         Files.newOutputStream(Paths.get(bot.logsDir + CURRENT_XML)), StandardCharsets.UTF_8
@@ -194,9 +191,7 @@ class EntriesMgr private constructor() {
                             }
                         }
                         rss.entries = items
-                        if (bot.logger.isDebugEnabled) {
-                            bot.logger.debug("Writing the entries feed.")
-                        }
+                        if (bot.logger.isDebugEnabled) bot.logger.debug("Writing the entries feed.")
                         output.output(rss, fw)
                     }
                     OutputStreamWriter(
@@ -238,9 +233,7 @@ class EntriesMgr private constructor() {
                                     items.add(item)
                                 }
                                 rss.entries = items
-                                if (bot.logger.isDebugEnabled) {
-                                    bot.logger.debug("Writing the backlog feed.")
-                                }
+                                if (bot.logger.isDebugEnabled) bot.logger.debug("Writing the backlog feed.")
                                 output.output(rss, fw)
                             }
                         } else {
@@ -248,12 +241,14 @@ class EntriesMgr private constructor() {
                         }
                     }
                 } catch (e: FeedException) {
-                    bot.logger.warn("Unable to generate the entries feed.", e)
+                    if (bot.logger.isWarnEnabled) bot.logger.warn("Unable to generate the entries feed.", e)
                 } catch (e: IOException) {
-                    bot.logger.warn("Unable to generate the entries feed.", e)
+                    if (bot.logger.isWarnEnabled) bot.logger.warn("Unable to generate the entries feed.", e)
                 }
             } else {
-                bot.logger.warn("Unable to generate the entries feed. A required property is missing.")
+                if (bot.logger.isWarnEnabled) {
+                    bot.logger.warn("Unable to generate the entries feed. A required property is missing.")
+                }
             }
         }
     }

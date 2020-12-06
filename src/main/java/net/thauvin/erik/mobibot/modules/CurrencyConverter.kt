@@ -43,7 +43,6 @@ import org.jdom2.input.SAXBuilder
 import java.io.IOException
 import java.net.URL
 import java.text.NumberFormat
-import java.util.*
 import javax.xml.XMLConstants
 
 /**
@@ -73,7 +72,7 @@ class CurrencyConverter(bot: Mobibot) : ThreadedModule(bot) {
                 try {
                     loadRates()
                 } catch (e: ModuleException) {
-                    logger.warn(e.debugMessage, e)
+                    if (bot.logger.isWarnEnabled)logger.warn(e.debugMessage, e)
                 }
             }
 
@@ -100,7 +99,7 @@ class CurrencyConverter(bot: Mobibot) : ThreadedModule(bot) {
                 try {
                     loadRates()
                 } catch (e: ModuleException) {
-                    logger.debug(e.debugMessage, e)
+                    if (logger.isDebugEnabled) logger.debug(e.debugMessage, e)
                 }
             }
             if (EXCHANGE_RATES.isEmpty()) {
@@ -139,7 +138,7 @@ class CurrencyConverter(bot: Mobibot) : ThreadedModule(bot) {
         private const val EMPTY_RATE_TABLE = "Sorry, but the exchange rate table is empty."
 
         // Exchange rates
-        private val EXCHANGE_RATES: MutableMap<String, String> = TreeMap()
+        private val EXCHANGE_RATES: MutableMap<String, String> = mutableMapOf()
 
         // Exchange rates table URL
         private const val EXCHANGE_TABLE_URL = "https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml"
@@ -183,7 +182,7 @@ class CurrencyConverter(bot: Mobibot) : ThreadedModule(bot) {
 
         @JvmStatic
         fun currencyRates(): List<String> {
-            val rates = ArrayList<String>(33)
+            val rates = mutableListOf<String>()
             for ((key, value) in EXCHANGE_RATES) {
                 rates.add("  $key: ${StringUtils.leftPad(value, 8)}")
             }

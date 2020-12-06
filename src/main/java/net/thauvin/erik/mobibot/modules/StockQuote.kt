@@ -41,7 +41,6 @@ import org.json.JSONException
 import org.json.JSONObject
 import java.io.IOException
 import java.net.URL
-import java.util.*
 
 /**
  * The StockQuote module.
@@ -59,7 +58,7 @@ class StockQuote(bot: Mobibot) : ThreadedModule(bot) {
                         send(sender, msg)
                     }
                 } catch (e: ModuleException) {
-                    logger.warn(e.debugMessage, e)
+                    if (logger.isWarnEnabled) logger.warn(e.debugMessage, e)
                     send(e.message)
                 }
             } else {
@@ -126,7 +125,7 @@ class StockQuote(bot: Mobibot) : ThreadedModule(bot) {
             }
             return if (symbol.isNotBlank()) {
                 val debugMessage = "getQuote($symbol)"
-                val messages = ArrayList<Message>()
+                val messages = mutableListOf<Message>()
                 var response: String
                 try {
                     with(messages) {

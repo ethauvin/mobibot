@@ -44,8 +44,8 @@ import org.jsoup.Jsoup
 import java.io.IOException
 
 class LinksMgr(bot: Mobibot) : AbstractCommand(bot) {
-    private val keywords: MutableList<String> = ArrayList()
-    private val defaultTags: MutableList<String> = ArrayList()
+    private val keywords: MutableList<String> = mutableListOf()
+    private val defaultTags: MutableList<String> = mutableListOf()
 
     override val name = Constants.LINK_CMD
     override val help = emptyList<String>()
@@ -65,11 +65,11 @@ class LinksMgr(bot: Mobibot) : AbstractCommand(bot) {
 
         // Entries array
         @JvmField
-        val entries = ArrayList<EntryLink>(0)
+        val entries = mutableListOf<EntryLink>()
 
         // History/backlogs array
         @JvmField
-        val history = ArrayList<String>(0)
+        val history = mutableListOf<String>()
 
 
         @JvmStatic
@@ -207,7 +207,7 @@ class LinksMgr(bot: Mobibot) : AbstractCommand(bot) {
         return false
     }
 
-    private fun matchTagKeywords(title: String, tags: ArrayList<String>) {
+    private fun matchTagKeywords(title: String, tags: MutableList<String>) {
         for (match in keywords) {
             val m = Regex.escape(match)
             if (title.matches("(?i).*\\b$m\\b.*".toRegex())) {

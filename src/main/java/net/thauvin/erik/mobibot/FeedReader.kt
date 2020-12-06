@@ -69,10 +69,10 @@ class FeedReader(
                     }
                 }
             } catch (e: MalformedURLException) {
-                logger.debug("Invalid feed URL.", e)
+                if (logger.isDebugEnabled) logger.debug("Invalid feed URL.", e)
                 send(sender, "The feed URL is invalid.", false)
             } catch (e: Exception) {
-                logger.debug("Unable to fetch the feed.", e)
+                if (logger.isDebugEnabled) logger.debug("Unable to fetch the feed.", e)
                 send(sender, "An error has occurred while fetching the feed: ${e.message}", false)
             }
         }

@@ -37,17 +37,16 @@ import net.thauvin.erik.mobibot.commands.links.LinksMgr
 import org.apache.commons.lang3.StringUtils
 import java.io.Serializable
 import java.util.*
-import java.util.concurrent.CopyOnWriteArrayList
 
 /**
  * The class used to store link entries.
  */
 class EntryLink : Serializable {
     // Link's comments
-    val comments: MutableList<EntryComment> = CopyOnWriteArrayList()
+    val comments: MutableList<EntryComment> = mutableListOf()
 
     // Tags/categories
-    val tags: MutableList<SyndCategory> = CopyOnWriteArrayList()
+    val tags: MutableList<SyndCategory> = mutableListOf()
 
     // Channel
     var channel: String

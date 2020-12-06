@@ -42,7 +42,6 @@ import net.thauvin.erik.mobibot.msg.Message
 import net.thauvin.erik.mobibot.msg.NoticeMessage
 import net.thauvin.erik.mobibot.msg.PublicMessage
 import org.jibble.pircbot.Colors
-import java.util.*
 import kotlin.math.roundToInt
 
 /**
@@ -64,7 +63,7 @@ class Weather2(bot: Mobibot) : ThreadedModule(bot) {
                     }
                 }
             } catch (e: ModuleException) {
-                bot.logger.debug(e.debugMessage, e)
+                if (bot.logger.isDebugEnabled) bot.logger.debug(e.debugMessage, e)
                 bot.send(e.message)
             }
         } else {
@@ -104,7 +103,7 @@ class Weather2(bot: Mobibot) : ThreadedModule(bot) {
                 throw ModuleException("${WEATHER_CMD.capitalize()} is disabled. The API key is missing.")
             }
             val owm = OWM(apiKey)
-            val messages = ArrayList<Message>()
+            val messages = mutableListOf<Message>()
             owm.unit = OWM.Unit.IMPERIAL
             if (query.isNotBlank()) {
                 val argv = query.split(",")

@@ -36,7 +36,6 @@ import net.thauvin.erik.mobibot.Mobibot
 import net.thauvin.erik.mobibot.Utils
 import java.time.Clock
 import java.time.LocalDateTime
-import java.util.*
 
 class Recap(bot: Mobibot) : AbstractCommand(bot) {
     override val name = "recap"
@@ -49,7 +48,7 @@ class Recap(bot: Mobibot) : AbstractCommand(bot) {
     override val isVisible = true
 
     companion object {
-        private val recaps = ArrayList<String>(0)
+        private val recaps = mutableListOf<String>()
 
         @JvmStatic
         fun recapCount(): Int {

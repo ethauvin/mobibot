@@ -76,7 +76,9 @@ class Lookup(bot: Mobibot) : AbstractModule(bot) {
                                 send("Unknown host.")
                             }
                         } catch (ioe: IOException) {
-                            logger.debug("Unable to perform whois IP lookup: {}", args, ioe)
+                            if (logger.isDebugEnabled) {
+                                logger.debug("Unable to perform whois IP lookup: $args", ioe)
+                            }
                             send("Unable to perform whois IP lookup: ${ioe.message}")
                         }
                     } else {

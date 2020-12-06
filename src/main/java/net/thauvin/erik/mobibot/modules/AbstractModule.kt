@@ -33,8 +33,6 @@ package net.thauvin.erik.mobibot.modules
 
 import net.thauvin.erik.mobibot.Mobibot
 import net.thauvin.erik.mobibot.Utils
-import java.util.*
-import java.util.concurrent.ConcurrentHashMap
 
 /**
  * The `Module` abstract class.
@@ -44,11 +42,11 @@ abstract class AbstractModule(val bot: Mobibot) {
      * The module's commands, if any.
      */
     @JvmField
-    val commands: MutableList<String> = ArrayList()
+    val commands: MutableList<String> = mutableListOf()
 
     @JvmField
-    val help: MutableList<String> = ArrayList()
-    val properties: MutableMap<String, String> = ConcurrentHashMap()
+    val help: MutableList<String> = mutableListOf()
+    val properties: MutableMap<String, String> = mutableMapOf()
 
     /**
      * Responds to a command.

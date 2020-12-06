@@ -41,6 +41,7 @@ import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoField
 import java.util.*
+import kotlin.collections.ArrayList
 
 /**
  * The WorldTime module.
@@ -94,7 +95,7 @@ class WorldTime(bot: Mobibot) : AbstractModule(bot) {
 
         init {
             // Initialize the countries map
-            val countries = TreeMap<String, String>()
+            val countries = mutableMapOf<String, String>()
             countries["AE"] = "Asia/Dubai"
             countries["AF"] = "Asia/Kabul"
             countries["AQ"] = "Antarctica/South_Pole"

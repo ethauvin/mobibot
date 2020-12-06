@@ -136,25 +136,25 @@ class Mobibot(nickname: String, channel: String, logsDirPath: String, p: Propert
     private val pinboard: PinboardPoster = PinboardPoster()
 
     /** Tell command. */
-    val tell: Tell
+    val tell: Tell = Tell(this)
 
     /** Today's date. */
     val today = today()
 
     /** Twitter module. */
-    val twitter: Twitter
+    val twitter: Twitter = Twitter(this)
 
     /** The backlogs URL. */
-    var backlogsUrl = ""
+    val backlogsUrl: String
 
     // Ident message
-    private var identMsg = ""
+    private val identMsg: String
 
     // Ident nick
-    private var identNick = ""
+    private val identNick: String
 
     // NickServ ident password
-    private var identPwd = ""
+    private val identPwd: String
 
     // Is pinboard enabled?
     private var isPinboardEnabled = false
@@ -163,7 +163,7 @@ class Mobibot(nickname: String, channel: String, logsDirPath: String, p: Propert
     val timer = Timer(true)
 
     /** Weblog URL */
-    var weblogUrl = ""
+    val weblogUrl: String
 
     /** The current channel name. */
     private val channelName: String
@@ -212,7 +212,9 @@ class Mobibot(nickname: String, channel: String, logsDirPath: String, p: Propert
                     connect(ircServer, ircPort)
                 } catch (ex: Exception) {
                     if (retries == MAX_RECONNECT) {
-                        logger.debug("Unable to reconnect to $ircServer, after $MAX_RECONNECT retries.", ex)
+                        if (logger.isDebugEnabled) {
+                            logger.debug("Unable to reconnect to $ircServer, after $MAX_RECONNECT retries.", ex)
+                        }
                         e.printStackTrace(System.err)
                         exitProcess(1)
                     }
@@ -350,7 +352,7 @@ class Mobibot(nickname: String, channel: String, logsDirPath: String, p: Propert
         hostname: String,
         message: String
     ) {
-        logger.debug(">>> $sender: $message")
+        if (logger.isDebugEnabled) logger.debug(">>> $sender: $message")
         tell.send(sender, true)
         if (message.matches("(?i)${Pattern.quote(nick)}:.*".toRegex())) { // mobibot: <command>
             val cmds = message.substring(message.indexOf(':') + 1).trim().split(" ".toRegex(), 2)
@@ -396,9 +398,7 @@ class Mobibot(nickname: String, channel: String, logsDirPath: String, p: Propert
         hostname: String,
         message: String
     ) {
-        if (logger.isDebugEnabled) {
-            logger.debug(">>> $sender : $message")
-        }
+        if (logger.isDebugEnabled) logger.debug(">>> $sender : $message")
         val cmds = message.split(" ".toRegex(), 2)
         val cmd = cmds[0].toLowerCase()
         val args = if (cmds.size > 1) {
@@ -467,10 +467,10 @@ class Mobibot(nickname: String, channel: String, logsDirPath: String, p: Propert
     fun send(sender: String, message: String?, isPrivate: Boolean) {
         if (message != null && sender.isNotBlank()) {
             if (isPrivate) {
-                logger.debug("Sending message to $sender : $message")
+                if (logger.isDebugEnabled) logger.debug("Sending message to $sender : $message")
                 sendMessage(sender, message)
             } else {
-                logger.debug("Sending notice to $sender: $message")
+                if (logger.isDebugEnabled) logger.debug("Sending notice to $sender: $message")
                 sendNotice(sender, message)
             }
         }
@@ -597,7 +597,7 @@ class Mobibot(nickname: String, channel: String, logsDirPath: String, p: Propert
             try {
                 commandLine = parser.parse(options, args)
             } catch (e: ParseException) {
-                System.err.println("CLI Parsing failed.  Reason: ${e.message}")
+                System.err.println("CLI Parsing failed. Reason: ${e.message}")
                 e.printStackTrace(System.err)
                 exitProcess(1)
             }
@@ -684,13 +684,13 @@ class Mobibot(nickname: String, channel: String, logsDirPath: String, p: Propert
         this.channel = channel
         logsDir = logsDirPath
 
-        // Set the default logger level
+        // Store the default logger level
         loggerLevel = logger.level
 
         // Load the current entries and backlogs, if any
         try {
             startup(logsDir + EntriesMgr.CURRENT_XML, logsDir + EntriesMgr.NAV_XML, this.channel)
-            logger.debug("Last feed: $startDate")
+            if (logger.isDebugEnabled) logger.debug("Last feed: $startDate")
         } catch (e: Exception) {
             logger.error("An error occurred while loading the logs.", e)
         }
@@ -712,7 +712,7 @@ class Mobibot(nickname: String, channel: String, logsDirPath: String, p: Propert
         backlogsUrl = ensureDir(p.getProperty("backlogs", weblogUrl), true)
 
         // Set the pinboard authentication
-        setPinboardAuth(p.getProperty("pinboard-api-token"))
+        setPinboardAuth(p.getProperty("pinboard-api-token", ""))
 
         // Load the commands
         addons.add(AddLog(this), p)
@@ -730,7 +730,6 @@ class Mobibot(nickname: String, channel: String, logsDirPath: String, p: Propert
         addons.add(Versions(this), p)
 
         // Tell command
-        tell = Tell(this)
         addons.add(tell, p)
 
         // Load the links commands
@@ -755,7 +754,6 @@ class Mobibot(nickname: String, channel: String, logsDirPath: String, p: Propert
         addons.add(WorldTime(this), p)
 
         // Twitter module
-        twitter = Twitter(this)
         addons.add(twitter, p)
 
         // Sort the addons

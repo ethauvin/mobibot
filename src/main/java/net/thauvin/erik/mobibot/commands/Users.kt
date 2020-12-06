@@ -35,7 +35,6 @@ package net.thauvin.erik.mobibot.commands
 import net.thauvin.erik.mobibot.Mobibot
 import net.thauvin.erik.mobibot.Utils
 import org.jibble.pircbot.User
-import java.util.*
 
 class Users(bot: Mobibot) : AbstractCommand(bot) {
     override val name = "users"
@@ -56,7 +55,7 @@ class Users(bot: Mobibot) : AbstractCommand(bot) {
         isPrivate: Boolean
     ) {
         val users: Array<User> = bot.getUsers(bot.channel)
-        val nicks = ArrayList<String>()
+        val nicks = mutableListOf<String>()
         users.forEach { user ->
             if (bot.isOp(user.nick)) {
                 nicks.add("@${user.nick}")

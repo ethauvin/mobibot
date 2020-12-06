@@ -91,11 +91,9 @@ class Twitter(bot: Mobibot) : ThreadedModule(bot) {
                 Thread {
                     try {
                         post(message = msg, isDm = true)
-                        if (logger.isDebugEnabled) {
-                            logger.debug("Notified @{}: {}", handle, msg)
-                        }
+                        if (logger.isDebugEnabled) logger.debug("Notified @$handle: $msg")
                     } catch (e: ModuleException) {
-                        logger.warn("Failed to notify @{}: {}", handle, msg, e)
+                        if (logger.isWarnEnabled) logger.warn("Failed to notify @$handle: $msg", e)
                     }
                 }.start()
             }
@@ -133,7 +131,7 @@ class Twitter(bot: Mobibot) : ThreadedModule(bot) {
                         }
                         post(message = msg, isDm = false)
                     } catch (e: ModuleException) {
-                        logger.warn("Failed to post entry on Twitter.", e)
+                        if (bot.logger.isWarnEnabled) logger.warn("Failed to post entry on Twitter.", e)
                     }
                 }.start()
                 removeEntry(index)
@@ -167,7 +165,7 @@ class Twitter(bot: Mobibot) : ThreadedModule(bot) {
                     isPrivate
                 )
             } catch (e: ModuleException) {
-                logger.warn(e.debugMessage, e)
+                if (logger.isWarnEnabled) logger.warn(e.debugMessage, e)
                 send(sender, e.message, isPrivate)
             }
         }

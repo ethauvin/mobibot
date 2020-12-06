@@ -18,7 +18,6 @@
     <ID>MagicNumber:CurrencyConverter.kt$CurrencyConverter$11</ID>
     <ID>MagicNumber:CurrencyConverter.kt$CurrencyConverter$3</ID>
     <ID>MagicNumber:CurrencyConverter.kt$CurrencyConverter.Companion$3</ID>
-    <ID>MagicNumber:CurrencyConverter.kt$CurrencyConverter.Companion$33</ID>
     <ID>MagicNumber:CurrencyConverter.kt$CurrencyConverter.Companion$4</ID>
     <ID>MagicNumber:CurrencyConverter.kt$CurrencyConverter.Companion$8</ID>
     <ID>MagicNumber:Cycle.kt$Cycle$10</ID>
@@ -54,8 +53,9 @@
     <ID>MemberNameEqualsClassName:WorldTime.kt$WorldTime.Companion$ @JvmStatic fun worldTime(query: String): Message</ID>
     <ID>NestedBlockDepth:Addons.kt$Addons$ fun add(command: AbstractCommand, props: Properties)</ID>
     <ID>NestedBlockDepth:Comment.kt$Comment$override fun commandResponse( sender: String, login: String, args: String, isOp: Boolean, isPrivate: Boolean )</ID>
+    <ID>NestedBlockDepth:CurrencyConverter.kt$CurrencyConverter$override fun helpResponse(sender: String, isPrivate: Boolean)</ID>
     <ID>NestedBlockDepth:CurrencyConverter.kt$CurrencyConverter.Companion$ @JvmStatic fun convertCurrency(query: String): Message</ID>
-    <ID>NestedBlockDepth:EntriesMgr.kt$EntriesMgr.Companion$ @Throws(IOException::class, FeedException::class) fun loadEntries(file: String, channel: String, entries: ArrayList&lt;EntryLink&gt;): String</ID>
+    <ID>NestedBlockDepth:EntriesMgr.kt$EntriesMgr.Companion$ @Throws(IOException::class, FeedException::class) fun loadEntries(file: String, channel: String, entries: MutableList&lt;EntryLink&gt;): String</ID>
     <ID>NestedBlockDepth:EntriesMgr.kt$EntriesMgr.Companion$ fun saveEntries( bot: Mobibot, entries: List&lt;EntryLink&gt;, history: MutableList&lt;String&gt;, isDayBackup: Boolean )</ID>
     <ID>NestedBlockDepth:EntryLink.kt$EntryLink$ private fun setTags(tags: List&lt;String?&gt;)</ID>
     <ID>NestedBlockDepth:FeedReader.kt$FeedReader$ override fun run()</ID>

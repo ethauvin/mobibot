@@ -60,7 +60,7 @@ class Joke(bot: Mobibot) : ThreadedModule(bot) {
         try {
             bot.send(Utils.cyan(randomJoke().msg))
         } catch (e: ModuleException) {
-            bot.logger.warn(e.debugMessage, e)
+            if (bot.logger.isWarnEnabled) bot.logger.warn(e.debugMessage, e)
             bot.send(sender, e.message, isPrivate)
         }
     }

@@ -34,17 +34,16 @@ package net.thauvin.erik.mobibot
 import net.thauvin.erik.mobibot.commands.AbstractCommand
 import net.thauvin.erik.mobibot.modules.AbstractModule
 import java.util.*
-import kotlin.collections.ArrayList
 
 /**
  * Modules and Commands addons.
  */
 class Addons {
-    val commands: MutableList<AbstractCommand> = ArrayList()
-    val modules: MutableList<AbstractModule> = ArrayList()
-    val modulesNames: MutableList<String> = ArrayList()
-    val names: MutableList<String> = ArrayList()
-    val ops: MutableList<String> = ArrayList()
+    val commands: MutableList<AbstractCommand> = mutableListOf()
+    val modules: MutableList<AbstractModule> = mutableListOf()
+    val modulesNames: MutableList<String> = mutableListOf()
+    val names: MutableList<String> = mutableListOf()
+    val ops: MutableList<String> = mutableListOf()
 
     /**
      * Add a module with properties.

@@ -66,9 +66,7 @@ internal class TellMessagesMgr private constructor() {
                 ObjectInputStream(
                     BufferedInputStream(Files.newInputStream(Paths.get(file)))
                 ).use { input ->
-                    if (logger.isDebugEnabled) {
-                        logger.debug("Loading the messages.")
-                    }
+                    if (logger.isDebugEnabled) logger.debug("Loading the messages.")
                     @Suppress("UNCHECKED_CAST")
                     return input.readObject() as List<TellMessage>
                 }
@@ -79,7 +77,7 @@ internal class TellMessagesMgr private constructor() {
             } catch (e: ClassNotFoundException) {
                 logger.error("An error occurred loading the messages queue.", e)
             }
-            return ArrayList()
+            return listOf()
         }
 
         /**
@@ -89,9 +87,7 @@ internal class TellMessagesMgr private constructor() {
             try {
                 BufferedOutputStream(Files.newOutputStream(Paths.get(file))).use { bos ->
                     ObjectOutputStream(bos).use { output ->
-                        if (logger.isDebugEnabled) {
-                            logger.debug("Saving the messages.")
-                        }
+                        if (logger.isDebugEnabled) logger.debug("Saving the messages.")
                         output.writeObject(messages)
                     }
                 }

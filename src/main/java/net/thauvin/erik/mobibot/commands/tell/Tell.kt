@@ -41,14 +41,13 @@ import net.thauvin.erik.mobibot.Utils.Companion.reverseColor
 import net.thauvin.erik.mobibot.Utils.Companion.utcDateTime
 import net.thauvin.erik.mobibot.commands.AbstractCommand
 import net.thauvin.erik.mobibot.commands.links.View
-import java.util.concurrent.CopyOnWriteArrayList
 
 /**
  * The `Tell` command.
  */
 class Tell(bot: Mobibot) : AbstractCommand(bot) {
     // Messages queue
-    private val messages: MutableList<TellMessage> = CopyOnWriteArrayList()
+    private val messages: MutableList<TellMessage> = mutableListOf()
 
     // Serialized object file
     private val serializedObject: String
@@ -63,9 +62,7 @@ class Tell(bot: Mobibot) : AbstractCommand(bot) {
      * Cleans the messages queue.
      */
     private fun clean(): Boolean {
-        if (bot.logger.isDebugEnabled) {
-            bot.logger.debug("Cleaning the messages.")
-        }
+        if (bot.logger.isDebugEnabled) bot.logger.debug("Cleaning the messages.")
         return TellMessagesMgr.clean(messages, maxDays)
     }
 
