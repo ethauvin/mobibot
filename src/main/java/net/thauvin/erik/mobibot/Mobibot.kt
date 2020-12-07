@@ -34,16 +34,17 @@ package net.thauvin.erik.mobibot
 import net.thauvin.erik.mobibot.PinboardUtils.addPin
 import net.thauvin.erik.mobibot.PinboardUtils.deletePin
 import net.thauvin.erik.mobibot.PinboardUtils.updatePin
-import net.thauvin.erik.mobibot.Utils.Companion.colorize
-import net.thauvin.erik.mobibot.Utils.Companion.ensureDir
-import net.thauvin.erik.mobibot.Utils.Companion.getIntProperty
-import net.thauvin.erik.mobibot.Utils.Companion.helpFormat
-import net.thauvin.erik.mobibot.Utils.Companion.helpIndent
-import net.thauvin.erik.mobibot.Utils.Companion.isoLocalDate
-import net.thauvin.erik.mobibot.Utils.Companion.today
+import net.thauvin.erik.mobibot.Utils.colorize
+import net.thauvin.erik.mobibot.Utils.ensureDir
+import net.thauvin.erik.mobibot.Utils.getIntProperty
+import net.thauvin.erik.mobibot.Utils.helpFormat
+import net.thauvin.erik.mobibot.Utils.helpIndent
+import net.thauvin.erik.mobibot.Utils.isoLocalDate
+import net.thauvin.erik.mobibot.Utils.today
 import net.thauvin.erik.mobibot.commands.AddLog
 import net.thauvin.erik.mobibot.commands.ChannelFeed
 import net.thauvin.erik.mobibot.commands.Cycle
+import net.thauvin.erik.mobibot.commands.Debug
 import net.thauvin.erik.mobibot.commands.Ignore
 import net.thauvin.erik.mobibot.commands.Info
 import net.thauvin.erik.mobibot.commands.Me
@@ -92,7 +93,6 @@ import org.apache.commons.cli.ParseException
 import org.apache.logging.log4j.Level
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
-import org.apache.logging.log4j.core.config.Configurator
 import org.jibble.pircbot.PircBot
 import java.io.BufferedOutputStream
 import java.io.FileNotFoundException
@@ -126,8 +126,8 @@ class Mobibot(nickname: String, channel: String, logsDirPath: String, p: Propert
     /** Logger. */
     val logger: Logger = LogManager.getLogger(Mobibot::class.java)
 
-    // Logger default level
-    private val loggerLevel: Level
+    /** Logger default level. */
+    val loggerLevel: Level
 
     /** Log directory. */
     val logsDir: String
@@ -407,17 +407,10 @@ class Mobibot(nickname: String, channel: String, logsDirPath: String, p: Propert
         val isOp = isOp(sender)
         if (cmd.startsWith(Constants.HELP_CMD)) { // help
             helpResponse(sender, args, true)
-        } else if (isOp && "kill" == cmd) { // kill
+        } else if (isOp && Constants.KILL_CMD == cmd) { // kill
             twitter.notification("$name killed by $sender on $channel")
             sendRawLine("QUIT : Poof!")
             exitProcess(0)
-        } else if (isOp && Constants.DEBUG_CMD == cmd) { // debug
-            if (logger.isDebugEnabled) {
-                Configurator.setLevel(logger.name, loggerLevel)
-            } else {
-                Configurator.setLevel(logger.name, Level.DEBUG)
-            }
-            send(sender, "Debug logging is " + if (logger.isDebugEnabled) "enabled." else "disabled.", true)
         } else if (isOp && Constants.DIE_CMD == cmd) { // die
             send("$sender has just signed my death sentence.")
             timer.cancel()
@@ -718,6 +711,7 @@ class Mobibot(nickname: String, channel: String, logsDirPath: String, p: Propert
         addons.add(AddLog(this), p)
         addons.add(ChannelFeed(this, channelName), p)
         addons.add(Cycle(this), p)
+        addons.add(Debug(this), p)
         addons.add(Ignore(this), p)
         addons.add(Info(this), p)
         addons.add(Me(this), p)

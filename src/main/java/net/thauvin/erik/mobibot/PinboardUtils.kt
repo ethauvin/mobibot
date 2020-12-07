@@ -43,7 +43,7 @@ import java.time.format.DateTimeFormatter
 import java.util.*
 
 /**
- * The class to handle posts to pinboard.in.
+ * Handles posts to pinboard.in.
  */
 object PinboardUtils {
     /**

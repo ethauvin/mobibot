@@ -1,5 +1,5 @@
 /*
- * Constants.kt
+ * Debug.kt
  *
  * Copyright (c) 2004-2020, Erik C. Thauvin (erik@thauvin.net)
  * All rights reserved.
@@ -29,86 +29,30 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.thauvin.erik.mobibot
 
-import java.util.*
+package net.thauvin.erik.mobibot.commands
 
-/**
- * The `Constants`.
- */
-object Constants {
-    /**
-     * The connect/read timeout in ms.
-     */
-    const val CONNECT_TIMEOUT = 5000
+import net.thauvin.erik.mobibot.Mobibot
+import org.apache.logging.log4j.Level
+import org.apache.logging.log4j.core.config.Configurator
 
-    /**
-     * Debug command line argument.
-     */
-    const val DEBUG_ARG = "debug"
+class Debug(bot: Mobibot) : AbstractCommand(bot) {
+    override val name = "debug"
+    override val help = emptyList<String>()
+    override val isOp = true
+    override val isPublic = false
+    override val isVisible = false
 
-    /**
-     * The debug command.
-     */
-    const val DEBUG_CMD = "debug"
-
-    /**
-     * Default IRC Port.
-     */
-    const val DEFAULT_PORT = 6667
-
-    /**
-     * Default IRC Server.
-     */
-    const val DEFAULT_SERVER = "irc.freenode.net"
-
-    /**
-     * The die command.
-     */
-    const val DIE_CMD = "die"
-
-    /**
-     * Help command line argument.
-     */
-    const val HELP_ARG = "help"
-
-    /**
-     * The help command.
-     */
-    const val HELP_CMD = "help"
-
-    /**
-     * The kill command.
-     */
-    const val KILL_CMD = "kill"
-
-    /**
-     * The link command.
-     */
-    const val LINK_CMD = "L"
-
-    /**
-     * Default locale.
-     */
-    val LOCALE: Locale = Locale.getDefault()
-
-    /**
-     * The empty title string.
-     */
-    const val NO_TITLE = "No Title"
-
-    /**
-     * Properties command line argument.
-     */
-    const val PROPS_ARG = "properties"
-
-    /**
-     * The timer delay in minutes.
-     */
-    const val TIMER_DELAY = 10L
-
-    /**
-     * Properties version line argument.
-     */
-    const val VERSION_ARG = "version"
+    override fun commandResponse(sender: String, login: String, args: String, isOp: Boolean, isPrivate: Boolean) {
+        if (isOp) {
+            with(bot) {
+                if (logger.isDebugEnabled) {
+                    Configurator.setLevel(logger.name, loggerLevel)
+                } else {
+                    Configurator.setLevel(logger.name, Level.DEBUG)
+                }
+                send(sender, "Debug logging is " + if (logger.isDebugEnabled) "enabled." else "disabled.", true)
+            }
+        }
+    }
 }

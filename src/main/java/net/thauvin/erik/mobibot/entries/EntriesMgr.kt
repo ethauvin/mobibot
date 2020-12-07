@@ -40,7 +40,7 @@ import com.rometools.rome.io.FeedException
 import com.rometools.rome.io.SyndFeedInput
 import com.rometools.rome.io.SyndFeedOutput
 import net.thauvin.erik.mobibot.Mobibot
-import net.thauvin.erik.mobibot.Utils.Companion.isoLocalDate
+import net.thauvin.erik.mobibot.Utils.isoLocalDate
 import java.io.IOException
 import java.io.InputStreamReader
 import java.io.OutputStreamWriter

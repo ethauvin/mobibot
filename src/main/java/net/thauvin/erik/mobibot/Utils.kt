@@ -49,261 +49,240 @@ import java.util.concurrent.TimeUnit
 import java.util.stream.Collectors
 
 /**
- * Miscellaneous utilities class.
+ * Miscellaneous utilities.
  */
-class Utils private constructor() {
-    companion object {
-        private val searchFlags = arrayOf("%c", "%n")
+object Utils {
+    private val searchFlags = arrayOf("%c", "%n")
 
-        /**
-         * Makes the given int bold.
-         */
-        @JvmStatic
-        fun bold(i: Int): String {
-            return bold(i.toString())
+    /**
+     * Makes the given int bold.
+     */
+    @JvmStatic
+    fun bold(i: Int): String = bold(i.toString())
+
+    /**
+     * Makes the given string bold.
+     */
+    @JvmStatic
+    fun bold(s: String?): String = colorize(s, Colors.BOLD)
+
+    /**
+     * Colorize a string.
+     */
+    @JvmStatic
+    fun colorize(s: String?, color: String): String {
+        return if (s.isNullOrBlank()) {
+            Colors.NORMAL
+        } else if (Colors.BOLD == color || Colors.REVERSE == color) {
+            color + s + color
+        } else {
+            color + s + Colors.NORMAL
         }
+    }
 
-        /**
-         * Makes the given string bold.
-         */
-        @JvmStatic
-        fun bold(s: String?): String {
-            return colorize(s, Colors.BOLD)
-        }
+    /**
+     * Makes the given string cyan.
+     */
+    @JvmStatic
+    fun cyan(s: String?): String = colorize(s, Colors.CYAN)
 
-        /**
-         * Colorize a string.
-         */
-        @JvmStatic
-        fun colorize(s: String?, color: String): String {
-            if (s.isNullOrBlank()) {
-                return Colors.NORMAL
-            } else if (Colors.BOLD == color || Colors.REVERSE == color) {
-                return color + s + color
-            }
-            return color + s + Colors.NORMAL
-        }
+    /**
+     * URL encodes the given string.
+     */
+    fun encodeUrl(s: String): String = URLEncoder.encode(s, StandardCharsets.UTF_8)
 
-        /**
-         * Makes the given string cyan.
-         */
-        @JvmStatic
-        fun cyan(s: String?): String {
-            return colorize(s, Colors.CYAN)
-        }
-
-        /**
-         * URL encodes the given string.
-         */
-        fun encodeUrl(s: String): String {
-            return URLEncoder.encode(s, StandardCharsets.UTF_8)
-        }
-
-        /**
-         * Ensures that the given location (File/URL) has a trailing slash (`/`) to indicate a directory.
-         */
-        @JvmStatic
-        fun ensureDir(location: String, isUrl: Boolean): String {
-            return if (location.isNotEmpty()) {
-                if (isUrl) {
-                    if (location[location.length - 1] == '/') {
-                        location
-                    } else {
-                        "$location/"
-                    }
+    /**
+     * Ensures that the given location (File/URL) has a trailing slash (`/`) to indicate a directory.
+     */
+    @JvmStatic
+    fun ensureDir(location: String, isUrl: Boolean): String {
+        return if (location.isNotEmpty()) {
+            if (isUrl) {
+                if (location[location.length - 1] == '/') {
+                    location
                 } else {
-                    if (location[location.length - 1] == File.separatorChar) {
-                        location
-                    } else {
-                        location + File.separatorChar
-                    }
+                    "$location/"
                 }
             } else {
-                location
+                if (location[location.length - 1] == File.separatorChar) {
+                    location
+                } else {
+                    location + File.separatorChar
+                }
             }
+        } else {
+            location
         }
+    }
 
-        /**
-         * Returns a property as an int.
-         */
-        @JvmStatic
-        fun getIntProperty(property: String?, def: Int): Int {
-            return if (property == null) {
+    /**
+     * Returns a property as an int.
+     */
+    @JvmStatic
+    fun getIntProperty(property: String?, def: Int): Int {
+        return if (property == null) {
+            def
+        } else {
+            try {
+                property.toInt()
+            } catch (ignore: NumberFormatException) {
                 def
-            } else {
-                try {
-                    property.toInt()
-                } catch (ignore: NumberFormatException) {
-                    def
-                }
             }
         }
+    }
 
-        /**
-         * Makes the given string green.
-         */
-        @JvmStatic
-        fun green(s: String?): String {
-            return colorize(s, Colors.DARK_GREEN)
+    /**
+     * Makes the given string green.
+     */
+    @JvmStatic
+    fun green(s: String?): String = colorize(s, Colors.DARK_GREEN)
+
+    /**
+     * Formats a help command by replacing `%c` with the bot's pub/priv command, and `%n` with the bot's
+     * nick.
+     */
+    @JvmStatic
+    fun helpFormat(text: String, botNick: String, isPrivate: Boolean): String {
+        val replace = arrayOf(if (isPrivate) "/msg $botNick" else "$botNick:", botNick)
+        return StringUtils.replaceEach(text, searchFlags, replace)
+    }
+
+    /**
+     * Returns indented help string.
+     */
+    @JvmStatic
+    @JvmOverloads
+    fun helpIndent(help: String, isBold: Boolean = true): String {
+        return "      " + if (isBold) bold(help) else help
+    }
+
+    /**
+     * Returns the specified date as an ISO local date string.
+     */
+    @JvmStatic
+    fun isoLocalDate(date: Date): String {
+        return isoLocalDate(LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault()))
+    }
+
+    /**
+     * Returns the specified date as an ISO local date string.
+     */
+    @JvmStatic
+    fun isoLocalDate(date: LocalDateTime): String = date.format(DateTimeFormatter.ISO_LOCAL_DATE)
+
+    /**
+     * Obfuscates the given string.
+     */
+    @JvmStatic
+    fun obfuscate(s: String): String {
+        return if (s.isNotBlank()) {
+            StringUtils.repeat('x', s.length)
+        } else s
+    }
+
+    /**
+     * Returns the plural form of a word, if count &gt; 1.
+     */
+    @JvmStatic
+    fun plural(count: Long, word: String, plural: String): String {
+        return if (count > 1) {
+            plural
+        } else {
+            word
         }
+    }
 
-        /**
-         * Formats a help command by replacing `%c` with the bot's pub/priv command, and `%n` with the bot's
-         * nick.
-         */
-        @JvmStatic
-        fun helpFormat(text: String, botNick: String, isPrivate: Boolean): String {
-            val replace = arrayOf(if (isPrivate) "/msg $botNick" else "$botNick:", botNick)
-            return StringUtils.replaceEach(text, searchFlags, replace)
-        }
+    /**
+     * Makes the given string red.
+     */
+    @JvmStatic
+    fun red(s: String?): String = colorize(s, Colors.RED)
 
-        /**
-         * Returns indented help string.
-         */
-        @JvmStatic
-        @JvmOverloads
-        fun helpIndent(help: String, isBold: Boolean = true): String {
-            return "      " + if (isBold) bold(help) else help
-        }
+    /**
+     * Makes the given string reverse color.
+     */
+    @JvmStatic
+    fun reverseColor(s: String?): String = colorize(s, Colors.REVERSE)
 
-        /**
-         * Returns the specified date as an ISO local date string.
-         */
-        @JvmStatic
-        fun isoLocalDate(date: Date): String {
-            return isoLocalDate(LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault()))
-        }
+    /**
+     * Returns today's date.
+     */
+    @JvmStatic
+    fun today(): String = isoLocalDate(LocalDateTime.now())
 
-        /**
-         * Returns the specified date as an ISO local date string.
-         */
-        @JvmStatic
-        fun isoLocalDate(date: LocalDateTime): String {
-            return date.format(DateTimeFormatter.ISO_LOCAL_DATE)
-        }
+    /**
+     * Converts XML/XHTML entities to plain text.
+     */
+    @JvmStatic
+    fun unescapeXml(str: String): String = Jsoup.parse(str).text()
 
-        /**
-         * Obfuscates the given string.
-         */
-        @JvmStatic
-        fun obfuscate(s: String): String {
-            return if (s.isNotBlank()) {
-                StringUtils.repeat('x', s.length)
-            } else s
-        }
-
-        /**
-         * Returns the plural form of a word, if count &gt; 1.
-         */
-        @JvmStatic
-        fun plural(count: Long, word: String, plural: String): String {
-            return if (count > 1) {
-                plural
-            } else {
-                word
+    /**
+     * Converts milliseconds to year month week day hour and minutes.
+     */
+    @JvmStatic
+    fun uptime(uptime: Long): String {
+        val info = StringBuilder()
+        var days = TimeUnit.MILLISECONDS.toDays(uptime)
+        val years = days / 365
+        days %= 365
+        val months = days / 30
+        days %= 30
+        val weeks = days / 7
+        days %= 7
+        val hours = TimeUnit.MILLISECONDS.toHours(uptime) - TimeUnit.DAYS.toHours(
+            TimeUnit.MILLISECONDS.toDays(uptime)
+        )
+        val minutes = TimeUnit.MILLISECONDS.toMinutes(uptime) - TimeUnit.HOURS.toMinutes(
+            TimeUnit.MILLISECONDS.toHours(uptime)
+        )
+        with(info) {
+            if (years > 0) {
+                append(years).append(plural(years, " year ", " years "))
             }
-        }
-
-        /**
-         * Makes the given string red.
-         */
-        @JvmStatic
-        fun red(s: String?): String {
-            return colorize(s, Colors.RED)
-        }
-
-        /**
-         * Makes the given string reverse color.
-         */
-        @JvmStatic
-        fun reverseColor(s: String?): String {
-            return colorize(s, Colors.REVERSE)
-        }
-
-        /**
-         * Returns today's date.
-         */
-        @JvmStatic
-        fun today(): String {
-            return isoLocalDate(LocalDateTime.now())
-        }
-
-        /**
-         * Converts XML/XHTML entities to plain text.
-         */
-        @JvmStatic
-        fun unescapeXml(str: String): String {
-            return Jsoup.parse(str).text()
-        }
-
-        /**
-         * Converts milliseconds to year month week day hour and minutes.
-         */
-        @JvmStatic
-        fun uptime(uptime: Long): String {
-            val info = StringBuilder()
-            var days = TimeUnit.MILLISECONDS.toDays(uptime)
-            val years = days / 365
-            days %= 365
-            val months = days / 30
-            days %= 30
-            val weeks = days / 7
-            days %= 7
-            val hours = TimeUnit.MILLISECONDS.toHours(uptime) - TimeUnit.DAYS.toHours(
-                TimeUnit.MILLISECONDS.toDays(uptime)
-            )
-            val minutes = TimeUnit.MILLISECONDS.toMinutes(uptime) - TimeUnit.HOURS.toMinutes(
-                TimeUnit.MILLISECONDS.toHours(uptime)
-            )
-            with(info) {
-                if (years > 0) {
-                    append(years).append(plural(years, " year ", " years "))
-                }
-                if (months > 0) {
-                    append(weeks).append(plural(months, " month ", " months "))
-                }
-                if (weeks > 0) {
-                    append(weeks).append(plural(weeks, " week ", " weeks "))
-                }
-                if (days > 0) {
-                    append(days).append(plural(days, " day ", " days "))
-                }
-                if (hours > 0) {
-                    append(hours).append(plural(hours, " hour ", " hours "))
-                }
-                append(minutes).append(plural(minutes, " minute", " minutes"))
-                return toString()
+            if (months > 0) {
+                append(weeks).append(plural(months, " month ", " months "))
             }
-        }
-
-        /**
-         * Reads contents of a URL.
-         */
-        @JvmStatic
-        @Throws(IOException::class)
-        fun urlReader(url: URL): String {
-            BufferedReader(InputStreamReader(url.openStream(), StandardCharsets.UTF_8))
-                .use { reader -> return reader.lines().collect(Collectors.joining(System.lineSeparator())) }
-        }
-
-        /**
-         * Returns the specified date formatted as `yyyy-MM-dd HH:mm`.
-         */
-        @JvmStatic
-        fun utcDateTime(date: Date): String {
-            return utcDateTime(LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault()))
-        }
-
-        /**
-         * Returns the specified date formatted as `yyyy-MM-dd HH:mm`.
-         */
-        @JvmStatic
-        fun utcDateTime(date: LocalDateTime?): String {
-            return if (date != null) {
-                date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))
-            } else {
-                ""
+            if (weeks > 0) {
+                append(weeks).append(plural(weeks, " week ", " weeks "))
             }
+            if (days > 0) {
+                append(days).append(plural(days, " day ", " days "))
+            }
+            if (hours > 0) {
+                append(hours).append(plural(hours, " hour ", " hours "))
+            }
+            append(minutes).append(plural(minutes, " minute", " minutes"))
+            return toString()
+        }
+    }
+
+    /**
+     * Reads contents of a URL.
+     */
+    @JvmStatic
+    @Throws(IOException::class)
+    fun urlReader(url: URL): String {
+        BufferedReader(InputStreamReader(url.openStream(), StandardCharsets.UTF_8))
+            .use { reader -> return reader.lines().collect(Collectors.joining(System.lineSeparator())) }
+    }
+
+    /**
+     * Returns the specified date formatted as `yyyy-MM-dd HH:mm`.
+     */
+    @JvmStatic
+    fun utcDateTime(date: Date): String {
+        return utcDateTime(LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault()))
+    }
+
+    /**
+     * Returns the specified date formatted as `yyyy-MM-dd HH:mm`.
+     */
+    @JvmStatic
+    fun utcDateTime(date: LocalDateTime?): String {
+        return if (date != null) {
+            date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))
+        } else {
+            ""
         }
     }
 }

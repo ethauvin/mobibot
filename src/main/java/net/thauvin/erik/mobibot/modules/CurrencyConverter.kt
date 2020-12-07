@@ -72,7 +72,7 @@ class CurrencyConverter(bot: Mobibot) : ThreadedModule(bot) {
                 try {
                     loadRates()
                 } catch (e: ModuleException) {
-                    if (bot.logger.isWarnEnabled)logger.warn(e.debugMessage, e)
+                    if (bot.logger.isWarnEnabled) logger.warn(e.debugMessage, e)
                 }
             }
 

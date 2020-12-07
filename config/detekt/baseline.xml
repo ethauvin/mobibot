@@ -3,8 +3,8 @@
   <ManuallySuppressedIssues></ManuallySuppressedIssues>
   <CurrentIssues>
     <ID>ComplexMethod:EntriesMgr.kt$EntriesMgr.Companion$ fun saveEntries( bot: Mobibot, entries: List&lt;EntryLink&gt;, history: MutableList&lt;String&gt;, isDayBackup: Boolean )</ID>
-    <ID>ComplexMethod:Mobibot.kt$Mobibot$override fun onPrivateMessage( sender: String, login: String, hostname: String, message: String )</ID>
     <ID>ComplexMethod:Weather2.kt$Weather2.Companion$ @JvmStatic @Throws(ModuleException::class) fun getWeather(query: String, apiKey: String?): List&lt;Message&gt;</ID>
+    <ID>EmptyDefaultConstructor:Message.kt$Message$()</ID>
     <ID>LongMethod:EntriesMgr.kt$EntriesMgr.Companion$ fun saveEntries( bot: Mobibot, entries: List&lt;EntryLink&gt;, history: MutableList&lt;String&gt;, isDayBackup: Boolean )</ID>
     <ID>LongMethod:Mobibot.kt$Mobibot.Companion$ @JvmStatic fun main(args: Array&lt;String&gt;)</ID>
     <ID>LongMethod:StockQuote.kt$StockQuote.Companion$ @JvmStatic @Throws(ModuleException::class) fun getQuote(symbol: String, apiKey: String?): List&lt;Message&gt;</ID>
@@ -35,9 +35,9 @@
     <ID>MagicNumber:Twitter.kt$Twitter$1000L</ID>
     <ID>MagicNumber:Twitter.kt$Twitter$60L</ID>
     <ID>MagicNumber:Users.kt$Users$8</ID>
-    <ID>MagicNumber:Utils.kt$Utils.Companion$30</ID>
-    <ID>MagicNumber:Utils.kt$Utils.Companion$365</ID>
-    <ID>MagicNumber:Utils.kt$Utils.Companion$7</ID>
+    <ID>MagicNumber:Utils.kt$Utils$30</ID>
+    <ID>MagicNumber:Utils.kt$Utils$365</ID>
+    <ID>MagicNumber:Utils.kt$Utils$7</ID>
     <ID>MagicNumber:View.kt$View$8</ID>
     <ID>MagicNumber:Weather2.kt$Weather2.Companion$1.60934</ID>
     <ID>MagicNumber:Weather2.kt$Weather2.Companion$32</ID>
@@ -75,7 +75,6 @@
     <ID>NestedBlockDepth:Weather2.kt$Weather2.Companion$ @JvmStatic @Throws(ModuleException::class) fun getWeather(query: String, apiKey: String?): List&lt;Message&gt;</ID>
     <ID>NestedBlockDepth:WorldTime.kt$WorldTime$override fun commandResponse( sender: String, cmd: String, args: String, isPrivate: Boolean )</ID>
     <ID>ReturnCount:Mobibot.kt$Mobibot$override fun onMessage( channel: String, sender: String, login: String, hostname: String, message: String )</ID>
-    <ID>ReturnCount:Utils.kt$Utils.Companion$ @JvmStatic fun colorize(s: String?, color: String): String</ID>
     <ID>ThrowsCount:GoogleSearch.kt$GoogleSearch.Companion$ @JvmStatic @Throws(ModuleException::class) fun searchGoogle(query: String, apiKey: String?, cseKey: String?): List&lt;Message&gt;</ID>
     <ID>ThrowsCount:StockQuote.kt$StockQuote.Companion$ @JvmStatic @Throws(ModuleException::class) fun getQuote(symbol: String, apiKey: String?): List&lt;Message&gt;</ID>
     <ID>ThrowsCount:StockQuote.kt$StockQuote.Companion$@Throws(ModuleException::class) private fun getJsonResponse(response: String, debugMessage: String): JSONObject</ID>
@@ -87,6 +86,6 @@
     <ID>TooGenericExceptionCaught:Weather2.kt$Weather2.Companion$e: NullPointerException</ID>
     <ID>TooManyFunctions:Mobibot.kt$Mobibot : PircBot</ID>
     <ID>TooManyFunctions:Tell.kt$Tell : AbstractCommand</ID>
-    <ID>TooManyFunctions:Utils.kt$Utils$Companion</ID>
+    <ID>TooManyFunctions:Utils.kt$Utils$Utils</ID>
   </CurrentIssues>
 </SmellBaseline>

@@ -35,7 +35,6 @@ import net.thauvin.erik.mobibot.modules.Lookup.Companion.lookup
 import net.thauvin.erik.mobibot.modules.Lookup.Companion.whois
 import org.assertj.core.api.Assertions
 import org.testng.annotations.Test
-import java.util.*
 
 /**
  * The `Lookup Test` class.

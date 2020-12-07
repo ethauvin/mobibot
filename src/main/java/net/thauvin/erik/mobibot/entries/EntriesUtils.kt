@@ -32,52 +32,49 @@
 package net.thauvin.erik.mobibot.entries
 
 import net.thauvin.erik.mobibot.Constants
-import net.thauvin.erik.mobibot.Utils.Companion.bold
-import net.thauvin.erik.mobibot.Utils.Companion.green
+import net.thauvin.erik.mobibot.Utils.bold
+import net.thauvin.erik.mobibot.Utils.green
 
 /**
- * The `Utils` class.
+ * Entries utilities.
  */
-class EntriesUtils private constructor() {
-    companion object {
-        /**
-         * Build link cmd based on its index. e.g: L1
-         */
-        fun buildLinkCmd(index: Int): String = Constants.LINK_CMD + (index + 1)
+object EntriesUtils {
+    /**
+     * Build link cmd based on its index. e.g: L1
+     */
+    fun buildLinkCmd(index: Int): String = Constants.LINK_CMD + (index + 1)
 
-        /**
-         * Builds an entry's comment for display on the channel.
-         */
-        fun buildComment(entryIndex: Int, commentIndex: Int, comment: EntryComment): String =
-            (buildLinkCmd(entryIndex) + '.' + (commentIndex + 1) + ": [" + comment.nick + "] "
-                + comment.comment)
+    /**
+     * Builds an entry's comment for display on the channel.
+     */
+    fun buildComment(entryIndex: Int, commentIndex: Int, comment: EntryComment): String =
+        ("${buildLinkCmd(entryIndex)}.${commentIndex + 1}: [${comment.nick}] ${comment.comment}")
 
-        /**
-         * Builds an entry's link for display on the channel.
-         */
-        @JvmOverloads
-        fun buildLink(entryIndex: Int, entry: EntryLink, isView: Boolean = false): String {
-            val buff = StringBuilder().append(buildLinkCmd(entryIndex)).append(": ")
-                .append('[').append(entry.nick).append(']')
-            if (isView && entry.hasComments()) {
-                buff.append("[+").append(entry.comments.size).append(']')
-            }
-            buff.append(' ')
-            with(entry) {
-                if (Constants.NO_TITLE == title) {
-                    buff.append(title)
-                } else {
-                    buff.append(bold(title))
-                }
-                buff.append(" ( ").append(green(link)).append(" )")
-            }
-            return buff.toString()
+    /**
+     * Builds an entry's link for display on the channel.
+     */
+    @JvmOverloads
+    fun buildLink(entryIndex: Int, entry: EntryLink, isView: Boolean = false): String {
+        val buff = StringBuilder().append(buildLinkCmd(entryIndex)).append(": ")
+            .append('[').append(entry.nick).append(']')
+        if (isView && entry.hasComments()) {
+            buff.append("[+").append(entry.comments.size).append(']')
         }
-
-        /**
-         * Build an entry's tags/categories for display on the channel.
-         */
-        fun buildTags(entryIndex: Int, entry: EntryLink): String =
-            buildLinkCmd(entryIndex) + "T: " + entry.pinboardTags.replace(",", ", ")
+        buff.append(' ')
+        with(entry) {
+            if (Constants.NO_TITLE == title) {
+                buff.append(title)
+            } else {
+                buff.append(bold(title))
+            }
+            buff.append(" ( ").append(green(link)).append(" )")
+        }
+        return buff.toString()
     }
+
+    /**
+     * Build an entry's tags/categories for display on the channel.
+     */
+    fun buildTags(entryIndex: Int, entry: EntryLink): String =
+        buildLinkCmd(entryIndex) + "T: " + entry.pinboardTags.replace(",", ", ")
 }

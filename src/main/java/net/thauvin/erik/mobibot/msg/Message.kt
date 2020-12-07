@@ -1,5 +1,5 @@
 /*
- * Message.java
+ * Message.kt
  *
  * Copyright (c) 2004-2020, Erik C. Thauvin (erik@thauvin.net)
  * All rights reserved.
@@ -41,19 +41,19 @@ open class Message {
         var DEFAULT_COLOR = Colors.NORMAL
     }
 
-    /** Color */
+    /** Message color. */
     var color = DEFAULT_COLOR
 
-    /** Error */
+    /** Error flag. */
     var isError = false
 
-    /** Notice */
+    /** Notice flag. */
     var isNotice = false
 
-    /** Private */
+    /** Private flag. */
     var isPrivate = false
 
-    /** Message text*/
+    /** Message text. */
     var msg = ""
 
     /** Creates a new message. */

@@ -32,13 +32,13 @@
 package net.thauvin.erik.mobibot.commands.tell
 
 import net.thauvin.erik.mobibot.Mobibot
-import net.thauvin.erik.mobibot.Utils.Companion.bold
-import net.thauvin.erik.mobibot.Utils.Companion.getIntProperty
-import net.thauvin.erik.mobibot.Utils.Companion.helpFormat
-import net.thauvin.erik.mobibot.Utils.Companion.helpIndent
-import net.thauvin.erik.mobibot.Utils.Companion.plural
-import net.thauvin.erik.mobibot.Utils.Companion.reverseColor
-import net.thauvin.erik.mobibot.Utils.Companion.utcDateTime
+import net.thauvin.erik.mobibot.Utils.bold
+import net.thauvin.erik.mobibot.Utils.getIntProperty
+import net.thauvin.erik.mobibot.Utils.helpFormat
+import net.thauvin.erik.mobibot.Utils.helpIndent
+import net.thauvin.erik.mobibot.Utils.plural
+import net.thauvin.erik.mobibot.Utils.reverseColor
+import net.thauvin.erik.mobibot.Utils.utcDateTime
 import net.thauvin.erik.mobibot.commands.AbstractCommand
 import net.thauvin.erik.mobibot.commands.links.View
 
