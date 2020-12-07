@@ -47,6 +47,9 @@ class FeedReader(
     // URL to fetch
     private val url: String
 ) : Runnable {
+    // Maximum number of feed items to display
+    private val maxItems = 5
+
     /**
      * Fetches the Feed's items.
      */
@@ -61,7 +64,7 @@ class FeedReader(
                         send(sender, "There is currently nothing to view.", false)
                     } else {
                         var i = 0
-                        while (i < items.size && i < MAX_ITEMS) {
+                        while (i < items.size && i < maxItems) {
                             send(sender, items[i].title, false)
                             send(sender, Utils.helpIndent(Utils.green(items[i].link), false), false)
                             i++
@@ -76,10 +79,5 @@ class FeedReader(
                 send(sender, "An error has occurred while fetching the feed: ${e.message}", false)
             }
         }
-    }
-
-    companion object {
-        // Maximum number of feed items to display
-        private const val MAX_ITEMS = 5
     }
 }

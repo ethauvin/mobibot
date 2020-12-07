@@ -73,8 +73,8 @@ class UtilsTest {
 
     @Test
     fun testBold() {
-        Assertions.assertThat(bold(1.toString())).`as`("bold(1)").isEqualTo(Colors.BOLD + "1" + Colors.BOLD)
-        Assertions.assertThat(bold(ascii)).`as`("bold(ascii").isEqualTo(Colors.BOLD + ascii + Colors.BOLD)
+        Assertions.assertThat(bold(1)).`as`("bold(1)").isEqualTo(Colors.BOLD + "1" + Colors.BOLD)
+        Assertions.assertThat(bold(ascii)).`as`("bold(ascii)").isEqualTo(Colors.BOLD + ascii + Colors.BOLD)
     }
 
     @Test

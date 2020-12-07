@@ -71,15 +71,9 @@ class LinksMgr(bot: Mobibot) : AbstractCommand(bot) {
         @JvmField
         val history = mutableListOf<String>()
 
-
         @JvmStatic
         var startDate: String = Utils.today()
             private set
-
-        //        @JvmStatic
-        //        fun addHistory(index: Int, entry: String) {
-        //            history.add(index, entry)
-        //        }
 
         /**
          * Saves the entries.
@@ -90,16 +84,6 @@ class LinksMgr(bot: Mobibot) : AbstractCommand(bot) {
         fun saveEntries(bot: Mobibot, isDayBackup: Boolean) {
             EntriesMgr.saveEntries(bot, entries, history, isDayBackup)
         }
-
-        //        @JvmStatic
-        //        fun removeEntry(index: Int) {
-        //            entries.removeAt(index)
-        //        }
-        //
-        //        @JvmStatic
-        //        fun getEntry(index: Int): EntryLink {
-        //            return entries[index]
-        //        }
 
         @JvmStatic
         fun startup(current: String, backlogs: String, channel: String) {
