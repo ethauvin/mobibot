@@ -58,9 +58,6 @@ import net.thauvin.erik.mobibot.commands.Users
 import net.thauvin.erik.mobibot.commands.Versions
 import net.thauvin.erik.mobibot.commands.links.Comment
 import net.thauvin.erik.mobibot.commands.links.LinksMgr
-import net.thauvin.erik.mobibot.commands.links.LinksMgr.Companion.saveEntries
-import net.thauvin.erik.mobibot.commands.links.LinksMgr.Companion.startDate
-import net.thauvin.erik.mobibot.commands.links.LinksMgr.Companion.startup
 import net.thauvin.erik.mobibot.commands.links.Posting
 import net.thauvin.erik.mobibot.commands.links.Tags
 import net.thauvin.erik.mobibot.commands.links.View
@@ -363,31 +360,12 @@ class Mobibot(nickname: String, channel: String, logsDirPath: String, p: Propert
             if (cmd.startsWith(Constants.HELP_CMD)) { // mobibot: help
                 helpResponse(sender, args, false)
             } else {
-                // Commands
-                for (command in addons.commands) {
-                    if (command.isPublic && command.name.startsWith(cmd)) {
-                        command.commandResponse(sender, login, args, isOp(sender), false)
-                        return
-                    }
-                }
-                // Modules
-                for (module in addons.modules) { // modules
-                    for (c in module.commands) {
-                        if (cmd.startsWith(c)) {
-                            module.commandResponse(sender, cmd, args, false)
-                            return
-                        }
-                    }
-                }
+                // Execute module or command
+                addons.exec(sender, login, cmd, args, isOp(sender), false)
             }
         } else {
-            // Commands, e.g.: https://www.example.com/
-            for (command in addons.commands) {
-                if (command.matches(message)) {
-                    command.commandResponse(sender, login, message, isOp(sender), false)
-                    return
-                }
-            }
+            // Links, e.g.: https://www.example.com/ or L1: , etc.
+            addons.match(sender, login, message, isOp(sender), false)
         }
         storeRecap(sender, message, false)
     }
@@ -420,23 +398,9 @@ class Mobibot(nickname: String, channel: String, logsDirPath: String, p: Propert
             quitServer("The Bot Is Out There!")
             exitProcess(0)
         } else {
-            for (command in addons.commands) {
-                if (command.name.startsWith(cmd)) {
-                    command.commandResponse(sender, login, args, isOp, true)
-                    return
-                }
+            if (!addons.exec(sender, login, cmd, args, isOp, true)) {
+                helpDefault(sender, isOp, true)
             }
-            for (module in addons.modules) {
-                if (module.isPrivateMsgEnabled) {
-                    for (c in module.commands) {
-                        if (cmd == c) {
-                            module.commandResponse(sender, cmd, args, true)
-                            return
-                        }
-                    }
-                }
-            }
-            helpDefault(sender, isOp, true)
         }
     }
 
@@ -600,16 +564,17 @@ class Mobibot(nickname: String, channel: String, logsDirPath: String, p: Propert
                     HelpFormatter().printHelp(Mobibot::class.java.name, options)
                 }
                 commandLine.hasOption(Constants.VERSION_ARG[0]) -> {
+                    // Output the version
                     println("${ReleaseInfo.PROJECT} ${ReleaseInfo.VERSION} (${isoLocalDate(ReleaseInfo.BUILDDATE)})")
                     println(ReleaseInfo.WEBSITE)
                 }
                 else -> {
+                    // Load the properties
                     val p = Properties()
                     try {
                         Files.newInputStream(
                             Paths.get(commandLine.getOptionValue(Constants.PROPS_ARG[0], "./mobibot.properties"))
                         ).use { fis ->
-                            // Load the properties files
                             p.load(fis)
                         }
                     } catch (e: FileNotFoundException) {
@@ -625,7 +590,7 @@ class Mobibot(nickname: String, channel: String, logsDirPath: String, p: Propert
                     val channel = p.getProperty("channel")
                     val logsDir = ensureDir(p.getProperty("logs", "."), false)
 
-                    // Redirect the stdout and stderr
+                    // Redirect stdout and stderr
                     if (!commandLine.hasOption(Constants.DEBUG_ARG[0])) {
                         try {
                             val stdout = PrintStream(
@@ -680,15 +645,6 @@ class Mobibot(nickname: String, channel: String, logsDirPath: String, p: Propert
         // Store the default logger level
         loggerLevel = logger.level
 
-        // Load the current entries and backlogs, if any
-        try {
-            startup(logsDir + EntriesMgr.CURRENT_XML, logsDir + EntriesMgr.NAV_XML, this.channel)
-            if (logger.isDebugEnabled) logger.debug("Last feed: $startDate")
-        } catch (e: Exception) {
-            logger.error("An error occurred while loading the logs.", e)
-        }
-
-        // Initialize the bot
         setVerbose(true)
         setAutoNickChange(true)
         login = p.getProperty("login", name)
@@ -703,6 +659,14 @@ class Mobibot(nickname: String, channel: String, logsDirPath: String, p: Propert
         // Set the URLs
         weblogUrl = p.getProperty("weblog", "")
         backlogsUrl = ensureDir(p.getProperty("backlogs", weblogUrl), true)
+
+        // Load the current entries and backlogs, if any
+        try {
+            LinksMgr.startup(logsDir + EntriesMgr.CURRENT_XML, logsDir + EntriesMgr.NAV_XML, this.channel)
+            if (logger.isDebugEnabled) logger.debug("Last feed: ${LinksMgr.startDate}")
+        } catch (e: Exception) {
+            logger.error("An error occurred while loading the logs.", e)
+        }
 
         // Set the pinboard authentication
         setPinboardAuth(p.getProperty("pinboard-api-token", ""))
@@ -756,6 +720,6 @@ class Mobibot(nickname: String, channel: String, logsDirPath: String, p: Propert
         addons.sort()
 
         // Save the entries
-        saveEntries(this, true)
+        LinksMgr.saveEntries(this, true)
     }
 }

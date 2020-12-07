@@ -88,6 +88,39 @@ class Addons {
     }
 
     /**
+     * Execute a command or module.
+     */
+    fun exec(sender: String, login: String, cmd: String, args: String, isOp: Boolean, isPrivate: Boolean): Boolean {
+        for (command in commands) {
+            if (command.name.startsWith(cmd)) {
+                command.commandResponse(sender, login, args, isOp, isPrivate)
+                return true
+            }
+        }
+        for (module in modules) {
+            if ((isPrivate && module.isPrivateMsgEnabled) || !isPrivate) {
+                if (module.commands.contains(cmd)) {
+                    module.commandResponse(sender, cmd, args, isPrivate)
+                    return true
+                }
+            }
+        }
+        return false
+    }
+
+    /**
+     * Match a command.
+     */
+    fun match(sender: String, login: String, message: String, isOp: Boolean, isPrivate: Boolean) {
+        for (command in commands) {
+            if (command.matches(message)) {
+                command.commandResponse(sender, login, message, isOp, isPrivate)
+                break
+            }
+        }
+    }
+
+    /**
      * Sort commands and modules names.
      */
     fun sort() {

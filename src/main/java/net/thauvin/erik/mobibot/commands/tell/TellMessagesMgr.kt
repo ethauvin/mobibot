@@ -46,53 +46,51 @@ import java.time.LocalDateTime
 /**
  * The Tell Messages Manager.
  */
-internal class TellMessagesMgr private constructor() {
-    companion object {
-        /**
-         * Cleans the messages queue.
-         */
-        fun clean(tellMessages: MutableList<TellMessage>, tellMaxDays: Int): Boolean {
-            val today = LocalDateTime.now(Clock.systemUTC())
-            return tellMessages.removeIf { o: TellMessage -> o.queued.plusDays(tellMaxDays.toLong()).isBefore(today) }
-        }
+internal object TellMessagesMgr {
+    /**
+     * Cleans the messages queue.
+     */
+    fun clean(tellMessages: MutableList<TellMessage>, tellMaxDays: Int): Boolean {
+        val today = LocalDateTime.now(Clock.systemUTC())
+        return tellMessages.removeIf { o: TellMessage -> o.queued.plusDays(tellMaxDays.toLong()).isBefore(today) }
+    }
 
-        /**
-         * Loads the messages.
-         */
+    /**
+     * Loads the messages.
+     */
 
-        fun load(file: String, logger: Logger): List<TellMessage> {
-            try {
-                ObjectInputStream(
-                    BufferedInputStream(Files.newInputStream(Paths.get(file)))
-                ).use { input ->
-                    if (logger.isDebugEnabled) logger.debug("Loading the messages.")
-                    @Suppress("UNCHECKED_CAST")
-                    return input.readObject() as List<TellMessage>
-                }
-            } catch (ignore: FileNotFoundException) {
-                // Do nothing
-            } catch (e: IOException) {
-                logger.error("An IO error occurred loading the messages queue.", e)
-            } catch (e: ClassNotFoundException) {
-                logger.error("An error occurred loading the messages queue.", e)
+    fun load(file: String, logger: Logger): List<TellMessage> {
+        try {
+            ObjectInputStream(
+                BufferedInputStream(Files.newInputStream(Paths.get(file)))
+            ).use { input ->
+                if (logger.isDebugEnabled) logger.debug("Loading the messages.")
+                @Suppress("UNCHECKED_CAST")
+                return input.readObject() as List<TellMessage>
             }
-            return listOf()
+        } catch (ignore: FileNotFoundException) {
+            // Do nothing
+        } catch (e: IOException) {
+            logger.error("An IO error occurred loading the messages queue.", e)
+        } catch (e: ClassNotFoundException) {
+            logger.error("An error occurred loading the messages queue.", e)
         }
+        return listOf()
+    }
 
-        /**
-         * Saves the messages.
-         */
-        fun save(file: String, messages: List<TellMessage?>?, logger: Logger) {
-            try {
-                BufferedOutputStream(Files.newOutputStream(Paths.get(file))).use { bos ->
-                    ObjectOutputStream(bos).use { output ->
-                        if (logger.isDebugEnabled) logger.debug("Saving the messages.")
-                        output.writeObject(messages)
-                    }
+    /**
+     * Saves the messages.
+     */
+    fun save(file: String, messages: List<TellMessage?>?, logger: Logger) {
+        try {
+            BufferedOutputStream(Files.newOutputStream(Paths.get(file))).use { bos ->
+                ObjectOutputStream(bos).use { output ->
+                    if (logger.isDebugEnabled) logger.debug("Saving the messages.")
+                    output.writeObject(messages)
                 }
-            } catch (e: IOException) {
-                logger.error("Unable to save messages queue.", e)
             }
+        } catch (e: IOException) {
+            logger.error("Unable to save messages queue.", e)
         }
     }
 }
