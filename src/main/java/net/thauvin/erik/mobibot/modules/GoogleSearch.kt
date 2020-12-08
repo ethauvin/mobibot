@@ -50,7 +50,7 @@ class GoogleSearch(bot: Mobibot) : ThreadedModule(bot) {
      * Searches Google.
      */
     override fun run(sender: String, cmd: String, args: String, isPrivate: Boolean) {
-        bot.apply {
+        with(bot) {
             if (args.isNotBlank()) {
                 try {
                     val results = searchGoogle(

@@ -124,7 +124,7 @@ class Weather2(bot: Mobibot) : ThreadedModule(bot) {
                             messages.add(
                                 PublicMessage("City: ${cwd.cityName} [${country.toUpperCase()}]")
                             )
-                            cwd.mainData.apply {
+                            with(cwd.mainData) {
                                 if (this != null) {
                                     if (hasTemp()) {
                                         messages.add(PublicMessage("Temperature: ${getTemps(temp)}"))
@@ -135,7 +135,7 @@ class Weather2(bot: Mobibot) : ThreadedModule(bot) {
                                 }
                             }
                             if (cwd.hasWindData()) {
-                                cwd.windData.apply {
+                                with(cwd.windData) {
                                     if (this != null && hasSpeed() && speed != null) {
                                         messages.add(NoticeMessage("Wind: ${wind(speed!!)}"))
                                     }

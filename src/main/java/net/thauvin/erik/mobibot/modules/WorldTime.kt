@@ -188,7 +188,7 @@ class WorldTime(bot: Mobibot) : AbstractModule(bot) {
         args: String,
         isPrivate: Boolean
     ) {
-        bot.apply {
+        with(bot) {
             if (args.isEmpty()) {
                 send(sender, "The supported countries/zones are: ", isPrivate)
                 sendList(sender, ArrayList(COUNTRIES_MAP.keys), 17, isPrivate = false)

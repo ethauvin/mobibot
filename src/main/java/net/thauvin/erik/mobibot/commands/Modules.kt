@@ -52,7 +52,7 @@ class Modules(bot: Mobibot) : AbstractCommand(bot) {
         isOp: Boolean,
         isPrivate: Boolean
     ) {
-        bot.apply {
+        with(bot) {
             if (isOp) {
                 if (modulesNames.isEmpty()) {
                     send(sender, "There are no enabled modules.", isPrivate)

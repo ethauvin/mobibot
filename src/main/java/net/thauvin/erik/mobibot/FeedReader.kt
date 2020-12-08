@@ -54,7 +54,7 @@ class FeedReader(
      * Fetches the Feed's items.
      */
     override fun run() {
-        bot.apply {
+        with(bot) {
             try {
                 val input = SyndFeedInput()
                 XmlReader(URL(url)).use { reader ->

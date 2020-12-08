@@ -50,7 +50,7 @@ class Lookup(bot: Mobibot) : AbstractModule(bot) {
         isPrivate: Boolean
     ) {
         if (args.matches("(\\S.)+(\\S)+".toRegex())) {
-            bot.apply {
+            with(bot) {
                 try {
                     lookup(args).split(',').forEach {
                         send(it.trim())
@@ -142,7 +142,7 @@ class Lookup(bot: Mobibot) : AbstractModule(bot) {
         fun whois(query: String, host: String): List<String> {
             val whoisClient = WhoisClient()
             val lines: List<String>
-            whoisClient.apply {
+            with(whoisClient) {
                 try {
                     defaultTimeout = Constants.CONNECT_TIMEOUT
                     connect(host)

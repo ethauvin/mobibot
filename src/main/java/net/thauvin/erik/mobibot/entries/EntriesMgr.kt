@@ -103,7 +103,7 @@ object EntriesMgr {
             val items = feed.entries
             var entry: EntryLink
             for (i in items.indices.reversed()) {
-                items[i].apply {
+                with(items[i]) {
                     entry = EntryLink(
                         link,
                         title,
@@ -145,7 +145,7 @@ object EntriesMgr {
                 OutputStreamWriter(
                     Files.newOutputStream(Paths.get(bot.logsDir + CURRENT_XML)), StandardCharsets.UTF_8
                 ).use { fw ->
-                    rss.apply {
+                    with(rss) {
                         feedType = "rss_2.0"
                         title = bot.channel + " IRC Links"
                         description = "Links from ${bot.ircServer} on ${bot.channel}"
@@ -156,7 +156,7 @@ object EntriesMgr {
                     var buff: StringBuilder
                     var comment: EntryComment
                     for (i in entries.size - 1 downTo 0) {
-                        entries[i].apply {
+                        with(entries[i]) {
                             buff = StringBuilder()
                                 .append("Posted by <b>")
                                 .append(nick)
@@ -210,7 +210,7 @@ object EntriesMgr {
                             Files.newOutputStream(Paths.get(bot.logsDir + NAV_XML)), StandardCharsets.UTF_8
                         ).use { fw ->
                             rss = SyndFeedImpl()
-                            rss.apply {
+                            with(rss) {
                                 feedType = "rss_2.0"
                                 title = "${bot.channel} IRC Links Backlogs"
                                 description = "Backlogs of Links from ${bot.ircServer} on ${bot.channel}"
@@ -222,7 +222,7 @@ object EntriesMgr {
                             for (i in history.size - 1 downTo 0) {
                                 date = history[i]
                                 item = SyndEntryImpl()
-                                item.apply {
+                                with(item) {
                                     link = bot.backlogsUrl + date + ".xml"
                                     title = date
                                     description = SyndContentImpl().apply { value = "Links for $date" }

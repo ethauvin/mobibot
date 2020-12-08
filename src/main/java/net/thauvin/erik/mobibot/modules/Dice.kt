@@ -49,7 +49,7 @@ class Dice(bot: Mobibot) : AbstractModule(bot) {
         val playerRoll = roll()
         val total = roll.first + roll.second
         val playerTotal = playerRoll.first + playerRoll.second
-        bot.apply {
+        with(bot) {
             send(
                 channel,
                 "$sender rolled two dice: ${Utils.bold(playerRoll.first)} and ${Utils.bold(playerRoll.second)}"

@@ -94,7 +94,7 @@ class CurrencyConverter(bot: Mobibot) : ThreadedModule(bot) {
     }
 
     override fun helpResponse(sender: String, isPrivate: Boolean): Boolean {
-        bot.apply {
+        with(bot) {
             if (EXCHANGE_RATES.isEmpty()) {
                 try {
                     loadRates()

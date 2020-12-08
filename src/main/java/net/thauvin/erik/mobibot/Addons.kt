@@ -49,7 +49,7 @@ class Addons {
      * Add a module with properties.
      */
     fun add(module: AbstractModule, props: Properties) {
-        module.apply {
+        with(module) {
             if (hasProperties()) {
                 propertyKeys.forEach {
                     setProperty(it, props.getProperty(it, ""))
@@ -68,7 +68,7 @@ class Addons {
      * Add a command with properties.
      */
     fun add(command: AbstractCommand, props: Properties) {
-        command.apply {
+        with(command) {
             if (properties.isNotEmpty()) {
                 properties.keys.forEach {
                     setProperty(it, props.getProperty(it, ""))

@@ -244,7 +244,7 @@ object Utils {
         val minutes = TimeUnit.MILLISECONDS.toMinutes(uptime) - TimeUnit.HOURS.toMinutes(
             TimeUnit.MILLISECONDS.toHours(uptime)
         )
-        info.apply {
+        with(info) {
             if (years > 0) {
                 append(years).append(plural(years, " year ", " years "))
             }
