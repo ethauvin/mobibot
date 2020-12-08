@@ -108,16 +108,16 @@ class CurrencyConverter(bot: Mobibot) : ThreadedModule(bot) {
                 send(sender, "To convert from one currency to another:", isPrivate)
                 send(
                     sender,
-                    Utils.helpIndent(
-                        Utils.helpFormat("%c $CURRENCY_CMD 100 USD to EUR", nick, isPrivateMsgEnabled)
+                    Utils.helpFormat(
+                        Utils.buildCmdSyntax("%c $CURRENCY_CMD 100 USD to EUR", nick, isPrivateMsgEnabled)
                     ),
                     isPrivate
                 )
                 send(sender, "For a listing of current rates:", isPrivate)
                 send(
                     sender,
-                    Utils.helpIndent(
-                        Utils.helpFormat("%c $CURRENCY_CMD $CURRENCY_RATES_KEYWORD", nick, isPrivateMsgEnabled)
+                    Utils.helpFormat(
+                        Utils.buildCmdSyntax("%c $CURRENCY_CMD $CURRENCY_RATES_KEYWORD", nick, isPrivateMsgEnabled)
                     ),
                     isPrivate
                 )

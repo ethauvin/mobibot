@@ -211,9 +211,9 @@ class WorldTime(bot: Mobibot) : AbstractModule(bot) {
 
     init {
         help.add("To display a country's current date/time:")
-        help.add(Utils.helpIndent("%c $TIME_CMD") + " [<country code>]")
+        help.add(Utils.helpFormat("%c $TIME_CMD") + " [<country code>]")
         help.add("For a listing of the supported countries:")
-        help.add(Utils.helpIndent("%c $TIME_CMD"))
+        help.add(Utils.helpFormat("%c $TIME_CMD"))
         commands.add(TIME_CMD)
     }
 }

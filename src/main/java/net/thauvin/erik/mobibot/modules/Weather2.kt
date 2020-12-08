@@ -191,9 +191,9 @@ class Weather2(bot: Mobibot) : ThreadedModule(bot) {
     init {
         commands.add(WEATHER_CMD)
         help.add("To display weather information:")
-        help.add(Utils.helpIndent("%c $WEATHER_CMD <city> [, <country code>]"))
+        help.add(Utils.helpFormat("%c $WEATHER_CMD <city> [, <country code>]"))
         help.add("For example:")
-        help.add(Utils.helpIndent("%c $WEATHER_CMD paris, fr"))
+        help.add(Utils.helpFormat("%c $WEATHER_CMD paris, fr"))
         help.add("The default ISO 3166 country code is ${Utils.bold("US")}. Zip codes supported in most countries.")
         initProperties(OWM_API_KEY_PROP)
     }

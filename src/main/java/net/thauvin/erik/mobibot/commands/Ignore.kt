@@ -47,17 +47,17 @@ class Ignore(bot: Mobibot) : AbstractCommand(bot) {
     override val name = IGNORE_CMD
     override val help = listOf(
         "To ignore a link posted to the channel:",
-        Utils.helpIndent("https://www.foo.bar %n"),
+        Utils.helpFormat("https://www.foo.bar %n"),
         "To check your ignore status:",
-        Utils.helpIndent("%c $name"),
+        Utils.helpFormat("%c $name"),
         "To toggle your ignore status:",
-        Utils.helpIndent("%c $name $me")
+        Utils.helpFormat("%c $name $me")
     )
     private val helpOp = listOf(
         "To ignore a link posted to the channel:",
-        Utils.helpIndent("https://www.foo.bar " + Utils.bold("%n"), false),
+        Utils.helpFormat("https://www.foo.bar " + Utils.bold("%n"), false),
         "To add/remove nicks from the ignored list:",
-        Utils.helpIndent("%c $name <nick> [<nick> ...]")
+        Utils.helpFormat("%c $name <nick> [<nick> ...]")
     )
 
     override val isOp = false
@@ -99,7 +99,7 @@ class Ignore(bot: Mobibot) : AbstractCommand(bot) {
     ): Boolean {
         return if (isOp) {
             for (h in helpOp) {
-                bot.send(sender, Utils.helpFormat(h, bot.nick, isPrivate), isPrivate)
+                bot.send(sender, Utils.buildCmdSyntax(h, bot.nick, isPrivate), isPrivate)
             }
             true
         } else {

@@ -39,7 +39,7 @@ class Modules(bot: Mobibot) : AbstractCommand(bot) {
     override val name = "modules"
     override val help = listOf(
         "To view a list of enabled modules:",
-        Utils.helpIndent("%c $name")
+        Utils.helpFormat("%c $name")
     )
     override val isOp = true
     override val isPublic = false

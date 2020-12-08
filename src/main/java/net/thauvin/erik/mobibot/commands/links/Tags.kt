@@ -43,7 +43,7 @@ class Tags(bot: Mobibot) : AbstractCommand(bot) {
     override val name = COMMAND
     override val help = listOf(
         "To categorize or tag a URL, use its label and a T:",
-        Utils.helpIndent("${Constants.LINK_CMD}1T:<+tag|-tag> [...]")
+        Utils.helpFormat("${Constants.LINK_CMD}1T:<+tag|-tag> [...]")
     )
     override val isOp = false
     override val isPublic = true

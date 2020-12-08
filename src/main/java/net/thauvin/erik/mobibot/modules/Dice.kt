@@ -98,6 +98,6 @@ class Dice(bot: Mobibot) : AbstractModule(bot) {
     init {
         commands.add(DICE_CMD)
         help.add("To roll the dice:")
-        help.add(Utils.helpIndent("%c $DICE_CMD"))
+        help.add(Utils.helpFormat("%c $DICE_CMD"))
     }
 }

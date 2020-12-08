@@ -41,7 +41,7 @@ class Recap(bot: Mobibot) : AbstractCommand(bot) {
     override val name = "recap"
     override val help = listOf(
         "To list the last 10 public channel messages:",
-        Utils.helpIndent("%c $name")
+        Utils.helpFormat("%c $name")
     )
     override val isOp = false
     override val isPublic = true

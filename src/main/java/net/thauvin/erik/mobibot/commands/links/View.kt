@@ -44,7 +44,7 @@ class View(bot: Mobibot) : AbstractCommand(bot) {
     override val name = VIEW_CMD
     override val help = listOf(
         "To list or search the current URL posts:",
-        Utils.helpIndent("%c $name [<start>] [<query>]")
+        Utils.helpFormat("%c $name [<start>] [<query>]")
     )
     override val isOp = false
     override val isPublic = true

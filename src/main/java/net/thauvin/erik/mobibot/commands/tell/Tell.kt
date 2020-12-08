@@ -118,9 +118,9 @@ class Tell(bot: Mobibot) : AbstractCommand(bot) {
     override val help: List<String>
         get() = listOf(
             "To send a message to someone when they join the channel:",
-            helpIndent("%c $name <nick> <message>"),
+            helpFormat("%c $name <nick> <message>"),
             "To view queued and sent messages:",
-            helpIndent("%c $name ${View.VIEW_CMD}"),
+            helpFormat("%c $name ${View.VIEW_CMD}"),
             "Messages are kept for " + bold(maxDays)
                 + plural(maxDays.toLong(), " day.", " days.")
         )
@@ -293,7 +293,7 @@ class Tell(bot: Mobibot) : AbstractCommand(bot) {
                         isPrivate
                     )
                 }
-                bot.send(sender, helpIndent(message.message), isPrivate)
+                bot.send(sender, helpFormat(message.message), isPrivate)
             }
         }
         if (!hasMessage) {
@@ -302,8 +302,8 @@ class Tell(bot: Mobibot) : AbstractCommand(bot) {
             bot.send(sender, "To delete one or all delivered messages:", isPrivate)
             bot.send(
                 sender,
-                helpIndent(
-                    helpFormat(
+                helpFormat(
+                    buildCmdSyntax(
                         "%c $name $TELL_DEL_KEYWORD <id|$TELL_ALL_KEYWORD>",
                         bot.nick,
                         isPrivate

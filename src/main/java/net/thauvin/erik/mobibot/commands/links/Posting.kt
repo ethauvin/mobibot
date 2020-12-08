@@ -44,15 +44,15 @@ class Posting(bot: Mobibot) : AbstractCommand(bot) {
     override val name = "posting"
     override val help = listOf(
         "Post a URL, by saying it on a line on its own:",
-        Utils.helpIndent("<url> [<title>] ${Tags.COMMAND}: <+tag> [...]]"),
+        Utils.helpFormat("<url> [<title>] ${Tags.COMMAND}: <+tag> [...]]"),
         "I will reply with a label, for example: ${Utils.bold(Constants.LINK_CMD)}1",
         "To add a title, use its label and a pipe:",
-        Utils.helpIndent("${Constants.LINK_CMD}1:|This is the title"),
+        Utils.helpFormat("${Constants.LINK_CMD}1:|This is the title"),
         "To add a comment:",
-        Utils.helpIndent("${Constants.LINK_CMD}1:This is a comment"),
+        Utils.helpFormat("${Constants.LINK_CMD}1:This is a comment"),
         "I will reply with a label, for example: ${Utils.bold(Constants.LINK_CMD)}1.1",
         "To edit a comment, see: ",
-        Utils.helpIndent("%c ${Constants.HELP_CMD} ${Comment.COMMAND}")
+        Utils.helpFormat("%c ${Constants.HELP_CMD} ${Comment.COMMAND}")
     )
     override val isOp = false
     override val isPublic = true

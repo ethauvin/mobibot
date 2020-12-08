@@ -38,7 +38,7 @@ import net.thauvin.erik.mobibot.Utils.colorize
 import net.thauvin.erik.mobibot.Utils.ensureDir
 import net.thauvin.erik.mobibot.Utils.getIntProperty
 import net.thauvin.erik.mobibot.Utils.helpFormat
-import net.thauvin.erik.mobibot.Utils.helpIndent
+import net.thauvin.erik.mobibot.Utils.buildCmdSyntax
 import net.thauvin.erik.mobibot.Utils.isoLocalDate
 import net.thauvin.erik.mobibot.Utils.today
 import net.thauvin.erik.mobibot.commands.AddLog
@@ -254,7 +254,7 @@ class Mobibot(nickname: String, channel: String, logsDirPath: String, p: Propert
         send(sender, "For more information on a specific command, type:", isPrivate)
         send(
             sender,
-            helpIndent(helpFormat("%c ${Constants.HELP_CMD} <command>", nick, isPrivate)),
+            helpFormat(buildCmdSyntax("%c ${Constants.HELP_CMD} <command>", nick, isPrivate)),
             isPrivate
         )
         send(sender, "The commands are:", isPrivate)
@@ -468,11 +468,10 @@ class Mobibot(nickname: String, channel: String, logsDirPath: String, p: Propert
         while (i < list.size) {
             send(
                 nick,
-                helpIndent(
+                helpFormat(
                     list.subList(i, list.size.coerceAtMost(i + maxPerLine)).joinToString(" ", truncated = ""),
-                    isBold
-                ),
-                isPrivate
+                    isBold,
+                    isIndent        isPrivate
             )
             i += maxPerLine
         }

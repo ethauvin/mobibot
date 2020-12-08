@@ -65,7 +65,7 @@ public final class War extends AbstractModule {
         commands.add(WAR_CMD);
 
         help.add("To play war:");
-        help.add(Utils.helpIndent("%c " + WAR_CMD));
+        help.add(Utils.helpFormat("%c " + WAR_CMD));
     }
 
     /**

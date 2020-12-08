@@ -61,7 +61,7 @@ public class Info extends AbstractCommand {
     @NotNull
     @Override
     public List<String> getHelp() {
-        return List.of("To view information about the bot:", Utils.helpIndent("%c " + getName()));
+        return List.of("To view information about the bot:", Utils.helpFormat("%c " + getName()));
     }
 
     @Override

@@ -206,7 +206,7 @@ class StockQuote(bot: Mobibot) : ThreadedModule(bot) {
     init {
         commands.add(STOCK_CMD)
         help.add("To retrieve a stock quote:")
-        help.add(Utils.helpIndent("%c $STOCK_CMD <symbol|keywords>"))
+        help.add(Utils.helpFormat("%c $STOCK_CMD <symbol|keywords>"))
         initProperties(ALPHAVANTAGE_API_KEY_PROP)
     }
 }

@@ -39,7 +39,7 @@ class Me(bot: Mobibot) : AbstractCommand(bot) {
     override val name = "me"
     override val help = listOf(
         "To have the bot perform an action:",
-        Utils.helpIndent("%c $name <action>")
+        Utils.helpFormat("%c $name <action>")
     )
     override val isOp = true
     override val isPublic = false

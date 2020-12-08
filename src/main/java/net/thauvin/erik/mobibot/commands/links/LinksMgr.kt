@@ -144,7 +144,7 @@ class LinksMgr(bot: Mobibot) : AbstractCommand(bot) {
                     bot.send(sender, "Please specify a title, by typing:", isPrivate)
                     bot.send(
                         sender,
-                        Utils.helpIndent("${EntriesUtils.buildLinkCmd(index)}:|This is the title"),
+                        Utils.helpFormat("${EntriesUtils.buildLinkCmd(index)}:|This is the title"),
                         isPrivate
                     )
                 }

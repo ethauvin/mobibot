@@ -97,6 +97,6 @@ class Joke(bot: Mobibot) : ThreadedModule(bot) {
     init {
         commands.add(JOKE_CMD)
         help.add("To retrieve a random joke:")
-        help.add(Utils.helpIndent("%c $JOKE_CMD"))
+        help.add(Utils.helpFormat("%c $JOKE_CMD"))
     }
 }

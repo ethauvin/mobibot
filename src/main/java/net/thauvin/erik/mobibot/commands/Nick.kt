@@ -39,7 +39,7 @@ class Nick(bot: Mobibot) : AbstractCommand(bot) {
     override val name = "nick"
     override val help = listOf(
         "To change the bot's nickname:",
-        Utils.helpIndent("%c $name <nick>")
+        Utils.helpFormat("%c $name <nick>")
     )
     override val isOp = true
     override val isPublic = true

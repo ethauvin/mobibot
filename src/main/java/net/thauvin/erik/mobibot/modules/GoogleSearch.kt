@@ -101,7 +101,7 @@ class GoogleSearch(bot: Mobibot) : ThreadedModule(bot) {
                     for (i in 0 until ja.length()) {
                         val j = ja.getJSONObject(i)
                         results.add(NoticeMessage(Utils.unescapeXml(j.getString("title"))))
-                        results.add(NoticeMessage(Utils.helpIndent(j.getString("link"), false), Colors.DARK_GREEN))
+                        results.add(NoticeMessage(Utils.helpFormat(j.getString("link"), false), Colors.DARK_GREEN))
                     }
                 } catch (e: IOException) {
                     throw ModuleException("searchGoogle($query)", "An IO error has occurred searching Google.", e)
@@ -118,7 +118,7 @@ class GoogleSearch(bot: Mobibot) : ThreadedModule(bot) {
     init {
         commands.add(GOOGLE_CMD)
         help.add("To search Google:")
-        help.add(Utils.helpIndent("%c $GOOGLE_CMD <query>"))
+        help.add(Utils.helpFormat("%c $GOOGLE_CMD <query>"))
         initProperties(GOOGLE_API_KEY_PROP, GOOGLE_CSE_KEY_PROP)
     }
 }

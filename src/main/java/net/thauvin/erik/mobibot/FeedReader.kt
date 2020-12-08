@@ -66,7 +66,7 @@ class FeedReader(
                         var i = 0
                         while (i < items.size && i < maxItems) {
                             send(sender, items[i].title, false)
-                            send(sender, Utils.helpIndent(Utils.green(items[i].link), false), false)
+                            send(sender, Utils.helpFormat(Utils.green(items[i].link), false), false)
                             i++
                         }
                     }

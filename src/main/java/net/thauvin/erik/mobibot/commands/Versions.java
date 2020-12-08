@@ -61,7 +61,7 @@ public class Versions extends AbstractCommand {
     @NotNull
     @Override
     public List<String> getHelp() {
-        return List.of("To view the versions data (bot, platform, java, etc.):", Utils.helpIndent("%c " + getName()));
+        return List.of("To view the versions data (bot, platform, java, etc.):", Utils.helpFormat("%c " + getName()));
     }
 
     @Override

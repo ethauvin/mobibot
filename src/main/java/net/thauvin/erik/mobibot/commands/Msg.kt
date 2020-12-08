@@ -39,7 +39,7 @@ class Msg(bot: Mobibot) : AbstractCommand(bot) {
     override val name = "msg"
     override val help = listOf(
         "To have the bot send a private message to someone:",
-        Utils.helpIndent("%c $name <nick> <text>")
+        Utils.helpFormat("%c $name <nick> <text>")
     )
     override val isOp = true
     override val isPublic = true

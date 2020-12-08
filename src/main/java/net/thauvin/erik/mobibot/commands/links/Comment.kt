@@ -43,12 +43,12 @@ class Comment(bot: Mobibot) : AbstractCommand(bot) {
     override val name = COMMAND
     override val help = listOf(
         "To add a comment:",
-        Utils.helpIndent("${Constants.LINK_CMD}1:This is a comment"),
+        Utils.helpFormat("${Constants.LINK_CMD}1:This is a comment"),
         "I will reply with a label, for example: ${Utils.bold(Constants.LINK_CMD)}1.1",
         "To edit a comment, use its label: ",
-        Utils.helpIndent("${Constants.LINK_CMD}1.1:This is an edited comment"),
+        Utils.helpFormat("${Constants.LINK_CMD}1.1:This is an edited comment"),
         "To delete a comment, use its label and a minus sign: ",
-        Utils.helpIndent("${Constants.LINK_CMD}1.1:-")
+        Utils.helpFormat("${Constants.LINK_CMD}1.1:-")
     )
     override val isOp = false
     override val isPublic = true
@@ -98,7 +98,7 @@ class Comment(bot: Mobibot) : AbstractCommand(bot) {
                 bot.send(sender, "To change a comment's author:", isPrivate)
                 bot.send(
                     sender,
-                    Utils.helpIndent("${Constants.LINK_CMD}1.1:?<nick>"),
+                    Utils.helpFormat("${Constants.LINK_CMD}1.1:?<nick>"),
                     isPrivate
                 )
             }

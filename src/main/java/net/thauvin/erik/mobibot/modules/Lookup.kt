@@ -164,6 +164,6 @@ class Lookup(bot: Mobibot) : AbstractModule(bot) {
     init {
         commands.add(LOOKUP_CMD)
         help.add("To perform a DNS lookup query:")
-        help.add(Utils.helpIndent("%c $LOOKUP_CMD <ip address or hostname>"))
+        help.add(Utils.helpFormat("%c $LOOKUP_CMD <ip address or hostname>"))
     }
 }

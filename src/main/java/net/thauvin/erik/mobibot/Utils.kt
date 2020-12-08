@@ -138,22 +138,12 @@ object Utils {
     fun green(s: String?): String = colorize(s, Colors.DARK_GREEN)
 
     /**
-     * Formats a help command by replacing `%c` with the bot's pub/priv command, and `%n` with the bot's
-     * nick.
-     */
-    @JvmStatic
-    fun helpFormat(text: String, botNick: String, isPrivate: Boolean): String {
-        val replace = arrayOf(if (isPrivate) "/msg $botNick" else "$botNick:", botNick)
-        return StringUtils.replaceEach(text, searchFlags, replace)
-    }
-
-    /**
-     * Returns indented help string.
+     * Returns a formatted help string.
      */
     @JvmStatic
     @JvmOverloads
-    fun helpIndent(help: String, isBold: Boolean = true): String {
-        return "      " + if (isBold) bold(help) else help
+    fun helpFormat(help: String, isBold: Boolean = true, isIndent: Boolean = true): String {
+        return (if (isIndent) "      " else "").plus(if (isBold) bold(help) else help)
     }
 
     /**

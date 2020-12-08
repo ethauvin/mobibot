@@ -85,6 +85,6 @@ class Ping(bot: Mobibot) : AbstractModule(bot) {
     init {
         commands.add(PING_CMD)
         help.add("To ping the bot:")
-        help.add(Utils.helpIndent("%c $PING_CMD"))
+        help.add(Utils.helpFormat("%c $PING_CMD"))
     }
 }

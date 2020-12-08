@@ -40,7 +40,7 @@ class Users(bot: Mobibot) : AbstractCommand(bot) {
     override val name = "users"
     override val help = listOf(
         "To list the users present on the channel:",
-        Utils.helpIndent("%c $name")
+        Utils.helpFormat("%c $name")
     )
     override val isOp = false
     override val isPublic = true

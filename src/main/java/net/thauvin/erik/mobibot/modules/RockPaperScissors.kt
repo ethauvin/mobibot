@@ -51,7 +51,7 @@ class RockPaperScissors(bot: Mobibot) : AbstractModule(bot) {
         with(help) {
             add("To play Rock Paper Scissors:")
             add(
-                Utils.helpIndent(
+                Utils.helpFormat(
                     "%c ${Hands.ROCK.name.toLowerCase()} | ${Hands.PAPER.name.toLowerCase()}"
                         + " | ${Hands.SCISSORS.name.toLowerCase()}"
                 )

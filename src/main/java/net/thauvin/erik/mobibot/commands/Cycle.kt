@@ -38,7 +38,7 @@ import net.thauvin.erik.mobibot.Utils
 class Cycle(bot: Mobibot) : AbstractCommand(bot) {
     private val wait = 10
     override val name = "cycle"
-    override val help = listOf("To have the bot leave the channel and come back:", Utils.helpIndent("%c $name"))
+    override val help = listOf("To have the bot leave the channel and come back:", Utils.helpFormat("%c $name"))
     override val isOp = true
     override val isPublic = false
     override val isVisible = true

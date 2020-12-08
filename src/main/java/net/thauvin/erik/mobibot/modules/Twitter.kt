@@ -234,7 +234,7 @@ class Twitter(bot: Mobibot) : ThreadedModule(bot) {
     init {
         commands.add(TWITTER_CMD)
         help.add("To post to Twitter:")
-        help.add(Utils.helpIndent("%c $TWITTER_CMD <message>"))
+        help.add(Utils.helpFormat("%c $TWITTER_CMD <message>"))
         properties[AUTOPOST_PROP] = "false"
         initProperties(CONSUMER_KEY_PROP, CONSUMER_SECRET_PROP, HANDLE_PROP, TOKEN_PROP, TOKEN_SECRET_PROP)
     }
