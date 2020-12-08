@@ -67,12 +67,12 @@ class CurrencyConverter(bot: Mobibot) : ThreadedModule(bot) {
      * Converts the specified currencies.
      */
     override fun run(sender: String, cmd: String, args: String, isPrivate: Boolean) {
-        with(bot) {
+        bot.apply {
             if (EXCHANGE_RATES.isEmpty()) {
                 try {
                     loadRates()
                 } catch (e: ModuleException) {
-                    if (bot.logger.isWarnEnabled) logger.warn(e.debugMessage, e)
+                    if (logger.isWarnEnabled) logger.warn(e.debugMessage, e)
                 }
             }
 
@@ -93,8 +93,8 @@ class CurrencyConverter(bot: Mobibot) : ThreadedModule(bot) {
         }
     }
 
-    override fun helpResponse(sender: String, isPrivate: Boolean) {
-        with(bot) {
+    override fun helpResponse(sender: String, isPrivate: Boolean) : Boolean {
+        bot.apply {
             if (EXCHANGE_RATES.isEmpty()) {
                 try {
                     loadRates()
@@ -125,6 +125,7 @@ class CurrencyConverter(bot: Mobibot) : ThreadedModule(bot) {
                 sendList(sender, ArrayList(EXCHANGE_RATES.keys), 11, isPrivate, isIndent = true)
             }
         }
+        return true
     }
 
     companion object {

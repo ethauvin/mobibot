@@ -122,6 +122,23 @@ class Addons {
     }
 
     /**
+     * Commands and Modules help.
+     */
+    fun help(sender: String, topic: String, isOp: Boolean, isPrivate: Boolean): Boolean {
+        for (command in commands) {
+            if (command.isVisible && command.name.startsWith(topic)) {
+                return command.helpResponse(topic, sender, isOp, isPrivate)
+            }
+        }
+        for (module in modules) {
+            if (module.commands.contains(topic)) {
+                return module.helpResponse(sender, isPrivate)
+            }
+        }
+        return false
+    }
+
+    /**
      * Sort commands and modules names.
      */
     fun sort() {

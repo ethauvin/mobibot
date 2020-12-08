@@ -34,11 +34,11 @@ package net.thauvin.erik.mobibot
 import net.thauvin.erik.mobibot.PinboardUtils.addPin
 import net.thauvin.erik.mobibot.PinboardUtils.deletePin
 import net.thauvin.erik.mobibot.PinboardUtils.updatePin
+import net.thauvin.erik.mobibot.Utils.buildCmdSyntax
 import net.thauvin.erik.mobibot.Utils.colorize
 import net.thauvin.erik.mobibot.Utils.ensureDir
 import net.thauvin.erik.mobibot.Utils.getIntProperty
 import net.thauvin.erik.mobibot.Utils.helpFormat
-import net.thauvin.erik.mobibot.Utils.buildCmdSyntax
 import net.thauvin.erik.mobibot.Utils.isoLocalDate
 import net.thauvin.erik.mobibot.Utils.today
 import net.thauvin.erik.mobibot.commands.AddLog
@@ -235,18 +235,6 @@ class Mobibot(nickname: String, channel: String, logsDirPath: String, p: Propert
     }
 
     /**
-     * Responds with the commands help, if any.
-     */
-    private fun helpCommands(sender: String, topic: String, isPrivate: Boolean): Boolean {
-        for (command in addons.commands) {
-            if (command.isVisible && command.name.startsWith(topic)) {
-                return command.helpResponse(topic, sender, isOp(sender), isPrivate)
-            }
-        }
-        return false
-    }
-
-    /**
      * Responds with the default help.
      */
     fun helpDefault(sender: String, isOp: Boolean, isPrivate: Boolean) {
@@ -265,38 +253,14 @@ class Mobibot(nickname: String, channel: String, logsDirPath: String, p: Propert
         }
     }
 
-    /**
-     * Responds with the modules help, if any.
-     */
-    private fun helpModules(sender: String, topic: String, isPrivate: Boolean): Boolean {
-        for (module in addons.modules) {
-            for (cmd in module.commands) {
-                if (topic == cmd) {
-                    module.helpResponse(sender, isPrivate)
-                    return true
-                }
-            }
-        }
-        return false
-    }
 
     /**
      * Responds with the default, commands or modules help.
      */
     private fun helpResponse(sender: String, topic: String, isPrivate: Boolean) {
         val isOp = isOp(sender)
-        if (topic.isBlank()) {
+        if (topic.isBlank() || !addons.help(sender, topic.toLowerCase().trim(), isOp, isPrivate)) {
             helpDefault(sender, isOp, isPrivate)
-        } else {
-            // Command, Modules or Default
-            if (!helpCommands(sender, topic, isPrivate) && !helpModules(
-                    sender,
-                    topic.toLowerCase().trim(),
-                    isPrivate
-                )
-            ) {
-                helpDefault(sender, isOp, isPrivate)
-            }
         }
     }
 

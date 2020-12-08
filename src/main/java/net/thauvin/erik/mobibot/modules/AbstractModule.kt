@@ -74,10 +74,11 @@ abstract class AbstractModule(val bot: Mobibot) {
     /**
      * Responds with the module's help.
      */
-    open fun helpResponse(sender: String, isPrivate: Boolean) {
+    open fun helpResponse(sender: String, isPrivate: Boolean) : Boolean {
         for (h in help) {
             bot.send(sender, Utils.buildCmdSyntax(h, bot.nick, isPrivateMsgEnabled && isPrivate), isPrivate)
         }
+        return true
     }
 
     /**
