@@ -40,7 +40,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 public class Versions extends AbstractCommand {
-    private final List<String> verList =
+    private final List<String> allVersions =
             List.of("Version: " + ReleaseInfo.VERSION + " (" + Utils.isoLocalDate(ReleaseInfo.BUILDDATE) + ')',
                     "Platform: " + System.getProperty("os.name") + ' ' + System.getProperty("os.version")
                     + " (" + System.getProperty("os.arch") + ')',
@@ -86,9 +86,7 @@ public class Versions extends AbstractCommand {
                                 final boolean isOp,
                                 final boolean isPrivate) {
         if (isOp) {
-            for (final String v : verList) {
-                getBot().send(sender, v, isPrivate);
-            }
+            getBot().sendList(sender, allVersions, 1, isPrivate, false, false);
         } else {
             getBot().helpDefault(sender, false, isPrivate);
         }

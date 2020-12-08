@@ -64,6 +64,6 @@ class Users(bot: Mobibot) : AbstractCommand(bot) {
             }
         }
 
-        bot.sendList(sender, nicks.sorted(), 8, isPrivate, false)
+        bot.sendList(sender, nicks.sorted(), 8, isPrivate, isIndent = true)
     }
 }

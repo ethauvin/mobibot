@@ -63,7 +63,7 @@ class AddLog(bot: Mobibot) : AbstractCommand(bot) {
                     return
                 }
             }
-            bot.sendList(sender, history, 4, isPrivate, false)
+            bot.sendList(sender, history, 4, isPrivate, isIndent = true)
         }
     }
 }

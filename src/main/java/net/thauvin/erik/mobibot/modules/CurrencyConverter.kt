@@ -86,7 +86,7 @@ class CurrencyConverter(bot: Mobibot) : ThreadedModule(bot) {
                 }
             } else if (args.contains(CURRENCY_RATES_KEYWORD)) {
                 send(sender, "The currency rates for ${Utils.bold(pubDate)} are:", isPrivate)
-                sendList(sender, currencyRates(), 3, isPrivate, false)
+                sendList(sender, currencyRates(), 3, isPrivate, isIndent = true)
             } else {
                 helpResponse(sender, isPrivate)
             }
@@ -122,7 +122,7 @@ class CurrencyConverter(bot: Mobibot) : ThreadedModule(bot) {
                     isPrivate
                 )
                 send(sender, "The supported currencies are: ", isPrivate)
-                sendList(sender, ArrayList(EXCHANGE_RATES.keys), 11, isPrivate, false)
+                sendList(sender, ArrayList(EXCHANGE_RATES.keys), 11, isPrivate, isIndent = true)
             }
         }
     }

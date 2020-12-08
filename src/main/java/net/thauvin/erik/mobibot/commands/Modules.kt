@@ -58,7 +58,7 @@ class Modules(bot: Mobibot) : AbstractCommand(bot) {
                     send(sender, "There are no enabled modules.", isPrivate)
                 } else {
                     send(sender, "The enabled modules are: ", isPrivate)
-                    sendList(sender, modulesNames, 7, isPrivate, false)
+                    sendList(sender, modulesNames, 7, isPrivate, isIndent = true)
                 }
             } else {
                 helpDefault(sender, isOp, isPrivate)
