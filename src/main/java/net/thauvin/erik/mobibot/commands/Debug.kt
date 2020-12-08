@@ -46,7 +46,7 @@ class Debug(bot: Mobibot) : AbstractCommand(bot) {
 
     override fun commandResponse(sender: String, login: String, args: String, isOp: Boolean, isPrivate: Boolean) {
         if (isOp) {
-            with(bot) {
+            bot.apply {
                 if (logger.isDebugEnabled) {
                     Configurator.setLevel(logger.name, loggerLevel)
                 } else {

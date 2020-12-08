@@ -103,7 +103,7 @@ object EntriesMgr {
             val items = feed.entries
             var entry: EntryLink
             for (i in items.indices.reversed()) {
-                with(items[i]) {
+                items[i].apply {
                     entry = EntryLink(
                         link,
                         title,
@@ -156,7 +156,7 @@ object EntriesMgr {
                     var buff: StringBuilder
                     var comment: EntryComment
                     for (i in entries.size - 1 downTo 0) {
-                        with(entries[i]) {
+                        entries[i].apply {
                             buff = StringBuilder()
                                 .append("Posted by <b>")
                                 .append(nick)

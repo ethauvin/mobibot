@@ -38,7 +38,6 @@ import java.io.BufferedReader
 import java.io.File
 import java.io.IOException
 import java.io.InputStreamReader
-import java.lang.NumberFormatException
 import java.net.URL
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
@@ -245,7 +244,7 @@ object Utils {
         val minutes = TimeUnit.MILLISECONDS.toMinutes(uptime) - TimeUnit.HOURS.toMinutes(
             TimeUnit.MILLISECONDS.toHours(uptime)
         )
-        with(info) {
+        info.apply {
             if (years > 0) {
                 append(years).append(plural(years, " year ", " years "))
             }

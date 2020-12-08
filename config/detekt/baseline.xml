@@ -56,7 +56,7 @@
     <ID>NestedBlockDepth:Addons.kt$Addons$ fun add(command: AbstractCommand, props: Properties)</ID>
     <ID>NestedBlockDepth:Comment.kt$Comment$override fun commandResponse( sender: String, login: String, args: String, isOp: Boolean, isPrivate: Boolean )</ID>
     <ID>NestedBlockDepth:CurrencyConverter.kt$CurrencyConverter$ override fun run(sender: String, cmd: String, args: String, isPrivate: Boolean)</ID>
-    <ID>NestedBlockDepth:CurrencyConverter.kt$CurrencyConverter$override fun helpResponse(sender: String, isPrivate: Boolean) : Boolean</ID>
+    <ID>NestedBlockDepth:CurrencyConverter.kt$CurrencyConverter$override fun helpResponse(sender: String, isPrivate: Boolean): Boolean</ID>
     <ID>NestedBlockDepth:CurrencyConverter.kt$CurrencyConverter.Companion$ @JvmStatic fun convertCurrency(query: String): Message</ID>
     <ID>NestedBlockDepth:EntriesMgr.kt$EntriesMgr$ @Throws(IOException::class, FeedException::class) fun loadEntries(file: String, channel: String, entries: MutableList&lt;EntryLink&gt;): String</ID>
     <ID>NestedBlockDepth:EntriesMgr.kt$EntriesMgr$ fun saveEntries( bot: Mobibot, entries: List&lt;EntryLink&gt;, history: MutableList&lt;String&gt;, isDayBackup: Boolean )</ID>

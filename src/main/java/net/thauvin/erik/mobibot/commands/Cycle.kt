@@ -51,7 +51,7 @@ class Cycle(bot: Mobibot) : AbstractCommand(bot) {
         isOp: Boolean,
         isPrivate: Boolean
     ) {
-        with(bot) {
+        bot.apply {
             if (isOp) {
                 send("$sender has just asked me to leave. I'll be back!")
                 sleep(wait)

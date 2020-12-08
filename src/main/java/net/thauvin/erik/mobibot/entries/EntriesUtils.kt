@@ -61,7 +61,7 @@ object EntriesUtils {
             buff.append("[+").append(entry.comments.size).append(']')
         }
         buff.append(' ')
-        with(entry) {
+        entry.apply {
             if (Constants.NO_TITLE == title) {
                 buff.append(title)
             } else {

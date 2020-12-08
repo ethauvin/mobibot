@@ -86,7 +86,7 @@ class Twitter(bot: Mobibot) : ThreadedModule(bot) {
      * Send a notification to the registered Twitter handle.
      */
     fun notification(msg: String) {
-        with(bot) {
+        bot.apply {
             if (isEnabled && !handle.isNullOrBlank()) {
                 Thread {
                     try {
@@ -120,7 +120,7 @@ class Twitter(bot: Mobibot) : ThreadedModule(bot) {
      * Post an entry to twitter.
      */
     fun postEntry(index: Int) {
-        with(bot) {
+        bot.apply {
             if (isAutoPost && hasEntry(index) && LinksMgr.entries.size >= index) {
                 val entry = LinksMgr.entries[index]
                 val msg = "${entry.title} ${entry.link} via ${entry.nick} on $channel"
@@ -157,7 +157,7 @@ class Twitter(bot: Mobibot) : ThreadedModule(bot) {
      * Posts to twitter.
      */
     override fun run(sender: String, cmd: String, args: String, isPrivate: Boolean) {
-        with(bot) {
+        bot.apply {
             try {
                 send(
                     sender,

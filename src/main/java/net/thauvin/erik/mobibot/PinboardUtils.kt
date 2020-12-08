@@ -80,7 +80,7 @@ object PinboardUtils {
     @JvmStatic
     fun updatePin(poster: PinboardPoster, ircServer: String, oldUrl: String, entry: EntryLink) = runBlocking {
         val update = GlobalScope.async {
-            with(entry) {
+            entry.apply {
                 if (oldUrl != link) {
                     poster.deletePin(oldUrl)
                     poster.addPin(

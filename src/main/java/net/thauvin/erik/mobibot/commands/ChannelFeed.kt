@@ -61,7 +61,7 @@ class ChannelFeed(bot: Mobibot, channel: String) : AbstractCommand(bot) {
         isOp: Boolean,
         isPrivate: Boolean
     ) {
-        with(properties[FEED_PROP]) {
+        properties[FEED_PROP].apply {
             if (!isNullOrBlank()) {
                 Thread(FeedReader(bot, sender, this)).start()
             } else {

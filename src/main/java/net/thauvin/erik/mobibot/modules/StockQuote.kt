@@ -50,7 +50,7 @@ class StockQuote(bot: Mobibot) : ThreadedModule(bot) {
      * Returns the specified stock quote from Alpha Avantage.
      */
     override fun run(sender: String, cmd: String, args: String, isPrivate: Boolean) {
-        with(bot) {
+        bot.apply {
             if (args.isNotBlank()) {
                 try {
                     val messages = getQuote(args, properties[ALPHAVANTAGE_API_KEY_PROP])
@@ -128,7 +128,7 @@ class StockQuote(bot: Mobibot) : ThreadedModule(bot) {
                 val messages = mutableListOf<Message>()
                 var response: String
                 try {
-                    with(messages) {
+                    messages.apply {
                         // Search for symbol/keywords
                         response = Utils.urlReader(
                             URL(

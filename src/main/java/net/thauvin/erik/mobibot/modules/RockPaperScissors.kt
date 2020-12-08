@@ -42,13 +42,13 @@ import kotlin.random.Random
  */
 class RockPaperScissors(bot: Mobibot) : AbstractModule(bot) {
     init {
-        with(commands) {
+        commands.apply {
             add(Hands.ROCK.name.toLowerCase())
             add(Hands.PAPER.name.toLowerCase())
             add(Hands.SCISSORS.name.toLowerCase())
         }
 
-        with(help) {
+        help.apply {
             add("To play Rock Paper Scissors:")
             add(
                 Utils.helpFormat(
@@ -96,7 +96,7 @@ class RockPaperScissors(bot: Mobibot) : AbstractModule(bot) {
     override fun commandResponse(sender: String, cmd: String, args: String, isPrivate: Boolean) {
         val hand = Hands.valueOf(cmd.toUpperCase())
         val botHand = Hands.values()[Random.nextInt(0, Hands.values().size)]
-        with(bot) {
+        bot.apply {
             when {
                 hand == botHand -> {
                     send("${Utils.green(hand.name)} vs. ${Utils.green(botHand.name)}")

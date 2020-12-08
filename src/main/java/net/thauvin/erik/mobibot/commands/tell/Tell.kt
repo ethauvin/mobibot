@@ -33,9 +33,9 @@ package net.thauvin.erik.mobibot.commands.tell
 
 import net.thauvin.erik.mobibot.Mobibot
 import net.thauvin.erik.mobibot.Utils.bold
+import net.thauvin.erik.mobibot.Utils.buildCmdSyntax
 import net.thauvin.erik.mobibot.Utils.getIntProperty
 import net.thauvin.erik.mobibot.Utils.helpFormat
-import net.thauvin.erik.mobibot.Utils.buildCmdSyntax
 import net.thauvin.erik.mobibot.Utils.plural
 import net.thauvin.erik.mobibot.Utils.reverseColor
 import net.thauvin.erik.mobibot.Utils.utcDateTime
