@@ -156,7 +156,7 @@ object Utils {
     @JvmStatic
     @JvmOverloads
     fun helpFormat(help: String, isBold: Boolean = true, isIndent: Boolean = true): String {
-        return (if (isIndent) "      " else "").plus(if (isBold) bold(help) else help)
+        return (if (isIndent) "    " else "").plus(if (isBold) bold(help) else help)
     }
 
     /**

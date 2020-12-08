@@ -41,10 +41,10 @@ import java.util.List;
 
 public class Versions extends AbstractCommand {
     private final List<String> allVersions =
-            List.of("Version: " + ReleaseInfo.VERSION + " (" + Utils.isoLocalDate(ReleaseInfo.BUILDDATE) + ')',
+            List.of("Version:  " + ReleaseInfo.VERSION + " (" + Utils.isoLocalDate(ReleaseInfo.BUILDDATE) + ')',
                     "Platform: " + System.getProperty("os.name") + ' ' + System.getProperty("os.version")
                     + " (" + System.getProperty("os.arch") + ')',
-                    "Runtime: " + System.getProperty("java.runtime.name")
+                    "Runtime:  " + System.getProperty("java.runtime.name")
                     + ' ' + System.getProperty("java.runtime.version"));
 
     public Versions(@NotNull final Mobibot bot) {
@@ -86,7 +86,7 @@ public class Versions extends AbstractCommand {
                                 final boolean isOp,
                                 final boolean isPrivate) {
         if (isOp) {
-            getBot().sendList(sender, allVersions, 1, isPrivate, false, false);
+            getBot().sendList(sender, allVersions, 1, isPrivate);
         } else {
             getBot().helpDefault(sender, false, isPrivate);
         }

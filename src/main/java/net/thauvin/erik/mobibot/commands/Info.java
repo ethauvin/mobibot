@@ -85,7 +85,7 @@ public class Info extends AbstractCommand {
                                 @NotNull final String args,
                                 final boolean isOp,
                                 final boolean isPrivate) {
-        getBot().sendList(sender, allVersions, 1, isPrivate, false, false);
+        getBot().sendList(sender, allVersions, 1, isPrivate);
 
         final StringBuilder info = new StringBuilder("Uptime: ");
 

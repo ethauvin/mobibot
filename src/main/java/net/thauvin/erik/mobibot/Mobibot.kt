@@ -399,7 +399,7 @@ class Mobibot(nickname: String, channel: String, logsDirPath: String, p: Propert
      * Sends a notice to the channel.
      */
     fun send(notice: String?) {
-        if (notice != null) send(channel, notice, false)
+        notice?.let { send(channel, it, false) }
     }
 
     /**
@@ -419,6 +419,7 @@ class Mobibot(nickname: String, channel: String, logsDirPath: String, p: Propert
     /**
      * Send a formatted commands/modules, etc. list.
      */
+    @JvmOverloads
     fun sendList(
         nick: String,
         list: List<String>,
@@ -600,6 +601,7 @@ class Mobibot(nickname: String, channel: String, logsDirPath: String, p: Propert
     init {
         System.getProperties().setProperty("sun.net.client.defaultConnectTimeout", Constants.CONNECT_TIMEOUT.toString())
         System.getProperties().setProperty("sun.net.client.defaultReadTimeout", Constants.CONNECT_TIMEOUT.toString())
+
         name = nickname
         ircServer = p.getProperty("server", Constants.DEFAULT_SERVER)
         ircPort = getIntProperty(p.getProperty("port"), Constants.DEFAULT_PORT)
