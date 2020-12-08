@@ -62,7 +62,7 @@ class GoogleSearchTest : LocalProperties() {
                 .`as`("no query").isInstanceOf(ModuleException::class.java).hasNoCause()
         } catch (e: ModuleException) {
             // Avoid displaying api keys in CI logs
-            if ("true" == System.getenv("CI") && !apiKey.isBlank() && !cseKey.isBlank()) {
+            if ("true" == System.getenv("CI") && apiKey.isNotBlank() && cseKey.isNotBlank()) {
                 throw ModuleException(e.debugMessage, e.getSanitizedMessage(apiKey, cseKey))
             } else {
                 throw e

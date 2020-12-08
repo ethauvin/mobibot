@@ -75,6 +75,6 @@ class Calc(bot: Mobibot) : AbstractModule(bot) {
     init {
         commands.add(CALC_CMD)
         help.add("To solve a mathematical calculation:")
-        help.add(Utils.helpIndent("%c $CALC_CMD <calculation>"))
+        help.add(Utils.helpFormat("%c $CALC_CMD <calculation>"))
     }
 }

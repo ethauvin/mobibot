@@ -43,7 +43,7 @@ abstract class AbstractCommand(val bot: Mobibot) {
     abstract val isPublic: Boolean
     abstract val isVisible: Boolean
 
-    private val properties: MutableMap<String, String> = ConcurrentHashMap()
+    val properties: MutableMap<String, String> = ConcurrentHashMap()
 
     abstract fun commandResponse(
         sender: String,
@@ -61,18 +61,6 @@ abstract class AbstractCommand(val bot: Mobibot) {
             return true
         }
         return false
-    }
-
-    open fun getProperty(key: String): String? {
-        return properties[key]
-    }
-
-    open fun getPropertyKeys(): Set<String> {
-        return properties.keys
-    }
-
-    open fun hasProperties(): Boolean {
-        return properties.isNotEmpty()
     }
 
     open fun initProperties(vararg keys: String) {

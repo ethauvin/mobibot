@@ -38,6 +38,7 @@ import java.io.BufferedReader
 import java.io.File
 import java.io.IOException
 import java.io.InputStreamReader
+import java.lang.NumberFormatException
 import java.net.URL
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
@@ -61,10 +62,26 @@ object Utils {
     fun bold(i: Int): String = bold(i.toString())
 
     /**
+     * Makes the given long bold.
+     */
+    @JvmStatic
+    fun bold(i: Long): String = bold(i.toString())
+
+    /**
      * Makes the given string bold.
      */
     @JvmStatic
     fun bold(s: String?): String = colorize(s, Colors.BOLD)
+
+    /**
+     * Build a help command by replacing `%c` with the bot's pub/priv command, and `%n` with the bot's
+     * nick.
+     */
+    @JvmStatic
+    fun buildCmdSyntax(text: String, botNick: String, isPrivate: Boolean): String {
+        val replace = arrayOf(if (isPrivate) "/msg $botNick" else "$botNick:", botNick)
+        return StringUtils.replaceEach(text, searchFlags, replace)
+    }
 
     /**
      * Colorize a string.
@@ -89,6 +106,7 @@ object Utils {
     /**
      * URL encodes the given string.
      */
+    @JvmStatic
     fun encodeUrl(s: String): String = URLEncoder.encode(s, StandardCharsets.UTF_8)
 
     /**
@@ -120,14 +138,10 @@ object Utils {
      */
     @JvmStatic
     fun getIntProperty(property: String?, def: Int): Int {
-        return if (property == null) {
+        return try {
+            property?.toInt() ?: def
+        } catch (nfe: NumberFormatException) {
             def
-        } else {
-            try {
-                property.toInt()
-            } catch (ignore: NumberFormatException) {
-                def
-            }
         }
     }
 
@@ -169,6 +183,12 @@ object Utils {
             StringUtils.repeat('x', s.length)
         } else s
     }
+
+    /**
+     * Returns the plural form of a word, if count &gt; 1.
+     */
+    @JvmStatic
+    fun plural(count: Int, word: String, plural: String): String = plural(count.toLong(), word, plural)
 
     /**
      * Returns the plural form of a word, if count &gt; 1.
@@ -269,10 +289,6 @@ object Utils {
      */
     @JvmStatic
     fun utcDateTime(date: LocalDateTime?): String {
-        return if (date != null) {
-            date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))
-        } else {
-            ""
-        }
+        return date?.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")) ?: ""
     }
 }

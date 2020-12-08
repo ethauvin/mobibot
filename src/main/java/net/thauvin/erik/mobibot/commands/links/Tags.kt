@@ -76,7 +76,7 @@ class Tags(bot: Mobibot) : AbstractCommand(bot) {
                     bot.send(sender, "Please ask a channel op to change the tags for you.", isPrivate)
                 }
             } else {
-                if (entry.hasTags()) {
+                if (entry.tags.isNotEmpty()) {
                     bot.send(EntriesUtils.buildTags(index, entry))
                 } else {
                     bot.send(sender, "The entry has no tags. Why don't add some?", isPrivate)

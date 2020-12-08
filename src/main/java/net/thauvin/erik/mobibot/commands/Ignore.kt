@@ -35,7 +35,6 @@ package net.thauvin.erik.mobibot.commands
 import net.thauvin.erik.mobibot.Mobibot
 import net.thauvin.erik.mobibot.Utils
 import net.thauvin.erik.mobibot.commands.links.LinksMgr
-import java.util.*
 
 class Ignore(bot: Mobibot) : AbstractCommand(bot) {
     private val me = "me"
@@ -67,7 +66,7 @@ class Ignore(bot: Mobibot) : AbstractCommand(bot) {
     companion object {
         const val IGNORE_CMD = "ignore"
         const val IGNORE_PROP = IGNORE_CMD
-        private val ignored = TreeSet<String>()
+        private val ignored = mutableSetOf<String>()
 
         @JvmStatic
         fun isNotIgnored(nick: String): Boolean {
@@ -150,7 +149,7 @@ class Ignore(bot: Mobibot) : AbstractCommand(bot) {
     override fun setProperty(key: String, value: String) {
         super.setProperty(key, value)
         if (IGNORE_PROP == key) {
-            ignored.addAll(value.split(LinksMgr.LINK_MATCH.toRegex()))
+            ignored.addAll(value.split(LinksMgr.TAG_MATCH.toRegex()))
         }
     }
 

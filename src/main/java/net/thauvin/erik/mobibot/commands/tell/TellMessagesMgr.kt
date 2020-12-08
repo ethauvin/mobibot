@@ -46,13 +46,13 @@ import java.time.LocalDateTime
 /**
  * The Tell Messages Manager.
  */
-internal object TellMessagesMgr {
+object TellMessagesMgr {
     /**
      * Cleans the messages queue.
      */
-    fun clean(tellMessages: MutableList<TellMessage>, tellMaxDays: Int): Boolean {
+    fun clean(tellMessages: MutableList<TellMessage>, tellMaxDays: Long): Boolean {
         val today = LocalDateTime.now(Clock.systemUTC())
-        return tellMessages.removeIf { o: TellMessage -> o.queued.plusDays(tellMaxDays.toLong()).isBefore(today) }
+        return tellMessages.removeIf { o: TellMessage -> o.queued.plusDays(tellMaxDays).isBefore(today) }
     }
 
     /**

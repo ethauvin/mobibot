@@ -397,10 +397,8 @@ class Mobibot(nickname: String, channel: String, logsDirPath: String, p: Propert
             sleep(3)
             quitServer("The Bot Is Out There!")
             exitProcess(0)
-        } else {
-            if (!addons.exec(sender, login, cmd, args, isOp, true)) {
-                helpDefault(sender, isOp, true)
-            }
+        } else if (!addons.exec(sender, login, cmd, args, isOp, true)) { // Execute command or module
+            helpDefault(sender, isOp, true)
         }
     }
 
@@ -463,13 +461,18 @@ class Mobibot(nickname: String, channel: String, logsDirPath: String, p: Propert
         maxPerLine: Int,
         isPrivate: Boolean,
         isBold: Boolean = false,
-        isIndent: Boolean = false  while (i < list.size) {
+        isIndent: Boolean = false
+    ) {
+        var i = 0
+        while (i < list.size) {
             send(
                 nick,
                 helpFormat(
                     list.subList(i, list.size.coerceAtMost(i + maxPerLine)).joinToString(" ", truncated = ""),
                     isBold,
-                    isIndent        isPrivate
+                    isIndent
+                ),
+                isPrivate
             )
             i += maxPerLine
         }

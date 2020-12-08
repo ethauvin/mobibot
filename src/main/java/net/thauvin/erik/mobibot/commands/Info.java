@@ -43,7 +43,7 @@ import java.lang.management.ManagementFactory;
 import java.util.List;
 
 public class Info extends AbstractCommand {
-    private final List<String> version = List.of(
+    private final List<String> allVersions = List.of(
             StringUtils.capitalize(ReleaseInfo.PROJECT) + " " + ReleaseInfo.VERSION
             + " (" + Utils.green(ReleaseInfo.WEBSITE) + ')',
             "Written by " + ReleaseInfo.AUTHOR + " (" + Utils.green(ReleaseInfo.AUTHOR_URL) + ')');
@@ -102,7 +102,7 @@ public class Info extends AbstractCommand {
             }
         }
 
-        info.append(", Recap: ").append(Recap.recapCount()).append(']');
+        info.append(", Recap: ").append(Recap.recaps.size()).append(']');
 
         getBot().send(sender, info.toString(), isPrivate);
     }

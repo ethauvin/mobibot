@@ -35,7 +35,7 @@ import net.thauvin.erik.mobibot.Mobibot
 import net.thauvin.erik.mobibot.Utils.bold
 import net.thauvin.erik.mobibot.Utils.getIntProperty
 import net.thauvin.erik.mobibot.Utils.helpFormat
-import net.thauvin.erik.mobibot.Utils.helpIndent
+import net.thauvin.erik.mobibot.Utils.buildCmdSyntax
 import net.thauvin.erik.mobibot.Utils.plural
 import net.thauvin.erik.mobibot.Utils.reverseColor
 import net.thauvin.erik.mobibot.Utils.utcDateTime
@@ -63,7 +63,7 @@ class Tell(bot: Mobibot) : AbstractCommand(bot) {
      */
     private fun clean(): Boolean {
         if (bot.logger.isDebugEnabled) bot.logger.debug("Cleaning the messages.")
-        return TellMessagesMgr.clean(messages, maxDays)
+        return TellMessagesMgr.clean(messages, maxDays.toLong())
     }
 
     // Delete message.
@@ -88,7 +88,7 @@ class Tell(bot: Mobibot) : AbstractCommand(bot) {
             } else {
                 var found = false
                 for (message in messages) {
-                    found = message.isMatchId(id)
+                    found = (message.id == id)
                     if (found && (message.sender.equals(sender, ignoreCase = true) || bot.isOp(sender))) {
                         messages.remove(message)
                         save()
@@ -122,7 +122,7 @@ class Tell(bot: Mobibot) : AbstractCommand(bot) {
             "To view queued and sent messages:",
             helpFormat("%c $name ${View.VIEW_CMD}"),
             "Messages are kept for " + bold(maxDays)
-                + plural(maxDays.toLong(), " day.", " days.")
+                + plural(maxDays, " day.", " days.")
         )
     override val isOp: Boolean
         get() = false
@@ -313,7 +313,7 @@ class Tell(bot: Mobibot) : AbstractCommand(bot) {
             )
             bot.send(
                 sender,
-                "Messages are kept for ${bold(maxDays)}${plural(maxDays.toLong(), " day.", " days.")}",
+                "Messages are kept for ${bold(maxDays)}${plural(maxDays, " day.", " days.")}",
                 isPrivate
             )
         }

@@ -58,7 +58,6 @@ class TellMessageTest {
         Assertions.assertThat(tellMessage.isMatch(sender)).`as`("match sender").isTrue
         Assertions.assertThat(tellMessage.isMatch(recipient)).`as`("match recipient").isTrue
         Assertions.assertThat(tellMessage.isMatch("foo")).`as`("foo is no match").isFalse
-        Assertions.assertThat(tellMessage.isMatchId(tellMessage.id)).`as`("is match ID").isTrue
         tellMessage.isReceived = true
         Assertions.assertThat(tellMessage.isReceived).`as`("is received").isTrue
         Assertions.assertThat(isValidDate(tellMessage.receptionDate)).`as`("received is valid date/time").isTrue

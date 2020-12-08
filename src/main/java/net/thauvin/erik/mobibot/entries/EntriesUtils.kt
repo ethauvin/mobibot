@@ -57,7 +57,7 @@ object EntriesUtils {
     fun buildLink(entryIndex: Int, entry: EntryLink, isView: Boolean = false): String {
         val buff = StringBuilder().append(buildLinkCmd(entryIndex)).append(": ")
             .append('[').append(entry.nick).append(']')
-        if (isView && entry.hasComments()) {
+        if (isView && entry.comments.isNotEmpty()) {
             buff.append("[+").append(entry.comments.size).append(']')
         }
         buff.append(' ')

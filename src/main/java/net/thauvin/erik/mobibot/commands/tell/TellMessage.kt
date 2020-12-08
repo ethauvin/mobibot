@@ -86,19 +86,11 @@ class TellMessage internal constructor(
      */
     var receptionDate: LocalDateTime = LocalDateTime.MIN
 
-
     /**
      * Matches the message sender or recipient.
      */
     fun isMatch(nick: String?): Boolean {
         return sender.equals(nick, ignoreCase = true) || recipient.equals(nick, ignoreCase = true)
-    }
-
-    /**
-     * Match the message ID.
-     */
-    fun isMatchId(id: String): Boolean {
-        return this.id == id
     }
 
     override fun toString(): String {

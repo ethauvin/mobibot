@@ -148,10 +148,10 @@ class Posting(bot: Mobibot) : AbstractCommand(bot) {
     private fun showEntry(index: Int) {
         val entry: EntryLink = entries[index]
         bot.send(EntriesUtils.buildLink(index, entry))
-        if (entry.hasTags()) {
+        if (entry.tags.isNotEmpty()) {
             bot.send(EntriesUtils.buildTags(index, entry))
         }
-        if (entry.hasComments()) {
+        if (entry.comments.isNotEmpty()) {
             val comments = entry.comments
             for (i in comments.indices) {
                 bot.send(EntriesUtils.buildComment(index, i, comments[i]))

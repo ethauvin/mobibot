@@ -32,12 +32,13 @@
 
 package net.thauvin.erik.mobibot.commands
 
+import net.thauvin.erik.mobibot.Constants
 import net.thauvin.erik.mobibot.Mobibot
 import org.apache.logging.log4j.Level
 import org.apache.logging.log4j.core.config.Configurator
 
 class Debug(bot: Mobibot) : AbstractCommand(bot) {
-    override val name = "debug"
+    override val name = Constants.DEBUG_CMD
     override val help = emptyList<String>()
     override val isOp = true
     override val isPublic = false

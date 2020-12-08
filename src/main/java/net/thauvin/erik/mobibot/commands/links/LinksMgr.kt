@@ -89,7 +89,7 @@ class LinksMgr(bot: Mobibot) : AbstractCommand(bot) {
         fun startup(current: String, backlogs: String, channel: String) {
             startDate = EntriesMgr.loadEntries(current, channel, entries)
             if (Utils.today() != startDate) {
-                this.entries.clear()
+                entries.clear()
                 startDate = Utils.today()
             }
             EntriesMgr.loadBacklogs(backlogs, history)

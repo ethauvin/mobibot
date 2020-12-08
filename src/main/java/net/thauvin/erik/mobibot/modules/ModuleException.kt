@@ -80,14 +80,6 @@ class ModuleException : Exception {
         }
     }
 
-    /**
-     * Return `true` if the exception has a cause.
-     */
-    @Suppress("unused")
-    fun hasCause(): Boolean {
-        return cause != null
-    }
-
     companion object {
         private const val serialVersionUID = 1L
     }

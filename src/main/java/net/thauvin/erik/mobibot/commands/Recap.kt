@@ -48,19 +48,11 @@ class Recap(bot: Mobibot) : AbstractCommand(bot) {
     override val isVisible = true
 
     companion object {
-        private val recaps = mutableListOf<String>()
-
-        @JvmStatic
-        fun recapCount(): Int {
-            return recaps.size
-        }
+        @JvmField
+        val recaps = mutableListOf<String>()
 
         /**
          * Stores the last 10 public messages and actions.
-         *
-         * @param sender   The nick of the person who sent the private message.
-         * @param message  The actual message sent.
-         * @param isAction Set to `true` if the message is an action.
          */
         @JvmStatic
         fun storeRecap(sender: String, message: String, isAction: Boolean) {

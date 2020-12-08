@@ -40,7 +40,7 @@ class ChannelFeed(bot: Mobibot, channel: String) : AbstractCommand(bot) {
     override val name = channel
     override val help = listOf(
         "To list the last 5 posts from the channel's weblog feed:",
-        Utils.helpIndent("%c $channel")
+        Utils.helpFormat("%c $channel")
     )
     override val isOp = false
     override val isPublic = true
@@ -61,7 +61,7 @@ class ChannelFeed(bot: Mobibot, channel: String) : AbstractCommand(bot) {
         isOp: Boolean,
         isPrivate: Boolean
     ) {
-        with(getProperty(FEED_PROP)) {
+        with(properties[FEED_PROP]) {
             if (!isNullOrBlank()) {
                 Thread(FeedReader(bot, sender, this)).start()
             } else {

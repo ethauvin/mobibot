@@ -69,8 +69,8 @@ class Addons {
      */
     fun add(command: AbstractCommand, props: Properties) {
         with(command) {
-            if (hasProperties()) {
-                getPropertyKeys().forEach {
+            if (properties.isNotEmpty()) {
+                properties.keys.forEach {
                     setProperty(it, props.getProperty(it, ""))
                 }
             }
@@ -111,13 +111,14 @@ class Addons {
     /**
      * Match a command.
      */
-    fun match(sender: String, login: String, message: String, isOp: Boolean, isPrivate: Boolean) {
+    fun match(sender: String, login: String, message: String, isOp: Boolean, isPrivate: Boolean): Boolean {
         for (command in commands) {
             if (command.matches(message)) {
                 command.commandResponse(sender, login, message, isOp, isPrivate)
-                break
+                return true
             }
         }
+        return false
     }
 
     /**

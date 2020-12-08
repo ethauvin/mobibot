@@ -107,8 +107,8 @@ class EntryLink : Serializable {
     /**
      * Adds a new comment.
      */
-    fun addComment(comment: String?, nick: String?): Int {
-        comments.add(EntryComment(comment!!, nick!!))
+    fun addComment(comment: String, nick: String): Int {
+        comments.add(EntryComment(comment, nick))
         return comments.size - 1
     }
 
@@ -138,16 +138,6 @@ class EntryLink : Serializable {
             }
             return pinboardTags.toString()
         }
-
-    /**
-     * Returns true if the entry has comments.
-     */
-    fun hasComments(): Boolean = comments.isNotEmpty()
-
-    /**
-     * Returns true if the entry has tags.
-     */
-    fun hasTags(): Boolean = tags.isNotEmpty()
 
     /**
      * Returns true if a string is contained in the link, title, or nick.

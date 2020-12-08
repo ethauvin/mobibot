@@ -67,7 +67,7 @@ class EntryLinkTest {
         while (entryLink.comments.size > 0) {
             entryLink.deleteComment(r.nextInt(entryLink.comments.size))
         }
-        Assertions.assertThat(entryLink.hasComments()).`as`("hasComments()").isFalse
+        Assertions.assertThat(entryLink.comments.isNotEmpty()).`as`("hasComments()").isFalse
         entryLink.addComment("nothing", "nobody")
         entryLink.setComment(0, "something", "somebody")
         Assertions.assertThat(entryLink.getComment(0).nick).`as`("getNick(somebody)").isEqualTo("somebody")
@@ -81,7 +81,7 @@ class EntryLinkTest {
             Assertions.assertThat(tag.name).`as`("tag.getName($i)").isEqualTo("tag" + (i + 1))
         }
         Assertions.assertThat(entryLink.tags.size).`as`("getTags().size() is 5").isEqualTo(5)
-        Assertions.assertThat(entryLink.hasTags()).`as`("hasTags() is true").isTrue
+        Assertions.assertThat(entryLink.tags.isNotEmpty()).`as`("hasTags() is true").isTrue
         entryLink.setTags("-tag5")
         entryLink.setTags("+mobitopia")
         entryLink.setTags("tag4")
