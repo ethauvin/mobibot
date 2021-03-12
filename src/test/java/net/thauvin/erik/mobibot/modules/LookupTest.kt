@@ -43,8 +43,8 @@ class LookupTest {
     @Test
     @Throws(Exception::class)
     fun testLookup() {
-        val result = lookup("erik.thauvin.net")
-        Assertions.assertThat(result).`as`("lookup(erik.thauvin.net/104.31.77.12)").contains("104.31.77.12")
+        val result = lookup("apple.com")
+    Assertions.assertThat(result).`as`("lookup(apple.com)").contains("17.253.144.10")
     }
 
     @Test

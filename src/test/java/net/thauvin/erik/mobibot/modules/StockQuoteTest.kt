@@ -48,7 +48,7 @@ class StockQuoteTest : LocalProperties() {
             val messages = getQuote("apple inc", apiKey)
             Assertions.assertThat(messages).`as`("response not empty").isNotEmpty
             Assertions.assertThat(messages[0].msg).`as`("same stock symbol")
-                .isEqualTo("Symbol: AAPL [Apple Inc.]")
+                .startsWith("Symbol: AAPL")
             Assertions.assertThat(messages[1].msg).`as`("price label")
                 .startsWith("    Price:     ")
             try {
