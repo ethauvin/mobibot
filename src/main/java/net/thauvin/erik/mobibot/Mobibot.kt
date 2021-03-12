@@ -479,6 +479,14 @@ class Mobibot(nickname: String, channel: String, logsDirPath: String, p: Propert
         }
     }
 
+    /**
+     * Returns the bot's version.
+     */
+    override fun onVersion(sourceNick: String, sourceLogin: String, sourceHostname: String, target: String) {
+        sendRawLine("NOTICE " + sourceNick + " :\u0001VERSION " + ReleaseInfo.PROJECT + ' ' + ReleaseInfo.VERSION
+                    + "\u0001")
+    }
+
     companion object {
         // Maximum number of times the bot will try to reconnect, if disconnected
         private const val MAX_RECONNECT = 10
@@ -614,7 +622,8 @@ class Mobibot(nickname: String, channel: String, logsDirPath: String, p: Propert
         setVerbose(true)
         setAutoNickChange(true)
         login = p.getProperty("login", name)
-        version = ReleaseInfo.PROJECT + ' ' + ReleaseInfo.VERSION
+        // Set the real name
+        version = ReleaseInfo.PROJECT
         // setMessageDelay(1000);
 
         // Set NICKSERV identification
