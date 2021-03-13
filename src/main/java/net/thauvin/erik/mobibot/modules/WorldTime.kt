@@ -64,7 +64,7 @@ class WorldTime(bot: Mobibot) : AbstractModule(bot) {
             val zdt = ZonedDateTime.now(ZoneId.of("UTC+01:00"))
             val beats = ((zdt[ChronoField.SECOND_OF_MINUTE] + zdt[ChronoField.MINUTE_OF_HOUR] * 60
                 + zdt[ChronoField.HOUR_OF_DAY] * 3600) / 86.4).toInt()
-            return String.format("%c%03d", '@', beats)
+            return String.format(Locale.getDefault(), "%c%03d", '@', beats)
         }
 
         /**

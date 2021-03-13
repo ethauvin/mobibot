@@ -1,16 +1,16 @@
 plugins {
     id 'application'
     id 'checkstyle'
-    id 'com.github.ben-manes.versions' version '0.36.0'
-    id 'com.github.spotbugs' version '4.6.0'
+    id 'com.github.ben-manes.versions' version '0.38.0'
+    id 'com.github.spotbugs' version '4.7.0'
     id 'idea'
-    id 'io.gitlab.arturbosch.detekt' version '1.15.0-RC1'
+    id 'io.gitlab.arturbosch.detekt' version '1.16.0'
     id 'jacoco'
     id 'java'
     id 'net.thauvin.erik.gradle.semver' version '1.0.4'
-    id 'org.jetbrains.kotlin.jvm' version '1.4.20'
-    id 'org.jetbrains.kotlin.kapt' version '1.4.20'
-    id 'org.sonarqube' version '3.0'
+    id 'org.jetbrains.kotlin.jvm' version '1.4.31'
+    id 'org.jetbrains.kotlin.kapt' version '1.4.31'
+    id 'org.sonarqube' version '3.1.1'
     id 'pmd'
 }
 
@@ -22,9 +22,9 @@ final def semverProcessor = "net.thauvin.erik:semver:1.2.0"
 
 ext.versions = [
     jacoco  : '0.8.6',
-    log4j   : '2.14.0',
-    pmd     : '6.29.0',
-    spotbugs: '4.2.0'
+    log4j   : '2.14.1',
+    pmd     : '6.32.0',
+    spotbugs: '4.2.2'
 ]
 
 repositories {
@@ -48,9 +48,9 @@ dependencies {
     implementation 'net.aksingh:owm-japis:2.5.3.0'
     implementation 'net.objecthunter:exp4j:0.4.8'
     implementation 'net.thauvin.erik:pinboard-poster:1.0.1'
-    implementation 'org.apache.commons:commons-lang3:3.11'
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.2'
-    implementation 'org.json:json:20201115'
+    implementation 'org.apache.commons:commons-lang3:3.12.0'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.3'
+    implementation 'org.json:json:20210307'
     implementation 'org.jsoup:jsoup:1.13.1'
     implementation 'org.twitter4j:twitter4j-core:4.0.7'
     implementation "org.apache.logging.log4j:log4j-api:$versions.log4j"
@@ -60,8 +60,8 @@ dependencies {
     compileOnly "com.github.spotbugs:spotbugs-annotations:$versions.spotbugs"
     testCompileOnly "com.github.spotbugs:spotbugs-annotations:$versions.spotbugs"
 
-    testImplementation 'org.assertj:assertj-core:3.18.1'
-    testImplementation 'org.testng:testng:7.3.0'
+    testImplementation 'org.assertj:assertj-core:3.19.0'
+    testImplementation 'org.testng:testng:7.4.0'
 
     spotbugsPlugins 'com.h3xstream.findsecbugs:findsecbugs-plugin:1.11.0'
     spotbugsPlugins 'com.mebigfatguy.sb-contrib:sb-contrib:7.4.7'

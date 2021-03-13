@@ -87,9 +87,10 @@ public class Info extends AbstractCommand {
                                 final boolean isPrivate) {
         getBot().sendList(sender, allVersions, 1, isPrivate);
 
-        final StringBuilder info = new StringBuilder("Uptime: ");
+        final StringBuilder info = new StringBuilder(29);
 
-        info.append(Utils.uptime(ManagementFactory.getRuntimeMXBean().getUptime()))
+        info.append("Uptime: ")
+            .append(Utils.uptime(ManagementFactory.getRuntimeMXBean().getUptime()))
             .append(" [Entries: ")
             .append(LinksMgr.entries.size());
 
