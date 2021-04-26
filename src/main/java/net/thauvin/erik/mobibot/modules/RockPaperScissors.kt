@@ -43,17 +43,17 @@ import kotlin.random.Random
 class RockPaperScissors(bot: Mobibot) : AbstractModule(bot) {
     init {
         with(commands) {
-            add(Hands.ROCK.name.toLowerCase())
-            add(Hands.PAPER.name.toLowerCase())
-            add(Hands.SCISSORS.name.toLowerCase())
+            add(Hands.ROCK.name.lowercase())
+            add(Hands.PAPER.name.lowercase())
+            add(Hands.SCISSORS.name.lowercase())
         }
 
         with(help) {
             add("To play Rock Paper Scissors:")
             add(
                 Utils.helpFormat(
-                    "%c ${Hands.ROCK.name.toLowerCase()} | ${Hands.PAPER.name.toLowerCase()}"
-                        + " | ${Hands.SCISSORS.name.toLowerCase()}"
+                    "%c ${Hands.ROCK.name.lowercase()} | ${Hands.PAPER.name.lowercase()}"
+                        + " | ${Hands.SCISSORS.name.lowercase()}"
                 )
             )
         }
@@ -82,8 +82,8 @@ class RockPaperScissors(bot: Mobibot) : AbstractModule(bot) {
     companion object {
         // For testing.
         fun winLoseOrDraw(player: String, bot: String): String {
-            val hand = Hands.valueOf(player.toUpperCase())
-            val botHand = Hands.valueOf(bot.toUpperCase())
+            val hand = Hands.valueOf(player.uppercase())
+            val botHand = Hands.valueOf(bot.uppercase())
 
             return when {
                 hand == botHand -> "draw"
@@ -94,7 +94,7 @@ class RockPaperScissors(bot: Mobibot) : AbstractModule(bot) {
     }
 
     override fun commandResponse(sender: String, cmd: String, args: String, isPrivate: Boolean) {
-        val hand = Hands.valueOf(cmd.toUpperCase())
+        val hand = Hands.valueOf(cmd.uppercase())
         val botHand = Hands.values()[Random.nextInt(0, Hands.values().size)]
         with(bot) {
             when {

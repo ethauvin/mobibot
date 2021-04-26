@@ -32,6 +32,7 @@
 
 package net.thauvin.erik.mobibot.modules;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import net.thauvin.erik.mobibot.Mobibot;
 import net.thauvin.erik.mobibot.Utils;
 import org.jetbrains.annotations.NotNull;
@@ -71,6 +72,7 @@ public final class War extends AbstractModule {
     /**
      * {@inheritDoc}
      */
+    @SuppressFBWarnings("DMI_RANDOM_USED_ONLY_ONCE")
     @Override
     public void commandResponse(@NotNull final String sender,
                                 @NotNull final String cmd,

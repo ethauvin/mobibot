@@ -51,7 +51,7 @@ object PinboardUtils {
      */
     @JvmStatic
     fun addPin(poster: PinboardPoster, ircServer: String, entry: EntryLink) = runBlocking {
-        val add = GlobalScope.async {
+        val add = async {
             poster.addPin(
                 entry.link,
                 entry.title,
@@ -68,7 +68,7 @@ object PinboardUtils {
      */
     @JvmStatic
     fun deletePin(poster: PinboardPoster, entry: EntryLink) = runBlocking {
-        val delete = GlobalScope.async {
+        val delete = async {
             poster.deletePin(entry.link)
         }
         delete.await()
@@ -79,7 +79,7 @@ object PinboardUtils {
      */
     @JvmStatic
     fun updatePin(poster: PinboardPoster, ircServer: String, oldUrl: String, entry: EntryLink) = runBlocking {
-        val update = GlobalScope.async {
+        val update = async {
             with(entry) {
                 if (oldUrl != link) {
                     poster.deletePin(oldUrl)

@@ -70,7 +70,7 @@ class View(bot: Mobibot) : AbstractCommand(bot) {
 
     private fun showPosts(bot: Mobibot, args: String, sender: String) {
         val max = entries.size
-        var lcArgs = args.toLowerCase()
+        var lcArgs = args.lowercase()
         var i = 0
         if (lcArgs.isEmpty() && max > maxEntries) {
             i = max - maxEntries

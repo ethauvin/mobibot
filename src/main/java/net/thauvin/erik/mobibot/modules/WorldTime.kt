@@ -72,7 +72,7 @@ class WorldTime(bot: Mobibot) : AbstractModule(bot) {
          */
         @JvmStatic
         fun worldTime(query: String): Message {
-            val tz = COUNTRIES_MAP[(query.substring(query.indexOf(' ') + 1).trim()).toUpperCase()]
+            val tz = COUNTRIES_MAP[(query.substring(query.indexOf(' ') + 1).trim()).uppercase()]
             val response: String = if (tz != null) {
                 if (BEATS_KEYWORD == tz) {
                     "The current Internet Time is: " + Utils.bold(internetTime() + ' ' + BEATS_KEYWORD)

@@ -70,7 +70,7 @@ class Ignore(bot: Mobibot) : AbstractCommand(bot) {
 
         @JvmStatic
         fun isNotIgnored(nick: String): Boolean {
-            return !ignored.contains(nick.toLowerCase())
+            return !ignored.contains(nick.lowercase())
         }
     }
 
@@ -82,8 +82,8 @@ class Ignore(bot: Mobibot) : AbstractCommand(bot) {
         isPrivate: Boolean
     ) {
         if (!isOp) {
-            val nick = sender.toLowerCase()
-            val isMe = args.toLowerCase().startsWith(me)
+            val nick = sender.lowercase()
+            val isMe = args.lowercase().startsWith(me)
             ignoreNick(bot, nick, isMe, isPrivate)
         } else {
             ignoreOp(bot, sender, args, isPrivate)
@@ -125,10 +125,10 @@ class Ignore(bot: Mobibot) : AbstractCommand(bot) {
 
     private fun ignoreOp(bot: Mobibot, sender: String, args: String, isPrivate: Boolean) {
         if (args.isNotEmpty()) {
-            val nicks = args.toLowerCase().split(" ")
+            val nicks = args.lowercase().split(" ")
             for (nick in nicks) {
                 val ignore = if (me == nick) {
-                    nick.toLowerCase()
+                    nick.lowercase()
                 } else {
                     nick
                 }

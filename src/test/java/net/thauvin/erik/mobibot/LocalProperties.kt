@@ -69,7 +69,7 @@ open class LocalProperties {
         }
 
         private fun keyToEnv(key: String): String {
-            return key.replace('-', '_').toUpperCase()
+            return key.replace('-', '_').uppercase()
         }
     }
 }

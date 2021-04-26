@@ -172,7 +172,7 @@ class EntryLink : Serializable {
             var category: SyndCategoryImpl
             for (tag in tags) {
                 if (!tag.isNullOrBlank()) {
-                    val t = tag.toLowerCase()
+                    val t = tag.lowercase()
                     val mod = t[0]
                     if (mod == '-') {
                         // Don't remove the channel tag

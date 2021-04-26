@@ -259,7 +259,7 @@ class Mobibot(nickname: String, channel: String, logsDirPath: String, p: Propert
      */
     private fun helpResponse(sender: String, topic: String, isPrivate: Boolean) {
         val isOp = isOp(sender)
-        if (topic.isBlank() || !addons.help(sender, topic.toLowerCase().trim(), isOp, isPrivate)) {
+        if (topic.isBlank() || !addons.help(sender, topic.lowercase().trim(), isOp, isPrivate)) {
             helpDefault(sender, isOp, isPrivate)
         }
     }
@@ -317,7 +317,7 @@ class Mobibot(nickname: String, channel: String, logsDirPath: String, p: Propert
         tell.send(sender, true)
         if (message.matches("(?i)${Pattern.quote(nick)}:.*".toRegex())) { // mobibot: <command>
             val cmds = message.substring(message.indexOf(':') + 1).trim().split(" ".toRegex(), 2)
-            val cmd = cmds[0].toLowerCase()
+            val cmd = cmds[0].lowercase()
             val args = if (cmds.size > 1) {
                 cmds[1].trim()
             } else ""
@@ -342,7 +342,7 @@ class Mobibot(nickname: String, channel: String, logsDirPath: String, p: Propert
     ) {
         if (logger.isDebugEnabled) logger.debug(">>> $sender : $message")
         val cmds = message.split(" ".toRegex(), 2)
-        val cmd = cmds[0].toLowerCase()
+        val cmd = cmds[0].lowercase()
         val args = if (cmds.size > 1) {
             cmds[1].trim()
         } else ""
@@ -559,7 +559,7 @@ class Mobibot(nickname: String, channel: String, logsDirPath: String, p: Propert
                         e.printStackTrace(System.err)
                         exitProcess(1)
                     }
-                    val nickname = p.getProperty("nick", Mobibot::class.java.name.toLowerCase())
+                    val nickname = p.getProperty("nick", Mobibot::class.java.name.lowercase())
                     val channel = p.getProperty("channel")
                     val logsDir = ensureDir(p.getProperty("logs", "."), false)
 
