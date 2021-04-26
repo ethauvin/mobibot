@@ -127,7 +127,7 @@ pmd {
 }
 
 detekt {
-    baseline = file("${projectDir}/config/detekt/baseline.xml")
+    baseline = file("${rootProject.projectDir}/config/detekt/baseline.xml")
 }
 
 javadoc {
