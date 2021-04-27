@@ -1,7 +1,7 @@
 /*
  * GoogleSearchTest.kt
  *
- * Copyright (c) 2004-2020, Erik C. Thauvin (erik@thauvin.net)
+ * Copyright (c) 2004-2021, Erik C. Thauvin (erik@thauvin.net)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
