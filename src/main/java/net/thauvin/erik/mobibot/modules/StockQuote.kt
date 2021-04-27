@@ -122,7 +122,7 @@ class StockQuote(bot: Mobibot) : ThreadedModule(bot) {
         fun getQuote(symbol: String, apiKey: String?): List<Message> {
             if (apiKey.isNullOrBlank()) {
                 throw ModuleException(
-                    "${STOCK_CMD.replaceFirstChar { it.uppercase() }} is disabled. The API key is missing.")
+                    "${Utils.capitalize(STOCK_CMD)} is disabled. The API key is missing.")
             }
             return if (symbol.isNotBlank()) {
                 val debugMessage = "getQuote($symbol)"

@@ -101,7 +101,7 @@ class Weather2(bot: Mobibot) : ThreadedModule(bot) {
         fun getWeather(query: String, apiKey: String?): List<Message> {
             if (apiKey.isNullOrBlank()) {
                 throw ModuleException(
-                    "${WEATHER_CMD.replaceFirstChar { it.uppercase() }} is disabled. The API key is missing.")
+                    "${Utils.capitalize(WEATHER_CMD)} is disabled. The API key is missing.")
             }
             val owm = OWM(apiKey)
             val messages = mutableListOf<Message>()
@@ -149,7 +149,7 @@ class Weather2(bot: Mobibot) : ThreadedModule(bot) {
                                     for (w in list) {
                                         if (w != null) {
                                             condition.append(' ')
-                                                .append(w.getDescription().replaceFirstChar { it.uppercase() })
+                                                .append(Utils.capitalize(w.getDescription()))
                                                 .append('.')
                                         }
                                     }

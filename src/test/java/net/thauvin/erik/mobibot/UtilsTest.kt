@@ -32,6 +32,7 @@
 package net.thauvin.erik.mobibot
 
 import net.thauvin.erik.mobibot.Utils.bold
+import net.thauvin.erik.mobibot.Utils.capitalize
 import net.thauvin.erik.mobibot.Utils.colorize
 import net.thauvin.erik.mobibot.Utils.cyan
 import net.thauvin.erik.mobibot.Utils.ensureDir
@@ -75,6 +76,12 @@ class UtilsTest {
     fun testBold() {
         Assertions.assertThat(bold(1)).`as`("bold(1)").isEqualTo(Colors.BOLD + "1" + Colors.BOLD)
         Assertions.assertThat(bold(ascii)).`as`("bold(ascii)").isEqualTo(Colors.BOLD + ascii + Colors.BOLD)
+    }
+
+    @Test
+    fun testCapitalize() {
+        Assertions.assertThat(capitalize("test")).`as`("capitalize(test)").isEqualTo("Test")
+        Assertions.assertThat(capitalize("Test")).`as`("capitalize(Test)").isEqualTo("Test")
     }
 
     @Test

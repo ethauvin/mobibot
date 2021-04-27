@@ -35,7 +35,6 @@ import net.thauvin.erik.mobibot.Mobibot
 import net.thauvin.erik.mobibot.Utils
 import net.thauvin.erik.mobibot.msg.Message
 import net.thauvin.erik.mobibot.msg.NoticeMessage
-import org.apache.commons.lang3.StringUtils
 import org.jibble.pircbot.Colors
 import org.json.JSONException
 import org.json.JSONObject
@@ -87,7 +86,7 @@ class GoogleSearch(bot: Mobibot) : ThreadedModule(bot) {
         @Throws(ModuleException::class)
         fun searchGoogle(query: String, apiKey: String?, cseKey: String?): List<Message> {
             if (apiKey.isNullOrBlank() || cseKey.isNullOrBlank()) {
-                throw ModuleException("${StringUtils.capitalize(GOOGLE_CMD)} is disabled. The API keys are missing.")
+                throw ModuleException("${Utils.capitalize(GOOGLE_CMD)} is disabled. The API keys are missing.")
             }
             return if (query.isNotBlank()) {
                 val results = mutableListOf<Message>()

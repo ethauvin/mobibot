@@ -81,7 +81,15 @@ object Utils {
         val replace = arrayOf(if (isPrivate) "/msg $botNick" else "$botNick:", botNick)
         return StringUtils.replaceEach(text, searchFlags, replace)
     }
-
+    
+    /**
+     * Capitalize a string.
+     */
+    @JvmStatic
+    fun capitalize(s: String?): String {
+        return s!!.replaceFirstChar { it.uppercase() }
+    }
+    
     /**
      * Colorize a string.
      */

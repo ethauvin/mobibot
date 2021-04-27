@@ -36,7 +36,6 @@ import net.thauvin.erik.mobibot.Mobibot;
 import net.thauvin.erik.mobibot.ReleaseInfo;
 import net.thauvin.erik.mobibot.Utils;
 import net.thauvin.erik.mobibot.commands.links.LinksMgr;
-import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.management.ManagementFactory;
@@ -44,7 +43,7 @@ import java.util.List;
 
 public class Info extends AbstractCommand {
     private final List<String> allVersions = List.of(
-            StringUtils.capitalize(ReleaseInfo.PROJECT) + " " + ReleaseInfo.VERSION
+            Utils.capitalize(ReleaseInfo.PROJECT) + " " + ReleaseInfo.VERSION
             + " (" + Utils.green(ReleaseInfo.WEBSITE) + ')',
             "Written by " + ReleaseInfo.AUTHOR + " (" + Utils.green(ReleaseInfo.AUTHOR_URL) + ')');
 
