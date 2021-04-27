@@ -82,6 +82,8 @@ class UtilsTest {
     fun testCapitalize() {
         Assertions.assertThat(capitalize("test")).`as`("capitalize(test)").isEqualTo("Test")
         Assertions.assertThat(capitalize("Test")).`as`("capitalize(Test)").isEqualTo("Test")
+        Assertions.assertThat(capitalize(null)).`as`("captitalize(null)").isNull()
+        Assertions.assertThat(capitalize("")).`as`("capitalize()").isEqualTo("")
     }
 
     @Test

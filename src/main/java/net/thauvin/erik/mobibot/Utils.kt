@@ -86,9 +86,7 @@ object Utils {
      * Capitalize a string.
      */
     @JvmStatic
-    fun capitalize(s: String?): String {
-        return s!!.replaceFirstChar { it.uppercase() }
-    }
+    fun capitalize(s: String?): String? = s?.replaceFirstChar { it.uppercase() }
     
     /**
      * Colorize a string.

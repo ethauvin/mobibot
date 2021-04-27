@@ -152,8 +152,8 @@ class EntryLink : Serializable {
      * Sets a comment.
      */
     fun setComment(index: Int, comment: String?, nick: String?) {
-        if (index < comments.size) {
-            comments[index] = EntryComment(comment!!, nick!!)
+        if (index < comments.size && (comment != null) && !nick.isNullOrBlank()) {
+            comments[index] = EntryComment(comment, nick)
         }
     }
 
