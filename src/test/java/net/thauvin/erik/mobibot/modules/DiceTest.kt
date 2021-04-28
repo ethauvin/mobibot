@@ -39,14 +39,8 @@ import org.testng.annotations.Test
 class DiceTest {
     @Test
     fun testWinLoseOrTie() {
-        assertThat(
-            Dice.winLoseOrTie(6, 6)
-        ).`as`("6 vs. 6").isEqualTo(Dice.Result.TIE)
-        assertThat(
-            Dice.winLoseOrTie(6, 5)
-        ).`as`("6 vs. 5").isEqualTo(Dice.Result.WIN)
-        assertThat(
-            Dice.winLoseOrTie(5, 6)
-        ).`as`("5 vs. 6").isEqualTo(Dice.Result.LOSE)
+        assertThat(Dice.winLoseOrTie(6, 6)).`as`("6 vs. 6").isEqualTo(Dice.Result.TIE)
+        assertThat(Dice.winLoseOrTie(6, 5)).`as`("6 vs. 5").isEqualTo(Dice.Result.WIN)
+        assertThat(Dice.winLoseOrTie(5, 6)).`as`("5 vs. 6").isEqualTo(Dice.Result.LOSE)
     }
 }

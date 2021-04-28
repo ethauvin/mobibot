@@ -32,7 +32,7 @@
 package net.thauvin.erik.mobibot.entries
 
 import com.rometools.rome.feed.synd.SyndCategory
-import org.assertj.core.api.Assertions
+import org.assertj.core.api.Assertions.assertThat
 import org.testng.annotations.Test
 import java.security.SecureRandom
 
@@ -56,37 +56,37 @@ class EntryLinkTest {
             entryLink.addComment("c$i", "u$i")
             i++
         }
-        Assertions.assertThat(entryLink.comments.size).`as`("getComments().size() == 5").isEqualTo(i)
+        assertThat(entryLink.comments.size).`as`("getComments().size() == 5").isEqualTo(i)
         i = 0
         for (comment in entryLink.comments) {
-            Assertions.assertThat(comment.comment).`as`("getComment($i)").isEqualTo("c$i")
-            Assertions.assertThat(comment.nick).`as`("getNick($i)").isEqualTo("u$i")
+            assertThat(comment.comment).`as`("getComment($i)").isEqualTo("c$i")
+            assertThat(comment.nick).`as`("getNick($i)").isEqualTo("u$i")
             i++
         }
         val r = SecureRandom()
         while (entryLink.comments.size > 0) {
             entryLink.deleteComment(r.nextInt(entryLink.comments.size))
         }
-        Assertions.assertThat(entryLink.comments.isNotEmpty()).`as`("hasComments()").isFalse
+        assertThat(entryLink.comments.isNotEmpty()).`as`("hasComments()").isFalse
         entryLink.addComment("nothing", "nobody")
         entryLink.setComment(0, "something", "somebody")
-        Assertions.assertThat(entryLink.getComment(0).nick).`as`("getNick(somebody)").isEqualTo("somebody")
-        Assertions.assertThat(entryLink.getComment(0).comment).`as`("getComment(something)").isEqualTo("something")
+        assertThat(entryLink.getComment(0).nick).`as`("getNick(somebody)").isEqualTo("somebody")
+        assertThat(entryLink.getComment(0).comment).`as`("getComment(something)").isEqualTo("something")
     }
 
     @Test
     fun testTags() {
         val tags: List<SyndCategory> = entryLink.tags
         for ((i, tag) in tags.withIndex()) {
-            Assertions.assertThat(tag.name).`as`("tag.getName($i)").isEqualTo("tag" + (i + 1))
+            assertThat(tag.name).`as`("tag.getName($i)").isEqualTo("tag" + (i + 1))
         }
-        Assertions.assertThat(entryLink.tags.size).`as`("getTags().size() is 5").isEqualTo(5)
-        Assertions.assertThat(entryLink.tags.isNotEmpty()).`as`("hasTags() is true").isTrue
+        assertThat(entryLink.tags.size).`as`("getTags().size() is 5").isEqualTo(5)
+        assertThat(entryLink.tags.isNotEmpty()).`as`("hasTags() is true").isTrue
         entryLink.setTags("-tag5")
         entryLink.setTags("+mobitopia")
         entryLink.setTags("tag4")
         entryLink.setTags("-mobitopia")
-        Assertions.assertThat(entryLink.pinboardTags).`as`("getPinboardTags()")
+        assertThat(entryLink.pinboardTags).`as`("getPinboardTags()")
             .isEqualTo(entryLink.nick + ",tag1,tag2,tag3,tag4,mobitopia")
     }
 }

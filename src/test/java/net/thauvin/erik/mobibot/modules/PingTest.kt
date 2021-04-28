@@ -32,7 +32,7 @@
 package net.thauvin.erik.mobibot.modules
 
 import net.thauvin.erik.mobibot.modules.Ping.Companion.randomPing
-import org.assertj.core.api.Assertions
+import org.assertj.core.api.Assertions.assertThat
 import org.testng.annotations.Test
 
 /**
@@ -41,13 +41,13 @@ import org.testng.annotations.Test
 class PingTest {
     @Test
     fun testPingsArray() {
-        Assertions.assertThat(Ping.PINGS).`as`("Pings array is not empty.").isNotEmpty
+        assertThat(Ping.PINGS).`as`("Pings array is not empty.").isNotEmpty
     }
 
     @Test
     fun testRandomPing() {
         for (i in 0..9) {
-            Assertions.assertThat(randomPing()).`as`("Random ping $i").isIn(Ping.PINGS)
+            assertThat(randomPing()).`as`("Random ping $i").isIn(Ping.PINGS)
         }
     }
 }

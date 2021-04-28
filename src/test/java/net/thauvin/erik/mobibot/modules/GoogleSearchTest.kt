@@ -33,7 +33,8 @@ package net.thauvin.erik.mobibot.modules
 
 import net.thauvin.erik.mobibot.LocalProperties
 import net.thauvin.erik.mobibot.modules.GoogleSearch.Companion.searchGoogle
-import org.assertj.core.api.Assertions
+import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.testng.annotations.Test
 
 /**
@@ -47,18 +48,18 @@ class GoogleSearchTest : LocalProperties() {
         val cseKey = getProperty(GoogleSearch.GOOGLE_CSE_KEY_PROP)
         try {
             var messages = searchGoogle("mobibot site:github.com", apiKey, cseKey)
-            Assertions.assertThat(messages).`as`("mobibot results not empty").isNotEmpty
-            Assertions.assertThat(messages[0].msg).`as`("found mobitopia").contains("mobibot")
+            assertThat(messages).`as`("mobibot results not empty").isNotEmpty
+            assertThat(messages[0].msg).`as`("found mobitopia").contains("mobibot")
             messages = searchGoogle("aapl", apiKey, cseKey)
-            Assertions.assertThat(messages).`as`("aapl results not empty").isNotEmpty
-            Assertions.assertThat(messages[0].msg).`as`("found apple").containsIgnoringCase("apple")
-            Assertions.assertThatThrownBy { searchGoogle("test", "", "apiKey") }
+            assertThat(messages).`as`("aapl results not empty").isNotEmpty
+            assertThat(messages[0].msg).`as`("found apple").containsIgnoringCase("apple")
+            assertThatThrownBy { searchGoogle("test", "", "apiKey") }
                 .`as`("no API key")
                 .isInstanceOf(ModuleException::class.java).hasNoCause()
-            Assertions.assertThatThrownBy { searchGoogle("test", "apiKey", "") }
+            assertThatThrownBy { searchGoogle("test", "apiKey", "") }
                 .`as`("no CSE API key")
                 .isInstanceOf(ModuleException::class.java).hasNoCause()
-            Assertions.assertThatThrownBy { searchGoogle("", "apikey", "apiKey") }
+            assertThatThrownBy { searchGoogle("", "apikey", "apiKey") }
                 .`as`("no query").isInstanceOf(ModuleException::class.java).hasNoCause()
         } catch (e: ModuleException) {
             // Avoid displaying api keys in CI logs

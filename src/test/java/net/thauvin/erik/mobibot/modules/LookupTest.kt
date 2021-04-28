@@ -33,7 +33,7 @@ package net.thauvin.erik.mobibot.modules
 
 import net.thauvin.erik.mobibot.modules.Lookup.Companion.lookup
 import net.thauvin.erik.mobibot.modules.Lookup.Companion.whois
-import org.assertj.core.api.Assertions
+import org.assertj.core.api.Assertions.assertThat
 import org.testng.annotations.Test
 
 /**
@@ -44,14 +44,14 @@ class LookupTest {
     @Throws(Exception::class)
     fun testLookup() {
         val result = lookup("apple.com")
-    Assertions.assertThat(result).`as`("lookup(apple.com)").contains("17.253.144.10")
+        assertThat(result).`as`("lookup(apple.com)").contains("17.253.144.10")
     }
 
     @Test
     @Throws(Exception::class)
     fun testWhois() {
         val result = whois("17.178.96.59", Lookup.WHOIS_HOST)
-        Assertions.assertThat(result.stream().anyMatch { m: String -> m.contains("Apple Inc.") })
+        assertThat(result.stream().anyMatch { m: String -> m.contains("Apple Inc.") })
             .`as`("whois(17.178.96.59/Apple Inc.").isTrue
     }
 }

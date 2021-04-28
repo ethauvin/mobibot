@@ -33,7 +33,8 @@ package net.thauvin.erik.mobibot.modules
 
 import net.thauvin.erik.mobibot.LocalProperties
 import net.thauvin.erik.mobibot.modules.StockQuote.Companion.getQuote
-import org.assertj.core.api.Assertions
+import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.testng.annotations.Test
 
 /**
@@ -46,20 +47,17 @@ class StockQuoteTest : LocalProperties() {
         val apiKey = getProperty(StockQuote.ALPHAVANTAGE_API_KEY_PROP)
         try {
             val messages = getQuote("apple inc", apiKey)
-            Assertions.assertThat(messages).`as`("response not empty").isNotEmpty
-            Assertions.assertThat(messages[0].msg).`as`("same stock symbol")
-                .startsWith("Symbol: AAPL")
-            Assertions.assertThat(messages[1].msg).`as`("price label")
-                .startsWith("    Price:     ")
+            assertThat(messages).`as`("response not empty").isNotEmpty
+            assertThat(messages[0].msg).`as`("same stock symbol").startsWith("Symbol: AAPL")
+            assertThat(messages[1].msg).`as`("price label").startsWith("    Price:     ")
             try {
                 getQuote("blahfoo", apiKey)
             } catch (e: ModuleException) {
-                Assertions.assertThat(e.message).`as`("invalid symbol")
-                    .containsIgnoringCase(StockQuote.INVALID_SYMBOL)
+                assertThat(e.message).`as`("invalid symbol").containsIgnoringCase(StockQuote.INVALID_SYMBOL)
             }
-            Assertions.assertThatThrownBy { getQuote("test", "") }.`as`("no API key")
+            assertThatThrownBy { getQuote("test", "") }.`as`("no API key")
                 .isInstanceOf(ModuleException::class.java).hasNoCause()
-            Assertions.assertThatThrownBy { getQuote("", "apikey") }.`as`("no symbol")
+            assertThatThrownBy { getQuote("", "apikey") }.`as`("no symbol")
                 .isInstanceOf(ModuleException::class.java).hasNoCause()
         } catch (e: ModuleException) {
             // Avoid displaying api keys in CI logs

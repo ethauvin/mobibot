@@ -33,7 +33,7 @@ package net.thauvin.erik.mobibot.modules
 
 import net.thauvin.erik.mobibot.LocalProperties
 import net.thauvin.erik.mobibot.modules.Twitter.Companion.twitterPost
-import org.assertj.core.api.Assertions
+import org.assertj.core.api.Assertions.assertThat
 import org.testng.annotations.Test
 import java.net.InetAddress
 import java.net.UnknownHostException
@@ -56,7 +56,7 @@ class TwitterTest : LocalProperties() {
     @Throws(ModuleException::class)
     fun testPostTwitter() {
         val msg = "Testing Twitter API from $ci"
-        Assertions.assertThat(
+        assertThat(
             twitterPost(
                 getProperty(Twitter.CONSUMER_KEY_PROP),
                 getProperty(Twitter.CONSUMER_SECRET_PROP),

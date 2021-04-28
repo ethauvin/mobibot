@@ -33,7 +33,7 @@ package net.thauvin.erik.mobibot.modules
 
 import net.thauvin.erik.mobibot.Utils
 import net.thauvin.erik.mobibot.modules.Calc.Companion.calc
-import org.assertj.core.api.Assertions
+import org.assertj.core.api.Assertions.assertThat
 import org.testng.annotations.Test
 
 /**
@@ -42,13 +42,9 @@ import org.testng.annotations.Test
 class CalcTest {
     @Test
     fun testCalc() {
-        Assertions.assertThat(calc("1 + 1")).`as`("calc(1+1)")
-            .isEqualTo("1+1 = %s", Utils.bold(2))
-        Assertions.assertThat(calc("1 -3")).`as`("calc(1 -3)")
-            .isEqualTo("1-3 = %s", Utils.bold(-2))
-        Assertions.assertThat(calc("pi+π+e+φ")).`as`("calc(pi+π+e+φ)")
-            .isEqualTo("pi+π+e+φ = %s", Utils.bold("10.62"))
-        Assertions.assertThat(calc("one + one")).`as`("calc(one + one)")
-            .startsWith("No idea.")
+        assertThat(calc("1 + 1")).`as`("calc(1+1)").isEqualTo("1+1 = %s", Utils.bold(2))
+        assertThat(calc("1 -3")).`as`("calc(1 -3)").isEqualTo("1-3 = %s", Utils.bold(-2))
+        assertThat(calc("pi+π+e+φ")).`as`("calc(pi+π+e+φ)").isEqualTo("pi+π+e+φ = %s", Utils.bold("10.62"))
+        assertThat(calc("one + one")).`as`("calc(one + one)").startsWith("No idea.")
     }
 }

@@ -34,7 +34,8 @@ package net.thauvin.erik.mobibot.modules
 import net.aksingh.owmjapis.api.APIException
 import net.thauvin.erik.mobibot.LocalProperties
 import net.thauvin.erik.mobibot.modules.Weather2.Companion.getWeather
-import org.assertj.core.api.Assertions
+import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.testng.annotations.Test
 
 /**
@@ -45,16 +46,16 @@ class Weather2Test : LocalProperties() {
     @Throws(ModuleException::class)
     fun testWeather() {
         var messages = getWeather("98204", getProperty(Weather2.OWM_API_KEY_PROP))
-        Assertions.assertThat(messages[0].msg).`as`("is Everett").contains("Everett").contains("US")
-        Assertions.assertThat(messages[messages.size - 1].msg).`as`("is City Search").endsWith("98204%2CUS")
+        assertThat(messages[0].msg).`as`("is Everett").contains("Everett").contains("US")
+        assertThat(messages[messages.size - 1].msg).`as`("is City Search").endsWith("98204%2CUS")
         messages = getWeather("London, UK", getProperty(Weather2.OWM_API_KEY_PROP))
-        Assertions.assertThat(messages[0].msg).`as`("is UK").contains("London").contains("UK")
-        Assertions.assertThat(messages[messages.size - 1].msg).`as`("is City Code").endsWith("4517009")
-        Assertions.assertThatThrownBy { getWeather("Montpellier, FR", getProperty(Weather2.OWM_API_KEY_PROP)) }
+        assertThat(messages[0].msg).`as`("is UK").contains("London").contains("UK")
+        assertThat(messages[messages.size - 1].msg).`as`("is City Code").endsWith("4517009")
+        assertThatThrownBy { getWeather("Montpellier, FR", getProperty(Weather2.OWM_API_KEY_PROP)) }
             .`as`("Montpellier not found").hasCauseInstanceOf(APIException::class.java)
-        Assertions.assertThatThrownBy { getWeather("test", "") }
+        assertThatThrownBy { getWeather("test", "") }
             .`as`("no API key").isInstanceOf(ModuleException::class.java).hasNoCause()
         messages = getWeather("", "apikey")
-        Assertions.assertThat(messages[0].isError).`as`("no query").isTrue
+        assertThat(messages[0].isError).`as`("no query").isTrue
     }
 }

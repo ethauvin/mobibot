@@ -32,7 +32,7 @@
 package net.thauvin.erik.mobibot.modules
 
 import net.thauvin.erik.mobibot.modules.Joke.Companion.randomJoke
-import org.assertj.core.api.Assertions
+import org.assertj.core.api.Assertions.assertThat
 import org.testng.annotations.Test
 
 /**
@@ -42,7 +42,7 @@ class JokeTest {
     @Test
     @Throws(ModuleException::class)
     fun testRamdomJoke() {
-        Assertions.assertThat(randomJoke().msg.isNotEmpty()).`as`("randomJoke() > 0").isTrue
-        Assertions.assertThat(randomJoke().msg).`as`("randomJoke()").containsIgnoringCase("chuck")
+        assertThat(randomJoke().msg.isNotEmpty()).`as`("randomJoke() > 0").isTrue
+        assertThat(randomJoke().msg).`as`("randomJoke()").containsIgnoringCase("chuck")
     }
 }

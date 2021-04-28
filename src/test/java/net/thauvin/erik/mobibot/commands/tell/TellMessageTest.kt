@@ -31,7 +31,7 @@
  */
 package net.thauvin.erik.mobibot.commands.tell
 
-import org.assertj.core.api.Assertions
+import org.assertj.core.api.Assertions.assertThat
 import org.testng.annotations.Test
 import java.time.Duration
 import java.time.LocalDateTime
@@ -51,17 +51,17 @@ class TellMessageTest {
         val recipient = "recipient"
         val sender = "sender"
         val tellMessage = TellMessage(sender, recipient, message)
-        Assertions.assertThat(tellMessage.sender).`as`(sender).isEqualTo(sender)
-        Assertions.assertThat(tellMessage.recipient).`as`(recipient).isEqualTo(recipient)
-        Assertions.assertThat(tellMessage.message).`as`(message).isEqualTo(message)
-        Assertions.assertThat(isValidDate(tellMessage.queued)).`as`("queued is valid date/time").isTrue
-        Assertions.assertThat(tellMessage.isMatch(sender)).`as`("match sender").isTrue
-        Assertions.assertThat(tellMessage.isMatch(recipient)).`as`("match recipient").isTrue
-        Assertions.assertThat(tellMessage.isMatch("foo")).`as`("foo is no match").isFalse
+        assertThat(tellMessage.sender).`as`(sender).isEqualTo(sender)
+        assertThat(tellMessage.recipient).`as`(recipient).isEqualTo(recipient)
+        assertThat(tellMessage.message).`as`(message).isEqualTo(message)
+        assertThat(isValidDate(tellMessage.queued)).`as`("queued is valid date/time").isTrue
+        assertThat(tellMessage.isMatch(sender)).`as`("match sender").isTrue
+        assertThat(tellMessage.isMatch(recipient)).`as`("match recipient").isTrue
+        assertThat(tellMessage.isMatch("foo")).`as`("foo is no match").isFalse
         tellMessage.isReceived = true
-        Assertions.assertThat(tellMessage.isReceived).`as`("is received").isTrue
-        Assertions.assertThat(isValidDate(tellMessage.receptionDate)).`as`("received is valid date/time").isTrue
+        assertThat(tellMessage.isReceived).`as`("is received").isTrue
+        assertThat(isValidDate(tellMessage.receptionDate)).`as`("received is valid date/time").isTrue
         tellMessage.isNotified = true
-        Assertions.assertThat(tellMessage.isNotified).`as`("is notified").isTrue
+        assertThat(tellMessage.isNotified).`as`("is notified").isTrue
     }
 }

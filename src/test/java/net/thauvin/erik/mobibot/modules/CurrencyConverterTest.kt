@@ -34,7 +34,7 @@ package net.thauvin.erik.mobibot.modules
 import net.thauvin.erik.mobibot.modules.CurrencyConverter.Companion.convertCurrency
 import net.thauvin.erik.mobibot.modules.CurrencyConverter.Companion.currencyRates
 import net.thauvin.erik.mobibot.modules.CurrencyConverter.Companion.loadRates
-import org.assertj.core.api.Assertions
+import org.assertj.core.api.Assertions.assertThat
 import org.testng.annotations.BeforeClass
 import org.testng.annotations.Test
 
@@ -50,15 +50,11 @@ class CurrencyConverterTest {
 
     @Test
     fun testConvertCurrency() {
-        Assertions.assertThat(convertCurrency("100 USD to EUR").msg)
+        assertThat(convertCurrency("100 USD to EUR").msg)
             .`as`("100 USD to EUR").matches("100\\.00 USD = \\d{2,3}\\.\\d{2} EUR")
-        Assertions.assertThat(convertCurrency("100 USD to USD").msg)
-            .`as`("100 USD to USD").contains("You're kidding, right?")
-        Assertions.assertThat(convertCurrency("100 USD").msg)
-            .`as`("100 USD").contains("Invalid query.")
-        Assertions.assertThat(currencyRates().size)
-            .`as`("currencyRates().size() == 33").isEqualTo(33)
-        Assertions.assertThat(currencyRates())
-            .`as`("currencyRates().get(EUR)").contains("  EUR:        1")
+        assertThat(convertCurrency("100 USD to USD").msg).`as`("100 USD to USD").contains("You're kidding, right?")
+        assertThat(convertCurrency("100 USD").msg).`as`("100 USD").contains("Invalid query.")
+        assertThat(currencyRates().size).`as`("currencyRates().size() == 33").isEqualTo(33)
+        assertThat(currencyRates()).`as`("currencyRates().get(EUR)").contains("  EUR:        1")
     }
 }
