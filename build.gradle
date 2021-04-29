@@ -21,7 +21,6 @@ final def deployDir = 'deploy'
 final def semverProcessor = "net.thauvin.erik:semver:1.2.0"
 
 ext.versions = [
-    jacoco  : '0.8.6',
     log4j   : '2.14.1',
     pmd     : '6.34.0',
     spotbugs: '4.2.3'
@@ -31,6 +30,7 @@ repositories {
     mavenLocal()
     mavenCentral()
     jcenter()
+    maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
 }
 
 dependencies {
@@ -170,10 +170,11 @@ sonarqube {
 }
 
 jacoco {
-    toolVersion = versions.jacoco
+    toolVersion = '0.8.7-SNAPSHOT'
 }
 
 jacocoTestReport {
+    dependsOn test
     reports {
         html.enabled = true
         xml.enabled = true
