@@ -98,11 +98,9 @@ class Addons {
             }
         }
         for (module in modules) {
-            if ((isPrivate && module.isPrivateMsgEnabled) || !isPrivate) {
-                if (module.commands.contains(cmd)) {
+            if (((isPrivate && module.isPrivateMsgEnabled) || !isPrivate) && module.commands.contains(cmd)) {
                     module.commandResponse(sender, cmd, args, isPrivate)
                     return true
-                }
             }
         }
         return false
