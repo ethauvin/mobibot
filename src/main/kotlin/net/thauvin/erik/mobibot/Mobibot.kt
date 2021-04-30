@@ -106,7 +106,7 @@ import kotlin.system.exitProcess
 /**
  * Implements the #mobitopia bot.
  */
-@Version(properties = "version.properties", className = "ReleaseInfo", template = "ReleaseInfo.mustache", type = "kt")
+@Version(properties = "version.properties", className = "ReleaseInfo", template = "version.mustache", type = "kt")
 class Mobibot(nickname: String, channel: String, logsDirPath: String, p: Properties) : PircBot() {
     // Commands and Modules
     private val addons = Addons()
