@@ -127,7 +127,6 @@ pmd {
 
 detekt {
     toolVersion = "main-SNAPSHOT"
-    ignoreFailures = true // Baseline is incomplete and fails on various CIs, not sure why.
     baseline = file("${projectDir}/config/detekt/baseline.xml")
 }
 
