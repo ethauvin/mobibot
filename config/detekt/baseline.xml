@@ -80,6 +80,9 @@
     <ID>ReturnCount:Addons.kt$Addons$ fun exec(sender: String, login: String, cmd: String, args: String, isOp: Boolean, isPrivate: Boolean): Boolean</ID>
     <ID>ReturnCount:Addons.kt$Addons$ fun help(sender: String, topic: String, isOp: Boolean, isPrivate: Boolean): Boolean</ID>
     <ID>SwallowedException:Calc.kt$Calc.Companion$catch (e: IllegalArgumentException) { "No idea. This is the kind of math I don't get." }</ID>
+    <ID>SwallowedException:GoogleSearchTest.kt$GoogleSearchTest$catch (e: ModuleException) { // Avoid displaying api keys in CI logs if ("true" == System.getenv("CI") &amp;&amp; apiKey.isNotBlank() &amp;&amp; cseKey.isNotBlank()) { throw ModuleException(e.debugMessage, e.getSanitizedMessage(apiKey, cseKey)) } else { throw e } }</ID>
+    <ID>SwallowedException:StockQuoteTest.kt$StockQuoteTest$catch (e: ModuleException) { // Avoid displaying api keys in CI logs if ("true" == System.getenv("CI") &amp;&amp; apiKey.isNotBlank()) { throw ModuleException(e.debugMessage, e.getSanitizedMessage(apiKey)) } else { throw e } }</ID>
+    <ID>SwallowedException:TwitterTest.kt$TwitterTest$catch (e: UnknownHostException) { "Unknown Host" }</ID>
     <ID>ThrowsCount:GoogleSearch.kt$GoogleSearch.Companion$ @JvmStatic @Throws(ModuleException::class) fun searchGoogle(query: String, apiKey: String?, cseKey: String?): List&lt;Message&gt;</ID>
     <ID>ThrowsCount:StockQuote.kt$StockQuote.Companion$ @JvmStatic @Throws(ModuleException::class) fun getQuote(symbol: String, apiKey: String?): List&lt;Message&gt;</ID>
     <ID>ThrowsCount:StockQuote.kt$StockQuote.Companion$@Throws(ModuleException::class) private fun getJsonResponse(response: String, debugMessage: String): JSONObject</ID>
