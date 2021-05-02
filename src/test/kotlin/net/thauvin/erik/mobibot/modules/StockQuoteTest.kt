@@ -62,7 +62,7 @@ class StockQuoteTest : LocalProperties() {
         } catch (e: ModuleException) {
             // Avoid displaying api keys in CI logs
             if ("true" == System.getenv("CI") && apiKey.isNotBlank()) {
-                throw ModuleException(e.debugMessage, e.getSanitizedMessage(apiKey))
+                throw ModuleException(e.debugMessage, e.getSanitizedMessage(apiKey), e)
             } else {
                 throw e
             }

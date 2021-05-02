@@ -31,7 +31,7 @@
  */
 package net.thauvin.erik.mobibot.modules
 
-import net.thauvin.erik.mobibot.modules.Lookup.Companion.lookup
+import net.thauvin.erik.mobibot.modules.Lookup.Companion.nslookup
 import net.thauvin.erik.mobibot.modules.Lookup.Companion.whois
 import org.assertj.core.api.Assertions.assertThat
 import org.testng.annotations.Test
@@ -43,7 +43,7 @@ class LookupTest {
     @Test
     @Throws(Exception::class)
     fun testLookup() {
-        val result = lookup("apple.com")
+        val result = nslookup("apple.com")
         assertThat(result).`as`("lookup(apple.com)").contains("17.253.144.10")
     }
 

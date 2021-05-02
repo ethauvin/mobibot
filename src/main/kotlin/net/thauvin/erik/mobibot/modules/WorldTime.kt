@@ -68,10 +68,10 @@ class WorldTime(bot: Mobibot) : AbstractModule(bot) {
         }
 
         /**
-         * Returns the world time.
+         * Returns the time for the given timezone/city.
          */
         @JvmStatic
-        fun worldTime(query: String): Message {
+        fun time(query: String): Message {
             val tz = COUNTRIES_MAP[(query.substring(query.indexOf(' ') + 1).trim()).uppercase()]
             val response: String = if (tz != null) {
                 if (BEATS_KEYWORD == tz) {
@@ -193,7 +193,7 @@ class WorldTime(bot: Mobibot) : AbstractModule(bot) {
                 send(sender, "The supported countries/zones are: ", isPrivate)
                 sendList(sender, ArrayList(COUNTRIES_MAP.keys), 17, isPrivate = false)
             } else {
-                val msg = worldTime(args)
+                val msg = time(args)
                 if (isPrivate) {
                     send(sender, msg.msg, true)
                 } else {

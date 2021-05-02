@@ -32,6 +32,7 @@
 package net.thauvin.erik.mobibot.modules
 
 import net.objecthunter.exp4j.ExpressionBuilder
+import net.objecthunter.exp4j.tokenizer.UnknownFunctionOrVariableException
 import net.thauvin.erik.mobibot.Mobibot
 import net.thauvin.erik.mobibot.Utils
 import java.text.DecimalFormat
@@ -47,7 +48,15 @@ class Calc(bot: Mobibot) : AbstractModule(bot) {
         isPrivate: Boolean
     ) {
         if (args.isNotBlank()) {
-            bot.send(calc(args))
+            try {
+                bot.send(calculate(args))
+            } catch (e: IllegalArgumentException) {
+                if (bot.logger.isWarnEnabled) bot.logger.warn("Failed to calcualte: $args", e)
+                bot.send("No idea. This is the kind of math I don't get.")
+            } catch (e: UnknownFunctionOrVariableException) {
+                if (bot.logger.isWarnEnabled) bot.logger.warn("Unable to calcualte: $args", e)
+                bot.send("No idea. I must've some form of Dyscalculia.")
+            }
         } else {
             helpResponse(sender, isPrivate)
         }
@@ -61,14 +70,11 @@ class Calc(bot: Mobibot) : AbstractModule(bot) {
          * Performs a calculation. e.g.: 1 + 1 * 2
          */
         @JvmStatic
-        fun calc(query: String): String {
+        @Throws(IllegalArgumentException::class)
+        fun calculate(query: String): String {
             val decimalFormat = DecimalFormat("#.##")
-            return try {
-                val calc = ExpressionBuilder(query).build()
-                query.replace(" ", "") + " = " + Utils.bold(decimalFormat.format(calc.evaluate()))
-            } catch (e: IllegalArgumentException) {
-                "No idea. This is the kind of math I don't get."
-            }
+            val calc = ExpressionBuilder(query).build()
+            return query.replace(" ", "") + " = " + Utils.bold(decimalFormat.format(calc.evaluate()))
         }
     }
 

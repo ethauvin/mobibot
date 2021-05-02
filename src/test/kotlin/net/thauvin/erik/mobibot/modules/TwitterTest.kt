@@ -47,7 +47,7 @@ class TwitterTest : LocalProperties() {
             val ciName = System.getenv("CI_NAME")
             return ciName ?: try {
                 InetAddress.getLocalHost().hostName
-            } catch (e: UnknownHostException) {
+            } catch (ignore: UnknownHostException) {
                 "Unknown Host"
             }
         }

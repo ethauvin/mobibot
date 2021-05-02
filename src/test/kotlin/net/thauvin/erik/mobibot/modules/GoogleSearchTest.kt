@@ -64,7 +64,7 @@ class GoogleSearchTest : LocalProperties() {
         } catch (e: ModuleException) {
             // Avoid displaying api keys in CI logs
             if ("true" == System.getenv("CI") && apiKey.isNotBlank() && cseKey.isNotBlank()) {
-                throw ModuleException(e.debugMessage, e.getSanitizedMessage(apiKey, cseKey))
+                throw ModuleException(e.debugMessage, e.getSanitizedMessage(apiKey, cseKey), e)
             } else {
                 throw e
             }

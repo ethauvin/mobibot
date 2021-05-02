@@ -202,6 +202,9 @@ class Mobibot(nickname: String, channel: String, logsDirPath: String, p: Propert
         try {
             connect(ircServer, ircPort)
         } catch (e: Exception) {
+            if (logger.isDebugEnabled) {
+                logger.debug("Unable to connect to $ircServer, will try again.", e)
+            }
             var retries = 0
             while (retries++ < MAX_RECONNECT && !isConnected) {
                 sleep(10)
@@ -212,7 +215,7 @@ class Mobibot(nickname: String, channel: String, logsDirPath: String, p: Propert
                         if (logger.isDebugEnabled) {
                             logger.debug("Unable to reconnect to $ircServer, after $MAX_RECONNECT retries.", ex)
                         }
-                        e.printStackTrace(System.err)
+                        System.err.println("An error has occurred while reconnecting; ${ex.message}")
                         exitProcess(1)
                     }
                 }
@@ -528,7 +531,6 @@ class Mobibot(nickname: String, channel: String, logsDirPath: String, p: Propert
                 commandLine = parser.parse(options, args)
             } catch (e: ParseException) {
                 System.err.println("CLI Parsing failed. Reason: ${e.message}")
-                e.printStackTrace(System.err)
                 exitProcess(1)
             }
             when {
@@ -550,13 +552,11 @@ class Mobibot(nickname: String, channel: String, logsDirPath: String, p: Propert
                         ).use { fis ->
                             p.load(fis)
                         }
-                    } catch (e: FileNotFoundException) {
+                    } catch (ignore: FileNotFoundException) {
                         System.err.println("Unable to find properties file.")
-                        e.printStackTrace(System.err)
                         exitProcess(1)
-                    } catch (e: IOException) {
+                    } catch (ignore: IOException) {
                         System.err.println("Unable to open properties file.")
-                        e.printStackTrace(System.err)
                         exitProcess(1)
                     }
                     val nickname = p.getProperty("nick", Mobibot::class.java.name.lowercase())
@@ -574,9 +574,8 @@ class Mobibot(nickname: String, channel: String, logsDirPath: String, p: Propert
                                 ), true
                             )
                             System.setOut(stdout)
-                        } catch (e: IOException) {
+                        } catch (ignore: IOException) {
                             System.err.println("Unable to open output (stdout) log file.")
-                            e.printStackTrace(System.err)
                             exitProcess(1)
                         }
                         try {
@@ -586,9 +585,8 @@ class Mobibot(nickname: String, channel: String, logsDirPath: String, p: Propert
                                 ), true
                             )
                             System.setErr(stderr)
-                        } catch (e: IOException) {
+                        } catch (ignore: IOException) {
                             System.err.println("Unable to open error (stderr) log file.")
-                            e.printStackTrace(System.err)
                             exitProcess(1)
                         }
                     }

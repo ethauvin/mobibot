@@ -52,7 +52,7 @@ class Lookup(bot: Mobibot) : AbstractModule(bot) {
         if (args.matches("(\\S.)+(\\S)+".toRegex())) {
             with(bot) {
                 try {
-                    lookup(args).split(',').forEach {
+                    nslookup(args).split(',').forEach {
                         send(it.trim())
                     }
                 } catch (ignore: UnknownHostException) {
@@ -105,7 +105,7 @@ class Lookup(bot: Mobibot) : AbstractModule(bot) {
          */
         @JvmStatic
         @Throws(UnknownHostException::class)
-        fun lookup(query: String): String {
+        fun nslookup(query: String): String {
             val buffer = StringBuilder()
             val results = InetAddress.getAllByName(query)
             var hostInfo: String
