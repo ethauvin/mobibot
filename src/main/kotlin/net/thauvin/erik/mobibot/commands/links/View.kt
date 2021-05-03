@@ -40,6 +40,7 @@ import net.thauvin.erik.mobibot.entries.EntriesUtils
 import net.thauvin.erik.mobibot.entries.EntryLink
 
 class View(bot: Mobibot) : AbstractCommand(bot) {
+    @Suppress("MagicNumber")
     private val maxEntries = 8
     override val name = VIEW_CMD
     override val help = listOf(

@@ -36,6 +36,7 @@ import net.thauvin.erik.mobibot.Mobibot
 import net.thauvin.erik.mobibot.Utils
 
 class Cycle(bot: Mobibot) : AbstractCommand(bot) {
+    @Suppress("MagicNumber")
     private val wait = 10
     override val name = "cycle"
     override val help = listOf("To have the bot leave the channel and come back:", Utils.helpFormat("%c $name"))

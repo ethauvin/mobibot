@@ -97,8 +97,9 @@ class Addons {
                 return true
             }
         }
-        for (module in modules) {
-            if (((isPrivate && module.isPrivateMsgEnabled) || !isPrivate) && module.commands.contains(cmd)) {
+        val mods = if (isPrivate) modules.filter { it.isPrivateMsgEnabled } else modules
+        for (module in mods) {
+            if (module.commands.contains(cmd)) {
                     module.commandResponse(sender, cmd, args, isPrivate)
                     return true
             }

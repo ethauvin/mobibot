@@ -145,6 +145,7 @@ class Twitter(bot: Mobibot) : ThreadedModule(bot) {
             if (bot.logger.isDebugEnabled) {
                 bot.logger.debug("Scheduling {} for posting on Twitter.", EntriesUtils.buildLinkCmd(index))
             }
+            @Suppress("MagicNumber")
             bot.timer.schedule(TwitterTimer(bot, index), Constants.TIMER_DELAY * 60L * 1000L)
         }
     }

@@ -86,6 +86,7 @@ class CurrencyConverter(bot: Mobibot) : ThreadedModule(bot) {
                 }
             } else if (args.contains(CURRENCY_RATES_KEYWORD)) {
                 send(sender, "The currency rates for ${Utils.bold(pubDate)} are:", isPrivate)
+                @Suppress("MagicNumber")
                 sendList(sender, currencyRates(), 3, isPrivate, isIndent = true)
             } else {
                 helpResponse(sender, isPrivate)
@@ -122,6 +123,7 @@ class CurrencyConverter(bot: Mobibot) : ThreadedModule(bot) {
                     isPrivate
                 )
                 send(sender, "The supported currencies are: ", isPrivate)
+                @Suppress("MagicNumber")
                 sendList(sender, ArrayList(EXCHANGE_RATES.keys), 11, isPrivate, isIndent = true)
             }
         }
@@ -150,6 +152,7 @@ class CurrencyConverter(bot: Mobibot) : ThreadedModule(bot) {
         /**
          * Converts from a currency to another.
          */
+        @Suppress("MagicNumber")
         @JvmStatic
         fun convertCurrency(query: String): Message {
             val cmds = query.split(" ")
@@ -185,6 +188,7 @@ class CurrencyConverter(bot: Mobibot) : ThreadedModule(bot) {
         fun currencyRates(): List<String> {
             val rates = mutableListOf<String>()
             for ((key, value) in EXCHANGE_RATES) {
+                @Suppress("MagicNumber")
                 rates.add("  $key: ${StringUtils.leftPad(value, 8)}")
             }
             return rates

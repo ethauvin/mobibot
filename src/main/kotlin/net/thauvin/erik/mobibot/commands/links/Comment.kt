@@ -65,6 +65,7 @@ class Comment(bot: Mobibot) : AbstractCommand(bot) {
         isOp: Boolean,
         isPrivate: Boolean
     ) {
+        @Suppress("MagicNumber")
         val cmds = args.substring(1).split("[.:]".toRegex(), 3)
         val index = cmds[0].toInt() - 1
 

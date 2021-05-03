@@ -140,6 +140,7 @@ class Ignore(bot: Mobibot) : AbstractCommand(bot) {
 
         if (ignored.size > 0) {
             bot.send(sender, "The following nicks are ignored:", isPrivate)
+            @Suppress("MagicNumber")
             bot.sendList(sender, ignored.sorted(), 8, isPrivate, isIndent = true)
         } else {
             bot.send(sender, "No one is currently ${Utils.bold("ignored")}.", isPrivate)

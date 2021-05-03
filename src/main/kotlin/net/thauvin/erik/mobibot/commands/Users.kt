@@ -62,6 +62,7 @@ class Users(bot: Mobibot) : AbstractCommand(bot) {
             }
         }
 
+        @Suppress("MagicNumber")
         bot.sendList(sender, nicks.sorted(), 8, isPrivate, isIndent = true)
     }
 }

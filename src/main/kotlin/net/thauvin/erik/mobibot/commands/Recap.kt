@@ -60,6 +60,7 @@ class Recap(bot: Mobibot) : AbstractCommand(bot) {
                 Utils.utcDateTime(LocalDateTime.now(Clock.systemUTC()))
                     + " - $sender" + (if (isAction) " " else ": ") + message
             )
+            @Suppress("MagicNumber")
             if (recaps.size > 10) {
                 recaps.removeAt(0)
             }

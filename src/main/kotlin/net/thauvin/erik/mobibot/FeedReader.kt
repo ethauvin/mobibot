@@ -48,6 +48,7 @@ class FeedReader(
     private val url: String
 ) : Runnable {
     // Maximum number of feed items to display
+    @Suppress("MagicNumber")
     private val maxItems = 5
 
     /**

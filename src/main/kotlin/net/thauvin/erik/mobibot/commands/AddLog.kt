@@ -63,6 +63,7 @@ class AddLog(bot: Mobibot) : AbstractCommand(bot) {
                     return
                 }
             }
+            @Suppress("MagicNumber")
             bot.sendList(sender, history, 4, isPrivate, isIndent = true)
         }
     }

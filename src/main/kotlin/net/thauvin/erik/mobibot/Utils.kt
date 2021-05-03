@@ -51,6 +51,7 @@ import java.util.stream.Collectors
 /**
  * Miscellaneous utilities.
  */
+@Suppress("TooManyFunctions")
 object Utils {
     private val searchFlags = arrayOf("%c", "%n")
 
@@ -234,6 +235,7 @@ object Utils {
     /**
      * Converts milliseconds to year month week day hour and minutes.
      */
+    @Suppress("MagicNumber")
     @JvmStatic
     fun uptime(uptime: Long): String {
         val info = StringBuilder()

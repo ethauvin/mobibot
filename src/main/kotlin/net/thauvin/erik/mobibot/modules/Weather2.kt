@@ -89,6 +89,7 @@ class Weather2(bot: Mobibot) : ThreadedModule(bot) {
         }
 
         private fun getTemps(d: Double?): String {
+            @Suppress("MagicNumber")
             val c = (d!! - 32) * 5 / 9
             return "${d.roundToInt()} °F, ${c.roundToInt()} °C"
         }
@@ -186,6 +187,7 @@ class Weather2(bot: Mobibot) : ThreadedModule(bot) {
         }
 
         private fun wind(w: Double): String {
+            @Suppress("MagicNumber")
             val kmh = w * 1.60934
             return "${w.roundToInt()} mph, ${kmh.roundToInt()} km/h"
         }

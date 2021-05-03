@@ -207,6 +207,7 @@ class Mobibot(nickname: String, channel: String, logsDirPath: String, p: Propert
             }
             var retries = 0
             while (retries++ < MAX_RECONNECT && !isConnected) {
+                @Suppress("MagicNumber")
                 sleep(10)
                 try {
                     connect(ircServer, ircPort)
@@ -240,6 +241,7 @@ class Mobibot(nickname: String, channel: String, logsDirPath: String, p: Propert
     /**
      * Responds with the default help.
      */
+    @Suppress("MagicNumber")
     fun helpDefault(sender: String, isOp: Boolean, isPrivate: Boolean) {
         send(sender, "Type a URL on $channel to post it.", isPrivate)
         send(sender, "For more information on a specific command, type:", isPrivate)
@@ -305,6 +307,7 @@ class Mobibot(nickname: String, channel: String, logsDirPath: String, p: Propert
         if (weblogUrl.isNotBlank()) {
             version = weblogUrl
         }
+        @Suppress("MagicNumber")
         sleep(5)
         connect()
     }
@@ -361,6 +364,7 @@ class Mobibot(nickname: String, channel: String, logsDirPath: String, p: Propert
             timer.cancel()
             twitter.shutdown()
             twitter.notification("$name stopped by $sender on $channel")
+            @Suppress("MagicNumber")
             sleep(3)
             quitServer("The Bot Is Out There!")
             exitProcess(0)
@@ -467,6 +471,7 @@ class Mobibot(nickname: String, channel: String, logsDirPath: String, p: Propert
      */
     fun sleep(secs: Int) {
         try {
+            @Suppress("MagicNumber")
             Thread.sleep(secs * 1000L)
         } catch (ignore: InterruptedException) {
             // Do nothing

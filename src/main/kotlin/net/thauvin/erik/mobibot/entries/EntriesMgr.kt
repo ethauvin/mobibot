@@ -71,6 +71,53 @@ object EntriesMgr {
     // Maximum number of backlogs to keep
     private const val maxBacklogs = 10
 
+    // Daily backup
+    private fun dailyBackup(
+        bot: Mobibot,
+        history: MutableList<String>
+    ) {
+        if (bot.backlogsUrl.isNotBlank()) {
+            if (!history.contains(bot.today)) {
+                history.add(bot.today)
+                while (history.size > maxBacklogs) {
+                    history.removeAt(0)
+                }
+            }
+            OutputStreamWriter(
+                Files.newOutputStream(Paths.get(bot.logsDir + NAV_XML)), StandardCharsets.UTF_8
+            ).use { fw ->
+                val output = SyndFeedOutput()
+                val rss: SyndFeed = SyndFeedImpl()
+                val items: MutableList<SyndEntry> = mutableListOf()
+                var item: SyndEntry
+                with(rss) {
+                    feedType = "rss_2.0"
+                    title = "${bot.channel} IRC Links Backlogs"
+                    description = "Backlogs of Links from ${bot.ircServer} on ${bot.channel}"
+                    link = bot.backlogsUrl
+                    publishedDate = Calendar.getInstance().time
+                }
+                var date: String
+                items.clear()
+                for (i in history.size - 1 downTo 0) {
+                    date = history[i]
+                    item = SyndEntryImpl()
+                    with(item) {
+                        link = bot.backlogsUrl + date + ".xml"
+                        title = date
+                        description = SyndContentImpl().apply { value = "Links for $date" }
+                    }
+                    items.add(item)
+                }
+                rss.entries = items
+                if (bot.logger.isDebugEnabled) bot.logger.debug("Writing the backlog feed.")
+                output.output(rss, fw)
+            }
+        } else {
+            bot.logger.warn("Unable to generate the backlogs feed. No property configured.")
+        }
+    }
+
     /**
      * Loads the backlogs.
      */
@@ -139,7 +186,7 @@ object EntriesMgr {
         if (bot.logsDir.isNotBlank() && bot.weblogUrl.isNotBlank()) {
             try {
                 val output = SyndFeedOutput()
-                var rss: SyndFeed = SyndFeedImpl()
+                val rss: SyndFeed = SyndFeedImpl()
                 val items: MutableList<SyndEntry> = mutableListOf()
                 var item: SyndEntry
                 OutputStreamWriter(
@@ -153,12 +200,12 @@ object EntriesMgr {
                         publishedDate = Calendar.getInstance().time
                         language = "en"
                     }
-                    var buff: StringBuilder
+                    val buff: StringBuilder = StringBuilder()
                     var comment: EntryComment
                     for (i in entries.size - 1 downTo 0) {
                         with(entries[i]) {
-                            buff = StringBuilder()
-                                .append("Posted by <b>")
+                            buff.setLength(0)
+                            buff.append("Posted by <b>")
                                 .append(nick)
                                 .append("</b> on <a href=\"irc://")
                                 .append(bot.ircServer).append('/')
@@ -199,43 +246,7 @@ object EntriesMgr {
                     ), StandardCharsets.UTF_8
                 ).use { fw -> output.output(rss, fw) }
                 if (isDayBackup) {
-                    if (bot.backlogsUrl.isNotBlank()) {
-                        if (!history.contains(bot.today)) {
-                            history.add(bot.today)
-                            while (history.size > maxBacklogs) {
-                                history.removeAt(0)
-                            }
-                        }
-                        OutputStreamWriter(
-                            Files.newOutputStream(Paths.get(bot.logsDir + NAV_XML)), StandardCharsets.UTF_8
-                        ).use { fw ->
-                            rss = SyndFeedImpl()
-                            with(rss) {
-                                feedType = "rss_2.0"
-                                title = "${bot.channel} IRC Links Backlogs"
-                                description = "Backlogs of Links from ${bot.ircServer} on ${bot.channel}"
-                                link = bot.backlogsUrl
-                                publishedDate = Calendar.getInstance().time
-                            }
-                            var date: String
-                            items.clear()
-                            for (i in history.size - 1 downTo 0) {
-                                date = history[i]
-                                item = SyndEntryImpl()
-                                with(item) {
-                                    link = bot.backlogsUrl + date + ".xml"
-                                    title = date
-                                    description = SyndContentImpl().apply { value = "Links for $date" }
-                                }
-                                items.add(item)
-                            }
-                            rss.entries = items
-                            if (bot.logger.isDebugEnabled) bot.logger.debug("Writing the backlog feed.")
-                            output.output(rss, fw)
-                        }
-                    } else {
-                        bot.logger.warn("Unable to generate the backlogs feed. No property configured.")
-                    }
+                    dailyBackup(bot, history)
                 }
             } catch (e: FeedException) {
                 if (bot.logger.isWarnEnabled) bot.logger.warn("Unable to generate the entries feed.", e)

@@ -60,6 +60,7 @@ class WorldTime(bot: Mobibot) : AbstractModule(bot) {
         /**
          * Returns the current Internet (beat) Time.
          */
+        @Suppress("MagicNumber")
         private fun internetTime(): String {
             val zdt = ZonedDateTime.now(ZoneId.of("UTC+01:00"))
             val beats = ((zdt[ChronoField.SECOND_OF_MINUTE] + zdt[ChronoField.MINUTE_OF_HOUR] * 60
@@ -171,6 +172,7 @@ class WorldTime(bot: Mobibot) : AbstractModule(bot) {
             countries["ZULU"] = "Zulu"
             countries["INTERNET"] = BEATS_KEYWORD
             countries["BEATS"] = BEATS_KEYWORD
+            @Suppress("MagicNumber")
             ZoneId.getAvailableZoneIds().stream()
                 .filter { tz: String ->
                     !tz.contains("/") && tz.length == 3 && !countries.containsKey(tz)
@@ -191,6 +193,7 @@ class WorldTime(bot: Mobibot) : AbstractModule(bot) {
         with(bot) {
             if (args.isEmpty()) {
                 send(sender, "The supported countries/zones are: ", isPrivate)
+                @Suppress("MagicNumber")
                 sendList(sender, ArrayList(COUNTRIES_MAP.keys), 17, isPrivate = false)
             } else {
                 val msg = time(args)

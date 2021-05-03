@@ -53,9 +53,11 @@ class Tell(bot: Mobibot) : AbstractCommand(bot) {
     private val serializedObject: String
 
     // Maximum number of days to keep messages
+    @Suppress("MagicNumber")
     private var maxDays = 7
 
     // Message maximum queue size
+    @Suppress("MagicNumber")
     private var maxSize = 50
 
     /**
@@ -227,8 +229,7 @@ class Tell(bot: Mobibot) : AbstractCommand(bot) {
                             save()
                         }
                     } else if (message.sender.equals(nickname, ignoreCase = true) && message.isReceived
-                        && !message.isNotified
-                    ) {
+                        && !message.isNotified) {
                         bot.send(
                             nickname,
                             "Your message ${reverseColor("[ID " + message.id + ']')} was sent to " +
