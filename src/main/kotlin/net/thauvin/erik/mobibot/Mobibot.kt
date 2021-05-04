@@ -64,6 +64,7 @@ import net.thauvin.erik.mobibot.commands.links.View
 import net.thauvin.erik.mobibot.commands.tell.Tell
 import net.thauvin.erik.mobibot.entries.EntriesMgr
 import net.thauvin.erik.mobibot.entries.EntryLink
+import net.thauvin.erik.mobibot.modules.Bitcoin
 import net.thauvin.erik.mobibot.modules.Calc
 import net.thauvin.erik.mobibot.modules.CurrencyConverter
 import net.thauvin.erik.mobibot.modules.Dice
@@ -677,6 +678,7 @@ class Mobibot(nickname: String, channel: String, logsDirPath: String, p: Propert
         addons.add(View(this), p)
 
         // Load the modules
+        addons.add(Bitcoin(this), p)
         addons.add(Calc(this), p)
         addons.add(CurrencyConverter(this), p)
         addons.add(Dice(this), p)
