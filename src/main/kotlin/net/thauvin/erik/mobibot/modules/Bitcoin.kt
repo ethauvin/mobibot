@@ -48,21 +48,38 @@ import java.net.URL
 class Bitcoin(bot: Mobibot) : ThreadedModule(bot) {
     // Currencies
     private val currencies = listOf(
-            "USD", "AUD", "BRL", "CAD", "CHF", "CLP", "CNY", "DKK", "EUR", "GBP", "HKD", "INR", "ISK", "JPY", "KRW", 
+            "USD", "AUD", "BRL", "CAD", "CHF", "CLP", "CNY", "DKK", "EUR", "GBP", "HKD", "INR", "ISK", "JPY", "KRW",
             "NZD", "PLN", "RUB", "SEK", "SGD", "THB", "TRY", "TWD");
+
+    override fun helpResponse(sender: String, isPrivate: Boolean): Boolean {
+        with(bot) {
+            send(sender, "To retrieve the bitcoin market price:", isPrivate)
+            send(
+                    sender,
+                    Utils.helpFormat(
+                            Utils.buildCmdSyntax(
+                                    "%c $BITCOIN_CMD <USD|GBP|EUR|...>",
+                                    nick,
+                                    isPrivateMsgEnabled)
+                    ),
+                    isPrivate
+            )
+            send(sender, "The supported currencies are: ", isPrivate)
+            @Suppress("MagicNumber")
+            sendList(sender, currencies, 12, isPrivate, isIndent = true)
+        }
+        return true
+    }
 
     /**
      * Returns the bitcoin market price from [Blockchain.info](https://blockchain.info/ticker).
      */
     override fun run(sender: String, cmd: String, args: String, isPrivate: Boolean) {
         with(bot) {
-            val arg  = args.trim().uppercase()
+            val arg = args.trim().uppercase()
             @Suppress("MagicNumber")
             if (!currencies.contains(arg)) {
                 helpResponse(sender, isPrivate)
-                send(sender, "The supported currencies are: ", isPrivate)
-                @Suppress("MagicNumber")
-                sendList(sender, currencies, 12, isPrivate, isIndent = true)
             } else {
                 try {
                     val messages = marketPrice(arg)
@@ -81,8 +98,14 @@ class Bitcoin(bot: Mobibot) : ThreadedModule(bot) {
         // Blockchain Ticker URL
         private const val TICKER_URL = "https://blockchain.info/ticker"
 
-        // Quote command
+        // Bitcoin command
         private const val BITCOIN_CMD = "bitcoin"
+
+        // BTC command
+        private const val BTC_CMD = "btc"
+
+        // XBT command
+        private const val XBT_CMD = "xbt"
 
         /**
          * Retrieves the bitcoin market price.
@@ -98,7 +121,7 @@ class Bitcoin(bot: Mobibot) : ThreadedModule(bot) {
                 val bpi = json.getJSONObject(currency.trim().uppercase())
                 val symbol = bpi.getString("symbol");
                 with(messages) {
-                    add(PublicMessage("BTC: $symbol" + bpi.getBigDecimal("last") + " [$currency]"))
+                    add(PublicMessage("BITCOIN: $symbol" + bpi.getBigDecimal("last") + " [$currency]"))
                     add(NoticeMessage("    15m:     $symbol" + bpi.getBigDecimal("15m")))
                     add(NoticeMessage("    Buy:     $symbol" + bpi.getBigDecimal("buy")))
                     add(NoticeMessage("    Sell:    $symbol" + bpi.getBigDecimal("sell")))
@@ -117,7 +140,7 @@ class Bitcoin(bot: Mobibot) : ThreadedModule(bot) {
 
     init {
         commands.add(BITCOIN_CMD)
-        help.add("To retrieve the bitcoin market price:")
-        help.add(Utils.helpFormat("%c $BITCOIN_CMD <USD|GBP|EUR|...>"))
+        commands.add(BTC_CMD)
+        commands.add(XBT_CMD)
     }
 }
