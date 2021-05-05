@@ -47,9 +47,9 @@ class GoogleSearchTest : LocalProperties() {
         val apiKey = getProperty(GoogleSearch.GOOGLE_API_KEY_PROP)
         val cseKey = getProperty(GoogleSearch.GOOGLE_CSE_KEY_PROP)
         try {
-            var messages = searchGoogle("mobibot site:github.com", apiKey, cseKey)
-            assertThat(messages).`as`("mobibot results not empty").isNotEmpty
-            assertThat(messages[0].msg).`as`("found mobitopia").contains("mobibot")
+            var messages = searchGoogle("mobitopia", apiKey, cseKey)
+            assertThat(messages).`as`("mobitopia results not empty").isNotEmpty
+            assertThat(messages[0].msg).`as`("found freenode").contains("freenode")
             messages = searchGoogle("aapl", apiKey, cseKey)
             assertThat(messages).`as`("aapl results not empty").isNotEmpty
             assertThat(messages[0].msg).`as`("found apple").containsIgnoringCase("apple")
