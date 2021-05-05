@@ -45,7 +45,7 @@ class BitcoinTest : LocalProperties() {
     fun testMarketPrice() {
         var messages = marketPrice("USD")
         assertThat(messages).`as`("not empty").isNotEmpty
-        assertThat(messages[0].msg).`as`("bitcoin &  $").startsWith("BITCOIN").contains("$")
+        assertThat(messages[0].msg).`as`("bitcoin, BTC, $").startsWith("Bitcoin").contains("BTC").contains("$")
         //assertThat(messages[1].msg).`as`("15m").contains("15m")
 
         messages = marketPrice("GBP")
