@@ -124,9 +124,11 @@ class Bitcoin(bot: Mobibot) : ThreadedModule(bot) {
                 val symbol = bpi.getString("symbol");
                 with(messages) {
                     add(PublicMessage("BITCOIN: $symbol" + bpi.getDecimal("last") + " [$currency]"))
-                    add(NoticeMessage("    15m:     $symbol" + bpi.getDecimal("15m")))
-                    add(NoticeMessage("    Buy:     $symbol" + bpi.getDecimal("buy")))
-                    add(NoticeMessage("    Sell:    $symbol" + bpi.getDecimal("sell")))
+                    if (bpi.getBigDecimal("15m") != bpi.getBigDecimal("last")) {
+                        add(NoticeMessage("    15m:     $symbol" + bpi.getDecimal("15m")))
+                        add(NoticeMessage("    Buy:     $symbol" + bpi.getDecimal("buy")))
+                        add(NoticeMessage("    Sell:    $symbol" + bpi.getDecimal("sell")))
+                    }
                 }
                 return messages
             } catch (e: IOException) {
