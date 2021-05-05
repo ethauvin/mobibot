@@ -41,6 +41,7 @@ import org.json.JSONException
 import org.json.JSONObject
 import java.io.IOException
 import java.net.URL
+import java.text.DecimalFormat
 
 /**
  * The Bitcoin module.
@@ -104,8 +105,9 @@ class Bitcoin(bot: Mobibot) : ThreadedModule(bot) {
         // BTC command
         private const val BTC_CMD = "btc"
 
-        // XBT command
-        private const val XBT_CMD = "xbt"
+        private fun JSONObject.getDecimal(key: String): String {
+            return DecimalFormat("0.00").format(this.getBigDecimal(key))
+        }
 
         /**
          * Retrieves the bitcoin market price.
@@ -121,10 +123,10 @@ class Bitcoin(bot: Mobibot) : ThreadedModule(bot) {
                 val bpi = json.getJSONObject(currency.trim().uppercase())
                 val symbol = bpi.getString("symbol");
                 with(messages) {
-                    add(PublicMessage("BITCOIN: $symbol" + bpi.getBigDecimal("last") + " [$currency]"))
-                    add(NoticeMessage("    15m:     $symbol" + bpi.getBigDecimal("15m")))
-                    add(NoticeMessage("    Buy:     $symbol" + bpi.getBigDecimal("buy")))
-                    add(NoticeMessage("    Sell:    $symbol" + bpi.getBigDecimal("sell")))
+                    add(PublicMessage("BITCOIN: $symbol" + bpi.getDecimal("last") + " [$currency]"))
+                    add(NoticeMessage("    15m:     $symbol" + bpi.getDecimal("15m")))
+                    add(NoticeMessage("    Buy:     $symbol" + bpi.getDecimal("buy")))
+                    add(NoticeMessage("    Sell:    $symbol" + bpi.getDecimal("sell")))
                 }
                 return messages
             } catch (e: IOException) {
@@ -141,6 +143,5 @@ class Bitcoin(bot: Mobibot) : ThreadedModule(bot) {
     init {
         commands.add(BITCOIN_CMD)
         commands.add(BTC_CMD)
-        commands.add(XBT_CMD)
     }
 }
