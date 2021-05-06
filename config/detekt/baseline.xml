@@ -15,8 +15,8 @@
     <ID>LongParameterList:Mobibot.kt$Mobibot$( nick: String, list: List&lt;String&gt;, maxPerLine: Int, isPrivate: Boolean, isBold: Boolean = false, isIndent: Boolean = false )</ID>
     <ID>LongParameterList:Twitter.kt$Twitter.Companion$( consumerKey: String?, consumerSecret: String?, token: String?, tokenSecret: String?, handle: String?, message: String, isDm: Boolean )</ID>
     <ID>NestedBlockDepth:Addons.kt$Addons$ fun add(command: AbstractCommand, props: Properties)</ID>
-    <ID>NestedBlockDepth:Bitcoin.kt$Bitcoin$ override fun run(sender: String, cmd: String, args: String, isPrivate: Boolean)</ID>
     <ID>NestedBlockDepth:Comment.kt$Comment$override fun commandResponse( sender: String, login: String, args: String, isOp: Boolean, isPrivate: Boolean )</ID>
+    <ID>NestedBlockDepth:CryptoPrices.kt$CryptoPrices$ override fun run(sender: String, cmd: String, args: String, isPrivate: Boolean)</ID>
     <ID>NestedBlockDepth:CurrencyConverter.kt$CurrencyConverter$ override fun run(sender: String, cmd: String, args: String, isPrivate: Boolean)</ID>
     <ID>NestedBlockDepth:CurrencyConverter.kt$CurrencyConverter$override fun helpResponse(sender: String, isPrivate: Boolean): Boolean</ID>
     <ID>NestedBlockDepth:CurrencyConverter.kt$CurrencyConverter.Companion$ @Suppress("MagicNumber") @JvmStatic fun convertCurrency(query: String): Message</ID>
@@ -39,12 +39,12 @@
     <ID>NestedBlockDepth:WorldTime.kt$WorldTime$override fun commandResponse( sender: String, cmd: String, args: String, isPrivate: Boolean )</ID>
     <ID>ReturnCount:Addons.kt$Addons$ fun exec(sender: String, login: String, cmd: String, args: String, isOp: Boolean, isPrivate: Boolean): Boolean</ID>
     <ID>ReturnCount:Addons.kt$Addons$ fun help(sender: String, topic: String, isOp: Boolean, isPrivate: Boolean): Boolean</ID>
-    <ID>ThrowsCount:Bitcoin.kt$Bitcoin.Companion$ @JvmStatic @Throws(ModuleException::class) fun marketPrice(currency: String): List&lt;Message&gt;</ID>
+    <ID>ThrowsCount:CryptoPrices.kt$CryptoPrices.Companion$ @JvmStatic @Throws(ModuleException::class) fun marketPrice(base: String, currency: String): Price</ID>
     <ID>ThrowsCount:GoogleSearch.kt$GoogleSearch.Companion$ @JvmStatic @Throws(ModuleException::class) fun searchGoogle(query: String, apiKey: String?, cseKey: String?): List&lt;Message&gt;</ID>
     <ID>ThrowsCount:StockQuote.kt$StockQuote.Companion$ @JvmStatic @Throws(ModuleException::class) fun getQuote(symbol: String, apiKey: String?): List&lt;Message&gt;</ID>
     <ID>ThrowsCount:StockQuote.kt$StockQuote.Companion$@Throws(ModuleException::class) private fun getJsonResponse(response: String, debugMessage: String): JSONObject</ID>
     <ID>ThrowsCount:Weather2.kt$Weather2.Companion$ @JvmStatic @Throws(ModuleException::class) fun getWeather(query: String, apiKey: String?): List&lt;Message&gt;</ID>
-    <ID>TooGenericExceptionCaught:Bitcoin.kt$Bitcoin.Companion$e: NullPointerException</ID>
+    <ID>TooGenericExceptionCaught:CryptoPrices.kt$CryptoPrices$e: Exception</ID>
     <ID>TooGenericExceptionCaught:FeedReader.kt$FeedReader$e: Exception</ID>
     <ID>TooGenericExceptionCaught:Mobibot.kt$Mobibot$e: Exception</ID>
     <ID>TooGenericExceptionCaught:Mobibot.kt$Mobibot$ex: Exception</ID>
