@@ -31,36 +31,17 @@
  */
 package net.thauvin.erik.mobibot.modules
 
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import net.thauvin.erik.crypto.CryptoPrice.Companion.marketPrice
 import net.thauvin.erik.crypto.CryptoException
+import net.thauvin.erik.crypto.CryptoPrice
+import net.thauvin.erik.crypto.CryptoPrice.Companion.marketPrice
 import net.thauvin.erik.mobibot.Mobibot
 import net.thauvin.erik.mobibot.Utils
-import net.thauvin.erik.mobibot.msg.ErrorMessage
-import net.thauvin.erik.mobibot.msg.Message
-import net.thauvin.erik.mobibot.msg.NoticeMessage
 import net.thauvin.erik.mobibot.msg.PublicMessage
-import org.json.JSONException
-import org.json.JSONObject
-import java.io.IOException
-import java.net.URL
-import java.text.DecimalFormat
-import java.time.format.DateTimeFormatter
-import java.time.Instant
-import java.time.temporal.ChronoUnit
-import java.time.ZoneId
-import java.time.ZoneOffset
-
-data class Price(val base: String, val currency: String, val amount: Double)
 
 /**
  * The Cryptocurrency Prices  module.
  */
 class CryptoPrices(bot: Mobibot) : ThreadedModule(bot) {
-    val dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd").withZone(ZoneOffset.UTC)
-    val decimalFormat = DecimalFormat("0.00")
-
     /**
      * Returns the cryptocurrency market price from [Coinbase](https://developers.coinbase.com/api/v2#get-spot-price).
      */
@@ -68,10 +49,8 @@ class CryptoPrices(bot: Mobibot) : ThreadedModule(bot) {
         val debugMessage = "crypto($cmd $args)"
         with(bot) {
             if (args.matches("\\w+( [a-zA-Z]{3}+)?".toRegex())) {
-                val params = args.trim().split(" ");
                 try {
-                    val currency = if (params.size == 2) params[1] else "USD"
-                    val price = marketPrice(params[0], currency)
+                    val price = currentPrice(args.split(' '))
                     send(sender, PublicMessage("${price.base}: ${price.amount} [${price.currency}]"))
                 } catch (e: CryptoException) {
                     if (logger.isWarnEnabled) logger.warn("$debugMessage => ${e.statusCode}", e)
@@ -89,6 +68,16 @@ class CryptoPrices(bot: Mobibot) : ThreadedModule(bot) {
     companion object {
         // Crypto command
         private const val CRYPTO_CMD = "crypto"
+
+        /**
+         * Get current market price.
+         */
+        fun currentPrice(args: List<String>): CryptoPrice {
+            return if (args.size == 2)
+                marketPrice(args[0], args[1])
+            else
+                marketPrice(args[0])
+        }
     }
 
     init {
