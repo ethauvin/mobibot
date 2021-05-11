@@ -33,14 +33,11 @@
 package net.thauvin.erik.mobibot.commands
 
 import net.thauvin.erik.mobibot.Mobibot
-import net.thauvin.erik.mobibot.Utils
+import net.thauvin.erik.mobibot.Utils.helpFormat
 
 class Users(bot: Mobibot) : AbstractCommand(bot) {
     override val name = "users"
-    override val help = listOf(
-        "To list the users present on the channel:",
-        Utils.helpFormat("%c $name")
-    )
+    override val help = listOf("To list the users present on the channel:", helpFormat("%c $name"))
     override val isOp = false
     override val isPublic = true
     override val isVisible = true

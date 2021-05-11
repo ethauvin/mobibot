@@ -33,13 +33,13 @@
 package net.thauvin.erik.mobibot.commands
 
 import net.thauvin.erik.mobibot.Mobibot
-import net.thauvin.erik.mobibot.Utils
+import net.thauvin.erik.mobibot.Utils.helpFormat
 
 class Msg(bot: Mobibot) : AbstractCommand(bot) {
     override val name = "msg"
     override val help = listOf(
         "To have the bot send a private message to someone:",
-        Utils.helpFormat("%c $name <nick> <text>")
+        helpFormat("%c $name <nick> <text>")
     )
     override val isOp = true
     override val isPublic = true

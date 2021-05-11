@@ -33,14 +33,11 @@
 package net.thauvin.erik.mobibot.commands
 
 import net.thauvin.erik.mobibot.Mobibot
-import net.thauvin.erik.mobibot.Utils
+import net.thauvin.erik.mobibot.Utils.helpFormat
 
 class Say(bot: Mobibot) : AbstractCommand(bot) {
     override val name = "say"
-    override val help = listOf(
-        "To have the bot say something on the channel:",
-        Utils.helpFormat("%c $name <text>")
-    )
+    override val help = listOf("To have the bot say something on the channel:", helpFormat("%c $name <text>"))
     override val isOp = true
     override val isPublic = false
     override val isVisible = true

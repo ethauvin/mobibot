@@ -35,7 +35,7 @@ import net.thauvin.erik.crypto.CryptoException
 import net.thauvin.erik.crypto.CryptoPrice
 import net.thauvin.erik.crypto.CryptoPrice.Companion.marketPrice
 import net.thauvin.erik.mobibot.Mobibot
-import net.thauvin.erik.mobibot.Utils
+import net.thauvin.erik.mobibot.Utils.helpFormat
 import net.thauvin.erik.mobibot.msg.PublicMessage
 
 /**
@@ -83,10 +83,10 @@ class CryptoPrices(bot: Mobibot) : ThreadedModule(bot) {
     init {
         commands.add(CRYPTO_CMD)
         help.add("To retrieve a cryptocurrency's market price:")
-        help.add(Utils.helpFormat("%c $CRYPTO_CMD <symbol> [<currency>]"))
+        help.add(helpFormat("%c $CRYPTO_CMD <symbol> [<currency>]"))
         help.add("For example:")
-        help.add(Utils.helpFormat("%c $CRYPTO_CMD BTC"))
-        help.add(Utils.helpFormat("%c $CRYPTO_CMD ETH EUR"))
-        help.add(Utils.helpFormat("%c $CRYPTO_CMD ETH2 GPB"))
+        help.add(helpFormat("%c $CRYPTO_CMD BTC"))
+        help.add(helpFormat("%c $CRYPTO_CMD ETH EUR"))
+        help.add(helpFormat("%c $CRYPTO_CMD ETH2 GPB"))
     }
 }

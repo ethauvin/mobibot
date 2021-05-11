@@ -34,7 +34,7 @@ package net.thauvin.erik.mobibot.commands.links
 
 import net.thauvin.erik.mobibot.Constants
 import net.thauvin.erik.mobibot.Mobibot
-import net.thauvin.erik.mobibot.Utils
+import net.thauvin.erik.mobibot.Utils.helpFormat
 import net.thauvin.erik.mobibot.commands.AbstractCommand
 import net.thauvin.erik.mobibot.entries.EntriesUtils
 import net.thauvin.erik.mobibot.entries.EntryLink
@@ -43,7 +43,7 @@ class Tags(bot: Mobibot) : AbstractCommand(bot) {
     override val name = COMMAND
     override val help = listOf(
         "To categorize or tag a URL, use its label and a T:",
-        Utils.helpFormat("${Constants.LINK_CMD}1T:<+tag|-tag> [...]")
+        helpFormat("${Constants.LINK_CMD}1T:<+tag|-tag> [...]")
     )
     override val isOp = false
     override val isPublic = true

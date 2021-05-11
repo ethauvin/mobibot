@@ -31,7 +31,7 @@
  */
 package net.thauvin.erik.mobibot.modules
 
-import net.thauvin.erik.mobibot.Utils
+import net.thauvin.erik.mobibot.Utils.obfuscate
 import org.apache.commons.lang3.StringUtils
 
 /**
@@ -68,7 +68,7 @@ class ModuleException : Exception {
      * Return the sanitized message (e.g. remove API keys, etc.)
      */
     fun getSanitizedMessage(vararg sanitize: String): String {
-        val obfuscate = sanitize.map { Utils.obfuscate(it) }.toTypedArray()
+        val obfuscate = sanitize.map { obfuscate(it) }.toTypedArray()
         return when {
             cause != null -> {
                 cause.javaClass.name + ": " + StringUtils.replaceEach(cause.message, sanitize, obfuscate)

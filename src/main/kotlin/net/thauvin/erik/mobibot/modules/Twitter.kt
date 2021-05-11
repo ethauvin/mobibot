@@ -34,7 +34,7 @@ package net.thauvin.erik.mobibot.modules
 import net.thauvin.erik.mobibot.Constants
 import net.thauvin.erik.mobibot.Mobibot
 import net.thauvin.erik.mobibot.TwitterTimer
-import net.thauvin.erik.mobibot.Utils
+import net.thauvin.erik.mobibot.Utils.helpFormat
 import net.thauvin.erik.mobibot.commands.links.LinksMgr
 import net.thauvin.erik.mobibot.entries.EntriesUtils
 import net.thauvin.erik.mobibot.msg.Message
@@ -235,7 +235,7 @@ class Twitter(bot: Mobibot) : ThreadedModule(bot) {
     init {
         commands.add(TWITTER_CMD)
         help.add("To post to Twitter:")
-        help.add(Utils.helpFormat("%c $TWITTER_CMD <message>"))
+        help.add(helpFormat("%c $TWITTER_CMD <message>"))
         properties[AUTOPOST_PROP] = "false"
         initProperties(CONSUMER_KEY_PROP, CONSUMER_SECRET_PROP, HANDLE_PROP, TOKEN_PROP, TOKEN_SECRET_PROP)
     }

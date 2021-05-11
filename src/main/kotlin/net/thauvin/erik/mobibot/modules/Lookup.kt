@@ -33,7 +33,7 @@ package net.thauvin.erik.mobibot.modules
 
 import net.thauvin.erik.mobibot.Constants
 import net.thauvin.erik.mobibot.Mobibot
-import net.thauvin.erik.mobibot.Utils
+import net.thauvin.erik.mobibot.Utils.helpFormat
 import org.apache.commons.net.whois.WhoisClient
 import java.io.IOException
 import java.net.InetAddress
@@ -164,6 +164,6 @@ class Lookup(bot: Mobibot) : AbstractModule(bot) {
     init {
         commands.add(LOOKUP_CMD)
         help.add("To perform a DNS lookup query:")
-        help.add(Utils.helpFormat("%c $LOOKUP_CMD <ip address or hostname>"))
+        help.add(helpFormat("%c $LOOKUP_CMD <ip address or hostname>"))
     }
 }

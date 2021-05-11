@@ -32,7 +32,8 @@
 package net.thauvin.erik.mobibot.modules
 
 import net.thauvin.erik.mobibot.Mobibot
-import net.thauvin.erik.mobibot.Utils
+import net.thauvin.erik.mobibot.Utils.bold
+import net.thauvin.erik.mobibot.Utils.helpFormat
 import net.thauvin.erik.mobibot.msg.ErrorMessage
 import net.thauvin.erik.mobibot.msg.Message
 import net.thauvin.erik.mobibot.msg.PublicMessage
@@ -76,16 +77,16 @@ class WorldTime(bot: Mobibot) : AbstractModule(bot) {
             val tz = COUNTRIES_MAP[(query.substring(query.indexOf(' ') + 1).trim()).uppercase()]
             val response: String = if (tz != null) {
                 if (BEATS_KEYWORD == tz) {
-                    "The current Internet Time is: " + Utils.bold(internetTime() + ' ' + BEATS_KEYWORD)
+                    "The current Internet Time is: " + bold(internetTime() + ' ' + BEATS_KEYWORD)
                 } else {
                     (ZonedDateTime.now()
                         .withZoneSameInstant(ZoneId.of(tz))
                         .format(
                             DateTimeFormatter.ofPattern(
-                                "'The time is ${Utils.bold("'HH:mm'")} on ${Utils.bold("'EEEE, d MMMM yyyy'")} in '"
+                                "'The time is ${bold("'HH:mm'")} on ${bold("'EEEE, d MMMM yyyy'")} in '"
                             )
                         )
-                        + Utils.bold(tz.substring(tz.indexOf('/') + 1).replace('_', ' '))
+                        + bold(tz.substring(tz.indexOf('/') + 1).replace('_', ' '))
                         )
                 }
             } else {
@@ -214,9 +215,9 @@ class WorldTime(bot: Mobibot) : AbstractModule(bot) {
 
     init {
         help.add("To display a country's current date/time:")
-        help.add(Utils.helpFormat("%c $TIME_CMD") + " [<country code>]")
+        help.add(helpFormat("%c $TIME_CMD") + " [<country code>]")
         help.add("For a listing of the supported countries:")
-        help.add(Utils.helpFormat("%c $TIME_CMD"))
+        help.add(helpFormat("%c $TIME_CMD"))
         commands.add(TIME_CMD)
     }
 }

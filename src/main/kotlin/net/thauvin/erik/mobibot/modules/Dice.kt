@@ -32,7 +32,8 @@
 package net.thauvin.erik.mobibot.modules
 
 import net.thauvin.erik.mobibot.Mobibot
-import net.thauvin.erik.mobibot.Utils
+import net.thauvin.erik.mobibot.Utils.bold
+import net.thauvin.erik.mobibot.Utils.helpFormat
 import kotlin.random.Random
 
 /**
@@ -52,13 +53,13 @@ class Dice(bot: Mobibot) : AbstractModule(bot) {
         with(bot) {
             send(
                 channel,
-                "$sender rolled two dice: ${Utils.bold(playerRoll.first)} and ${Utils.bold(playerRoll.second)}"
-                    + " for a total of ${Utils.bold(playerTotal)}",
+                "$sender rolled two dice: ${bold(playerRoll.first)} and ${bold(playerRoll.second)}"
+                    + " for a total of ${bold(playerTotal)}",
                 isPrivate
             )
             action(
-                "rolled two dice: ${Utils.bold(roll.first)} and ${Utils.bold(roll.second)}" +
-                    " for a total of ${Utils.bold(total)}"
+                "rolled two dice: ${bold(roll.first)} and ${bold(roll.second)}" +
+                    " for a total of ${bold(total)}"
             )
             when (winLoseOrTie(total, playerTotal)) {
                 Result.WIN -> action("wins.")
@@ -99,6 +100,6 @@ class Dice(bot: Mobibot) : AbstractModule(bot) {
     init {
         commands.add(DICE_CMD)
         help.add("To roll the dice:")
-        help.add(Utils.helpFormat("%c $DICE_CMD"))
+        help.add(helpFormat("%c $DICE_CMD"))
     }
 }

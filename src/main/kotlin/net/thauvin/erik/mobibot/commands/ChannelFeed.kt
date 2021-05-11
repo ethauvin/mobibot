@@ -34,14 +34,11 @@ package net.thauvin.erik.mobibot.commands
 
 import net.thauvin.erik.mobibot.FeedReader
 import net.thauvin.erik.mobibot.Mobibot
-import net.thauvin.erik.mobibot.Utils
+import net.thauvin.erik.mobibot.Utils.helpFormat
 
 class ChannelFeed(bot: Mobibot, channel: String) : AbstractCommand(bot) {
     override val name = channel
-    override val help = listOf(
-        "To list the last 5 posts from the channel's weblog feed:",
-        Utils.helpFormat("%c $channel")
-    )
+    override val help = listOf("To list the last 5 posts from the channel's weblog feed:", helpFormat("%c $channel"))
     override val isOp = false
     override val isPublic = true
     override val isVisible = true

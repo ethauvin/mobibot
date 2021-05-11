@@ -34,7 +34,8 @@ package net.thauvin.erik.mobibot.modules
 import net.objecthunter.exp4j.ExpressionBuilder
 import net.objecthunter.exp4j.tokenizer.UnknownFunctionOrVariableException
 import net.thauvin.erik.mobibot.Mobibot
-import net.thauvin.erik.mobibot.Utils
+import net.thauvin.erik.mobibot.Utils.bold
+import net.thauvin.erik.mobibot.Utils.helpFormat
 import java.text.DecimalFormat
 
 /**
@@ -74,13 +75,13 @@ class Calc(bot: Mobibot) : AbstractModule(bot) {
         fun calculate(query: String): String {
             val decimalFormat = DecimalFormat("#.##")
             val calc = ExpressionBuilder(query).build()
-            return query.replace(" ", "") + " = " + Utils.bold(decimalFormat.format(calc.evaluate()))
+            return query.replace(" ", "") + " = " + bold(decimalFormat.format(calc.evaluate()))
         }
     }
 
     init {
         commands.add(CALC_CMD)
         help.add("To solve a mathematical calculation:")
-        help.add(Utils.helpFormat("%c $CALC_CMD <calculation>"))
+        help.add(helpFormat("%c $CALC_CMD <calculation>"))
     }
 }

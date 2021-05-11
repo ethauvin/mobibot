@@ -32,7 +32,7 @@
 package net.thauvin.erik.mobibot.modules
 
 import net.thauvin.erik.mobibot.Mobibot
-import net.thauvin.erik.mobibot.Utils
+import net.thauvin.erik.mobibot.Utils.buildCmdSyntax
 
 /**
  * The `Module` abstract class.
@@ -76,7 +76,7 @@ abstract class AbstractModule(val bot: Mobibot) {
      */
     open fun helpResponse(sender: String, isPrivate: Boolean): Boolean {
         for (h in help) {
-            bot.send(sender, Utils.buildCmdSyntax(h, bot.nick, isPrivateMsgEnabled && isPrivate), isPrivate)
+            bot.send(sender, buildCmdSyntax(h, bot.nick, isPrivateMsgEnabled && isPrivate), isPrivate)
         }
         return true
     }

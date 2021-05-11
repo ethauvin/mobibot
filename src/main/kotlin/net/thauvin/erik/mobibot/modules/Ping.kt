@@ -32,7 +32,7 @@
 package net.thauvin.erik.mobibot.modules
 
 import net.thauvin.erik.mobibot.Mobibot
-import net.thauvin.erik.mobibot.Utils
+import net.thauvin.erik.mobibot.Utils.helpFormat
 import kotlin.random.Random
 
 /**
@@ -85,6 +85,6 @@ class Ping(bot: Mobibot) : AbstractModule(bot) {
     init {
         commands.add(PING_CMD)
         help.add("To ping the bot:")
-        help.add(Utils.helpFormat("%c $PING_CMD"))
+        help.add(helpFormat("%c $PING_CMD"))
     }
 }

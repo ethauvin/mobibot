@@ -33,7 +33,8 @@
 package net.thauvin.erik.mobibot.commands.links
 
 import net.thauvin.erik.mobibot.Mobibot
-import net.thauvin.erik.mobibot.Utils
+import net.thauvin.erik.mobibot.Utils.bold
+import net.thauvin.erik.mobibot.Utils.helpFormat
 import net.thauvin.erik.mobibot.commands.AbstractCommand
 import net.thauvin.erik.mobibot.commands.links.LinksMgr.Companion.entries
 import net.thauvin.erik.mobibot.entries.EntriesUtils
@@ -45,7 +46,7 @@ class View(bot: Mobibot) : AbstractCommand(bot) {
     override val name = VIEW_CMD
     override val help = listOf(
         "To list or search the current URL posts:",
-        Utils.helpFormat("%c $name [<start>] [<query>]")
+        helpFormat("%c $name [<start>] [<query>]")
     )
     override val isOp = false
     override val isPublic = true
@@ -109,7 +110,7 @@ class View(bot: Mobibot) : AbstractCommand(bot) {
             i++
             if (sent == maxEntries && i < max) {
                 bot.send(
-                    sender, "To view more, try: " + Utils.bold("${bot.nick}: $name ${i + 1} $lcArgs"), false
+                    sender, "To view more, try: " + bold("${bot.nick}: $name ${i + 1} $lcArgs"), false
                 )
             }
         }

@@ -33,14 +33,11 @@
 package net.thauvin.erik.mobibot.commands
 
 import net.thauvin.erik.mobibot.Mobibot
-import net.thauvin.erik.mobibot.Utils
+import net.thauvin.erik.mobibot.Utils.helpFormat
 
 class Modules(bot: Mobibot) : AbstractCommand(bot) {
     override val name = "modules"
-    override val help = listOf(
-        "To view a list of enabled modules:",
-        Utils.helpFormat("%c $name")
-    )
+    override val help = listOf("To view a list of enabled modules:", helpFormat("%c $name"))
     override val isOp = true
     override val isPublic = false
     override val isVisible = true

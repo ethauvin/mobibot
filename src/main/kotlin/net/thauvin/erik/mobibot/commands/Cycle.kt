@@ -33,13 +33,13 @@
 package net.thauvin.erik.mobibot.commands
 
 import net.thauvin.erik.mobibot.Mobibot
-import net.thauvin.erik.mobibot.Utils
+import net.thauvin.erik.mobibot.Utils.helpFormat
 
 class Cycle(bot: Mobibot) : AbstractCommand(bot) {
     @Suppress("MagicNumber")
     private val wait = 10
     override val name = "cycle"
-    override val help = listOf("To have the bot leave the channel and come back:", Utils.helpFormat("%c $name"))
+    override val help = listOf("To have the bot leave the channel and come back:", helpFormat("%c $name"))
     override val isOp = true
     override val isPublic = false
     override val isVisible = true

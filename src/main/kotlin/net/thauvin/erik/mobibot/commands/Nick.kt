@@ -33,14 +33,11 @@
 package net.thauvin.erik.mobibot.commands
 
 import net.thauvin.erik.mobibot.Mobibot
-import net.thauvin.erik.mobibot.Utils
+import net.thauvin.erik.mobibot.Utils.helpFormat
 
 class Nick(bot: Mobibot) : AbstractCommand(bot) {
     override val name = "nick"
-    override val help = listOf(
-        "To change the bot's nickname:",
-        Utils.helpFormat("%c $name <nick>")
-    )
+    override val help = listOf("To change the bot's nickname:", helpFormat("%c $name <nick>"))
     override val isOp = true
     override val isPublic = true
     override val isVisible = true
