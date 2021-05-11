@@ -51,10 +51,11 @@ class CurrencyConverterTest {
     @Test
     fun testConvertCurrency() {
         assertThat(convertCurrency("100 USD to EUR").msg)
-            .`as`("100 USD to EUR").matches("100\\.00 USD = \\d{2,3}\\.\\d{2} EUR")
-        assertThat(convertCurrency("100 USD to USD").msg).`as`("100 USD to USD").contains("You're kidding, right?")
-        assertThat(convertCurrency("100 USD").msg).`as`("100 USD").contains("Invalid query.")
-        assertThat(currencyRates().size).`as`("currencyRates().size() == 33").isEqualTo(33)
-        assertThat(currencyRates()).`as`("currencyRates().get(EUR)").contains("  EUR:        1")
+            .describedAs("100 USD to EUR").matches("100\\.00 USD = \\d{2,3}\\.\\d{2} EUR")
+        assertThat(convertCurrency("100 USD to USD").msg).describedAs("100 USD to USD")
+            .contains("You're kidding, right?")
+        assertThat(convertCurrency("100 USD").msg).describedAs("100 USD").contains("Invalid query.")
+        assertThat(currencyRates().size).describedAs("currencyRates().size() == 33").isEqualTo(33)
+        assertThat(currencyRates()).describedAs("currencyRates().get(EUR)").contains("  EUR:        1")
     }
 }

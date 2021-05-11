@@ -50,7 +50,7 @@ class ModuleExceptionTest {
     fun createData(@Suppress("UNUSED_PARAMETER") m: Method?): Array<Array<Any>> {
         return arrayOf(
             arrayOf(ModuleException(debugMessage, message, IOException("URL http://foobar.com"))),
-            arrayOf(ModuleException(debugMessage,message,IOException("URL http://foobar.com?"))),
+            arrayOf(ModuleException(debugMessage, message, IOException("URL http://foobar.com?"))),
             arrayOf(ModuleException(debugMessage, message))
         )
     }

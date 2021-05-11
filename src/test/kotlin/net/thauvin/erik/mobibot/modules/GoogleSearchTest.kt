@@ -48,19 +48,19 @@ class GoogleSearchTest : LocalProperties() {
         val cseKey = getProperty(GoogleSearch.GOOGLE_CSE_KEY_PROP)
         try {
             var messages = searchGoogle("mobitopia", apiKey, cseKey)
-            assertThat(messages).`as`("mobitopia results not empty").isNotEmpty
-            assertThat(messages[0].msg).`as`("found freenode").contains("freenode")
+            assertThat(messages).describedAs("mobitopia results not empty").isNotEmpty
+            assertThat(messages[0].msg).describedAs("found freenode").contains("freenode")
             messages = searchGoogle("aapl", apiKey, cseKey)
-            assertThat(messages).`as`("aapl results not empty").isNotEmpty
-            assertThat(messages[0].msg).`as`("found apple").containsIgnoringCase("apple")
+            assertThat(messages).describedAs("aapl results not empty").isNotEmpty
+            assertThat(messages[0].msg).describedAs("found apple").containsIgnoringCase("apple")
             assertThatThrownBy { searchGoogle("test", "", "apiKey") }
-                .`as`("no API key")
+                .describedAs("no API key")
                 .isInstanceOf(ModuleException::class.java).hasNoCause()
             assertThatThrownBy { searchGoogle("test", "apiKey", "") }
-                .`as`("no CSE API key")
+                .describedAs("no CSE API key")
                 .isInstanceOf(ModuleException::class.java).hasNoCause()
             assertThatThrownBy { searchGoogle("", "apikey", "apiKey") }
-                .`as`("no query").isInstanceOf(ModuleException::class.java).hasNoCause()
+                .describedAs("no query").isInstanceOf(ModuleException::class.java).hasNoCause()
         } catch (e: ModuleException) {
             // Avoid displaying api keys in CI logs
             if ("true" == System.getenv("CI") && apiKey.isNotBlank() && cseKey.isNotBlank()) {

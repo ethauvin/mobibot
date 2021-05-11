@@ -44,7 +44,7 @@ class LookupTest {
     @Throws(Exception::class)
     fun testLookup() {
         val result = nslookup("apple.com")
-        assertThat(result).`as`("lookup(apple.com)").contains("17.253.144.10")
+        assertThat(result).describedAs("lookup(apple.com)").contains("17.253.144.10")
     }
 
     @Test
@@ -52,6 +52,6 @@ class LookupTest {
     fun testWhois() {
         val result = whois("17.178.96.59", Lookup.WHOIS_HOST)
         assertThat(result.stream().anyMatch { m: String -> m.contains("Apple Inc.") })
-            .`as`("whois(17.178.96.59/Apple Inc.").isTrue
+            .describedAs("whois(17.178.96.59/Apple Inc.").isTrue
     }
 }

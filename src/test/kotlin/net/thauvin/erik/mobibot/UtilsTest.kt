@@ -74,25 +74,26 @@ class UtilsTest {
 
     @Test
     fun testBold() {
-        assertThat(bold(1)).`as`("bold(1)").isEqualTo(Colors.BOLD + "1" + Colors.BOLD)
-        assertThat(bold(ascii)).`as`("bold(ascii)").isEqualTo(Colors.BOLD + ascii + Colors.BOLD)
+        assertThat(bold(1)).describedAs("bold(1)").isEqualTo(Colors.BOLD + "1" + Colors.BOLD)
+        assertThat(bold(ascii)).describedAs("bold(ascii)").isEqualTo(Colors.BOLD + ascii + Colors.BOLD)
     }
 
     @Test
     fun testCapitalize() {
-        assertThat(capitalize("test")).`as`("capitalize(test)").isEqualTo("Test")
-        assertThat(capitalize("Test")).`as`("capitalize(Test)").isEqualTo("Test")
-        assertThat(capitalize(null)).`as`("captitalize(null)").isNull()
-        assertThat(capitalize("")).`as`("capitalize()").isEqualTo("")
+        assertThat(capitalize("test")).describedAs("capitalize(test)").isEqualTo("Test")
+        assertThat(capitalize("Test")).describedAs("capitalize(Test)").isEqualTo("Test")
+        assertThat(capitalize(null)).describedAs("captitalize(null)").isNull()
+        assertThat(capitalize("")).describedAs("capitalize()").isEqualTo("")
     }
 
     @Test
     fun testColorize() {
-        assertThat(colorize(ascii, Colors.REVERSE)).`as`("colorize(reverse)").isEqualTo(
+        assertThat(colorize(ascii, Colors.REVERSE)).describedAs("colorize(reverse)").isEqualTo(
             Colors.REVERSE + ascii + Colors.REVERSE
         )
-        assertThat(colorize(ascii, Colors.RED)).`as`("colorize(red)").isEqualTo(Colors.RED + ascii + Colors.NORMAL)
-        assertThat(colorize(null, Colors.RED)).`as`("colorize(null)").isEqualTo(Colors.NORMAL)
+        assertThat(colorize(ascii, Colors.RED)).describedAs("colorize(red)")
+            .isEqualTo(Colors.RED + ascii + Colors.NORMAL)
+        assertThat(colorize(null, Colors.RED)).describedAs("colorize(null)").isEqualTo(Colors.NORMAL)
     }
 
     @Test
@@ -102,15 +103,15 @@ class UtilsTest {
 
     @Test
     fun testEnsureDir() {
-        assertThat(ensureDir("dir", false)).`as`("ensureDir(dir, false)").isEqualTo("dir" + File.separatorChar)
-        assertThat(ensureDir("https://erik.thauvin.net", true)).`as`("ensureDir(erik.thauvin.net, true)")
+        assertThat(ensureDir("dir", false)).describedAs("ensureDir(dir, false)").isEqualTo("dir" + File.separatorChar)
+        assertThat(ensureDir("https://erik.thauvin.net", true)).describedAs("ensureDir(erik.thauvin.net, true)")
             .isEqualTo("https://erik.thauvin.net/")
     }
 
     @Test
     fun testGetIntProperty() {
-        assertThat(getIntProperty("10", 1)).`as`("getIntProperty(10, 1)").isEqualTo(10)
-        assertThat(getIntProperty("a", 1)).`as`("getIntProperty(a, 1)").isEqualTo(1)
+        assertThat(getIntProperty("10", 1)).describedAs("getIntProperty(10, 1)").isEqualTo(10)
+        assertThat(getIntProperty("a", 1)).describedAs("getIntProperty(a, 1)").isEqualTo(1)
     }
 
     @Test
@@ -120,25 +121,25 @@ class UtilsTest {
 
     @Test
     fun testIsoLocalDate() {
-        assertThat(isoLocalDate(cal.time)).`as`("isoLocalDate(date)").isEqualTo("1952-02-17")
-        assertThat(isoLocalDate(localDateTime)).`as`("isoLocalDate(localDate)").isEqualTo("1952-02-17")
+        assertThat(isoLocalDate(cal.time)).describedAs("isoLocalDate(date)").isEqualTo("1952-02-17")
+        assertThat(isoLocalDate(localDateTime)).describedAs("isoLocalDate(localDate)").isEqualTo("1952-02-17")
     }
 
     @Test
     fun testObfuscate() {
-        assertThat(obfuscate(ascii).length).`as`("obfuscate is right length").isEqualTo(ascii.length)
-        assertThat(obfuscate(ascii)).`as`("obfuscate()").isEqualTo(StringUtils.repeat("x", ascii.length))
-        assertThat(obfuscate(" ")).`as`("obfuscate(blank)").isEqualTo(" ")
+        assertThat(obfuscate(ascii).length).describedAs("obfuscate is right length").isEqualTo(ascii.length)
+        assertThat(obfuscate(ascii)).describedAs("obfuscate()").isEqualTo(StringUtils.repeat("x", ascii.length))
+        assertThat(obfuscate(" ")).describedAs("obfuscate(blank)").isEqualTo(" ")
     }
 
     @Test
     fun testPlural() {
         val week = "week"
         val weeks = "weeks"
-        assertThat(plural(-1, week, weeks)).`as`("plural(-1)").isEqualTo(week)
-        assertThat(plural(0, week, weeks)).`as`("plural(0)").isEqualTo(week)
-        assertThat(plural(1, week, weeks)).`as`("plural(1)").isEqualTo(week)
-        assertThat(plural(2, week, weeks)).`as`("plural(2)").isEqualTo(weeks)
+        assertThat(plural(-1, week, weeks)).describedAs("plural(-1)").isEqualTo(week)
+        assertThat(plural(0, week, weeks)).describedAs("plural(0)").isEqualTo(week)
+        assertThat(plural(1, week, weeks)).describedAs("plural(1)").isEqualTo(week)
+        assertThat(plural(2, week, weeks)).describedAs("plural(2)").isEqualTo(weeks)
     }
 
     @Test
@@ -166,14 +167,14 @@ class UtilsTest {
     @Test
     @Throws(IOException::class)
     fun testUrlReader() {
-        assertThat(urlReader(URL("https://postman-echo.com/status/200"))).`as`("urlReader()").isEqualTo(
-            "{\"status\":200}"
+        assertThat(urlReader(URL("https://postman-echo.com/status/200"))).describedAs("urlReader()")
+            .isEqualTo("{\"status\":200}"
         )
     }
 
     @Test
     fun testUtcDateTime() {
-        assertThat(utcDateTime(cal.time)).`as`("utcDateTime(date)").isEqualTo("1952-02-17 12:30")
-        assertThat(utcDateTime(localDateTime)).`as`("utcDateTime(localDate)").isEqualTo("1952-02-17 12:30")
+        assertThat(utcDateTime(cal.time)).describedAs("utcDateTime(date)").isEqualTo("1952-02-17 12:30")
+        assertThat(utcDateTime(localDateTime)).describedAs("utcDateTime(localDate)").isEqualTo("1952-02-17 12:30")
     }
 }

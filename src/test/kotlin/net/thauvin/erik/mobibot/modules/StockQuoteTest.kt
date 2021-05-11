@@ -47,17 +47,17 @@ class StockQuoteTest : LocalProperties() {
         val apiKey = getProperty(StockQuote.ALPHAVANTAGE_API_KEY_PROP)
         try {
             val messages = getQuote("apple inc", apiKey)
-            assertThat(messages).`as`("response not empty").isNotEmpty
-            assertThat(messages[0].msg).`as`("same stock symbol").startsWith("Symbol: AAPL")
-            assertThat(messages[1].msg).`as`("price label").startsWith("    Price:     ")
+            assertThat(messages).describedAs("response not empty").isNotEmpty
+            assertThat(messages[0].msg).describedAs("same stock symbol").startsWith("Symbol: AAPL")
+            assertThat(messages[1].msg).describedAs("price label").startsWith("    Price:     ")
             try {
                 getQuote("blahfoo", apiKey)
             } catch (e: ModuleException) {
-                assertThat(e.message).`as`("invalid symbol").containsIgnoringCase(StockQuote.INVALID_SYMBOL)
+                assertThat(e.message).describedAs("invalid symbol").containsIgnoringCase(StockQuote.INVALID_SYMBOL)
             }
-            assertThatThrownBy { getQuote("test", "") }.`as`("no API key")
+            assertThatThrownBy { getQuote("test", "") }.describedAs("no API key")
                 .isInstanceOf(ModuleException::class.java).hasNoCause()
-            assertThatThrownBy { getQuote("", "apikey") }.`as`("no symbol")
+            assertThatThrownBy { getQuote("", "apikey") }.describedAs("no symbol")
                 .isInstanceOf(ModuleException::class.java).hasNoCause()
         } catch (e: ModuleException) {
             // Avoid displaying api keys in CI logs

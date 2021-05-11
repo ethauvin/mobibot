@@ -42,7 +42,7 @@ class JokeTest {
     @Test
     @Throws(ModuleException::class)
     fun testRamdomJoke() {
-        assertThat(randomJoke().msg.isNotEmpty()).`as`("randomJoke() > 0").isTrue
-        assertThat(randomJoke().msg).`as`("randomJoke()").containsIgnoringCase("chuck")
+        assertThat(randomJoke().msg.isNotEmpty()).describedAs("randomJoke() > 0").isTrue
+        assertThat(randomJoke().msg).describedAs("randomJoke()").containsIgnoringCase("chuck")
     }
 }

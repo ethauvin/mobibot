@@ -66,6 +66,6 @@ class TwitterTest : LocalProperties() {
                 msg,
                 true
             ).msg
-        ).`as`("twitterPost($msg)").isEqualTo(msg)
+        ).describedAs("twitterPost($msg)").isEqualTo(msg)
     }
 }

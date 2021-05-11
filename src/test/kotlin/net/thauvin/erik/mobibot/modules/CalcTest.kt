@@ -44,10 +44,11 @@ import org.testng.annotations.Test
 class CalcTest {
     @Test
     fun testCalculate() {
-        assertThat(calculate("1 + 1")).`as`("calculate(1+1)").isEqualTo("1+1 = %s", Utils.bold(2))
-        assertThat(calculate("1 -3")).`as`("calculate(1 -3)").isEqualTo("1-3 = %s", Utils.bold(-2))
-        assertThat(calculate("pi+π+e+φ")).`as`("calculate(pi+π+e+φ)").isEqualTo("pi+π+e+φ = %s", Utils.bold("10.62"))
-        assertThatThrownBy { calculate("one + one") }.`as`("calculate(one+one)")
-                        .isInstanceOf(UnknownFunctionOrVariableException::class.java)
+        assertThat(calculate("1 + 1")).describedAs("calculate(1+1)").isEqualTo("1+1 = %s", Utils.bold(2))
+        assertThat(calculate("1 -3")).describedAs("calculate(1 -3)").isEqualTo("1-3 = %s", Utils.bold(-2))
+        assertThat(calculate("pi+π+e+φ")).describedAs("calculate(pi+π+e+φ)")
+            .isEqualTo("pi+π+e+φ = %s", Utils.bold("10.62"))
+        assertThatThrownBy { calculate("one + one") }.describedAs("calculate(one+one)")
+            .isInstanceOf(UnknownFunctionOrVariableException::class.java)
     }
 }

@@ -46,16 +46,16 @@ class Weather2Test : LocalProperties() {
     @Throws(ModuleException::class)
     fun testWeather() {
         var messages = getWeather("98204", getProperty(Weather2.OWM_API_KEY_PROP))
-        assertThat(messages[0].msg).`as`("is Everett").contains("Everett").contains("US")
-        assertThat(messages[messages.size - 1].msg).`as`("is City Search").endsWith("98204%2CUS")
+        assertThat(messages[0].msg).describedAs("is Everett").contains("Everett").contains("US")
+        assertThat(messages[messages.size - 1].msg).describedAs("is City Search").endsWith("98204%2CUS")
         messages = getWeather("London, UK", getProperty(Weather2.OWM_API_KEY_PROP))
-        assertThat(messages[0].msg).`as`("is UK").contains("London").contains("UK")
-        assertThat(messages[messages.size - 1].msg).`as`("is City Code").endsWith("4517009")
+        assertThat(messages[0].msg).describedAs("is UK").contains("London").contains("UK")
+        assertThat(messages[messages.size - 1].msg).describedAs("is City Code").endsWith("4517009")
         assertThatThrownBy { getWeather("Montpellier, FR", getProperty(Weather2.OWM_API_KEY_PROP)) }
-            .`as`("Montpellier not found").hasCauseInstanceOf(APIException::class.java)
+            .describedAs("Montpellier not found").hasCauseInstanceOf(APIException::class.java)
         assertThatThrownBy { getWeather("test", "") }
-            .`as`("no API key").isInstanceOf(ModuleException::class.java).hasNoCause()
+            .describedAs("no API key").isInstanceOf(ModuleException::class.java).hasNoCause()
         messages = getWeather("", "apikey")
-        assertThat(messages[0].isError).`as`("no query").isTrue
+        assertThat(messages[0].isError).describedAs("no query").isTrue
     }
 }

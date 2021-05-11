@@ -31,9 +31,8 @@
  */
 package net.thauvin.erik.mobibot.modules
 
-import net.thauvin.erik.crypto.CryptoPrice.Companion.marketPrice
 import net.thauvin.erik.crypto.CryptoException
-import net.thauvin.erik.mobibot.LocalProperties
+import net.thauvin.erik.crypto.CryptoPrice.Companion.marketPrice
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.testng.annotations.Test
@@ -46,28 +45,28 @@ class CryptoPricesTest {
     @Throws(ModuleException::class)
     fun testMarketPrice() {
         var price = marketPrice("BTC", "USD")
-        assertThat(price.base).`as`("is BTC").isEqualTo("BTC")
-        assertThat(price.currency).`as`("is USD").isEqualTo("USD")
-        assertThat(price.amount).`as`("BTC > 0").isGreaterThan(0.00)
+        assertThat(price.base).describedAs("is BTC").isEqualTo("BTC")
+        assertThat(price.currency).describedAs("is USD").isEqualTo("USD")
+        assertThat(price.amount).describedAs("BTC > 0").isGreaterThan(0.00)
 
         price = marketPrice("ETH", "EUR")
-        assertThat(price.base).`as`("is ETH").isEqualTo("ETH")
-        assertThat(price.currency).`as`("is EUR").isEqualTo("EUR")
-        assertThat(price.amount).`as`("ETH > 0").isGreaterThan(0.00)
+        assertThat(price.base).describedAs("is ETH").isEqualTo("ETH")
+        assertThat(price.currency).describedAs("is EUR").isEqualTo("EUR")
+        assertThat(price.amount).describedAs("ETH > 0").isGreaterThan(0.00)
 
         price = marketPrice("ETH2", "GBP")
-        assertThat(price.base).`as`("is ETH2").isEqualTo("ETH2")
-        assertThat(price.currency).`as`("is GBP").isEqualTo("GBP")
-        assertThat(price.amount).`as`("ETH2 > 0").isGreaterThan(0.00)
+        assertThat(price.base).describedAs("is ETH2").isEqualTo("ETH2")
+        assertThat(price.currency).describedAs("is GBP").isEqualTo("GBP")
+        assertThat(price.amount).describedAs("ETH2 > 0").isGreaterThan(0.00)
 
         assertThatThrownBy { marketPrice("FOO", "USD") }
-                .`as`("FOO")
-                .isInstanceOf(CryptoException::class.java)
-                .hasMessageContaining("Invalid base currency")
+            .describedAs("FOO")
+            .isInstanceOf(CryptoException::class.java)
+            .hasMessageContaining("Invalid base currency")
 
         assertThatThrownBy { marketPrice("FOO", "BAR") }
-                .`as`("FOO-BAR")
-                .isInstanceOf(CryptoException::class.java)
-                .hasMessageContaining("Invalid currency (BAR)")
+            .describedAs("FOO-BAR")
+            .isInstanceOf(CryptoException::class.java)
+            .hasMessageContaining("Invalid currency (BAR)")
     }
 }

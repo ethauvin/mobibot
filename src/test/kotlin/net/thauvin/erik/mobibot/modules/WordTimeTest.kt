@@ -42,8 +42,8 @@ import org.testng.annotations.Test
 class WordTimeTest {
     @Test
     fun testTime() {
-        assertThat(time("PST").msg).`as`("PST").endsWith(Utils.bold("Los Angeles"))
-        assertThat(time("BLAH").isError).`as`("BLAH").isTrue
-        assertThat(time("BEATS").msg).`as`("BEATS").contains("@")
+        assertThat(time("PST").msg).describedAs("PST").endsWith(Utils.bold("Los Angeles"))
+        assertThat(time("BLAH").isError).describedAs("BLAH").isTrue
+        assertThat(time("BEATS").msg).describedAs("BEATS").contains("@")
     }
 }

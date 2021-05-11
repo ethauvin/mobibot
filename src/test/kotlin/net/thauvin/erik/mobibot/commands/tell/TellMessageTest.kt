@@ -51,17 +51,17 @@ class TellMessageTest {
         val recipient = "recipient"
         val sender = "sender"
         val tellMessage = TellMessage(sender, recipient, message)
-        assertThat(tellMessage.sender).`as`(sender).isEqualTo(sender)
-        assertThat(tellMessage.recipient).`as`(recipient).isEqualTo(recipient)
-        assertThat(tellMessage.message).`as`(message).isEqualTo(message)
-        assertThat(isValidDate(tellMessage.queued)).`as`("queued is valid date/time").isTrue
-        assertThat(tellMessage.isMatch(sender)).`as`("match sender").isTrue
-        assertThat(tellMessage.isMatch(recipient)).`as`("match recipient").isTrue
-        assertThat(tellMessage.isMatch("foo")).`as`("foo is no match").isFalse
+        assertThat(tellMessage.sender).describedAs(sender).isEqualTo(sender)
+        assertThat(tellMessage.recipient).describedAs(recipient).isEqualTo(recipient)
+        assertThat(tellMessage.message).describedAs(message).isEqualTo(message)
+        assertThat(isValidDate(tellMessage.queued)).describedAs("queued is valid date/time").isTrue
+        assertThat(tellMessage.isMatch(sender)).describedAs("match sender").isTrue
+        assertThat(tellMessage.isMatch(recipient)).describedAs("match recipient").isTrue
+        assertThat(tellMessage.isMatch("foo")).describedAs("foo is no match").isFalse
         tellMessage.isReceived = true
-        assertThat(tellMessage.isReceived).`as`("is received").isTrue
-        assertThat(isValidDate(tellMessage.receptionDate)).`as`("received is valid date/time").isTrue
+        assertThat(tellMessage.isReceived).describedAs("is received").isTrue
+        assertThat(isValidDate(tellMessage.receptionDate)).describedAs("received is valid date/time").isTrue
         tellMessage.isNotified = true
-        assertThat(tellMessage.isNotified).`as`("is notified").isTrue
+        assertThat(tellMessage.isNotified).describedAs("is notified").isTrue
     }
 }

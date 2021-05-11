@@ -41,13 +41,13 @@ import org.testng.annotations.Test
 class PingTest {
     @Test
     fun testPingsArray() {
-        assertThat(Ping.PINGS).`as`("Pings array is not empty.").isNotEmpty
+        assertThat(Ping.PINGS).describedAs("Pings array is not empty.").isNotEmpty
     }
 
     @Test
     fun testRandomPing() {
         for (i in 0..9) {
-            assertThat(randomPing()).`as`("Random ping $i").isIn(Ping.PINGS)
+            assertThat(randomPing()).describedAs("Random ping $i").isIn(Ping.PINGS)
         }
     }
 }
