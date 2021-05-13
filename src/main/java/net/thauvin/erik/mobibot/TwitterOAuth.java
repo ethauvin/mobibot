@@ -32,7 +32,6 @@
 
 package net.thauvin.erik.mobibot;
 
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
 import twitter4j.auth.AccessToken;
@@ -69,8 +68,7 @@ public final class TwitterOAuth {
      * @throws TwitterException If an error occurs.
      * @throws IOException      If an IO error occurs.
      */
-    @SuppressFBWarnings({ "DM_DEFAULT_ENCODING", "IMC_IMMATURE_CLASS_PRINTSTACKTRACE" })
-    @SuppressWarnings({ "PMD.AvoidPrintStackTrace", "PMD.SystemPrintln" })
+    @SuppressWarnings({ "PMD.SystemPrintln" })
     public static void main(final String[] args) throws TwitterException, IOException {
         if (args.length == 2) {
             final twitter4j.Twitter twitter = new TwitterFactory().getInstance();

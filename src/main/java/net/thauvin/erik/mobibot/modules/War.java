@@ -32,7 +32,6 @@
 
 package net.thauvin.erik.mobibot.modules;
 
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import net.thauvin.erik.mobibot.Mobibot;
 import net.thauvin.erik.mobibot.Utils;
 import org.jetbrains.annotations.NotNull;
@@ -56,6 +55,8 @@ public final class War extends AbstractModule {
             new String[]{ "Ace", "King", "Queen", "Jack", "10", "9", "8", "7", "6", "5", "4", "3", "2" };
     // Suits for the deck of card
     private static final String[] WAR_SUITS = new String[]{ "Hearts", "Spades", "Diamonds", "Clubs" };
+    // Random
+    private static final SecureRandom RANDOM = new SecureRandom();
 
     /**
      * The default constructor.
@@ -72,24 +73,22 @@ public final class War extends AbstractModule {
     /**
      * {@inheritDoc}
      */
-    @SuppressFBWarnings("DMI_RANDOM_USED_ONLY_ONCE")
     @Override
     public void commandResponse(@NotNull final String sender,
                                 @NotNull final String cmd,
                                 @NotNull final String args,
                                 final boolean isPrivate) {
-        final SecureRandom r = new SecureRandom();
-
         int i;
         int y;
 
         while (true) {
-            i = r.nextInt(WAR_DECK.length);
-            y = r.nextInt(WAR_DECK.length);
+            i = RANDOM.nextInt(WAR_DECK.length);
+            y = RANDOM.nextInt(WAR_DECK.length);
 
             getBot().send(sender + " drew the " + bold(WAR_DECK[i]) + " of "
-                          + bold(WAR_SUITS[r.nextInt(WAR_SUITS.length)]));
-            getBot().action("drew the " + bold(WAR_DECK[y]) + " of " + bold(WAR_SUITS[r.nextInt(WAR_SUITS.length)]));
+                          + bold(WAR_SUITS[RANDOM.nextInt(WAR_SUITS.length)]));
+            getBot().action("drew the " + bold(WAR_DECK[y]) + " of "
+                            + bold(WAR_SUITS[RANDOM.nextInt(WAR_SUITS.length)]));
 
             if (i != y) {
                 break;

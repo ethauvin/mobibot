@@ -2,7 +2,6 @@ plugins {
     id 'application'
     id 'checkstyle'
     id 'com.github.ben-manes.versions' version '0.38.0'
-    id 'com.github.spotbugs' version '4.7.1'
     id 'idea'
     id 'io.gitlab.arturbosch.detekt' version '1.17.0-RC1'
     id 'jacoco'
@@ -23,7 +22,6 @@ final def semverProcessor = "net.thauvin.erik:semver:1.2.0"
 ext.versions = [
     log4j   : '2.14.1',
     pmd     : '6.34.0',
-    spotbugs: '4.2.3'
 ]
 
 repositories {
@@ -61,19 +59,14 @@ dependencies {
     implementation 'org.jsoup:jsoup:1.13.1'
     implementation 'org.twitter4j:twitter4j-core:4.0.7'
 
-    compileOnly "com.github.spotbugs:spotbugs-annotations:$versions.spotbugs"
-    testCompileOnly "com.github.spotbugs:spotbugs-annotations:$versions.spotbugs"
-
     testImplementation 'org.assertj:assertj-core:3.19.0'
     testImplementation 'org.testng:testng:7.4.0'
-
-    spotbugsPlugins 'com.h3xstream.findsecbugs:findsecbugs-plugin:1.11.0'
-    spotbugsPlugins 'com.mebigfatguy.sb-contrib:sb-contrib:7.4.7'
 }
 
 test {
     testLogging {
         exceptionFormat "full"
+        events /* "passed", */ "skipped", "failed"
     }
     useTestNG() {
         options.suites('src/test/resources/testng.xml')
@@ -106,22 +99,7 @@ compileJava {
 
 tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
     kotlinOptions {
-        jvmTarget = '11'
-    }
-}
-
-spotbugs {
-    toolVersion.set("$versions.spotbugs")
-    excludeFilter.set(file("$projectDir/config/spotbugs/excludeFilter.xml"))
-    tasks.spotbugsMain {
-        reports.create("html") {
-            enabled = true
-        }
-    }
-    tasks.spotbugsTest {
-        reports.create("html") {
-            enabled = true
-        }
+        jvmTarget = java.targetCompatibility.toString()
     }
 }
 
@@ -213,7 +191,7 @@ task copyToDeployLib(type: Copy) {
 }
 
 task deploy(dependsOn: ['clean', 'build', 'jar']) {
-    description = 'Copies all needed files to the ${deployDir} directory.'
+    description = "Copies all needed files to the ${deployDir} directory."
     group = 'Publishing'
     outputs.dir deployDir
     inputs.files copyToDeploy
