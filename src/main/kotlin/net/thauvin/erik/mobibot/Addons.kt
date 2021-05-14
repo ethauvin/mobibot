@@ -33,7 +33,7 @@ package net.thauvin.erik.mobibot
 
 import net.thauvin.erik.mobibot.commands.AbstractCommand
 import net.thauvin.erik.mobibot.modules.AbstractModule
-import java.util.*
+import java.util.Properties
 
 /**
  * Modules and Commands addons.
@@ -100,8 +100,8 @@ class Addons {
         val mods = if (isPrivate) modules.filter { it.isPrivateMsgEnabled } else modules
         for (module in mods) {
             if (module.commands.contains(cmd)) {
-                    module.commandResponse(sender, cmd, args, isPrivate)
-                    return true
+                module.commandResponse(sender, cmd, args, isPrivate)
+                return true
             }
         }
         return false

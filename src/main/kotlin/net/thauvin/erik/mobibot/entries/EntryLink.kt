@@ -36,7 +36,8 @@ import com.rometools.rome.feed.synd.SyndCategoryImpl
 import net.thauvin.erik.mobibot.commands.links.LinksMgr
 import org.apache.commons.lang3.StringUtils
 import java.io.Serializable
-import java.util.*
+import java.util.Calendar
+import java.util.Date
 
 /**
  * The class used to store link entries.

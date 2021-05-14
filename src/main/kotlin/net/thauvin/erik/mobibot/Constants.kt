@@ -31,7 +31,7 @@
  */
 package net.thauvin.erik.mobibot
 
-import java.util.*
+import java.util.Locale
 
 /**
  * The `Constants`.

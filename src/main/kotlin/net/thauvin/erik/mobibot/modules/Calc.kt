@@ -52,10 +52,10 @@ class Calc(bot: Mobibot) : AbstractModule(bot) {
             try {
                 bot.send(calculate(args))
             } catch (e: IllegalArgumentException) {
-                if (bot.logger.isWarnEnabled) bot.logger.warn("Failed to calcualte: $args", e)
+                if (bot.logger.isWarnEnabled) bot.logger.warn("Failed to calculate: $args", e)
                 bot.send("No idea. This is the kind of math I don't get.")
             } catch (e: UnknownFunctionOrVariableException) {
-                if (bot.logger.isWarnEnabled) bot.logger.warn("Unable to calcualte: $args", e)
+                if (bot.logger.isWarnEnabled) bot.logger.warn("Unable to calculate: $args", e)
                 bot.send("No idea. I must've some form of Dyscalculia.")
             }
         } else {

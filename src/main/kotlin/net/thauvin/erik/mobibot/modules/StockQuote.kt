@@ -79,7 +79,7 @@ class StockQuote(bot: Mobibot) : ThreadedModule(bot) {
         const val INVALID_SYMBOL = "Invalid symbol."
 
         // Alpha Advantage URL
-        private const val ALAPHAVANTAGE_URL = "https://www.alphavantage.co/query?function="
+        private const val ALPHAVANTAGE_URL = "https://www.alphavantage.co/query?function="
 
         // Quote command
         private const val STOCK_CMD = "stock"
@@ -122,7 +122,8 @@ class StockQuote(bot: Mobibot) : ThreadedModule(bot) {
         fun getQuote(symbol: String, apiKey: String?): List<Message> {
             if (apiKey.isNullOrBlank()) {
                 throw ModuleException(
-                    "${Utils.capitalize(STOCK_CMD)} is disabled. The API key is missing.")
+                    "${Utils.capitalize(STOCK_CMD)} is disabled. The API key is missing."
+                )
             }
             return if (symbol.isNotBlank()) {
                 val debugMessage = "getQuote($symbol)"
@@ -132,10 +133,10 @@ class StockQuote(bot: Mobibot) : ThreadedModule(bot) {
                     with(messages) {
                         // Search for symbol/keywords
                         response = Utils.urlReader(
-                                URL(
-                                        "${ALAPHAVANTAGE_URL}SYMBOL_SEARCH&keywords=" + Utils.encodeUrl(symbol)
-                                            + "&apikey=" + Utils.encodeUrl(apiKey)
-                                )
+                            URL(
+                                "${ALPHAVANTAGE_URL}SYMBOL_SEARCH&keywords=" + Utils.encodeUrl(symbol)
+                                    + "&apikey=" + Utils.encodeUrl(apiKey)
+                            )
                         )
                         var json = getJsonResponse(response, debugMessage)
                         val symbols = json.getJSONArray("bestMatches")
@@ -146,11 +147,11 @@ class StockQuote(bot: Mobibot) : ThreadedModule(bot) {
 
                             // Get quote for symbol
                             response = Utils.urlReader(
-                                    URL(
-                                            "${ALAPHAVANTAGE_URL}GLOBAL_QUOTE&symbol="
-                                                    + Utils.encodeUrl(symbolInfo.getString("1. symbol"))
-                                                    + "&apikey=" + Utils.encodeUrl(apiKey)
-                                    )
+                                URL(
+                                    "${ALPHAVANTAGE_URL}GLOBAL_QUOTE&symbol="
+                                        + Utils.encodeUrl(symbolInfo.getString("1. symbol"))
+                                        + "&apikey=" + Utils.encodeUrl(apiKey)
+                                )
                             )
                             json = getJsonResponse(response, debugMessage)
                             val quote = json.getJSONObject("Global Quote")
@@ -159,36 +160,36 @@ class StockQuote(bot: Mobibot) : ThreadedModule(bot) {
                                 return messages
                             }
                             add(
-                                    PublicMessage(
-                                            "Symbol: " + Utils.unescapeXml(quote.getString("01. symbol"))
-                                                    + " [" + Utils.unescapeXml(symbolInfo.getString("2. name")) + ']'
-                                    )
+                                PublicMessage(
+                                    "Symbol: " + Utils.unescapeXml(quote.getString("01. symbol"))
+                                        + " [" + Utils.unescapeXml(symbolInfo.getString("2. name")) + ']'
+                                )
                             )
                             add(PublicMessage("    Price:     " + Utils.unescapeXml(quote.getString("05. price"))))
                             add(
-                                    PublicMessage(
-                                            "    Previous:  " + Utils.unescapeXml(quote.getString("08. previous close"))
-                                    )
+                                PublicMessage(
+                                    "    Previous:  " + Utils.unescapeXml(quote.getString("08. previous close"))
+                                )
                             )
                             add(NoticeMessage("    Open:      " + Utils.unescapeXml(quote.getString("02. open"))))
                             add(NoticeMessage("    High:      " + Utils.unescapeXml(quote.getString("03. high"))))
                             add(NoticeMessage("    Low:       " + Utils.unescapeXml(quote.getString("04. low"))))
                             add(
-                                    NoticeMessage(
-                                            "    Volume:    " + Utils.unescapeXml(quote.getString("06. volume"))
-                                    )
+                                NoticeMessage(
+                                    "    Volume:    " + Utils.unescapeXml(quote.getString("06. volume"))
+                                )
                             )
                             add(
-                                    NoticeMessage(
-                                            "    Latest:    "
-                                                    + Utils.unescapeXml(quote.getString("07. latest trading day"))
-                                    )
+                                NoticeMessage(
+                                    "    Latest:    "
+                                        + Utils.unescapeXml(quote.getString("07. latest trading day"))
+                                )
                             )
                             add(
-                                    NoticeMessage(
-                                            "    Change:    " + Utils.unescapeXml(quote.getString("09. change")) + " ["
-                                                    + Utils.unescapeXml(quote.getString("10. change percent")) + ']'
-                                    )
+                                NoticeMessage(
+                                    "    Change:    " + Utils.unescapeXml(quote.getString("09. change")) + " ["
+                                        + Utils.unescapeXml(quote.getString("10. change percent")) + ']'
+                                )
                             )
                         }
                     }

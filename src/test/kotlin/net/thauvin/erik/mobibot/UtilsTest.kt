@@ -56,7 +56,7 @@ import java.io.File
 import java.io.IOException
 import java.net.URL
 import java.time.LocalDateTime
-import java.util.*
+import java.util.Calendar
 
 /**
  * The `Utils Test` class.

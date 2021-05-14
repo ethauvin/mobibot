@@ -32,7 +32,7 @@
 
 package net.thauvin.erik.mobibot
 
-import java.util.*
+import java.util.TimerTask
 
 class TwitterTimer(var bot: Mobibot, private var index: Int) : TimerTask() {
     override fun run() {

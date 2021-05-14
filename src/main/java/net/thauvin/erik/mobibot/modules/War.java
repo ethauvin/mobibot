@@ -48,6 +48,8 @@ import static net.thauvin.erik.mobibot.Utils.bold;
  * @since 1.0
  */
 public final class War extends AbstractModule {
+    // Random
+    private static final SecureRandom RANDOM = new SecureRandom();
     // War command
     private static final String WAR_CMD = "war";
     // Deck of card
@@ -55,8 +57,6 @@ public final class War extends AbstractModule {
             new String[]{ "Ace", "King", "Queen", "Jack", "10", "9", "8", "7", "6", "5", "4", "3", "2" };
     // Suits for the deck of card
     private static final String[] WAR_SUITS = new String[]{ "Hearts", "Spades", "Diamonds", "Clubs" };
-    // Random
-    private static final SecureRandom RANDOM = new SecureRandom();
 
     /**
      * The default constructor.

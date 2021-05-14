@@ -116,12 +116,6 @@ detekt {
     baseline = file("${projectDir}/config/detekt/baseline.xml")
 }
 
-javadoc {
-    options.tags = ['created']
-    options.author = true
-    options.links('http://www.jibble.org/javadocs/pircbot/', 'http://docs.oracle.com/javase/8/docs/api/')
-}
-
 jar {
     manifest.attributes('Main-Class': mainClassName,
             'Class-Path': '. ./lib/' + configurations.runtimeClasspath.collect { it.getName() }.join(' ./lib/'))

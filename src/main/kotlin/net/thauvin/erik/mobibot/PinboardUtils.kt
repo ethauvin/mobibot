@@ -32,7 +32,6 @@
 
 package net.thauvin.erik.mobibot
 
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.runBlocking
 import net.thauvin.erik.mobibot.entries.EntryLink
@@ -40,7 +39,7 @@ import net.thauvin.erik.pinboard.PinboardPoster
 import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
-import java.util.*
+import java.util.Date
 
 /**
  * Handles posts to pinboard.in.

@@ -64,8 +64,8 @@ import net.thauvin.erik.mobibot.commands.links.View
 import net.thauvin.erik.mobibot.commands.tell.Tell
 import net.thauvin.erik.mobibot.entries.EntriesMgr
 import net.thauvin.erik.mobibot.entries.EntryLink
-import net.thauvin.erik.mobibot.modules.CryptoPrices
 import net.thauvin.erik.mobibot.modules.Calc
+import net.thauvin.erik.mobibot.modules.CryptoPrices
 import net.thauvin.erik.mobibot.modules.CurrencyConverter
 import net.thauvin.erik.mobibot.modules.Dice
 import net.thauvin.erik.mobibot.modules.GoogleSearch
@@ -99,7 +99,8 @@ import java.io.IOException
 import java.io.PrintStream
 import java.nio.file.Files
 import java.nio.file.Paths
-import java.util.*
+import java.util.Properties
+import java.util.Timer
 import java.util.logging.ConsoleHandler
 import java.util.regex.Pattern
 import kotlin.system.exitProcess
@@ -358,7 +359,7 @@ class Mobibot(nickname: String, channel: String, logsDirPath: String, p: Propert
             helpResponse(sender, args, true)
         } else if (isOp && Constants.KILL_CMD == cmd) { // kill
             twitter.notification("$name killed by $sender on $channel")
-            sendRawLine("QUIT : Poof!")
+            sendRawLine("QUIT :Poof!")
             exitProcess(0)
         } else if (isOp && Constants.DIE_CMD == cmd) { // die
             send("$sender has just signed my death sentence.")
@@ -492,8 +493,7 @@ class Mobibot(nickname: String, channel: String, logsDirPath: String, p: Propert
      * Returns the bot's version.
      */
     override fun onVersion(sourceNick: String, sourceLogin: String, sourceHostname: String, target: String) {
-        sendRawLine("NOTICE " + sourceNick + " :\u0001VERSION " + ReleaseInfo.PROJECT + ' ' + ReleaseInfo.VERSION
-                    + "\u0001")
+        sendRawLine("NOTICE $sourceNick :\u0001VERSION ${ReleaseInfo.PROJECT} ${ReleaseInfo.VERSION}\u0001")
     }
 
     companion object {

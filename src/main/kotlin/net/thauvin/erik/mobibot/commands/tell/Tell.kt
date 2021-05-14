@@ -327,7 +327,7 @@ class Tell(bot: Mobibot) : AbstractCommand(bot) {
         const val MAX_DAYS_PROP = "tell-max-days"
 
         /**
-         * Max size proeprty.
+         * Max size property.
          */
         const val MAX_SIZE_PROP = "tell-max-size"
 

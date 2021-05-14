@@ -44,7 +44,7 @@ import java.nio.charset.StandardCharsets
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
-import java.util.*
+import java.util.Date
 import java.util.concurrent.TimeUnit
 import java.util.stream.Collectors
 
@@ -82,13 +82,13 @@ object Utils {
         val replace = arrayOf(if (isPrivate) "/msg $botNick" else "$botNick:", botNick)
         return StringUtils.replaceEach(text, searchFlags, replace)
     }
-    
+
     /**
      * Capitalize a string.
      */
     @JvmStatic
     fun capitalize(s: String?): String? = s?.replaceFirstChar { it.uppercase() }
-    
+
     /**
      * Colorize a string.
      */

@@ -42,7 +42,6 @@ import net.thauvin.erik.mobibot.msg.NoticeMessage
 import twitter4j.TwitterException
 import twitter4j.TwitterFactory
 import twitter4j.conf.ConfigurationBuilder
-import java.util.*
 
 /**
  * The Twitter module.

@@ -34,6 +34,7 @@
     <ID>NestedBlockDepth:Tell.kt$Tell$ @JvmOverloads fun send(nickname: String, isMessage: Boolean = false)</ID>
     <ID>NestedBlockDepth:Tell.kt$Tell$// Delete message. private fun deleteMessage(sender: String, args: String, isOp: Boolean, isPrivate: Boolean)</ID>
     <ID>NestedBlockDepth:TellMessagesMgr.kt$TellMessagesMgr$ fun save(file: String, messages: List&lt;TellMessage?&gt;?, logger: Logger)</ID>
+    <ID>NestedBlockDepth:TwitterOAuth.kt$TwitterOAuth$ @Throws(TwitterException::class, IOException::class) @JvmStatic fun main(args: Array&lt;String&gt;)</ID>
     <ID>NestedBlockDepth:Weather2.kt$Weather2$ override fun run(sender: String, cmd: String, args: String, isPrivate: Boolean)</ID>
     <ID>NestedBlockDepth:Weather2.kt$Weather2.Companion$ @JvmStatic @Throws(ModuleException::class) fun getWeather(query: String, apiKey: String?): List&lt;Message&gt;</ID>
     <ID>NestedBlockDepth:WorldTime.kt$WorldTime$override fun commandResponse( sender: String, cmd: String, args: String, isPrivate: Boolean )</ID>

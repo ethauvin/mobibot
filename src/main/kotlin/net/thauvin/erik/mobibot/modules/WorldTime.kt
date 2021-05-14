@@ -41,8 +41,8 @@ import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoField
-import java.util.*
-import kotlin.collections.ArrayList
+import java.util.Collections
+import java.util.Locale
 
 /**
  * The WorldTime module.
@@ -146,7 +146,7 @@ class WorldTime(bot: Mobibot) : AbstractModule(bot) {
             countries["MX"] = "America/Mexico_City"
             countries["NL"] = "Europe/Amsterdam"
             countries["NO"] = "Europe/Oslo"
-            countries["NP"] = "Asia/Katmandu"
+            countries["NP"] = "Asia/Kathmandu"
             countries["NZ"] = "Pacific/Auckland"
             countries["PDT"] = "America/Los_Angeles"
             countries["PH"] = "Asia/Manila"
