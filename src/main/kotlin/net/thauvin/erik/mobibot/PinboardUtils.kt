@@ -39,6 +39,7 @@ import net.thauvin.erik.pinboard.PinboardPoster
 import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
+import java.time.temporal.ChronoUnit
 import java.util.Date
 
 /**
@@ -50,16 +51,15 @@ object PinboardUtils {
      */
     @JvmStatic
     fun addPin(poster: PinboardPoster, ircServer: String, entry: EntryLink) = runBlocking {
-        val add = async {
+        async {
             poster.addPin(
                 entry.link,
                 entry.title,
                 postedBy(entry, ircServer),
                 entry.pinboardTags,
-                formatDate(entry.date)
+                entry.date.toTimestamp()
             )
-        }
-        add.await()
+        }.await()
     }
 
     /**
@@ -67,10 +67,9 @@ object PinboardUtils {
      */
     @JvmStatic
     fun deletePin(poster: PinboardPoster, entry: EntryLink) = runBlocking {
-        val delete = async {
+        async {
             poster.deletePin(entry.link)
-        }
-        delete.await()
+        }.await()
     }
 
     /**
@@ -78,7 +77,7 @@ object PinboardUtils {
      */
     @JvmStatic
     fun updatePin(poster: PinboardPoster, ircServer: String, oldUrl: String, entry: EntryLink) = runBlocking {
-        val update = async {
+        async {
             with(entry) {
                 if (oldUrl != link) {
                     poster.deletePin(oldUrl)
@@ -87,7 +86,7 @@ object PinboardUtils {
                         title,
                         postedBy(entry, ircServer),
                         pinboardTags,
-                        formatDate(date)
+                        date.toTimestamp()
                     )
                 } else {
                     poster.addPin(
@@ -95,21 +94,23 @@ object PinboardUtils {
                         title,
                         postedBy(entry, ircServer),
                         pinboardTags,
-                        formatDate(date),
+                        date.toTimestamp(),
                         replace = true,
                         shared = true
                     )
                 }
             }
-        }
-        update.await()
+        }.await()
     }
 
     /**
      * Format a date to a UTC timestamp.
      */
-    private fun formatDate(date: Date): String {
-        return ZonedDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault()).format(DateTimeFormatter.ISO_INSTANT)
+    @JvmStatic
+    fun Date.toTimestamp(): String {
+        return ZonedDateTime.ofInstant(
+                this.toInstant().truncatedTo(ChronoUnit.SECONDS),
+                ZoneId.systemDefault()).format(DateTimeFormatter.ISO_INSTANT)
     }
 
     /**

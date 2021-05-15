@@ -33,9 +33,12 @@
 package net.thauvin.erik.mobibot
 
 import net.thauvin.erik.mobibot.entries.EntryLink
+import net.thauvin.erik.mobibot.PinboardUtils.toTimestamp
 import net.thauvin.erik.pinboard.PinboardPoster
-import org.testng.Assert
+import org.testng.Assert.assertFalse
+import org.testng.Assert.assertTrue
 import org.testng.annotations.Test
+import java.util.Date
 import java.net.URL
 
 class PinboardUtilsTest : LocalProperties() {
@@ -48,14 +51,20 @@ class PinboardUtilsTest : LocalProperties() {
         val entry = EntryLink(url, "Test Example", "ErikT", "", "#mobitopia", listOf("test"))
 
         PinboardUtils.addPin(pinboard, ircServer, entry)
-        Assert.assertTrue(validatePin(apiToken, ircServer, entry.link), "addPin")
+        assertTrue(validatePin(apiToken, ircServer, entry.link), "addPin")
         entry.link = "https://www.foo.com/"
 
         PinboardUtils.updatePin(pinboard, ircServer, url, entry)
-        Assert.assertTrue(validatePin(apiToken, ircServer, entry.link), "updatePin")
+        assertTrue(validatePin(apiToken, ircServer, entry.link), "updatePin")
 
         PinboardUtils.deletePin(pinboard, entry)
-        Assert.assertFalse(validatePin(apiToken, url = entry.link), "deletePin")
+        assertFalse(validatePin(apiToken, url = entry.link), "deletePin")
+    }
+
+    @Test
+    fun toTimestampTest() {
+        val d = Date()
+        assertTrue(d.toTimestamp().matches("[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z".toRegex()))
     }
 
     private fun validatePin(apiToken: String, ircServer: String = "", url: String): Boolean {
