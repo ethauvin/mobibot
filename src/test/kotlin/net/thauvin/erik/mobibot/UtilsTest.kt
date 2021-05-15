@@ -41,6 +41,7 @@ import net.thauvin.erik.mobibot.Utils.obfuscate
 import net.thauvin.erik.mobibot.Utils.plural
 import net.thauvin.erik.mobibot.Utils.reverseColor
 import net.thauvin.erik.mobibot.Utils.toDir
+import net.thauvin.erik.mobibot.Utils.toIntOrDefault
 import net.thauvin.erik.mobibot.Utils.toIsoLocalDate
 import net.thauvin.erik.mobibot.Utils.toUtcDateTime
 import net.thauvin.erik.mobibot.Utils.today
@@ -57,6 +58,7 @@ import java.io.IOException
 import java.net.URL
 import java.time.LocalDateTime
 import java.util.Calendar
+import java.util.Properties
 
 /**
  * The `Utils Test` class.
@@ -102,8 +104,11 @@ class UtilsTest {
 
     @Test
     fun testGetIntProperty() {
-        assertThat(getIntProperty("10", 1)).describedAs("getIntProperty(10, 1)").isEqualTo(10)
-        assertThat(getIntProperty("a", 1)).describedAs("getIntProperty(a, 1)").isEqualTo(1)
+        val p = Properties()
+        p["one"] = "1"
+        p["two"] = "foo"
+        assertThat(p.getIntProperty("one", 1)).describedAs("getIntProperty(one)").isEqualTo(1)
+        assertThat(p.getIntProperty("two", 2)).describedAs("getIntProperty(two)").isEqualTo(2)
     }
 
     @Test
@@ -149,6 +154,12 @@ class UtilsTest {
         assertThat("dir".toDir(false)).describedAs("toDir(dir, false)").isEqualTo("dir" + File.separatorChar)
         assertThat("https://erik.thauvin.net".toDir(true)).describedAs("toDir(erik.thauvin.net, true)")
             .isEqualTo("https://erik.thauvin.net/")
+    }
+
+    @Test
+    fun testToIntOrDefault() {
+        assertThat("10".toIntOrDefault(1)).describedAs("toIntOrDefault(10, 1)").isEqualTo(10)
+        assertThat("a".toIntOrDefault(2)).describedAs("toIntOrDefault(a, 2)").isEqualTo(2)
     }
 
     @Test

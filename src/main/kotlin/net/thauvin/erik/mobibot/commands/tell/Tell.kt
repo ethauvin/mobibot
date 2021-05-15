@@ -34,10 +34,10 @@ package net.thauvin.erik.mobibot.commands.tell
 import net.thauvin.erik.mobibot.Mobibot
 import net.thauvin.erik.mobibot.Utils.bold
 import net.thauvin.erik.mobibot.Utils.buildCmdSyntax
-import net.thauvin.erik.mobibot.Utils.getIntProperty
 import net.thauvin.erik.mobibot.Utils.helpFormat
 import net.thauvin.erik.mobibot.Utils.plural
 import net.thauvin.erik.mobibot.Utils.reverseColor
+import net.thauvin.erik.mobibot.Utils.toIntOrDefault
 import net.thauvin.erik.mobibot.Utils.toUtcDateTime
 import net.thauvin.erik.mobibot.commands.AbstractCommand
 import net.thauvin.erik.mobibot.commands.links.View
@@ -162,9 +162,9 @@ class Tell(bot: Mobibot) : AbstractCommand(bot) {
     override fun setProperty(key: String, value: String) {
         super.setProperty(key, value)
         if (MAX_DAYS_PROP == key) {
-            maxDays = getIntProperty(value, maxDays)
+            maxDays = value.toIntOrDefault(maxDays)
         } else if (MAX_SIZE_PROP == key) {
-            maxSize = getIntProperty(value, maxSize)
+            maxSize = value.toIntOrDefault(maxSize)
         }
     }
 

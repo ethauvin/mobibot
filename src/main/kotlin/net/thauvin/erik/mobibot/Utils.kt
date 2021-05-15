@@ -45,6 +45,7 @@ import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.Date
+import java.util.Properties
 import java.util.concurrent.TimeUnit
 import java.util.stream.Collectors
 
@@ -119,12 +120,8 @@ object Utils {
      * Returns a property as an int.
      */
     @JvmStatic
-    fun getIntProperty(property: String?, def: Int): Int {
-        return try {
-            property?.toInt() ?: def
-        } catch (nfe: NumberFormatException) {
-            def
-        }
+    fun Properties.getIntProperty(key: String, defaultValue: Int): Int {
+        return this.getProperty(key)?.toIntOrDefault(defaultValue) ?: defaultValue
     }
 
     /**
@@ -200,6 +197,18 @@ object Utils {
             } else {
                 this + File.separatorChar
             }
+        }
+    }
+
+    /**
+     * Converts a string to an int.
+     */
+    @JvmStatic
+    fun String.toIntOrDefault(defaultValue: Int): Int {
+        return try {
+            this.toInt()
+        } catch (e: NumberFormatException) {
+            defaultValue
         }
     }
 

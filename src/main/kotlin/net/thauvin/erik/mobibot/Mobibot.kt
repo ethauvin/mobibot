@@ -616,7 +616,7 @@ class Mobibot(nickname: String, channel: String, logsDirPath: String, p: Propert
 
         name = nickname
         ircServer = p.getProperty("server", Constants.DEFAULT_SERVER)
-        ircPort = getIntProperty(p.getProperty("port"), Constants.DEFAULT_PORT)
+        ircPort = p.getIntProperty("port", Constants.DEFAULT_PORT)
         this.channel = channel
         logsDir = logsDirPath
 
