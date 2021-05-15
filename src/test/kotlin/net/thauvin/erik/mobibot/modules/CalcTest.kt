@@ -32,7 +32,7 @@
 package net.thauvin.erik.mobibot.modules
 
 import net.objecthunter.exp4j.tokenizer.UnknownFunctionOrVariableException
-import net.thauvin.erik.mobibot.Utils
+import net.thauvin.erik.mobibot.Utils.bold
 import net.thauvin.erik.mobibot.modules.Calc.Companion.calculate
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
@@ -44,10 +44,10 @@ import org.testng.annotations.Test
 class CalcTest {
     @Test
     fun testCalculate() {
-        assertThat(calculate("1 + 1")).describedAs("calculate(1+1)").isEqualTo("1+1 = %s", Utils.bold(2))
-        assertThat(calculate("1 -3")).describedAs("calculate(1 -3)").isEqualTo("1-3 = %s", Utils.bold(-2))
+        assertThat(calculate("1 + 1")).describedAs("calculate(1+1)").isEqualTo("1+1 = %s", bold(2))
+        assertThat(calculate("1 -3")).describedAs("calculate(1 -3)").isEqualTo("1-3 = %s", bold(-2))
         assertThat(calculate("pi+π+e+φ")).describedAs("calculate(pi+π+e+φ)")
-            .isEqualTo("pi+π+e+φ = %s", Utils.bold("10.62"))
+            .isEqualTo("pi+π+e+φ = %s", bold("10.62"))
         assertThatThrownBy { calculate("one + one") }.describedAs("calculate(one+one)")
             .isInstanceOf(UnknownFunctionOrVariableException::class.java)
     }

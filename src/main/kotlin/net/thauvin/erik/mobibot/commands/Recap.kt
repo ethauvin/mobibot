@@ -33,7 +33,8 @@
 package net.thauvin.erik.mobibot.commands
 
 import net.thauvin.erik.mobibot.Mobibot
-import net.thauvin.erik.mobibot.Utils
+import net.thauvin.erik.mobibot.Utils.toUtcDateTime
+import net.thauvin.erik.mobibot.Utils.helpFormat
 import java.time.Clock
 import java.time.LocalDateTime
 
@@ -41,7 +42,7 @@ class Recap(bot: Mobibot) : AbstractCommand(bot) {
     override val name = "recap"
     override val help = listOf(
         "To list the last 10 public channel messages:",
-        Utils.helpFormat("%c $name")
+        helpFormat("%c $name")
     )
     override val isOp = false
     override val isPublic = true
@@ -57,7 +58,7 @@ class Recap(bot: Mobibot) : AbstractCommand(bot) {
         @JvmStatic
         fun storeRecap(sender: String, message: String, isAction: Boolean) {
             recaps.add(
-                Utils.utcDateTime(LocalDateTime.now(Clock.systemUTC()))
+                LocalDateTime.now(Clock.systemUTC()).toUtcDateTime()
                     + " - $sender" + (if (isAction) " " else ": ") + message
             )
             @Suppress("MagicNumber")

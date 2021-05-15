@@ -40,7 +40,7 @@ import com.rometools.rome.io.FeedException
 import com.rometools.rome.io.SyndFeedInput
 import com.rometools.rome.io.SyndFeedOutput
 import net.thauvin.erik.mobibot.Mobibot
-import net.thauvin.erik.mobibot.Utils.isoLocalDate
+import net.thauvin.erik.mobibot.Utils.toIsoLocalDate
 import java.io.IOException
 import java.io.InputStreamReader
 import java.io.OutputStreamWriter
@@ -146,7 +146,7 @@ object EntriesMgr {
             Files.newInputStream(Paths.get(file)), StandardCharsets.UTF_8
         ).use { reader ->
             val feed = input.build(reader)
-            today = isoLocalDate(feed.publishedDate)
+            today = feed.publishedDate.toIsoLocalDate()
             val items = feed.entries
             var entry: EntryLink
             for (i in items.indices.reversed()) {

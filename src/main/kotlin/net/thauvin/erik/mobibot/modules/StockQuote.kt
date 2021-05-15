@@ -32,7 +32,11 @@
 package net.thauvin.erik.mobibot.modules
 
 import net.thauvin.erik.mobibot.Mobibot
-import net.thauvin.erik.mobibot.Utils
+import net.thauvin.erik.mobibot.Utils.capitalise
+import net.thauvin.erik.mobibot.Utils.encodeUrl
+import net.thauvin.erik.mobibot.Utils.helpFormat
+import net.thauvin.erik.mobibot.Utils.unescapeXml
+import net.thauvin.erik.mobibot.Utils.urlReader
 import net.thauvin.erik.mobibot.msg.ErrorMessage
 import net.thauvin.erik.mobibot.msg.Message
 import net.thauvin.erik.mobibot.msg.NoticeMessage
@@ -91,7 +95,7 @@ class StockQuote(bot: Mobibot) : ThreadedModule(bot) {
                 try {
                     val info = json.getString("Information")
                     if (info.isNotEmpty()) {
-                        throw ModuleException(debugMessage, Utils.unescapeXml(info))
+                        throw ModuleException(debugMessage, unescapeXml(info))
                     }
                 } catch (ignore: JSONException) {
                     // Do nothing
@@ -99,11 +103,11 @@ class StockQuote(bot: Mobibot) : ThreadedModule(bot) {
                 try {
                     var error = json.getString("Note")
                     if (error.isNotEmpty()) {
-                        throw ModuleException(debugMessage, Utils.unescapeXml(error))
+                        throw ModuleException(debugMessage, unescapeXml(error))
                     }
                     error = json.getString("Error Message")
                     if (error.isNotEmpty()) {
-                        throw ModuleException(debugMessage, Utils.unescapeXml(error))
+                        throw ModuleException(debugMessage, unescapeXml(error))
                     }
                 } catch (ignore: JSONException) {
                     // Do nothing
@@ -122,7 +126,7 @@ class StockQuote(bot: Mobibot) : ThreadedModule(bot) {
         fun getQuote(symbol: String, apiKey: String?): List<Message> {
             if (apiKey.isNullOrBlank()) {
                 throw ModuleException(
-                    "${Utils.capitalize(STOCK_CMD)} is disabled. The API key is missing."
+                    "${STOCK_CMD.capitalise()} is disabled. The API key is missing."
                 )
             }
             return if (symbol.isNotBlank()) {
@@ -132,10 +136,10 @@ class StockQuote(bot: Mobibot) : ThreadedModule(bot) {
                 try {
                     with(messages) {
                         // Search for symbol/keywords
-                        response = Utils.urlReader(
+                        response = urlReader(
                             URL(
-                                "${ALPHAVANTAGE_URL}SYMBOL_SEARCH&keywords=" + Utils.encodeUrl(symbol)
-                                    + "&apikey=" + Utils.encodeUrl(apiKey)
+                                "${ALPHAVANTAGE_URL}SYMBOL_SEARCH&keywords=" + encodeUrl(symbol)
+                                    + "&apikey=" + encodeUrl(apiKey)
                             )
                         )
                         var json = getJsonResponse(response, debugMessage)
@@ -146,11 +150,11 @@ class StockQuote(bot: Mobibot) : ThreadedModule(bot) {
                             val symbolInfo = symbols.getJSONObject(0)
 
                             // Get quote for symbol
-                            response = Utils.urlReader(
+                            response = urlReader(
                                 URL(
                                     "${ALPHAVANTAGE_URL}GLOBAL_QUOTE&symbol="
-                                        + Utils.encodeUrl(symbolInfo.getString("1. symbol"))
-                                        + "&apikey=" + Utils.encodeUrl(apiKey)
+                                        + encodeUrl(symbolInfo.getString("1. symbol"))
+                                        + "&apikey=" + encodeUrl(apiKey)
                                 )
                             )
                             json = getJsonResponse(response, debugMessage)
@@ -161,34 +165,28 @@ class StockQuote(bot: Mobibot) : ThreadedModule(bot) {
                             }
                             add(
                                 PublicMessage(
-                                    "Symbol: " + Utils.unescapeXml(quote.getString("01. symbol"))
-                                        + " [" + Utils.unescapeXml(symbolInfo.getString("2. name")) + ']'
+                                    "Symbol: " + unescapeXml(quote.getString("01. symbol"))
+                                        + " [" + unescapeXml(symbolInfo.getString("2. name")) + ']'
                                 )
                             )
-                            add(PublicMessage("    Price:     " + Utils.unescapeXml(quote.getString("05. price"))))
+                            add(PublicMessage("    Price:     " + unescapeXml(quote.getString("05. price"))))
                             add(
                                 PublicMessage(
-                                    "    Previous:  " + Utils.unescapeXml(quote.getString("08. previous close"))
+                                    "    Previous:  " + unescapeXml(quote.getString("08. previous close"))
                                 )
                             )
-                            add(NoticeMessage("    Open:      " + Utils.unescapeXml(quote.getString("02. open"))))
-                            add(NoticeMessage("    High:      " + Utils.unescapeXml(quote.getString("03. high"))))
-                            add(NoticeMessage("    Low:       " + Utils.unescapeXml(quote.getString("04. low"))))
-                            add(
-                                NoticeMessage(
-                                    "    Volume:    " + Utils.unescapeXml(quote.getString("06. volume"))
-                                )
-                            )
-                            add(
-                                NoticeMessage(
-                                    "    Latest:    "
-                                        + Utils.unescapeXml(quote.getString("07. latest trading day"))
+                            add(NoticeMessage("    Open:      " + unescapeXml(quote.getString("02. open"))))
+                            add(NoticeMessage("    High:      " + unescapeXml(quote.getString("03. high"))))
+                            add(NoticeMessage("    Low:       " + unescapeXml(quote.getString("04. low"))))
+                            add(NoticeMessage("    Volume:    " + unescapeXml(quote.getString("06. volume"))))
+                            add(NoticeMessage(
+                                    "    Latest:    " + unescapeXml(quote.getString("07. latest trading day"))
                                 )
                             )
                             add(
                                 NoticeMessage(
-                                    "    Change:    " + Utils.unescapeXml(quote.getString("09. change")) + " ["
-                                        + Utils.unescapeXml(quote.getString("10. change percent")) + ']'
+                                    "    Change:    " + unescapeXml(quote.getString("09. change")) + " ["
+                                        + unescapeXml(quote.getString("10. change percent")) + ']'
                                 )
                             )
                         }
@@ -208,7 +206,7 @@ class StockQuote(bot: Mobibot) : ThreadedModule(bot) {
     init {
         commands.add(STOCK_CMD)
         help.add("To retrieve a stock quote:")
-        help.add(Utils.helpFormat("%c $STOCK_CMD <symbol|keywords>"))
+        help.add(helpFormat("%c $STOCK_CMD <symbol|keywords>"))
         initProperties(ALPHAVANTAGE_API_KEY_PROP)
     }
 }

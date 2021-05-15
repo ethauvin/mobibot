@@ -33,7 +33,9 @@
 package net.thauvin.erik.mobibot.commands
 
 import net.thauvin.erik.mobibot.Mobibot
-import net.thauvin.erik.mobibot.Utils
+import net.thauvin.erik.mobibot.Utils.bold
+import net.thauvin.erik.mobibot.Utils.buildCmdSyntax
+import net.thauvin.erik.mobibot.Utils.helpFormat
 import net.thauvin.erik.mobibot.commands.links.LinksMgr
 
 class Ignore(bot: Mobibot) : AbstractCommand(bot) {
@@ -46,17 +48,17 @@ class Ignore(bot: Mobibot) : AbstractCommand(bot) {
     override val name = IGNORE_CMD
     override val help = listOf(
         "To ignore a link posted to the channel:",
-        Utils.helpFormat("https://www.foo.bar %n"),
+        helpFormat("https://www.foo.bar %n"),
         "To check your ignore status:",
-        Utils.helpFormat("%c $name"),
+        helpFormat("%c $name"),
         "To toggle your ignore status:",
-        Utils.helpFormat("%c $name $me")
+        helpFormat("%c $name $me")
     )
     private val helpOp = listOf(
         "To ignore a link posted to the channel:",
-        Utils.helpFormat("https://www.foo.bar " + Utils.bold("%n"), false),
+        helpFormat("https://www.foo.bar " + bold("%n"), false),
         "To add/remove nicks from the ignored list:",
-        Utils.helpFormat("%c $name <nick> [<nick> ...]")
+        helpFormat("%c $name <nick> [<nick> ...]")
     )
 
     override val isOp = false
@@ -98,7 +100,7 @@ class Ignore(bot: Mobibot) : AbstractCommand(bot) {
     ): Boolean {
         return if (isOp) {
             for (h in helpOp) {
-                bot.send(sender, Utils.buildCmdSyntax(h, bot.nick, isPrivate), isPrivate)
+                bot.send(sender, buildCmdSyntax(h, bot.nick, isPrivate), isPrivate)
             }
             true
         } else {
@@ -143,7 +145,7 @@ class Ignore(bot: Mobibot) : AbstractCommand(bot) {
             @Suppress("MagicNumber")
             bot.sendList(sender, ignored.sorted(), 8, isPrivate, isIndent = true)
         } else {
-            bot.send(sender, "No one is currently ${Utils.bold("ignored")}.", isPrivate)
+            bot.send(sender, "No one is currently ${bold("ignored")}.", isPrivate)
         }
     }
 

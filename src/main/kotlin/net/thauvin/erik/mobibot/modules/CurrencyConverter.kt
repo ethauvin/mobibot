@@ -33,7 +33,10 @@ package net.thauvin.erik.mobibot.modules
 
 import net.thauvin.erik.mobibot.Constants
 import net.thauvin.erik.mobibot.Mobibot
-import net.thauvin.erik.mobibot.Utils
+import net.thauvin.erik.mobibot.Utils.bold
+import net.thauvin.erik.mobibot.Utils.buildCmdSyntax
+import net.thauvin.erik.mobibot.Utils.helpFormat
+import net.thauvin.erik.mobibot.Utils.today
 import net.thauvin.erik.mobibot.msg.ErrorMessage
 import net.thauvin.erik.mobibot.msg.Message
 import net.thauvin.erik.mobibot.msg.PublicMessage
@@ -56,7 +59,7 @@ class CurrencyConverter(bot: Mobibot) : ThreadedModule(bot) {
         isPrivate: Boolean
     ) {
         synchronized(this) {
-            if (pubDate != Utils.today()) {
+            if (pubDate != today()) {
                 EXCHANGE_RATES.clear()
             }
         }
@@ -85,7 +88,7 @@ class CurrencyConverter(bot: Mobibot) : ThreadedModule(bot) {
                     helpResponse(sender, isPrivate)
                 }
             } else if (args.contains(CURRENCY_RATES_KEYWORD)) {
-                send(sender, "The currency rates for ${Utils.bold(pubDate)} are:", isPrivate)
+                send(sender, "The currency rates for ${bold(pubDate)} are:", isPrivate)
                 @Suppress("MagicNumber")
                 sendList(sender, currencyRates(), 3, isPrivate, isIndent = true)
             } else {
@@ -109,16 +112,16 @@ class CurrencyConverter(bot: Mobibot) : ThreadedModule(bot) {
                 send(sender, "To convert from one currency to another:", isPrivate)
                 send(
                     sender,
-                    Utils.helpFormat(
-                        Utils.buildCmdSyntax("%c $CURRENCY_CMD 100 USD to EUR", nick, isPrivateMsgEnabled)
+                    helpFormat(
+                        buildCmdSyntax("%c $CURRENCY_CMD 100 USD to EUR", nick, isPrivateMsgEnabled)
                     ),
                     isPrivate
                 )
                 send(sender, "For a listing of current rates:", isPrivate)
                 send(
                     sender,
-                    Utils.helpFormat(
-                        Utils.buildCmdSyntax("%c $CURRENCY_CMD $CURRENCY_RATES_KEYWORD", nick, isPrivateMsgEnabled)
+                    helpFormat(
+                        buildCmdSyntax("%c $CURRENCY_CMD $CURRENCY_RATES_KEYWORD", nick, isPrivateMsgEnabled)
                     ),
                     isPrivate
                 )

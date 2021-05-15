@@ -33,7 +33,7 @@ package net.thauvin.erik.mobibot.commands
 
 import net.thauvin.erik.mobibot.Mobibot
 import net.thauvin.erik.mobibot.ReleaseInfo
-import net.thauvin.erik.mobibot.Utils.capitalize
+import net.thauvin.erik.mobibot.Utils.capitalise
 import net.thauvin.erik.mobibot.Utils.green
 import net.thauvin.erik.mobibot.Utils.helpFormat
 import net.thauvin.erik.mobibot.Utils.uptime
@@ -42,8 +42,8 @@ import java.lang.management.ManagementFactory
 
 class Info(bot: Mobibot?) : AbstractCommand(bot!!) {
     private val allVersions = listOf(
-        capitalize(ReleaseInfo.PROJECT) + " ${ReleaseInfo.VERSION} (" + green(ReleaseInfo.WEBSITE) + ')',
-        "Written by ${ReleaseInfo.AUTHOR} (" + green(ReleaseInfo.AUTHOR_URL) + ')'
+        "${ReleaseInfo.PROJECT.capitalise()} ${ReleaseInfo.VERSION} (${green(ReleaseInfo.WEBSITE)})",
+        "Written by ${ReleaseInfo.AUTHOR} (${green(ReleaseInfo.AUTHOR_URL)})"
     )
     override val name = "info"
     override val help = listOf("To view information about the bot:", helpFormat("%c $name"))

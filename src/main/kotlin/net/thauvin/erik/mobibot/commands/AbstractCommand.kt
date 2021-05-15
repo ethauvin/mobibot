@@ -33,7 +33,7 @@
 package net.thauvin.erik.mobibot.commands
 
 import net.thauvin.erik.mobibot.Mobibot
-import net.thauvin.erik.mobibot.Utils
+import net.thauvin.erik.mobibot.Utils.buildCmdSyntax
 import java.util.concurrent.ConcurrentHashMap
 
 abstract class AbstractCommand(val bot: Mobibot) {
@@ -56,7 +56,7 @@ abstract class AbstractCommand(val bot: Mobibot) {
     open fun helpResponse(command: String, sender: String, isOp: Boolean, isPrivate: Boolean): Boolean {
         if (!this.isOp || this.isOp == isOp) {
             for (h in help) {
-                bot.send(sender, Utils.buildCmdSyntax(h, bot.nick, isPrivate), isPrivate)
+                bot.send(sender, buildCmdSyntax(h, bot.nick, isPrivate), isPrivate)
             }
             return true
         }

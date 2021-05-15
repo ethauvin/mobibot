@@ -36,7 +36,10 @@ import net.aksingh.owmjapis.core.OWM
 import net.aksingh.owmjapis.core.OWM.Country
 import net.aksingh.owmjapis.model.CurrentWeather
 import net.thauvin.erik.mobibot.Mobibot
-import net.thauvin.erik.mobibot.Utils
+import net.thauvin.erik.mobibot.Utils.capitalise
+import net.thauvin.erik.mobibot.Utils.bold
+import net.thauvin.erik.mobibot.Utils.encodeUrl
+import net.thauvin.erik.mobibot.Utils.helpFormat
 import net.thauvin.erik.mobibot.msg.ErrorMessage
 import net.thauvin.erik.mobibot.msg.Message
 import net.thauvin.erik.mobibot.msg.NoticeMessage
@@ -102,7 +105,7 @@ class Weather2(bot: Mobibot) : ThreadedModule(bot) {
         fun getWeather(query: String, apiKey: String?): List<Message> {
             if (apiKey.isNullOrBlank()) {
                 throw ModuleException(
-                    "${Utils.capitalize(WEATHER_CMD)} is disabled. The API key is missing."
+                    "${WEATHER_CMD.capitalise()} is disabled. The API key is missing."
                 )
             }
             val owm = OWM(apiKey)
@@ -151,7 +154,7 @@ class Weather2(bot: Mobibot) : ThreadedModule(bot) {
                                     for (w in list) {
                                         if (w != null) {
                                             condition.append(' ')
-                                                .append(Utils.capitalize(w.getDescription()))
+                                                .append(w.getDescription().capitalise())
                                                 .append('.')
                                         }
                                     }
@@ -167,7 +170,7 @@ class Weather2(bot: Mobibot) : ThreadedModule(bot) {
                                     messages.add(
                                         NoticeMessage(
                                             "https://openweathermap.org/find?q="
-                                                + Utils.encodeUrl("$city,${country.uppercase()}"),
+                                                + encodeUrl("$city,${country.uppercase()}"),
                                             Colors.GREEN
                                         )
                                     )
@@ -197,10 +200,10 @@ class Weather2(bot: Mobibot) : ThreadedModule(bot) {
     init {
         commands.add(WEATHER_CMD)
         help.add("To display weather information:")
-        help.add(Utils.helpFormat("%c $WEATHER_CMD <city> [, <country code>]"))
+        help.add(helpFormat("%c $WEATHER_CMD <city> [, <country code>]"))
         help.add("For example:")
-        help.add(Utils.helpFormat("%c $WEATHER_CMD paris, fr"))
-        help.add("The default ISO 3166 country code is ${Utils.bold("US")}. Zip codes supported in most countries.")
+        help.add(helpFormat("%c $WEATHER_CMD paris, fr"))
+        help.add("The default ISO 3166 country code is ${bold("US")}. Zip codes supported in most countries.")
         initProperties(OWM_API_KEY_PROP)
     }
 }

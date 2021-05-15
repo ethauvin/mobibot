@@ -31,7 +31,7 @@
  */
 package net.thauvin.erik.mobibot.modules
 
-import net.thauvin.erik.mobibot.Utils
+import net.thauvin.erik.mobibot.Utils.bold
 import net.thauvin.erik.mobibot.modules.WorldTime.Companion.time
 import org.assertj.core.api.Assertions.assertThat
 import org.testng.annotations.Test
@@ -42,7 +42,7 @@ import org.testng.annotations.Test
 class WordTimeTest {
     @Test
     fun testTime() {
-        assertThat(time("PST").msg).describedAs("PST").endsWith(Utils.bold("Los Angeles"))
+        assertThat(time("PST").msg).describedAs("PST").endsWith(bold("Los Angeles"))
         assertThat(time("BLAH").isError).describedAs("BLAH").isTrue
         assertThat(time("BEATS").msg).describedAs("BEATS").contains("@")
     }

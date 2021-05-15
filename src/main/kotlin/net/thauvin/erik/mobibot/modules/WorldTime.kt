@@ -77,7 +77,7 @@ class WorldTime(bot: Mobibot) : AbstractModule(bot) {
             val tz = COUNTRIES_MAP[(query.substring(query.indexOf(' ') + 1).trim()).uppercase()]
             val response: String = if (tz != null) {
                 if (BEATS_KEYWORD == tz) {
-                    "The current Internet Time is: " + bold(internetTime() + ' ' + BEATS_KEYWORD)
+                    "The current Internet Time is: ${bold(internetTime())} $BEATS_KEYWORD"
                 } else {
                     (ZonedDateTime.now()
                         .withZoneSameInstant(ZoneId.of(tz))
@@ -215,7 +215,7 @@ class WorldTime(bot: Mobibot) : AbstractModule(bot) {
 
     init {
         help.add("To display a country's current date/time:")
-        help.add(helpFormat("%c $TIME_CMD") + " [<country code>]")
+        help.add(helpFormat("%c $TIME_CMD [<country code>]"))
         help.add("For a listing of the supported countries:")
         help.add(helpFormat("%c $TIME_CMD"))
         commands.add(TIME_CMD)

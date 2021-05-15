@@ -87,7 +87,7 @@ object Utils {
      * Capitalize a string.
      */
     @JvmStatic
-    fun capitalize(s: String?): String? = s?.replaceFirstChar { it.uppercase() }
+    fun String.capitalise(): String = this.replaceFirstChar { it.uppercase() }
 
     /**
      * Colorize a string.
@@ -114,30 +114,6 @@ object Utils {
      */
     @JvmStatic
     fun encodeUrl(s: String): String = URLEncoder.encode(s, StandardCharsets.UTF_8)
-
-    /**
-     * Ensures that the given location (File/URL) has a trailing slash (`/`) to indicate a directory.
-     */
-    @JvmStatic
-    fun ensureDir(location: String, isUrl: Boolean): String {
-        return if (location.isNotEmpty()) {
-            if (isUrl) {
-                if (location[location.length - 1] == '/') {
-                    location
-                } else {
-                    "$location/"
-                }
-            } else {
-                if (location[location.length - 1] == File.separatorChar) {
-                    location
-                } else {
-                    location + File.separatorChar
-                }
-            }
-        } else {
-            location
-        }
-    }
 
     /**
      * Returns a property as an int.
@@ -167,45 +143,26 @@ object Utils {
     }
 
     /**
-     * Returns the specified date as an ISO local date string.
-     */
-    @JvmStatic
-    fun isoLocalDate(date: Date): String {
-        return isoLocalDate(LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault()))
-    }
-
-    /**
-     * Returns the specified date as an ISO local date string.
-     */
-    @JvmStatic
-    fun isoLocalDate(date: LocalDateTime): String = date.format(DateTimeFormatter.ISO_LOCAL_DATE)
-
-    /**
      * Obfuscates the given string.
      */
     @JvmStatic
-    fun obfuscate(s: String): String {
-        return if (s.isNotBlank()) {
-            StringUtils.repeat('x', s.length)
-        } else s
+    fun String.obfuscate(): String {
+        return if (this.isNotBlank()) {
+            StringUtils.repeat('x', this.length)
+        } else this
     }
 
     /**
      * Returns the plural form of a word, if count &gt; 1.
      */
-    @JvmStatic
-    fun plural(count: Int, word: String, plural: String): String = plural(count.toLong(), word, plural)
-
+    fun String.plural(count: Int, plural: String): String = this.plural(count.toLong(), plural)
+    
     /**
      * Returns the plural form of a word, if count &gt; 1.
      */
     @JvmStatic
-    fun plural(count: Long, word: String, plural: String): String {
-        return if (count > 1) {
-            plural
-        } else {
-            word
-        }
+    fun String.plural(count: Long, plural: String): String {
+        return if (count > 1) plural else this
     }
 
     /**
@@ -224,7 +181,55 @@ object Utils {
      * Returns today's date.
      */
     @JvmStatic
-    fun today(): String = isoLocalDate(LocalDateTime.now())
+    fun today(): String = LocalDateTime.now().toIsoLocalDate()
+
+    /**
+     * Ensures that the given location (File/URL) has a trailing slash (`/`) to indicate a directory.
+     */
+    @JvmStatic
+    fun String.toDir(isUrl: Boolean = false) : String {
+        return if (isUrl) {
+            if (this.last() == '/') {
+                this
+            } else {
+                "$this/"
+            }
+        } else {
+            if (this.last() == File.separatorChar) {
+                this
+            } else {
+                this + File.separatorChar
+            }
+        }
+    }
+
+    /**
+     * Returns the specified date as an ISO local date string.
+     */
+    @JvmStatic
+    fun Date.toIsoLocalDate(): String {
+        return LocalDateTime.ofInstant(this.toInstant(), ZoneId.systemDefault()).toIsoLocalDate()
+    }
+
+    /**
+     * Returns the specified date as an ISO local date string.
+     */
+    @JvmStatic
+    fun LocalDateTime.toIsoLocalDate(): String = this.format(DateTimeFormatter.ISO_LOCAL_DATE)
+
+    /**
+     * Returns the specified date formatted as `yyyy-MM-dd HH:mm`.
+     */
+    @JvmStatic
+    fun Date.toUtcDateTime(): String {
+        return LocalDateTime.ofInstant(this.toInstant(), ZoneId.systemDefault()).toUtcDateTime()
+    }
+
+    /**
+     * Returns the specified date formatted as `yyyy-MM-dd HH:mm`.
+     */
+    @JvmStatic
+    fun LocalDateTime.toUtcDateTime(): String  = this.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))
 
     /**
      * Converts XML/XHTML entities to plain text.
@@ -254,21 +259,21 @@ object Utils {
         )
         with(info) {
             if (years > 0) {
-                append(years).append(plural(years, " year ", " years "))
+                append(years).append(" year ".plural(years, " years "))
             }
             if (months > 0) {
-                append(weeks).append(plural(months, " month ", " months "))
+                append(weeks).append(" month ".plural(months, " months "))
             }
             if (weeks > 0) {
-                append(weeks).append(plural(weeks, " week ", " weeks "))
+                append(weeks).append(" week ".plural(weeks, " weeks "))
             }
             if (days > 0) {
-                append(days).append(plural(days, " day ", " days "))
+                append(days).append(" day ".plural(days, " days "))
             }
             if (hours > 0) {
-                append(hours).append(plural(hours, " hour ", " hours "))
+                append(hours).append(" hour ".plural(hours, " hours "))
             }
-            append(minutes).append(plural(minutes, " minute", " minutes"))
+            append(minutes).append(" minute ".plural(minutes, " minutes"))
             return toString()
         }
     }
@@ -281,21 +286,5 @@ object Utils {
     fun urlReader(url: URL): String {
         BufferedReader(InputStreamReader(url.openStream(), StandardCharsets.UTF_8))
             .use { reader -> return reader.lines().collect(Collectors.joining(System.lineSeparator())) }
-    }
-
-    /**
-     * Returns the specified date formatted as `yyyy-MM-dd HH:mm`.
-     */
-    @JvmStatic
-    fun utcDateTime(date: Date): String {
-        return utcDateTime(LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault()))
-    }
-
-    /**
-     * Returns the specified date formatted as `yyyy-MM-dd HH:mm`.
-     */
-    @JvmStatic
-    fun utcDateTime(date: LocalDateTime?): String {
-        return date?.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")) ?: ""
     }
 }

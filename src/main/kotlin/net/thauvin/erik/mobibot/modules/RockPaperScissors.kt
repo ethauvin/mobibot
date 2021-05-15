@@ -33,7 +33,10 @@
 package net.thauvin.erik.mobibot.modules
 
 import net.thauvin.erik.mobibot.Mobibot
-import net.thauvin.erik.mobibot.Utils
+import net.thauvin.erik.mobibot.Utils.bold
+import net.thauvin.erik.mobibot.Utils.green
+import net.thauvin.erik.mobibot.Utils.helpFormat
+import net.thauvin.erik.mobibot.Utils.red
 import kotlin.random.Random
 
 
@@ -51,7 +54,7 @@ class RockPaperScissors(bot: Mobibot) : AbstractModule(bot) {
         with(help) {
             add("To play Rock Paper Scissors:")
             add(
-                Utils.helpFormat(
+                helpFormat(
                     "%c ${Hands.ROCK.name.lowercase()} | ${Hands.PAPER.name.lowercase()}"
                         + " | ${Hands.SCISSORS.name.lowercase()}"
                 )
@@ -99,15 +102,15 @@ class RockPaperScissors(bot: Mobibot) : AbstractModule(bot) {
         with(bot) {
             when {
                 hand == botHand -> {
-                    send("${Utils.green(hand.name)} vs. ${Utils.green(botHand.name)}")
+                    send("${green(hand.name)} vs. ${green(botHand.name)}")
                     action("tied.")
                 }
                 hand.beats(botHand) -> {
-                    send("${Utils.green(hand.name)} ${Utils.bold(hand.action)} ${Utils.red(botHand.name)}")
+                    send("${green(hand.name)} ${bold(hand.action)} ${red(botHand.name)}")
                     action("lost.")
                 }
                 else -> {
-                    send("${Utils.green(botHand.name)} ${Utils.bold(botHand.action)} ${Utils.red(hand.name)}")
+                    send("${green(botHand.name)} ${bold(botHand.action)} ${red(hand.name)}")
                     action("wins.")
                 }
             }

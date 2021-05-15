@@ -35,18 +35,18 @@ import net.thauvin.erik.mobibot.Utils.bold
 import net.thauvin.erik.mobibot.Utils.capitalize
 import net.thauvin.erik.mobibot.Utils.colorize
 import net.thauvin.erik.mobibot.Utils.cyan
-import net.thauvin.erik.mobibot.Utils.ensureDir
 import net.thauvin.erik.mobibot.Utils.getIntProperty
 import net.thauvin.erik.mobibot.Utils.green
-import net.thauvin.erik.mobibot.Utils.isoLocalDate
 import net.thauvin.erik.mobibot.Utils.obfuscate
 import net.thauvin.erik.mobibot.Utils.plural
 import net.thauvin.erik.mobibot.Utils.reverseColor
+import net.thauvin.erik.mobibot.Utils.toDir
+import net.thauvin.erik.mobibot.Utils.toIsoLocalDate
+import net.thauvin.erik.mobibot.Utils.toUtcDateTime
 import net.thauvin.erik.mobibot.Utils.today
 import net.thauvin.erik.mobibot.Utils.unescapeXml
 import net.thauvin.erik.mobibot.Utils.uptime
 import net.thauvin.erik.mobibot.Utils.urlReader
-import net.thauvin.erik.mobibot.Utils.utcDateTime
 import org.apache.commons.lang3.StringUtils
 import org.assertj.core.api.Assertions.assertThat
 import org.jibble.pircbot.Colors
@@ -102,13 +102,6 @@ class UtilsTest {
     }
 
     @Test
-    fun testEnsureDir() {
-        assertThat(ensureDir("dir", false)).describedAs("ensureDir(dir, false)").isEqualTo("dir" + File.separatorChar)
-        assertThat(ensureDir("https://erik.thauvin.net", true)).describedAs("ensureDir(erik.thauvin.net, true)")
-            .isEqualTo("https://erik.thauvin.net/")
-    }
-
-    @Test
     fun testGetIntProperty() {
         assertThat(getIntProperty("10", 1)).describedAs("getIntProperty(10, 1)").isEqualTo(10)
         assertThat(getIntProperty("a", 1)).describedAs("getIntProperty(a, 1)").isEqualTo(1)
@@ -121,25 +114,25 @@ class UtilsTest {
 
     @Test
     fun testIsoLocalDate() {
-        assertThat(isoLocalDate(cal.time)).describedAs("isoLocalDate(date)").isEqualTo("1952-02-17")
-        assertThat(isoLocalDate(localDateTime)).describedAs("isoLocalDate(localDate)").isEqualTo("1952-02-17")
+        assertThat(cal.time.toIsoLocalDate()).describedAs("isoLocalDate(date)").isEqualTo("1952-02-17")
+        assertThat(localDateTime.toIsoLocalDate()).describedAs("isoLocalDate(localDate)").isEqualTo("1952-02-17")
     }
 
     @Test
     fun testObfuscate() {
-        assertThat(obfuscate(ascii).length).describedAs("obfuscate is right length").isEqualTo(ascii.length)
-        assertThat(obfuscate(ascii)).describedAs("obfuscate()").isEqualTo(StringUtils.repeat("x", ascii.length))
-        assertThat(obfuscate(" ")).describedAs("obfuscate(blank)").isEqualTo(" ")
+        assertThat(ascii.obfuscate().length).describedAs("obfuscate is right length").isEqualTo(ascii.length)
+        assertThat(ascii.obfuscate()).describedAs("obfuscate()").isEqualTo(StringUtils.repeat("x", ascii.length))
+        assertThat(" ".obfuscate()).describedAs("obfuscate(blank)").isEqualTo(" ")
     }
 
     @Test
     fun testPlural() {
         val week = "week"
         val weeks = "weeks"
-        assertThat(plural(-1, week, weeks)).describedAs("plural(-1)").isEqualTo(week)
-        assertThat(plural(0, week, weeks)).describedAs("plural(0)").isEqualTo(week)
-        assertThat(plural(1, week, weeks)).describedAs("plural(1)").isEqualTo(week)
-        assertThat(plural(2, week, weeks)).describedAs("plural(2)").isEqualTo(weeks)
+        assertThat(week.plural(-1, weeks)).describedAs("plural(-1)").isEqualTo(week)
+        assertThat(week.plural(0, weeks)).describedAs("plural(0)").isEqualTo(week)
+        assertThat(week.plural(1, weeks)).describedAs("plural(1)").isEqualTo(week)
+        assertThat(week.plural(2, weeks)).describedAs("plural(2)").isEqualTo(weeks)
     }
 
     @Test
@@ -149,7 +142,14 @@ class UtilsTest {
 
     @Test
     fun testToday() {
-        assertThat(today()).isEqualTo(isoLocalDate(LocalDateTime.now()))
+        assertThat(today()).isEqualTo(LocalDateTime.now().toIsoLocalDate())
+    }
+
+    @Test
+    fun testToDir() {
+        assertThat("dir".toDir(false)).describedAs("toDir(dir, false)").isEqualTo("dir" + File.separatorChar)
+        assertThat("https://erik.thauvin.net".toDir(true)).describedAs("toDir(erik.thauvin.net, true)")
+            .isEqualTo("https://erik.thauvin.net/")
     }
 
     @Test
@@ -174,7 +174,7 @@ class UtilsTest {
 
     @Test
     fun testUtcDateTime() {
-        assertThat(utcDateTime(cal.time)).describedAs("utcDateTime(date)").isEqualTo("1952-02-17 12:30")
-        assertThat(utcDateTime(localDateTime)).describedAs("utcDateTime(localDate)").isEqualTo("1952-02-17 12:30")
+        assertThat(cal.time.toUtcDateTime()).describedAs("utcDateTime(date)").isEqualTo("1952-02-17 12:30")
+        assertThat(localDateTime.toUtcDateTime()).describedAs("utcDateTime(localDate)").isEqualTo("1952-02-17 12:30")
     }
 }

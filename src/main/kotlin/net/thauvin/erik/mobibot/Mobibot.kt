@@ -36,11 +36,11 @@ import net.thauvin.erik.mobibot.PinboardUtils.deletePin
 import net.thauvin.erik.mobibot.PinboardUtils.updatePin
 import net.thauvin.erik.mobibot.Utils.buildCmdSyntax
 import net.thauvin.erik.mobibot.Utils.colorize
-import net.thauvin.erik.mobibot.Utils.ensureDir
 import net.thauvin.erik.mobibot.Utils.getIntProperty
 import net.thauvin.erik.mobibot.Utils.helpFormat
-import net.thauvin.erik.mobibot.Utils.isoLocalDate
 import net.thauvin.erik.mobibot.Utils.today
+import net.thauvin.erik.mobibot.Utils.toIsoLocalDate
+import net.thauvin.erik.mobibot.Utils.toDir
 import net.thauvin.erik.mobibot.commands.AddLog
 import net.thauvin.erik.mobibot.commands.ChannelFeed
 import net.thauvin.erik.mobibot.commands.Cycle
@@ -546,7 +546,7 @@ class Mobibot(nickname: String, channel: String, logsDirPath: String, p: Propert
                 }
                 commandLine.hasOption(Constants.VERSION_ARG[0]) -> {
                     // Output the version
-                    println("${ReleaseInfo.PROJECT} ${ReleaseInfo.VERSION} (${isoLocalDate(ReleaseInfo.BUILDDATE)})")
+                    println("${ReleaseInfo.PROJECT} ${ReleaseInfo.VERSION} (${ReleaseInfo.BUILDDATE.toIsoLocalDate()})")
                     println(ReleaseInfo.WEBSITE)
                 }
                 else -> {
@@ -567,7 +567,7 @@ class Mobibot(nickname: String, channel: String, logsDirPath: String, p: Propert
                     }
                     val nickname = p.getProperty("nick", Mobibot::class.java.name.lowercase())
                     val channel = p.getProperty("channel")
-                    val logsDir = ensureDir(p.getProperty("logs", "."), false)
+                    val logsDir = p.getProperty("logs", ".").toDir()
 
                     // Redirect stdout and stderr
                     if (!commandLine.hasOption(Constants.DEBUG_ARG[0])) {
@@ -637,7 +637,7 @@ class Mobibot(nickname: String, channel: String, logsDirPath: String, p: Propert
 
         // Set the URLs
         weblogUrl = p.getProperty("weblog", "")
-        backlogsUrl = ensureDir(p.getProperty("backlogs", weblogUrl), true)
+        backlogsUrl = p.getProperty("backlogs", weblogUrl).toDir(true)
 
         // Load the current entries and backlogs, if any
         try {

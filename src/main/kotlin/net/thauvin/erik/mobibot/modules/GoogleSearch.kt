@@ -32,7 +32,11 @@
 package net.thauvin.erik.mobibot.modules
 
 import net.thauvin.erik.mobibot.Mobibot
-import net.thauvin.erik.mobibot.Utils
+import net.thauvin.erik.mobibot.Utils.capitalise
+import net.thauvin.erik.mobibot.Utils.encodeUrl
+import net.thauvin.erik.mobibot.Utils.helpFormat
+import net.thauvin.erik.mobibot.Utils.urlReader
+import net.thauvin.erik.mobibot.Utils.unescapeXml
 import net.thauvin.erik.mobibot.msg.Message
 import net.thauvin.erik.mobibot.msg.NoticeMessage
 import org.jibble.pircbot.Colors
@@ -86,21 +90,21 @@ class GoogleSearch(bot: Mobibot) : ThreadedModule(bot) {
         @Throws(ModuleException::class)
         fun searchGoogle(query: String, apiKey: String?, cseKey: String?): List<Message> {
             if (apiKey.isNullOrBlank() || cseKey.isNullOrBlank()) {
-                throw ModuleException("${Utils.capitalize(GOOGLE_CMD)} is disabled. The API keys are missing.")
+                throw ModuleException("${GOOGLE_CMD.capitalise()} is disabled. The API keys are missing.")
             }
             return if (query.isNotBlank()) {
                 val results = mutableListOf<Message>()
                 try {
                     val url = URL(
                         "https://www.googleapis.com/customsearch/v1?key=$apiKey&cx=$cseKey" +
-                            "&q=${Utils.encodeUrl(query)}&filter=1&num=5&alt=json"
+                            "&q=${encodeUrl(query)}&filter=1&num=5&alt=json"
                     )
-                    val json = JSONObject(Utils.urlReader(url))
+                    val json = JSONObject(urlReader(url))
                     val ja = json.getJSONArray("items")
                     for (i in 0 until ja.length()) {
                         val j = ja.getJSONObject(i)
-                        results.add(NoticeMessage(Utils.unescapeXml(j.getString("title"))))
-                        results.add(NoticeMessage(Utils.helpFormat(j.getString("link"), false), Colors.DARK_GREEN))
+                        results.add(NoticeMessage(unescapeXml(j.getString("title"))))
+                        results.add(NoticeMessage(helpFormat(j.getString("link"), false), Colors.DARK_GREEN))
                     }
                 } catch (e: IOException) {
                     throw ModuleException("searchGoogle($query)", "An IO error has occurred searching Google.", e)
@@ -117,7 +121,7 @@ class GoogleSearch(bot: Mobibot) : ThreadedModule(bot) {
     init {
         commands.add(GOOGLE_CMD)
         help.add("To search Google:")
-        help.add(Utils.helpFormat("%c $GOOGLE_CMD <query>"))
+        help.add(helpFormat("%c $GOOGLE_CMD <query>"))
         initProperties(GOOGLE_API_KEY_PROP, GOOGLE_CSE_KEY_PROP)
     }
 }

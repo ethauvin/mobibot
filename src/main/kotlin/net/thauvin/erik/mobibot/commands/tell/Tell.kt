@@ -38,7 +38,7 @@ import net.thauvin.erik.mobibot.Utils.getIntProperty
 import net.thauvin.erik.mobibot.Utils.helpFormat
 import net.thauvin.erik.mobibot.Utils.plural
 import net.thauvin.erik.mobibot.Utils.reverseColor
-import net.thauvin.erik.mobibot.Utils.utcDateTime
+import net.thauvin.erik.mobibot.Utils.toUtcDateTime
 import net.thauvin.erik.mobibot.commands.AbstractCommand
 import net.thauvin.erik.mobibot.commands.links.View
 
@@ -117,21 +117,16 @@ class Tell(bot: Mobibot) : AbstractCommand(bot) {
      */
     override val name = "tell"
 
-    override val help: List<String>
-        get() = listOf(
+    override val help  = listOf(
             "To send a message to someone when they join the channel:",
             helpFormat("%c $name <nick> <message>"),
             "To view queued and sent messages:",
             helpFormat("%c $name ${View.VIEW_CMD}"),
-            "Messages are kept for " + bold(maxDays)
-                + plural(maxDays, " day.", " days.")
+            "Messages are kept for ${bold(maxDays)}" + " day.".plural(maxDays, " days.")
         )
-    override val isOp: Boolean
-        get() = false
-    override val isPublic: Boolean
-        get() = isEnabled()
-    override val isVisible: Boolean
-        get() = isEnabled()
+    override val isOp: Boolean = false
+    override val isPublic: Boolean = isEnabled()
+    override val isVisible: Boolean = isEnabled()
 
     override fun commandResponse(
         sender: String,
@@ -232,8 +227,8 @@ class Tell(bot: Mobibot) : AbstractCommand(bot) {
                         && !message.isNotified) {
                         bot.send(
                             nickname,
-                            "Your message ${reverseColor("[ID " + message.id + ']')} was sent to " +
-                                "${bold(message.recipient)} on ${utcDateTime(message.receptionDate)}",
+                            "Your message ${reverseColor("[ID " + message.id + ']')} was sent to "
+                                + "${bold(message.recipient)} on ${message.receptionDate.toUtcDateTime()}",
                             true
                         )
                         message.isNotified = true
@@ -248,9 +243,7 @@ class Tell(bot: Mobibot) : AbstractCommand(bot) {
      *
      * @return The size.
      */
-    fun size(): Int {
-        return messages.size
-    }
+    fun size(): Int = messages.size
 
     // View all messages.
     private fun viewAll(sender: String, isPrivate: Boolean) {
@@ -281,7 +274,7 @@ class Tell(bot: Mobibot) : AbstractCommand(bot) {
                     bot.send(
                         sender,
                         bold(message.sender) + ARROW + bold(message.recipient)
-                            + " [" + utcDateTime(message.receptionDate) + ", ID: "
+                            + " [${message.receptionDate.toUtcDateTime()}, ID: "
                             + bold(message.id) + ", DELIVERED]",
                         isPrivate
                     )
@@ -289,7 +282,7 @@ class Tell(bot: Mobibot) : AbstractCommand(bot) {
                     bot.send(
                         sender,
                         bold(message.sender) + ARROW + bold(message.recipient)
-                            + " [" + utcDateTime(message.queued) + ", ID: "
+                            + " [${message.queued.toUtcDateTime()}, ID: "
                             + bold(message.id) + ", QUEUED]",
                         isPrivate
                     )
@@ -312,11 +305,7 @@ class Tell(bot: Mobibot) : AbstractCommand(bot) {
                 ),
                 isPrivate
             )
-            bot.send(
-                sender,
-                "Messages are kept for ${bold(maxDays)}${plural(maxDays, " day.", " days.")}",
-                isPrivate
-            )
+            bot.send(sender, help.last(), isPrivate)
         }
     }
 

@@ -32,7 +32,9 @@
 package net.thauvin.erik.mobibot.modules
 
 import net.thauvin.erik.mobibot.Mobibot
-import net.thauvin.erik.mobibot.Utils
+import net.thauvin.erik.mobibot.Utils.cyan
+import net.thauvin.erik.mobibot.Utils.helpFormat
+import net.thauvin.erik.mobibot.Utils.urlReader
 import net.thauvin.erik.mobibot.msg.Message
 import net.thauvin.erik.mobibot.msg.PublicMessage
 import org.json.JSONException
@@ -58,7 +60,7 @@ class Joke(bot: Mobibot) : ThreadedModule(bot) {
      */
     override fun run(sender: String, cmd: String, args: String, isPrivate: Boolean) {
         try {
-            bot.send(Utils.cyan(randomJoke().msg))
+            bot.send(cyan(randomJoke().msg))
         } catch (e: ModuleException) {
             if (bot.logger.isWarnEnabled) bot.logger.warn(e.debugMessage, e)
             bot.send(sender, e.message, isPrivate)
@@ -81,7 +83,7 @@ class Joke(bot: Mobibot) : ThreadedModule(bot) {
         fun randomJoke(): Message {
             return try {
                 val url = URL(JOKE_URL)
-                val json = JSONObject(Utils.urlReader(url))
+                val json = JSONObject(urlReader(url))
                 PublicMessage(
                     json.getJSONObject("value")["joke"].toString().replace("\\'", "'")
                         .replace("\\\"", "\"")
@@ -97,6 +99,6 @@ class Joke(bot: Mobibot) : ThreadedModule(bot) {
     init {
         commands.add(JOKE_CMD)
         help.add("To retrieve a random joke:")
-        help.add(Utils.helpFormat("%c $JOKE_CMD"))
+        help.add(helpFormat("%c $JOKE_CMD"))
     }
 }

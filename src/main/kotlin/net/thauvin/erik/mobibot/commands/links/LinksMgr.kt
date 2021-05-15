@@ -34,7 +34,9 @@ package net.thauvin.erik.mobibot.commands.links
 
 import net.thauvin.erik.mobibot.Constants
 import net.thauvin.erik.mobibot.Mobibot
-import net.thauvin.erik.mobibot.Utils
+import net.thauvin.erik.mobibot.Utils.bold
+import net.thauvin.erik.mobibot.Utils.helpFormat
+import net.thauvin.erik.mobibot.Utils.today
 import net.thauvin.erik.mobibot.commands.AbstractCommand
 import net.thauvin.erik.mobibot.commands.Ignore
 import net.thauvin.erik.mobibot.entries.EntriesMgr
@@ -72,7 +74,7 @@ class LinksMgr(bot: Mobibot) : AbstractCommand(bot) {
         val history = mutableListOf<String>()
 
         @JvmStatic
-        var startDate: String = Utils.today()
+        var startDate: String = today()
             private set
 
         /**
@@ -88,9 +90,9 @@ class LinksMgr(bot: Mobibot) : AbstractCommand(bot) {
         @JvmStatic
         fun startup(current: String, backlogs: String, channel: String) {
             startDate = EntriesMgr.loadEntries(current, channel, entries)
-            if (Utils.today() != startDate) {
+            if (today() != startDate) {
                 entries.clear()
-                startDate = Utils.today()
+                startDate = today()
             }
             EntriesMgr.loadBacklogs(backlogs, history)
         }
@@ -144,7 +146,7 @@ class LinksMgr(bot: Mobibot) : AbstractCommand(bot) {
                     bot.send(sender, "Please specify a title, by typing:", isPrivate)
                     bot.send(
                         sender,
-                        Utils.helpFormat("${EntriesUtils.buildLinkCmd(index)}:|This is the title"),
+                        helpFormat("${EntriesUtils.buildLinkCmd(index)}:|This is the title"),
                         isPrivate
                     )
                 }
@@ -183,7 +185,7 @@ class LinksMgr(bot: Mobibot) : AbstractCommand(bot) {
             for (i in entries.indices) {
                 if (link == entries[i].link) {
                     val entry: EntryLink = entries[i]
-                    bot.send(sender, Utils.bold("Duplicate") + " >> " + EntriesUtils.buildLink(i, entry), isPrivate)
+                    bot.send(sender, bold("Duplicate") + " >> " + EntriesUtils.buildLink(i, entry), isPrivate)
                     return true
                 }
             }
@@ -201,10 +203,10 @@ class LinksMgr(bot: Mobibot) : AbstractCommand(bot) {
     }
 
     private fun saveDayBackup(bot: Mobibot): Boolean {
-        if (Utils.today() != startDate) {
+        if (today() != startDate) {
             saveEntries(bot, true)
             entries.clear()
-            startDate = Utils.today()
+            startDate = today()
             return true
         }
 
