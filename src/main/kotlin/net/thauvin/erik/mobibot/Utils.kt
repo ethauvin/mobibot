@@ -156,7 +156,7 @@ object Utils {
      * Returns the plural form of a word, if count &gt; 1.
      */
     fun String.plural(count: Int, plural: String): String = this.plural(count.toLong(), plural)
-    
+
     /**
      * Returns the plural form of a word, if count &gt; 1.
      */
@@ -187,7 +187,7 @@ object Utils {
      * Ensures that the given location (File/URL) has a trailing slash (`/`) to indicate a directory.
      */
     @JvmStatic
-    fun String.toDir(isUrl: Boolean = false) : String {
+    fun String.toDir(isUrl: Boolean = false): String {
         return if (isUrl) {
             if (this.last() == '/') {
                 this
@@ -229,7 +229,7 @@ object Utils {
      * Returns the specified date formatted as `yyyy-MM-dd HH:mm`.
      */
     @JvmStatic
-    fun LocalDateTime.toUtcDateTime(): String  = this.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))
+    fun LocalDateTime.toUtcDateTime(): String = this.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))
 
     /**
      * Converts XML/XHTML entities to plain text.

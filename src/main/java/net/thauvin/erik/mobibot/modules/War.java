@@ -44,7 +44,6 @@ import static net.thauvin.erik.mobibot.Utils.bold;
  * The War module.
  *
  * @author <a href="https://erik.thauvin.net" target="_blank">Erik C. Thauvin</a>
- * @created 2014-04-28
  * @since 1.0
  */
 public final class War extends AbstractModule {

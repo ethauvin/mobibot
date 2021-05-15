@@ -36,8 +36,8 @@ import net.aksingh.owmjapis.core.OWM
 import net.aksingh.owmjapis.core.OWM.Country
 import net.aksingh.owmjapis.model.CurrentWeather
 import net.thauvin.erik.mobibot.Mobibot
-import net.thauvin.erik.mobibot.Utils.capitalise
 import net.thauvin.erik.mobibot.Utils.bold
+import net.thauvin.erik.mobibot.Utils.capitalise
 import net.thauvin.erik.mobibot.Utils.encodeUrl
 import net.thauvin.erik.mobibot.Utils.helpFormat
 import net.thauvin.erik.mobibot.msg.ErrorMessage

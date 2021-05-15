@@ -117,13 +117,13 @@ class Tell(bot: Mobibot) : AbstractCommand(bot) {
      */
     override val name = "tell"
 
-    override val help  = listOf(
-            "To send a message to someone when they join the channel:",
-            helpFormat("%c $name <nick> <message>"),
-            "To view queued and sent messages:",
-            helpFormat("%c $name ${View.VIEW_CMD}"),
-            "Messages are kept for ${bold(maxDays)}" + " day.".plural(maxDays, " days.")
-        )
+    override val help = listOf(
+        "To send a message to someone when they join the channel:",
+        helpFormat("%c $name <nick> <message>"),
+        "To view queued and sent messages:",
+        helpFormat("%c $name ${View.VIEW_CMD}"),
+        "Messages are kept for ${bold(maxDays)}" + " day.".plural(maxDays, " days.")
+    )
     override val isOp: Boolean = false
     override val isPublic: Boolean = isEnabled()
     override val isVisible: Boolean = isEnabled()
@@ -224,7 +224,8 @@ class Tell(bot: Mobibot) : AbstractCommand(bot) {
                             save()
                         }
                     } else if (message.sender.equals(nickname, ignoreCase = true) && message.isReceived
-                        && !message.isNotified) {
+                        && !message.isNotified
+                    ) {
                         bot.send(
                             nickname,
                             "Your message ${reverseColor("[ID " + message.id + ']')} was sent to "

@@ -35,8 +35,8 @@ import net.thauvin.erik.mobibot.Mobibot
 import net.thauvin.erik.mobibot.Utils.capitalise
 import net.thauvin.erik.mobibot.Utils.encodeUrl
 import net.thauvin.erik.mobibot.Utils.helpFormat
-import net.thauvin.erik.mobibot.Utils.urlReader
 import net.thauvin.erik.mobibot.Utils.unescapeXml
+import net.thauvin.erik.mobibot.Utils.urlReader
 import net.thauvin.erik.mobibot.msg.Message
 import net.thauvin.erik.mobibot.msg.NoticeMessage
 import org.jibble.pircbot.Colors

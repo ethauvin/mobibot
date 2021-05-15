@@ -32,7 +32,7 @@
 package net.thauvin.erik.mobibot
 
 import net.thauvin.erik.mobibot.Utils.bold
-import net.thauvin.erik.mobibot.Utils.capitalize
+import net.thauvin.erik.mobibot.Utils.capitalise
 import net.thauvin.erik.mobibot.Utils.colorize
 import net.thauvin.erik.mobibot.Utils.cyan
 import net.thauvin.erik.mobibot.Utils.getIntProperty
@@ -79,11 +79,10 @@ class UtilsTest {
     }
 
     @Test
-    fun testCapitalize() {
-        assertThat(capitalize("test")).describedAs("capitalize(test)").isEqualTo("Test")
-        assertThat(capitalize("Test")).describedAs("capitalize(Test)").isEqualTo("Test")
-        assertThat(capitalize(null)).describedAs("captitalize(null)").isNull()
-        assertThat(capitalize("")).describedAs("capitalize()").isEqualTo("")
+    fun testCapitalise() {
+        assertThat("test".capitalise()).describedAs("capitalize(test)").isEqualTo("Test")
+        assertThat("Test".capitalise()).describedAs("capitalize(Test)").isEqualTo("Test")
+        assertThat("".capitalise()).describedAs("capitalize()").isEqualTo("")
     }
 
     @Test
@@ -168,8 +167,9 @@ class UtilsTest {
     @Throws(IOException::class)
     fun testUrlReader() {
         assertThat(urlReader(URL("https://postman-echo.com/status/200"))).describedAs("urlReader()")
-            .isEqualTo("{\"status\":200}"
-        )
+            .isEqualTo(
+                "{\"status\":200}"
+            )
     }
 
     @Test
