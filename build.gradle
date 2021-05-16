@@ -3,7 +3,7 @@ plugins {
     id 'checkstyle'
     id 'com.github.ben-manes.versions' version '0.38.0'
     id 'idea'
-    id 'io.gitlab.arturbosch.detekt' version '1.17.0-RC1'
+    id 'io.gitlab.arturbosch.detekt' version '1.17.0'
     id 'jacoco'
     id 'java'
     id 'net.thauvin.erik.gradle.semver' version '1.0.4'
@@ -38,7 +38,7 @@ dependencies {
     compileOnly 'pircbot:pircbot:1.5.0:sources'
 
     implementation(platform("org.jetbrains.kotlin:kotlin-bom"))
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.0-RC'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.0'
 
     implementation "org.apache.logging.log4j:log4j-api:$versions.log4j"
     implementation "org.apache.logging.log4j:log4j-core:$versions.log4j"
@@ -112,7 +112,7 @@ pmd {
 }
 
 detekt {
-    toolVersion = "main-SNAPSHOT"
+    //toolVersion = "main-SNAPSHOT"
     baseline = file("${projectDir}/config/detekt/baseline.xml")
 }
 
