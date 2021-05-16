@@ -80,7 +80,7 @@ object EntriesMgr {
             if (!history.contains(bot.today)) {
                 history.add(bot.today)
                 while (history.size > maxBacklogs) {
-                    history.removeAt(0)
+                    history.removeFirst()
                 }
             }
             OutputStreamWriter(
@@ -201,7 +201,6 @@ object EntriesMgr {
                         language = "en"
                     }
                     val buff: StringBuilder = StringBuilder()
-                    var comment: EntryComment
                     for (i in entries.size - 1 downTo 0) {
                         with(entries[i]) {
                             buff.setLength(0)
@@ -215,13 +214,11 @@ object EntriesMgr {
                                 .append("</b></a>")
                             if (comments.size > 0) {
                                 buff.append(" <br/><br/>")
-                                val comments = comments
                                 for (j in comments.indices) {
-                                    comment = comments[j]
                                     if (j > 0) {
                                         buff.append(" <br/>")
                                     }
-                                    buff.append(comment.nick).append(": ").append(comment.comment)
+                                    buff.append(comments[j].nick).append(": ").append(comments[j].comment)
                                 }
                             }
                             item = SyndEntryImpl()

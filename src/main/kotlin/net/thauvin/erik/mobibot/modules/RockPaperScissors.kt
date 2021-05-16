@@ -56,7 +56,7 @@ class RockPaperScissors(bot: Mobibot) : AbstractModule(bot) {
             add(
                 helpFormat(
                     "%c ${Hands.ROCK.name.lowercase()} | ${Hands.PAPER.name.lowercase()}"
-                        + " | ${Hands.SCISSORS.name.lowercase()}"
+                            + " | ${Hands.SCISSORS.name.lowercase()}"
                 )
             )
         }

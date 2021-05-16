@@ -104,9 +104,7 @@ class Weather2(bot: Mobibot) : ThreadedModule(bot) {
         @Throws(ModuleException::class)
         fun getWeather(query: String, apiKey: String?): List<Message> {
             if (apiKey.isNullOrBlank()) {
-                throw ModuleException(
-                    "${WEATHER_CMD.capitalise()} is disabled. The API key is missing."
-                )
+                throw ModuleException("${WEATHER_CMD.capitalise()} is disabled. The API key is missing.")
             }
             val owm = OWM(apiKey)
             val messages = mutableListOf<Message>()
@@ -127,9 +125,7 @@ class Weather2(bot: Mobibot) : ThreadedModule(bot) {
                             owm.currentWeatherByCityName(city, getCountry(country))
                         }
                         if (cwd.hasCityName()) {
-                            messages.add(
-                                PublicMessage("City: ${cwd.cityName} [${country.uppercase()}]")
-                            )
+                            messages.add(PublicMessage("City: ${cwd.cityName} [${country.uppercase()}]"))
                             with(cwd.mainData) {
                                 if (this != null) {
                                     if (hasTemp()) {
@@ -170,7 +166,7 @@ class Weather2(bot: Mobibot) : ThreadedModule(bot) {
                                     messages.add(
                                         NoticeMessage(
                                             "https://openweathermap.org/find?q="
-                                                + encodeUrl("$city,${country.uppercase()}"),
+                                                    + encodeUrl("$city,${country.uppercase()}"),
                                             Colors.GREEN
                                         )
                                     )

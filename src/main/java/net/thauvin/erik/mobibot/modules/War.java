@@ -53,9 +53,9 @@ public final class War extends AbstractModule {
     private static final String WAR_CMD = "war";
     // Deck of card
     private static final String[] WAR_DECK =
-            new String[]{ "Ace", "King", "Queen", "Jack", "10", "9", "8", "7", "6", "5", "4", "3", "2" };
+            new String[]{"Ace", "King", "Queen", "Jack", "10", "9", "8", "7", "6", "5", "4", "3", "2"};
     // Suits for the deck of card
-    private static final String[] WAR_SUITS = new String[]{ "Hearts", "Spades", "Diamonds", "Clubs" };
+    private static final String[] WAR_SUITS = new String[]{"Hearts", "Spades", "Diamonds", "Clubs"};
 
     /**
      * The default constructor.
@@ -85,9 +85,9 @@ public final class War extends AbstractModule {
             y = RANDOM.nextInt(WAR_DECK.length);
 
             getBot().send(sender + " drew the " + bold(WAR_DECK[i]) + " of "
-                          + bold(WAR_SUITS[RANDOM.nextInt(WAR_SUITS.length)]));
+                    + bold(WAR_SUITS[RANDOM.nextInt(WAR_SUITS.length)]));
             getBot().action("drew the " + bold(WAR_DECK[y]) + " of "
-                            + bold(WAR_SUITS[RANDOM.nextInt(WAR_SUITS.length)]));
+                    + bold(WAR_SUITS[RANDOM.nextInt(WAR_SUITS.length)]));
 
             if (i != y) {
                 break;

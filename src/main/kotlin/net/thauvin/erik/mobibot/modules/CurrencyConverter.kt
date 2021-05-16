@@ -152,6 +152,9 @@ class CurrencyConverter(bot: Mobibot) : ThreadedModule(bot) {
         // Last exchange rates table publication date
         private var pubDate = ""
 
+        private fun Double.formatCurrency(): String =
+            NumberFormat.getCurrencyInstance(Constants.LOCALE).format(this).substring(1)
+
         /**
          * Converts from a currency to another.
          */
@@ -171,11 +174,8 @@ class CurrencyConverter(bot: Mobibot) : ThreadedModule(bot) {
                             val doubleFrom = EXCHANGE_RATES[to]!!.toDouble()
                             val doubleTo = EXCHANGE_RATES[from]!!.toDouble()
                             PublicMessage(
-                                NumberFormat.getCurrencyInstance(Constants.LOCALE).format(amt).substring(1)
-                                    + " ${cmds[1].uppercase()} = "
-                                    + NumberFormat.getCurrencyInstance(Constants.LOCALE)
-                                    .format(amt * doubleTo / doubleFrom).substring(1)
-                                    + " ${cmds[3].uppercase()}"
+                                amt.formatCurrency() + " ${cmds[1].uppercase()} = "
+                                        + (amt * doubleTo / doubleFrom).formatCurrency() + " ${cmds[3].uppercase()}"
                             )
                         } catch (e: NumberFormatException) {
                             ErrorMessage("Let's try with some real numbers next time, okay?")
@@ -186,6 +186,7 @@ class CurrencyConverter(bot: Mobibot) : ThreadedModule(bot) {
                 }
             } else ErrorMessage("Invalid query. Let's try again.")
         }
+
 
         @JvmStatic
         fun currencyRates(): List<String> {

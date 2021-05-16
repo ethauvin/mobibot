@@ -139,7 +139,7 @@ class StockQuote(bot: Mobibot) : ThreadedModule(bot) {
                         response = urlReader(
                             URL(
                                 "${ALPHAVANTAGE_URL}SYMBOL_SEARCH&keywords=" + encodeUrl(symbol)
-                                    + "&apikey=" + encodeUrl(apiKey)
+                                        + "&apikey=" + encodeUrl(apiKey)
                             )
                         )
                         var json = getJsonResponse(response, debugMessage)
@@ -153,8 +153,8 @@ class StockQuote(bot: Mobibot) : ThreadedModule(bot) {
                             response = urlReader(
                                 URL(
                                     "${ALPHAVANTAGE_URL}GLOBAL_QUOTE&symbol="
-                                        + encodeUrl(symbolInfo.getString("1. symbol"))
-                                        + "&apikey=" + encodeUrl(apiKey)
+                                            + encodeUrl(symbolInfo.getString("1. symbol"))
+                                            + "&apikey=" + encodeUrl(apiKey)
                                 )
                             )
                             json = getJsonResponse(response, debugMessage)
@@ -166,28 +166,23 @@ class StockQuote(bot: Mobibot) : ThreadedModule(bot) {
                             add(
                                 PublicMessage(
                                     "Symbol: " + unescapeXml(quote.getString("01. symbol"))
-                                        + " [" + unescapeXml(symbolInfo.getString("2. name")) + ']'
+                                            + " [" + unescapeXml(symbolInfo.getString("2. name")) + ']'
                                 )
                             )
                             add(PublicMessage("    Price:     " + unescapeXml(quote.getString("05. price"))))
-                            add(
-                                PublicMessage(
-                                    "    Previous:  " + unescapeXml(quote.getString("08. previous close"))
-                                )
-                            )
+                            add(PublicMessage("    Previous:  " + unescapeXml(quote.getString("08. previous close"))))
                             add(NoticeMessage("    Open:      " + unescapeXml(quote.getString("02. open"))))
                             add(NoticeMessage("    High:      " + unescapeXml(quote.getString("03. high"))))
                             add(NoticeMessage("    Low:       " + unescapeXml(quote.getString("04. low"))))
                             add(NoticeMessage("    Volume:    " + unescapeXml(quote.getString("06. volume"))))
-                            add(
-                                NoticeMessage(
+                            add(NoticeMessage(
                                     "    Latest:    " + unescapeXml(quote.getString("07. latest trading day"))
                                 )
                             )
                             add(
                                 NoticeMessage(
                                     "    Change:    " + unescapeXml(quote.getString("09. change")) + " ["
-                                        + unescapeXml(quote.getString("10. change percent")) + ']'
+                                            + unescapeXml(quote.getString("10. change percent")) + ']'
                                 )
                             )
                         }

@@ -32,8 +32,9 @@
 
 package net.thauvin.erik.mobibot
 
-import kotlinx.coroutines.async
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 import net.thauvin.erik.mobibot.entries.EntryLink
 import net.thauvin.erik.pinboard.PinboardPoster
 import java.time.ZoneId
@@ -51,15 +52,15 @@ object PinboardUtils {
      */
     @JvmStatic
     fun addPin(poster: PinboardPoster, ircServer: String, entry: EntryLink) = runBlocking {
-        async {
+        withContext(Dispatchers.Default) {
             poster.addPin(
                 entry.link,
                 entry.title,
-                postedBy(entry, ircServer),
+                entry.postedBy(ircServer),
                 entry.pinboardTags,
                 entry.date.toTimestamp()
             )
-        }.await()
+        }
     }
 
     /**
@@ -67,9 +68,9 @@ object PinboardUtils {
      */
     @JvmStatic
     fun deletePin(poster: PinboardPoster, entry: EntryLink) = runBlocking {
-        async {
+        withContext(Dispatchers.Default) {
             poster.deletePin(entry.link)
-        }.await()
+        }
     }
 
     /**
@@ -77,14 +78,14 @@ object PinboardUtils {
      */
     @JvmStatic
     fun updatePin(poster: PinboardPoster, ircServer: String, oldUrl: String, entry: EntryLink) = runBlocking {
-        async {
+        withContext(Dispatchers.Default) {
             with(entry) {
                 if (oldUrl != link) {
                     poster.deletePin(oldUrl)
                     poster.addPin(
                         link,
                         title,
-                        postedBy(entry, ircServer),
+                        entry.postedBy(ircServer),
                         pinboardTags,
                         date.toTimestamp()
                     )
@@ -92,7 +93,7 @@ object PinboardUtils {
                     poster.addPin(
                         link,
                         title,
-                        postedBy(entry, ircServer),
+                        entry.postedBy(ircServer),
                         pinboardTags,
                         date.toTimestamp(),
                         replace = true,
@@ -100,7 +101,7 @@ object PinboardUtils {
                     )
                 }
             }
-        }.await()
+        }
     }
 
     /**
@@ -109,15 +110,16 @@ object PinboardUtils {
     @JvmStatic
     fun Date.toTimestamp(): String {
         return ZonedDateTime.ofInstant(
-                this.toInstant().truncatedTo(ChronoUnit.SECONDS),
-                ZoneId.systemDefault()).format(DateTimeFormatter.ISO_INSTANT)
+            this.toInstant().truncatedTo(ChronoUnit.SECONDS),
+            ZoneId.systemDefault()
+        ).format(DateTimeFormatter.ISO_INSTANT)
     }
 
     /**
      * Returns the pinboard.in extended attribution line.
      */
-    private fun postedBy(entry: EntryLink, ircServer: String): String {
-        return "Posted by ${entry.nick} on ${entry.channel} ( $ircServer )"
+    private fun EntryLink.postedBy(ircServer: String): String {
+        return "Posted by ${this.nick} on ${this.channel} ( $ircServer )"
     }
 }
 

@@ -40,7 +40,7 @@ class Versions(bot: Mobibot) : AbstractCommand(bot) {
     private val allVersions = listOf(
         "Version:  ${ReleaseInfo.VERSION} (${ReleaseInfo.BUILDDATE.toIsoLocalDate()})",
         "Platform: " + System.getProperty("os.name") + ' ' + System.getProperty("os.version")
-            + " (" + System.getProperty("os.arch") + ')',
+                + " (" + System.getProperty("os.arch") + ')',
         "Runtime:  " + System.getProperty("java.runtime.name") + ' ' + System.getProperty("java.runtime.version")
     )
     override val name = "versions"

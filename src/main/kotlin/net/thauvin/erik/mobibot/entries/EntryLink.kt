@@ -145,8 +145,8 @@ class EntryLink : Serializable {
      */
     fun matches(match: String?): Boolean {
         return (StringUtils.containsIgnoreCase(link, match)
-            || StringUtils.containsIgnoreCase(title, match)
-            || StringUtils.containsIgnoreCase(nick, match))
+                || StringUtils.containsIgnoreCase(title, match)
+                || StringUtils.containsIgnoreCase(nick, match))
     }
 
     /**
@@ -203,7 +203,7 @@ class EntryLink : Serializable {
      */
     override fun toString(): String {
         return ("EntryLink{channel='$channel', comments=$comments, date=$date, link='$link', login='$login'," +
-            "nick='$nick', tags=$tags, title='$title'}")
+                "nick='$nick', tags=$tags, title='$title'}")
     }
 
     companion object {

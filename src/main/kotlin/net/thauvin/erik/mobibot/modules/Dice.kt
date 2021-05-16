@@ -54,12 +54,12 @@ class Dice(bot: Mobibot) : AbstractModule(bot) {
             send(
                 channel,
                 "$sender rolled two dice: ${bold(playerRoll.first)} and ${bold(playerRoll.second)}"
-                    + " for a total of ${bold(playerTotal)}",
+                        + " for a total of ${bold(playerTotal)}",
                 isPrivate
             )
             action(
                 "rolled two dice: ${bold(roll.first)} and ${bold(roll.second)}" +
-                    " for a total of ${bold(total)}"
+                        " for a total of ${bold(total)}"
             )
             when (winLoseOrTie(total, playerTotal)) {
                 Result.WIN -> action("wins.")

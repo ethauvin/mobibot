@@ -33,6 +33,8 @@ package net.thauvin.erik.mobibot
 
 import com.rometools.rome.io.SyndFeedInput
 import com.rometools.rome.io.XmlReader
+import net.thauvin.erik.mobibot.Utils.green
+import net.thauvin.erik.mobibot.Utils.helpFormat
 import java.net.MalformedURLException
 import java.net.URL
 
@@ -67,7 +69,7 @@ class FeedReader(
                         var i = 0
                         while (i < items.size && i < maxItems) {
                             send(sender, items[i].title, false)
-                            send(sender, Utils.helpFormat(Utils.green(items[i].link), false), false)
+                            send(sender, helpFormat(green(items[i].link), false), false)
                             i++
                         }
                     }

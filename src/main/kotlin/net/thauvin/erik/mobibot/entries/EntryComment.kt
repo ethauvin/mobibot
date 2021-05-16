@@ -43,9 +43,7 @@ data class EntryComment(var comment: String, var nick: String) : Serializable {
      */
     val date: LocalDateTime = LocalDateTime.now()
 
-    override fun toString(): String {
-        return ("EntryComment{comment='$comment', date=$date, nick='$nick'}")
-    }
+    override fun toString(): String = "EntryComment{comment='$comment', date=$date, nick='$nick'}"
 
     companion object {
         // Serial version UID

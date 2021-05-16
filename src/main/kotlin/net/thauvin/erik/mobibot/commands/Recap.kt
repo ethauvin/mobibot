@@ -59,11 +59,11 @@ class Recap(bot: Mobibot) : AbstractCommand(bot) {
         fun storeRecap(sender: String, message: String, isAction: Boolean) {
             recaps.add(
                 LocalDateTime.now(Clock.systemUTC()).toUtcDateTime()
-                    + " - $sender" + (if (isAction) " " else ": ") + message
+                        + " - $sender" + (if (isAction) " " else ": ") + message
             )
             @Suppress("MagicNumber")
             if (recaps.size > 10) {
-                recaps.removeAt(0)
+                recaps.removeFirst()
             }
         }
     }

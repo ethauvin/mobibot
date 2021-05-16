@@ -97,7 +97,7 @@ class GoogleSearch(bot: Mobibot) : ThreadedModule(bot) {
                 try {
                     val url = URL(
                         "https://www.googleapis.com/customsearch/v1?key=$apiKey&cx=$cseKey" +
-                            "&q=${encodeUrl(query)}&filter=1&num=5&alt=json"
+                                "&q=${encodeUrl(query)}&filter=1&num=5&alt=json"
                     )
                     val json = JSONObject(urlReader(url))
                     val ja = json.getJSONArray("items")

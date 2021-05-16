@@ -32,14 +32,14 @@
 
 package net.thauvin.erik.mobibot
 
-import net.thauvin.erik.mobibot.entries.EntryLink
 import net.thauvin.erik.mobibot.PinboardUtils.toTimestamp
+import net.thauvin.erik.mobibot.entries.EntryLink
 import net.thauvin.erik.pinboard.PinboardPoster
 import org.testng.Assert.assertFalse
 import org.testng.Assert.assertTrue
 import org.testng.annotations.Test
-import java.util.Date
 import java.net.URL
+import java.util.Date
 
 class PinboardUtilsTest : LocalProperties() {
     @Test
@@ -71,7 +71,7 @@ class PinboardUtilsTest : LocalProperties() {
         val response = Utils.urlReader(
             URL(
                 "https://api.pinboard.in/v1/posts/get?auth_token=${apiToken}&tag=test&"
-                    + Utils.encodeUrl(url)
+                        + Utils.encodeUrl(url)
             )
         )
 
