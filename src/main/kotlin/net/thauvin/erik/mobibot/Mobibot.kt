@@ -45,8 +45,10 @@ import net.thauvin.erik.mobibot.commands.AddLog
 import net.thauvin.erik.mobibot.commands.ChannelFeed
 import net.thauvin.erik.mobibot.commands.Cycle
 import net.thauvin.erik.mobibot.commands.Debug
+import net.thauvin.erik.mobibot.commands.Die
 import net.thauvin.erik.mobibot.commands.Ignore
 import net.thauvin.erik.mobibot.commands.Info
+import net.thauvin.erik.mobibot.commands.Kill
 import net.thauvin.erik.mobibot.commands.Me
 import net.thauvin.erik.mobibot.commands.Modules
 import net.thauvin.erik.mobibot.commands.Msg
@@ -260,7 +262,6 @@ class Mobibot(nickname: String, channel: String, logsDirPath: String, p: Propert
         }
     }
 
-
     /**
      * Responds with the default, commands or modules help.
      */
@@ -469,6 +470,24 @@ class Mobibot(nickname: String, channel: String, logsDirPath: String, p: Propert
     }
 
     /**
+     * Shutdown the bot.
+     */
+    fun shutdown(sender: String, now: Boolean = false) {
+        if (now) { // kill
+            twitter.notification("$name killed by $sender on $channel")
+            sendRawLine("QUIT :Poof!")
+        } else {
+            timer.cancel()
+            twitter.shutdown()
+            twitter.notification("$name stopped by $sender on $channel")
+            @Suppress("MagicNumber")
+            sleep(3)
+            quitServer("The Bot Is Out There!")
+        }
+        exitProcess(0)
+    }
+
+    /**
      * Sleeps for the specified number of seconds.
      */
     fun sleep(secs: Int) {
@@ -654,9 +673,11 @@ class Mobibot(nickname: String, channel: String, logsDirPath: String, p: Propert
         addons.add(AddLog(this), p)
         addons.add(ChannelFeed(this, channelName), p)
         addons.add(Cycle(this), p)
+        addons.add(Die(this), p)
         addons.add(Debug(this), p)
         addons.add(Ignore(this), p)
         addons.add(Info(this), p)
+        addons.add(Kill(this), p)
         addons.add(Me(this), p)
         addons.add(Modules(this), p)
         addons.add(Msg(this), p)

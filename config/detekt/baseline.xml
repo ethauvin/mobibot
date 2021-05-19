@@ -24,7 +24,6 @@
     <ID>NestedBlockDepth:EntriesMgr.kt$EntriesMgr$ fun saveEntries( bot: Mobibot, entries: List&lt;EntryLink&gt;, history: MutableList&lt;String&gt;, isDayBackup: Boolean )</ID>
     <ID>NestedBlockDepth:EntriesMgr.kt$EntriesMgr$// Daily backup private fun dailyBackup( bot: Mobibot, history: MutableList&lt;String&gt; )</ID>
     <ID>NestedBlockDepth:EntryLink.kt$EntryLink$ private fun setTags(tags: List&lt;String?&gt;)</ID>
-    <ID>NestedBlockDepth:FeedReader.kt$FeedReader$ override fun run()</ID>
     <ID>NestedBlockDepth:GoogleSearch.kt$GoogleSearch$ override fun run(sender: String, cmd: String, args: String, isPrivate: Boolean)</ID>
     <ID>NestedBlockDepth:LinksMgr.kt$LinksMgr$override fun commandResponse( sender: String, login: String, args: String, isOp: Boolean, isPrivate: Boolean )</ID>
     <ID>NestedBlockDepth:Lookup.kt$Lookup$override fun commandResponse( sender: String, cmd: String, args: String, isPrivate: Boolean )</ID>
@@ -45,7 +44,6 @@
     <ID>ThrowsCount:StockQuote.kt$StockQuote.Companion$@Throws(ModuleException::class) private fun getJsonResponse(response: String, debugMessage: String): JSONObject</ID>
     <ID>ThrowsCount:Weather2.kt$Weather2.Companion$ @JvmStatic @Throws(ModuleException::class) fun getWeather(query: String, apiKey: String?): List&lt;Message&gt;</ID>
     <ID>TooGenericExceptionCaught:CryptoPrices.kt$CryptoPrices$e: Exception</ID>
-    <ID>TooGenericExceptionCaught:FeedReader.kt$FeedReader$e: Exception</ID>
     <ID>TooGenericExceptionCaught:Mobibot.kt$Mobibot$e: Exception</ID>
     <ID>TooGenericExceptionCaught:Mobibot.kt$Mobibot$ex: Exception</ID>
     <ID>TooGenericExceptionCaught:StockQuote.kt$StockQuote.Companion$e: NullPointerException</ID>
