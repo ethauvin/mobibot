@@ -31,11 +31,14 @@
  */
 package net.thauvin.erik.mobibot
 
+import com.rometools.rome.io.FeedException
 import com.rometools.rome.io.SyndFeedInput
 import com.rometools.rome.io.XmlReader
+import net.thauvin.erik.mobibot.msg.Message
+import net.thauvin.erik.mobibot.msg.PublicMessage
 import net.thauvin.erik.mobibot.Utils.green
 import net.thauvin.erik.mobibot.Utils.helpFormat
-import java.net.MalformedURLException
+import java.io.IOException
 import java.net.URL
 
 /**
@@ -49,38 +52,44 @@ class FeedReader(
     // URL to fetch
     private val url: String
 ) : Runnable {
-    // Maximum number of feed items to display
-    @Suppress("MagicNumber")
-    private val maxItems = 5
-
     /**
      * Fetches the Feed's items.
      */
     override fun run() {
         with(bot) {
             try {
-                val input = SyndFeedInput()
-                XmlReader(URL(url)).use { reader ->
-                    val feed = input.build(reader)
-                    val items = feed.entries
-                    if (items.isEmpty()) {
-                        send(sender, "There is currently nothing to view.", false)
-                    } else {
-                        var i = 0
-                        while (i < items.size && i < maxItems) {
-                            send(sender, items[i].title, false)
-                            send(sender, helpFormat(green(items[i].link), false), false)
-                            i++
-                        }
-                    }
+                readFeed(url).forEach {
+                    send(sender, it)
                 }
-            } catch (e: MalformedURLException) {
-                if (logger.isDebugEnabled) logger.debug("Invalid feed URL.", e)
-                send(sender, "The feed URL is invalid.", false)
-            } catch (e: Exception) {
-                if (logger.isDebugEnabled) logger.debug("Unable to fetch the feed.", e)
+            } catch (e: FeedException) {
+                if (logger.isDebugEnabled) logger.debug("Unabled to parse the feed at ${url}", e)
+                send(sender, "An error has occured while parsing the feed: ${e.message}", false)
+            } catch (e: IOException) {
+                if (logger.isDebugEnabled) logger.debug("Unable to fetch the feed at ${url}", e)
                 send(sender, "An error has occurred while fetching the feed: ${e.message}", false)
             }
+        }
+    }
+
+    companion object {
+        @JvmStatic
+        @Throws(FeedException::class, IOException::class)
+        fun readFeed(url: String, maxItems: Int = 5) : List<Message> {
+            val messages = mutableListOf<Message>()
+            val input = SyndFeedInput()
+            XmlReader(URL(url)).use { reader ->
+                val feed = input.build(reader)
+                val items = feed.entries
+                if (items.isEmpty()) {
+                    messages.add(PublicMessage("There is currently nothing to view."))
+                } else {
+                    items.take(maxItems).forEach {
+                        messages.add(PublicMessage(it.title))
+                        messages.add(PublicMessage(helpFormat(green(it.link), false)))
+                    }
+                }
+            }
+            return messages
         }
     }
 }
