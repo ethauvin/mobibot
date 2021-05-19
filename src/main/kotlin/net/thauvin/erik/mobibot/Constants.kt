@@ -103,6 +103,11 @@ object Constants {
     const val PROPS_ARG = "properties"
 
     /**
+     * The tag command
+     */
+    const val TAG_CMD = "T"
+
+    /**
      * The timer delay in minutes.
      */
     const val TIMER_DELAY = 10L

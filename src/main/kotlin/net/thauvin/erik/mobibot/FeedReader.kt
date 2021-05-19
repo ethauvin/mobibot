@@ -34,10 +34,10 @@ package net.thauvin.erik.mobibot
 import com.rometools.rome.io.FeedException
 import com.rometools.rome.io.SyndFeedInput
 import com.rometools.rome.io.XmlReader
-import net.thauvin.erik.mobibot.msg.Message
-import net.thauvin.erik.mobibot.msg.PublicMessage
 import net.thauvin.erik.mobibot.Utils.green
 import net.thauvin.erik.mobibot.Utils.helpFormat
+import net.thauvin.erik.mobibot.msg.Message
+import net.thauvin.erik.mobibot.msg.PublicMessage
 import java.io.IOException
 import java.net.URL
 
@@ -62,10 +62,10 @@ class FeedReader(
                     send(sender, it)
                 }
             } catch (e: FeedException) {
-                if (logger.isDebugEnabled) logger.debug("Unabled to parse the feed at ${url}", e)
+                if (logger.isDebugEnabled) logger.debug("Unabled to parse the feed at $url", e)
                 send(sender, "An error has occured while parsing the feed: ${e.message}", false)
             } catch (e: IOException) {
-                if (logger.isDebugEnabled) logger.debug("Unable to fetch the feed at ${url}", e)
+                if (logger.isDebugEnabled) logger.debug("Unable to fetch the feed at $url", e)
                 send(sender, "An error has occurred while fetching the feed: ${e.message}", false)
             }
         }
@@ -74,7 +74,7 @@ class FeedReader(
     companion object {
         @JvmStatic
         @Throws(FeedException::class, IOException::class)
-        fun readFeed(url: String, maxItems: Int = 5) : List<Message> {
+        fun readFeed(url: String, maxItems: Int = 5): List<Message> {
             val messages = mutableListOf<Message>()
             val input = SyndFeedInput()
             XmlReader(URL(url)).use { reader ->

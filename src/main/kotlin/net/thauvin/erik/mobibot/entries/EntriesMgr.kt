@@ -248,7 +248,8 @@ object EntriesMgr {
             } catch (e: FeedException) {
                 if (bot.logger.isWarnEnabled) bot.logger.warn("Unable to generate the entries feed.", e)
             } catch (e: IOException) {
-                if (bot.logger.isWarnEnabled) bot.logger.warn("Unable to generate the entries feed.", e)
+                if (bot.logger.isWarnEnabled)
+                    bot.logger.warn("An IO error occurred while generating the entries feed.", e)
             }
         } else {
             if (bot.logger.isWarnEnabled) {

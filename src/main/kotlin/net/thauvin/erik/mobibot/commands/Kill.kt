@@ -33,7 +33,6 @@
 package net.thauvin.erik.mobibot.commands
 
 import net.thauvin.erik.mobibot.Mobibot
-import net.thauvin.erik.mobibot.Utils.helpFormat
 
 class Kill(bot: Mobibot) : AbstractCommand(bot) {
     override val name = "kill"

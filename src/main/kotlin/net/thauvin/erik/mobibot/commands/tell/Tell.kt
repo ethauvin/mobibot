@@ -229,7 +229,7 @@ class Tell(bot: Mobibot) : AbstractCommand(bot) {
                         bot.send(
                             nickname,
                             "Your message ${reverseColor("[ID " + message.id + ']')} was sent to "
-                                + "${bold(message.recipient)} on ${message.receptionDate.toUtcDateTime()}",
+                                    + "${bold(message.recipient)} on ${message.receptionDate.toUtcDateTime()}",
                             true
                         )
                         message.isNotified = true
@@ -252,8 +252,8 @@ class Tell(bot: Mobibot) : AbstractCommand(bot) {
             for (message in messages) {
                 bot.send(
                     sender, bold(message.sender) + ARROW + bold(message.recipient)
-                        + " [ID: " + message.id + ", "
-                        + (if (message.isReceived) "DELIVERED" else "QUEUED") + ']',
+                            + " [ID: " + message.id + ", "
+                            + (if (message.isReceived) "DELIVERED" else "QUEUED") + ']',
                     isPrivate
                 )
             }
@@ -275,16 +275,16 @@ class Tell(bot: Mobibot) : AbstractCommand(bot) {
                     bot.send(
                         sender,
                         bold(message.sender) + ARROW + bold(message.recipient)
-                            + " [${message.receptionDate.toUtcDateTime()}, ID: "
-                            + bold(message.id) + ", DELIVERED]",
+                                + " [${message.receptionDate.toUtcDateTime()}, ID: "
+                                + bold(message.id) + ", DELIVERED]",
                         isPrivate
                     )
                 } else {
                     bot.send(
                         sender,
                         bold(message.sender) + ARROW + bold(message.recipient)
-                            + " [${message.queued.toUtcDateTime()}, ID: "
-                            + bold(message.id) + ", QUEUED]",
+                                + " [${message.queued.toUtcDateTime()}, ID: "
+                                + bold(message.id) + ", QUEUED]",
                         isPrivate
                     )
                 }

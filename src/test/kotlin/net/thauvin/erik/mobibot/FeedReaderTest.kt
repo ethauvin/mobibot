@@ -53,11 +53,11 @@ class FeedReaderTest {
 
         messages = readFeed("https://lorem-rss.herokuapp.com/feed?length=0")
         assertThat(messages[0].msg).describedAs("nothing to view").contains("nothing")
-        
+
         messages = readFeed("https://lorem-rss.herokuapp.com/feed?length=42", 42)
         assertThat(messages.size).describedAs("messages = 84").isEqualTo(84)
         assertThat(messages.last().msg).describedAs("example entry url").contains("http://example.com/test/")
-        
+
         assertThatThrownBy { readFeed("blah") }.describedAs("invalid URL")
             .isInstanceOf(MalformedURLException::class.java)
 

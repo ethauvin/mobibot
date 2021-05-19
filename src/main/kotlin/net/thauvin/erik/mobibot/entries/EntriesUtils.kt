@@ -76,5 +76,5 @@ object EntriesUtils {
      * Build an entry's tags/categories for display on the channel.
      */
     fun buildTags(entryIndex: Int, entry: EntryLink): String =
-        buildLinkCmd(entryIndex) + "T: " + entry.pinboardTags.replace(",", ", ")
+        buildLinkCmd(entryIndex) + "${Constants.TAG_CMD}: " + entry.pinboardTags.replace(",", ", ")
 }

@@ -95,7 +95,7 @@ class TellMessage internal constructor(
 
     override fun toString(): String {
         return ("TellMessage{id='$id', isNotified=$isNotified, isReceived=$isReceived, message='$message', " +
-            "queued=$queued, received=$receptionDate, recipient='$recipient', sender='$sender'}")
+                "queued=$queued, received=$receptionDate, recipient='$recipient', sender='$sender'}")
     }
 
     companion object {

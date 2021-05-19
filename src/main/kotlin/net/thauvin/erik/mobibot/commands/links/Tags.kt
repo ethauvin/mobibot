@@ -42,8 +42,8 @@ import net.thauvin.erik.mobibot.entries.EntryLink
 class Tags(bot: Mobibot) : AbstractCommand(bot) {
     override val name = COMMAND
     override val help = listOf(
-        "To categorize or tag a URL, use its label and a T:",
-        helpFormat("${Constants.LINK_CMD}1T:<+tag|-tag> [...]")
+        "To categorize or tag a URL, use its label and a ${Constants.TAG_CMD}:",
+        helpFormat("${Constants.LINK_CMD}1${Constants.TAG_CMD}:<+tag|-tag> [...]")
     )
     override val isOp = false
     override val isPublic = true
@@ -60,7 +60,7 @@ class Tags(bot: Mobibot) : AbstractCommand(bot) {
         isOp: Boolean,
         isPrivate: Boolean
     ) {
-        val cmds = args.substring(1).split("T:", limit = 2)
+        val cmds = args.substring(1).split("${Constants.TAG_CMD}:", limit = 2)
         val index = cmds[0].toInt() - 1
 
         if (index < LinksMgr.entries.size) {
@@ -86,6 +86,6 @@ class Tags(bot: Mobibot) : AbstractCommand(bot) {
     }
 
     override fun matches(message: String): Boolean {
-        return message.matches("^${Constants.LINK_CMD}[0-9]+T:.*".toRegex())
+        return message.matches("^${Constants.LINK_CMD}[0-9]+${Constants.TAG_CMD}:.*".toRegex())
     }
 }

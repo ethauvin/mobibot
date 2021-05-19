@@ -175,7 +175,8 @@ class StockQuote(bot: Mobibot) : ThreadedModule(bot) {
                             add(NoticeMessage("    High:      " + unescapeXml(quote.getString("03. high"))))
                             add(NoticeMessage("    Low:       " + unescapeXml(quote.getString("04. low"))))
                             add(NoticeMessage("    Volume:    " + unescapeXml(quote.getString("06. volume"))))
-                            add(NoticeMessage(
+                            add(
+                                NoticeMessage(
                                     "    Latest:    " + unescapeXml(quote.getString("07. latest trading day"))
                                 )
                             )
