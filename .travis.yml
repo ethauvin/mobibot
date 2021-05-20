@@ -5,9 +5,6 @@ env:
   global:
     - CI_NAME="Travis CI"
 
-install:
-  - git fetch --unshallow --tags
-
 addons:
   sonarcloud:
     organization: "ethauvin-github"
