@@ -5,17 +5,29 @@ on: [push, pull_request, workflow_dispatch]
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
       - name: Set up JDK 11
         uses: actions/setup-java@v1
         with:
           java-version: 11
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
+      - name: Cache SonarCloud packages
+        uses: actions/cache@v1
+        with:
+          path: ~/.sonar/cache
+          key: ${{ runner.os }}-sonar
+          restore-keys: ${{ runner.os }}-sonar
+      - name: Cache Gradle packages
+        uses: actions/cache@v1
+        with:
+          path: ~/.gradle/caches
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
+          restore-keys: ${{ runner.os }}-gradle
       - name: Test with Gradle
-        run: ./gradlew check
         env:
           CI_NAME: "GitHub CI"
           ALPHAVANTAGE_API_KEY: ${{ secrets.ALPHAVANTAGE_API_KEY }}
@@ -23,8 +35,10 @@ jobs:
           GOOGLE_CSE_CX: ${{ secrets.GOOGLE_CSE_CX }}
           OWM_API_KEY: ${{ secrets.OWM_API_KEY }}
           PINBOARD_API_TOKEN: ${{ secrets.PINBOARD_API_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           TWITTER_CONSUMERKEY: ${{ secrets.TWITTER_CONSUMERKEY }}
           TWITTER_CONSUMERSECRET: ${{ secrets.TWITTER_CONSUMERSECRET }}
           TWITTER_HANDLE: ${{ secrets.TWITTER_HANDLE }}
           TWITTER_TOKEN: ${{ secrets.TWITTER_TOKEN }}
           TWITTER_TOKENSECRET: ${{ secrets.TWITTER_TOKENSECRET }}
+        run: ./gradlew check sonarqube
