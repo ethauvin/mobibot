@@ -41,4 +41,4 @@ jobs:
           TWITTER_HANDLE: ${{ secrets.TWITTER_HANDLE }}
           TWITTER_TOKEN: ${{ secrets.TWITTER_TOKEN }}
           TWITTER_TOKENSECRET: ${{ secrets.TWITTER_TOKENSECRET }}
-        run: ./gradlew sonarqube --info
+        run: ./gradlew check sonarqube
