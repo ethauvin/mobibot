@@ -31,6 +31,7 @@ jobs:
         env:
           CI_NAME: "GitHub CI"
           ALPHAVANTAGE_API_KEY: ${{ secrets.ALPHAVANTAGE_API_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
           GOOGLE_CSE_CX: ${{ secrets.GOOGLE_CSE_CX }}
           OWM_API_KEY: ${{ secrets.OWM_API_KEY }}
