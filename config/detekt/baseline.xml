@@ -39,6 +39,7 @@
     <ID>NestedBlockDepth:WorldTime.kt$WorldTime$override fun commandResponse( sender: String, cmd: String, args: String, isPrivate: Boolean )</ID>
     <ID>ReturnCount:Addons.kt$Addons$ fun exec(sender: String, login: String, cmd: String, args: String, isOp: Boolean, isPrivate: Boolean): Boolean</ID>
     <ID>ReturnCount:Addons.kt$Addons$ fun help(sender: String, topic: String, isOp: Boolean, isPrivate: Boolean): Boolean</ID>
+    <ID>SwallowedException:CryptoPrices.kt$CryptoPrices$catch (e: IllegalArgumentException) { price.amount }</ID>
     <ID>ThrowsCount:GoogleSearch.kt$GoogleSearch.Companion$ @JvmStatic @Throws(ModuleException::class) fun searchGoogle(query: String, apiKey: String?, cseKey: String?): List&lt;Message&gt;</ID>
     <ID>ThrowsCount:StockQuote.kt$StockQuote.Companion$ @JvmStatic @Throws(ModuleException::class) fun getQuote(symbol: String, apiKey: String?): List&lt;Message&gt;</ID>
     <ID>ThrowsCount:StockQuote.kt$StockQuote.Companion$@Throws(ModuleException::class) private fun getJsonResponse(response: String, debugMessage: String): JSONObject</ID>

@@ -38,6 +38,9 @@ import net.thauvin.erik.mobibot.Mobibot
 import net.thauvin.erik.mobibot.Utils.helpFormat
 import net.thauvin.erik.mobibot.msg.PublicMessage
 
+import java.text.NumberFormat
+import java.util.Currency
+
 /**
  * The Cryptocurrency Prices  module.
  */
@@ -51,7 +54,12 @@ class CryptoPrices(bot: Mobibot) : ThreadedModule(bot) {
             if (args.matches("\\w+( [a-zA-Z]{3}+)?".toRegex())) {
                 try {
                     val price = currentPrice(args.split(' '))
-                    send(sender, PublicMessage("${price.base}: ${price.amount} [${price.currency}]"))
+                    val amount = try {
+                        price.toCurrency()
+                    } catch (e: IllegalArgumentException) {
+                        price.amount
+                    }
+                    send(sender, PublicMessage("${price.base}: $amount [${price.currency}]"))
                 } catch (e: CryptoException) {
                     if (logger.isWarnEnabled) logger.warn("$debugMessage => ${e.statusCode}", e)
                     send(e.message)
