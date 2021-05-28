@@ -49,7 +49,7 @@ class GoogleSearchTest : LocalProperties() {
         try {
             var messages = searchGoogle("mobitopia", apiKey, cseKey)
             assertThat(messages).describedAs("mobitopia results not empty").isNotEmpty
-            assertThat(messages[0].msg).describedAs("found mobibtopia").contains("mobitopia")
+            assertThat(messages[0].msg).describedAs("found mobibtopia").containsIgnoringCase("mobitopia")
             messages = searchGoogle("aapl", apiKey, cseKey)
             assertThat(messages).describedAs("aapl results not empty").isNotEmpty
             assertThat(messages[0].msg).describedAs("found apple").containsIgnoringCase("apple")
