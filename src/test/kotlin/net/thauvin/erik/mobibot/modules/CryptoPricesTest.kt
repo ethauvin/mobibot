@@ -45,11 +45,11 @@ class CryptoPricesTest {
         var price = currentPrice(listOf("BTC"))
         assertThat(price.base).describedAs("is BTC").isEqualTo("BTC")
         assertThat(price.currency).describedAs("is USD").isEqualTo("USD")
-        assertThat(price.amount).describedAs("BTC > 0").isGreaterThan(0.00)
+        assertThat(price.amount.signum() > 0).describedAs("BTC > 0").isTrue
 
         price = currentPrice(listOf("ETH", "EUR"))
         assertThat(price.base).describedAs("is ETH").isEqualTo("ETH")
         assertThat(price.currency).describedAs("is EUR").isEqualTo("EUR")
-        assertThat(price.amount).describedAs("ETH > 0").isGreaterThan(0.00)
+        assertThat(price.amount.signum() > 0).describedAs("ETH > 0").isTrue
     }
 }

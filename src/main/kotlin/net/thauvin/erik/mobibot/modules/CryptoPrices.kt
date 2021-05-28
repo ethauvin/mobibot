@@ -33,13 +33,10 @@ package net.thauvin.erik.mobibot.modules
 
 import net.thauvin.erik.crypto.CryptoException
 import net.thauvin.erik.crypto.CryptoPrice
-import net.thauvin.erik.crypto.CryptoPrice.Companion.marketPrice
+import net.thauvin.erik.crypto.CryptoPrice.Companion.spotPrice
 import net.thauvin.erik.mobibot.Mobibot
 import net.thauvin.erik.mobibot.Utils.helpFormat
 import net.thauvin.erik.mobibot.msg.PublicMessage
-
-import java.text.NumberFormat
-import java.util.Currency
 
 /**
  * The Cryptocurrency Prices  module.
@@ -56,7 +53,7 @@ class CryptoPrices(bot: Mobibot) : ThreadedModule(bot) {
                     val price = currentPrice(args.split(' '))
                     val amount = try {
                         price.toCurrency()
-                    } catch (e: IllegalArgumentException) {
+                    } catch (ignore: IllegalArgumentException) {
                         price.amount
                     }
                     send(sender, PublicMessage("${price.base}: $amount [${price.currency}]"))
@@ -82,9 +79,9 @@ class CryptoPrices(bot: Mobibot) : ThreadedModule(bot) {
          */
         fun currentPrice(args: List<String>): CryptoPrice {
             return if (args.size == 2)
-                marketPrice(args[0], args[1])
+                spotPrice(args[0], args[1])
             else
-                marketPrice(args[0])
+                spotPrice(args[0])
         }
     }
 
