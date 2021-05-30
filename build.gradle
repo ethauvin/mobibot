@@ -21,7 +21,7 @@ final def semverProcessor = "net.thauvin.erik:semver:1.2.0"
 
 ext.versions = [
     log4j   : '2.14.1',
-    pmd     : '6.34.0',
+    pmd     : '6.35.0',
 ]
 
 repositories {
@@ -65,8 +65,8 @@ dependencies {
 
 test {
     testLogging {
-        exceptionFormat "full"
-        events /* "passed", */ "skipped", "failed"
+        exceptionFormat = "full"
+        events(/* "passed", */ "skipped", "failed")
     }
     useTestNG() {
         options.suites('src/test/resources/testng.xml')
@@ -129,7 +129,7 @@ clean {
 }
 
 run {
-    args '-d'
+    args('-d')
 }
 
 incrementBuildMeta {
@@ -144,9 +144,9 @@ incrementBuildMeta {
 
 sonarqube {
     properties {
-        property "sonar.organization", "ethauvin-github"
-        property "sonar.projectKey", "ethauvin_mobibot"
-        property "sonar.host.url", "https://sonarcloud.io"
+        property("sonar.organization", "ethauvin-github")
+        property("sonar.projectKey", "ethauvin_mobibot")
+        property("sonar.host.url", "https://sonarcloud.io")
     }
 }
 
@@ -155,7 +155,7 @@ jacoco {
 }
 
 jacocoTestReport {
-    dependsOn test
+    dependsOn(test)
     reports {
         html.enabled = true
         xml.enabled = true
@@ -175,27 +175,26 @@ tasks.sonarqube {
 
 task copyToDeploy(type: Copy) {
     from('properties')
-    from jar
-    into deployDir
+    from(jar)
+    into(deployDir)
 }
 
 task copyToDeployLib(type: Copy) {
     from(configurations.runtimeClasspath) {
-        exclude 'annotations-*.jar'
+        exclude('annotations-*.jar')
     }
-    into deployDir + '/lib'
+    into(deployDir + '/lib')
 }
 
 task deploy(dependsOn: ['clean', 'build', 'jar']) {
     description = "Copies all needed files to the ${deployDir} directory."
     group = 'Publishing'
-    outputs.dir deployDir
-    inputs.files copyToDeploy
-    inputs.files copyToDeployLib
+    outputs.dir(deployDir)
+    inputs.files(copyToDeploy, copyToDeployLib)
     doLast {
         file(deployDir + '/logs').mkdir()
     }
-    mustRunAfter clean
+    mustRunAfter(clean)
 }
 
 task release(dependsOn: ['wrapper', 'deploy']) {
