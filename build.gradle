@@ -65,8 +65,8 @@ dependencies {
 
 test {
     testLogging {
-        exceptionFormat = "full"
-        events(/* "passed", */ "skipped", "failed")
+        exceptionFormat = 'full'
+        events('skipped', 'failed')
     }
     useTestNG() {
         options.suites('src/test/resources/testng.xml')
@@ -80,7 +80,7 @@ java {
 
 kapt {
     arguments {
-        arg("semver.project.dir", projectDir)
+        arg('semver.project.dir', projectDir)
     }
 }
 
@@ -93,7 +93,7 @@ tasks.withType(JavaCompile) {
 }
 
 compileJava {
-    dependsOn('incrementBuildMeta')
+    dependsOn 'incrementBuildMeta'
     options.compilerArgs += ['-Xlint:unchecked', '-Xlint:deprecation']
 }
 
@@ -137,16 +137,16 @@ incrementBuildMeta {
         if (!System.getenv('CI')) {
             buildMeta = sprintf("%03d", (buildMeta as Integer) + 1)
         } else {
-            println "No increment on CIs."
+            println 'No increment on CIs.'
         }
     }
 }
 
 sonarqube {
     properties {
-        property("sonar.organization", "ethauvin-github")
-        property("sonar.projectKey", "ethauvin_mobibot")
-        property("sonar.host.url", "https://sonarcloud.io")
+        property('sonar.organization', 'ethauvin-github')
+        property('sonar.projectKey', 'ethauvin_mobibot')
+        property('sonar.host.url', 'https://sonarcloud.io')
     }
 }
 
@@ -170,34 +170,36 @@ tasks.withType(Checkstyle) {
 }
 
 tasks.sonarqube {
-    dependsOn("jacocoTestReport")
+    dependsOn('jacocoTestReport')
 }
 
 task copyToDeploy(type: Copy) {
     from('properties')
-    from(jar)
-    into(deployDir)
+    from jar
+    into deployDir
 }
 
 task copyToDeployLib(type: Copy) {
     from(configurations.runtimeClasspath) {
-        exclude('annotations-*.jar')
+        exclude 'annotations-*.jar'
     }
     into(deployDir + '/lib')
 }
 
-task deploy(dependsOn: ['clean', 'build', 'jar']) {
+task deploy {
     description = "Copies all needed files to the ${deployDir} directory."
     group = 'Publishing'
-    outputs.dir(deployDir)
+    dependsOn(clean, build, jar)
+    outputs.dir deployDir
     inputs.files(copyToDeploy, copyToDeployLib)
     doLast {
         file(deployDir + '/logs').mkdir()
     }
-    mustRunAfter(clean)
+    mustRunAfter clean
 }
 
-task release(dependsOn: ['wrapper', 'deploy']) {
+task release {
     group = 'Publishing'
     description = 'Releases new version.'
+    dependsOn(wrapper, 'deploy')
 }
