@@ -52,8 +52,8 @@ public final class War extends AbstractModule {
     // War command
     private static final String WAR_CMD = "war";
     // Deck of card
-    private static final String[] WAR_DECK = 
-        {"Ace", "King", "Queen", "Jack", "10", "9", "8", "7", "6", "5", "4", "3", "2"};
+    private static final String[] WAR_DECK =
+            {"Ace", "King", "Queen", "Jack", "10", "9", "8", "7", "6", "5", "4", "3", "2"};
     // Suits for the deck of card
     private static final String[] WAR_SUITS = {"Hearts", "Spades", "Diamonds", "Clubs"};
 

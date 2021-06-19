@@ -130,7 +130,7 @@ class Twitter(bot: Mobibot) : ThreadedModule(bot) {
                         }
                         post(message = msg, isDm = false)
                     } catch (e: ModuleException) {
-                        if (bot.logger.isWarnEnabled) logger.warn("Failed to post entry on Twitter.", e)
+                        if (logger.isWarnEnabled) logger.warn("Failed to post entry on Twitter.", e)
                     }
                 }.start()
                 removeEntry(index)
