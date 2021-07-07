@@ -62,8 +62,8 @@ class FeedReader(
                     send(sender, it)
                 }
             } catch (e: FeedException) {
-                if (logger.isDebugEnabled) logger.debug("Unabled to parse the feed at $url", e)
-                send(sender, "An error has occured while parsing the feed: ${e.message}", false)
+                if (logger.isDebugEnabled) logger.debug("Unable to parse the feed at $url", e)
+                send(sender, "An error has occurred while parsing the feed: ${e.message}", false)
             } catch (e: IOException) {
                 if (logger.isDebugEnabled) logger.debug("Unable to fetch the feed at $url", e)
                 send(sender, "An error has occurred while fetching the feed: ${e.message}", false)

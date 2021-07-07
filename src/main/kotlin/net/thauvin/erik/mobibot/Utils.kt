@@ -260,12 +260,10 @@ object Utils {
         days %= 30
         val weeks = days / 7
         days %= 7
-        val hours = TimeUnit.MILLISECONDS.toHours(uptime) - TimeUnit.DAYS.toHours(
-            TimeUnit.MILLISECONDS.toDays(uptime)
-        )
-        val minutes = TimeUnit.MILLISECONDS.toMinutes(uptime) - TimeUnit.HOURS.toMinutes(
-            TimeUnit.MILLISECONDS.toHours(uptime)
-        )
+        val hours = TimeUnit.MILLISECONDS.toHours(uptime) - TimeUnit.DAYS.toHours(TimeUnit.MILLISECONDS.toDays(uptime))
+        val minutes =
+            TimeUnit.MILLISECONDS.toMinutes(uptime) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(uptime))
+
         with(info) {
             if (years > 0) {
                 append(years).append(" year ".plural(years, " years "))

@@ -18,7 +18,8 @@ defaults_gradle: &defaults_gradle
         name: Gradle Dependencies
         command: ./gradlew dependencies
     - save_cache:
-        paths: ~/.m2
+        paths:
+          - ~/.m2
         key: gradle-dependencies-{{ checksum "build.gradle" }}
     - run:
         name: Run All Checks
@@ -49,7 +50,7 @@ jobs:
 workflows:
   version: 2
   gradle:
-        jobs:
-        - build_gradle_jdk11
-        - build_gradle_jdk15
+    jobs:
+      - build_gradle_jdk11
+      - build_gradle_jdk15
 

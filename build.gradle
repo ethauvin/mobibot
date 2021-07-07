@@ -6,8 +6,8 @@ plugins {
     id 'jacoco'
     id 'java'
     id 'net.thauvin.erik.gradle.semver' version '1.0.4'
-    id 'org.jetbrains.kotlin.jvm' version '1.5.10'
-    id 'org.jetbrains.kotlin.kapt' version '1.5.10'
+    id 'org.jetbrains.kotlin.jvm' version '1.5.20'
+    id 'org.jetbrains.kotlin.kapt' version '1.5.20'
     id 'org.sonarqube' version '3.3'
     id 'pmd'
 }
@@ -21,8 +21,8 @@ final def semverProcessor = "net.thauvin.erik:semver:1.2.0"
 mainClassName = packageName + '.Mobibot'
 
 ext.versions = [
-    log4j   : '2.14.1',
-    pmd     : '6.35.0',
+        log4j: '2.14.1',
+        pmd  : '6.35.0',
 ]
 
 repositories {
@@ -48,19 +48,19 @@ dependencies {
     implementation 'commons-net:commons-net:3.8.0'
     implementation 'org.apache.commons:commons-lang3:3.12.0'
 
-    implementation 'com.rometools:rome:1.15.0'
+    implementation 'com.rometools:rome:1.16.0'
     implementation 'com.squareup.okhttp3:okhttp:4.9.1'
     implementation 'net.aksingh:owm-japis:2.5.3.0'
     implementation 'net.objecthunter:exp4j:0.4.8'
-    
+
     implementation 'net.thauvin.erik:cryptoprice:0.9.0-SNAPSHOT'
     implementation 'net.thauvin.erik:pinboard-poster:1.0.3'
-    
+
     implementation 'org.json:json:20210307'
     implementation 'org.jsoup:jsoup:1.13.1'
     implementation 'org.twitter4j:twitter4j-core:4.0.7'
 
-    testImplementation 'org.assertj:assertj-core:3.20.1'
+    testImplementation 'org.assertj:assertj-core:3.20.2'
     testImplementation 'org.testng:testng:7.4.0'
 }
 
