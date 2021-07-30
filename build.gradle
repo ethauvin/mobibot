@@ -2,12 +2,12 @@ plugins {
     id 'application'
     id 'com.github.ben-manes.versions' version '0.39.0'
     id 'idea'
-    id 'io.gitlab.arturbosch.detekt' version '1.17.1'
+    id 'io.gitlab.arturbosch.detekt' version '1.18.0-RC2'
     id 'jacoco'
     id 'java'
     id 'net.thauvin.erik.gradle.semver' version '1.0.4'
-    id 'org.jetbrains.kotlin.jvm' version '1.5.20'
-    id 'org.jetbrains.kotlin.kapt' version '1.5.20'
+    id 'org.jetbrains.kotlin.jvm' version '1.5.21'
+    id 'org.jetbrains.kotlin.kapt' version '1.5.21'
     id 'org.sonarqube' version '3.3'
     id 'pmd'
 }
@@ -39,14 +39,13 @@ dependencies {
     compileOnly 'pircbot:pircbot:1.5.0:sources'
 
     implementation(platform("org.jetbrains.kotlin:kotlin-bom"))
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.0'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.1'
 
     implementation "org.apache.logging.log4j:log4j-api:$versions.log4j"
     implementation "org.apache.logging.log4j:log4j-core:$versions.log4j"
     implementation "org.apache.logging.log4j:log4j-slf4j-impl:$versions.log4j"
     implementation 'commons-cli:commons-cli:1.4'
     implementation 'commons-net:commons-net:3.8.0'
-    implementation 'org.apache.commons:commons-lang3:3.12.0'
 
     implementation 'com.rometools:rome:1.16.0'
     implementation 'com.squareup.okhttp3:okhttp:4.9.1'
@@ -57,7 +56,7 @@ dependencies {
     implementation 'net.thauvin.erik:pinboard-poster:1.0.3'
 
     implementation 'org.json:json:20210307'
-    implementation 'org.jsoup:jsoup:1.13.1'
+    implementation 'org.jsoup:jsoup:1.14.1'
     implementation 'org.twitter4j:twitter4j-core:4.0.7'
 
     testImplementation 'org.assertj:assertj-core:3.20.2'
@@ -75,8 +74,8 @@ test {
 }
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
 }
 
 kapt {
