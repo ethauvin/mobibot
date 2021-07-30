@@ -32,29 +32,68 @@
 package net.thauvin.erik.mobibot.modules
 
 import net.aksingh.owmjapis.api.APIException
+import net.aksingh.owmjapis.core.OWM
 import net.thauvin.erik.mobibot.LocalProperties
+import net.thauvin.erik.mobibot.modules.Weather2.Companion.OWM_API_KEY_PROP
+import net.thauvin.erik.mobibot.modules.Weather2.Companion.ftoC
+import net.thauvin.erik.mobibot.modules.Weather2.Companion.getCountry
 import net.thauvin.erik.mobibot.modules.Weather2.Companion.getWeather
+import net.thauvin.erik.mobibot.modules.Weather2.Companion.mphToKmh
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.testng.annotations.Test
+import kotlin.random.Random
 
 /**
  * The `Weather2Test` class.
  */
 class Weather2Test : LocalProperties() {
     @Test
+    fun testFtoC() {
+        val t = ftoC(32.0)
+        assertThat(t.second).describedAs("32 °F is 0 °C").isEqualTo(0)
+    }
+
+    @Test
+    fun testGetCountry() {
+        assertThat(getCountry("foo")).describedAs("not a country").isEqualTo(OWM.Country.UNITED_STATES)
+        assertThat(getCountry("fr")).describedAs("fr is france").isEqualTo(OWM.Country.FRANCE)
+
+        val country = OWM.Country.values()
+        repeat(3) {
+            val rand = country[Random.nextInt(0, country.size - 1)]
+            assertThat(getCountry(rand.value)).describedAs(rand.name).isEqualTo(rand)
+        }
+    }
+
+    @Test
+    fun testMphToKmh() {
+        val w = mphToKmh(0.62)
+        assertThat(w.second).describedAs("0.62 mph is 1 km/h").isEqualTo(1)
+    }
+
+    @Test
     @Throws(ModuleException::class)
     fun testWeather() {
-        var messages = getWeather("98204", getProperty(Weather2.OWM_API_KEY_PROP))
+        var messages = getWeather("98204", getProperty(OWM_API_KEY_PROP))
         assertThat(messages[0].msg).describedAs("is Everett").contains("Everett").contains("US")
-        assertThat(messages[messages.size - 1].msg).describedAs("is City Search").endsWith("98204%2CUS")
-        messages = getWeather("London, UK", getProperty(Weather2.OWM_API_KEY_PROP))
+        assertThat(messages[messages.size - 1].msg).describedAs("is Everett zip code").endsWith("98204%2CUS")
+
+        messages = getWeather("San Francisco", getProperty(OWM_API_KEY_PROP))
+        assertThat(messages[0].msg).describedAs("is San Francisco").contains("San Francisco").contains("US")
+        assertThat(messages[messages.size - 1].msg).describedAs("is San Fran city code").endsWith("5391959")
+
+        messages = getWeather("London, UK", getProperty(OWM_API_KEY_PROP))
         assertThat(messages[0].msg).describedAs("is UK").contains("London").contains("UK")
-        assertThat(messages[messages.size - 1].msg).describedAs("is City Code").endsWith("4517009")
-        assertThatThrownBy { getWeather("Montpellier, FR", getProperty(Weather2.OWM_API_KEY_PROP)) }
-            .describedAs("Montpellier not found").hasCauseInstanceOf(APIException::class.java)
+        assertThat(messages[messages.size - 1].msg).describedAs("is London city code").endsWith("4517009")
+
+        assertThatThrownBy { getWeather("Foo, US", getProperty(OWM_API_KEY_PROP)) }
+            .describedAs("foo not found").hasCauseInstanceOf(APIException::class.java)
         assertThatThrownBy { getWeather("test", "") }
             .describedAs("no API key").isInstanceOf(ModuleException::class.java).hasNoCause()
+        assertThatThrownBy { getWeather("test", null) }
+            .describedAs("null API key").isInstanceOf(ModuleException::class.java).hasNoCause()
+
         messages = getWeather("", "apikey")
         assertThat(messages[0].isError).describedAs("no query").isTrue
     }

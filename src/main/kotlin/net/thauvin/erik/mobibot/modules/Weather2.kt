@@ -84,19 +84,26 @@ class Weather2(bot: Mobibot) : ThreadedModule(bot) {
 
         // Weather command
         private const val WEATHER_CMD = "weather"
-        private fun getCountry(countryCode: String): Country {
+
+        /**
+         * Converts and rounds temperature from °F to °C.
+         */
+        fun ftoC(d: Double?): Pair<Int, Int> {
+            @Suppress("MagicNumber")
+            val c = (d!! - 32) * 5 / 9
+            return d.roundToInt() to c.roundToInt()
+        }
+
+        /**
+         * Returns a country based on its country code. Defaults to [Country.UNITED_STATES] if not found.
+         */
+        fun getCountry(countryCode: String): Country {
             for (c in Country.values()) {
-                if (c.name.equals(countryCode, ignoreCase = true)) {
+                if (c.value.equals(countryCode, ignoreCase = true)) {
                     return c
                 }
             }
             return Country.UNITED_STATES
-        }
-
-        private fun getTemps(d: Double?): String {
-            @Suppress("MagicNumber")
-            val c = (d!! - 32) * 5 / 9
-            return "${d.roundToInt()} °F, ${c.roundToInt()} °C"
         }
 
         /**
@@ -131,7 +138,8 @@ class Weather2(bot: Mobibot) : ThreadedModule(bot) {
                             with(cwd.mainData) {
                                 if (this != null) {
                                     if (hasTemp()) {
-                                        messages.add(PublicMessage("Temperature: ${getTemps(temp)}"))
+                                        val t = ftoC(temp)
+                                        messages.add(PublicMessage("Temperature: ${t.first}°F, ${t.second}°C"))
                                     }
                                     if (hasHumidity() && humidity != null) {
                                         messages.add(NoticeMessage("Humidity: ${(humidity!!).roundToInt()}%"))
@@ -141,7 +149,8 @@ class Weather2(bot: Mobibot) : ThreadedModule(bot) {
                             if (cwd.hasWindData()) {
                                 with(cwd.windData) {
                                     if (this != null && hasSpeed() && speed != null) {
-                                        messages.add(NoticeMessage("Wind: ${wind(speed!!)}"))
+                                        val w = mphToKmh(speed!!)
+                                        messages.add(NoticeMessage("Wind: ${w.first} mph, ${w.second} km/h"))
                                     }
                                 }
                             }
@@ -176,7 +185,7 @@ class Weather2(bot: Mobibot) : ThreadedModule(bot) {
                             }
                         }
                     } catch (e: APIException) {
-                        throw ModuleException("getWeather($query)", "A weather API error has occurred.", e)
+                        throw ModuleException("getWeather($query)", "A weather API error has occurred: ${e.message}", e)
                     } catch (e: NullPointerException) {
                         throw ModuleException("getWeather($query)", "Unable to perform weather lookup.", e)
                     }
@@ -188,10 +197,13 @@ class Weather2(bot: Mobibot) : ThreadedModule(bot) {
             return messages
         }
 
-        private fun wind(w: Double): String {
+        /**
+         * Converts and rounds temperature from mph to km/h.
+         */
+        fun mphToKmh(w: Double): Pair<Int, Int> {
             @Suppress("MagicNumber")
             val kmh = w * 1.60934
-            return "${w.roundToInt()} mph, ${kmh.roundToInt()} km/h"
+            return w.roundToInt() to kmh.roundToInt()
         }
     }
 
