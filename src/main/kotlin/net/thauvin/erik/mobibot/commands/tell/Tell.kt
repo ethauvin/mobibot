@@ -122,7 +122,7 @@ class Tell(bot: Mobibot) : AbstractCommand(bot) {
         helpFormat("%c $name <nick> <message>"),
         "To view queued and sent messages:",
         helpFormat("%c $name ${View.VIEW_CMD}"),
-        "Messages are kept for ${bold(maxDays)}" + " day.".plural(maxDays, " days.")
+        "Messages are kept for ${bold(maxDays)}" + " day".plural(maxDays.toLong()) + '.'
     )
     override val isOp: Boolean = false
     override val isPublic: Boolean = isEnabled()

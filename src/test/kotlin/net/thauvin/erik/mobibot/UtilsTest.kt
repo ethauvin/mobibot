@@ -31,16 +31,21 @@
  */
 package net.thauvin.erik.mobibot
 
+import net.thauvin.erik.mobibot.Utils.appendIfMissing
 import net.thauvin.erik.mobibot.Utils.bold
+import net.thauvin.erik.mobibot.Utils.buildCmdSyntax
 import net.thauvin.erik.mobibot.Utils.capitalise
 import net.thauvin.erik.mobibot.Utils.colorize
 import net.thauvin.erik.mobibot.Utils.cyan
+import net.thauvin.erik.mobibot.Utils.encodeUrl
 import net.thauvin.erik.mobibot.Utils.getIntProperty
 import net.thauvin.erik.mobibot.Utils.green
+import net.thauvin.erik.mobibot.Utils.helpFormat
 import net.thauvin.erik.mobibot.Utils.obfuscate
 import net.thauvin.erik.mobibot.Utils.plural
+import net.thauvin.erik.mobibot.Utils.red
+import net.thauvin.erik.mobibot.Utils.replaceEach
 import net.thauvin.erik.mobibot.Utils.reverseColor
-import net.thauvin.erik.mobibot.Utils.toDir
 import net.thauvin.erik.mobibot.Utils.toIntOrDefault
 import net.thauvin.erik.mobibot.Utils.toIsoLocalDate
 import net.thauvin.erik.mobibot.Utils.toUtcDateTime
@@ -48,7 +53,6 @@ import net.thauvin.erik.mobibot.Utils.today
 import net.thauvin.erik.mobibot.Utils.unescapeXml
 import net.thauvin.erik.mobibot.Utils.uptime
 import net.thauvin.erik.mobibot.Utils.urlReader
-import org.apache.commons.lang3.StringUtils
 import org.assertj.core.api.Assertions.assertThat
 import org.jibble.pircbot.Colors
 import org.testng.annotations.BeforeClass
@@ -68,6 +72,7 @@ class UtilsTest {
         " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~"
     private val cal = Calendar.getInstance()
     private val localDateTime = LocalDateTime.of(1952, 2, 17, 12, 30, 0)
+    private val test = "This is a test."
 
     @BeforeClass
     fun setUp() {
@@ -75,17 +80,39 @@ class UtilsTest {
     }
 
     @Test
+    fun testAppendIfMissing() {
+        val dir = "dir"
+        val sep = '/'
+        val url = "https://erik.thauvin.net"
+        assertThat(dir.appendIfMissing(File.separatorChar)).describedAs("appendIfMissing(dir)")
+            .isEqualTo(dir + File.separatorChar)
+        assertThat(url.appendIfMissing(sep)).describedAs("appendIfMissing(url)").isEqualTo("$url$sep")
+        assertThat("$url$sep".appendIfMissing(sep)).describedAs("appendIfMissing($url$sep)").isEqualTo("$url$sep")
+    }
+
+    @Test
     fun testBold() {
         assertThat(bold(1)).describedAs("bold(1)").isEqualTo(Colors.BOLD + "1" + Colors.BOLD)
+        assertThat(bold(2L)).describedAs("bold(1)").isEqualTo(Colors.BOLD + "2" + Colors.BOLD)
         assertThat(bold(ascii)).describedAs("bold(ascii)").isEqualTo(Colors.BOLD + ascii + Colors.BOLD)
         assertThat(bold("test")).describedAs("bold(test)").isEqualTo(Colors.BOLD + "test" + Colors.BOLD)
-
     }
+
+    @Test
+    fun testBuildCmdSyntax() {
+        val bot = "mobibot"
+        assertThat(buildCmdSyntax("%c $test %n $test", bot, false)).describedAs("public")
+            .isEqualTo("$bot: $test $bot $test")
+        assertThat(buildCmdSyntax("%c %n $test %c $test %n", bot, true)).describedAs("public")
+            .isEqualTo("/msg $bot $bot $test /msg $bot $test $bot")
+    }
+
 
     @Test
     fun testCapitalise() {
         assertThat("test".capitalise()).describedAs("capitalize(test)").isEqualTo("Test")
         assertThat("Test".capitalise()).describedAs("capitalize(Test)").isEqualTo("Test")
+        assertThat(test.capitalise()).describedAs("capitalize($test)").isEqualTo(test)
         assertThat("".capitalise()).describedAs("capitalize()").isEqualTo("")
     }
 
@@ -99,6 +126,8 @@ class UtilsTest {
         assertThat(colorize(ascii, Colors.BOLD)).describedAs("colorized(bold)")
             .isEqualTo(Colors.BOLD + ascii + Colors.BOLD)
         assertThat(colorize(null, Colors.RED)).describedAs("colorize(null)").isEqualTo(Colors.NORMAL)
+        assertThat(colorize("", Colors.RED)).describedAs("colorize()").isEqualTo(Colors.NORMAL)
+
     }
 
     @Test
@@ -107,17 +136,34 @@ class UtilsTest {
     }
 
     @Test
+    fun testEncodeUrl() {
+        assertThat(encodeUrl("Hello Günter")).isEqualTo("Hello+G%C3%BCnter")
+    }
+
+    @Test
     fun testGetIntProperty() {
         val p = Properties()
         p["one"] = "1"
-        p["two"] = "foo"
-        assertThat(p.getIntProperty("one", 1)).describedAs("getIntProperty(one)").isEqualTo(1)
+        p["two"] = "two"
+        assertThat(p.getIntProperty("one", 9)).describedAs("getIntProperty(one)").isEqualTo(1)
         assertThat(p.getIntProperty("two", 2)).describedAs("getIntProperty(two)").isEqualTo(2)
+        assertThat(p.getIntProperty("foo", 3)).describedAs("getIntProperty(foo)").isEqualTo(3)
     }
 
     @Test
     fun testGreen() {
         assertThat(green(ascii)).isEqualTo(Colors.DARK_GREEN + ascii + Colors.NORMAL)
+    }
+
+    @Test
+    fun testHelpFormat() {
+        assertThat(helpFormat(test, isBold = true, isIndent = false)).describedAs("bold")
+            .isEqualTo("${Colors.BOLD}$test${Colors.BOLD}")
+        assertThat(helpFormat(test, isBold = false, isIndent = true)).describedAs("indent")
+            .isEqualTo(test.prependIndent())
+        assertThat(helpFormat(test, isBold = true, isIndent = true)).describedAs("bold-indent")
+            .isEqualTo(colorize(test, Colors.BOLD).prependIndent())
+
     }
 
     @Test
@@ -129,7 +175,7 @@ class UtilsTest {
     @Test
     fun testObfuscate() {
         assertThat(ascii.obfuscate().length).describedAs("obfuscate is right length").isEqualTo(ascii.length)
-        assertThat(ascii.obfuscate()).describedAs("obfuscate()").isEqualTo(StringUtils.repeat("x", ascii.length))
+        assertThat(ascii.obfuscate()).describedAs("obfuscate()").isEqualTo("x".repeat(ascii.length))
         assertThat(" ".obfuscate()).describedAs("obfuscate(blank)").isEqualTo(" ")
     }
 
@@ -137,10 +183,31 @@ class UtilsTest {
     fun testPlural() {
         val week = "week"
         val weeks = "weeks"
-        assertThat(week.plural(-1, weeks)).describedAs("plural(-1)").isEqualTo(week)
-        assertThat(week.plural(0, weeks)).describedAs("plural(0)").isEqualTo(week)
-        assertThat(week.plural(1, weeks)).describedAs("plural(1)").isEqualTo(week)
-        assertThat(week.plural(2, weeks)).describedAs("plural(2)").isEqualTo(weeks)
+
+        for (i in -1..3) {
+            assertThat(week.plural(i.toLong())).describedAs("plural($i)").isEqualTo(if (i > 1) weeks else week)
+        }
+    }
+
+    @Test
+    fun testReplaceEach() {
+        val search = arrayOf("one", "two", "three")
+        val replace = arrayOf("1", "2", "3")
+        assertThat(search.joinToString(",").replaceEach(search, replace)).describedAs("replaceEach(1,2,3")
+            .isEqualTo(replace.joinToString(","))
+
+        assertThat(test.replaceEach(search, replace)).describedAs("replaceEach(nothing)").isEqualTo(test)
+
+        assertThat(test.replaceEach(arrayOf("t", "e"), arrayOf("", "E"))).describedAs("replaceEach($test)")
+            .isEqualTo(test.replace("t", "").replace("e", "E"))
+
+        assertThat(test.replaceEach(search, emptyArray())).describedAs("replaceEach(search, empty)")
+            .isEqualTo(test)
+    }
+
+    @Test
+    fun testRed() {
+        assertThat(red(ascii)).isEqualTo(colorize(ascii, Colors.RED))
     }
 
     @Test
@@ -151,13 +218,6 @@ class UtilsTest {
     @Test
     fun testToday() {
         assertThat(today()).isEqualTo(LocalDateTime.now().toIsoLocalDate())
-    }
-
-    @Test
-    fun testToDir() {
-        assertThat("dir".toDir(false)).describedAs("toDir(dir, false)").isEqualTo("dir" + File.separatorChar)
-        assertThat("https://erik.thauvin.net".toDir(true)).describedAs("toDir(erik.thauvin.net, true)")
-            .isEqualTo("https://erik.thauvin.net/")
     }
 
     @Test
@@ -175,16 +235,21 @@ class UtilsTest {
 
     @Test
     fun testUptime() {
-        assertThat("17 years 2 months 2 weeks 1 day 6 hours 45 minutes").isEqualTo(uptime(547800300076L))
+        assertThat(uptime(547800300076L)).describedAs("full")
+            .isEqualTo("17 years 2 months 2 weeks 1 day 6 hours 45 minutes")
+        assertThat(uptime(2700000L)).describedAs("minutes").isEqualTo("45 minutes")
+        assertThat(uptime(24300000L)).describedAs("hours minutes").isEqualTo("6 hours 45 minutes")
+        assertThat(uptime(110700000L)).describedAs("days hours minutes").isEqualTo("1 day 6 hours 45 minutes")
+        assertThat(uptime(1320300000L)).describedAs("weeks days hours minutes")
+            .isEqualTo("2 weeks 1 day 6 hours 45 minutes")
+        assertThat(uptime(0L)).describedAs("0 minutes").isEqualTo("0 minute")
     }
 
     @Test
     @Throws(IOException::class)
     fun testUrlReader() {
         assertThat(urlReader(URL("https://postman-echo.com/status/200"))).describedAs("urlReader()")
-            .isEqualTo(
-                "{\"status\":200}"
-            )
+            .isEqualTo("{\"status\":200}")
     }
 
     @Test

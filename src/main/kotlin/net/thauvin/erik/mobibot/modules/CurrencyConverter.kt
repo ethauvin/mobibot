@@ -40,7 +40,6 @@ import net.thauvin.erik.mobibot.Utils.today
 import net.thauvin.erik.mobibot.msg.ErrorMessage
 import net.thauvin.erik.mobibot.msg.Message
 import net.thauvin.erik.mobibot.msg.PublicMessage
-import org.apache.commons.lang3.StringUtils
 import org.jdom2.JDOMException
 import org.jdom2.input.SAXBuilder
 import java.io.IOException
@@ -193,7 +192,7 @@ class CurrencyConverter(bot: Mobibot) : ThreadedModule(bot) {
             val rates = mutableListOf<String>()
             for ((key, value) in EXCHANGE_RATES) {
                 @Suppress("MagicNumber")
-                rates.add("  $key: ${StringUtils.leftPad(value, 8)}")
+                rates.add("  $key: ${value.padStart(8)}")
             }
             return rates
         }

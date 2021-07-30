@@ -34,11 +34,11 @@ package net.thauvin.erik.mobibot
 import net.thauvin.erik.mobibot.PinboardUtils.addPin
 import net.thauvin.erik.mobibot.PinboardUtils.deletePin
 import net.thauvin.erik.mobibot.PinboardUtils.updatePin
+import net.thauvin.erik.mobibot.Utils.appendIfMissing
 import net.thauvin.erik.mobibot.Utils.buildCmdSyntax
 import net.thauvin.erik.mobibot.Utils.colorize
 import net.thauvin.erik.mobibot.Utils.getIntProperty
 import net.thauvin.erik.mobibot.Utils.helpFormat
-import net.thauvin.erik.mobibot.Utils.toDir
 import net.thauvin.erik.mobibot.Utils.toIsoLocalDate
 import net.thauvin.erik.mobibot.Utils.today
 import net.thauvin.erik.mobibot.commands.AddLog
@@ -95,6 +95,7 @@ import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
 import org.jibble.pircbot.PircBot
 import java.io.BufferedOutputStream
+import java.io.File
 import java.io.FileNotFoundException
 import java.io.FileOutputStream
 import java.io.IOException
@@ -586,7 +587,7 @@ class Mobibot(nickname: String, channel: String, logsDirPath: String, p: Propert
                     }
                     val nickname = p.getProperty("nick", Mobibot::class.java.name.lowercase())
                     val channel = p.getProperty("channel")
-                    val logsDir = p.getProperty("logs", ".").toDir()
+                    val logsDir = p.getProperty("logs", ".").appendIfMissing(File.separatorChar)
 
                     // Redirect stdout and stderr
                     if (!commandLine.hasOption(Constants.DEBUG_ARG[0])) {
@@ -656,14 +657,14 @@ class Mobibot(nickname: String, channel: String, logsDirPath: String, p: Propert
 
         // Set the URLs
         weblogUrl = p.getProperty("weblog", "")
-        backlogsUrl = p.getProperty("backlogs", weblogUrl).toDir(true)
+        backlogsUrl = p.getProperty("backlogs", weblogUrl).appendIfMissing('/')
 
         // Load the current entries and backlogs, if any
         try {
             LinksMgr.startup(logsDir + EntriesMgr.CURRENT_XML, logsDir + EntriesMgr.NAV_XML, this.channel)
             if (logger.isDebugEnabled) logger.debug("Last feed: ${LinksMgr.startDate}")
         } catch (e: Exception) {
-            logger.error("An error occurred while loading the logs.", e)
+            if (logger.isErrorEnabled) logger.error("An error occurred while loading the logs.", e)
         }
 
         // Set the pinboard authentication

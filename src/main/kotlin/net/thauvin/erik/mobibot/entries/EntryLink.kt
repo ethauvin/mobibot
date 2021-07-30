@@ -34,7 +34,6 @@ package net.thauvin.erik.mobibot.entries
 import com.rometools.rome.feed.synd.SyndCategory
 import com.rometools.rome.feed.synd.SyndCategoryImpl
 import net.thauvin.erik.mobibot.commands.links.LinksMgr
-import org.apache.commons.lang3.StringUtils
 import java.io.Serializable
 import java.util.Calendar
 import java.util.Date
@@ -144,9 +143,11 @@ class EntryLink : Serializable {
      * Returns true if a string is contained in the link, title, or nick.
      */
     fun matches(match: String?): Boolean {
-        return (StringUtils.containsIgnoreCase(link, match)
-                || StringUtils.containsIgnoreCase(title, match)
-                || StringUtils.containsIgnoreCase(nick, match))
+        return if (match.isNullOrEmpty()) {
+            false
+        } else {
+            link.contains(match, true) || title.contains(match, true) || nick.contains(match, true)
+        }
     }
 
     /**

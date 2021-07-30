@@ -31,7 +31,6 @@
  */
 package net.thauvin.erik.mobibot
 
-import org.apache.commons.lang3.StringUtils
 import org.jibble.pircbot.Colors
 import org.jsoup.Jsoup
 import java.io.BufferedReader
@@ -55,6 +54,18 @@ import java.util.stream.Collectors
 @Suppress("TooManyFunctions")
 object Utils {
     private val searchFlags = arrayOf("%c", "%n")
+
+    /**
+     * Appends a suffix to the end of the String if not present.
+     */
+    @JvmStatic
+    fun String.appendIfMissing(suffix: Char) : String {
+        return if (this.last() != suffix) {
+            "$this${suffix}"
+        } else {
+            this
+        }
+    }
 
     /**
      * Makes the given int bold.
@@ -81,7 +92,7 @@ object Utils {
     @JvmStatic
     fun buildCmdSyntax(text: String, botNick: String, isPrivate: Boolean): String {
         val replace = arrayOf(if (isPrivate) "/msg $botNick" else "$botNick:", botNick)
-        return StringUtils.replaceEach(text, searchFlags, replace)
+        return text.replaceEach(searchFlags, replace)
     }
 
     /**
@@ -95,7 +106,7 @@ object Utils {
      */
     @JvmStatic
     fun colorize(s: String?, color: String): String {
-        return if (s.isNullOrBlank()) {
+        return if (s.isNullOrEmpty()) {
             Colors.NORMAL
         } else if (Colors.BOLD == color || Colors.REVERSE == color) {
             color + s + color
@@ -136,7 +147,8 @@ object Utils {
     @JvmStatic
     @JvmOverloads
     fun helpFormat(help: String, isBold: Boolean = true, isIndent: Boolean = true): String {
-        return (if (isIndent) "    " else "").plus(if (isBold) bold(help) else help)
+        val s = if (isBold) bold(help) else help
+        return if (isIndent) s.prependIndent() else s
     }
 
     /**
@@ -145,21 +157,16 @@ object Utils {
     @JvmStatic
     fun String.obfuscate(): String {
         return if (this.isNotBlank()) {
-            StringUtils.repeat('x', this.length)
+            "x".repeat(this.length)
         } else this
     }
 
     /**
      * Returns the plural form of a word, if count &gt; 1.
      */
-    fun String.plural(count: Int, plural: String): String = this.plural(count.toLong(), plural)
-
-    /**
-     * Returns the plural form of a word, if count &gt; 1.
-     */
     @JvmStatic
-    fun String.plural(count: Long, plural: String): String {
-        return if (count > 1) plural else this
+    fun String.plural(count: Long): String {
+        return if (count > 1) "${this}s" else this
     }
 
     /**
@@ -167,6 +174,20 @@ object Utils {
      */
     @JvmStatic
     fun red(s: String?): String = colorize(s, Colors.RED)
+
+    /**
+     * Replaces all occurrences of Strings within another String.
+     */
+    @JvmStatic
+    fun String.replaceEach(search: Array<out String>, replace: Array<out String>): String {
+        var result = this
+        if (search.size == replace.size) {
+            search.forEachIndexed { i, s ->
+                result = result.replace(s, replace[i])
+            }
+        }
+        return result
+    }
 
     /**
      * Makes the given string reverse color.
@@ -179,26 +200,6 @@ object Utils {
      */
     @JvmStatic
     fun today(): String = LocalDateTime.now().toIsoLocalDate()
-
-    /**
-     * Ensures that the given location (File/URL) has a trailing slash (`/`) to indicate a directory.
-     */
-    @JvmStatic
-    fun String.toDir(isUrl: Boolean = false): String {
-        return if (isUrl) {
-            if (this.last() == '/') {
-                this
-            } else {
-                "$this/"
-            }
-        } else {
-            if (this.last() == File.separatorChar) {
-                this
-            } else {
-                this + File.separatorChar
-            }
-        }
-    }
 
     /**
      * Converts a string to an int.
@@ -266,21 +267,23 @@ object Utils {
 
         with(info) {
             if (years > 0) {
-                append(years).append(" year ".plural(years, " years "))
+                append(years).append(" year".plural(years)).append(' ')
             }
             if (months > 0) {
-                append(weeks).append(" month ".plural(months, " months "))
+                append(weeks).append(" month".plural(months)).append(' ')
             }
             if (weeks > 0) {
-                append(weeks).append(" week ".plural(weeks, " weeks "))
+                append(weeks).append(" week".plural(weeks)).append(' ')
             }
             if (days > 0) {
-                append(days).append(" day ".plural(days, " days "))
+                append(days).append(" day".plural(days)).append(' ')
             }
             if (hours > 0) {
-                append(hours).append(" hour ".plural(hours, " hours "))
+                append(hours).append(" hour".plural(hours)).append(' ')
             }
-            append(minutes).append(" minute ".plural(minutes, " minutes"))
+
+            append(minutes).append(" minute".plural(minutes))
+
             return toString()
         }
     }

@@ -32,7 +32,7 @@
 package net.thauvin.erik.mobibot.modules
 
 import net.thauvin.erik.mobibot.Utils.obfuscate
-import org.apache.commons.lang3.StringUtils
+import net.thauvin.erik.mobibot.Utils.replaceEach
 
 /**
  * The `ModuleException` class.
@@ -70,11 +70,11 @@ class ModuleException : Exception {
     fun getSanitizedMessage(vararg sanitize: String): String {
         val obfuscate = sanitize.map { it.obfuscate() }.toTypedArray()
         return when {
-            cause != null -> {
-                cause.javaClass.name + ": " + StringUtils.replaceEach(cause.message, sanitize, obfuscate)
+            cause?.message != null -> {
+                cause.javaClass.name + ": " + cause.message!!.replaceEach(sanitize, obfuscate)
             }
             message != null -> {
-                message.javaClass.name + ": " + StringUtils.replaceEach(message, sanitize, obfuscate)
+                message.javaClass.name + ": " + message.replaceEach(sanitize, obfuscate)
             }
             else -> ""
         }
