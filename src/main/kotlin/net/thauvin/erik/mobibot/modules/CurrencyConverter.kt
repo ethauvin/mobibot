@@ -190,7 +190,7 @@ class CurrencyConverter(bot: Mobibot) : ThreadedModule(bot) {
         @JvmStatic
         fun currencyRates(): List<String> {
             val rates = mutableListOf<String>()
-            for ((key, value) in EXCHANGE_RATES) {
+            for ((key, value) in EXCHANGE_RATES.toSortedMap()) {
                 @Suppress("MagicNumber")
                 rates.add("  $key: ${value.padStart(8)}")
             }

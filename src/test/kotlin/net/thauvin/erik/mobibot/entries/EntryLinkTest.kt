@@ -83,7 +83,7 @@ class EntryLinkTest {
         val link = EntryLink("link", "title", "nick", "channel", Date(), tags)
         assertThat(link.tags.size).describedAs("check tag size").isEqualTo(tags.size)
         assertThat(link.tags[0].name).describedAs("check tag name").isEqualTo(tag)
-        assertThat(link.pinboardTags).describedAs("check pinboard tag").isEqualTo("nick,$tag")
+        assertThat(link.pinboardTags).describedAs("check pinboard tags").isEqualTo("nick,$tag")
     }
 
     @Test
@@ -94,8 +94,6 @@ class EntryLinkTest {
         assertThat(entryLink.matches("foo")).describedAs("match foo").isFalse
         assertThat(entryLink.matches("")).describedAs("match empty").isFalse
         assertThat(entryLink.matches(null)).describedAs("match null").isFalse
-
-
     }
 
 
