@@ -211,10 +211,12 @@ class WorldTime(bot: Mobibot) : AbstractModule(bot) {
     override val isPrivateMsgEnabled = true
 
     init {
-        help.add("To display a country's current date/time:")
-        help.add(helpFormat("%c $TIME_CMD [<country code>]"))
-        help.add("For a listing of the supported countries:")
-        help.add(helpFormat("%c $TIME_CMD"))
+        with(help) {
+            add("To display a country's current date/time:")
+            add(helpFormat("%c $TIME_CMD [<country code>]"))
+            add("For a listing of the supported countries:")
+            add(helpFormat("%c $TIME_CMD"))
+        }
         commands.add(TIME_CMD)
     }
 }

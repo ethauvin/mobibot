@@ -114,7 +114,9 @@ object EntriesMgr {
                 output.output(rss, fw)
             }
         } else {
-            bot.logger.warn("Unable to generate the backlogs feed. No property configured.")
+            if (bot.logger.isErrorEnabled) {
+                bot.logger.warn("Unable to generate the backlogs feed. No property configured.")
+            }
         }
     }
 

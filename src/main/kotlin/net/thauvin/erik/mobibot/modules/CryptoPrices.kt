@@ -87,11 +87,13 @@ class CryptoPrices(bot: Mobibot) : ThreadedModule(bot) {
 
     init {
         commands.add(CRYPTO_CMD)
-        help.add("To retrieve a cryptocurrency's market price:")
-        help.add(helpFormat("%c $CRYPTO_CMD <symbol> [<currency>]"))
-        help.add("For example:")
-        help.add(helpFormat("%c $CRYPTO_CMD BTC"))
-        help.add(helpFormat("%c $CRYPTO_CMD ETH EUR"))
-        help.add(helpFormat("%c $CRYPTO_CMD ETH2 GPB"))
+        with(help) {
+            add("To retrieve a cryptocurrency's market price:")
+            add(helpFormat("%c $CRYPTO_CMD <symbol> [<currency>]"))
+            add("For example:")
+            add(helpFormat("%c $CRYPTO_CMD BTC"))
+            add(helpFormat("%c $CRYPTO_CMD ETH EUR"))
+            add(helpFormat("%c $CRYPTO_CMD ETH2 GPB"))
+        }
     }
 }

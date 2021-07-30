@@ -56,18 +56,20 @@ class Weather2(bot: Mobibot) : ThreadedModule(bot) {
      */
     override fun run(sender: String, cmd: String, args: String, isPrivate: Boolean) {
         if (args.isNotBlank()) {
-            try {
-                val messages = getWeather(args, properties[OWM_API_KEY_PROP])
-                if (messages[0].isError) {
-                    helpResponse(sender, isPrivate)
-                } else {
-                    for (msg in messages) {
-                        bot.send(sender, msg)
+            with(bot) {
+                try {
+                    val messages = getWeather(args, properties[OWM_API_KEY_PROP])
+                    if (messages[0].isError) {
+                        helpResponse(sender, isPrivate)
+                    } else {
+                        for (msg in messages) {
+                            send(sender, msg)
+                        }
                     }
+                } catch (e: ModuleException) {
+                    if (logger.isDebugEnabled) logger.debug(e.debugMessage, e)
+                    send(e.message)
                 }
-            } catch (e: ModuleException) {
-                if (bot.logger.isDebugEnabled) bot.logger.debug(e.debugMessage, e)
-                bot.send(e.message)
             }
         } else {
             helpResponse(sender, isPrivate)
@@ -174,7 +176,7 @@ class Weather2(bot: Mobibot) : ThreadedModule(bot) {
                             }
                         }
                     } catch (e: APIException) {
-                        throw ModuleException("getWeather($query)", "Unable to perform weather lookup.", e)
+                        throw ModuleException("getWeather($query)", "A weather API error has occurred.", e)
                     } catch (e: NullPointerException) {
                         throw ModuleException("getWeather($query)", "Unable to perform weather lookup.", e)
                     }
@@ -195,11 +197,13 @@ class Weather2(bot: Mobibot) : ThreadedModule(bot) {
 
     init {
         commands.add(WEATHER_CMD)
-        help.add("To display weather information:")
-        help.add(helpFormat("%c $WEATHER_CMD <city> [, <country code>]"))
-        help.add("For example:")
-        help.add(helpFormat("%c $WEATHER_CMD paris, fr"))
-        help.add("The default ISO 3166 country code is ${bold("US")}. Zip codes supported in most countries.")
+        with(help) {
+            add("To display weather information:")
+            add(helpFormat("%c $WEATHER_CMD <city> [, <country code>]"))
+            add("For example:")
+            add(helpFormat("%c $WEATHER_CMD paris, fr"))
+            add("The default ISO 3166 country code is ${bold("US")}. Zip codes supported in most countries.")
+        }
         initProperties(OWM_API_KEY_PROP)
     }
 }

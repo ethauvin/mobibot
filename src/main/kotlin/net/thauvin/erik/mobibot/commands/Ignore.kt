@@ -54,11 +54,8 @@ class Ignore(bot: Mobibot) : AbstractCommand(bot) {
         "To toggle your ignore status:",
         helpFormat("%c $name $me")
     )
-    private val helpOp = listOf(
-        "To ignore a link posted to the channel:",
-        helpFormat("https://www.foo.bar " + bold("%n"), false),
-        "To add/remove nicks from the ignored list:",
-        helpFormat("%c $name <nick> [<nick> ...]")
+    private val helpOp = help.plus(
+        arrayOf("To add/remove nicks from the ignored list:", helpFormat("%c $name <nick> [<nick> ...]"))
     )
 
     override val isOp = false

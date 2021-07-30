@@ -51,7 +51,7 @@ import java.net.URL
  */
 class StockQuote(bot: Mobibot) : ThreadedModule(bot) {
     /**
-     * Returns the specified stock quote from Alpha Avantage.
+     * Returns the specified stock quote from Alpha Vantage.
      */
     override fun run(sender: String, cmd: String, args: String, isPrivate: Boolean) {
         with(bot) {
@@ -163,27 +163,52 @@ class StockQuote(bot: Mobibot) : ThreadedModule(bot) {
                                 add(ErrorMessage(INVALID_SYMBOL))
                                 return messages
                             }
+
                             add(
                                 PublicMessage(
                                     "Symbol: " + unescapeXml(quote.getString("01. symbol"))
                                             + " [" + unescapeXml(symbolInfo.getString("2. name")) + ']'
                                 )
                             )
-                            add(PublicMessage("    Price:     " + unescapeXml(quote.getString("05. price"))))
-                            add(PublicMessage("    Previous:  " + unescapeXml(quote.getString("08. previous close"))))
-                            add(NoticeMessage("    Open:      " + unescapeXml(quote.getString("02. open"))))
-                            add(NoticeMessage("    High:      " + unescapeXml(quote.getString("03. high"))))
-                            add(NoticeMessage("    Low:       " + unescapeXml(quote.getString("04. low"))))
-                            add(NoticeMessage("    Volume:    " + unescapeXml(quote.getString("06. volume"))))
+
+                            @Suppress("MagicNumber")
+                            val pad = 10
+
                             add(
-                                NoticeMessage(
-                                    "    Latest:    " + unescapeXml(quote.getString("07. latest trading day"))
+                                PublicMessage(
+                                    "Price:".padEnd(pad).prependIndent()
+                                            + unescapeXml(quote.getString("05. price"))
                                 )
                             )
                             add(
+                                PublicMessage(
+                                    "Previous:".padEnd(pad).prependIndent()
+                                            + unescapeXml(quote.getString("08. previous close"))
+                                )
+                            )
+
+                            val data = arrayOf(
+                                "Open" to "02. open",
+                                "High" to "03. high",
+                                "Low" to  "04. low",
+                                "Volume" to "06. volume",
+                                "Latest" to "07. latest trading day"
+                            )
+
+                            data.forEach {
+                                add(
+                                    NoticeMessage(
+                                        "${it.first}:".padEnd(pad).prependIndent(),
+                                        unescapeXml(quote.getString(it.second))
+                                    )
+                                )
+                            }
+
+                            add(
                                 NoticeMessage(
-                                    "    Change:    " + unescapeXml(quote.getString("09. change")) + " ["
-                                            + unescapeXml(quote.getString("10. change percent")) + ']'
+                                    "Change:".padEnd(pad).prependIndent()
+                                            + unescapeXml(quote.getString("09. change"))
+                                            + " [" + unescapeXml(quote.getString("10. change percent")) + ']'
                                 )
                             )
                         }

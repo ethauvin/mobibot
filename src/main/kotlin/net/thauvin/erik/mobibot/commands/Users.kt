@@ -51,15 +51,17 @@ class Users(bot: Mobibot) : AbstractCommand(bot) {
         isPrivate: Boolean
     ) {
         val nicks = mutableListOf<String>()
-        bot.getUsers(bot.channel).forEach { user ->
-            if (bot.isOp(user.nick)) {
-                nicks.add("@${user.nick}")
-            } else {
-                nicks.add(user.nick)
+        with(bot) {
+            getUsers(channel).forEach { user ->
+                if (isOp(user.nick)) {
+                    nicks.add("@${user.nick}")
+                } else {
+                    nicks.add(user.nick)
+                }
             }
-        }
 
-        @Suppress("MagicNumber")
-        bot.sendList(sender, nicks.sorted(), 8, isPrivate, isIndent = true)
+            @Suppress("MagicNumber")
+            sendList(sender, nicks.sorted(), 8, isPrivate, isIndent = true)
+        }
     }
 }

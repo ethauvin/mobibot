@@ -75,7 +75,7 @@ class Dice(bot: Mobibot) : AbstractModule(bot) {
 
     private fun roll(): Pair<Int, Int> {
         @Suppress("MagicNumber")
-        return Pair(Random.nextInt(1, 7), Random.nextInt(1, 7))
+        return Random.nextInt(1, 7) to Random.nextInt(1, 7)
     }
 
     companion object {

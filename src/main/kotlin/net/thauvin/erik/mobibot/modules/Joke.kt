@@ -59,11 +59,13 @@ class Joke(bot: Mobibot) : ThreadedModule(bot) {
      * Returns a random joke from [The Internet Chuck Norris Database](http://www.icndb.com/).
      */
     override fun run(sender: String, cmd: String, args: String, isPrivate: Boolean) {
-        try {
-            bot.send(cyan(randomJoke().msg))
-        } catch (e: ModuleException) {
-            if (bot.logger.isWarnEnabled) bot.logger.warn(e.debugMessage, e)
-            bot.send(sender, e.message, isPrivate)
+        with(bot) {
+            try {
+                send(cyan(randomJoke().msg))
+            } catch (e: ModuleException) {
+                if (logger.isWarnEnabled) logger.warn(e.debugMessage, e)
+                send(sender, e.message, isPrivate)
+            }
         }
     }
 
