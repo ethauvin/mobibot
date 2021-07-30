@@ -1,7 +1,7 @@
 /*
- * ErrorMessage.kt
+ * TestMessage.kt
  *
- * Copyright (c) 2004-2019, Erik C. Thauvin (erik@thauvin.net)
+ * Copyright (c) 2004-2021, Erik C. Thauvin (erik@thauvin.net)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,15 +29,27 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
 package net.thauvin.erik.mobibot.msg
 
-/**
- * The `ErrorMessage` class.
- */
-class ErrorMessage @JvmOverloads constructor(msg: String, color: String = DEFAULT_COLOR) : Message() {
-    init {
-        this.msg = msg
-        this.color = color
-        isError = true
+import org.assertj.core.api.Assertions.assertThat
+import org.testng.annotations.Test
+
+class TestMessage {
+    @Test
+    fun testConstructor() {
+        var msg = Message()
+
+        msg.isError = true
+        assertThat(msg.isNotice).describedAs("message is notice").isTrue
+
+        msg = Message("foo", isError = true)
+        assertThat(msg.isNotice).describedAs("message is notice too").isTrue
+    }
+
+    @Test
+    fun testErrorMessage() {
+        val msg = ErrorMessage("foo")
+        assertThat(msg.isNotice).describedAs("error message is notice").isTrue
     }
 }

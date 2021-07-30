@@ -32,7 +32,6 @@
 package net.thauvin.erik.mobibot.msg
 
 import net.thauvin.erik.semver.Constants
-import org.jibble.pircbot.Colors
 
 /**
  * The `Message` class.
@@ -47,6 +46,10 @@ open class Message {
 
     /** Error flag. */
     var isError = false
+        set(value) {
+            if (value) isNotice = value
+            field = value
+        }
 
     /** Notice flag. */
     var isNotice = false
@@ -66,7 +69,13 @@ open class Message {
      * Creates a new message.
      */
     @JvmOverloads
-    constructor(msg: String, color: String = DEFAULT_COLOR, isNotice: Boolean, isError: Boolean, isPrivate: Boolean) {
+    constructor(
+        msg: String,
+        color: String = DEFAULT_COLOR,
+        isNotice: Boolean = false,
+        isError: Boolean = false,
+        isPrivate: Boolean = false
+    ) {
         this.msg = msg
         this.color = color
         this.isNotice = isNotice
