@@ -106,7 +106,7 @@ object Utils {
      */
     @JvmStatic
     fun colorize(s: String?, color: String): String {
-        return if (s.isNullOrEmpty()) {
+        return if (s.isNullOrBlank()) {
             Colors.NORMAL
         } else if (Colors.BOLD == color || Colors.REVERSE == color) {
             color + s + color

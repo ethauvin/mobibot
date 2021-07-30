@@ -32,9 +32,11 @@
 package net.thauvin.erik.mobibot.entries
 
 import com.rometools.rome.feed.synd.SyndCategory
+import com.rometools.rome.feed.synd.SyndCategoryImpl
 import org.assertj.core.api.Assertions.assertThat
 import org.testng.annotations.Test
 import java.security.SecureRandom
+import java.util.Date
 
 /**
  * The `EntryUtilsTest` class.
@@ -75,6 +77,29 @@ class EntryLinkTest {
     }
 
     @Test
+    fun testConstructor() {
+        val tag = "test"
+        val tags = listOf(SyndCategoryImpl().apply { name = tag })
+        val link = EntryLink("link", "title", "nick", "channel", Date(), tags)
+        assertThat(link.tags.size).describedAs("check tag size").isEqualTo(tags.size)
+        assertThat(link.tags[0].name).describedAs("check tag name").isEqualTo(tag)
+        assertThat(link.pinboardTags).describedAs("check pinboard tag").isEqualTo("nick,$tag")
+    }
+
+    @Test
+    fun testMatches() {
+        assertThat(entryLink.matches("mobitopia")).describedAs("match mobitopia").isTrue
+        assertThat(entryLink.matches("skynx")).describedAs("match nick").isTrue
+        assertThat(entryLink.matches("www.mobitopia.org")).describedAs("match url").isTrue
+        assertThat(entryLink.matches("foo")).describedAs("match foo").isFalse
+        assertThat(entryLink.matches("")).describedAs("match empty").isFalse
+        assertThat(entryLink.matches(null)).describedAs("match null").isFalse
+
+
+    }
+
+
+    @Test
     fun testTags() {
         val tags: List<SyndCategory> = entryLink.tags
         for ((i, tag) in tags.withIndex()) {
@@ -88,5 +113,10 @@ class EntryLinkTest {
         entryLink.setTags("-mobitopia")
         assertThat(entryLink.pinboardTags).describedAs("getPinboardTags()")
             .isEqualTo(entryLink.nick + ",tag1,tag2,tag3,tag4,mobitopia")
+        val size = entryLink.tags.size
+        entryLink.setTags("")
+        assertThat(entryLink.tags.size).describedAs("empty tag").isEqualTo(size)
+        entryLink.setTags("    ")
+        assertThat(entryLink.tags.size).describedAs("blank tag").isEqualTo(size)
     }
 }

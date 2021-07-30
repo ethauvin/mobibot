@@ -58,6 +58,8 @@ class TellMessageTest {
         assertThat(tellMessage.isMatch(sender)).describedAs("match sender").isTrue
         assertThat(tellMessage.isMatch(recipient)).describedAs("match recipient").isTrue
         assertThat(tellMessage.isMatch("foo")).describedAs("foo is no match").isFalse
+        tellMessage.isReceived = false
+        assertThat(tellMessage.receptionDate).describedAs("reception date not set").isEqualTo(LocalDateTime.MIN)
         tellMessage.isReceived = true
         assertThat(tellMessage.isReceived).describedAs("is received").isTrue
         assertThat(isValidDate(tellMessage.receptionDate)).describedAs("received is valid date/time").isTrue

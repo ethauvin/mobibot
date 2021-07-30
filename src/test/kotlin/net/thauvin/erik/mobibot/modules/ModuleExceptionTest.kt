@@ -31,7 +31,7 @@
  */
 package net.thauvin.erik.mobibot.modules
 
-import org.assertj.core.api.Assertions
+import org.assertj.core.api.Assertions.assertThat
 import org.testng.annotations.DataProvider
 import org.testng.annotations.Test
 import java.io.IOException
@@ -57,19 +57,30 @@ class ModuleExceptionTest {
 
     @Test(dataProvider = "dp")
     fun testGetDebugMessage(e: ModuleException) {
-        Assertions.assertThat(e.debugMessage).describedAs("get debug message").isEqualTo(debugMessage)
+        assertThat(e.debugMessage).describedAs("get debug message").isEqualTo(debugMessage)
     }
 
     @Test(dataProvider = "dp")
     fun testGetMessage(e: ModuleException) {
-        Assertions.assertThat(e.message).describedAs("get message").isEqualTo(message)
+        assertThat(e.message).describedAs("get message").isEqualTo(message)
     }
 
     @Test
     fun testGetSanitizedMessage() {
         val apiKey = "1234567890"
-        val e = ModuleException(debugMessage, message, IOException("URL http://foo.com?apiKey=$apiKey&userID=me"))
-        Assertions.assertThat(e.getSanitizedMessage(apiKey)).describedAs("sanitized url")
+        var e = ModuleException(debugMessage, message, IOException("URL http://foo.com?apiKey=$apiKey&userID=me"))
+        assertThat(e.getSanitizedMessage(apiKey)).describedAs("sanitized url")
             .contains("xxxxxxxxxx").doesNotContain(apiKey)
+
+        e = ModuleException(debugMessage, message, null)
+        assertThat(e.getSanitizedMessage(apiKey)).describedAs("no cause").contains(message)
+
+        val msg: String? = null
+        e = ModuleException(debugMessage, msg, IOException(msg))
+        assertThat(e.getSanitizedMessage(apiKey)).describedAs("no message").isEqualTo("")
+
+
+        e = ModuleException(msg, msg, IOException(apiKey))
+        assertThat(e.getSanitizedMessage(apiKey)).describedAs("null message").doesNotContain(apiKey)
     }
 }

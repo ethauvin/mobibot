@@ -72,4 +72,8 @@ open class Message {
         this.isError = isError
         this.isPrivate = isPrivate
     }
+
+    override fun toString(): String {
+        return "Message(color='$color', isError=$isError, isNotice=$isNotice, isPrivate=$isPrivate, msg='$msg')"
+    }
 }

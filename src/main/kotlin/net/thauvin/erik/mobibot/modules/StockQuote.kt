@@ -198,8 +198,8 @@ class StockQuote(bot: Mobibot) : ThreadedModule(bot) {
                             data.forEach {
                                 add(
                                     NoticeMessage(
-                                        "${it.first}:".padEnd(pad).prependIndent(),
-                                        unescapeXml(quote.getString(it.second))
+                                        "${it.first}:".padEnd(pad).prependIndent()
+                                                + unescapeXml(quote.getString(it.second))
                                     )
                                 )
                             }

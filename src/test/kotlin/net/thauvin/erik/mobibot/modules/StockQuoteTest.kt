@@ -49,7 +49,9 @@ class StockQuoteTest : LocalProperties() {
             val messages = getQuote("apple inc", apiKey)
             assertThat(messages).describedAs("response not empty").isNotEmpty
             assertThat(messages[0].msg).describedAs("same stock symbol").startsWith("Symbol: AAPL")
-            assertThat(messages[1].msg).describedAs("price label").startsWith("    Price:     ")
+            assertThat(messages[1].msg).describedAs("price label").startsWith("Price:    ".prependIndent())
+            assertThat(messages[2].msg).describedAs("previous label").startsWith("Previous: ".prependIndent())
+            assertThat(messages[3].msg).describedAs("open label").startsWith("Open:     ".prependIndent())
             try {
                 getQuote("blahfoo", apiKey)
             } catch (e: ModuleException) {

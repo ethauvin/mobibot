@@ -51,11 +51,15 @@ class PinboardUtilsTest : LocalProperties() {
         val entry = EntryLink(url, "Test Example", "ErikT", "", "#mobitopia", listOf("test"))
 
         PinboardUtils.addPin(pinboard, ircServer, entry)
-        assertTrue(validatePin(apiToken, ircServer, entry.link), "addPin")
-        entry.link = "https://www.foo.com/"
+        assertTrue(validatePin(apiToken, url = entry.link, entry.title, entry.nick, entry.channel), "addPin")
 
+        entry.link = "https://www.foo.com/"
         PinboardUtils.updatePin(pinboard, ircServer, url, entry)
-        assertTrue(validatePin(apiToken, ircServer, entry.link), "updatePin")
+        assertTrue(validatePin(apiToken, url = entry.link, ircServer), "updatePin")
+
+        entry.title = "Foo Title"
+        PinboardUtils.updatePin(pinboard, ircServer, entry.link, entry)
+        assertTrue(validatePin(apiToken, url = entry.link, entry.title), "update title")
 
         PinboardUtils.deletePin(pinboard, entry)
         assertFalse(validatePin(apiToken, url = entry.link), "deletePin")
@@ -67,7 +71,7 @@ class PinboardUtilsTest : LocalProperties() {
         assertTrue(d.toTimestamp().matches("[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z".toRegex()))
     }
 
-    private fun validatePin(apiToken: String, ircServer: String = "", url: String): Boolean {
+    private fun validatePin(apiToken: String, url: String, vararg matches: String): Boolean {
         val response = Utils.urlReader(
             URL(
                 "https://api.pinboard.in/v1/posts/get?auth_token=${apiToken}&tag=test&"
@@ -75,6 +79,12 @@ class PinboardUtilsTest : LocalProperties() {
             )
         )
 
-        return response.contains(url) && response.contains(ircServer)
+        matches.forEach {
+            if (!response.contains(it)) {
+                return false
+            }
+        }
+
+        return response.contains(url)
     }
 }
