@@ -53,6 +53,7 @@ import net.thauvin.erik.mobibot.Utils.today
 import net.thauvin.erik.mobibot.Utils.unescapeXml
 import net.thauvin.erik.mobibot.Utils.uptime
 import net.thauvin.erik.mobibot.Utils.urlReader
+import net.thauvin.erik.mobibot.msg.Message.Companion.DEFAULT_COLOR
 import org.assertj.core.api.Assertions.assertThat
 import org.jibble.pircbot.Colors
 import org.testng.annotations.BeforeClass
@@ -125,9 +126,11 @@ class UtilsTest {
             .isEqualTo(Colors.RED + ascii + Colors.NORMAL)
         assertThat(colorize(ascii, Colors.BOLD)).describedAs("colorized(bold)")
             .isEqualTo(Colors.BOLD + ascii + Colors.BOLD)
-        assertThat(colorize(null, Colors.RED)).describedAs("colorize(null)").isEqualTo(Colors.NORMAL)
-        assertThat(colorize("", Colors.RED)).describedAs("colorize()").isEqualTo(Colors.NORMAL)
-
+        assertThat(colorize(null, Colors.RED)).describedAs("colorize(null)").isEqualTo("")
+        assertThat(colorize("", Colors.RED)).describedAs("colorize()").isEqualTo("")
+        assertThat(colorize(ascii, DEFAULT_COLOR)).describedAs("colorize(none)").isEqualTo(ascii)
+        assertThat(colorize("   ", Colors.NORMAL)).describedAs("colorize(blank)")
+            .isEqualTo(Colors.NORMAL + "   " + Colors.NORMAL)
     }
 
     @Test

@@ -31,10 +31,10 @@
  */
 package net.thauvin.erik.mobibot
 
+import net.thauvin.erik.mobibot.msg.Message.Companion.DEFAULT_COLOR
 import org.jibble.pircbot.Colors
 import org.jsoup.Jsoup
 import java.io.BufferedReader
-import java.io.File
 import java.io.IOException
 import java.io.InputStreamReader
 import java.net.URL
@@ -59,7 +59,7 @@ object Utils {
      * Appends a suffix to the end of the String if not present.
      */
     @JvmStatic
-    fun String.appendIfMissing(suffix: Char) : String {
+    fun String.appendIfMissing(suffix: Char): String {
         return if (this.last() != suffix) {
             "$this${suffix}"
         } else {
@@ -106,8 +106,10 @@ object Utils {
      */
     @JvmStatic
     fun colorize(s: String?, color: String): String {
-        return if (s.isNullOrBlank()) {
-            Colors.NORMAL
+        return if (s.isNullOrEmpty()) {
+            ""
+        } else if (color == DEFAULT_COLOR) {
+            s
         } else if (Colors.BOLD == color || Colors.REVERSE == color) {
             color + s + color
         } else {

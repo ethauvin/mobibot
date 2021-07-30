@@ -31,6 +31,7 @@
  */
 package net.thauvin.erik.mobibot.msg
 
+import net.thauvin.erik.semver.Constants
 import org.jibble.pircbot.Colors
 
 /**
@@ -38,7 +39,7 @@ import org.jibble.pircbot.Colors
  */
 open class Message {
     companion object {
-        var DEFAULT_COLOR = Colors.NORMAL
+        var DEFAULT_COLOR = Constants.EMPTY
     }
 
     /** Message color. */
