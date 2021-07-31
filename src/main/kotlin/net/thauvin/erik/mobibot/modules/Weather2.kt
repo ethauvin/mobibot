@@ -122,19 +122,20 @@ class Weather2(bot: Mobibot) : ThreadedModule(bot) {
                 val argv = query.split(",")
                 if (argv.size in 1..2) {
                     val city = argv[0].trim()
-                    val country: String = if (argv.size > 1 && argv[1].isNotBlank()) {
+                    val code: String = if (argv.size > 1 && argv[1].isNotBlank()) {
                         argv[1].trim()
                     } else {
                         "US"
                     }
                     try {
+                        val country = getCountry(code)
                         val cwd: CurrentWeather = if (city.matches("\\d+".toRegex())) {
-                            owm.currentWeatherByZipCode(city.toInt(), getCountry(country))
+                            owm.currentWeatherByZipCode(city.toInt(), country)
                         } else {
-                            owm.currentWeatherByCityName(city, getCountry(country))
+                            owm.currentWeatherByCityName(city, country)
                         }
                         if (cwd.hasCityName()) {
-                            messages.add(PublicMessage("City: ${cwd.cityName} [${country.uppercase()}]"))
+                            messages.add(PublicMessage("City: ${cwd.cityName} [${country.value}]"))
                             with(cwd.mainData) {
                                 if (this != null) {
                                     if (hasTemp()) {
@@ -177,7 +178,7 @@ class Weather2(bot: Mobibot) : ThreadedModule(bot) {
                                     messages.add(
                                         NoticeMessage(
                                             "https://openweathermap.org/find?q="
-                                                    + encodeUrl("$city,${country.uppercase()}"),
+                                                    + encodeUrl("$city,${code.uppercase()}"),
                                             Colors.GREEN
                                         )
                                     )
@@ -185,7 +186,7 @@ class Weather2(bot: Mobibot) : ThreadedModule(bot) {
                             }
                         }
                     } catch (e: APIException) {
-                        throw ModuleException("getWeather($query)", "A weather API error has occurred: ${e.message}", e)
+                        throw ModuleException("getWeather($query)", e.message, e)
                     } catch (e: NullPointerException) {
                         throw ModuleException("getWeather($query)", "Unable to perform weather lookup.", e)
                     }
