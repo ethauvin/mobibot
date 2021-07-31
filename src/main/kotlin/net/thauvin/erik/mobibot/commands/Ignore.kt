@@ -80,9 +80,9 @@ class Ignore(bot: Mobibot) : AbstractCommand(bot) {
         isOp: Boolean,
         isPrivate: Boolean
     ) {
-        if (!isOp) {
+        val isMe = args.trim().equals(me, true)
+        if (isMe || !isOp) {
             val nick = sender.lowercase()
-            val isMe = args.lowercase().startsWith(me)
             ignoreNick(bot, nick, isMe, isPrivate)
         } else {
             ignoreOp(bot, sender, args, isPrivate)
