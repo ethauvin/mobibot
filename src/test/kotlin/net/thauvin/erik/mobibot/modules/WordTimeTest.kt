@@ -32,9 +32,13 @@
 package net.thauvin.erik.mobibot.modules
 
 import net.thauvin.erik.mobibot.Utils.bold
+import net.thauvin.erik.mobibot.modules.WorldTime.Companion.BEATS_KEYWORD
+import net.thauvin.erik.mobibot.modules.WorldTime.Companion.COUNTRIES_MAP
 import net.thauvin.erik.mobibot.modules.WorldTime.Companion.time
 import org.assertj.core.api.Assertions.assertThat
 import org.testng.annotations.Test
+import java.time.ZoneId
+import java.time.zone.ZoneRulesException
 
 /**
  * The `WordTimeTest` class.
@@ -44,6 +48,16 @@ class WordTimeTest {
     fun testTime() {
         assertThat(time("PST").msg).describedAs("PST").endsWith(bold("Los Angeles"))
         assertThat(time("BLAH").isError).describedAs("BLAH").isTrue
-        assertThat(time("BEATS").msg).describedAs("BEATS").contains("@")
+        assertThat(time("BEAT").msg).describedAs(BEATS_KEYWORD).endsWith(BEATS_KEYWORD).contains("@")
+    }
+
+    @Test
+    @Throws(ZoneRulesException::class)
+    fun testCountries() {
+        COUNTRIES_MAP.toSortedMap().forEach {
+            if (it.value != BEATS_KEYWORD) {
+                ZoneId.of(it.value)
+            }
+        }
     }
 }
