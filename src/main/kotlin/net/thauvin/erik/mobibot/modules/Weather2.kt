@@ -38,6 +38,7 @@ import net.aksingh.owmjapis.model.CurrentWeather
 import net.thauvin.erik.mobibot.Mobibot
 import net.thauvin.erik.mobibot.Utils.bold
 import net.thauvin.erik.mobibot.Utils.capitalise
+import net.thauvin.erik.mobibot.Utils.capitalizeWords
 import net.thauvin.erik.mobibot.Utils.encodeUrl
 import net.thauvin.erik.mobibot.Utils.helpFormat
 import net.thauvin.erik.mobibot.msg.ErrorMessage
@@ -135,7 +136,12 @@ class Weather2(bot: Mobibot) : ThreadedModule(bot) {
                             owm.currentWeatherByCityName(city, country)
                         }
                         if (cwd.hasCityName()) {
-                            messages.add(PublicMessage("City: ${cwd.cityName} [${country.value}]"))
+                            messages.add(
+                                PublicMessage(
+                                    "City: ${cwd.cityName}, " +
+                                            country.name.replace('_', ' ').capitalizeWords() + " [${country.value}]"
+                                )
+                            )
                             with(cwd.mainData) {
                                 if (this != null) {
                                     if (hasTemp()) {

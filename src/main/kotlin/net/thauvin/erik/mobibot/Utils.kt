@@ -102,6 +102,12 @@ object Utils {
     fun String.capitalise(): String = this.replaceFirstChar { it.uppercase() }
 
     /**
+     * Capitalize words
+     */
+    fun String.capitalizeWords(): String = split(" ").map { it.lowercase().capitalise() }.joinToString(" ")
+
+
+    /**
      * Colorize a string.
      */
     @JvmStatic

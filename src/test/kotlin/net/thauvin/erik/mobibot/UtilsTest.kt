@@ -35,6 +35,7 @@ import net.thauvin.erik.mobibot.Utils.appendIfMissing
 import net.thauvin.erik.mobibot.Utils.bold
 import net.thauvin.erik.mobibot.Utils.buildCmdSyntax
 import net.thauvin.erik.mobibot.Utils.capitalise
+import net.thauvin.erik.mobibot.Utils.capitalizeWords
 import net.thauvin.erik.mobibot.Utils.colorize
 import net.thauvin.erik.mobibot.Utils.cyan
 import net.thauvin.erik.mobibot.Utils.encodeUrl
@@ -115,6 +116,14 @@ class UtilsTest {
         assertThat("Test".capitalise()).describedAs("capitalize(Test)").isEqualTo("Test")
         assertThat(test.capitalise()).describedAs("capitalize($test)").isEqualTo(test)
         assertThat("".capitalise()).describedAs("capitalize()").isEqualTo("")
+    }
+
+    @Test
+    fun textCapitaliseWords() {
+        assertThat(test.capitalizeWords()).describedAs("captiatlizeWords(test)").isEqualTo("This Is A Test.")
+        assertThat("Already Capitalized".capitalizeWords()).describedAs("already capitalized")
+            .isEqualTo("Already Capitalized")
+        assertThat("    a  test  ".capitalizeWords()).describedAs("with spaces").isEqualTo("    A  Test  ")
     }
 
     @Test

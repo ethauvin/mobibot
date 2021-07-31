@@ -76,16 +76,16 @@ class Weather2Test : LocalProperties() {
     @Throws(ModuleException::class)
     fun testWeather() {
         var messages = getWeather("98204", getProperty(OWM_API_KEY_PROP))
-        assertThat(messages[0].msg).describedAs("is Everett").contains("Everett").contains("US")
+        assertThat(messages[0].msg).describedAs("is Everett").contains("Everett, United States").contains("US")
         assertThat(messages[messages.size - 1].msg).describedAs("is Everett zip code").endsWith("98204%2CUS")
 
         messages = getWeather("San Francisco", getProperty(OWM_API_KEY_PROP))
         assertThat(messages[0].msg).describedAs("is San Francisco").contains("San Francisco").contains("US")
         assertThat(messages[messages.size - 1].msg).describedAs("is San Fran city code").endsWith("5391959")
 
-        messages = getWeather("London, UK", getProperty(OWM_API_KEY_PROP))
-        assertThat(messages[0].msg).describedAs("is UK").contains("London").contains("UK")
-        assertThat(messages[messages.size - 1].msg).describedAs("is London city code").endsWith("4517009")
+        messages = getWeather("London, GB", getProperty(OWM_API_KEY_PROP))
+        assertThat(messages[0].msg).describedAs("is UK").contains("London, United Kingdom").contains("GB")
+        assertThat(messages[messages.size - 1].msg).describedAs("is London city code").endsWith("2643743")
 
         assertThatThrownBy { getWeather("Foo, US", getProperty(OWM_API_KEY_PROP)) }
             .describedAs("foo not found").hasCauseInstanceOf(APIException::class.java)
