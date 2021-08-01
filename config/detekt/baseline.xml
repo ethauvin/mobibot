@@ -15,6 +15,7 @@
     <ID>LongParameterList:Mobibot.kt$Mobibot$( nick: String, list: List&lt;String&gt;, maxPerLine: Int, isPrivate: Boolean, isBold: Boolean = false, isIndent: Boolean = false )</ID>
     <ID>LongParameterList:Twitter.kt$Twitter.Companion$( consumerKey: String?, consumerSecret: String?, token: String?, tokenSecret: String?, handle: String?, message: String, isDm: Boolean )</ID>
     <ID>NestedBlockDepth:Addons.kt$Addons$ fun add(command: AbstractCommand, props: Properties)</ID>
+    <ID>NestedBlockDepth:Calc.kt$Calc$override fun commandResponse( sender: String, cmd: String, args: String, isPrivate: Boolean )</ID>
     <ID>NestedBlockDepth:Comment.kt$Comment$override fun commandResponse( sender: String, login: String, args: String, isOp: Boolean, isPrivate: Boolean )</ID>
     <ID>NestedBlockDepth:CryptoPrices.kt$CryptoPrices$ override fun run(sender: String, cmd: String, args: String, isPrivate: Boolean)</ID>
     <ID>NestedBlockDepth:CurrencyConverter.kt$CurrencyConverter$ override fun run(sender: String, cmd: String, args: String, isPrivate: Boolean)</ID>

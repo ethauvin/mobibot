@@ -99,12 +99,12 @@ object Utils {
      * Capitalize a string.
      */
     @JvmStatic
-    fun String.capitalise(): String = this.replaceFirstChar { it.uppercase() }
+    fun String.capitalise(): String = this.lowercase().replaceFirstChar { it.uppercase() }
 
     /**
      * Capitalize words
      */
-    fun String.capitalizeWords(): String = split(" ").map { it.lowercase().capitalise() }.joinToString(" ")
+    fun String.capitalizeWords(): String = split(" ").joinToString(" ") { it.capitalise() }
 
 
     /**

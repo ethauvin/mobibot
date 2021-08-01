@@ -33,10 +33,8 @@
 package net.thauvin.erik.mobibot.modules
 
 import net.thauvin.erik.mobibot.Mobibot
-import net.thauvin.erik.mobibot.Utils.bold
-import net.thauvin.erik.mobibot.Utils.green
+import net.thauvin.erik.mobibot.Utils.capitalise
 import net.thauvin.erik.mobibot.Utils.helpFormat
-import net.thauvin.erik.mobibot.Utils.red
 import kotlin.random.Random
 
 
@@ -67,19 +65,26 @@ class RockPaperScissors(bot: Mobibot) : AbstractModule(bot) {
             override fun beats(hand: Hands): Boolean {
                 return hand == SCISSORS
             }
+
+            override var emoji = "\u270A"
         },
         PAPER("covers") {
             override fun beats(hand: Hands): Boolean {
                 return hand == ROCK
             }
+
+            override var emoji = "\u270B"
         },
         SCISSORS("cuts") {
             override fun beats(hand: Hands): Boolean {
                 return hand == PAPER
             }
+
+            override var emoji = "\u270C"
         };
 
         abstract fun beats(hand: Hands): Boolean
+        abstract var emoji: String
     }
 
     companion object {
@@ -100,18 +105,16 @@ class RockPaperScissors(bot: Mobibot) : AbstractModule(bot) {
         val hand = Hands.valueOf(cmd.uppercase())
         val botHand = Hands.values()[Random.nextInt(0, Hands.values().size)]
         with(bot) {
+            send("${hand.emoji}  vs. ${botHand.emoji}")
             when {
                 hand == botHand -> {
-                    send("${green(hand.name)} vs. ${green(botHand.name)}")
                     action("tied.")
                 }
                 hand.beats(botHand) -> {
-                    send("${green(hand.name)} ${bold(hand.action)} ${red(botHand.name)}")
-                    action("lost.")
+                    action("lost. ${hand.name.capitalise()} ${hand.action} ${botHand.name.lowercase()}.")
                 }
                 else -> {
-                    send("${green(botHand.name)} ${bold(botHand.action)} ${red(hand.name)}")
-                    action("wins.")
+                    action("wins. ${botHand.name.capitalise()} ${botHand.action} ${hand.name.lowercase()}.")
                 }
             }
         }

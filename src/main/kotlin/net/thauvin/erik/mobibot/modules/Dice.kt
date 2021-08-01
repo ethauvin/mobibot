@@ -32,7 +32,6 @@
 package net.thauvin.erik.mobibot.modules
 
 import net.thauvin.erik.mobibot.Mobibot
-import net.thauvin.erik.mobibot.Utils.bold
 import net.thauvin.erik.mobibot.Utils.helpFormat
 import kotlin.random.Random
 
@@ -46,22 +45,20 @@ class Dice(bot: Mobibot) : AbstractModule(bot) {
         args: String,
         isPrivate: Boolean
     ) {
+        val botRoll = roll()
         val roll = roll()
-        val playerRoll = roll()
+        val botTotal = botRoll.first + botRoll.second
         val total = roll.first + roll.second
-        val playerTotal = playerRoll.first + playerRoll.second
         with(bot) {
             send(
                 channel,
-                "$sender rolled two dice: ${bold(playerRoll.first)} and ${bold(playerRoll.second)}"
-                        + " for a total of ${bold(playerTotal)}",
+                "$sender rolled ${total}: ${DICE_FACES[roll.first]}  ${DICE_FACES[roll.second]}",
                 isPrivate
             )
             action(
-                "rolled two dice: ${bold(roll.first)} and ${bold(roll.second)}" +
-                        " for a total of ${bold(total)}"
+                "rolled ${botTotal}: ${DICE_FACES[botRoll.first]}  ${DICE_FACES[botRoll.second]}"
             )
-            when (winLoseOrTie(total, playerTotal)) {
+            when (winLoseOrTie(botTotal, total)) {
                 Result.WIN -> action("wins.")
                 Result.LOSE -> action("lost.")
                 else -> action("tied.")
@@ -74,13 +71,15 @@ class Dice(bot: Mobibot) : AbstractModule(bot) {
     }
 
     private fun roll(): Pair<Int, Int> {
-        @Suppress("MagicNumber")
-        return Random.nextInt(1, 7) to Random.nextInt(1, 7)
+        return Random.nextInt(1, DICE_FACES.size) to Random.nextInt(1, DICE_FACES.size)
     }
 
     companion object {
         // Dice command
         private const val DICE_CMD = "dice"
+
+        // Dice faces
+        private val DICE_FACES = arrayOf("", "⚀", "⚁", "⚂", "⚃", "⚄", "⚅")
 
         fun winLoseOrTie(bot: Int, player: Int): Result {
             return when {

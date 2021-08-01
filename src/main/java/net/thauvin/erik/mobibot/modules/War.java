@@ -51,11 +51,17 @@ public final class War extends AbstractModule {
     private static final SecureRandom RANDOM = new SecureRandom();
     // War command
     private static final String WAR_CMD = "war";
-    // Deck of card
-    private static final String[] WAR_DECK =
-            {"Ace", "King", "Queen", "Jack", "10", "9", "8", "7", "6", "5", "4", "3", "2"};
-    // Suits for the deck of card
-    private static final String[] WAR_SUITS = {"Hearts", "Spades", "Diamonds", "Clubs"};
+
+    private static final String[] HEARTS =
+            {"🂱", "🂾", "🂽", "🂼", "🂻", "🂺", "🂹", "🂸", "🂷", "🂶", "🂵", "🂴", "🂳", "🂲"};
+    private static final String[] SPADES =
+            {"🂡", "🂮", "🂭", "🂬", "🂫", "🂪", "🂩", "🂨", "🂧", "🂦", "🂥", "🂤", "🂣", "🂢"};
+    private static final String[] DIAMONDS =
+            {"🃁", "🃎", "🃍", "🃌", "🃋", "🃊", "🃉", "🃈", "🃇", "🃆", "🃅", "🃄", "🃃", "🃂"};
+    private static final String[] CLUBS =
+            {"🃑", "🃞", "🃝", "🃜", "🃛", "🃚", "🃙", "🃘", "🃗", "🃖", "🃕", "🃔", "🃓", "🃒"};
+
+    private static final String[][] DECK = {HEARTS, SPADES, DIAMONDS, CLUBS};
 
     /**
      * The default constructor.
@@ -81,13 +87,11 @@ public final class War extends AbstractModule {
         int y;
 
         while (true) {
-            i = RANDOM.nextInt(WAR_DECK.length);
-            y = RANDOM.nextInt(WAR_DECK.length);
+            i = RANDOM.nextInt(HEARTS.length);
+            y = RANDOM.nextInt(HEARTS.length);
 
-            getBot().send(sender + " drew the " + bold(WAR_DECK[i]) + " of "
-                    + bold(WAR_SUITS[RANDOM.nextInt(WAR_SUITS.length)]));
-            getBot().action("drew the " + bold(WAR_DECK[y]) + " of "
-                    + bold(WAR_SUITS[RANDOM.nextInt(WAR_SUITS.length)]));
+            getBot().send(sender + " drew: " + DECK[RANDOM.nextInt(DECK.length)][i]);
+            getBot().action("drew: " + DECK[RANDOM.nextInt(DECK.length)][y]);
 
             if (i != y) {
                 break;
