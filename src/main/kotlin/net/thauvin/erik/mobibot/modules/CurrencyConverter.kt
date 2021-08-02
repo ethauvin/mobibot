@@ -31,7 +31,6 @@
  */
 package net.thauvin.erik.mobibot.modules
 
-import net.thauvin.erik.mobibot.Constants
 import net.thauvin.erik.mobibot.Mobibot
 import net.thauvin.erik.mobibot.Utils.bold
 import net.thauvin.erik.mobibot.Utils.buildCmdSyntax
@@ -45,10 +44,12 @@ import org.jdom2.input.SAXBuilder
 import java.io.IOException
 import java.net.URL
 import java.text.NumberFormat
+import java.util.Currency
+import java.util.Locale
 import javax.xml.XMLConstants
 
 /**
- * The CurrentConverter module.
+ * The CurrencyConverter module.
  */
 class CurrencyConverter(bot: Mobibot) : ThreadedModule(bot) {
     override fun commandResponse(
@@ -87,9 +88,9 @@ class CurrencyConverter(bot: Mobibot) : ThreadedModule(bot) {
                     helpResponse(sender, isPrivate)
                 }
             } else if (args.contains(CURRENCY_RATES_KEYWORD)) {
-                send(sender, "The currency rates for ${bold(pubDate)} are:", isPrivate)
+                send(sender, "The reference rates for ${bold(pubDate)} are:", isPrivate)
                 @Suppress("MagicNumber")
-                sendList(sender, currencyRates(), 3, isPrivate, isIndent = true)
+                sendList(sender, currencyRates(), 3, "   ", isPrivate, isIndent = true)
             } else {
                 helpResponse(sender, isPrivate)
             }
@@ -116,7 +117,7 @@ class CurrencyConverter(bot: Mobibot) : ThreadedModule(bot) {
                     ),
                     isPrivate
                 )
-                send(sender, "For a listing of current rates:", isPrivate)
+                send(sender, "For a listing of current reference rates:", isPrivate)
                 send(
                     sender,
                     helpFormat(
@@ -126,7 +127,7 @@ class CurrencyConverter(bot: Mobibot) : ThreadedModule(bot) {
                 )
                 send(sender, "The supported currencies are: ", isPrivate)
                 @Suppress("MagicNumber")
-                sendList(sender, ArrayList(EXCHANGE_RATES.keys), 11, isPrivate, isIndent = true)
+                sendList(sender, ArrayList(EXCHANGE_RATES.keys), 11, isPrivate = isPrivate, isIndent = true)
             }
         }
         return true
@@ -151,8 +152,11 @@ class CurrencyConverter(bot: Mobibot) : ThreadedModule(bot) {
         // Last exchange rates table publication date
         private var pubDate = ""
 
-        private fun Double.formatCurrency(): String =
-            NumberFormat.getCurrencyInstance(Constants.LOCALE).format(this).substring(1)
+        private fun Double.formatCurrency(currency: String): String =
+            NumberFormat.getCurrencyInstance(Locale.getDefault(Locale.Category.FORMAT)).let {
+                it.currency = Currency.getInstance(currency)
+                it.format(this)
+            }
 
         /**
          * Converts from a currency to another.
@@ -173,8 +177,7 @@ class CurrencyConverter(bot: Mobibot) : ThreadedModule(bot) {
                             val doubleFrom = EXCHANGE_RATES[to]!!.toDouble()
                             val doubleTo = EXCHANGE_RATES[from]!!.toDouble()
                             PublicMessage(
-                                amt.formatCurrency() + " ${cmds[1].uppercase()} = "
-                                        + (amt * doubleTo / doubleFrom).formatCurrency() + " ${cmds[3].uppercase()}"
+                                amt.formatCurrency(to) + " = " + (amt * doubleTo / doubleFrom).formatCurrency(from)
                             )
                         } catch (e: NumberFormatException) {
                             ErrorMessage("Let's try with some real numbers next time, okay?")
@@ -192,7 +195,7 @@ class CurrencyConverter(bot: Mobibot) : ThreadedModule(bot) {
             val rates = mutableListOf<String>()
             for ((key, value) in EXCHANGE_RATES.toSortedMap()) {
                 @Suppress("MagicNumber")
-                rates.add("  $key: ${value.padStart(8)}")
+                rates.add("$key: ${value.padStart(8)}")
             }
             return rates
         }
