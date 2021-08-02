@@ -57,7 +57,7 @@ class Versions(bot: Mobibot) : AbstractCommand(bot) {
         isPrivate: Boolean
     ) {
         if (isOp) {
-            bot.sendList(sender, allVersions, 1, isPrivate)
+            bot.sendList(sender, allVersions, 1, isPrivate = isPrivate)
         } else {
             bot.helpDefault(sender, false, isPrivate)
         }

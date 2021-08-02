@@ -256,10 +256,10 @@ class Mobibot(nickname: String, channel: String, logsDirPath: String, p: Propert
             isPrivate
         )
         send(sender, "The commands are:", isPrivate)
-        sendList(sender, addons.names, 8, isPrivate, isBold = true, isIndent = true)
+        sendList(sender, addons.names, 8, isPrivate = isPrivate, isBold = true, isIndent = true)
         if (isOp) {
             send(sender, "The op commands are:", isPrivate)
-            sendList(sender, addons.ops, 8, isPrivate, isBold = true, isIndent = true)
+            sendList(sender, addons.ops, 8, isPrivate = isPrivate, isBold = true, isIndent = true)
         }
     }
 
@@ -435,6 +435,7 @@ class Mobibot(nickname: String, channel: String, logsDirPath: String, p: Propert
         nick: String,
         list: List<String>,
         maxPerLine: Int,
+        separator: String = " ",
         isPrivate: Boolean,
         isBold: Boolean = false,
         isIndent: Boolean = false
@@ -444,7 +445,7 @@ class Mobibot(nickname: String, channel: String, logsDirPath: String, p: Propert
             send(
                 nick,
                 helpFormat(
-                    list.subList(i, list.size.coerceAtMost(i + maxPerLine)).joinToString(" ", truncated = ""),
+                    list.subList(i, list.size.coerceAtMost(i + maxPerLine)).joinToString(separator, truncated = ""),
                     isBold,
                     isIndent
                 ),

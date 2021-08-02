@@ -56,7 +56,7 @@ class Modules(bot: Mobibot) : AbstractCommand(bot) {
                 } else {
                     send(sender, "The enabled modules are: ", isPrivate)
                     @Suppress("MagicNumber")
-                    sendList(sender, modulesNames, 7, isPrivate, isIndent = true)
+                    sendList(sender, modulesNames, 7, isPrivate = isPrivate, isIndent = true)
                 }
             } else {
                 helpDefault(sender, isOp, isPrivate)

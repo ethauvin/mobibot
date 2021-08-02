@@ -50,19 +50,19 @@ class PinboardUtilsTest : LocalProperties() {
         val ircServer = "irc.test.com"
         val entry = EntryLink(url, "Test Example", "ErikT", "", "#mobitopia", listOf("test"))
 
-        PinboardUtils.addPin(pinboard, ircServer, entry)
-        assertTrue(validatePin(apiToken, url = entry.link, entry.title, entry.nick, entry.channel), "addPin")
+        assertTrue(PinboardUtils.addPin(pinboard, ircServer, entry), "addPin")
+        assertTrue(validatePin(apiToken, url = entry.link, entry.title, entry.nick, entry.channel), "validate add")
 
         entry.link = "https://www.foo.com/"
-        PinboardUtils.updatePin(pinboard, ircServer, url, entry)
-        assertTrue(validatePin(apiToken, url = entry.link, ircServer), "updatePin")
+        assertTrue(PinboardUtils.updatePin(pinboard, ircServer, url, entry), "updatePin")
+        assertTrue(validatePin(apiToken, url = entry.link, ircServer), "validate update")
 
         entry.title = "Foo Title"
-        PinboardUtils.updatePin(pinboard, ircServer, entry.link, entry)
-        assertTrue(validatePin(apiToken, url = entry.link, entry.title), "update title")
+        assertTrue(PinboardUtils.updatePin(pinboard, ircServer, entry.link, entry), "update title")
+        assertTrue(validatePin(apiToken, url = entry.link, entry.title), "validate title")
 
-        PinboardUtils.deletePin(pinboard, entry)
-        assertFalse(validatePin(apiToken, url = entry.link), "deletePin")
+        assertTrue(PinboardUtils.deletePin(pinboard, entry), "daletePin")
+        assertFalse(validatePin(apiToken, url = entry.link), "validate delete")
     }
 
     @Test

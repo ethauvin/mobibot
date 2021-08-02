@@ -59,7 +59,7 @@ class Info(bot: Mobibot?) : AbstractCommand(bot!!) {
         isPrivate: Boolean
     ) {
         with(bot) {
-            sendList(sender, allVersions, 1, isPrivate)
+            sendList(sender, allVersions, 1, isPrivate = isPrivate)
             val info = StringBuilder()
             info.append("Uptime: ")
                 .append(uptime(ManagementFactory.getRuntimeMXBean().uptime))
