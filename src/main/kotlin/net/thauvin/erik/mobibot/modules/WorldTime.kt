@@ -384,7 +384,7 @@ class WorldTime(bot: Mobibot) : AbstractModule(bot) {
                 @Suppress("MagicNumber")
                 sendList(
                     sender,
-                    COUNTRIES_MAP.keys.sorted().stream().map { it.padEnd(4) }.toList(),
+                    COUNTRIES_MAP.keys.sorted().map { it.padEnd(4) },
                     14,
                     isPrivate = false,
                     isIndent = true
