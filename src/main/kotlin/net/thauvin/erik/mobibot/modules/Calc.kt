@@ -49,14 +49,16 @@ class Calc(bot: Mobibot) : AbstractModule(bot) {
         isPrivate: Boolean
     ) {
         if (args.isNotBlank()) {
-            try {
-                bot.send(calculate(args))
-            } catch (e: IllegalArgumentException) {
-                if (bot.logger.isWarnEnabled) bot.logger.warn("Failed to calculate: $args", e)
-                bot.send("No idea. This is the kind of math I don't get.")
-            } catch (e: UnknownFunctionOrVariableException) {
-                if (bot.logger.isWarnEnabled) bot.logger.warn("Unable to calculate: $args", e)
-                bot.send("No idea. I must've some form of Dyscalculia.")
+            with (bot) {
+                try {
+                    send(calculate(args))
+                } catch (e: IllegalArgumentException) {
+                    if (logger.isWarnEnabled) logger.warn("Failed to calculate: $args", e)
+                    send("No idea. This is the kind of math I don't get.")
+                } catch (e: UnknownFunctionOrVariableException) {
+                    if (logger.isWarnEnabled) logger.warn("Unable to calculate: $args", e)
+                    send("No idea. I must've some form of Dyscalculia.")
+                }
             }
         } else {
             helpResponse(sender, isPrivate)
