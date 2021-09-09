@@ -351,7 +351,7 @@ class Mobibot(nickname: String, channel: String, logsDirPath: String, p: Propert
         message: String
     ) {
         if (logger.isDebugEnabled) logger.debug(">>> $sender : $message")
-        val cmds = message.split(" ".toRegex(), 2)
+        val cmds = message.trim().split(" ".toRegex(), 2)
         val cmd = cmds[0].lowercase()
         val args = if (cmds.size > 1) {
             cmds[1].trim()
