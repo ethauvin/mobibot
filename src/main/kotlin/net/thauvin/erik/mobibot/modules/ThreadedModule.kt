@@ -31,6 +31,8 @@
  */
 package net.thauvin.erik.mobibot.modules
 
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import net.thauvin.erik.mobibot.Mobibot
 
 /**
@@ -44,7 +46,11 @@ abstract class ThreadedModule(bot: Mobibot) : AbstractModule(bot) {
         isPrivate: Boolean
     ) {
         if (isEnabled && args.isNotEmpty()) {
-            Thread { run(sender, cmd, args, isPrivate) }.start()
+            runBlocking {
+                launch {
+                    run(sender, cmd, args, isPrivate)
+                }
+            }
         } else {
             helpResponse(sender, isPrivate)
         }

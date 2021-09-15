@@ -32,6 +32,7 @@
 
 package net.thauvin.erik.mobibot
 
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
@@ -47,12 +48,14 @@ import java.util.Date
  * Handles posts to pinboard.in.
  */
 object PinboardUtils {
+    private val dispatcher: CoroutineDispatcher = Dispatchers.IO
+
     /**
      * Adds a pin.
      */
     @JvmStatic
     fun addPin(poster: PinboardPoster, ircServer: String, entry: EntryLink) = runBlocking {
-        withContext(Dispatchers.Default) {
+        withContext(dispatcher) {
             poster.addPin(
                 entry.link,
                 entry.title,
@@ -68,7 +71,7 @@ object PinboardUtils {
      */
     @JvmStatic
     fun deletePin(poster: PinboardPoster, entry: EntryLink) = runBlocking {
-        withContext(Dispatchers.Default) {
+        withContext(dispatcher) {
             poster.deletePin(entry.link)
         }
     }
@@ -78,7 +81,7 @@ object PinboardUtils {
      */
     @JvmStatic
     fun updatePin(poster: PinboardPoster, ircServer: String, oldUrl: String, entry: EntryLink) = runBlocking {
-        withContext(Dispatchers.Default) {
+        withContext(dispatcher) {
             with(entry) {
                 if (oldUrl != link) {
                     poster.deletePin(oldUrl)
