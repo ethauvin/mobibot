@@ -31,6 +31,8 @@
  */
 package net.thauvin.erik.mobibot.modules
 
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import net.thauvin.erik.mobibot.Mobibot
 import net.thauvin.erik.mobibot.Utils.cyan
 import net.thauvin.erik.mobibot.Utils.helpFormat
@@ -52,7 +54,9 @@ class Joke(bot: Mobibot) : ThreadedModule(bot) {
         args: String,
         isPrivate: Boolean
     ) {
-        Thread { run(sender, cmd, args, isPrivate) }.start()
+        runBlocking {
+            launch { run(sender, cmd, args, isPrivate) }
+        }
     }
 
     /**

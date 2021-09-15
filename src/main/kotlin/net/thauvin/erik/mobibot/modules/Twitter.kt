@@ -31,6 +31,8 @@
  */
 package net.thauvin.erik.mobibot.modules
 
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import net.thauvin.erik.mobibot.Constants
 import net.thauvin.erik.mobibot.Mobibot
 import net.thauvin.erik.mobibot.TwitterTimer
@@ -87,14 +89,16 @@ class Twitter(bot: Mobibot) : ThreadedModule(bot) {
     fun notification(msg: String) {
         with(bot) {
             if (isEnabled && !handle.isNullOrBlank()) {
-                Thread {
-                    try {
-                        post(message = msg, isDm = true)
-                        if (logger.isDebugEnabled) logger.debug("Notified @$handle: $msg")
-                    } catch (e: ModuleException) {
-                        if (logger.isWarnEnabled) logger.warn("Failed to notify @$handle: $msg", e)
+                runBlocking {
+                    launch {
+                        try {
+                            post(message = msg, isDm = true)
+                            if (logger.isDebugEnabled) logger.debug("Notified @$handle: $msg")
+                        } catch (e: ModuleException) {
+                            if (logger.isWarnEnabled) logger.warn("Failed to notify @$handle: $msg", e)
+                        }
                     }
-                }.start()
+                }
             }
         }
     }
@@ -123,16 +127,18 @@ class Twitter(bot: Mobibot) : ThreadedModule(bot) {
             if (isAutoPost && hasEntry(index) && LinksMgr.entries.size >= index) {
                 val entry = LinksMgr.entries[index]
                 val msg = "${entry.title} ${entry.link} via ${entry.nick} on $channel"
-                Thread {
-                    try {
-                        if (logger.isDebugEnabled) {
-                            logger.debug("Posting {} to Twitter.", EntriesUtils.buildLinkCmd(index))
+                runBlocking {
+                    launch {
+                        try {
+                            if (logger.isDebugEnabled) {
+                                logger.debug("Posting {} to Twitter.", EntriesUtils.buildLinkCmd(index))
+                            }
+                            post(message = msg, isDm = false)
+                        } catch (e: ModuleException) {
+                            if (logger.isWarnEnabled) logger.warn("Failed to post entry on Twitter.", e)
                         }
-                        post(message = msg, isDm = false)
-                    } catch (e: ModuleException) {
-                        if (logger.isWarnEnabled) logger.warn("Failed to post entry on Twitter.", e)
                     }
-                }.start()
+                }
                 removeEntry(index)
             }
         }

@@ -32,10 +32,8 @@
 
 package net.thauvin.erik.mobibot
 
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.withContext
 import net.thauvin.erik.mobibot.entries.EntryLink
 import net.thauvin.erik.pinboard.PinboardPoster
 import java.time.ZoneId
@@ -48,21 +46,21 @@ import java.util.Date
  * Handles posts to pinboard.in.
  */
 object PinboardUtils {
-    private val dispatcher: CoroutineDispatcher = Dispatchers.IO
-
     /**
      * Adds a pin.
      */
     @JvmStatic
-    fun addPin(poster: PinboardPoster, ircServer: String, entry: EntryLink) = runBlocking {
-        withContext(dispatcher) {
-            poster.addPin(
-                entry.link,
-                entry.title,
-                entry.postedBy(ircServer),
-                entry.pinboardTags,
-                entry.date.toTimestamp()
-            )
+    fun addPin(poster: PinboardPoster, ircServer: String, entry: EntryLink) {
+        runBlocking {
+            launch {
+                poster.addPin(
+                    entry.link,
+                    entry.title,
+                    entry.postedBy(ircServer),
+                    entry.pinboardTags,
+                    entry.date.toTimestamp()
+                )
+            }
         }
     }
 
@@ -70,9 +68,11 @@ object PinboardUtils {
      * Deletes a pin.
      */
     @JvmStatic
-    fun deletePin(poster: PinboardPoster, entry: EntryLink) = runBlocking {
-        withContext(dispatcher) {
-            poster.deletePin(entry.link)
+    fun deletePin(poster: PinboardPoster, entry: EntryLink)  {
+        runBlocking {
+            launch {
+                poster.deletePin(entry.link)
+            }
         }
     }
 
@@ -80,28 +80,30 @@ object PinboardUtils {
      * Updates a pin.
      */
     @JvmStatic
-    fun updatePin(poster: PinboardPoster, ircServer: String, oldUrl: String, entry: EntryLink) = runBlocking {
-        withContext(dispatcher) {
-            with(entry) {
-                if (oldUrl != link) {
-                    poster.deletePin(oldUrl)
-                    poster.addPin(
-                        link,
-                        title,
-                        entry.postedBy(ircServer),
-                        pinboardTags,
-                        date.toTimestamp()
-                    )
-                } else {
-                    poster.addPin(
-                        link,
-                        title,
-                        entry.postedBy(ircServer),
-                        pinboardTags,
-                        date.toTimestamp(),
-                        replace = true,
-                        shared = true
-                    )
+    fun updatePin(poster: PinboardPoster, ircServer: String, oldUrl: String, entry: EntryLink)  {
+        runBlocking {
+            launch {
+                with(entry) {
+                    if (oldUrl != link) {
+                        poster.deletePin(oldUrl)
+                        poster.addPin(
+                            link,
+                            title,
+                            entry.postedBy(ircServer),
+                            pinboardTags,
+                            date.toTimestamp()
+                        )
+                    } else {
+                        poster.addPin(
+                            link,
+                            title,
+                            entry.postedBy(ircServer),
+                            pinboardTags,
+                            date.toTimestamp(),
+                            replace = true,
+                            shared = true
+                        )
+                    }
                 }
             }
         }

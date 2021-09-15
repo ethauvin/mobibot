@@ -32,6 +32,8 @@
 
 package net.thauvin.erik.mobibot.commands
 
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import net.thauvin.erik.mobibot.FeedReader
 import net.thauvin.erik.mobibot.Mobibot
 import net.thauvin.erik.mobibot.Utils.helpFormat
@@ -60,7 +62,11 @@ class ChannelFeed(bot: Mobibot, channel: String) : AbstractCommand(bot) {
     ) {
         with(properties[FEED_PROP]) {
             if (!isNullOrBlank()) {
-                Thread(FeedReader(bot, sender, this)).start()
+                runBlocking {
+                    launch {
+                        FeedReader(bot, sender, this@with).run()
+                    }
+                }
             } else {
                 bot.send(sender, "There is no feed setup for this channel.", false)
             }

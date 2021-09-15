@@ -50,18 +50,18 @@ class PinboardUtilsTest : LocalProperties() {
         val ircServer = "irc.test.com"
         val entry = EntryLink(url, "Test Example", "ErikT", "", "#mobitopia", listOf("test"))
 
-        assertTrue(PinboardUtils.addPin(pinboard, ircServer, entry), "addPin")
+        PinboardUtils.addPin(pinboard, ircServer, entry)
         assertTrue(validatePin(apiToken, url = entry.link, entry.title, entry.nick, entry.channel), "validate add")
 
         entry.link = "https://www.foo.com/"
-        assertTrue(PinboardUtils.updatePin(pinboard, ircServer, url, entry), "updatePin")
+        PinboardUtils.updatePin(pinboard, ircServer, url, entry)
         assertTrue(validatePin(apiToken, url = entry.link, ircServer), "validate update")
 
         entry.title = "Foo Title"
-        assertTrue(PinboardUtils.updatePin(pinboard, ircServer, entry.link, entry), "update title")
+        PinboardUtils.updatePin(pinboard, ircServer, entry.link, entry)
         assertTrue(validatePin(apiToken, url = entry.link, entry.title), "validate title")
 
-        assertTrue(PinboardUtils.deletePin(pinboard, entry), "daletePin")
+        PinboardUtils.deletePin(pinboard, entry)
         assertFalse(validatePin(apiToken, url = entry.link), "validate delete")
     }
 
