@@ -31,8 +31,6 @@
  */
 package net.thauvin.erik.mobibot
 
-import java.util.Locale
-
 /**
  * The `Constants`.
  */
@@ -86,11 +84,6 @@ object Constants {
      * The link command.
      */
     const val LINK_CMD = "L"
-
-    /**
-     * Default locale.
-     */
-    val LOCALE: Locale = Locale.getDefault()
 
     /**
      * The empty title string.

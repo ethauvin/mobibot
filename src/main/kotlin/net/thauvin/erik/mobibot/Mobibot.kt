@@ -31,9 +31,6 @@
  */
 package net.thauvin.erik.mobibot
 
-import net.thauvin.erik.mobibot.PinboardUtils.addPin
-import net.thauvin.erik.mobibot.PinboardUtils.deletePin
-import net.thauvin.erik.mobibot.PinboardUtils.updatePin
 import net.thauvin.erik.mobibot.Utils.appendIfMissing
 import net.thauvin.erik.mobibot.Utils.buildCmdSyntax
 import net.thauvin.erik.mobibot.Utils.colorize
@@ -196,7 +193,7 @@ class Mobibot(nickname: String, channel: String, logsDirPath: String, p: Propert
      */
     fun addPin(entry: EntryLink) {
         if (isPinboardEnabled) {
-            addPin(pinboard, ircServer, entry)
+            PinboardUtils.addPin(pinboard, ircServer, entry)
         }
     }
 
@@ -236,7 +233,7 @@ class Mobibot(nickname: String, channel: String, logsDirPath: String, p: Propert
      */
     fun deletePin(index: Int, entry: EntryLink) {
         if (isPinboardEnabled) {
-            deletePin(pinboard, entry)
+            PinboardUtils.deletePin(pinboard, entry)
         }
         if (twitter.isAutoPost) {
             twitter.removeEntry(index)
@@ -506,7 +503,7 @@ class Mobibot(nickname: String, channel: String, logsDirPath: String, p: Propert
      */
     fun updatePin(oldUrl: String, entry: EntryLink) {
         if (isPinboardEnabled) {
-            updatePin(pinboard, ircServer, oldUrl, entry)
+            PinboardUtils.updatePin(pinboard, ircServer, oldUrl, entry)
         }
     }
 
@@ -526,7 +523,7 @@ class Mobibot(nickname: String, channel: String, logsDirPath: String, p: Propert
          */
         @JvmStatic
         fun main(args: Array<String>) {
-            // Setup the command line options
+            // Set up the command line options
             val options = Options()
                 .addOption(
                     Constants.HELP_ARG.substring(0, 1),

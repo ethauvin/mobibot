@@ -49,7 +49,7 @@ class Calc(bot: Mobibot) : AbstractModule(bot) {
         isPrivate: Boolean
     ) {
         if (args.isNotBlank()) {
-            with (bot) {
+            with(bot) {
                 try {
                     send(calculate(args))
                 } catch (e: IllegalArgumentException) {

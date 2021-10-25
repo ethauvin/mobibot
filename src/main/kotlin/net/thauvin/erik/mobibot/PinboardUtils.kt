@@ -68,7 +68,7 @@ object PinboardUtils {
      * Deletes a pin.
      */
     @JvmStatic
-    fun deletePin(poster: PinboardPoster, entry: EntryLink)  {
+    fun deletePin(poster: PinboardPoster, entry: EntryLink) {
         runBlocking {
             launch {
                 poster.deletePin(entry.link)
@@ -80,7 +80,7 @@ object PinboardUtils {
      * Updates a pin.
      */
     @JvmStatic
-    fun updatePin(poster: PinboardPoster, ircServer: String, oldUrl: String, entry: EntryLink)  {
+    fun updatePin(poster: PinboardPoster, ircServer: String, oldUrl: String, entry: EntryLink) {
         runBlocking {
             launch {
                 with(entry) {
