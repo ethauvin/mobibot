@@ -32,6 +32,7 @@
 package net.thauvin.erik.mobibot.modules
 
 import net.thauvin.erik.mobibot.LocalProperties
+import net.thauvin.erik.mobibot.Sanitize.sanitizedMessage
 import net.thauvin.erik.mobibot.modules.GoogleSearch.Companion.searchGoogle
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
@@ -63,8 +64,8 @@ class GoogleSearchTest : LocalProperties() {
                 .describedAs("no query").isInstanceOf(ModuleException::class.java).hasNoCause()
         } catch (e: ModuleException) {
             // Avoid displaying api keys in CI logs
-            if ("true" == System.getenv("CI") && apiKey.isNotBlank() && cseKey.isNotBlank()) {
-                throw ModuleException(e.debugMessage, e.getSanitizedMessage(apiKey, cseKey), e)
+            if ("true" == System.getenv("CI") && (apiKey.isNotBlank() || cseKey.isNotBlank())) {
+                throw ModuleException(e.debugMessage, sanitizedMessage(e, apiKey, cseKey), e)
             } else {
                 throw e
             }

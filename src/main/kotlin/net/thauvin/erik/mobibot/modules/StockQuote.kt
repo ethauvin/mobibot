@@ -190,7 +190,7 @@ class StockQuote(bot: Mobibot) : ThreadedModule(bot) {
                             val data = arrayOf(
                                 "Open" to "02. open",
                                 "High" to "03. high",
-                                "Low" to  "04. low",
+                                "Low" to "04. low",
                                 "Volume" to "06. volume",
                                 "Latest" to "07. latest trading day"
                             )

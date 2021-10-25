@@ -1,7 +1,7 @@
 /*
- * ModuleException.kit
+ * Sanitize.kt
  *
- * Copyright (c) 2004-2019, Erik C. Thauvin (erik@thauvin.net)
+ * Copyright (c) 2004-2021, Erik C. Thauvin (erik@thauvin.net)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,39 +29,28 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.thauvin.erik.mobibot.modules
 
-/**
- * The `ModuleException` class.
- */
-class ModuleException : Exception {
+package net.thauvin.erik.mobibot
+
+import net.thauvin.erik.mobibot.Utils.obfuscate
+import net.thauvin.erik.mobibot.Utils.replaceEach
+
+object Sanitize {
     /**
-     * Returns the debug message.
+     * Return the sanitized exception message (e.g. remove API keys, etc.)
      */
-    val debugMessage: String?
-
-    /**
-     * Creates a new exception.
-     */
-    constructor(message: String?) : super(message) {
-        debugMessage = message
-    }
-
-    /**
-     * Creates a new exception.
-     */
-    constructor(debugMessage: String?, message: String?, cause: Throwable?) : super(message, cause) {
-        this.debugMessage = debugMessage
-    }
-
-    /**
-     * Creates a new exception.
-     */
-    constructor(debugMessage: String?, message: String?) : super(message) {
-        this.debugMessage = debugMessage
-    }
-
-    companion object {
-        private const val serialVersionUID = 1L
+    fun sanitizedMessage(e: Throwable, vararg sanitize: String): String {
+        val obfuscate = sanitize.map { it.obfuscate() }.toTypedArray()
+        with(e) {
+            return when {
+                cause?.message != null -> {
+                    cause!!.javaClass.name + ": " + cause!!.message!!.replaceEach(sanitize, obfuscate)
+                }
+                message != null -> {
+                    message!!.javaClass.name + ": " + message!!.replaceEach(sanitize, obfuscate)
+                }
+                else -> ""
+            }
+        }
     }
 }

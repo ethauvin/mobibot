@@ -32,6 +32,7 @@
 package net.thauvin.erik.mobibot.modules
 
 import net.thauvin.erik.mobibot.LocalProperties
+import net.thauvin.erik.mobibot.Sanitize.sanitizedMessage
 import net.thauvin.erik.mobibot.modules.StockQuote.Companion.getQuote
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
@@ -64,7 +65,7 @@ class StockQuoteTest : LocalProperties() {
         } catch (e: ModuleException) {
             // Avoid displaying api keys in CI logs
             if ("true" == System.getenv("CI") && apiKey.isNotBlank()) {
-                throw ModuleException(e.debugMessage, e.getSanitizedMessage(apiKey), e)
+                throw ModuleException(e.debugMessage, sanitizedMessage(e, apiKey), e)
             } else {
                 throw e
             }

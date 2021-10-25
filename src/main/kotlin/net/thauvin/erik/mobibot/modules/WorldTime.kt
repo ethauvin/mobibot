@@ -42,7 +42,6 @@ import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoField
 import java.util.Collections
-import java.util.Locale
 
 /**
  * The WorldTime module.
@@ -65,12 +64,12 @@ class WorldTime(bot: Mobibot) : AbstractModule(bot) {
         /**
          * Returns the current Internet (beat) Time.
          */
-        @Suppress("MagicNumber")
+        @Suppress("MagicNumber", "ImplicitDefaultLocale")
         private fun internetTime(): String {
             val zdt = ZonedDateTime.now(ZoneId.of("UTC+01:00"))
             val beats = ((zdt[ChronoField.SECOND_OF_MINUTE] + zdt[ChronoField.MINUTE_OF_HOUR] * 60
                     + zdt[ChronoField.HOUR_OF_DAY] * 3600) / 86.4).toInt()
-            return String.format(Locale.getDefault(), "%c%03d", '@', beats)
+            return String.format("%c%03d", '@', beats)
         }
 
         /**
