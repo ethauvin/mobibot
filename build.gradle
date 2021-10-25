@@ -6,8 +6,8 @@ plugins {
     id 'jacoco'
     id 'java'
     id 'net.thauvin.erik.gradle.semver' version '1.0.4'
-    id 'org.jetbrains.kotlin.jvm' version '1.5.31'
-    id 'org.jetbrains.kotlin.kapt' version '1.5.31'
+    id 'org.jetbrains.kotlin.jvm' version '1.6.0-RC'
+    id 'org.jetbrains.kotlin.kapt' version '1.6.0-RC'
     id 'org.sonarqube' version '3.3'
     id 'pmd'
 }
@@ -76,24 +76,6 @@ test {
 java {
     sourceCompatibility = JavaVersion.VERSION_11
     targetCompatibility = JavaVersion.VERSION_11
-}
-
-kotlin {
-    // Add kapt.use.worker.api=false to gradle.properties (JDK 16+)
-    // See: https://youtrack.jetbrains.com/issue/KT-45545
-    kotlinDaemonJvmArgs = [
-            "-Dfile.encoding=UTF-8",
-            "--add-opens=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED",
-            "--add-opens=jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED",
-            "--add-opens=jdk.compiler/com.sun.tools.javac.comp=ALL-UNNAMED",
-            "--add-opens=jdk.compiler/com.sun.tools.javac.file=ALL-UNNAMED",
-            "--add-opens=jdk.compiler/com.sun.tools.javac.jvm=ALL-UNNAMED",
-            "--add-opens=jdk.compiler/com.sun.tools.javac.main=ALL-UNNAMED",
-            "--add-opens=jdk.compiler/com.sun.tools.javac.parser=ALL-UNNAMED",
-            "--add-opens=jdk.compiler/com.sun.tools.javac.processing=ALL-UNNAMED",
-            "--add-opens=jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED",
-            "--add-opens=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED"
-    ]
 }
 
 kapt {
