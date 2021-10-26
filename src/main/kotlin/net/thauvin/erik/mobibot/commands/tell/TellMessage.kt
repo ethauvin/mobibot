@@ -66,7 +66,7 @@ class TellMessage internal constructor(
     var id: String = queued.format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"))
 
     /**
-     * Returns {@code true) if a notification was send.
+     * Returns {@code true) if a notification was sent.
      */
     var isNotified = false
 
@@ -82,7 +82,7 @@ class TellMessage internal constructor(
         }
 
     /**
-     * Return the message creating date.
+     * Returns the message creating date.
      */
     var receptionDate: LocalDateTime = LocalDateTime.MIN
 

@@ -42,7 +42,7 @@ import java.io.IOException
 import java.net.URL
 
 /**
- * Reads a RSS feed.
+ * Reads an RSS feed.
  */
 class FeedReader(
     // Bot

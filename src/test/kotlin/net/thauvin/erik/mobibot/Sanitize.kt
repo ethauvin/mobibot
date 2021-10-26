@@ -34,23 +34,29 @@ package net.thauvin.erik.mobibot
 
 import net.thauvin.erik.mobibot.Utils.obfuscate
 import net.thauvin.erik.mobibot.Utils.replaceEach
+import net.thauvin.erik.mobibot.modules.ModuleException
 
 object Sanitize {
     /**
-     * Return the sanitized exception message (e.g. remove API keys, etc.)
+     * Returns a sanitized exception to avoid displaying api keys, etc. in CI logs.
      */
-    fun sanitizedMessage(e: Throwable, vararg sanitize: String): String {
-        val obfuscate = sanitize.map { it.obfuscate() }.toTypedArray()
-        with(e) {
-            return when {
-                cause?.message != null -> {
-                    cause!!.javaClass.name + ": " + cause!!.message!!.replaceEach(sanitize, obfuscate)
+    fun sanitizeException(e: ModuleException, vararg sanitize: String): ModuleException {
+        var sanitizedException = e
+        val search = sanitize.filter { it.isNotBlank() }.toTypedArray()
+        if (search.isNotEmpty()) {
+            val obfuscate = search.map { it.obfuscate() }.toTypedArray()
+            with(e) {
+                if (cause?.message != null) {
+                    sanitizedException = ModuleException(
+                        debugMessage,
+                        cause!!.javaClass.name + ": " + cause!!.message!!.replaceEach(search, obfuscate),
+                        this
+                    )
+                } else if (message != null) {
+                    sanitizedException = ModuleException(debugMessage, message!!.replaceEach(search, obfuscate), this)
                 }
-                message != null -> {
-                    message!!.javaClass.name + ": " + message!!.replaceEach(sanitize, obfuscate)
-                }
-                else -> ""
             }
         }
+        return sanitizedException
     }
 }

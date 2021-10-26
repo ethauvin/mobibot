@@ -32,7 +32,7 @@
 package net.thauvin.erik.mobibot.modules
 
 import net.thauvin.erik.mobibot.LocalProperties
-import net.thauvin.erik.mobibot.Sanitize.sanitizedMessage
+import net.thauvin.erik.mobibot.Sanitize.sanitizeException
 import net.thauvin.erik.mobibot.modules.StockQuote.Companion.getQuote
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
@@ -64,8 +64,8 @@ class StockQuoteTest : LocalProperties() {
                 .isInstanceOf(ModuleException::class.java).hasNoCause()
         } catch (e: ModuleException) {
             // Avoid displaying api keys in CI logs
-            if ("true" == System.getenv("CI") && apiKey.isNotBlank()) {
-                throw ModuleException(e.debugMessage, sanitizedMessage(e, apiKey), e)
+            if ("true" == System.getenv("CI")) {
+                throw sanitizeException(e, apiKey)
             } else {
                 throw e
             }
