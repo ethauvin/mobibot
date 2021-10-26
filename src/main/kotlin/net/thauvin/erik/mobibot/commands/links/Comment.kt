@@ -1,5 +1,5 @@
 /*
- * Links.kt
+ * Comment.kt
  *
  * Copyright (c) 2004-2021, Erik C. Thauvin (erik@thauvin.net)
  * All rights reserved.
