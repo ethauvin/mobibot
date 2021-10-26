@@ -42,6 +42,10 @@ import org.testng.annotations.Test
  * The `StockQuoteTest` class.
  */
 class StockQuoteTest : LocalProperties() {
+    private fun buildMatch(label: String): String {
+        return "${label}:[ ]+[0-9.]+".prependIndent()
+    }
+
     @Test
     @Throws(ModuleException::class)
     fun testGetQuote() {
@@ -49,10 +53,10 @@ class StockQuoteTest : LocalProperties() {
         try {
             val messages = getQuote("apple inc", apiKey)
             assertThat(messages).describedAs("response not empty").isNotEmpty
-            assertThat(messages[0].msg).describedAs("same stock symbol").startsWith("Symbol: AAPL")
-            assertThat(messages[1].msg).describedAs("price label").startsWith("Price:    ".prependIndent())
-            assertThat(messages[2].msg).describedAs("previous label").startsWith("Previous: ".prependIndent())
-            assertThat(messages[3].msg).describedAs("open label").startsWith("Open:     ".prependIndent())
+            assertThat(messages[0].msg).describedAs("same stock symbol").matches("Symbol: AAPL .*")
+            assertThat(messages[1].msg).describedAs("price label").matches(buildMatch("Price"))
+            assertThat(messages[2].msg).describedAs("previous label").matches(buildMatch("Previous"))
+            assertThat(messages[3].msg).describedAs("open label").matches(buildMatch("Open"))
             try {
                 getQuote("blahfoo", apiKey)
             } catch (e: ModuleException) {

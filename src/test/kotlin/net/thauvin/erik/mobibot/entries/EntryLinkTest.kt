@@ -61,19 +61,18 @@ class EntryLinkTest {
         assertThat(entryLink.comments.size).describedAs("getComments().size() == 5").isEqualTo(i)
         i = 0
         for (comment in entryLink.comments) {
-            assertThat(comment.comment).describedAs("getComment($i)").isEqualTo("c$i")
-            assertThat(comment.nick).describedAs("getNick($i)").isEqualTo("u$i")
+            assertThat(comment).extracting("comment", "nick").containsExactly("c$i", "u$i")
             i++
         }
         val r = SecureRandom()
         while (entryLink.comments.size > 0) {
             entryLink.deleteComment(r.nextInt(entryLink.comments.size))
         }
-        assertThat(entryLink.comments.isNotEmpty()).describedAs("hasComments()").isFalse
+        assertThat(entryLink.comments).describedAs("hasComments()").isEmpty()
         entryLink.addComment("nothing", "nobody")
         entryLink.setComment(0, "something", "somebody")
-        assertThat(entryLink.getComment(0).nick).describedAs("getNick(somebody)").isEqualTo("somebody")
-        assertThat(entryLink.getComment(0).comment).describedAs("getComment(something)").isEqualTo("something")
+        assertThat(entryLink.getComment(0)).describedAs("get first comment").extracting("nick", "comment")
+            .containsExactly("somebody", "something")
     }
 
     @Test
@@ -104,7 +103,7 @@ class EntryLinkTest {
             assertThat(tag.name).describedAs("tag.getName($i)").isEqualTo("tag" + (i + 1))
         }
         assertThat(entryLink.tags.size).describedAs("getTags().size() is 5").isEqualTo(5)
-        assertThat(entryLink.tags.isNotEmpty()).describedAs("hasTags() is true").isTrue
+        assertThat(entryLink.tags).describedAs("hasTags() is true").isNotEmpty
         entryLink.setTags("-tag5")
         entryLink.setTags("+mobitopia")
         entryLink.setTags("tag4")

@@ -48,16 +48,14 @@ class WordTimeTest {
     fun testTime() {
         assertThat(time("PST").msg).describedAs("PST").endsWith(bold("Los Angeles"))
         assertThat(time("BLAH").isError).describedAs("BLAH").isTrue
-        assertThat(time("BEAT").msg).describedAs(BEATS_KEYWORD).endsWith(BEATS_KEYWORD).contains("@")
+        assertThat(time("BEAT").msg).describedAs(BEATS_KEYWORD).matches("[\\w ]+: .?@\\d{3}+.? .beats")
     }
 
     @Test
     @Throws(ZoneRulesException::class)
     fun testCountries() {
-        COUNTRIES_MAP.toSortedMap().forEach {
-            if (it.value != BEATS_KEYWORD) {
-                ZoneId.of(it.value)
-            }
+        COUNTRIES_MAP.filter { it.value != BEATS_KEYWORD }.forEach {
+            ZoneId.of(it.value)
         }
     }
 }

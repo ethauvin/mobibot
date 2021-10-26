@@ -51,9 +51,8 @@ class TellMessageTest {
         val recipient = "recipient"
         val sender = "sender"
         val tellMessage = TellMessage(sender, recipient, message)
-        assertThat(tellMessage.sender).describedAs(sender).isEqualTo(sender)
-        assertThat(tellMessage.recipient).describedAs(recipient).isEqualTo(recipient)
-        assertThat(tellMessage.message).describedAs(message).isEqualTo(message)
+        assertThat(tellMessage).extracting("sender", "recipient", "message")
+            .containsExactly(sender, recipient, message)
         assertThat(isValidDate(tellMessage.queued)).describedAs("queued is valid date/time").isTrue
         assertThat(tellMessage.isMatch(sender)).describedAs("match sender").isTrue
         assertThat(tellMessage.isMatch(recipient)).describedAs("match recipient").isTrue

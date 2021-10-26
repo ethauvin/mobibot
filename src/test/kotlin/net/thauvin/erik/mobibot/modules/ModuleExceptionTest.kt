@@ -71,7 +71,8 @@ class ModuleExceptionTest {
         val apiKey = "1234567890"
         var e = ModuleException(debugMessage, message, IOException("URL http://foo.com?apiKey=$apiKey&userID=me"))
         assertThat(sanitizeException(e, apiKey, "", "me")).describedAs("sanitized url")
-            .hasMessageContainingAll("xxxxxxxxxx", "userID=xx").hasMessageNotContainingAny(apiKey, "me")
+            .hasMessageContainingAll("xxxxxxxxxx", "userID=xx", "java.io.IOException")
+            .hasMessageNotContainingAny(apiKey, "me")
 
         e = ModuleException(debugMessage, message, null)
         assertThat(sanitizeException(e, apiKey)).describedAs("no cause").hasMessage(message)

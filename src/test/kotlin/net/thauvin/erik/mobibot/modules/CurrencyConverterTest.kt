@@ -57,8 +57,7 @@ class CurrencyConverterTest {
         assertThat(convertCurrency("100 USD").msg).describedAs("100 USD").contains("Invalid query.")
         val rates = currencyRates()
         assertThat(rates.size).describedAs("currencyRates.size == 33").isEqualTo(33)
-        assertThat(rates).describedAs("currencyRates(EUR)").contains("EUR:        1")
-        assertThat(rates.stream().anyMatch { it.matches("USD: .*".toRegex()) })
-            .describedAs("currencyRates(USD)").isTrue
+        assertThat(rates).describedAs("currencyRates(EUR< USD)").contains("EUR:        1")
+            .anyMatch { it.matches("USD: .*".toRegex()) }
     }
 }
