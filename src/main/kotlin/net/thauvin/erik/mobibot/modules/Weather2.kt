@@ -35,45 +35,48 @@ import net.aksingh.owmjapis.api.APIException
 import net.aksingh.owmjapis.core.OWM
 import net.aksingh.owmjapis.core.OWM.Country
 import net.aksingh.owmjapis.model.CurrentWeather
-import net.thauvin.erik.mobibot.Mobibot
 import net.thauvin.erik.mobibot.Utils.bold
 import net.thauvin.erik.mobibot.Utils.capitalise
 import net.thauvin.erik.mobibot.Utils.capitalizeWords
 import net.thauvin.erik.mobibot.Utils.encodeUrl
 import net.thauvin.erik.mobibot.Utils.helpFormat
+import net.thauvin.erik.mobibot.Utils.sendMessage
 import net.thauvin.erik.mobibot.msg.ErrorMessage
 import net.thauvin.erik.mobibot.msg.Message
 import net.thauvin.erik.mobibot.msg.NoticeMessage
 import net.thauvin.erik.mobibot.msg.PublicMessage
-import org.jibble.pircbot.Colors
+import org.pircbotx.Colors
+import org.pircbotx.hooks.types.GenericMessageEvent
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import kotlin.math.roundToInt
 
 /**
  * The `Weather2` module.
  */
-class Weather2(bot: Mobibot) : ThreadedModule(bot) {
+class Weather2 : ThreadedModule() {
+    private val logger: Logger = LoggerFactory.getLogger(Weather2::class.java)
+
     /**
      * Fetches the weather data from a specific city.
      */
-    override fun run(sender: String, cmd: String, args: String, isPrivate: Boolean) {
+    override fun run(channel: String, cmd: String, args: String, event: GenericMessageEvent) {
         if (args.isNotBlank()) {
-            with(bot) {
-                try {
-                    val messages = getWeather(args, properties[OWM_API_KEY_PROP])
-                    if (messages[0].isError) {
-                        helpResponse(sender, isPrivate)
-                    } else {
-                        for (msg in messages) {
-                            send(sender, msg)
-                        }
+            try {
+                val messages = getWeather(args, properties[OWM_API_KEY_PROP])
+                if (messages[0].isError) {
+                    helpResponse(event)
+                } else {
+                    for (msg in messages) {
+                        event.sendMessage(channel, msg)
                     }
-                } catch (e: ModuleException) {
-                    if (logger.isDebugEnabled) logger.debug(e.debugMessage, e)
-                    send(e.message)
                 }
+            } catch (e: ModuleException) {
+                if (logger.isWarnEnabled) logger.warn(e.debugMessage, e)
+                event.respond(e.message)
             }
         } else {
-            helpResponse(sender, isPrivate)
+            helpResponse(event)
         }
     }
 
@@ -90,7 +93,6 @@ class Weather2(bot: Mobibot) : ThreadedModule(bot) {
          * Converts and rounds temperature from °F to °C.
          */
         fun ftoC(d: Double?): Pair<Int, Int> {
-            @Suppress("MagicNumber")
             val c = (d!! - 32) * 5 / 9
             return d.roundToInt() to c.roundToInt()
         }
@@ -208,7 +210,6 @@ class Weather2(bot: Mobibot) : ThreadedModule(bot) {
          * Converts and rounds temperature from mph to km/h.
          */
         fun mphToKmh(w: Double): Pair<Int, Int> {
-            @Suppress("MagicNumber")
             val kmh = w * 1.60934
             return w.roundToInt() to kmh.roundToInt()
         }

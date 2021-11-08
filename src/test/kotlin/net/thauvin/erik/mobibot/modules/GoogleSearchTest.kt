@@ -31,11 +31,20 @@
  */
 package net.thauvin.erik.mobibot.modules
 
+import assertk.all
+import assertk.assertThat
+import assertk.assertions.contains
+import assertk.assertions.hasNoCause
+import assertk.assertions.isEqualTo
+import assertk.assertions.isFailure
+import assertk.assertions.isInstanceOf
+import assertk.assertions.isNotEmpty
+import assertk.assertions.prop
+import net.thauvin.erik.mobibot.ExceptionSanitizer.sanitize
 import net.thauvin.erik.mobibot.LocalProperties
-import net.thauvin.erik.mobibot.Sanitize.sanitizeException
 import net.thauvin.erik.mobibot.modules.GoogleSearch.Companion.searchGoogle
-import org.assertj.core.api.Assertions.assertThat
-import org.assertj.core.api.Assertions.assertThatThrownBy
+import net.thauvin.erik.mobibot.msg.ErrorMessage
+import net.thauvin.erik.mobibot.msg.Message
 import org.testng.annotations.Test
 
 /**
@@ -49,23 +58,33 @@ class GoogleSearchTest : LocalProperties() {
         val cseKey = getProperty(GoogleSearch.GOOGLE_CSE_KEY_PROP)
         try {
             var messages = searchGoogle("mobitopia", apiKey, cseKey)
-            assertThat(messages).describedAs("mobitopia results not empty").isNotEmpty
-            assertThat(messages[0].msg).describedAs("found mobibtopia").containsIgnoringCase("mobitopia")
+            assertThat(messages, "mobitopia results not empty").isNotEmpty()
+            assertThat(messages[0].msg, "found mobibtopia").contains("mobitopia", true)
+
             messages = searchGoogle("aapl", apiKey, cseKey)
-            assertThat(messages).describedAs("aapl results not empty").isNotEmpty
-            assertThat(messages[0].msg).describedAs("found apple").containsIgnoringCase("apple")
-            assertThatThrownBy { searchGoogle("test", "", "apiKey") }
-                .describedAs("no API key")
+            assertThat(messages, "aapl results not empty").isNotEmpty()
+            assertThat(messages[0].msg, "found apple").contains("apple", true)
+
+            messages = searchGoogle("adadflkjl", apiKey, cseKey)
+            assertThat(messages[0], "not found").all {
+                isInstanceOf(ErrorMessage::class.java)
+                prop(Message::msg).isEqualTo("No results found.")
+            }
+
+            assertThat(
+                searchGoogle("", "apikey", "cssKey").first(),
+                "empty query"
+            ).isInstanceOf(ErrorMessage::class.java)
+
+            assertThat { searchGoogle("test", "", "apiKey") }.isFailure()
                 .isInstanceOf(ModuleException::class.java).hasNoCause()
-            assertThatThrownBy { searchGoogle("test", "apiKey", "") }
-                .describedAs("no CSE API key")
+
+            assertThat { searchGoogle("test", "apiKey", "") }.isFailure()
                 .isInstanceOf(ModuleException::class.java).hasNoCause()
-            assertThatThrownBy { searchGoogle("", "apikey", "apiKey") }
-                .describedAs("no query").isInstanceOf(ModuleException::class.java).hasNoCause()
         } catch (e: ModuleException) {
             // Avoid displaying api keys in CI logs
             if ("true" == System.getenv("CI")) {
-                throw sanitizeException(e, apiKey, cseKey)
+                throw e.sanitize(apiKey, cseKey)
             } else {
                 throw e
             }

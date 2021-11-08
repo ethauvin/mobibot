@@ -33,19 +33,22 @@
 package net.thauvin.erik.mobibot.commands.links
 
 import net.thauvin.erik.mobibot.Constants
-import net.thauvin.erik.mobibot.Mobibot
+import net.thauvin.erik.mobibot.Utils.bot
 import net.thauvin.erik.mobibot.Utils.helpFormat
+import net.thauvin.erik.mobibot.Utils.isChannelOp
+import net.thauvin.erik.mobibot.Utils.sendMessage
 import net.thauvin.erik.mobibot.commands.AbstractCommand
 import net.thauvin.erik.mobibot.entries.EntriesUtils
 import net.thauvin.erik.mobibot.entries.EntryLink
+import org.pircbotx.hooks.types.GenericMessageEvent
 
-class Tags(bot: Mobibot) : AbstractCommand(bot) {
+class Tags : AbstractCommand() {
     override val name = COMMAND
     override val help = listOf(
         "To categorize or tag a URL, use its label and a ${Constants.TAG_CMD}:",
         helpFormat("${Constants.LINK_CMD}1${Constants.TAG_CMD}:<+tag|-tag> [...]")
     )
-    override val isOp = false
+    override val isOpOnly = false
     override val isPublic = true
     override val isVisible = true
 
@@ -53,33 +56,27 @@ class Tags(bot: Mobibot) : AbstractCommand(bot) {
         const val COMMAND = "tags"
     }
 
-    override fun commandResponse(
-        sender: String,
-        login: String,
-        args: String,
-        isOp: Boolean,
-        isPrivate: Boolean
-    ) {
+    override fun commandResponse(channel: String, args: String, event: GenericMessageEvent) {
         val cmds = args.substring(1).split("${Constants.TAG_CMD}:", limit = 2)
         val index = cmds[0].toInt() - 1
 
-        if (index < LinksMgr.entries.size) {
+        if (index < LinksMgr.entries.links.size && LinksMgr.isUpToDate(event)) {
             val cmd = cmds[1].trim()
-            val entry: EntryLink = LinksMgr.entries[index]
+            val entry: EntryLink = LinksMgr.entries.links[index]
             if (cmd.isNotEmpty()) {
-                if (entry.login == login || isOp) {
+                if (entry.login == event.user.login || isChannelOp(channel, event)) {
                     entry.setTags(cmd)
-                    bot.updatePin(entry.link, entry)
-                    bot.send(EntriesUtils.buildTags(index, entry))
-                    LinksMgr.saveEntries(bot, false)
+                    LinksMgr.pinboard.updatePin(event.bot().serverHostname, entry.link, entry)
+                    event.sendMessage(EntriesUtils.buildTags(index, entry))
+                    LinksMgr.entries.save()
                 } else {
-                    bot.send(sender, "Please ask a channel op to change the tags for you.", isPrivate)
+                    event.sendMessage("Please ask a channel op to change the tags for you.")
                 }
             } else {
                 if (entry.tags.isNotEmpty()) {
-                    bot.send(EntriesUtils.buildTags(index, entry))
+                    event.sendMessage(EntriesUtils.buildTags(index, entry))
                 } else {
-                    bot.send(sender, "The entry has no tags. Why don't add some?", isPrivate)
+                    event.sendMessage("The entry has no tags. Why don't add some?")
                 }
             }
         }

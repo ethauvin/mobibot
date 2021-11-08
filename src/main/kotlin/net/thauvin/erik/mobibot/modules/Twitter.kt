@@ -34,21 +34,26 @@ package net.thauvin.erik.mobibot.modules
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import net.thauvin.erik.mobibot.Constants
-import net.thauvin.erik.mobibot.Mobibot
 import net.thauvin.erik.mobibot.TwitterTimer
 import net.thauvin.erik.mobibot.Utils.helpFormat
 import net.thauvin.erik.mobibot.commands.links.LinksMgr
 import net.thauvin.erik.mobibot.entries.EntriesUtils
-import net.thauvin.erik.mobibot.msg.Message
-import net.thauvin.erik.mobibot.msg.NoticeMessage
+import org.pircbotx.hooks.types.GenericMessageEvent
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import twitter4j.TwitterException
 import twitter4j.TwitterFactory
 import twitter4j.conf.ConfigurationBuilder
+import java.util.Timer
 
 /**
  * The Twitter module.
  */
-class Twitter(bot: Mobibot) : ThreadedModule(bot) {
+class Twitter : ThreadedModule() {
+    private val logger: Logger = LoggerFactory.getLogger(Twitter::class.java)
+
+    private val timer = Timer(true)
+
     // Twitter auto-posts.
     private val entries: MutableSet<Int> = HashSet()
 
@@ -87,16 +92,14 @@ class Twitter(bot: Mobibot) : ThreadedModule(bot) {
      * Send a notification to the registered Twitter handle.
      */
     fun notification(msg: String) {
-        with(bot) {
-            if (isEnabled && !handle.isNullOrBlank()) {
-                runBlocking {
-                    launch {
-                        try {
-                            post(message = msg, isDm = true)
-                            if (logger.isDebugEnabled) logger.debug("Notified @$handle: $msg")
-                        } catch (e: ModuleException) {
-                            if (logger.isWarnEnabled) logger.warn("Failed to notify @$handle: $msg", e)
-                        }
+        if (isEnabled && !handle.isNullOrBlank()) {
+            runBlocking {
+                launch {
+                    try {
+                        post(message = msg, isDm = true)
+                        if (logger.isDebugEnabled) logger.debug("Notified @$handle: $msg")
+                    } catch (e: ModuleException) {
+                        if (logger.isWarnEnabled) logger.warn("Failed to notify @$handle: $msg", e)
                     }
                 }
             }
@@ -107,7 +110,7 @@ class Twitter(bot: Mobibot) : ThreadedModule(bot) {
      * Posts on Twitter.
      */
     @Throws(ModuleException::class)
-    fun post(handle: String = "${properties[HANDLE_PROP]}", message: String, isDm: Boolean): Message {
+    fun post(handle: String = "${properties[HANDLE_PROP]}", message: String, isDm: Boolean): String {
         return twitterPost(
             properties[CONSUMER_KEY_PROP],
             properties[CONSUMER_SECRET_PROP],
@@ -123,35 +126,32 @@ class Twitter(bot: Mobibot) : ThreadedModule(bot) {
      * Post an entry to twitter.
      */
     fun postEntry(index: Int) {
-        with(bot) {
-            if (isAutoPost && hasEntry(index) && LinksMgr.entries.size >= index) {
-                val entry = LinksMgr.entries[index]
-                val msg = "${entry.title} ${entry.link} via ${entry.nick} on $channel"
-                runBlocking {
-                    launch {
-                        try {
-                            if (logger.isDebugEnabled) {
-                                logger.debug("Posting {} to Twitter.", EntriesUtils.buildLinkCmd(index))
-                            }
-                            post(message = msg, isDm = false)
-                        } catch (e: ModuleException) {
-                            if (logger.isWarnEnabled) logger.warn("Failed to post entry on Twitter.", e)
+        if (isAutoPost && hasEntry(index) && LinksMgr.entries.links.size >= index) {
+            val entry = LinksMgr.entries.links[index]
+            val msg = "${entry.title} ${entry.link} via ${entry.nick} on ${entry.channel}"
+            runBlocking {
+                launch {
+                    try {
+                        if (logger.isDebugEnabled) {
+                            logger.debug("Posting {} to Twitter.", EntriesUtils.buildLinkLabel(index))
                         }
+                        post(message = msg, isDm = false)
+                    } catch (e: ModuleException) {
+                        if (logger.isWarnEnabled) logger.warn("Failed to post entry on Twitter.", e)
                     }
                 }
-                removeEntry(index)
             }
+            removeEntry(index)
         }
     }
 
     fun queueEntry(index: Int) {
         if (isAutoPost) {
             addEntry(index)
-            if (bot.logger.isDebugEnabled) {
-                bot.logger.debug("Scheduling {} for posting on Twitter.", EntriesUtils.buildLinkCmd(index))
+            if (logger.isDebugEnabled) {
+                logger.debug("Scheduling {} for posting on Twitter.", EntriesUtils.buildLinkLabel(index))
             }
-            @Suppress("MagicNumber")
-            bot.timer.schedule(TwitterTimer(bot, index), Constants.TIMER_DELAY * 60L * 1000L)
+            timer.schedule(TwitterTimer(this, index), Constants.TIMER_DELAY * 60L * 1000L)
         }
     }
 
@@ -162,18 +162,12 @@ class Twitter(bot: Mobibot) : ThreadedModule(bot) {
     /**
      * Posts to twitter.
      */
-    override fun run(sender: String, cmd: String, args: String, isPrivate: Boolean) {
-        with(bot) {
-            try {
-                send(
-                    sender,
-                    post(sender, "$args (by $sender on $channel)", false).msg,
-                    isPrivate
-                )
-            } catch (e: ModuleException) {
-                if (logger.isWarnEnabled) logger.warn(e.debugMessage, e)
-                send(sender, e.message, isPrivate)
-            }
+    override fun run(channel: String, cmd: String, args: String, event: GenericMessageEvent) {
+        try {
+            event.respond(post(event.user.nick, "$args (by ${event.user.nick} on $channel)", false))
+        } catch (e: ModuleException) {
+            if (logger.isWarnEnabled) logger.warn(e.debugMessage, e)
+            event.respond(e.message)
         }
     }
 
@@ -181,6 +175,7 @@ class Twitter(bot: Mobibot) : ThreadedModule(bot) {
      * Post all the entries to Twitter on shutdown.
      */
     fun shutdown() {
+        timer.cancel()
         if (isAutoPost) {
             for (index in entries) {
                 postEntry(index)
@@ -213,23 +208,23 @@ class Twitter(bot: Mobibot) : ThreadedModule(bot) {
             handle: String?,
             message: String,
             isDm: Boolean
-        ): Message {
+        ): String {
             return try {
-                val cb = ConfigurationBuilder()
-                cb.setDebugEnabled(true)
-                    .setOAuthConsumerKey(consumerKey)
-                    .setOAuthConsumerSecret(consumerSecret)
-                    .setOAuthAccessToken(token).setOAuthAccessTokenSecret(tokenSecret)
+                val cb = ConfigurationBuilder().apply {
+                    setDebugEnabled(true)
+                    setOAuthConsumerKey(consumerKey)
+                    setOAuthConsumerSecret(consumerSecret)
+                    setOAuthAccessToken(token)
+                    setOAuthAccessTokenSecret(tokenSecret)
+                }
                 val tf = TwitterFactory(cb.build())
                 val twitter = tf.instance
                 if (!isDm) {
                     val status = twitter.updateStatus(message)
-                    NoticeMessage(
-                        "You message was posted to https://twitter.com/${twitter.screenName}/statuses/${status.id}"
-                    )
+                    "Your message was posted to https://twitter.com/${twitter.screenName}/statuses/${status.id}"
                 } else {
                     val dm = twitter.sendDirectMessage(handle, message)
-                    NoticeMessage(dm.text)
+                    dm.text
                 }
             } catch (e: TwitterException) {
                 throw ModuleException("twitterPost($message)", "An error has occurred: ${e.message}", e)

@@ -32,16 +32,17 @@
 
 package net.thauvin.erik.mobibot.modules
 
-import net.thauvin.erik.mobibot.Mobibot
+import net.thauvin.erik.mobibot.Utils.bot
 import net.thauvin.erik.mobibot.Utils.capitalise
 import net.thauvin.erik.mobibot.Utils.helpFormat
+import org.pircbotx.hooks.types.GenericMessageEvent
 import kotlin.random.Random
 
 
 /**
  * Simple module example in Kotlin.
  */
-class RockPaperScissors(bot: Mobibot) : AbstractModule(bot) {
+class RockPaperScissors : AbstractModule() {
     init {
         with(commands) {
             add(Hands.ROCK.name.lowercase())
@@ -101,20 +102,26 @@ class RockPaperScissors(bot: Mobibot) : AbstractModule(bot) {
         }
     }
 
-    override fun commandResponse(sender: String, cmd: String, args: String, isPrivate: Boolean) {
+    override fun commandResponse(channel: String, cmd: String, args: String, event: GenericMessageEvent) {
         val hand = Hands.valueOf(cmd.uppercase())
         val botHand = Hands.values()[Random.nextInt(0, Hands.values().size)]
-        with(bot) {
-            send("${hand.emoji}  vs. ${botHand.emoji}")
+        with(event.bot()) {
+            sendIRC().message(channel, "${hand.emoji}  vs. ${botHand.emoji}")
             when {
                 hand == botHand -> {
-                    action("tied.")
+                    sendIRC().action(channel, "tied.")
                 }
                 hand.beats(botHand) -> {
-                    action("lost. ${hand.name.capitalise()} ${hand.action} ${botHand.name.lowercase()}.")
+                    sendIRC().action(
+                        channel,
+                        "lost. ${hand.name.capitalise()} ${hand.action} ${botHand.name.lowercase()}."
+                    )
                 }
                 else -> {
-                    action("wins. ${botHand.name.capitalise()} ${botHand.action} ${hand.name.lowercase()}.")
+                    sendIRC().action(
+                        channel,
+                        "wins. ${botHand.name.capitalise()} ${botHand.action} ${hand.name.lowercase()}."
+                    )
                 }
             }
         }

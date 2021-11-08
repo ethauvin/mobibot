@@ -32,35 +32,30 @@
 
 package net.thauvin.erik.mobibot.commands
 
-import net.thauvin.erik.mobibot.Mobibot
+import net.thauvin.erik.mobibot.Utils.bot
 import net.thauvin.erik.mobibot.Utils.helpFormat
+import net.thauvin.erik.mobibot.Utils.isChannelOp
+import org.pircbotx.hooks.types.GenericMessageEvent
 
-class Msg(bot: Mobibot) : AbstractCommand(bot) {
+class Msg : AbstractCommand() {
     override val name = "msg"
     override val help = listOf(
         "To have the bot send a private message to someone:",
         helpFormat("%c $name <nick> <text>")
     )
-    override val isOp = true
-    override val isPublic = true
+    override val isOpOnly = true
+    override val isPublic = false
     override val isVisible = true
 
-    override fun commandResponse(
-        sender: String,
-        login: String,
-        args: String,
-        isOp: Boolean,
-        isPrivate: Boolean
-    ) {
-        if (isOp) {
+    override fun commandResponse(channel: String, args: String, event: GenericMessageEvent) {
+        if (isChannelOp(channel, event)) {
             val msg = args.split(" ", limit = 2)
             if (args.length > 2) {
-                bot.send(msg[0], msg[1], isPrivate)
+                event.bot().sendIRC().message(msg[0], msg[1])
+                event.respondPrivateMessage("A message was sent to ${msg[0]}")
             } else {
-                helpResponse(name, sender, isOp, isPrivate)
+                helpResponse(channel, args, event)
             }
-        } else {
-            bot.helpDefault(sender, isOp, isPrivate)
         }
     }
 }

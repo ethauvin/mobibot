@@ -32,28 +32,22 @@
 
 package net.thauvin.erik.mobibot.commands
 
-import net.thauvin.erik.mobibot.Mobibot
+import net.thauvin.erik.mobibot.Utils.bot
 import net.thauvin.erik.mobibot.Utils.helpFormat
+import net.thauvin.erik.mobibot.Utils.isChannelOp
+import org.pircbotx.hooks.types.GenericMessageEvent
 
-class Say(bot: Mobibot) : AbstractCommand(bot) {
+class Say : AbstractCommand() {
     override val name = "say"
     override val help = listOf("To have the bot say something on the channel:", helpFormat("%c $name <text>"))
-    override val isOp = true
+    override val isOpOnly = true
     override val isPublic = false
     override val isVisible = true
 
 
-    override fun commandResponse(
-        sender: String,
-        login: String,
-        args: String,
-        isOp: Boolean,
-        isPrivate: Boolean
-    ) {
-        if (isOp) {
-            bot.send(args)
-        } else {
-            bot.helpDefault(sender, isOp, isPrivate)
+    override fun commandResponse(channel: String, args: String, event: GenericMessageEvent) {
+        if (isChannelOp(channel, event)) {
+            event.bot().sendIRC().message(channel, args)
         }
     }
 }

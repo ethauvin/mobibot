@@ -31,84 +31,88 @@
  */
 package net.thauvin.erik.mobibot.commands.tell
 
-import net.thauvin.erik.mobibot.Mobibot
 import net.thauvin.erik.mobibot.Utils.bold
 import net.thauvin.erik.mobibot.Utils.buildCmdSyntax
 import net.thauvin.erik.mobibot.Utils.helpFormat
+import net.thauvin.erik.mobibot.Utils.isChannelOp
 import net.thauvin.erik.mobibot.Utils.plural
 import net.thauvin.erik.mobibot.Utils.reverseColor
+import net.thauvin.erik.mobibot.Utils.sendMessage
 import net.thauvin.erik.mobibot.Utils.toIntOrDefault
 import net.thauvin.erik.mobibot.Utils.toUtcDateTime
 import net.thauvin.erik.mobibot.commands.AbstractCommand
 import net.thauvin.erik.mobibot.commands.links.View
+import org.pircbotx.PircBotX
+import org.pircbotx.hooks.events.MessageEvent
+import org.pircbotx.hooks.types.GenericMessageEvent
+import org.pircbotx.hooks.types.GenericUserEvent
 
 /**
  * The `Tell` command.
  */
-class Tell(bot: Mobibot) : AbstractCommand(bot) {
+class Tell(private val serialObject: String) : AbstractCommand() {
     // Messages queue
     private val messages: MutableList<TellMessage> = mutableListOf()
 
-    // Serialized object file
-    private val serializedObject: String
-
     // Maximum number of days to keep messages
-    @Suppress("MagicNumber")
     private var maxDays = 7
 
     // Message maximum queue size
-    @Suppress("MagicNumber")
     private var maxSize = 50
 
     /**
      * Cleans the messages queue.
      */
     private fun clean(): Boolean {
-        if (bot.logger.isDebugEnabled) bot.logger.debug("Cleaning the messages.")
+        // if (bot.logger.isDebugEnabled) bot.logger.debug("Cleaning the messages.")
         return TellMessagesMgr.clean(messages, maxDays.toLong())
     }
 
     // Delete message.
-    private fun deleteMessage(sender: String, args: String, isOp: Boolean, isPrivate: Boolean) {
+    private fun deleteMessage(channel: String, args: String, event: GenericMessageEvent) {
         val split = args.split(" ")
         if (split.size == 2) {
             val id = split[1]
             var deleted = false
             if (TELL_ALL_KEYWORD.equals(id, ignoreCase = true)) {
                 for (message in messages) {
-                    if (message.sender.equals(sender, ignoreCase = true) && message.isReceived) {
+                    if (message.sender.equals(event.user.nick, ignoreCase = true) && message.isReceived) {
                         messages.remove(message)
                         deleted = true
                     }
                 }
                 if (deleted) {
                     save()
-                    bot.send(sender, "Delivered messages have been deleted.", isPrivate)
+                    event.sendMessage("Delivered messages have been deleted.")
                 } else {
-                    bot.send(sender, "No delivered messages were found.", isPrivate)
+                    event.sendMessage("No delivered messages were found.")
                 }
             } else {
                 var found = false
                 for (message in messages) {
                     found = (message.id == id)
-                    if (found && (message.sender.equals(sender, ignoreCase = true) || bot.isOp(sender))) {
+                    if (found && (message.sender.equals(event.user.nick, ignoreCase = true) || isChannelOp(
+                            channel,
+                            event
+                        ))
+                    ) {
                         messages.remove(message)
                         save()
-                        bot.send(sender, "Your message was deleted from the queue.", isPrivate)
+                        event.sendMessage("Your message was deleted from the queue.")
                         deleted = true
                         break
                     }
                 }
                 if (!deleted) {
                     if (found) {
-                        bot.send(sender, "Only messages that you sent can be deleted.", isPrivate)
+                        event.sendMessage("Only messages that you sent can be deleted.")
                     } else {
-                        bot.send(sender, "The specified message [ID $id] could not be found.", isPrivate)
+                        event.sendMessage("The specified message [ID $id] could not be found.")
                     }
                 }
             }
         } else {
-            helpResponse(args, sender, isOp, isPrivate)
+            helpResponse(channel, args, event)
         }
     }
 
@@ -124,30 +128,24 @@ class Tell(bot: Mobibot) : AbstractCommand(bot) {
         helpFormat("%c $name ${View.VIEW_CMD}"),
         "Messages are kept for ${bold(maxDays)}" + " day".plural(maxDays.toLong()) + '.'
     )
-    override val isOp: Boolean = false
+    override val isOpOnly: Boolean = false
     override val isPublic: Boolean = isEnabled()
     override val isVisible: Boolean = isEnabled()
 
-    override fun commandResponse(
-        sender: String,
-        login: String,
-        args: String,
-        isOp: Boolean,
-        isPrivate: Boolean
-    ) {
+    override fun commandResponse(channel: String, args: String, event: GenericMessageEvent) {
         if (isEnabled()) {
             if (args.isBlank()) {
-                helpResponse(args, sender, isOp, isPrivate)
+                helpResponse(channel, args, event)
             } else if (args.startsWith(View.VIEW_CMD)) {
-                if (bot.isOp(sender) && "${View.VIEW_CMD} $TELL_ALL_KEYWORD" == args) {
-                    viewAll(sender, isPrivate)
+                if (isChannelOp(channel, event) && "${View.VIEW_CMD} $TELL_ALL_KEYWORD" == args) {
+                    viewAll(event)
                 } else {
-                    viewMessages(sender, isPrivate)
+                    viewMessages(event)
                 }
             } else if (args.startsWith("$TELL_DEL_KEYWORD ")) {
-                deleteMessage(sender, args, isOp, isPrivate)
+                deleteMessage(channel, args, event)
             } else {
-                newMessage(sender, args, isOp, isPrivate)
+                newMessage(channel, args, event)
             }
             if (clean()) {
                 save()
@@ -169,21 +167,19 @@ class Tell(bot: Mobibot) : AbstractCommand(bot) {
     }
 
     // New message.
-    private fun newMessage(sender: String, args: String, isOp: Boolean, isPrivate: Boolean) {
+    private fun newMessage(channel: String, args: String, event: GenericMessageEvent) {
         val split = args.split(" ".toRegex(), 2)
         if (split.size == 2 && split[1].isNotBlank() && split[1].contains(" ")) {
             if (messages.size < maxSize) {
-                val message = TellMessage(sender, split[0], split[1].trim())
+                val message = TellMessage(event.user.nick, split[0], split[1].trim())
                 messages.add(message)
                 save()
-                bot.send(
-                    sender, "Message [ID ${message.id}] was queued for ${bold(message.recipient)}", isPrivate
-                )
+                event.sendMessage("Message [ID ${message.id}] was queued for ${bold(message.recipient)}")
             } else {
-                bot.send(sender, "Sorry, the messages queue is currently full.", isPrivate)
+                event.sendMessage("Sorry, the messages queue is currently full.")
             }
         } else {
-            helpResponse(args, sender, isOp, isPrivate)
+            helpResponse(channel, args, event)
         }
     }
 
@@ -191,34 +187,30 @@ class Tell(bot: Mobibot) : AbstractCommand(bot) {
      * Saves the messages queue.
      */
     private fun save() {
-        TellMessagesMgr.save(serializedObject, messages, bot.logger)
+        TellMessagesMgr.save(serialObject, messages)
     }
 
     /**
      * Checks and sends messages.
      */
-    @JvmOverloads
-    fun send(nickname: String, isMessage: Boolean = false) {
-        if (isEnabled() && nickname != bot.nick) {
+    fun send(event: GenericUserEvent) {
+        val nickname = event.user.nick
+        if (isEnabled() && nickname != event.getBot<PircBotX>().nick) {
             messages.stream().filter { message: TellMessage -> message.isMatch(nickname) }
                 .forEach { message: TellMessage ->
                     if (message.recipient.equals(nickname, ignoreCase = true) && !message.isReceived) {
                         if (message.sender == nickname) {
-                            if (!isMessage) {
-                                bot.send(
-                                    nickname,
-                                    "${bold("You")} wanted me to remind you: ${reverseColor(message.message)}",
-                                    true
+                            if (event !is MessageEvent) {
+                                event.user.send().message(
+                                    "${bold("You")} wanted me to remind you: ${reverseColor(message.message)}"
                                 )
                                 message.isReceived = true
                                 message.isNotified = true
                                 save()
                             }
                         } else {
-                            bot.send(
-                                nickname,
-                                "${message.sender} wanted me to tell you: ${reverseColor(message.message)}",
-                                true
+                            event.user.send().message(
+                                "${message.sender} wanted me to tell you: ${reverseColor(message.message)}"
                             )
                             message.isReceived = true
                             save()
@@ -226,11 +218,9 @@ class Tell(bot: Mobibot) : AbstractCommand(bot) {
                     } else if (message.sender.equals(nickname, ignoreCase = true) && message.isReceived
                         && !message.isNotified
                     ) {
-                        bot.send(
-                            nickname,
-                            "Your message ${reverseColor("[ID " + message.id + ']')} was sent to "
-                                    + "${bold(message.recipient)} on ${message.receptionDate.toUtcDateTime()}",
-                            true
+                        event.user.send().message(
+                            "Your message ${reverseColor("[ID ${message.id}]")} was sent to "
+                                    + "${bold(message.recipient)} on ${message.receptionDate}"
                         )
                         message.isNotified = true
                         save()
@@ -247,66 +237,55 @@ class Tell(bot: Mobibot) : AbstractCommand(bot) {
     fun size(): Int = messages.size
 
     // View all messages.
-    private fun viewAll(sender: String, isPrivate: Boolean) {
+    private fun viewAll(event: GenericMessageEvent) {
         if (messages.isNotEmpty()) {
             for (message in messages) {
-                bot.send(
-                    sender, bold(message.sender) + ARROW + bold(message.recipient)
-                            + " [ID: " + message.id + ", "
-                            + (if (message.isReceived) "DELIVERED" else "QUEUED") + ']',
-                    isPrivate
+                event.sendMessage(
+                    "${bold(message.sender)}$ARROW${bold(message.recipient)} [ID: ${message.id}, " +
+                            (if (message.isReceived) "DELIVERED]" else "QUEUED]")
                 )
             }
         } else {
-            bot.send(sender, "There are no messages in the queue.", isPrivate)
+            event.sendMessage("There are no messages in the queue.")
         }
     }
 
     // View messages.
-    private fun viewMessages(sender: String, isPrivate: Boolean) {
+    private fun viewMessages(event: GenericMessageEvent) {
         var hasMessage = false
         for (message in messages) {
-            if (message.isMatch(sender)) {
+            if (message.isMatch(event.user.nick)) {
                 if (!hasMessage) {
-                    hasMessage = true
-                    bot.send(sender, "Here are your messages: ", isPrivate)
+                    hasMessage = true; event.sendMessage("Here are your messages: ")
                 }
                 if (message.isReceived) {
-                    bot.send(
-                        sender,
-                        bold(message.sender) + ARROW + bold(message.recipient)
-                                + " [${message.receptionDate.toUtcDateTime()}, ID: "
-                                + bold(message.id) + ", DELIVERED]",
-                        isPrivate
+                    event.sendMessage(
+                        bold(message.sender) + ARROW + bold(message.recipient) +
+                                " [${message.receptionDate.toUtcDateTime()}, ID: ${bold(message.id)}, DELIVERED]"
                     )
                 } else {
-                    bot.send(
-                        sender,
-                        bold(message.sender) + ARROW + bold(message.recipient)
-                                + " [${message.queued.toUtcDateTime()}, ID: "
-                                + bold(message.id) + ", QUEUED]",
-                        isPrivate
+                    event.sendMessage(
+                        bold(message.sender) + ARROW + bold(message.recipient) +
+                                " [${message.queued.toUtcDateTime()}, ID: ${bold(message.id)}, QUEUED]"
                     )
                 }
-                bot.send(sender, helpFormat(message.message), isPrivate)
+                event.sendMessage(helpFormat(message.message))
             }
         }
         if (!hasMessage) {
-            bot.send(sender, "You have no messages in the queue.", isPrivate)
+            event.sendMessage("You have no messages in the queue.")
         } else {
-            bot.send(sender, "To delete one or all delivered messages:", isPrivate)
-            bot.send(
-                sender,
+            event.sendMessage("To delete one or all delivered messages:")
+            event.sendMessage(
                 helpFormat(
                     buildCmdSyntax(
                         "%c $name $TELL_DEL_KEYWORD <id|$TELL_ALL_KEYWORD>",
-                        bot.nick,
-                        isPrivate
+                        event.user.nick,
+                        true
                     )
-                ),
-                isPrivate
+                )
             )
-            bot.send(sender, help.last(), isPrivate)
+            event.sendMessage(help.last())
         }
     }
 
@@ -324,9 +303,6 @@ class Tell(bot: Mobibot) : AbstractCommand(bot) {
         // Arrow
         private const val ARROW = " --> "
 
-        // Serialized object file extension
-        private const val SER_EXT = ".ser"
-
         // All keyword
         private const val TELL_ALL_KEYWORD = "all"
 
@@ -341,8 +317,7 @@ class Tell(bot: Mobibot) : AbstractCommand(bot) {
         initProperties(MAX_DAYS_PROP, MAX_SIZE_PROP)
 
         // Load the message queue
-        serializedObject = bot.logsDir + bot.name + SER_EXT
-        messages.addAll(TellMessagesMgr.load(serializedObject, bot.logger))
+        messages.addAll(TellMessagesMgr.load(serialObject))
         if (clean()) {
             save()
         }

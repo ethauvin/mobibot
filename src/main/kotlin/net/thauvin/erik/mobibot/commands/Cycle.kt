@@ -32,35 +32,33 @@
 
 package net.thauvin.erik.mobibot.commands
 
-import net.thauvin.erik.mobibot.Mobibot
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.runBlocking
+import net.thauvin.erik.mobibot.Utils.bot
 import net.thauvin.erik.mobibot.Utils.helpFormat
+import net.thauvin.erik.mobibot.Utils.isChannelOp
+import org.pircbotx.hooks.types.GenericMessageEvent
 
-class Cycle(bot: Mobibot) : AbstractCommand(bot) {
-    @Suppress("MagicNumber")
+class Cycle : AbstractCommand() {
     private val wait = 10
     override val name = "cycle"
     override val help = listOf("To have the bot leave the channel and come back:", helpFormat("%c $name"))
-    override val isOp = true
+    override val isOpOnly = true
     override val isPublic = false
     override val isVisible = true
 
 
-    override fun commandResponse(
-        sender: String,
-        login: String,
-        args: String,
-        isOp: Boolean,
-        isPrivate: Boolean
-    ) {
-        with(bot) {
-            if (isOp) {
-                send("$sender has just asked me to leave. I'll be back!")
-                sleep(wait)
-                partChannel(channel)
-                sleep(wait)
-                joinChannel(channel)
+    override fun commandResponse(channel: String, args: String, event: GenericMessageEvent) {
+        with(event.bot()) {
+            if (isChannelOp(channel, event)) {
+                runBlocking {
+                    sendIRC().message(channel, "${event.user.nick} asked me to leave. I'll be back!")
+                    userChannelDao.getChannel(channel).send().part()
+                    delay(wait * 1000L)
+                    sendIRC().joinChannel(channel)
+                }
             } else {
-                helpDefault(sender, isOp, isPrivate)
+                helpResponse(channel, args, event)
             }
         }
     }

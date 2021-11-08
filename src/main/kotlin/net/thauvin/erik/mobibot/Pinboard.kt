@@ -1,5 +1,5 @@
 /*
- * PinboardUtils.kt
+ * Pinboard.kt
  *
  * Copyright (c) 2004-2021, Erik C. Thauvin (erik@thauvin.net)
  * All rights reserved.
@@ -45,33 +45,44 @@ import java.util.Date
 /**
  * Handles posts to pinboard.in.
  */
-object PinboardUtils {
+class Pinboard {
+    private val poster = PinboardPoster()
+
     /**
      * Adds a pin.
      */
-    @JvmStatic
-    fun addPin(poster: PinboardPoster, ircServer: String, entry: EntryLink) {
-        runBlocking {
-            launch {
-                poster.addPin(
-                    entry.link,
-                    entry.title,
-                    entry.postedBy(ircServer),
-                    entry.pinboardTags,
-                    entry.date.toTimestamp()
-                )
+    fun addPin(ircServer: String, entry: EntryLink) {
+        if (poster.apiToken.isNotBlank()) {
+            runBlocking {
+                launch {
+                    poster.addPin(
+                        entry.link,
+                        entry.title,
+                        entry.postedBy(ircServer),
+                        entry.pinboardTags,
+                        entry.date.toTimestamp()
+                    )
+                }
             }
         }
     }
 
     /**
+     * Sets the pinboard API token.
+     */
+    fun setApiToken(apiToken: String) {
+        poster.apiToken = apiToken
+    }
+
+    /**
      * Deletes a pin.
      */
-    @JvmStatic
-    fun deletePin(poster: PinboardPoster, entry: EntryLink) {
-        runBlocking {
-            launch {
-                poster.deletePin(entry.link)
+    fun deletePin(entry: EntryLink) {
+        if (poster.apiToken.isNotBlank()) {
+            runBlocking {
+                launch {
+                    poster.deletePin(entry.link)
+                }
             }
         }
     }
@@ -79,30 +90,15 @@ object PinboardUtils {
     /**
      * Updates a pin.
      */
-    @JvmStatic
-    fun updatePin(poster: PinboardPoster, ircServer: String, oldUrl: String, entry: EntryLink) {
-        runBlocking {
-            launch {
-                with(entry) {
-                    if (oldUrl != link) {
-                        poster.deletePin(oldUrl)
-                        poster.addPin(
-                            link,
-                            title,
-                            entry.postedBy(ircServer),
-                            pinboardTags,
-                            date.toTimestamp()
-                        )
-                    } else {
-                        poster.addPin(
-                            link,
-                            title,
-                            entry.postedBy(ircServer),
-                            pinboardTags,
-                            date.toTimestamp(),
-                            replace = true,
-                            shared = true
-                        )
+    fun updatePin(ircServer: String, oldUrl: String, entry: EntryLink) {
+        if (poster.apiToken.isNotBlank()) {
+            runBlocking {
+                launch {
+                    with(entry) {
+                        if (oldUrl != link) {
+                            poster.deletePin(oldUrl)
+                        }
+                        poster.addPin(link, title, entry.postedBy(ircServer), pinboardTags, date.toTimestamp())
                     }
                 }
             }
@@ -112,8 +108,7 @@ object PinboardUtils {
     /**
      * Format a date to a UTC timestamp.
      */
-    @JvmStatic
-    fun Date.toTimestamp(): String {
+    private fun Date.toTimestamp(): String {
         return ZonedDateTime.ofInstant(
             this.toInstant().truncatedTo(ChronoUnit.SECONDS),
             ZoneId.systemDefault()

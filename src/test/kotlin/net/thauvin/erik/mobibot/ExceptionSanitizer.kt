@@ -1,5 +1,5 @@
 /*
- * Kill.kt
+ * ExceptionSanitizer.kt
  *
  * Copyright (c) 2004-2021, Erik C. Thauvin (erik@thauvin.net)
  * All rights reserved.
@@ -30,26 +30,32 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package net.thauvin.erik.mobibot.commands
+package net.thauvin.erik.mobibot
 
-import net.thauvin.erik.mobibot.Mobibot
+import net.thauvin.erik.mobibot.Utils.obfuscate
+import net.thauvin.erik.mobibot.Utils.replaceEach
+import net.thauvin.erik.mobibot.modules.ModuleException
 
-class Kill(bot: Mobibot) : AbstractCommand(bot) {
-    override val name = "kill"
-    override val help = emptyList<String>()
-    override val isOp = true
-    override val isPublic = false
-    override val isVisible = false
-
-    override fun commandResponse(
-        sender: String,
-        login: String,
-        args: String,
-        isOp: Boolean,
-        isPrivate: Boolean
-    ) {
-        if (isOp) {
-            bot.shutdown(sender, true)
+object ExceptionSanitizer {
+    /**
+     * Returns a sanitized exception to avoid displaying api keys, etc. in CI logs.
+     */
+    fun ModuleException.sanitize(vararg sanitize: String): ModuleException {
+        val search = sanitize.filter { it.isNotBlank() }.toTypedArray()
+        if (search.isNotEmpty()) {
+            val obfuscate = search.map { it.obfuscate() }.toTypedArray()
+            with(this) {
+                if (!cause?.message.isNullOrBlank()) {
+                    return ModuleException(
+                        debugMessage,
+                        cause!!.javaClass.name + ": " + cause!!.message!!.replaceEach(search, obfuscate),
+                        this
+                    )
+                } else if (!message.isNullOrBlank()) {
+                    return ModuleException(debugMessage, message!!.replaceEach(search, obfuscate), this)
+                }
+            }
         }
+        return this
     }
 }

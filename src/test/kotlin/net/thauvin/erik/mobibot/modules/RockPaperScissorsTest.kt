@@ -32,23 +32,19 @@
 
 package net.thauvin.erik.mobibot.modules
 
-import org.assertj.core.api.Assertions.assertThat
+import assertk.assertThat
+import assertk.assertions.isEqualTo
 import org.testng.annotations.Test
 
 class RockPaperScissorsTest {
     @Test
     fun testWinLoseOrDraw() {
-        assertThat(RockPaperScissors.winLoseOrDraw("scissors", "paper")).describedAs("scissors vs. paper")
-            .isEqualTo("win")
-        assertThat(RockPaperScissors.winLoseOrDraw("paper", "rock")).describedAs("paper vs. rock").isEqualTo("win")
-        assertThat(RockPaperScissors.winLoseOrDraw("rock", "scissors")).describedAs("rock vs. scissors")
-            .isEqualTo("win")
-        assertThat(RockPaperScissors.winLoseOrDraw("paper", "scissors")).describedAs("paper vs. scissors")
-            .isEqualTo("lose")
-        assertThat(RockPaperScissors.winLoseOrDraw("rock", "paper")).describedAs("rock vs. paper").isEqualTo("lose")
-        assertThat(RockPaperScissors.winLoseOrDraw("scissors", "rock")).describedAs("scissors vs. rock")
-            .isEqualTo("lose")
-        assertThat(RockPaperScissors.winLoseOrDraw("scissors", "scissors"))
-            .describedAs("scissors vs. scissors").isEqualTo("draw")
+        assertThat(RockPaperScissors.winLoseOrDraw("scissors", "paper"), "scissors vs. paper").isEqualTo("win")
+        assertThat(RockPaperScissors.winLoseOrDraw("paper", "rock"), "paper vs. rock").isEqualTo("win")
+        assertThat(RockPaperScissors.winLoseOrDraw("rock", "scissors"), "rock vs. scissors").isEqualTo("win")
+        assertThat(RockPaperScissors.winLoseOrDraw("paper", "scissors"), "paper vs. scissors").isEqualTo("lose")
+        assertThat(RockPaperScissors.winLoseOrDraw("rock", "paper"), "rock vs. paper").isEqualTo("lose")
+        assertThat(RockPaperScissors.winLoseOrDraw("scissors", "rock"), "scissors vs. rock").isEqualTo("lose")
+        assertThat(RockPaperScissors.winLoseOrDraw("scissors", "scissors"), "scissors vs. scissors").isEqualTo("draw")
     }
 }

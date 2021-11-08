@@ -31,24 +31,20 @@
  */
 package net.thauvin.erik.mobibot.modules
 
-import net.thauvin.erik.mobibot.Mobibot
+import net.thauvin.erik.mobibot.Utils.bot
 import net.thauvin.erik.mobibot.Utils.helpFormat
+import org.pircbotx.hooks.types.GenericMessageEvent
 import kotlin.random.Random
 
 /**
  * The Ping module.
  */
-class Ping(bot: Mobibot) : AbstractModule(bot) {
+class Ping : AbstractModule() {
     /**
      * {@inheritDoc}
      */
-    override fun commandResponse(
-        sender: String,
-        cmd: String,
-        args: String,
-        isPrivate: Boolean
-    ) {
-        bot.action(randomPing())
+    override fun commandResponse(channel: String, cmd: String, args: String, event: GenericMessageEvent) {
+        event.bot().sendIRC().action(channel, randomPing())
     }
 
     companion object {

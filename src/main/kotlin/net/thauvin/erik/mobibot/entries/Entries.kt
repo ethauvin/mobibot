@@ -1,5 +1,5 @@
 /*
- * Debug.kt
+ * Entries.kt
  *
  * Copyright (c) 2004-2021, Erik C. Thauvin (erik@thauvin.net)
  * All rights reserved.
@@ -30,30 +30,26 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package net.thauvin.erik.mobibot.commands
+package net.thauvin.erik.mobibot.entries
 
-import net.thauvin.erik.mobibot.Constants
-import net.thauvin.erik.mobibot.Mobibot
-import org.apache.logging.log4j.Level
-import org.apache.logging.log4j.core.config.Configurator
+import net.thauvin.erik.mobibot.Utils.today
 
-class Debug(bot: Mobibot) : AbstractCommand(bot) {
-    override val name = Constants.DEBUG_CMD
-    override val help = emptyList<String>()
-    override val isOp = true
-    override val isPublic = false
-    override val isVisible = false
+class Entries(
+    var channel: String = "",
+    var ircServer: String = "",
+    var logsDir: String = "",
+    var backlogs: String = ""
+) {
+    val links = mutableListOf<EntryLink>()
 
-    override fun commandResponse(sender: String, login: String, args: String, isOp: Boolean, isPrivate: Boolean) {
-        if (isOp) {
-            with(bot) {
-                if (logger.isDebugEnabled) {
-                    Configurator.setLevel(logger.name, loggerLevel)
-                } else {
-                    Configurator.setLevel(logger.name, Level.DEBUG)
-                }
-                send(sender, "Debug logging is " + if (logger.isDebugEnabled) "enabled." else "disabled.", true)
-            }
-        }
+    var lastPubDate = today()
+
+    fun load() {
+        lastPubDate = FeedsMgr.loadFeed(this)
+    }
+
+    fun save() {
+        lastPubDate = today()
+        FeedsMgr.saveFeed(this)
     }
 }

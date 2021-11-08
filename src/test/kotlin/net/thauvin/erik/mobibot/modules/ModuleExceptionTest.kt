@@ -31,8 +31,16 @@
  */
 package net.thauvin.erik.mobibot.modules
 
-import net.thauvin.erik.mobibot.Sanitize.sanitizeException
-import org.assertj.core.api.Assertions.assertThat
+import assertk.all
+import assertk.assertThat
+import assertk.assertions.contains
+import assertk.assertions.doesNotContain
+import assertk.assertions.endsWith
+import assertk.assertions.hasMessage
+import assertk.assertions.isEqualTo
+import assertk.assertions.isNotNull
+import assertk.assertions.isNull
+import net.thauvin.erik.mobibot.ExceptionSanitizer.sanitize
 import org.testng.annotations.DataProvider
 import org.testng.annotations.Test
 import java.io.IOException
@@ -58,37 +66,41 @@ class ModuleExceptionTest {
 
     @Test(dataProvider = "dp")
     fun testGetDebugMessage(e: ModuleException) {
-        assertThat(e.debugMessage).describedAs("get debug message").isEqualTo(debugMessage)
+        assertThat(e.debugMessage, "get debug message").isEqualTo(debugMessage)
     }
 
     @Test(dataProvider = "dp")
     fun testGetMessage(e: ModuleException) {
-        assertThat(e).describedAs("get message").hasMessage(message)
+        assertThat(e, "get message").hasMessage(message)
     }
 
     @Test
     fun testSanitizeMessage() {
         val apiKey = "1234567890"
         var e = ModuleException(debugMessage, message, IOException("URL http://foo.com?apiKey=$apiKey&userID=me"))
-        assertThat(sanitizeException(e, apiKey, "", "me")).describedAs("sanitized url")
-            .hasMessageContainingAll("xxxxxxxxxx", "userID=xx", "java.io.IOException")
-            .hasMessageNotContainingAny(apiKey, "me")
+        assertThat(e.sanitize(apiKey, "", "me").message, "sanitized url").isNotNull().all {
+            contains("xxxxxxxxxx", "userID=xx", "java.io.IOException")
+            doesNotContain(apiKey, "me")
+        }
 
         e = ModuleException(debugMessage, message, null)
-        assertThat(sanitizeException(e, apiKey)).describedAs("no cause").hasMessage(message)
+        assertThat(e.sanitize(apiKey), "no cause").hasMessage(message)
 
         e = ModuleException(debugMessage, message, IOException())
-        assertThat(sanitizeException(e, apiKey)).describedAs("no cause message").hasMessage(message)
+        assertThat(e.sanitize(apiKey), "no cause message").hasMessage(message)
 
         e = ModuleException(apiKey)
-        assertThat(sanitizeException(e, apiKey)).describedAs("api key in message").hasMessageNotContaining(apiKey)
+        assertThat(e.sanitize(apiKey).message, "api key in message").isNotNull().doesNotContain(apiKey)
 
         val msg: String? = null
         e = ModuleException(debugMessage, msg, IOException(msg))
-        assertThat(sanitizeException(e, apiKey).message).describedAs("null message").isNull()
+        assertThat(e.sanitize(apiKey).message, "null message").isNull()
 
         e = ModuleException(msg, msg, IOException("foo is $apiKey"))
-        assertThat(sanitizeException(e, "   ", apiKey, "foo").message).describedAs("key in cause")
-            .doesNotContain(apiKey).endsWith("xxx is xxxxxxxxxx")
+        assertThat(e.sanitize("   ", apiKey, "foo").message, "key in cause").isNotNull().all {
+            doesNotContain(apiKey)
+            endsWith("xxx is xxxxxxxxxx")
+        }
+        assertThat(e.sanitize(), "empty").isEqualTo(e)
     }
 }

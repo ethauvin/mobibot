@@ -33,42 +33,43 @@ package net.thauvin.erik.mobibot.modules
 
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import net.thauvin.erik.mobibot.Mobibot
+import net.thauvin.erik.mobibot.Utils.bot
 import net.thauvin.erik.mobibot.Utils.cyan
 import net.thauvin.erik.mobibot.Utils.helpFormat
+import net.thauvin.erik.mobibot.Utils.sendMessage
 import net.thauvin.erik.mobibot.Utils.urlReader
 import net.thauvin.erik.mobibot.msg.Message
 import net.thauvin.erik.mobibot.msg.PublicMessage
 import org.json.JSONException
 import org.json.JSONObject
+import org.pircbotx.hooks.types.GenericMessageEvent
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import java.io.IOException
 import java.net.URL
 
 /**
  * The Joke module.
  */
-class Joke(bot: Mobibot) : ThreadedModule(bot) {
-    override fun commandResponse(
-        sender: String,
-        cmd: String,
-        args: String,
-        isPrivate: Boolean
-    ) {
+class Joke : ThreadedModule() {
+    private val logger: Logger = LoggerFactory.getLogger(Joke::class.java)
+
+    override fun commandResponse(channel: String, cmd: String, args: String, event: GenericMessageEvent) {
         runBlocking {
-            launch { run(sender, cmd, args, isPrivate) }
+            launch { run(channel, cmd, args, event) }
         }
     }
 
     /**
      * Returns a random joke from [The Internet Chuck Norris Database](http://www.icndb.com/).
      */
-    override fun run(sender: String, cmd: String, args: String, isPrivate: Boolean) {
-        with(bot) {
+    override fun run(channel: String, cmd: String, args: String, event: GenericMessageEvent) {
+        with(event.bot()) {
             try {
-                send(cyan(randomJoke().msg))
+                sendIRC().notice(channel, cyan(randomJoke().msg))
             } catch (e: ModuleException) {
                 if (logger.isWarnEnabled) logger.warn(e.debugMessage, e)
-                send(sender, e.message, isPrivate)
+                event.sendMessage(e.message!!)
             }
         }
     }

@@ -31,14 +31,18 @@
  */
 package net.thauvin.erik.mobibot.modules
 
+import assertk.assertThat
+import assertk.assertions.endsWith
+import assertk.assertions.isSuccess
+import assertk.assertions.matches
+import assertk.assertions.startsWith
 import net.thauvin.erik.mobibot.Utils.bold
 import net.thauvin.erik.mobibot.modules.WorldTime.Companion.BEATS_KEYWORD
 import net.thauvin.erik.mobibot.modules.WorldTime.Companion.COUNTRIES_MAP
 import net.thauvin.erik.mobibot.modules.WorldTime.Companion.time
-import org.assertj.core.api.Assertions.assertThat
+import org.pircbotx.Colors
 import org.testng.annotations.Test
 import java.time.ZoneId
-import java.time.zone.ZoneRulesException
 
 /**
  * The `WordTimeTest` class.
@@ -46,16 +50,23 @@ import java.time.zone.ZoneRulesException
 class WordTimeTest {
     @Test
     fun testTime() {
-        assertThat(time("PST").msg).describedAs("PST").endsWith(bold("Los Angeles"))
-        assertThat(time("BLAH").isError).describedAs("BLAH").isTrue
-        assertThat(time("BEAT").msg).describedAs(BEATS_KEYWORD).matches("[\\w ]+: .?@\\d{3}+.? .beats")
+        assertThat(time(), "no zone").matches(
+            ("The time is ${Colors.BOLD}\\d{1,2}:\\d{2}${Colors.BOLD} " +
+                    "on ${Colors.BOLD}\\w+, \\d{1,2} \\w+ \\d{4}${Colors.BOLD} " +
+                    "in ${Colors.BOLD}Los Angeles${Colors.BOLD}").toRegex()
+        )
+        assertThat(time(""), "empty zone").endsWith(bold("Los Angeles"))
+        assertThat(time("PST"), "PST").endsWith(bold("Los Angeles"))
+        assertThat(time("GB"), "GB").endsWith(bold("London"))
+        assertThat(time("FR"), "FR").endsWith(bold("Paris"))
+        assertThat(time("BLAH"), "BLAH").startsWith("Unsupported")
+        assertThat(time("BEAT"), BEATS_KEYWORD).matches("[\\w ]+ .?@\\d{3}+.? .beats".toRegex())
     }
 
     @Test
-    @Throws(ZoneRulesException::class)
-    fun testCountries() {
+    fun testZones() {
         COUNTRIES_MAP.filter { it.value != BEATS_KEYWORD }.forEach {
-            ZoneId.of(it.value)
+            assertThat { ZoneId.of(it.value) }.isSuccess()
         }
     }
 }

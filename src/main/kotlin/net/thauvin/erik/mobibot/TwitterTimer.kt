@@ -32,10 +32,11 @@
 
 package net.thauvin.erik.mobibot
 
+import net.thauvin.erik.mobibot.modules.Twitter
 import java.util.TimerTask
 
-class TwitterTimer(var bot: Mobibot, private var index: Int) : TimerTask() {
+class TwitterTimer(private var twitter: Twitter, private var index: Int) : TimerTask() {
     override fun run() {
-        bot.twitter.postEntry(index)
+        twitter.postEntry(index)
     }
 }

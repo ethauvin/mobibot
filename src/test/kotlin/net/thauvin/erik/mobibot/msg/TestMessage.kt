@@ -32,7 +32,8 @@
 
 package net.thauvin.erik.mobibot.msg
 
-import org.assertj.core.api.Assertions.assertThat
+import assertk.assertThat
+import assertk.assertions.isTrue
 import org.testng.annotations.Test
 
 class TestMessage {
@@ -41,15 +42,15 @@ class TestMessage {
         var msg = Message()
 
         msg.isError = true
-        assertThat(msg.isNotice).describedAs("message is notice").isTrue
+        assertThat(msg.isNotice, "message is notice").isTrue()
 
         msg = Message("foo", isError = true)
-        assertThat(msg.isNotice).describedAs("message is notice too").isTrue
+        assertThat(msg.isNotice, "message is notice too").isTrue()
     }
 
     @Test
     fun testErrorMessage() {
         val msg = ErrorMessage("foo")
-        assertThat(msg.isNotice).describedAs("error message is notice").isTrue
+        assertThat(msg.isNotice, "error message is notice").isTrue()
     }
 }

@@ -33,14 +33,16 @@
 package net.thauvin.erik.mobibot.commands.links
 
 import net.thauvin.erik.mobibot.Constants
-import net.thauvin.erik.mobibot.Mobibot
 import net.thauvin.erik.mobibot.Utils.bold
 import net.thauvin.erik.mobibot.Utils.helpFormat
+import net.thauvin.erik.mobibot.Utils.isChannelOp
+import net.thauvin.erik.mobibot.Utils.sendMessage
 import net.thauvin.erik.mobibot.commands.AbstractCommand
 import net.thauvin.erik.mobibot.entries.EntriesUtils
 import net.thauvin.erik.mobibot.entries.EntryLink
+import org.pircbotx.hooks.types.GenericMessageEvent
 
-class Comment(bot: Mobibot) : AbstractCommand(bot) {
+class Comment : AbstractCommand() {
     override val name = COMMAND
     override val help = listOf(
         "To add a comment:",
@@ -51,7 +53,7 @@ class Comment(bot: Mobibot) : AbstractCommand(bot) {
         "To delete a comment, use its label and a minus sign: ",
         helpFormat("${Constants.LINK_CMD}1.1:-")
     )
-    override val isOp = false
+    override val isOpOnly = false
     override val isPublic = true
     override val isVisible = true
 
@@ -59,29 +61,22 @@ class Comment(bot: Mobibot) : AbstractCommand(bot) {
         const val COMMAND = "comment"
     }
 
-    override fun commandResponse(
-        sender: String,
-        login: String,
-        args: String,
-        isOp: Boolean,
-        isPrivate: Boolean
-    ) {
-        @Suppress("MagicNumber")
+    override fun commandResponse(channel: String, args: String, event: GenericMessageEvent) {
         val cmds = args.substring(1).split("[.:]".toRegex(), 3)
-        val index = cmds[0].toInt() - 1
+        val entryIndex = cmds[0].toInt() - 1
 
-        if (index < LinksMgr.entries.size) {
-            val entry: EntryLink = LinksMgr.entries[index]
+        if (entryIndex < LinksMgr.entries.links.size && LinksMgr.isUpToDate(event)) {
+            val entry: EntryLink = LinksMgr.entries.links[entryIndex]
             val commentIndex = cmds[1].toInt() - 1
             if (commentIndex < entry.comments.size) {
                 when (val cmd = cmds[2].trim()) {
-                    "" -> showComment(bot, entry, index, commentIndex) // L1.1:
-                    "-" -> deleteComment(bot, sender, isOp, entry, index, commentIndex) // L11:-
+                    "" -> showComment(entry, entryIndex, commentIndex, event) // L1.1:
+                    "-" -> deleteComment(channel, entry, entryIndex, commentIndex, event) // L1.1:-
                     else -> {
                         if (cmd.startsWith('?')) {  // L1.1:?<author>
-                            changeAuthor(bot, cmd, sender, isOp, entry, index, commentIndex)
+                            changeAuthor(channel, cmd, entry, entryIndex, commentIndex, event)
                         } else { // L1.1:<comment>
-                            setComment(bot, cmd, sender, entry, index, commentIndex)
+                            setComment(cmd, entry, entryIndex, commentIndex, event)
                         }
                     }
                 }
@@ -89,20 +84,11 @@ class Comment(bot: Mobibot) : AbstractCommand(bot) {
         }
     }
 
-    override fun helpResponse(
-        command: String,
-        sender: String,
-        isOp: Boolean,
-        isPrivate: Boolean
-    ): Boolean {
-        if (super.helpResponse(command, sender, isOp, isPrivate)) {
-            if (isOp) {
-                bot.send(sender, "To change a comment's author:", isPrivate)
-                bot.send(
-                    sender,
-                    helpFormat("${Constants.LINK_CMD}1.1:?<nick>"),
-                    isPrivate
-                )
+    override fun helpResponse(channel: String, topic: String, event: GenericMessageEvent): Boolean {
+        if (super.helpResponse(channel, topic, event)) {
+            if (isChannelOp(channel, event)) {
+                event.sendMessage("To change a comment's author:")
+                event.sendMessage(helpFormat("${Constants.LINK_CMD}1.1:?<nick>"))
             }
             return true
         }
@@ -114,49 +100,52 @@ class Comment(bot: Mobibot) : AbstractCommand(bot) {
     }
 
     private fun changeAuthor(
-        bot: Mobibot,
+        channel: String,
         cmd: String,
-        sender: String,
-        isOp: Boolean,
         entry: EntryLink,
-        index: Int,
-        commentIndex: Int
+        entryIndex: Int,
+        commentIndex: Int,
+        event: GenericMessageEvent
     ) {
-        if (isOp && cmd.length > 1) {
+        if (isChannelOp(channel, event) && cmd.length > 1) {
             val comment = entry.getComment(commentIndex)
             comment.nick = cmd.substring(1)
-            bot.send(EntriesUtils.buildComment(index, commentIndex, comment))
-            LinksMgr.saveEntries(bot, false)
+            event.sendMessage(EntriesUtils.buildComment(entryIndex, commentIndex, comment))
+            LinksMgr.entries.save()
         } else {
-            bot.send(sender, "Please ask a channel op to change the author of this comment for you.", false)
+            event.sendMessage("Please ask a channel op to change the author of this comment for you.")
         }
     }
 
     private fun deleteComment(
-        bot: Mobibot,
-        sender: String,
-        isOp: Boolean,
+        channel: String,
         entry: EntryLink,
-        index: Int,
-        commentIndex: Int
+        entryIndex: Int,
+        commentIndex: Int,
+        event: GenericMessageEvent
     ) {
-        if (isOp || sender == entry.getComment(commentIndex).nick) {
+        if (isChannelOp(channel, event) || event.user.nick == entry.getComment(commentIndex).nick) {
             entry.deleteComment(commentIndex)
-            bot.send("Comment ${EntriesUtils.buildLinkCmd(index)}.${commentIndex + 1} removed.")
-            LinksMgr.saveEntries(bot, false)
+            event.sendMessage("Comment ${EntriesUtils.buildLinkLabel(entryIndex)}.${commentIndex + 1} removed.")
+            LinksMgr.entries.save()
         } else {
-            bot.send(sender, "Please ask a channel op to delete this comment for you.", false)
+            event.sendMessage("Please ask a channel op to delete this comment for you.")
         }
     }
 
-    private fun setComment(bot: Mobibot, cmd: String, sender: String, entry: EntryLink, index: Int, commentIndex: Int) {
-        entry.setComment(commentIndex, cmd, sender)
-        val comment = entry.getComment(commentIndex)
-        bot.send(sender, EntriesUtils.buildComment(index, commentIndex, comment), false)
-        LinksMgr.saveEntries(bot, false)
+    private fun setComment(
+        cmd: String,
+        entry: EntryLink,
+        entryIndex: Int,
+        commentIndex: Int,
+        event: GenericMessageEvent
+    ) {
+        entry.setComment(commentIndex, cmd, event.user.nick)
+        event.sendMessage(EntriesUtils.buildComment(entryIndex, commentIndex, entry.getComment(commentIndex)))
+        LinksMgr.entries.save()
     }
 
-    private fun showComment(bot: Mobibot, entry: EntryLink, index: Int, commentIndex: Int) {
-        bot.send(EntriesUtils.buildComment(index, commentIndex, entry.getComment(commentIndex)))
+    private fun showComment(entry: EntryLink, entryIndex: Int, commentIndex: Int, event: GenericMessageEvent) {
+        event.sendMessage(EntriesUtils.buildComment(entryIndex, commentIndex, entry.getComment(commentIndex)))
     }
 }

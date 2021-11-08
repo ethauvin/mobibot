@@ -31,6 +31,8 @@
  */
 package net.thauvin.erik.mobibot
 
+import assertk.assertThat
+import assertk.assertions.isEqualTo
 import net.thauvin.erik.mobibot.Utils.appendIfMissing
 import net.thauvin.erik.mobibot.Utils.bold
 import net.thauvin.erik.mobibot.Utils.buildCmdSyntax
@@ -55,8 +57,7 @@ import net.thauvin.erik.mobibot.Utils.unescapeXml
 import net.thauvin.erik.mobibot.Utils.uptime
 import net.thauvin.erik.mobibot.Utils.urlReader
 import net.thauvin.erik.mobibot.msg.Message.Companion.DEFAULT_COLOR
-import org.assertj.core.api.Assertions.assertThat
-import org.jibble.pircbot.Colors
+import org.pircbotx.Colors
 import org.testng.annotations.BeforeClass
 import org.testng.annotations.Test
 import java.io.File
@@ -86,59 +87,59 @@ class UtilsTest {
         val dir = "dir"
         val sep = '/'
         val url = "https://erik.thauvin.net"
-        assertThat(dir.appendIfMissing(File.separatorChar)).describedAs("appendIfMissing(dir)")
+        assertThat(dir.appendIfMissing(File.separatorChar), "appendIfMissing(dir)")
             .isEqualTo(dir + File.separatorChar)
-        assertThat(url.appendIfMissing(sep)).describedAs("appendIfMissing(url)").isEqualTo("$url$sep")
-        assertThat("$url$sep".appendIfMissing(sep)).describedAs("appendIfMissing($url$sep)").isEqualTo("$url$sep")
+        assertThat(url.appendIfMissing(sep), "appendIfMissing(url)").isEqualTo("$url$sep")
+        assertThat("$url$sep".appendIfMissing(sep), "appendIfMissing($url$sep)").isEqualTo("$url$sep")
     }
 
     @Test
     fun testBold() {
-        assertThat(bold(1)).describedAs("bold(1)").isEqualTo(Colors.BOLD + "1" + Colors.BOLD)
-        assertThat(bold(2L)).describedAs("bold(1)").isEqualTo(Colors.BOLD + "2" + Colors.BOLD)
-        assertThat(bold(ascii)).describedAs("bold(ascii)").isEqualTo(Colors.BOLD + ascii + Colors.BOLD)
-        assertThat(bold("test")).describedAs("bold(test)").isEqualTo(Colors.BOLD + "test" + Colors.BOLD)
+        assertThat(bold(1), "bold(1)").isEqualTo(Colors.BOLD + "1" + Colors.BOLD)
+        assertThat(bold(2L), "bold(1)").isEqualTo(Colors.BOLD + "2" + Colors.BOLD)
+        assertThat(bold(ascii), "bold(ascii)").isEqualTo(Colors.BOLD + ascii + Colors.BOLD)
+        assertThat(bold("test"), "bold(test)").isEqualTo(Colors.BOLD + "test" + Colors.BOLD)
     }
 
     @Test
     fun testBuildCmdSyntax() {
         val bot = "mobibot"
-        assertThat(buildCmdSyntax("%c $test %n $test", bot, false)).describedAs("public")
+        assertThat(buildCmdSyntax("%c $test %n $test", bot, false), "public")
             .isEqualTo("$bot: $test $bot $test")
-        assertThat(buildCmdSyntax("%c %n $test %c $test %n", bot, true)).describedAs("public")
+        assertThat(buildCmdSyntax("%c %n $test %c $test %n", bot, true), "public")
             .isEqualTo("/msg $bot $bot $test /msg $bot $test $bot")
     }
 
 
     @Test
     fun testCapitalise() {
-        assertThat("test".capitalise()).describedAs("capitalize(test)").isEqualTo("Test")
-        assertThat("Test".capitalise()).describedAs("capitalize(Test)").isEqualTo("Test")
-        assertThat(test.capitalise()).describedAs("capitalize($test)").isEqualTo(test)
-        assertThat("".capitalise()).describedAs("capitalize()").isEqualTo("")
+        assertThat("test".capitalise(), "capitalize(test)").isEqualTo("Test")
+        assertThat("Test".capitalise(), "capitalize(Test)").isEqualTo("Test")
+        assertThat(test.capitalise(), "capitalize($test)").isEqualTo(test)
+        assertThat("".capitalise(), "capitalize()").isEqualTo("")
     }
 
     @Test
     fun textCapitaliseWords() {
-        assertThat(test.capitalizeWords()).describedAs("captiatlizeWords(test)").isEqualTo("This Is A Test.")
-        assertThat("Already Capitalized".capitalizeWords()).describedAs("already capitalized")
+        assertThat(test.capitalizeWords(), "captiatlizeWords(test)").isEqualTo("This Is A Test.")
+        assertThat("Already Capitalized".capitalizeWords(), "already capitalized")
             .isEqualTo("Already Capitalized")
-        assertThat("    a  test  ".capitalizeWords()).describedAs("with spaces").isEqualTo("    A  Test  ")
+        assertThat("    a  test  ".capitalizeWords(), "with spaces").isEqualTo("    A  Test  ")
     }
 
     @Test
     fun testColorize() {
-        assertThat(colorize(ascii, Colors.REVERSE)).describedAs("colorize(reverse)").isEqualTo(
+        assertThat(colorize(ascii, Colors.REVERSE), "colorize(reverse)").isEqualTo(
             Colors.REVERSE + ascii + Colors.REVERSE
         )
-        assertThat(colorize(ascii, Colors.RED)).describedAs("colorize(red)")
+        assertThat(colorize(ascii, Colors.RED), "colorize(red)")
             .isEqualTo(Colors.RED + ascii + Colors.NORMAL)
-        assertThat(colorize(ascii, Colors.BOLD)).describedAs("colorized(bold)")
+        assertThat(colorize(ascii, Colors.BOLD), "colorized(bold)")
             .isEqualTo(Colors.BOLD + ascii + Colors.BOLD)
-        assertThat(colorize(null, Colors.RED)).describedAs("colorize(null)").isEqualTo("")
-        assertThat(colorize("", Colors.RED)).describedAs("colorize()").isEqualTo("")
-        assertThat(colorize(ascii, DEFAULT_COLOR)).describedAs("colorize(none)").isEqualTo(ascii)
-        assertThat(colorize("   ", Colors.NORMAL)).describedAs("colorize(blank)")
+        assertThat(colorize(null, Colors.RED), "colorize(null)").isEqualTo("")
+        assertThat(colorize("", Colors.RED), "colorize()").isEqualTo("")
+        assertThat(colorize(ascii, DEFAULT_COLOR), "colorize(none)").isEqualTo(ascii)
+        assertThat(colorize("   ", Colors.NORMAL), "colorize(blank)")
             .isEqualTo(Colors.NORMAL + "   " + Colors.NORMAL)
     }
 
@@ -157,9 +158,9 @@ class UtilsTest {
         val p = Properties()
         p["one"] = "1"
         p["two"] = "two"
-        assertThat(p.getIntProperty("one", 9)).describedAs("getIntProperty(one)").isEqualTo(1)
-        assertThat(p.getIntProperty("two", 2)).describedAs("getIntProperty(two)").isEqualTo(2)
-        assertThat(p.getIntProperty("foo", 3)).describedAs("getIntProperty(foo)").isEqualTo(3)
+        assertThat(p.getIntProperty("one", 9), "getIntProperty(one)").isEqualTo(1)
+        assertThat(p.getIntProperty("two", 2), "getIntProperty(two)").isEqualTo(2)
+        assertThat(p.getIntProperty("foo", 3), "getIntProperty(foo)").isEqualTo(3)
     }
 
     @Test
@@ -169,26 +170,26 @@ class UtilsTest {
 
     @Test
     fun testHelpFormat() {
-        assertThat(helpFormat(test, isBold = true, isIndent = false)).describedAs("bold")
+        assertThat(helpFormat(test, isBold = true, isIndent = false), "bold")
             .isEqualTo("${Colors.BOLD}$test${Colors.BOLD}")
-        assertThat(helpFormat(test, isBold = false, isIndent = true)).describedAs("indent")
+        assertThat(helpFormat(test, isBold = false, isIndent = true), "indent")
             .isEqualTo(test.prependIndent())
-        assertThat(helpFormat(test, isBold = true, isIndent = true)).describedAs("bold-indent")
+        assertThat(helpFormat(test, isBold = true, isIndent = true), "bold-indent")
             .isEqualTo(colorize(test, Colors.BOLD).prependIndent())
 
     }
 
     @Test
     fun testIsoLocalDate() {
-        assertThat(cal.time.toIsoLocalDate()).describedAs("isoLocalDate(date)").isEqualTo("1952-02-17")
-        assertThat(localDateTime.toIsoLocalDate()).describedAs("isoLocalDate(localDate)").isEqualTo("1952-02-17")
+        assertThat(cal.time.toIsoLocalDate(), "isoLocalDate(date)").isEqualTo("1952-02-17")
+        assertThat(localDateTime.toIsoLocalDate(), "isoLocalDate(localDate)").isEqualTo("1952-02-17")
     }
 
     @Test
     fun testObfuscate() {
-        assertThat(ascii.obfuscate().length).describedAs("obfuscate is right length").isEqualTo(ascii.length)
-        assertThat(ascii.obfuscate()).describedAs("obfuscate()").isEqualTo("x".repeat(ascii.length))
-        assertThat(" ".obfuscate()).describedAs("obfuscate(blank)").isEqualTo(" ")
+        assertThat(ascii.obfuscate().length, "obfuscate is right length").isEqualTo(ascii.length)
+        assertThat(ascii.obfuscate(), "obfuscate()").isEqualTo("x".repeat(ascii.length))
+        assertThat(" ".obfuscate(), "obfuscate(blank)").isEqualTo(" ")
     }
 
     @Test
@@ -197,7 +198,7 @@ class UtilsTest {
         val weeks = "weeks"
 
         for (i in -1..3) {
-            assertThat(week.plural(i.toLong())).describedAs("plural($i)").isEqualTo(if (i > 1) weeks else week)
+            assertThat(week.plural(i.toLong()), "plural($i)").isEqualTo(if (i > 1) weeks else week)
         }
     }
 
@@ -205,15 +206,15 @@ class UtilsTest {
     fun testReplaceEach() {
         val search = arrayOf("one", "two", "three")
         val replace = arrayOf("1", "2", "3")
-        assertThat(search.joinToString(",").replaceEach(search, replace)).describedAs("replaceEach(1,2,3")
+        assertThat(search.joinToString(",").replaceEach(search, replace), "replaceEach(1,2,3")
             .isEqualTo(replace.joinToString(","))
 
-        assertThat(test.replaceEach(search, replace)).describedAs("replaceEach(nothing)").isEqualTo(test)
+        assertThat(test.replaceEach(search, replace), "replaceEach(nothing)").isEqualTo(test)
 
-        assertThat(test.replaceEach(arrayOf("t", "e"), arrayOf("", "E"))).describedAs("replaceEach($test)")
+        assertThat(test.replaceEach(arrayOf("t", "e"), arrayOf("", "E")), "replaceEach($test)")
             .isEqualTo(test.replace("t", "").replace("e", "E"))
 
-        assertThat(test.replaceEach(search, emptyArray())).describedAs("replaceEach(search, empty)")
+        assertThat(test.replaceEach(search, emptyArray()), "replaceEach(search, empty)")
             .isEqualTo(test)
     }
 
@@ -234,8 +235,8 @@ class UtilsTest {
 
     @Test
     fun testToIntOrDefault() {
-        assertThat("10".toIntOrDefault(1)).describedAs("toIntOrDefault(10, 1)").isEqualTo(10)
-        assertThat("a".toIntOrDefault(2)).describedAs("toIntOrDefault(a, 2)").isEqualTo(2)
+        assertThat("10".toIntOrDefault(1), "toIntOrDefault(10, 1)").isEqualTo(10)
+        assertThat("a".toIntOrDefault(2), "toIntOrDefault(a, 2)").isEqualTo(2)
     }
 
     @Test
@@ -247,26 +248,26 @@ class UtilsTest {
 
     @Test
     fun testUptime() {
-        assertThat(uptime(547800300076L)).describedAs("full")
+        assertThat(uptime(547800300076L), "full")
             .isEqualTo("17 years 2 months 2 weeks 1 day 6 hours 45 minutes")
-        assertThat(uptime(2700000L)).describedAs("minutes").isEqualTo("45 minutes")
-        assertThat(uptime(24300000L)).describedAs("hours minutes").isEqualTo("6 hours 45 minutes")
-        assertThat(uptime(110700000L)).describedAs("days hours minutes").isEqualTo("1 day 6 hours 45 minutes")
-        assertThat(uptime(1320300000L)).describedAs("weeks days hours minutes")
+        assertThat(uptime(2700000L), "minutes").isEqualTo("45 minutes")
+        assertThat(uptime(24300000L), "hours minutes").isEqualTo("6 hours 45 minutes")
+        assertThat(uptime(110700000L), "days hours minutes").isEqualTo("1 day 6 hours 45 minutes")
+        assertThat(uptime(1320300000L), "weeks days hours minutes")
             .isEqualTo("2 weeks 1 day 6 hours 45 minutes")
-        assertThat(uptime(0L)).describedAs("0 minutes").isEqualTo("0 minute")
+        assertThat(uptime(0L), "0 minutes").isEqualTo("0 minute")
     }
 
     @Test
     @Throws(IOException::class)
     fun testUrlReader() {
-        assertThat(urlReader(URL("https://postman-echo.com/status/200"))).describedAs("urlReader()")
+        assertThat(urlReader(URL("https://postman-echo.com/status/200")), "urlReader()")
             .isEqualTo("{\"status\":200}")
     }
 
     @Test
     fun testUtcDateTime() {
-        assertThat(cal.time.toUtcDateTime()).describedAs("utcDateTime(date)").isEqualTo("1952-02-17 12:30")
-        assertThat(localDateTime.toUtcDateTime()).describedAs("utcDateTime(localDate)").isEqualTo("1952-02-17 12:30")
+        assertThat(cal.time.toUtcDateTime(), "utcDateTime(date)").isEqualTo("1952-02-17 12:30")
+        assertThat(localDateTime.toUtcDateTime(), "utcDateTime(localDate)").isEqualTo("1952-02-17 12:30")
     }
 }

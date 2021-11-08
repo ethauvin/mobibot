@@ -31,9 +31,13 @@
  */
 package net.thauvin.erik.mobibot
 
+import net.thauvin.erik.mobibot.msg.Message
 import net.thauvin.erik.mobibot.msg.Message.Companion.DEFAULT_COLOR
-import org.jibble.pircbot.Colors
 import org.jsoup.Jsoup
+import org.pircbotx.Colors
+import org.pircbotx.PircBotX
+import org.pircbotx.hooks.events.PrivateMessageEvent
+import org.pircbotx.hooks.types.GenericMessageEvent
 import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStreamReader
@@ -84,6 +88,13 @@ object Utils {
      */
     @JvmStatic
     fun bold(s: String?): String = colorize(s, Colors.BOLD)
+
+    /**
+     * Returns the [PircBotX] instance.
+     */
+    fun GenericMessageEvent.bot(): PircBotX {
+        return getBot() as PircBotX
+    }
 
     /**
      * Build a help command by replacing `%c` with the bot's pub/priv command, and `%n` with the bot's
@@ -160,6 +171,14 @@ object Utils {
     }
 
     /**
+     * Returns {@code true} if the specified user is an operator on the [channel].
+     */
+    @JvmStatic
+    fun isChannelOp(channel: String, event: GenericMessageEvent): Boolean {
+        return event.bot().userChannelDao.getChannel(channel).isOp(event.user)
+    }
+
+    /**
      * Obfuscates the given string.
      */
     @JvmStatic
@@ -202,6 +221,56 @@ object Utils {
      */
     @JvmStatic
     fun reverseColor(s: String?): String = colorize(s, Colors.REVERSE)
+
+    /**
+     * Send a formatted commands/modules, etc. list.
+     */
+    @JvmStatic
+    fun GenericMessageEvent.sendList(
+        list: List<String>,
+        maxPerLine: Int,
+        separator: String = " ",
+        isBold: Boolean = false,
+        isIndent: Boolean = false
+    ) {
+        var i = 0
+        while (i < list.size) {
+            sendMessage(
+                helpFormat(
+                    list.subList(i, list.size.coerceAtMost(i + maxPerLine)).joinToString(separator, truncated = ""),
+                    isBold,
+                    isIndent
+                ),
+            )
+            i += maxPerLine
+        }
+    }
+
+    /**
+     * Sends a [message].
+     */
+    @JvmStatic
+    fun GenericMessageEvent.sendMessage(channel: String, message: Message) {
+        if (message.isNotice) {
+            bot().sendIRC().notice(user.nick, colorize(message.msg, message.color))
+        } else if (message.isPrivate || this is PrivateMessageEvent || channel.isBlank()) {
+            respondPrivateMessage(colorize(message.msg, message.color))
+        } else {
+            bot().sendIRC().message(channel, colorize(message.msg, message.color))
+        }
+    }
+
+    /**
+     * Sends a response as a private message or notice.
+     */
+    @JvmStatic
+    fun GenericMessageEvent.sendMessage(message: String) {
+        if (this is PrivateMessageEvent) {
+            respondPrivateMessage(message)
+        } else {
+            bot().sendIRC().notice(user.nick, message)
+        }
+    }
 
     /**
      * Returns today's date.
@@ -258,7 +327,6 @@ object Utils {
     /**
      * Converts milliseconds to year month week day hour and minutes.
      */
-    @Suppress("MagicNumber")
     @JvmStatic
     fun uptime(uptime: Long): String {
         val info = StringBuilder()

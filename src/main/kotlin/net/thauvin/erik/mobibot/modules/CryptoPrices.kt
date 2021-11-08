@@ -34,40 +34,44 @@ package net.thauvin.erik.mobibot.modules
 import net.thauvin.erik.crypto.CryptoException
 import net.thauvin.erik.crypto.CryptoPrice
 import net.thauvin.erik.crypto.CryptoPrice.Companion.spotPrice
-import net.thauvin.erik.mobibot.Mobibot
 import net.thauvin.erik.mobibot.Utils.helpFormat
-import net.thauvin.erik.mobibot.msg.PublicMessage
+import net.thauvin.erik.mobibot.Utils.sendMessage
+import org.pircbotx.hooks.types.GenericMessageEvent
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
+import java.io.IOException
 
 /**
  * The Cryptocurrency Prices  module.
  */
-class CryptoPrices(bot: Mobibot) : ThreadedModule(bot) {
+class CryptoPrices : ThreadedModule() {
+    private val logger: Logger = LoggerFactory.getLogger(CryptoPrices::class.java)
+
     /**
      * Returns the cryptocurrency market price from [Coinbase](https://developers.coinbase.com/api/v2#get-spot-price).
      */
-    override fun run(sender: String, cmd: String, args: String, isPrivate: Boolean) {
+    override fun run(channel: String, cmd: String, args: String, event: GenericMessageEvent) {
         val debugMessage = "crypto($cmd $args)"
-        with(bot) {
-            if (args.matches("\\w+( [a-zA-Z]{3}+)?".toRegex())) {
-                try {
-                    val price = currentPrice(args.split(' '))
-                    val amount = try {
-                        price.toCurrency()
-                    } catch (ignore: IllegalArgumentException) {
-                        price.amount
-                    }
-                    send(sender, PublicMessage("${price.base}: $amount [${price.currency}]"))
-                } catch (e: CryptoException) {
-                    if (logger.isWarnEnabled) logger.warn("$debugMessage => ${e.statusCode}", e)
-                    send(e.message)
-                } catch (e: Exception) {
-                    if (logger.isErrorEnabled) logger.error(debugMessage, e)
-                    send("An error has occurred while retrieving the cryptocurrency market price.")
+        if (args.matches("\\w+( [a-zA-Z]{3}+)?".toRegex())) {
+            try {
+                val price = currentPrice(args.split(' '))
+                val amount = try {
+                    price.toCurrency()
+                } catch (ignore: IllegalArgumentException) {
+                    price.amount
                 }
-            } else {
-                helpResponse(sender, isPrivate)
+                event.respond("${price.base} current price is $amount [${price.currency}]")
+            } catch (e: CryptoException) {
+                if (logger.isWarnEnabled) logger.warn("$debugMessage => ${e.statusCode}", e)
+                event.sendMessage(e.message!!)
+            } catch (e: IOException) {
+                if (logger.isErrorEnabled) logger.error(debugMessage, e)
+                event.sendMessage("An IO error has occurred while retrieving the cryptocurrency market price.")
             }
+        } else {
+            helpResponse(event)
         }
+
     }
 
     companion object {

@@ -32,23 +32,25 @@
 
 package net.thauvin.erik.mobibot.commands.links
 
-import net.thauvin.erik.mobibot.Mobibot
-import net.thauvin.erik.mobibot.Utils.bold
+import net.thauvin.erik.mobibot.Utils.bot
+import net.thauvin.erik.mobibot.Utils.buildCmdSyntax
 import net.thauvin.erik.mobibot.Utils.helpFormat
+import net.thauvin.erik.mobibot.Utils.sendMessage
 import net.thauvin.erik.mobibot.commands.AbstractCommand
 import net.thauvin.erik.mobibot.commands.links.LinksMgr.Companion.entries
 import net.thauvin.erik.mobibot.entries.EntriesUtils
 import net.thauvin.erik.mobibot.entries.EntryLink
+import org.pircbotx.hooks.events.PrivateMessageEvent
+import org.pircbotx.hooks.types.GenericMessageEvent
 
-class View(bot: Mobibot) : AbstractCommand(bot) {
-    @Suppress("MagicNumber")
-    private val maxEntries = 8
+class View : AbstractCommand() {
+    private val maxEntries = 6
     override val name = VIEW_CMD
     override val help = listOf(
         "To list or search the current URL posts:",
         helpFormat("%c $name [<start>] [<query>]")
     )
-    override val isOp = false
+    override val isOpOnly = false
     override val isPublic = true
     override val isVisible = true
 
@@ -56,22 +58,16 @@ class View(bot: Mobibot) : AbstractCommand(bot) {
         const val VIEW_CMD = "view"
     }
 
-    override fun commandResponse(
-        sender: String,
-        login: String,
-        args: String,
-        isOp: Boolean,
-        isPrivate: Boolean
-    ) {
-        if (entries.size != 0) {
-            showPosts(bot, args, sender)
+    override fun commandResponse(channel: String, args: String, event: GenericMessageEvent) {
+        if (entries.links.isNotEmpty()) {
+            showPosts(args, event)
         } else {
-            bot.send(sender, "There is currently nothing to view. Why don't you post something?", isPrivate)
+            event.sendMessage("There is currently nothing to view. Why don't you post something?")
         }
     }
 
-    private fun showPosts(bot: Mobibot, args: String, sender: String) {
-        val max = entries.size
+    private fun showPosts(args: String, event: GenericMessageEvent) {
+        val max = entries.links.size
         var lcArgs = args.lowercase()
         var i = 0
         if (lcArgs.isEmpty() && max > maxEntries) {
@@ -97,25 +93,32 @@ class View(bot: Mobibot) : AbstractCommand(bot) {
         var entry: EntryLink
         var sent = 0
         while (i < max && sent < maxEntries) {
-            entry = entries[i]
+            entry = entries.links[i]
             if (lcArgs.isNotBlank()) {
                 if (entry.matches(lcArgs)) {
-                    bot.send(sender, EntriesUtils.buildLink(i, entry, true), false)
+                    event.sendMessage(EntriesUtils.buildLink(i, entry, true))
                     sent++
                 }
             } else {
-                bot.send(sender, EntriesUtils.buildLink(i, entry, true), false)
+                event.sendMessage(EntriesUtils.buildLink(i, entry, true))
                 sent++
             }
             i++
             if (sent == maxEntries && i < max) {
-                bot.send(
-                    sender, "To view more, try: " + bold("${bot.nick}: $name ${i + 1} $lcArgs"), false
+                event.sendMessage("To view more, try: ")
+                event.sendMessage(
+                    helpFormat(
+                        buildCmdSyntax(
+                            "%c $name ${i + 1} $lcArgs",
+                            event.bot().nick,
+                            event is PrivateMessageEvent
+                        )
+                    )
                 )
             }
         }
         if (sent == 0) {
-            bot.send(sender, "No matches. Please try again.", false)
+            event.sendMessage("No matches. Please try again.")
         }
     }
 }

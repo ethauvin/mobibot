@@ -33,25 +33,29 @@
 package net.thauvin.erik.mobibot.commands.links
 
 import net.thauvin.erik.mobibot.Constants
-import net.thauvin.erik.mobibot.Mobibot
+import net.thauvin.erik.mobibot.Pinboard
 import net.thauvin.erik.mobibot.Utils.bold
+import net.thauvin.erik.mobibot.Utils.bot
 import net.thauvin.erik.mobibot.Utils.helpFormat
+import net.thauvin.erik.mobibot.Utils.sendMessage
 import net.thauvin.erik.mobibot.Utils.today
 import net.thauvin.erik.mobibot.commands.AbstractCommand
-import net.thauvin.erik.mobibot.commands.Ignore
-import net.thauvin.erik.mobibot.entries.EntriesMgr
+import net.thauvin.erik.mobibot.commands.Ignore.Companion.isNotIgnored
+import net.thauvin.erik.mobibot.entries.Entries
 import net.thauvin.erik.mobibot.entries.EntriesUtils
 import net.thauvin.erik.mobibot.entries.EntryLink
+import net.thauvin.erik.mobibot.modules.Twitter
 import org.jsoup.Jsoup
+import org.pircbotx.hooks.types.GenericMessageEvent
 import java.io.IOException
 
-class LinksMgr(bot: Mobibot) : AbstractCommand(bot) {
-    private val keywords: MutableList<String> = mutableListOf()
+class LinksMgr : AbstractCommand() {
     private val defaultTags: MutableList<String> = mutableListOf()
+    private val keywords: MutableList<String> = mutableListOf()
 
     override val name = Constants.LINK_CMD
     override val help = emptyList<String>()
-    override val isOp = false
+    override val isOpOnly = false
     override val isPublic = false
     override val isVisible = false
 
@@ -65,52 +69,35 @@ class LinksMgr(bot: Mobibot) : AbstractCommand(bot) {
         const val TAGS_PROP = "tags"
         const val TAG_MATCH = ", *| +"
 
-        // Entries array
-        @JvmField
-        val entries = mutableListOf<EntryLink>()
+        /** Entries array **/
+        val entries = Entries()
 
-        // History/backlogs array
-        @JvmField
-        val history = mutableListOf<String>()
+        /** Pinboard handler. **/
+        val pinboard = Pinboard()
 
+        /** Twitter handler. **/
+        val twitter = Twitter()
+
+        /** Let the user know if the entries are too old to be modified. **/
         @JvmStatic
-        var startDate: String = today()
-            private set
-
-        /**
-         * Saves the entries.
-         *
-         * @param isDayBackup Set the `true` if the daily backup file should also be created.
-         */
-        @JvmStatic
-        fun saveEntries(bot: Mobibot, isDayBackup: Boolean) {
-            EntriesMgr.saveEntries(bot, entries, history, isDayBackup)
-        }
-
-        @JvmStatic
-        fun startup(current: String, backlogs: String, channel: String) {
-            startDate = EntriesMgr.loadEntries(current, channel, entries)
-            if (today() != startDate) {
-                entries.clear()
-                startDate = today()
+        fun isUpToDate(event: GenericMessageEvent): Boolean {
+            if (entries.lastPubDate != today()) {
+                event.sendMessage("The links are too old to be updated.")
+                return false
             }
-            EntriesMgr.loadBacklogs(backlogs, history)
+            return true
         }
     }
 
-    override fun commandResponse(
-        sender: String,
-        login: String,
-        args: String,
-        isOp: Boolean,
-        isPrivate: Boolean
-    ) {
+    override fun commandResponse(channel: String, args: String, event: GenericMessageEvent) {
         val cmds = args.split(" ".toRegex(), 2)
+        val sender = event.user.nick
+        val botNick = event.bot().nick
+        val login = event.user.login
 
-        if (Ignore.isNotIgnored(sender) && (cmds.size == 1 || !cmds[1].contains(bot.nick))) {
+        if (isNotIgnored(sender) && (cmds.size == 1 || !cmds[1].contains(botNick))) {
             val link = cmds[0].trim()
-            if (!isDupEntry(bot, sender, link, isPrivate)) {
-                val isBackup = saveDayBackup(bot)
+            if (!isDupEntry(link, event)) {
                 var title = ""
                 val tags = ArrayList<String>(defaultTags)
                 if (cmds.size == 2) {
@@ -129,37 +116,32 @@ class LinksMgr(bot: Mobibot) : AbstractCommand(bot) {
                     matchTagKeywords(title, tags)
                 }
 
-                entries.add(EntryLink(link, title, sender, login, bot.channel, tags))
-                val index: Int = entries.size - 1
-                val entry: EntryLink = entries[index]
-                bot.send(EntriesUtils.buildLink(index, entry))
+                // Links are old, clear them
+                if (entries.lastPubDate != today()) {
+                    entries.links.clear()
+                }
 
-                // Add Entry to pinboard.
-                bot.addPin(entry)
+                val entry = EntryLink(link, title, sender, login, channel, tags)
+                entries.links.add(entry)
+                val index = entries.links.lastIndexOf(entry)
+                event.sendMessage(EntriesUtils.buildLink(index, entry))
+
+                pinboard.addPin(event.bot().serverHostname, entry)
 
                 // Queue link for posting to Twitter.
-                bot.twitter.queueEntry(index)
+                twitter.queueEntry(index)
 
-                saveEntries(bot, isBackup)
+                entries.save()
 
                 if (Constants.NO_TITLE == entry.title) {
-                    bot.send(sender, "Please specify a title, by typing:", isPrivate)
-                    bot.send(
-                        sender,
-                        helpFormat("${EntriesUtils.buildLinkCmd(index)}:|This is the title"),
-                        isPrivate
-                    )
+                    event.sendMessage("Please specify a title, by typing:")
+                    event.sendMessage(helpFormat("${EntriesUtils.buildLinkLabel(index)}:|This is the title"))
                 }
             }
         }
     }
 
-    override fun helpResponse(
-        command: String,
-        sender: String,
-        isOp: Boolean,
-        isPrivate: Boolean
-    ): Boolean = false
+    override fun helpResponse(channel: String, topic: String, event: GenericMessageEvent): Boolean = false
 
     override fun matches(message: String): Boolean {
         return message.matches(LINK_MATCH.toRegex())
@@ -180,12 +162,12 @@ class LinksMgr(bot: Mobibot) : AbstractCommand(bot) {
         return Constants.NO_TITLE
     }
 
-    private fun isDupEntry(bot: Mobibot, sender: String, link: String, isPrivate: Boolean): Boolean {
+    private fun isDupEntry(link: String, event: GenericMessageEvent): Boolean {
         synchronized(entries) {
-            for (i in entries.indices) {
-                if (link == entries[i].link) {
-                    val entry: EntryLink = entries[i]
-                    bot.send(sender, bold("Duplicate") + " >> " + EntriesUtils.buildLink(i, entry), isPrivate)
+            for (i in entries.links.indices) {
+                if (link == entries.links[i].link) {
+                    val entry: EntryLink = entries.links[i]
+                    event.sendMessage(bold("Duplicate") + " >> " + EntriesUtils.buildLink(i, entry))
                     return true
                 }
             }
@@ -200,17 +182,6 @@ class LinksMgr(bot: Mobibot) : AbstractCommand(bot) {
                 tags.add(match)
             }
         }
-    }
-
-    private fun saveDayBackup(bot: Mobibot): Boolean {
-        if (today() != startDate) {
-            saveEntries(bot, true)
-            entries.clear()
-            startDate = today()
-            return true
-        }
-
-        return false
     }
 
     override fun setProperty(key: String, value: String) {

@@ -32,19 +32,20 @@
 
 package net.thauvin.erik.mobibot.commands
 
-import net.thauvin.erik.mobibot.Mobibot
 import net.thauvin.erik.mobibot.Utils.helpFormat
+import net.thauvin.erik.mobibot.Utils.sendMessage
 import net.thauvin.erik.mobibot.Utils.toUtcDateTime
+import org.pircbotx.hooks.types.GenericMessageEvent
 import java.time.Clock
 import java.time.LocalDateTime
 
-class Recap(bot: Mobibot) : AbstractCommand(bot) {
+class Recap : AbstractCommand() {
     override val name = "recap"
     override val help = listOf(
         "To list the last 10 public channel messages:",
         helpFormat("%c $name")
     )
-    override val isOp = false
+    override val isOpOnly = false
     override val isPublic = true
     override val isVisible = true
 
@@ -61,26 +62,19 @@ class Recap(bot: Mobibot) : AbstractCommand(bot) {
                 LocalDateTime.now(Clock.systemUTC()).toUtcDateTime()
                         + " - $sender" + (if (isAction) " " else ": ") + message
             )
-            @Suppress("MagicNumber")
             if (recaps.size > 10) {
                 recaps.removeFirst()
             }
         }
     }
 
-    override fun commandResponse(
-        sender: String,
-        login: String,
-        args: String,
-        isOp: Boolean,
-        isPrivate: Boolean
-    ) {
+    override fun commandResponse(channel: String, args: String, event: GenericMessageEvent) {
         if (recaps.isNotEmpty()) {
             for (r in recaps) {
-                bot.send(sender, r, isPrivate)
+                event.sendMessage(r)
             }
         } else {
-            bot.send(sender, "Sorry, nothing to recap.", isPrivate)
+            event.sendMessage("Sorry, nothing to recap.")
         }
     }
 }

@@ -36,38 +36,36 @@ import com.rometools.rome.io.SyndFeedInput
 import com.rometools.rome.io.XmlReader
 import net.thauvin.erik.mobibot.Utils.green
 import net.thauvin.erik.mobibot.Utils.helpFormat
+import net.thauvin.erik.mobibot.Utils.sendMessage
+import net.thauvin.erik.mobibot.entries.FeedsMgr
 import net.thauvin.erik.mobibot.msg.Message
-import net.thauvin.erik.mobibot.msg.PublicMessage
+import net.thauvin.erik.mobibot.msg.NoticeMessage
+import org.pircbotx.hooks.types.GenericMessageEvent
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import java.io.IOException
 import java.net.URL
 
 /**
  * Reads an RSS feed.
  */
-class FeedReader(
-    // Bot
-    private val bot: Mobibot,
-    // Nick of the person who sent the message
-    private val sender: String,
-    // URL to fetch
-    private val url: String
-) : Runnable {
+class FeedReader(private val url: String, val event: GenericMessageEvent) : Runnable {
+    private val logger: Logger = LoggerFactory.getLogger(FeedsMgr::class.java)
+
     /**
      * Fetches the Feed's items.
      */
     override fun run() {
-        with(bot) {
-            try {
-                readFeed(url).forEach {
-                    send(sender, it)
-                }
-            } catch (e: FeedException) {
-                if (logger.isDebugEnabled) logger.debug("Unable to parse the feed at $url", e)
-                send(sender, "An error has occurred while parsing the feed: ${e.message}", false)
-            } catch (e: IOException) {
-                if (logger.isDebugEnabled) logger.debug("Unable to fetch the feed at $url", e)
-                send(sender, "An error has occurred while fetching the feed: ${e.message}", false)
+        try {
+            readFeed(url).forEach {
+                event.sendMessage("", it)
             }
+        } catch (e: FeedException) {
+            if (logger.isWarnEnabled) logger.warn("Unable to parse the feed at $url", e)
+            event.sendMessage("An error has occurred while parsing the feed: ${e.message}")
+        } catch (e: IOException) {
+            if (logger.isWarnEnabled) logger.warn("Unable to fetch the feed at $url", e)
+            event.sendMessage("An error has occurred while fetching the feed: ${e.message}")
         }
     }
 
@@ -81,11 +79,11 @@ class FeedReader(
                 val feed = input.build(reader)
                 val items = feed.entries
                 if (items.isEmpty()) {
-                    messages.add(PublicMessage("There is currently nothing to view."))
+                    messages.add(NoticeMessage("There is currently nothing to view."))
                 } else {
                     items.take(maxItems).forEach {
-                        messages.add(PublicMessage(it.title))
-                        messages.add(PublicMessage(helpFormat(green(it.link), false)))
+                        messages.add(NoticeMessage(it.title))
+                        messages.add(NoticeMessage(helpFormat(green(it.link), false)))
                     }
                 }
             }

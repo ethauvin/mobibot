@@ -33,6 +33,8 @@ package net.thauvin.erik.mobibot
 
 import net.thauvin.erik.mobibot.commands.AbstractCommand
 import net.thauvin.erik.mobibot.modules.AbstractModule
+import org.pircbotx.hooks.events.PrivateMessageEvent
+import org.pircbotx.hooks.types.GenericMessageEvent
 import java.util.Properties
 
 /**
@@ -77,7 +79,7 @@ class Addons {
             if (isEnabled()) {
                 commands.add(this)
                 if (isVisible) {
-                    if (isOp) {
+                    if (isOpOnly) {
                         ops.add(name)
                     } else {
                         names.add(name)
@@ -90,17 +92,18 @@ class Addons {
     /**
      * Execute a command or module.
      */
-    fun exec(sender: String, login: String, cmd: String, args: String, isOp: Boolean, isPrivate: Boolean): Boolean {
-        for (command in commands) {
+    fun exec(channel: String, cmd: String, args: String, event: GenericMessageEvent): Boolean {
+        val cmds = if (event is PrivateMessageEvent) commands else commands.filter { it.isPublic }
+        for (command in cmds) {
             if (command.name.startsWith(cmd)) {
-                command.commandResponse(sender, login, args, isOp, isPrivate)
+                command.commandResponse(channel, args, event)
                 return true
             }
         }
-        val mods = if (isPrivate) modules.filter { it.isPrivateMsgEnabled } else modules
+        val mods = if (event is PrivateMessageEvent) modules.filter { it.isPrivateMsgEnabled } else modules
         for (module in mods) {
             if (module.commands.contains(cmd)) {
-                module.commandResponse(sender, cmd, args, isPrivate)
+                module.commandResponse(channel, cmd, args, event)
                 return true
             }
         }
@@ -110,10 +113,10 @@ class Addons {
     /**
      * Match a command.
      */
-    fun match(sender: String, login: String, message: String, isOp: Boolean, isPrivate: Boolean): Boolean {
+    fun match(channel: String, event: GenericMessageEvent): Boolean {
         for (command in commands) {
-            if (command.matches(message)) {
-                command.commandResponse(sender, login, message, isOp, isPrivate)
+            if (command.matches(event.message)) {
+                command.commandResponse(channel, event.message, event)
                 return true
             }
         }
@@ -123,15 +126,15 @@ class Addons {
     /**
      * Commands and Modules help.
      */
-    fun help(sender: String, topic: String, isOp: Boolean, isPrivate: Boolean): Boolean {
+    fun help(channel: String, topic: String, event: GenericMessageEvent): Boolean {
         for (command in commands) {
             if (command.isVisible && command.name.startsWith(topic)) {
-                return command.helpResponse(topic, sender, isOp, isPrivate)
+                return command.helpResponse(channel, topic, event)
             }
         }
         for (module in modules) {
             if (module.commands.contains(topic)) {
-                return module.helpResponse(sender, isPrivate)
+                return module.helpResponse(event)
             }
         }
         return false

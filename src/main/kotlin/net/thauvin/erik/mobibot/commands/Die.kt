@@ -32,25 +32,35 @@
 
 package net.thauvin.erik.mobibot.commands
 
-import net.thauvin.erik.mobibot.Mobibot
+import net.thauvin.erik.mobibot.Utils.bot
+import net.thauvin.erik.mobibot.Utils.isChannelOp
+import org.pircbotx.hooks.types.GenericMessageEvent
 
-class Die(bot: Mobibot) : AbstractCommand(bot) {
+class Die : AbstractCommand() {
     override val name = "die"
     override val help = emptyList<String>()
-    override val isOp = true
+    override val isOpOnly = true
     override val isPublic = false
     override val isVisible = false
 
-    override fun commandResponse(
-        sender: String,
-        login: String,
-        args: String,
-        isOp: Boolean,
-        isPrivate: Boolean
-    ) {
-        if (isOp) {
-            bot.send("$sender has just signed my death sentence.")
-            bot.shutdown(sender)
+    override fun commandResponse(channel: String, args: String, event: GenericMessageEvent) {
+        with(event.bot()) {
+            if (isChannelOp(channel, event) && (properties[DIE_PROP].isNullOrBlank() || args == properties[DIE_PROP])) {
+                sendIRC().message(channel, "${event.user?.nick} has just signed my death sentence.")
+                stopBotReconnect()
+                sendIRC().quitServer("The Bot is Out There!")
+            }
         }
+    }
+
+    companion object {
+        /**
+         * Max days property.
+         */
+        const val DIE_PROP = "die"
+    }
+
+    init {
+        initProperties(DIE_PROP)
     }
 }

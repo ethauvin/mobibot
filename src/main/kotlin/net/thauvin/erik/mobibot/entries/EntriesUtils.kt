@@ -40,22 +40,22 @@ import net.thauvin.erik.mobibot.Utils.green
  */
 object EntriesUtils {
     /**
-     * Build link cmd based on its index. e.g: L1
+     * Build link label based on its index. e.g: L1
      */
-    fun buildLinkCmd(index: Int): String = Constants.LINK_CMD + (index + 1)
+    fun buildLinkLabel(index: Int): String = Constants.LINK_CMD + (index + 1)
 
     /**
      * Builds an entry's comment for display on the channel.
      */
     fun buildComment(entryIndex: Int, commentIndex: Int, comment: EntryComment): String =
-        ("${buildLinkCmd(entryIndex)}.${commentIndex + 1}: [${comment.nick}] ${comment.comment}")
+        ("${buildLinkLabel(entryIndex)}.${commentIndex + 1}: [${comment.nick}] ${comment.comment}")
 
     /**
      * Builds an entry's link for display on the channel.
      */
     @JvmOverloads
     fun buildLink(entryIndex: Int, entry: EntryLink, isView: Boolean = false): String {
-        val buff = StringBuilder().append(buildLinkCmd(entryIndex)).append(": ")
+        val buff = StringBuilder().append(buildLinkLabel(entryIndex)).append(": ")
             .append('[').append(entry.nick).append(']')
         if (isView && entry.comments.isNotEmpty()) {
             buff.append("[+").append(entry.comments.size).append(']')
@@ -76,5 +76,5 @@ object EntriesUtils {
      * Build an entry's tags/categories for display on the channel.
      */
     fun buildTags(entryIndex: Int, entry: EntryLink): String =
-        buildLinkCmd(entryIndex) + "${Constants.TAG_CMD}: " + entry.pinboardTags.replace(",", ", ")
+        buildLinkLabel(entryIndex) + "${Constants.TAG_CMD}: " + entry.pinboardTags.replace(",", ", ")
 }

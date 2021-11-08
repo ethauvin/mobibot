@@ -31,16 +31,21 @@
  */
 package net.thauvin.erik.mobibot.modules
 
-import net.thauvin.erik.mobibot.Mobibot
 import net.thauvin.erik.mobibot.Utils.bold
+import net.thauvin.erik.mobibot.Utils.bot
 import net.thauvin.erik.mobibot.Utils.buildCmdSyntax
 import net.thauvin.erik.mobibot.Utils.helpFormat
+import net.thauvin.erik.mobibot.Utils.sendList
+import net.thauvin.erik.mobibot.Utils.sendMessage
 import net.thauvin.erik.mobibot.Utils.today
 import net.thauvin.erik.mobibot.msg.ErrorMessage
 import net.thauvin.erik.mobibot.msg.Message
 import net.thauvin.erik.mobibot.msg.PublicMessage
 import org.jdom2.JDOMException
 import org.jdom2.input.SAXBuilder
+import org.pircbotx.hooks.types.GenericMessageEvent
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import java.io.IOException
 import java.net.URL
 import java.text.NumberFormat
@@ -51,84 +56,68 @@ import javax.xml.XMLConstants
 /**
  * The CurrencyConverter module.
  */
-class CurrencyConverter(bot: Mobibot) : ThreadedModule(bot) {
-    override fun commandResponse(
-        sender: String,
-        cmd: String,
-        args: String,
-        isPrivate: Boolean
-    ) {
+class CurrencyConverter : ThreadedModule() {
+    private val logger: Logger = LoggerFactory.getLogger(CurrencyConverter::class.java)
+
+    override fun commandResponse(channel: String, cmd: String, args: String, event: GenericMessageEvent) {
         synchronized(this) {
             if (pubDate != today()) {
                 EXCHANGE_RATES.clear()
             }
         }
-        super.commandResponse(sender, cmd, args, isPrivate)
+        super.commandResponse(channel, cmd, args, event)
     }
 
     /**
      * Converts the specified currencies.
      */
-    override fun run(sender: String, cmd: String, args: String, isPrivate: Boolean) {
-        bot.apply {
-            if (EXCHANGE_RATES.isEmpty()) {
-                try {
-                    loadRates()
-                } catch (e: ModuleException) {
-                    if (logger.isWarnEnabled) logger.warn(e.debugMessage, e)
-                }
+    override fun run(channel: String, cmd: String, args: String, event: GenericMessageEvent) {
+        if (EXCHANGE_RATES.isEmpty()) {
+            try {
+                loadRates()
+            } catch (e: ModuleException) {
+                if (logger.isWarnEnabled) logger.warn(e.debugMessage, e)
             }
+        }
 
-            if (EXCHANGE_RATES.isEmpty()) {
-                send(sender, EMPTY_RATE_TABLE, true)
-            } else if (args.matches("\\d+([,\\d]+)?(\\.\\d+)? [a-zA-Z]{3}+ to [a-zA-Z]{3}+".toRegex())) {
-                val msg = convertCurrency(args)
-                send(sender, msg)
-                if (msg.isError) {
-                    helpResponse(sender, isPrivate)
-                }
-            } else if (args.contains(CURRENCY_RATES_KEYWORD)) {
-                send(sender, "The reference rates for ${bold(pubDate)} are:", isPrivate)
-                @Suppress("MagicNumber")
-                sendList(sender, currencyRates(), 3, "   ", isPrivate, isIndent = true)
-            } else {
-                helpResponse(sender, isPrivate)
+        if (EXCHANGE_RATES.isEmpty()) {
+            event.respond(EMPTY_RATE_TABLE)
+        } else if (args.matches("\\d+([,\\d]+)?(\\.\\d+)? [a-zA-Z]{3}+ to [a-zA-Z]{3}+".toRegex())) {
+            val msg = convertCurrency(args)
+            event.respond(msg.msg)
+            if (msg.isError) {
+                helpResponse(event)
             }
+        } else if (args.contains(CURRENCY_RATES_KEYWORD)) {
+            event.sendMessage("The reference rates for ${bold(pubDate)} are:")
+            event.sendList(currencyRates(), 3, "   ", isIndent = true)
+        } else {
+            helpResponse(event)
         }
     }
 
-    override fun helpResponse(sender: String, isPrivate: Boolean): Boolean {
-        with(bot) {
-            if (EXCHANGE_RATES.isEmpty()) {
-                try {
-                    loadRates()
-                } catch (e: ModuleException) {
-                    if (logger.isDebugEnabled) logger.debug(e.debugMessage, e)
-                }
+    override fun helpResponse(event: GenericMessageEvent): Boolean {
+        if (EXCHANGE_RATES.isEmpty()) {
+            try {
+                loadRates()
+            } catch (e: ModuleException) {
+                if (logger.isWarnEnabled) logger.warn(e.debugMessage, e)
             }
-            if (EXCHANGE_RATES.isEmpty()) {
-                send(sender, EMPTY_RATE_TABLE, isPrivate)
-            } else {
-                send(sender, "To convert from one currency to another:", isPrivate)
-                send(
-                    sender,
-                    helpFormat(
-                        buildCmdSyntax("%c $CURRENCY_CMD 100 USD to EUR", nick, isPrivateMsgEnabled)
-                    ),
-                    isPrivate
+        }
+        if (EXCHANGE_RATES.isEmpty()) {
+            event.sendMessage(EMPTY_RATE_TABLE)
+        } else {
+            val nick = event.bot().nick
+            event.sendMessage("To convert from one currency to another:")
+            event.sendMessage(helpFormat(buildCmdSyntax("%c $CURRENCY_CMD 100 USD to EUR", nick, isPrivateMsgEnabled)))
+            event.sendMessage("For a listing of current reference rates:")
+            event.sendMessage(
+                helpFormat(
+                    buildCmdSyntax("%c $CURRENCY_CMD $CURRENCY_RATES_KEYWORD", nick, isPrivateMsgEnabled)
                 )
-                send(sender, "For a listing of current reference rates:", isPrivate)
-                send(
-                    sender,
-                    helpFormat(
-                        buildCmdSyntax("%c $CURRENCY_CMD $CURRENCY_RATES_KEYWORD", nick, isPrivateMsgEnabled)
-                    ),
-                    isPrivate
-                )
-                send(sender, "The supported currencies are: ", isPrivate)
-                @Suppress("MagicNumber")
-                sendList(sender, ArrayList(EXCHANGE_RATES.keys), 11, isPrivate = isPrivate, isIndent = true)
-            }
+            )
+            event.sendMessage("The supported currencies are: ")
+            event.sendList(ArrayList(EXCHANGE_RATES.keys), 11, isIndent = true)
         }
         return true
     }
@@ -161,7 +150,6 @@ class CurrencyConverter(bot: Mobibot) : ThreadedModule(bot) {
         /**
          * Converts from a currency to another.
          */
-        @Suppress("MagicNumber")
         @JvmStatic
         fun convertCurrency(query: String): Message {
             val cmds = query.split(" ")
@@ -194,7 +182,6 @@ class CurrencyConverter(bot: Mobibot) : ThreadedModule(bot) {
         fun currencyRates(): List<String> {
             val rates = mutableListOf<String>()
             for ((key, value) in EXCHANGE_RATES.toSortedMap()) {
-                @Suppress("MagicNumber")
                 rates.add("$key: ${value.padStart(8)}")
             }
             return rates

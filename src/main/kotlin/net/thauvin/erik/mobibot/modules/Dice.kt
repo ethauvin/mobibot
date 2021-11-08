@@ -31,37 +31,33 @@
  */
 package net.thauvin.erik.mobibot.modules
 
-import net.thauvin.erik.mobibot.Mobibot
+import net.thauvin.erik.mobibot.Utils.bold
+import net.thauvin.erik.mobibot.Utils.bot
 import net.thauvin.erik.mobibot.Utils.helpFormat
+import org.pircbotx.hooks.types.GenericMessageEvent
 import kotlin.random.Random
 
 /**
  * The Dice module.
  */
-class Dice(bot: Mobibot) : AbstractModule(bot) {
-    override fun commandResponse(
-        sender: String,
-        cmd: String,
-        args: String,
-        isPrivate: Boolean
-    ) {
+class Dice : AbstractModule() {
+    override fun commandResponse(channel: String, cmd: String, args: String, event: GenericMessageEvent) {
         val botRoll = roll()
         val roll = roll()
         val botTotal = botRoll.first + botRoll.second
         val total = roll.first + roll.second
-        with(bot) {
-            send(
-                channel,
-                "$sender rolled ${total}: ${DICE_FACES[roll.first]}  ${DICE_FACES[roll.second]}",
-                isPrivate
+        with(event.bot()) {
+            event.respond(
+                "you rolled ${DICE_FACES[roll.first]}  ${DICE_FACES[roll.second]}  for a total of ${bold(total)}"
             )
-            action(
-                "rolled ${botTotal}: ${DICE_FACES[botRoll.first]}  ${DICE_FACES[botRoll.second]}"
+            sendIRC().action(
+                channel,
+                "rolled ${DICE_FACES[botRoll.first]}  ${DICE_FACES[botRoll.second]}  for a total of ${bold(botTotal)}"
             )
             when (winLoseOrTie(botTotal, total)) {
-                Result.WIN -> action("wins.")
-                Result.LOSE -> action("lost.")
-                else -> action("tied.")
+                Result.WIN -> sendIRC().action(channel, "wins.")
+                Result.LOSE -> sendIRC().action(channel, "lost.")
+                else -> sendIRC().action(channel, "tied.")
             }
         }
     }

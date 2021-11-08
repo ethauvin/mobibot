@@ -31,10 +31,10 @@
  */
 package net.thauvin.erik.mobibot.commands.tell
 
-import org.apache.logging.log4j.Logger
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import java.io.BufferedInputStream
 import java.io.BufferedOutputStream
-import java.io.FileNotFoundException
 import java.io.IOException
 import java.io.ObjectInputStream
 import java.io.ObjectOutputStream
@@ -42,11 +42,14 @@ import java.nio.file.Files
 import java.nio.file.Paths
 import java.time.Clock
 import java.time.LocalDateTime
+import kotlin.io.path.exists
 
 /**
  * The Tell Messages Manager.
  */
 object TellMessagesMgr {
+    val logger: Logger = LoggerFactory.getLogger(TellMessagesMgr::class.java)
+
     /**
      * Cleans the messages queue.
      */
@@ -58,22 +61,22 @@ object TellMessagesMgr {
     /**
      * Loads the messages.
      */
-
-    fun load(file: String, logger: Logger): List<TellMessage> {
-        try {
-            ObjectInputStream(
-                BufferedInputStream(Files.newInputStream(Paths.get(file)))
-            ).use { input ->
-                if (logger.isDebugEnabled) logger.debug("Loading the messages.")
-                @Suppress("UNCHECKED_CAST")
-                return input.readObject() as List<TellMessage>
+    fun load(file: String): List<TellMessage> {
+        val serialFile = Paths.get(file)
+        if (serialFile.exists()) {
+            try {
+                ObjectInputStream(
+                    BufferedInputStream(Files.newInputStream(serialFile))
+                ).use { input ->
+                    if (logger.isDebugEnabled) logger.debug("Loading the messages.")
+                    @Suppress("UNCHECKED_CAST")
+                    return input.readObject() as List<TellMessage>
+                }
+            } catch (e: IOException) {
+                logger.error("An IO error occurred loading the messages queue.", e)
+            } catch (e: ClassNotFoundException) {
+                logger.error("An error occurred loading the messages queue.", e)
             }
-        } catch (ignore: FileNotFoundException) {
-            // Do nothing
-        } catch (e: IOException) {
-            logger.error("An IO error occurred loading the messages queue.", e)
-        } catch (e: ClassNotFoundException) {
-            logger.error("An error occurred loading the messages queue.", e)
         }
         return listOf()
     }
@@ -81,7 +84,7 @@ object TellMessagesMgr {
     /**
      * Saves the messages.
      */
-    fun save(file: String, messages: List<TellMessage?>?, logger: Logger) {
+    fun save(file: String, messages: List<TellMessage?>?) {
         try {
             BufferedOutputStream(Files.newOutputStream(Paths.get(file))).use { bos ->
                 ObjectOutputStream(bos).use { output ->

@@ -33,15 +33,18 @@
 package net.thauvin.erik.mobibot.commands.links
 
 import net.thauvin.erik.mobibot.Constants
-import net.thauvin.erik.mobibot.Mobibot
 import net.thauvin.erik.mobibot.Utils.bold
+import net.thauvin.erik.mobibot.Utils.bot
 import net.thauvin.erik.mobibot.Utils.helpFormat
+import net.thauvin.erik.mobibot.Utils.isChannelOp
+import net.thauvin.erik.mobibot.Utils.sendMessage
 import net.thauvin.erik.mobibot.commands.AbstractCommand
 import net.thauvin.erik.mobibot.commands.links.LinksMgr.Companion.entries
 import net.thauvin.erik.mobibot.entries.EntriesUtils
 import net.thauvin.erik.mobibot.entries.EntryLink
+import org.pircbotx.hooks.types.GenericMessageEvent
 
-class Posting(bot: Mobibot) : AbstractCommand(bot) {
+class Posting : AbstractCommand() {
     override val name = "posting"
     override val help = listOf(
         "Post a URL, by saying it on a line on its own:",
@@ -55,30 +58,27 @@ class Posting(bot: Mobibot) : AbstractCommand(bot) {
         "To edit a comment, see: ",
         helpFormat("%c ${Constants.HELP_CMD} ${Comment.COMMAND}")
     )
-    override val isOp = false
+    override val isOpOnly = false
     override val isPublic = true
     override val isVisible = true
 
-    override fun commandResponse(
-        sender: String,
-        login: String,
-        args: String,
-        isOp: Boolean,
-        isPrivate: Boolean
-    ) {
+    override fun commandResponse(channel: String, args: String, event: GenericMessageEvent) {
         val cmds = args.substring(1).split(":", limit = 2)
-        val index = cmds[0].toInt() - 1
+        val entryIndex = cmds[0].toInt() - 1
 
-        if (index < entries.size) {
-            when (val cmd = cmds[1].trim()) {
-                "" -> showEntry(index)
-                "-" -> removeEntry(sender, login, isOp, index) // L1:-
-                else -> {
+        if (entryIndex < entries.links.size) {
+            val cmd = cmds[1].trim()
+            if (cmd.isBlank()) {
+                showEntry(entryIndex, event) // L1:
+            } else if (LinksMgr.isUpToDate(event)) {
+                if (cmd == "-") {
+                    removeEntry(channel, entryIndex, event) // L1:-
+                } else {
                     when (cmd[0]) {
-                        '|' -> changeTitle(cmd, index) // L1:|<title>
-                        '=' -> changeUrl(cmd, login, isOp, index) // L1:=<url>
-                        '?' -> changeAuthor(cmd, sender, isOp, index) // L1:?<author>
-                        else -> addComment(cmd, sender, index) // L1:<comment>
+                        '|' -> changeTitle(cmd, entryIndex, event) // L1:|<title>
+                        '=' -> changeUrl(channel, cmd, entryIndex, event) // L1:=<url>
+                        '?' -> changeAuthor(channel, cmd, entryIndex, event) // L1:?<author>
+                        else -> addComment(cmd, entryIndex, event) // L1:<comment>
                     }
                 }
             }
@@ -89,73 +89,75 @@ class Posting(bot: Mobibot) : AbstractCommand(bot) {
         return message.matches("${Constants.LINK_CMD}[0-9]+:.*".toRegex())
     }
 
-    private fun addComment(cmd: String, sender: String, index: Int) {
-        val entry: EntryLink = entries[index]
-        val commentIndex = entry.addComment(cmd, sender)
+    private fun addComment(cmd: String, entryIndex: Int, event: GenericMessageEvent) {
+        val entry: EntryLink = entries.links[entryIndex]
+        val commentIndex = entry.addComment(cmd, event.user.nick)
         val comment = entry.getComment(commentIndex)
-        bot.send(sender, EntriesUtils.buildComment(index, commentIndex, comment), false)
-        LinksMgr.saveEntries(bot, false)
+        event.sendMessage(EntriesUtils.buildComment(entryIndex, commentIndex, comment))
+        entries.save()
     }
 
-    private fun changeTitle(cmd: String, index: Int) {
+    private fun changeTitle(cmd: String, entryIndex: Int, event: GenericMessageEvent) {
         if (cmd.length > 1) {
-            val entry: EntryLink = entries[index]
+            val entry: EntryLink = entries.links[entryIndex]
             entry.title = cmd.substring(1).trim()
-            bot.updatePin(entry.link, entry)
-            bot.send(EntriesUtils.buildLink(index, entry))
-            LinksMgr.saveEntries(bot, false)
+            LinksMgr.pinboard.updatePin(event.bot().serverHostname, entry.link, entry)
+            event.sendMessage(EntriesUtils.buildLink(entryIndex, entry))
+            entries.save()
         }
     }
 
-    private fun changeUrl(cmd: String, login: String, isOp: Boolean, index: Int) {
-        val entry: EntryLink = entries[index]
-        if (entry.login == login || isOp) {
+    private fun changeUrl(channel: String, cmd: String, entryIndex: Int, event: GenericMessageEvent) {
+        val entry: EntryLink = entries.links[entryIndex]
+        if (entry.login == event.user.login || isChannelOp(channel, event)) {
             val link = cmd.substring(1)
             if (link.matches(LinksMgr.LINK_MATCH.toRegex())) {
                 val oldLink = entry.link
                 entry.link = link
-                bot.updatePin(oldLink, entry)
-                bot.send(EntriesUtils.buildLink(index, entry))
-                LinksMgr.saveEntries(bot, false)
+                LinksMgr.pinboard.updatePin(event.bot().serverHostname, oldLink, entry)
+                event.sendMessage(EntriesUtils.buildLink(entryIndex, entry))
+                entries.save()
             }
         }
     }
 
-    private fun changeAuthor(cmd: String, sender: String, isOp: Boolean, index: Int) {
-        if (isOp) {
+    private fun changeAuthor(channel: String, cmd: String, index: Int, event: GenericMessageEvent) {
+        if (isChannelOp(channel, event)) {
             if (cmd.length > 1) {
-                val entry: EntryLink = entries[index]
+                val entry: EntryLink = entries.links[index]
                 entry.nick = cmd.substring(1)
-                bot.send(EntriesUtils.buildLink(index, entry))
-                LinksMgr.saveEntries(bot, false)
+                LinksMgr.pinboard.updatePin(event.bot().serverHostname, entry.link, entry)
+                event.sendMessage(EntriesUtils.buildLink(index, entry))
+                entries.save()
             }
         } else {
-            bot.send(sender, "Please ask a channel op to change the author of this link for you.", false)
+            event.sendMessage("Please ask a channel op to change the author of this link for you.")
         }
     }
 
-    private fun removeEntry(sender: String, login: String, isOp: Boolean, index: Int) {
-        val entry: EntryLink = entries[index]
-        if (entry.login == login || isOp) {
-            bot.deletePin(index, entry)
-            entries.removeAt(index)
-            bot.send("Entry ${EntriesUtils.buildLinkCmd(index)} removed.")
-            LinksMgr.saveEntries(bot, false)
+    private fun removeEntry(channel: String, index: Int, event: GenericMessageEvent) {
+        val entry: EntryLink = entries.links[index]
+        if (entry.login == event.user.login || isChannelOp(channel, event)) {
+            LinksMgr.pinboard.deletePin(entry)
+            LinksMgr.twitter.removeEntry(index)
+            entries.links.removeAt(index)
+            event.sendMessage("Entry ${EntriesUtils.buildLinkLabel(index)} removed.")
+            entries.save()
         } else {
-            bot.send(sender, "Please ask a channel op to remove this entry for you.", false)
+            event.sendMessage("Please ask a channel op to remove this entry for you.")
         }
     }
 
-    private fun showEntry(index: Int) {
-        val entry: EntryLink = entries[index]
-        bot.send(EntriesUtils.buildLink(index, entry))
+    private fun showEntry(index: Int, event: GenericMessageEvent) {
+        val entry: EntryLink = entries.links[index]
+        event.sendMessage(EntriesUtils.buildLink(index, entry))
         if (entry.tags.isNotEmpty()) {
-            bot.send(EntriesUtils.buildTags(index, entry))
+            event.sendMessage(EntriesUtils.buildTags(index, entry))
         }
         if (entry.comments.isNotEmpty()) {
             val comments = entry.comments
             for (i in comments.indices) {
-                bot.send(EntriesUtils.buildComment(index, i, comments[i]))
+                event.sendMessage(EntriesUtils.buildComment(index, i, comments[i]))
             }
         }
     }

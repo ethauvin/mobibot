@@ -46,11 +46,6 @@ object Constants {
     const val DEBUG_ARG = "debug"
 
     /**
-     * The debug command.
-     */
-    const val DEBUG_CMD = "debug"
-
-    /**
      * Default IRC Port.
      */
     const val DEFAULT_PORT = 6667
@@ -58,12 +53,7 @@ object Constants {
     /**
      * Default IRC Server.
      */
-    const val DEFAULT_SERVER = "irc.freenode.net"
-
-    /**
-     * The die command.
-     */
-    const val DIE_CMD = "die"
+    const val DEFAULT_SERVER = "irc.libera.chat"
 
     /**
      * Help command line argument.
@@ -74,11 +64,6 @@ object Constants {
      * The help command.
      */
     const val HELP_CMD = "help"
-
-    /**
-     * The kill command.
-     */
-    const val KILL_CMD = "kill"
 
     /**
      * The link command.

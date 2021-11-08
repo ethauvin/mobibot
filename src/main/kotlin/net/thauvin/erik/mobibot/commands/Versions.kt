@@ -31,12 +31,14 @@
  */
 package net.thauvin.erik.mobibot.commands
 
-import net.thauvin.erik.mobibot.Mobibot
 import net.thauvin.erik.mobibot.ReleaseInfo
 import net.thauvin.erik.mobibot.Utils.helpFormat
+import net.thauvin.erik.mobibot.Utils.isChannelOp
+import net.thauvin.erik.mobibot.Utils.sendList
 import net.thauvin.erik.mobibot.Utils.toIsoLocalDate
+import org.pircbotx.hooks.types.GenericMessageEvent
 
-class Versions(bot: Mobibot) : AbstractCommand(bot) {
+class Versions : AbstractCommand() {
     private val allVersions = listOf(
         "Version:  ${ReleaseInfo.VERSION} (${ReleaseInfo.BUILDDATE.toIsoLocalDate()})",
         "Platform: " + System.getProperty("os.name") + ' ' + System.getProperty("os.version")
@@ -45,21 +47,13 @@ class Versions(bot: Mobibot) : AbstractCommand(bot) {
     )
     override val name = "versions"
     override val help = listOf("To view the versions data (bot, platform, java, etc.):", helpFormat("%c $name"))
-    override val isOp = true
+    override val isOpOnly = true
     override val isPublic = false
     override val isVisible = true
 
-    override fun commandResponse(
-        sender: String,
-        login: String,
-        args: String,
-        isOp: Boolean,
-        isPrivate: Boolean
-    ) {
-        if (isOp) {
-            bot.sendList(sender, allVersions, 1, isPrivate = isPrivate)
-        } else {
-            bot.helpDefault(sender, false, isPrivate)
+    override fun commandResponse(channel: String, args: String, event: GenericMessageEvent) {
+        if (isChannelOp(channel, event)) {
+            event.sendList(allVersions, 1)
         }
     }
 }

@@ -33,14 +33,15 @@
 package net.thauvin.erik.mobibot.modules
 
 
-import org.assertj.core.api.Assertions.assertThat
+import assertk.assertThat
+import assertk.assertions.isEqualTo
 import org.testng.annotations.Test
 
 class DiceTest {
     @Test
     fun testWinLoseOrTie() {
-        assertThat(Dice.winLoseOrTie(6, 6)).describedAs("6 vs. 6").isEqualTo(Dice.Result.TIE)
-        assertThat(Dice.winLoseOrTie(6, 5)).describedAs("6 vs. 5").isEqualTo(Dice.Result.WIN)
-        assertThat(Dice.winLoseOrTie(5, 6)).describedAs("5 vs. 6").isEqualTo(Dice.Result.LOSE)
+        assertThat(Dice.winLoseOrTie(6, 6), "6 vs. 6").isEqualTo(Dice.Result.TIE)
+        assertThat(Dice.winLoseOrTie(6, 5), "6 vs. 5").isEqualTo(Dice.Result.WIN)
+        assertThat(Dice.winLoseOrTie(5, 6), "5 vs. 6").isEqualTo(Dice.Result.LOSE)
     }
 }

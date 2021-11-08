@@ -32,35 +32,29 @@
 
 package net.thauvin.erik.mobibot.commands
 
-import net.thauvin.erik.mobibot.Mobibot
 import net.thauvin.erik.mobibot.Utils.helpFormat
+import net.thauvin.erik.mobibot.Utils.isChannelOp
+import net.thauvin.erik.mobibot.Utils.sendList
+import org.pircbotx.hooks.types.GenericMessageEvent
 
-class Modules(bot: Mobibot) : AbstractCommand(bot) {
+class Modules(private val modulesNames: List<String>) : AbstractCommand() {
     override val name = "modules"
     override val help = listOf("To view a list of enabled modules:", helpFormat("%c $name"))
-    override val isOp = true
+    override val isOpOnly = true
     override val isPublic = false
     override val isVisible = true
 
-    override fun commandResponse(
-        sender: String,
-        login: String,
-        args: String,
-        isOp: Boolean,
-        isPrivate: Boolean
-    ) {
-        with(bot) {
-            if (isOp) {
-                if (modulesNames.isEmpty()) {
-                    send(sender, "There are no enabled modules.", isPrivate)
-                } else {
-                    send(sender, "The enabled modules are: ", isPrivate)
-                    @Suppress("MagicNumber")
-                    sendList(sender, modulesNames, 7, isPrivate = isPrivate, isIndent = true)
-                }
+    override fun commandResponse(channel: String, args: String, event: GenericMessageEvent) {
+        if (isChannelOp(channel, event)) {
+            if (modulesNames.isEmpty()) {
+                event.respondPrivateMessage("There are no enabled modules.")
             } else {
-                helpDefault(sender, isOp, isPrivate)
+                event.respondPrivateMessage("The enabled modules are: ")
+                event.sendList(modulesNames, 7, isIndent = true)
             }
+        } else {
+            helpResponse(channel, args, event)
         }
     }
 }
+

@@ -31,9 +31,11 @@
  */
 package net.thauvin.erik.mobibot.modules
 
+import assertk.assertThat
+import assertk.assertions.any
+import assertk.assertions.contains
 import net.thauvin.erik.mobibot.modules.Lookup.Companion.nslookup
 import net.thauvin.erik.mobibot.modules.Lookup.Companion.whois
-import org.assertj.core.api.Assertions.assertThat
 import org.testng.annotations.Test
 
 /**
@@ -44,14 +46,13 @@ class LookupTest {
     @Throws(Exception::class)
     fun testLookup() {
         val result = nslookup("apple.com")
-        assertThat(result).describedAs("lookup(apple.com)").contains("17.253.144.10")
+        assertThat(result, "lookup(apple.com)").contains("17.253.144.10")
     }
 
     @Test
     @Throws(Exception::class)
     fun testWhois() {
         val result = whois("17.178.96.59", Lookup.WHOIS_HOST)
-        assertThat(result).describedAs("whois(17.178.96.59/Apple Inc.")
-            .anyMatch { it.contains("Apple Inc.") }
+        assertThat(result, "whois(17.178.96.59/Apple Inc.").any { it.contains("Apple Inc.") }
     }
 }

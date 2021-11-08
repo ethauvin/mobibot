@@ -31,8 +31,13 @@
  */
 package net.thauvin.erik.mobibot.modules
 
+import assertk.all
+import assertk.assertThat
+import assertk.assertions.isEqualTo
+import assertk.assertions.isGreaterThan
+import assertk.assertions.prop
+import net.thauvin.erik.crypto.CryptoPrice
 import net.thauvin.erik.mobibot.modules.CryptoPrices.Companion.currentPrice
-import org.assertj.core.api.Assertions.assertThat
 import org.testng.annotations.Test
 
 /**
@@ -43,11 +48,17 @@ class CryptoPricesTest {
     @Throws(ModuleException::class)
     fun testMarketPrice() {
         var price = currentPrice(listOf("BTC"))
-        assertThat(price).extracting("base", "currency").containsExactly("BTC", "USD")
-        assertThat(price.amount.signum()).describedAs("BTC > 0").isGreaterThan(0)
+        assertThat(price, "BTC in USD").all {
+            prop(CryptoPrice::base).isEqualTo("BTC")
+            prop(CryptoPrice::currency).isEqualTo("USD")
+            prop(CryptoPrice::amount).transform { it.signum() }.isGreaterThan(0)
+        }
 
         price = currentPrice(listOf("ETH", "EUR"))
-        assertThat(price).extracting("base", "currency").containsExactly("ETH", "EUR")
-        assertThat(price.amount.signum()).describedAs("ETH > 0").isGreaterThan(0)
+        assertThat(price, "ETH in EUR").all {
+            prop(CryptoPrice::base).isEqualTo("ETH")
+            prop(CryptoPrice::currency).isEqualTo("EUR")
+            prop(CryptoPrice::amount).transform { it.signum() }.isGreaterThan(0)
+        }
     }
 }

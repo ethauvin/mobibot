@@ -31,11 +31,20 @@
  */
 package net.thauvin.erik.mobibot.modules
 
+import assertk.all
+import assertk.assertThat
+import assertk.assertions.hasNoCause
+import assertk.assertions.isEqualTo
+import assertk.assertions.isFailure
+import assertk.assertions.isInstanceOf
+import assertk.assertions.isNotEmpty
+import assertk.assertions.matches
+import assertk.assertions.prop
+import net.thauvin.erik.mobibot.ExceptionSanitizer.sanitize
 import net.thauvin.erik.mobibot.LocalProperties
-import net.thauvin.erik.mobibot.Sanitize.sanitizeException
 import net.thauvin.erik.mobibot.modules.StockQuote.Companion.getQuote
-import org.assertj.core.api.Assertions.assertThat
-import org.assertj.core.api.Assertions.assertThatThrownBy
+import net.thauvin.erik.mobibot.msg.ErrorMessage
+import net.thauvin.erik.mobibot.msg.Message
 import org.testng.annotations.Test
 
 /**
@@ -52,24 +61,25 @@ class StockQuoteTest : LocalProperties() {
         val apiKey = getProperty(StockQuote.ALPHAVANTAGE_API_KEY_PROP)
         try {
             val messages = getQuote("apple inc", apiKey)
-            assertThat(messages).describedAs("response not empty").isNotEmpty
-            assertThat(messages[0].msg).describedAs("same stock symbol").matches("Symbol: AAPL .*")
-            assertThat(messages[1].msg).describedAs("price label").matches(buildMatch("Price"))
-            assertThat(messages[2].msg).describedAs("previous label").matches(buildMatch("Previous"))
-            assertThat(messages[3].msg).describedAs("open label").matches(buildMatch("Open"))
-            try {
-                getQuote("blahfoo", apiKey)
-            } catch (e: ModuleException) {
-                assertThat(e.message).describedAs("invalid symbol").containsIgnoringCase(StockQuote.INVALID_SYMBOL)
+            assertThat(messages, "response not empty").isNotEmpty()
+            assertThat(messages[0].msg, "same stock symbol").matches("Symbol: AAPL .*".toRegex())
+            assertThat(messages[1].msg, "price label").matches(buildMatch("Price").toRegex())
+            assertThat(messages[2].msg, "previous label").matches(buildMatch("Previous").toRegex())
+            assertThat(messages[3].msg, "open label").matches(buildMatch("Open").toRegex())
+
+            assertThat(getQuote("blahfoo", apiKey).first(), "invalid symbol").all {
+                isInstanceOf(ErrorMessage::class.java)
+                prop(Message::msg).isEqualTo(StockQuote.INVALID_SYMBOL)
             }
-            assertThatThrownBy { getQuote("test", "") }.describedAs("no API key")
-                .isInstanceOf(ModuleException::class.java).hasNoCause()
-            assertThatThrownBy { getQuote("", "apikey") }.describedAs("no symbol")
-                .isInstanceOf(ModuleException::class.java).hasNoCause()
+            assertThat(getQuote("", "apikey").first(), "empty symbol").all {
+                isInstanceOf(ErrorMessage::class.java)
+                prop(Message::msg).isEqualTo(StockQuote.INVALID_SYMBOL)
+            }
+            assertThat { getQuote("test", "") }.isFailure().isInstanceOf(ModuleException::class.java).hasNoCause()
         } catch (e: ModuleException) {
             // Avoid displaying api keys in CI logs
             if ("true" == System.getenv("CI")) {
-                throw sanitizeException(e, apiKey)
+                throw e.sanitize(apiKey)
             } else {
                 throw e
             }

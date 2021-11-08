@@ -31,11 +31,13 @@
  */
 package net.thauvin.erik.mobibot.modules
 
+import assertk.assertThat
+import assertk.assertions.isEqualTo
+import assertk.assertions.isFailure
+import assertk.assertions.isInstanceOf
 import net.objecthunter.exp4j.tokenizer.UnknownFunctionOrVariableException
 import net.thauvin.erik.mobibot.Utils.bold
 import net.thauvin.erik.mobibot.modules.Calc.Companion.calculate
-import org.assertj.core.api.Assertions.assertThat
-import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.testng.annotations.Test
 
 /**
@@ -44,11 +46,11 @@ import org.testng.annotations.Test
 class CalcTest {
     @Test
     fun testCalculate() {
-        assertThat(calculate("1 + 1")).describedAs("calculate(1+1)").isEqualTo("1+1 = %s", bold(2))
-        assertThat(calculate("1 -3")).describedAs("calculate(1 -3)").isEqualTo("1-3 = %s", bold(-2))
-        assertThat(calculate("pi+π+e+φ")).describedAs("calculate(pi+π+e+φ)")
-            .isEqualTo("pi+π+e+φ = %s", bold("10.62"))
-        assertThatThrownBy { calculate("one + one") }.describedAs("calculate(one+one)")
-            .isInstanceOf(UnknownFunctionOrVariableException::class.java)
+        assertThat(calculate("1 + 1"), "calculate(1+1)").isEqualTo("1+1 = ${bold(2)}")
+        assertThat(calculate("1 -3"), "calculate(1 -3)").isEqualTo("1-3 = ${bold(-2)}")
+        assertThat(calculate("pi+π+e+φ"), "calculate(pi+π+e+φ)")
+            .isEqualTo("pi+π+e+φ = ${bold("10.62")}")
+        assertThat { calculate("one + one") }
+            .isFailure().isInstanceOf(UnknownFunctionOrVariableException::class.java)
     }
 }

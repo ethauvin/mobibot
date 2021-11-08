@@ -32,31 +32,31 @@
 
 package net.thauvin.erik.mobibot.commands
 
-import net.thauvin.erik.mobibot.Mobibot
+import net.thauvin.erik.mobibot.Utils.bot
 import net.thauvin.erik.mobibot.Utils.buildCmdSyntax
+import net.thauvin.erik.mobibot.Utils.isChannelOp
+import net.thauvin.erik.mobibot.Utils.sendMessage
+import org.pircbotx.hooks.events.PrivateMessageEvent
+import org.pircbotx.hooks.types.GenericMessageEvent
 import java.util.concurrent.ConcurrentHashMap
 
-abstract class AbstractCommand(val bot: Mobibot) {
+abstract class AbstractCommand {
     abstract val name: String
     abstract val help: List<String>
-    abstract val isOp: Boolean
+    abstract val isOpOnly: Boolean
     abstract val isPublic: Boolean
     abstract val isVisible: Boolean
 
     val properties: MutableMap<String, String> = ConcurrentHashMap()
 
-    abstract fun commandResponse(
-        sender: String,
-        login: String,
-        args: String,
-        isOp: Boolean,
-        isPrivate: Boolean
-    )
+    abstract fun commandResponse(channel: String, args: String, event: GenericMessageEvent)
 
-    open fun helpResponse(command: String, sender: String, isOp: Boolean, isPrivate: Boolean): Boolean {
-        if (!this.isOp || this.isOp == isOp) {
+    open fun helpResponse(channel: String, topic: String, event: GenericMessageEvent): Boolean {
+        if (!isOpOnly || isOpOnly == isChannelOp(channel, event)) {
             for (h in help) {
-                bot.send(sender, buildCmdSyntax(h, bot.nick, isPrivate), isPrivate)
+                event.sendMessage(
+                    buildCmdSyntax(h, event.bot().nick, event is PrivateMessageEvent || !isPublic),
+                )
             }
             return true
         }

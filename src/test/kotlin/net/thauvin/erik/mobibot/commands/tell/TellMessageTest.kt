@@ -31,7 +31,12 @@
  */
 package net.thauvin.erik.mobibot.commands.tell
 
-import org.assertj.core.api.Assertions.assertThat
+import assertk.all
+import assertk.assertThat
+import assertk.assertions.isEqualTo
+import assertk.assertions.isFalse
+import assertk.assertions.isTrue
+import assertk.assertions.prop
 import org.testng.annotations.Test
 import java.time.Duration
 import java.time.LocalDateTime
@@ -51,18 +56,21 @@ class TellMessageTest {
         val recipient = "recipient"
         val sender = "sender"
         val tellMessage = TellMessage(sender, recipient, message)
-        assertThat(tellMessage).extracting("sender", "recipient", "message")
-            .containsExactly(sender, recipient, message)
-        assertThat(isValidDate(tellMessage.queued)).describedAs("queued is valid date/time").isTrue
-        assertThat(tellMessage.isMatch(sender)).describedAs("match sender").isTrue
-        assertThat(tellMessage.isMatch(recipient)).describedAs("match recipient").isTrue
-        assertThat(tellMessage.isMatch("foo")).describedAs("foo is no match").isFalse
+        assertThat(tellMessage).all {
+            prop(TellMessage::sender).isEqualTo(sender)
+            prop(TellMessage::recipient).isEqualTo(recipient)
+            prop(TellMessage::message).isEqualTo(message)
+        }
+        assertThat(isValidDate(tellMessage.queued), "queued is valid date/time").isTrue()
+        assertThat(tellMessage.isMatch(sender), "match sender").isTrue()
+        assertThat(tellMessage.isMatch(recipient), "match recipient").isTrue()
+        assertThat(tellMessage.isMatch("foo"), "foo is no match").isFalse()
         tellMessage.isReceived = false
-        assertThat(tellMessage.receptionDate).describedAs("reception date not set").isEqualTo(LocalDateTime.MIN)
+        assertThat(tellMessage.receptionDate, "reception date not set").isEqualTo(LocalDateTime.MIN)
         tellMessage.isReceived = true
-        assertThat(tellMessage.isReceived).describedAs("is received").isTrue
-        assertThat(isValidDate(tellMessage.receptionDate)).describedAs("received is valid date/time").isTrue
+        assertThat(tellMessage.isReceived, "is received").isTrue()
+        assertThat(isValidDate(tellMessage.receptionDate), "received is valid date/time").isTrue()
         tellMessage.isNotified = true
-        assertThat(tellMessage.isNotified).describedAs("is notified").isTrue
+        assertThat(tellMessage.isNotified, "is notified").isTrue()
     }
 }

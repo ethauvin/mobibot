@@ -95,7 +95,6 @@ object TwitterOAuth {
                                 """.trimIndent()
                             )
                         } catch (te: TwitterException) {
-                            @Suppress("MagicNumber")
                             if (401 == te.statusCode) {
                                 println("Unable to get the access token.")
                             } else {

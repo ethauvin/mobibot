@@ -35,13 +35,14 @@ package net.thauvin.erik.mobibot.commands
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import net.thauvin.erik.mobibot.FeedReader
-import net.thauvin.erik.mobibot.Mobibot
 import net.thauvin.erik.mobibot.Utils.helpFormat
+import net.thauvin.erik.mobibot.Utils.sendMessage
+import org.pircbotx.hooks.types.GenericMessageEvent
 
-class ChannelFeed(bot: Mobibot, channel: String) : AbstractCommand(bot) {
+class ChannelFeed(channel: String) : AbstractCommand() {
     override val name = channel
     override val help = listOf("To list the last 5 posts from the channel's weblog feed:", helpFormat("%c $channel"))
-    override val isOp = false
+    override val isOpOnly = false
     override val isPublic = true
     override val isVisible = true
 
@@ -53,22 +54,16 @@ class ChannelFeed(bot: Mobibot, channel: String) : AbstractCommand(bot) {
         initProperties(FEED_PROP)
     }
 
-    override fun commandResponse(
-        sender: String,
-        login: String,
-        args: String,
-        isOp: Boolean,
-        isPrivate: Boolean
-    ) {
+    override fun commandResponse(channel: String, args: String, event: GenericMessageEvent) {
         with(properties[FEED_PROP]) {
             if (!isNullOrBlank()) {
                 runBlocking {
                     launch {
-                        FeedReader(bot, sender, this@with).run()
+                        FeedReader(this@with, event).run()
                     }
                 }
             } else {
-                bot.send(sender, "There is no feed setup for this channel.", false)
+                event.sendMessage("There is no feed setup for this channel.")
             }
         }
     }

@@ -109,16 +109,25 @@ class EntryLink : Serializable {
      */
     fun addComment(comment: String, nick: String): Int {
         comments.add(EntryComment(comment, nick))
-        return comments.size - 1
+        return comments.lastIndex
     }
 
     /**
      * Deletes a specific comment.
      */
-    fun deleteComment(index: Int) {
+    fun deleteComment(index: Int): Boolean {
         if (index < comments.size) {
             comments.removeAt(index)
+            return true
         }
+        return false
+    }
+
+    /**
+     * Deletes a comment.
+     */
+    fun deleteComment(entryComment: EntryComment): Boolean {
+        return comments.remove(entryComment)
     }
 
     /**
@@ -154,7 +163,7 @@ class EntryLink : Serializable {
      * Sets a comment.
      */
     fun setComment(index: Int, comment: String?, nick: String?) {
-        if (index < comments.size && (comment != null) && !nick.isNullOrBlank()) {
+        if (index < comments.size && !comment.isNullOrBlank() && !nick.isNullOrBlank()) {
             comments[index] = EntryComment(comment, nick)
         }
     }

@@ -32,9 +32,9 @@
 
 package net.thauvin.erik.mobibot.modules;
 
-import net.thauvin.erik.mobibot.Mobibot;
 import net.thauvin.erik.mobibot.Utils;
 import org.jetbrains.annotations.NotNull;
+import org.pircbotx.hooks.types.GenericMessageEvent;
 
 import java.security.SecureRandom;
 
@@ -66,8 +66,8 @@ public final class War extends AbstractModule {
     /**
      * The default constructor.
      */
-    public War(final Mobibot bot) {
-        super(bot);
+    public War() {
+        super();
 
         commands.add(WAR_CMD);
 
@@ -79,10 +79,8 @@ public final class War extends AbstractModule {
      * {@inheritDoc}
      */
     @Override
-    public void commandResponse(@NotNull final String sender,
-                                @NotNull final String cmd,
-                                @NotNull final String args,
-                                final boolean isPrivate) {
+    public void commandResponse(@NotNull final String channel, @NotNull final String cmd, @NotNull final String args,
+                                @NotNull final GenericMessageEvent event) {
         int i;
         int y;
 
@@ -90,20 +88,20 @@ public final class War extends AbstractModule {
             i = RANDOM.nextInt(HEARTS.length);
             y = RANDOM.nextInt(HEARTS.length);
 
-            getBot().send(sender + " drew: " + DECK[RANDOM.nextInt(DECK.length)][i]);
-            getBot().action("drew: " + DECK[RANDOM.nextInt(DECK.length)][y]);
+            event.respond("you drew " + DECK[RANDOM.nextInt(DECK.length)][i]);
+            event.getBot().sendIRC().action(channel, "drew " + DECK[RANDOM.nextInt(DECK.length)][y]);
 
             if (i != y) {
                 break;
             }
 
-            getBot().send("This means " + bold("WAR") + '!');
+            event.respond("This means " + bold("WAR") + '!');
         }
 
         if (i < y) {
-            getBot().action("lost.");
+            event.getBot().sendIRC().action(channel, "lost.");
         } else {
-            getBot().action("wins.");
+            event.getBot().sendIRC().action(channel, "wins.");
         }
     }
 }

@@ -31,12 +31,11 @@
  */
 package net.thauvin.erik.mobibot.modules
 
-import net.thauvin.erik.mobibot.Mobibot
 import net.thauvin.erik.mobibot.Utils.bold
 import net.thauvin.erik.mobibot.Utils.helpFormat
-import net.thauvin.erik.mobibot.msg.ErrorMessage
-import net.thauvin.erik.mobibot.msg.Message
-import net.thauvin.erik.mobibot.msg.PublicMessage
+import net.thauvin.erik.mobibot.Utils.sendList
+import net.thauvin.erik.mobibot.Utils.sendMessage
+import org.pircbotx.hooks.types.GenericMessageEvent
 import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
@@ -46,7 +45,7 @@ import java.util.Collections
 /**
  * The WorldTime module.
  */
-class WorldTime(bot: Mobibot) : AbstractModule(bot) {
+class WorldTime : AbstractModule() {
     companion object {
         // Beats (Internet Time) keyword
         const val BEATS_KEYWORD = ".beats"
@@ -57,6 +56,12 @@ class WorldTime(bot: Mobibot) : AbstractModule(bot) {
         // The Time command
         private const val TIME_CMD = "time"
 
+        // The zones arguments
+        private const val ZONES_ARGS = "zones"
+
+        // The default zone
+        private const val DEFAULT_ZONE = "PST"
+
         // Date/Time Format
         private var dtf =
             DateTimeFormatter.ofPattern("'The time is ${bold("'HH:mm'")} on ${bold("'EEEE, d MMMM yyyy'")} in '")
@@ -64,342 +69,316 @@ class WorldTime(bot: Mobibot) : AbstractModule(bot) {
         /**
          * Returns the current Internet (beat) Time.
          */
-        @Suppress("MagicNumber", "ImplicitDefaultLocale")
         private fun internetTime(): String {
             val zdt = ZonedDateTime.now(ZoneId.of("UTC+01:00"))
             val beats = ((zdt[ChronoField.SECOND_OF_MINUTE] + zdt[ChronoField.MINUTE_OF_HOUR] * 60
                     + zdt[ChronoField.HOUR_OF_DAY] * 3600) / 86.4).toInt()
-            return String.format("%c%03d", '@', beats)
+            return "%c%03d".format('@', beats)
         }
 
         /**
          * Returns the time for the given timezone/city.
          */
         @JvmStatic
-        fun time(query: String): Message {
-            val tz = COUNTRIES_MAP[(query.substring(query.indexOf(' ') + 1).trim()).uppercase()]
-            val response: String = if (tz != null) {
+        fun time(query: String = DEFAULT_ZONE): String {
+            val tz = COUNTRIES_MAP[(if (query.isNotBlank()) query.trim().uppercase() else DEFAULT_ZONE)]
+            return if (tz != null) {
                 if (BEATS_KEYWORD == tz) {
-                    "The current Internet Time is: ${bold(internetTime())} $BEATS_KEYWORD"
+                    "The current Internet Time is ${bold(internetTime())} $BEATS_KEYWORD"
                 } else {
                     (ZonedDateTime.now().withZoneSameInstant(ZoneId.of(tz)).format(dtf)
                             + bold(tz.substring(tz.lastIndexOf('/') + 1).replace('_', ' ')))
                 }
             } else {
-                return ErrorMessage("Unsupported country/zone. Please try again.")
+                "Unsupported country/zone. Please try again."
             }
-            return PublicMessage(response)
         }
 
         init {
-            // Initialize the countries map
-            val countries = mutableMapOf<String, String>()
-            countries["AD"] = "Europe/Andorra"
-            countries["AE"] = "Asia/Dubai"
-            countries["AF"] = "Asia/Kabul"
-            countries["AG"] = "America/Antigua"
-            countries["AI"] = "America/Anguilla"
-            countries["AKDT"] = "America/Anchorage"
-            countries["AKST"] = "America/Anchorage"
-            countries["AL"] = "Europe/Tirane"
-            countries["AM"] = "Asia/Yerevan"
-            countries["AO"] = "Africa/Luanda"
-            countries["AQ"] = "Antarctica/South_Pole"
-            countries["AR"] = "America/Argentina/Buenos_Aires"
-            countries["AS"] = "Pacific/Pago_Pago"
-            countries["AT"] = "Europe/Vienna"
-            countries["AU"] = "Australia/Sydney"
-            countries["AW"] = "America/Aruba"
-            countries["AX"] = "Europe/Mariehamn"
-            countries["AZ"] = "Asia/Baku"
-            countries["BA"] = "Europe/Sarajevo"
-            countries["BB"] = "America/Barbados"
-            countries["BD"] = "Asia/Dhaka"
-            countries["BE"] = "Europe/Brussels"
-            countries["BEAT"] = BEATS_KEYWORD
-            countries["BF"] = "Africa/Ouagadougou"
-            countries["BG"] = "Europe/Sofia"
-            countries["BH"] = "Asia/Bahrain"
-            countries["BI"] = "Africa/Bujumbura"
-            countries["BJ"] = "Africa/Porto-Novo"
-            countries["BL"] = "America/St_Barthelemy"
-            countries["BM"] = "Atlantic/Bermuda"
-            countries["BMT"] = BEATS_KEYWORD
-            countries["BN"] = "Asia/Brunei"
-            countries["BO"] = "America/La_Paz"
-            countries["BQ"] = "America/Kralendijk"
-            countries["BR"] = "America/Sao_Paulo"
-            countries["BS"] = "America/Nassau"
-            countries["BT"] = "Asia/Thimphu"
-            countries["BW"] = "Africa/Gaborone"
-            countries["BY"] = "Europe/Minsk"
-            countries["BZ"] = "America/Belize"
-            countries["CA"] = "America/Montreal"
-            countries["CC"] = "Indian/Cocos"
-            countries["CD"] = "Africa/Kinshasa"
-            countries["CDT"] = "America/Chicago"
-            countries["CET"] = "CET"
-            countries["CF"] = "Africa/Bangui"
-            countries["CG"] = "Africa/Brazzaville"
-            countries["CH"] = "Europe/Zurich"
-            countries["CI"] = "Africa/Abidjan"
-            countries["CK"] = "Pacific/Rarotonga"
-            countries["CL"] = "America/Santiago"
-            countries["CM"] = "Africa/Douala"
-            countries["CN"] = "Asia/Shanghai"
-            countries["CO"] = "America/Bogota"
-            countries["CR"] = "America/Costa_Rica"
-            countries["CST"] = "America/Chicago"
-            countries["CU"] = "Cuba"
-            countries["CV"] = "Atlantic/Cape_Verde"
-            countries["CW"] = "America/Curacao"
-            countries["CX"] = "Indian/Christmas"
-            countries["CY"] = "Asia/Nicosia"
-            countries["CZ"] = "Europe/Prague"
-            countries["DE"] = "Europe/Berlin"
-            countries["DJ"] = "Africa/Djibouti"
-            countries["DK"] = "Europe/Copenhagen"
-            countries["DM"] = "America/Dominica"
-            countries["DO"] = "America/Santo_Domingo"
-            countries["DZ"] = "Africa/Algiers"
-            countries["EC"] = "Pacific/Galapagos"
-            countries["EDT"] = "America/New_York"
-            countries["EE"] = "Europe/Tallinn"
-            countries["EG"] = "Africa/Cairo"
-            countries["EH"] = "Africa/El_Aaiun"
-            countries["ER"] = "Africa/Asmara"
-            countries["ES"] = "Europe/Madrid"
-            countries["EST"] = "America/New_York"
-            countries["ET"] = "Africa/Addis_Ababa"
-            countries["FI"] = "Europe/Helsinki"
-            countries["FJ"] = "Pacific/Fiji"
-            countries["FK"] = "Atlantic/Stanley"
-            countries["FM"] = "Pacific/Yap"
-            countries["FO"] = "Atlantic/Faroe"
-            countries["FR"] = "Europe/Paris"
-            countries["GA"] = "Africa/Libreville"
-            countries["GB"] = "Europe/London"
-            countries["GD"] = "America/Grenada"
-            countries["GE"] = "Asia/Tbilisi"
-            countries["GF"] = "America/Cayenne"
-            countries["GG"] = "Europe/Guernsey"
-            countries["GH"] = "Africa/Accra"
-            countries["GI"] = "Europe/Gibraltar"
-            countries["GL"] = "America/Thule"
-            countries["GM"] = "Africa/Banjul"
-            countries["GMT"] = "GMT"
-            countries["GN"] = "Africa/Conakry"
-            countries["GP"] = "America/Guadeloupe"
-            countries["GQ"] = "Africa/Malabo"
-            countries["GR"] = "Europe/Athens"
-            countries["GS"] = "Atlantic/South_Georgia"
-            countries["GT"] = "America/Guatemala"
-            countries["GU"] = "Pacific/Guam"
-            countries["GW"] = "Africa/Bissau"
-            countries["GY"] = "America/Guyana"
-            countries["HK"] = "Asia/Hong_Kong"
-            countries["HN"] = "America/Tegucigalpa"
-            countries["HR"] = "Europe/Zagreb"
-            countries["HST"] = "Pacific/Honolulu"
-            countries["HT"] = "America/Port-au-Prince"
-            countries["HU"] = "Europe/Budapest"
-            countries["ID"] = "Asia/Jakarta"
-            countries["IE"] = "Europe/Dublin"
-            countries["IL"] = "Asia/Tel_Aviv"
-            countries["IM"] = "Europe/Isle_of_Man"
-            countries["IN"] = "Asia/Kolkata"
-            countries["IO"] = "Indian/Chagos"
-            countries["IQ"] = "Asia/Baghdad"
-            countries["IR"] = "Asia/Tehran"
-            countries["IS"] = "Atlantic/Reykjavik"
-            countries["IT"] = "Europe/Rome"
-            countries["JE"] = "Europe/Jersey"
-            countries["JM"] = "Jamaica"
-            countries["JO"] = "Asia/Amman"
-            countries["JP"] = "Asia/Tokyo"
-            countries["KE"] = "Africa/Nairobi"
-            countries["KG"] = "Asia/Bishkek"
-            countries["KH"] = "Asia/Phnom_Penh"
-            countries["KI"] = "Pacific/Tarawa"
-            countries["KM"] = "Indian/Comoro"
-            countries["KN"] = "America/St_Kitts"
-            countries["KP"] = "Asia/Pyongyang"
-            countries["KR"] = "Asia/Seoul"
-            countries["KW"] = "Asia/Riyadh"
-            countries["KY"] = "America/Cayman"
-            countries["KZ"] = "Asia/Oral"
-            countries["LA"] = "Asia/Vientiane"
-            countries["LB"] = "Asia/Beirut"
-            countries["LC"] = "America/St_Lucia"
-            countries["LI"] = "Europe/Vaduz"
-            countries["LK"] = "Asia/Colombo"
-            countries["LR"] = "Africa/Monrovia"
-            countries["LS"] = "Africa/Maseru"
-            countries["LT"] = "Europe/Vilnius"
-            countries["LU"] = "Europe/Luxembourg"
-            countries["LV"] = "Europe/Riga"
-            countries["LY"] = "Africa/Tripoli"
-            countries["MA"] = "Africa/Casablanca"
-            countries["MC"] = "Europe/Monaco"
-            countries["MD"] = "Europe/Chisinau"
-            countries["MDT"] = "America/Denver"
-            countries["ME"] = "Europe/Podgorica"
-            countries["MF"] = "America/Marigot"
-            countries["MG"] = "Indian/Antananarivo"
-            countries["MH"] = "Pacific/Majuro"
-            countries["MK"] = "Europe/Skopje"
-            countries["ML"] = "Africa/Timbuktu"
-            countries["MM"] = "Asia/Yangon"
-            countries["MN"] = "Asia/Ulaanbaatar"
-            countries["MO"] = "Asia/Macau"
-            countries["MP"] = "Pacific/Saipan"
-            countries["MQ"] = "America/Martinique"
-            countries["MR"] = "Africa/Nouakchott"
-            countries["MS"] = "America/Montserrat"
-            countries["MST"] = "America/Denver"
-            countries["MT"] = "Europe/Malta"
-            countries["MU"] = "Indian/Mauritius"
-            countries["MV"] = "Indian/Maldives"
-            countries["MW"] = "Africa/Blantyre"
-            countries["MX"] = "America/Mexico_City"
-            countries["MY"] = "Asia/Kuala_Lumpur"
-            countries["MZ"] = "Africa/Maputo"
-            countries["NA"] = "Africa/Windhoek"
-            countries["NC"] = "Pacific/Noumea"
-            countries["NE"] = "Africa/Niamey"
-            countries["NF"] = "Pacific/Norfolk"
-            countries["NG"] = "Africa/Lagos"
-            countries["NI"] = "America/Managua"
-            countries["NL"] = "Europe/Amsterdam"
-            countries["NO"] = "Europe/Oslo"
-            countries["NP"] = "Asia/Kathmandu"
-            countries["NR"] = "Pacific/Nauru"
-            countries["NU"] = "Pacific/Niue"
-            countries["NZ"] = "Pacific/Auckland"
-            countries["OM"] = "Asia/Muscat"
-            countries["PA"] = "America/Panama"
-            countries["PDT"] = "America/Los_Angeles"
-            countries["PE"] = "America/Lima"
-            countries["PF"] = "Pacific/Tahiti"
-            countries["PG"] = "Pacific/Port_Moresby"
-            countries["PH"] = "Asia/Manila"
-            countries["PK"] = "Asia/Karachi"
-            countries["PL"] = "Europe/Warsaw"
-            countries["PM"] = "America/Miquelon"
-            countries["PN"] = "Pacific/Pitcairn"
-            countries["PR"] = "America/Puerto_Rico"
-            countries["PS"] = "Asia/Gaza"
-            countries["PST"] = "America/Los_Angeles"
-            countries["PT"] = "Europe/Lisbon"
-            countries["PW"] = "Pacific/Palau"
-            countries["PY"] = "America/Asuncion"
-            countries["QA"] = "Asia/Qatar"
-            countries["RE"] = "Indian/Reunion"
-            countries["RO"] = "Europe/Bucharest"
-            countries["RS"] = "Europe/Belgrade"
-            countries["RU"] = "Europe/Moscow"
-            countries["RW"] = "Africa/Kigali"
-            countries["SA"] = "Asia/Riyadh"
-            countries["SB"] = "Pacific/Guadalcanal"
-            countries["SC"] = "Indian/Mahe"
-            countries["SD"] = "Africa/Khartoum"
-            countries["SE"] = "Europe/Stockholm"
-            countries["SG"] = "Asia/Singapore"
-            countries["SH"] = "Atlantic/St_Helena"
-            countries["SI"] = "Europe/Ljubljana"
-            countries["SJ"] = "Atlantic/Jan_Mayen"
-            countries["SK"] = "Europe/Bratislava"
-            countries["SL"] = "Africa/Freetown"
-            countries["SM"] = "Europe/San_Marino"
-            countries["SN"] = "Africa/Dakar"
-            countries["SO"] = "Africa/Mogadishu"
-            countries["SR"] = "America/Paramaribo"
-            countries["SS"] = "Africa/Juba"
-            countries["ST"] = "Africa/Sao_Tome"
-            countries["SV"] = "America/El_Salvador"
-            countries["SX"] = "America/Lower_Princes"
-            countries["SY"] = "Asia/Damascus"
-            countries["SZ"] = "Africa/Mbabane"
-            countries["TC"] = "America/Grand_Turk"
-            countries["TD"] = "Africa/Ndjamena"
-            countries["TF"] = "Indian/Kerguelen"
-            countries["TG"] = "Africa/Lome"
-            countries["TH"] = "Asia/Bangkok"
-            countries["TJ"] = "Asia/Dushanbe"
-            countries["TK"] = "Pacific/Fakaofo"
-            countries["TL"] = "Asia/Dili"
-            countries["TM"] = "Asia/Ashgabat"
-            countries["TN"] = "Africa/Tunis"
-            countries["TO"] = "Pacific/Tongatapu"
-            countries["TR"] = "Europe/Istanbul"
-            countries["TT"] = "America/Port_of_Spain"
-            countries["TV"] = "Pacific/Funafuti"
-            countries["TW"] = "Asia/Taipei"
-            countries["TZ"] = "Africa/Dar_es_Salaam"
-            countries["UA"] = "Europe/Kiev"
-            countries["UG"] = "Africa/Kampala"
-            countries["UK"] = "Europe/London"
-            countries["UM"] = "Pacific/Wake"
-            countries["US"] = "America/New_York"
-            countries["UTC"] = "UTC"
-            countries["UY"] = "America/Montevideo"
-            countries["UZ"] = "Asia/Tashkent"
-            countries["VA"] = "Europe/Vatican"
-            countries["VC"] = "America/St_Vincent"
-            countries["VE"] = "America/Caracas"
-            countries["VG"] = "America/Tortola"
-            countries["VI"] = "America/St_Thomas"
-            countries["VN"] = "Asia/Ho_Chi_Minh"
-            countries["VU"] = "Pacific/Efate"
-            countries["WF"] = "Pacific/Wallis"
-            countries["WS"] = "Pacific/Apia"
-            countries["YE"] = "Asia/Aden"
-            countries["YT"] = "Indian/Mayotte"
-            countries["ZA"] = "Africa/Johannesburg"
-            countries["ZM"] = "Africa/Lusaka"
-            countries["ZULU"] = "Zulu"
-            countries["ZW"] = "Africa/Harare"
-            @Suppress("MagicNumber")
+            // Initialize the zones map
+            val zones = mutableMapOf<String, String>()
+            zones["AD"] = "Europe/Andorra"
+            zones["AE"] = "Asia/Dubai"
+            zones["AF"] = "Asia/Kabul"
+            zones["AG"] = "America/Antigua"
+            zones["AI"] = "America/Anguilla"
+            zones["AKDT"] = "America/Anchorage"
+            zones["AKST"] = "America/Anchorage"
+            zones["AL"] = "Europe/Tirane"
+            zones["AM"] = "Asia/Yerevan"
+            zones["AO"] = "Africa/Luanda"
+            zones["AQ"] = "Antarctica/South_Pole"
+            zones["AR"] = "America/Argentina/Buenos_Aires"
+            zones["AS"] = "Pacific/Pago_Pago"
+            zones["AT"] = "Europe/Vienna"
+            zones["AU"] = "Australia/Sydney"
+            zones["AW"] = "America/Aruba"
+            zones["AX"] = "Europe/Mariehamn"
+            zones["AZ"] = "Asia/Baku"
+            zones["BA"] = "Europe/Sarajevo"
+            zones["BB"] = "America/Barbados"
+            zones["BD"] = "Asia/Dhaka"
+            zones["BE"] = "Europe/Brussels"
+            zones["BEAT"] = BEATS_KEYWORD
+            zones["BF"] = "Africa/Ouagadougou"
+            zones["BG"] = "Europe/Sofia"
+            zones["BH"] = "Asia/Bahrain"
+            zones["BI"] = "Africa/Bujumbura"
+            zones["BJ"] = "Africa/Porto-Novo"
+            zones["BL"] = "America/St_Barthelemy"
+            zones["BM"] = "Atlantic/Bermuda"
+            zones["BMT"] = BEATS_KEYWORD
+            zones["BN"] = "Asia/Brunei"
+            zones["BO"] = "America/La_Paz"
+            zones["BQ"] = "America/Kralendijk"
+            zones["BR"] = "America/Sao_Paulo"
+            zones["BS"] = "America/Nassau"
+            zones["BT"] = "Asia/Thimphu"
+            zones["BW"] = "Africa/Gaborone"
+            zones["BY"] = "Europe/Minsk"
+            zones["BZ"] = "America/Belize"
+            zones["CA"] = "America/Montreal"
+            zones["CC"] = "Indian/Cocos"
+            zones["CD"] = "Africa/Kinshasa"
+            zones["CDT"] = "America/Chicago"
+            zones["CET"] = "CET"
+            zones["CF"] = "Africa/Bangui"
+            zones["CG"] = "Africa/Brazzaville"
+            zones["CH"] = "Europe/Zurich"
+            zones["CI"] = "Africa/Abidjan"
+            zones["CK"] = "Pacific/Rarotonga"
+            zones["CL"] = "America/Santiago"
+            zones["CM"] = "Africa/Douala"
+            zones["CN"] = "Asia/Shanghai"
+            zones["CO"] = "America/Bogota"
+            zones["CR"] = "America/Costa_Rica"
+            zones["CST"] = "America/Chicago"
+            zones["CU"] = "Cuba"
+            zones["CV"] = "Atlantic/Cape_Verde"
+            zones["CW"] = "America/Curacao"
+            zones["CX"] = "Indian/Christmas"
+            zones["CY"] = "Asia/Nicosia"
+            zones["CZ"] = "Europe/Prague"
+            zones["DE"] = "Europe/Berlin"
+            zones["DJ"] = "Africa/Djibouti"
+            zones["DK"] = "Europe/Copenhagen"
+            zones["DM"] = "America/Dominica"
+            zones["DO"] = "America/Santo_Domingo"
+            zones["DZ"] = "Africa/Algiers"
+            zones["EC"] = "Pacific/Galapagos"
+            zones["EDT"] = "America/New_York"
+            zones["EE"] = "Europe/Tallinn"
+            zones["EG"] = "Africa/Cairo"
+            zones["EH"] = "Africa/El_Aaiun"
+            zones["ER"] = "Africa/Asmara"
+            zones["ES"] = "Europe/Madrid"
+            zones["EST"] = "America/New_York"
+            zones["ET"] = "Africa/Addis_Ababa"
+            zones["FI"] = "Europe/Helsinki"
+            zones["FJ"] = "Pacific/Fiji"
+            zones["FK"] = "Atlantic/Stanley"
+            zones["FM"] = "Pacific/Yap"
+            zones["FO"] = "Atlantic/Faroe"
+            zones["FR"] = "Europe/Paris"
+            zones["GA"] = "Africa/Libreville"
+            zones["GB"] = "Europe/London"
+            zones["GD"] = "America/Grenada"
+            zones["GE"] = "Asia/Tbilisi"
+            zones["GF"] = "America/Cayenne"
+            zones["GG"] = "Europe/Guernsey"
+            zones["GH"] = "Africa/Accra"
+            zones["GI"] = "Europe/Gibraltar"
+            zones["GL"] = "America/Thule"
+            zones["GM"] = "Africa/Banjul"
+            zones["GMT"] = "GMT"
+            zones["GN"] = "Africa/Conakry"
+            zones["GP"] = "America/Guadeloupe"
+            zones["GQ"] = "Africa/Malabo"
+            zones["GR"] = "Europe/Athens"
+            zones["GS"] = "Atlantic/South_Georgia"
+            zones["GT"] = "America/Guatemala"
+            zones["GU"] = "Pacific/Guam"
+            zones["GW"] = "Africa/Bissau"
+            zones["GY"] = "America/Guyana"
+            zones["HK"] = "Asia/Hong_Kong"
+            zones["HN"] = "America/Tegucigalpa"
+            zones["HR"] = "Europe/Zagreb"
+            zones["HST"] = "Pacific/Honolulu"
+            zones["HT"] = "America/Port-au-Prince"
+            zones["HU"] = "Europe/Budapest"
+            zones["ID"] = "Asia/Jakarta"
+            zones["IE"] = "Europe/Dublin"
+            zones["IL"] = "Asia/Tel_Aviv"
+            zones["IM"] = "Europe/Isle_of_Man"
+            zones["IN"] = "Asia/Kolkata"
+            zones["IO"] = "Indian/Chagos"
+            zones["IQ"] = "Asia/Baghdad"
+            zones["IR"] = "Asia/Tehran"
+            zones["IS"] = "Atlantic/Reykjavik"
+            zones["IT"] = "Europe/Rome"
+            zones["JE"] = "Europe/Jersey"
+            zones["JM"] = "Jamaica"
+            zones["JO"] = "Asia/Amman"
+            zones["JP"] = "Asia/Tokyo"
+            zones["KE"] = "Africa/Nairobi"
+            zones["KG"] = "Asia/Bishkek"
+            zones["KH"] = "Asia/Phnom_Penh"
+            zones["KI"] = "Pacific/Tarawa"
+            zones["KM"] = "Indian/Comoro"
+            zones["KN"] = "America/St_Kitts"
+            zones["KP"] = "Asia/Pyongyang"
+            zones["KR"] = "Asia/Seoul"
+            zones["KW"] = "Asia/Riyadh"
+            zones["KY"] = "America/Cayman"
+            zones["KZ"] = "Asia/Oral"
+            zones["LA"] = "Asia/Vientiane"
+            zones["LB"] = "Asia/Beirut"
+            zones["LC"] = "America/St_Lucia"
+            zones["LI"] = "Europe/Vaduz"
+            zones["LK"] = "Asia/Colombo"
+            zones["LR"] = "Africa/Monrovia"
+            zones["LS"] = "Africa/Maseru"
+            zones["LT"] = "Europe/Vilnius"
+            zones["LU"] = "Europe/Luxembourg"
+            zones["LV"] = "Europe/Riga"
+            zones["LY"] = "Africa/Tripoli"
+            zones["MA"] = "Africa/Casablanca"
+            zones["MC"] = "Europe/Monaco"
+            zones["MD"] = "Europe/Chisinau"
+            zones["MDT"] = "America/Denver"
+            zones["ME"] = "Europe/Podgorica"
+            zones["MF"] = "America/Marigot"
+            zones["MG"] = "Indian/Antananarivo"
+            zones["MH"] = "Pacific/Majuro"
+            zones["MK"] = "Europe/Skopje"
+            zones["ML"] = "Africa/Timbuktu"
+            zones["MM"] = "Asia/Yangon"
+            zones["MN"] = "Asia/Ulaanbaatar"
+            zones["MO"] = "Asia/Macau"
+            zones["MP"] = "Pacific/Saipan"
+            zones["MQ"] = "America/Martinique"
+            zones["MR"] = "Africa/Nouakchott"
+            zones["MS"] = "America/Montserrat"
+            zones["MST"] = "America/Denver"
+            zones["MT"] = "Europe/Malta"
+            zones["MU"] = "Indian/Mauritius"
+            zones["MV"] = "Indian/Maldives"
+            zones["MW"] = "Africa/Blantyre"
+            zones["MX"] = "America/Mexico_City"
+            zones["MY"] = "Asia/Kuala_Lumpur"
+            zones["MZ"] = "Africa/Maputo"
+            zones["NA"] = "Africa/Windhoek"
+            zones["NC"] = "Pacific/Noumea"
+            zones["NE"] = "Africa/Niamey"
+            zones["NF"] = "Pacific/Norfolk"
+            zones["NG"] = "Africa/Lagos"
+            zones["NI"] = "America/Managua"
+            zones["NL"] = "Europe/Amsterdam"
+            zones["NO"] = "Europe/Oslo"
+            zones["NP"] = "Asia/Kathmandu"
+            zones["NR"] = "Pacific/Nauru"
+            zones["NU"] = "Pacific/Niue"
+            zones["NZ"] = "Pacific/Auckland"
+            zones["OM"] = "Asia/Muscat"
+            zones["PA"] = "America/Panama"
+            zones["PDT"] = "America/Los_Angeles"
+            zones["PE"] = "America/Lima"
+            zones["PF"] = "Pacific/Tahiti"
+            zones["PG"] = "Pacific/Port_Moresby"
+            zones["PH"] = "Asia/Manila"
+            zones["PK"] = "Asia/Karachi"
+            zones["PL"] = "Europe/Warsaw"
+            zones["PM"] = "America/Miquelon"
+            zones["PN"] = "Pacific/Pitcairn"
+            zones["PR"] = "America/Puerto_Rico"
+            zones["PS"] = "Asia/Gaza"
+            zones["PST"] = "America/Los_Angeles"
+            zones["PT"] = "Europe/Lisbon"
+            zones["PW"] = "Pacific/Palau"
+            zones["PY"] = "America/Asuncion"
+            zones["QA"] = "Asia/Qatar"
+            zones["RE"] = "Indian/Reunion"
+            zones["RO"] = "Europe/Bucharest"
+            zones["RS"] = "Europe/Belgrade"
+            zones["RU"] = "Europe/Moscow"
+            zones["RW"] = "Africa/Kigali"
+            zones["SA"] = "Asia/Riyadh"
+            zones["SB"] = "Pacific/Guadalcanal"
+            zones["SC"] = "Indian/Mahe"
+            zones["SD"] = "Africa/Khartoum"
+            zones["SE"] = "Europe/Stockholm"
+            zones["SG"] = "Asia/Singapore"
+            zones["SH"] = "Atlantic/St_Helena"
+            zones["SI"] = "Europe/Ljubljana"
+            zones["SJ"] = "Atlantic/Jan_Mayen"
+            zones["SK"] = "Europe/Bratislava"
+            zones["SL"] = "Africa/Freetown"
+            zones["SM"] = "Europe/San_Marino"
+            zones["SN"] = "Africa/Dakar"
+            zones["SO"] = "Africa/Mogadishu"
+            zones["SR"] = "America/Paramaribo"
+            zones["SS"] = "Africa/Juba"
+            zones["ST"] = "Africa/Sao_Tome"
+            zones["SV"] = "America/El_Salvador"
+            zones["SX"] = "America/Lower_Princes"
+            zones["SY"] = "Asia/Damascus"
+            zones["SZ"] = "Africa/Mbabane"
+            zones["TC"] = "America/Grand_Turk"
+            zones["TD"] = "Africa/Ndjamena"
+            zones["TF"] = "Indian/Kerguelen"
+            zones["TG"] = "Africa/Lome"
+            zones["TH"] = "Asia/Bangkok"
+            zones["TJ"] = "Asia/Dushanbe"
+            zones["TK"] = "Pacific/Fakaofo"
+            zones["TL"] = "Asia/Dili"
+            zones["TM"] = "Asia/Ashgabat"
+            zones["TN"] = "Africa/Tunis"
+            zones["TO"] = "Pacific/Tongatapu"
+            zones["TR"] = "Europe/Istanbul"
+            zones["TT"] = "America/Port_of_Spain"
+            zones["TV"] = "Pacific/Funafuti"
+            zones["TW"] = "Asia/Taipei"
+            zones["TZ"] = "Africa/Dar_es_Salaam"
+            zones["UA"] = "Europe/Kiev"
+            zones["UG"] = "Africa/Kampala"
+            zones["UK"] = "Europe/London"
+            zones["UM"] = "Pacific/Wake"
+            zones["US"] = "America/New_York"
+            zones["UTC"] = "UTC"
+            zones["UY"] = "America/Montevideo"
+            zones["UZ"] = "Asia/Tashkent"
+            zones["VA"] = "Europe/Vatican"
+            zones["VC"] = "America/St_Vincent"
+            zones["VE"] = "America/Caracas"
+            zones["VG"] = "America/Tortola"
+            zones["VI"] = "America/St_Thomas"
+            zones["VN"] = "Asia/Ho_Chi_Minh"
+            zones["VU"] = "Pacific/Efate"
+            zones["WF"] = "Pacific/Wallis"
+            zones["WS"] = "Pacific/Apia"
+            zones["YE"] = "Asia/Aden"
+            zones["YT"] = "Indian/Mayotte"
+            zones["ZA"] = "Africa/Johannesburg"
+            zones["ZM"] = "Africa/Lusaka"
+            zones["ZULU"] = "Zulu"
+            zones["ZW"] = "Africa/Harare"
             ZoneId.getAvailableZoneIds().stream()
                 .filter { tz: String ->
-                    tz.length <= 3 && !countries.containsKey(tz)
+                    tz.length <= 3 && !zones.containsKey(tz)
                 }
                 .forEach { tz: String ->
-                    countries[tz] = tz
+                    zones[tz] = tz
                 }
-            COUNTRIES_MAP = Collections.unmodifiableMap(countries)
+            COUNTRIES_MAP = Collections.unmodifiableMap(zones)
         }
     }
 
-    override fun commandResponse(
-        sender: String,
-        cmd: String,
-        args: String,
-        isPrivate: Boolean
-    ) {
-        with(bot) {
-            if (args.isEmpty()) {
-                send(sender, "The supported countries/zones are: ", isPrivate)
-                @Suppress("MagicNumber")
-                sendList(
-                    sender,
-                    COUNTRIES_MAP.keys.sorted().map { it.padEnd(4) },
-                    14,
-                    isPrivate = false,
-                    isIndent = true
-                )
-            } else {
-                val msg = time(args)
-                if (isPrivate) {
-                    send(sender, msg.msg, true)
-                } else {
-                    if (msg.isError) {
-                        send(sender, msg.msg, false)
-                    } else {
-                        send(msg.msg)
-                    }
-                }
-            }
+    override fun commandResponse(channel: String, cmd: String, args: String, event: GenericMessageEvent) {
+        if (args.equals(ZONES_ARGS, true)) {
+            event.sendMessage("The supported countries/zones are: ")
+            event.sendList(COUNTRIES_MAP.keys.sorted().map { it.padEnd(4) }, 14, isIndent = true)
+        } else {
+            event.respond(time(args))
         }
     }
 
@@ -408,9 +387,9 @@ class WorldTime(bot: Mobibot) : AbstractModule(bot) {
     init {
         with(help) {
             add("To display a country's current date/time:")
-            add(helpFormat("%c $TIME_CMD <country code>"))
-            add("For a listing of the supported countries:")
-            add(helpFormat("%c $TIME_CMD"))
+            add(helpFormat("%c $TIME_CMD [<country code or zone>]"))
+            add("For a listing of the supported countries/zones:")
+            add(helpFormat("%c $TIME_CMD $ZONES_ARGS"))
         }
         commands.add(TIME_CMD)
     }

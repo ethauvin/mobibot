@@ -32,36 +32,29 @@
 
 package net.thauvin.erik.mobibot.commands
 
-import net.thauvin.erik.mobibot.Mobibot
+import net.thauvin.erik.mobibot.Utils.bot
 import net.thauvin.erik.mobibot.Utils.helpFormat
+import net.thauvin.erik.mobibot.Utils.sendList
+import org.pircbotx.hooks.types.GenericMessageEvent
 
-class Users(bot: Mobibot) : AbstractCommand(bot) {
+class Users : AbstractCommand() {
     override val name = "users"
     override val help = listOf("To list the users present on the channel:", helpFormat("%c $name"))
-    override val isOp = false
+    override val isOpOnly = false
     override val isPublic = true
     override val isVisible = true
 
 
-    override fun commandResponse(
-        sender: String,
-        login: String,
-        args: String,
-        isOp: Boolean,
-        isPrivate: Boolean
-    ) {
+    override fun commandResponse(channel: String, args: String, event: GenericMessageEvent) {
         val nicks = mutableListOf<String>()
-        with(bot) {
-            getUsers(channel).forEach { user ->
-                if (isOp(user.nick)) {
-                    nicks.add("@${user.nick}")
-                } else {
-                    nicks.add(user.nick)
-                }
+        val ch = event.bot().userChannelDao.getChannel(channel)
+        ch.users.forEach {
+            if (it.channelsOpIn.contains(ch)) {
+                nicks.add("@${it.nick}")
+            } else {
+                nicks.add(it.nick)
             }
-
-            @Suppress("MagicNumber")
-            sendList(sender, nicks.sorted(), 8, isPrivate = isPrivate, isIndent = true)
         }
+        event.sendList(nicks, 8)
     }
 }

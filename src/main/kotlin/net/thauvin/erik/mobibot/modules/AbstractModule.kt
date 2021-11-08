@@ -31,13 +31,16 @@
  */
 package net.thauvin.erik.mobibot.modules
 
-import net.thauvin.erik.mobibot.Mobibot
+import net.thauvin.erik.mobibot.Utils.bot
 import net.thauvin.erik.mobibot.Utils.buildCmdSyntax
+import net.thauvin.erik.mobibot.Utils.sendMessage
+import org.pircbotx.hooks.events.PrivateMessageEvent
+import org.pircbotx.hooks.types.GenericMessageEvent
 
 /**
  * The `Module` abstract class.
  */
-abstract class AbstractModule(val bot: Mobibot) {
+abstract class AbstractModule {
     /**
      * The module's commands, if any.
      */
@@ -51,12 +54,7 @@ abstract class AbstractModule(val bot: Mobibot) {
     /**
      * Responds to a command.
      */
-    abstract fun commandResponse(
-        sender: String,
-        cmd: String,
-        args: String,
-        isPrivate: Boolean
-    )
+    abstract fun commandResponse(channel: String, cmd: String, args: String, event: GenericMessageEvent)
 
     /**
      * Returns the module's property keys.
@@ -74,9 +72,9 @@ abstract class AbstractModule(val bot: Mobibot) {
     /**
      * Responds with the module's help.
      */
-    open fun helpResponse(sender: String, isPrivate: Boolean): Boolean {
+    open fun helpResponse(event: GenericMessageEvent): Boolean {
         for (h in help) {
-            bot.send(sender, buildCmdSyntax(h, bot.nick, isPrivateMsgEnabled && isPrivate), isPrivate)
+            event.sendMessage(buildCmdSyntax(h, event.bot().nick, isPrivateMsgEnabled && event is PrivateMessageEvent))
         }
         return true
     }

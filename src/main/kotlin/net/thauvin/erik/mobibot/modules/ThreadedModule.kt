@@ -33,36 +33,26 @@ package net.thauvin.erik.mobibot.modules
 
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import net.thauvin.erik.mobibot.Mobibot
+import org.pircbotx.hooks.types.GenericMessageEvent
 
 /**
  * The `ThreadedModule` class.
  */
-abstract class ThreadedModule(bot: Mobibot) : AbstractModule(bot) {
-    override fun commandResponse(
-        sender: String,
-        cmd: String,
-        args: String,
-        isPrivate: Boolean
-    ) {
-        if (isEnabled && args.isNotEmpty()) {
+abstract class ThreadedModule : AbstractModule() {
+    override fun commandResponse(channel: String, cmd: String, args: String, event: GenericMessageEvent) {
+        if (isEnabled && event.message.isNotEmpty()) {
             runBlocking {
                 launch {
-                    run(sender, cmd, args, isPrivate)
+                    run(channel, cmd, args, event)
                 }
             }
         } else {
-            helpResponse(sender, isPrivate)
+            helpResponse(event)
         }
     }
 
     /**
      * Runs the thread.
      */
-    abstract fun run(
-        sender: String,
-        cmd: String,
-        args: String,
-        isPrivate: Boolean
-    )
+    abstract fun run(channel: String, cmd: String, args: String, event: GenericMessageEvent)
 }

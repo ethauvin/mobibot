@@ -31,9 +31,16 @@
  */
 package net.thauvin.erik.mobibot.entries
 
+import assertk.all
+import assertk.assertThat
+import assertk.assertions.isEmpty
+import assertk.assertions.isEqualTo
+import assertk.assertions.isFalse
+import assertk.assertions.isTrue
+import assertk.assertions.prop
+import assertk.assertions.size
 import com.rometools.rome.feed.synd.SyndCategory
 import com.rometools.rome.feed.synd.SyndCategoryImpl
-import org.assertj.core.api.Assertions.assertThat
 import org.testng.annotations.Test
 import java.security.SecureRandom
 import java.util.Date
@@ -58,21 +65,30 @@ class EntryLinkTest {
             entryLink.addComment("c$i", "u$i")
             i++
         }
-        assertThat(entryLink.comments.size).describedAs("getComments().size() == 5").isEqualTo(i)
+        assertThat(entryLink.comments.size, "getComments().size() == 5").isEqualTo(i)
         i = 0
         for (comment in entryLink.comments) {
-            assertThat(comment).extracting("comment", "nick").containsExactly("c$i", "u$i")
+            assertThat(comment).all {
+                prop(EntryComment::comment).isEqualTo("c$i")
+                prop(EntryComment::nick).isEqualTo("u$i")
+            }
             i++
         }
+
         val r = SecureRandom()
         while (entryLink.comments.size > 0) {
             entryLink.deleteComment(r.nextInt(entryLink.comments.size))
         }
-        assertThat(entryLink.comments).describedAs("hasComments()").isEmpty()
+        assertThat(entryLink.comments, "hasComments()").isEmpty()
         entryLink.addComment("nothing", "nobody")
         entryLink.setComment(0, "something", "somebody")
-        assertThat(entryLink.getComment(0)).describedAs("get first comment").extracting("nick", "comment")
-            .containsExactly("somebody", "something")
+        val comment = entryLink.getComment(0)
+        assertThat(comment, "get first comment").all {
+            prop(EntryComment::nick).isEqualTo("somebody")
+            prop(EntryComment::comment).isEqualTo("something")
+        }
+        assertThat(entryLink.deleteComment(comment), "delete comment").isTrue()
+        assertThat(entryLink.deleteComment(comment), "comment is already deleted").isFalse()
     }
 
     @Test
@@ -80,19 +96,19 @@ class EntryLinkTest {
         val tag = "test"
         val tags = listOf(SyndCategoryImpl().apply { name = tag })
         val link = EntryLink("link", "title", "nick", "channel", Date(), tags)
-        assertThat(link.tags.size).describedAs("check tag size").isEqualTo(tags.size)
-        assertThat(link.tags[0].name).describedAs("check tag name").isEqualTo(tag)
-        assertThat(link.pinboardTags).describedAs("check pinboard tags").isEqualTo("nick,$tag")
+        assertThat(link.tags.size, "check tag size").isEqualTo(tags.size)
+        assertThat(link.tags[0].name, "check tag name").isEqualTo(tag)
+        assertThat(link.pinboardTags, "check pinboard tags").isEqualTo("nick,$tag")
     }
 
     @Test
     fun testMatches() {
-        assertThat(entryLink.matches("mobitopia")).describedAs("match mobitopia").isTrue
-        assertThat(entryLink.matches("skynx")).describedAs("match nick").isTrue
-        assertThat(entryLink.matches("www.mobitopia.org")).describedAs("match url").isTrue
-        assertThat(entryLink.matches("foo")).describedAs("match foo").isFalse
-        assertThat(entryLink.matches("")).describedAs("match empty").isFalse
-        assertThat(entryLink.matches(null)).describedAs("match null").isFalse
+        assertThat(entryLink.matches("mobitopia"), "match mobitopia").isTrue()
+        assertThat(entryLink.matches("skynx"), "match nick").isTrue()
+        assertThat(entryLink.matches("www.mobitopia.org"), "match url").isTrue()
+        assertThat(entryLink.matches("foo"), "match foo").isFalse()
+        assertThat(entryLink.matches("<empty>"), "match empty").isFalse()
+        assertThat(entryLink.matches(null), "match null").isFalse()
     }
 
 
@@ -100,20 +116,19 @@ class EntryLinkTest {
     fun testTags() {
         val tags: List<SyndCategory> = entryLink.tags
         for ((i, tag) in tags.withIndex()) {
-            assertThat(tag.name).describedAs("tag.getName($i)").isEqualTo("tag" + (i + 1))
+            assertThat(tag.name, "tag.getName($i)").isEqualTo("tag" + (i + 1))
         }
-        assertThat(entryLink.tags.size).describedAs("getTags().size() is 5").isEqualTo(5)
-        assertThat(entryLink.tags).describedAs("hasTags() is true").isNotEmpty
+        assertThat(entryLink.tags, "size is 5").size().isEqualTo(5)
         entryLink.setTags("-tag5")
         entryLink.setTags("+mobitopia")
         entryLink.setTags("tag4")
         entryLink.setTags("-mobitopia")
-        assertThat(entryLink.pinboardTags).describedAs("getPinboardTags()")
+        assertThat(entryLink.pinboardTags, "getPinboardTags()")
             .isEqualTo(entryLink.nick + ",tag1,tag2,tag3,tag4,mobitopia")
         val size = entryLink.tags.size
         entryLink.setTags("")
-        assertThat(entryLink.tags.size).describedAs("empty tag").isEqualTo(size)
+        assertThat(entryLink.tags.size, "empty tag").isEqualTo(size)
         entryLink.setTags("    ")
-        assertThat(entryLink.tags.size).describedAs("blank tag").isEqualTo(size)
+        assertThat(entryLink.tags.size, "blank tag").isEqualTo(size)
     }
 }

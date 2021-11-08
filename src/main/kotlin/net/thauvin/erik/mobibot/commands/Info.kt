@@ -31,50 +31,46 @@
  */
 package net.thauvin.erik.mobibot.commands
 
-import net.thauvin.erik.mobibot.Mobibot
 import net.thauvin.erik.mobibot.ReleaseInfo
 import net.thauvin.erik.mobibot.Utils.capitalise
 import net.thauvin.erik.mobibot.Utils.green
 import net.thauvin.erik.mobibot.Utils.helpFormat
+import net.thauvin.erik.mobibot.Utils.isChannelOp
+import net.thauvin.erik.mobibot.Utils.sendList
+import net.thauvin.erik.mobibot.Utils.sendMessage
 import net.thauvin.erik.mobibot.Utils.uptime
 import net.thauvin.erik.mobibot.commands.links.LinksMgr
+import net.thauvin.erik.mobibot.commands.tell.Tell
+import org.pircbotx.hooks.types.GenericMessageEvent
 import java.lang.management.ManagementFactory
 
-class Info(bot: Mobibot?) : AbstractCommand(bot!!) {
+class Info(private val tell: Tell) : AbstractCommand() {
     private val allVersions = listOf(
         "${ReleaseInfo.PROJECT.capitalise()} ${ReleaseInfo.VERSION} (${green(ReleaseInfo.WEBSITE)})",
         "Written by ${ReleaseInfo.AUTHOR} (${green(ReleaseInfo.AUTHOR_URL)})"
     )
     override val name = "info"
     override val help = listOf("To view information about the bot:", helpFormat("%c $name"))
-    override val isOp = false
+    override val isOpOnly = false
     override val isPublic = true
     override val isVisible = true
 
-    override fun commandResponse(
-        sender: String,
-        login: String,
-        args: String,
-        isOp: Boolean,
-        isPrivate: Boolean
-    ) {
-        with(bot) {
-            sendList(sender, allVersions, 1, isPrivate = isPrivate)
-            val info = StringBuilder()
-            info.append("Uptime: ")
-                .append(uptime(ManagementFactory.getRuntimeMXBean().uptime))
-                .append(" [Entries: ")
-                .append(LinksMgr.entries.size)
-            if (isOp) {
-                if (tell.isEnabled()) {
-                    info.append(", Messages: ").append(tell.size())
-                }
-                if (twitter.isAutoPost) {
-                    info.append(", Twitter: ").append(twitter.entriesCount())
-                }
+    override fun commandResponse(channel: String, args: String, event: GenericMessageEvent) {
+        event.sendList(allVersions, 1)
+        val info = StringBuilder()
+        info.append("Uptime: ")
+            .append(uptime(ManagementFactory.getRuntimeMXBean().uptime))
+            .append(" [Entries: ")
+            .append(LinksMgr.entries.links.size)
+        if (isChannelOp(channel, event)) {
+            if (tell.isEnabled()) {
+                info.append(", Messages: ").append(tell.size())
             }
-            info.append(", Recap: ").append(Recap.recaps.size).append(']')
-            send(sender, info.toString(), isPrivate)
+            if (LinksMgr.twitter.isAutoPost) {
+                info.append(", Twitter: ").append(LinksMgr.twitter.entriesCount())
+            }
         }
+        info.append(", Recap: ").append(Recap.recaps.size).append(']')
+        event.sendMessage(info.toString())
     }
 }

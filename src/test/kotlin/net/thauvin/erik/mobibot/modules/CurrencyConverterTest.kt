@@ -31,10 +31,21 @@
  */
 package net.thauvin.erik.mobibot.modules
 
+import assertk.all
+import assertk.assertThat
+import assertk.assertions.any
+import assertk.assertions.contains
+import assertk.assertions.isEqualTo
+import assertk.assertions.isInstanceOf
+import assertk.assertions.matches
+import assertk.assertions.prop
+import assertk.assertions.size
 import net.thauvin.erik.mobibot.modules.CurrencyConverter.Companion.convertCurrency
 import net.thauvin.erik.mobibot.modules.CurrencyConverter.Companion.currencyRates
 import net.thauvin.erik.mobibot.modules.CurrencyConverter.Companion.loadRates
-import org.assertj.core.api.Assertions.assertThat
+import net.thauvin.erik.mobibot.msg.ErrorMessage
+import net.thauvin.erik.mobibot.msg.Message
+import net.thauvin.erik.mobibot.msg.PublicMessage
 import org.testng.annotations.BeforeClass
 import org.testng.annotations.Test
 
@@ -50,14 +61,28 @@ class CurrencyConverterTest {
 
     @Test
     fun testConvertCurrency() {
-        assertThat(convertCurrency("100 USD to EUR").msg)
-            .describedAs("100 USD to EUR").matches("\\$100\\.00 = €\\d{2,3}\\.\\d{2}")
-        assertThat(convertCurrency("100 USD to USD").msg).describedAs("100 USD to USD")
-            .contains("You're kidding, right?")
-        assertThat(convertCurrency("100 USD").msg).describedAs("100 USD").contains("Invalid query.")
+        assertThat(
+            convertCurrency("100 USD to EUR").msg,
+            "100 USD to EUR"
+        ).matches("\\$100\\.00 = €\\d{2,3}\\.\\d{2}".toRegex())
+        assertThat(convertCurrency("100 USD to USD"), "100 USD to USD").all {
+            prop(Message::msg).contains("You're kidding, right?")
+            isInstanceOf(PublicMessage::class.java)
+        }
+        assertThat(convertCurrency("100 USD"), "100 USD").all {
+            prop(Message::msg).contains("Invalid query.")
+            isInstanceOf(ErrorMessage::class.java)
+        }
+    }
+
+    @Test
+    fun testCurrencyRates() {
         val rates = currencyRates()
-        assertThat(rates.size).describedAs("currencyRates.size == 33").isEqualTo(33)
-        assertThat(rates).describedAs("currencyRates(EUR< USD)").contains("EUR:        1")
-            .anyMatch { it.matches("USD: .*".toRegex()) }
+        assertThat(rates).all {
+            size().isEqualTo(33)
+            any { it.matches("[A-Z]{3}: +[\\d.]+".toRegex()) }
+            contains("EUR:        1")
+        }
+
     }
 }

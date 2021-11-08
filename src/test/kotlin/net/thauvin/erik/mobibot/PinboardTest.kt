@@ -1,5 +1,5 @@
 /*
- * PinboardUtilsTest.kt
+ * PinboardTest.kt
  *
  * Copyright (c) 2004-2021, Erik C. Thauvin (erik@thauvin.net)
  * All rights reserved.
@@ -32,43 +32,37 @@
 
 package net.thauvin.erik.mobibot
 
-import net.thauvin.erik.mobibot.PinboardUtils.toTimestamp
 import net.thauvin.erik.mobibot.entries.EntryLink
-import net.thauvin.erik.pinboard.PinboardPoster
 import org.testng.Assert.assertFalse
 import org.testng.Assert.assertTrue
 import org.testng.annotations.Test
 import java.net.URL
-import java.util.Date
 
-class PinboardUtilsTest : LocalProperties() {
+class PinboardTest : LocalProperties() {
+    private val pinboard = Pinboard()
+
     @Test
-    fun pinboardTest() {
+    fun testPinboard() {
         val apiToken = getProperty("pinboard-api-token")
-        val pinboard = PinboardPoster(apiToken)
         val url = "https://www.example.com/"
         val ircServer = "irc.test.com"
         val entry = EntryLink(url, "Test Example", "ErikT", "", "#mobitopia", listOf("test"))
 
-        PinboardUtils.addPin(pinboard, ircServer, entry)
+        pinboard.setApiToken(apiToken)
+
+        pinboard.addPin(ircServer, entry)
         assertTrue(validatePin(apiToken, url = entry.link, entry.title, entry.nick, entry.channel), "validate add")
 
         entry.link = "https://www.foo.com/"
-        PinboardUtils.updatePin(pinboard, ircServer, url, entry)
+        pinboard.updatePin(ircServer, url, entry)
         assertTrue(validatePin(apiToken, url = entry.link, ircServer), "validate update")
 
         entry.title = "Foo Title"
-        PinboardUtils.updatePin(pinboard, ircServer, entry.link, entry)
+        pinboard.updatePin(ircServer, entry.link, entry)
         assertTrue(validatePin(apiToken, url = entry.link, entry.title), "validate title")
 
-        PinboardUtils.deletePin(pinboard, entry)
+        pinboard.deletePin(entry)
         assertFalse(validatePin(apiToken, url = entry.link), "validate delete")
-    }
-
-    @Test
-    fun toTimestampTest() {
-        val d = Date()
-        assertTrue(d.toTimestamp().matches("[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z".toRegex()))
     }
 
     private fun validatePin(apiToken: String, url: String, vararg matches: String): Boolean {

@@ -32,13 +32,17 @@
 
 package net.thauvin.erik.mobibot.commands
 
-import net.thauvin.erik.mobibot.Mobibot
 import net.thauvin.erik.mobibot.Utils.bold
+import net.thauvin.erik.mobibot.Utils.bot
 import net.thauvin.erik.mobibot.Utils.buildCmdSyntax
 import net.thauvin.erik.mobibot.Utils.helpFormat
+import net.thauvin.erik.mobibot.Utils.isChannelOp
+import net.thauvin.erik.mobibot.Utils.sendList
+import net.thauvin.erik.mobibot.Utils.sendMessage
 import net.thauvin.erik.mobibot.commands.links.LinksMgr
+import org.pircbotx.hooks.types.GenericMessageEvent
 
-class Ignore(bot: Mobibot) : AbstractCommand(bot) {
+class Ignore : AbstractCommand() {
     private val me = "me"
 
     init {
@@ -58,7 +62,7 @@ class Ignore(bot: Mobibot) : AbstractCommand(bot) {
         arrayOf("To add/remove nicks from the ignored list:", helpFormat("%c $name <nick> [<nick> ...]"))
     )
 
-    override val isOp = false
+    override val isOpOnly = false
     override val isPublic = true
     override val isVisible = true
 
@@ -73,56 +77,45 @@ class Ignore(bot: Mobibot) : AbstractCommand(bot) {
         }
     }
 
-    override fun commandResponse(
-        sender: String,
-        login: String,
-        args: String,
-        isOp: Boolean,
-        isPrivate: Boolean
-    ) {
+    override fun commandResponse(channel: String, args: String, event: GenericMessageEvent) {
         val isMe = args.trim().equals(me, true)
-        if (isMe || !isOp) {
-            val nick = sender.lowercase()
-            ignoreNick(bot, nick, isMe, isPrivate)
+        if (isMe || !isChannelOp(channel, event)) {
+            val nick = event.user.nick.lowercase()
+            ignoreNick(nick, isMe, event)
         } else {
-            ignoreOp(bot, sender, args, isPrivate)
+            ignoreOp(args, event)
         }
     }
 
-    override fun helpResponse(
-        command: String,
-        sender: String,
-        isOp: Boolean,
-        isPrivate: Boolean
-    ): Boolean {
-        return if (isOp) {
+    override fun helpResponse(channel: String, topic: String, event: GenericMessageEvent): Boolean {
+        return if (isChannelOp(channel, event)) {
             for (h in helpOp) {
-                bot.send(sender, buildCmdSyntax(h, bot.nick, isPrivate), isPrivate)
+                event.sendMessage(buildCmdSyntax(h, event.bot().nick, true))
             }
             true
         } else {
-            super.helpResponse(command, sender, isOp, isPrivate)
+            super.helpResponse(channel, topic, event)
         }
     }
 
-    private fun ignoreNick(bot: Mobibot, sender: String, isMe: Boolean, isPrivate: Boolean) {
+    private fun ignoreNick(sender: String, isMe: Boolean, event: GenericMessageEvent) {
         if (isMe) {
             if (ignored.remove(sender)) {
-                bot.send(sender, "You are no longer ignored.", isPrivate)
+                event.sendMessage("You are no longer ignored.")
             } else {
                 ignored.add(sender)
-                bot.send(sender, "You are now ignored.", isPrivate)
+                event.sendMessage("You are now ignored.")
             }
         } else {
             if (ignored.contains(sender)) {
-                bot.send(sender, "You are currently ignored.", isPrivate)
+                event.sendMessage("You are currently ignored.")
             } else {
-                bot.send(sender, "You are not currently ignored.", isPrivate)
+                event.sendMessage("You are not currently ignored.")
             }
         }
     }
 
-    private fun ignoreOp(bot: Mobibot, sender: String, args: String, isPrivate: Boolean) {
+    private fun ignoreOp(args: String, event: GenericMessageEvent) {
         if (args.isNotEmpty()) {
             val nicks = args.lowercase().split(" ")
             for (nick in nicks) {
@@ -138,11 +131,10 @@ class Ignore(bot: Mobibot) : AbstractCommand(bot) {
         }
 
         if (ignored.size > 0) {
-            bot.send(sender, "The following nicks are ignored:", isPrivate)
-            @Suppress("MagicNumber")
-            bot.sendList(sender, ignored.sorted(), 8, isPrivate = isPrivate, isIndent = true)
+            event.sendMessage("The following nicks are ignored:")
+            event.sendList(ignored.sorted(), 8, isIndent = true)
         } else {
-            bot.send(sender, "No one is currently ${bold("ignored")}.", isPrivate)
+            event.sendMessage("No one is currently ${bold("ignored")}.")
         }
     }
 

@@ -31,12 +31,14 @@
  */
 package net.thauvin.erik.mobibot
 
+import assertk.assertThat
+import assertk.assertions.contains
+import assertk.assertions.isEqualTo
+import assertk.assertions.isFailure
+import assertk.assertions.isInstanceOf
 import com.rometools.rome.io.FeedException
 import net.thauvin.erik.mobibot.FeedReader.Companion.readFeed
-import org.assertj.core.api.Assertions.assertThat
-import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.testng.annotations.Test
-
 import java.io.FileNotFoundException
 import java.net.MalformedURLException
 import java.net.UnknownHostException
@@ -48,26 +50,24 @@ class FeedReaderTest {
     @Test
     fun readFeedTest() {
         var messages = readFeed("https://feeds.thauvin.net/ethauvin")
-        assertThat(messages.size).describedAs("messages = 10").isEqualTo(10)
-        assertThat(messages[1].msg).describedAs("feed entry url").contains("ethauvin")
+        assertThat(messages.size, "size = 10").isEqualTo(10)
+        assertThat(messages[1].msg, "feed entry url").contains("ethauvin")
 
         messages = readFeed("https://lorem-rss.herokuapp.com/feed?length=0")
-        assertThat(messages[0].msg).describedAs("nothing to view").contains("nothing")
+        assertThat(messages[0].msg, "nothing to view").contains("nothing")
 
         messages = readFeed("https://lorem-rss.herokuapp.com/feed?length=42", 42)
-        assertThat(messages.size).describedAs("messages = 84").isEqualTo(84)
-        assertThat(messages.last().msg).describedAs("example entry url").contains("http://example.com/test/")
+        assertThat(messages.size, "messages = 84").isEqualTo(84)
+        assertThat(messages.last().msg, "example entry url").contains("http://example.com/test/")
 
-        assertThatThrownBy { readFeed("blah") }.describedAs("invalid URL")
-            .isInstanceOf(MalformedURLException::class.java)
+        assertThat { readFeed("blah") }.isFailure().isInstanceOf(MalformedURLException::class.java)
 
-        assertThatThrownBy { readFeed("https://www.example.com") }.describedAs("not a feed")
-            .isInstanceOf(FeedException::class.java)
+        assertThat { readFeed("https://www.example.com") }.isFailure().isInstanceOf(FeedException::class.java)
 
-        assertThatThrownBy { readFeed("https://www.examples.com/foo") }.describedAs("404 not found")
+        assertThat { readFeed("https://www.examples.com/foo") }.isFailure()
             .isInstanceOf(FileNotFoundException::class.java)
 
-        assertThatThrownBy { readFeed("https://www.doesnotexists.com") }.describedAs("unknown host")
+        assertThat { readFeed("https://www.doesnotexists.com") }.isFailure()
             .isInstanceOf(UnknownHostException::class.java)
     }
 }

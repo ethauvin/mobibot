@@ -33,35 +33,32 @@ package net.thauvin.erik.mobibot.modules
 
 import net.objecthunter.exp4j.ExpressionBuilder
 import net.objecthunter.exp4j.tokenizer.UnknownFunctionOrVariableException
-import net.thauvin.erik.mobibot.Mobibot
 import net.thauvin.erik.mobibot.Utils.bold
 import net.thauvin.erik.mobibot.Utils.helpFormat
+import org.pircbotx.hooks.types.GenericMessageEvent
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import java.text.DecimalFormat
 
 /**
  * The Calc module.
  */
-class Calc(bot: Mobibot) : AbstractModule(bot) {
-    override fun commandResponse(
-        sender: String,
-        cmd: String,
-        args: String,
-        isPrivate: Boolean
-    ) {
+class Calc : AbstractModule() {
+    private val logger: Logger = LoggerFactory.getLogger(Calc::class.java)
+
+    override fun commandResponse(channel: String, cmd: String, args: String, event: GenericMessageEvent) {
         if (args.isNotBlank()) {
-            with(bot) {
-                try {
-                    send(calculate(args))
-                } catch (e: IllegalArgumentException) {
-                    if (logger.isWarnEnabled) logger.warn("Failed to calculate: $args", e)
-                    send("No idea. This is the kind of math I don't get.")
-                } catch (e: UnknownFunctionOrVariableException) {
-                    if (logger.isWarnEnabled) logger.warn("Unable to calculate: $args", e)
-                    send("No idea. I must've some form of Dyscalculia.")
-                }
+            try {
+                event.respond(calculate(args))
+            } catch (e: IllegalArgumentException) {
+                if (logger.isWarnEnabled) logger.warn("Failed to calculate: $args", e)
+                event.respond("No idea. This is the kind of math I don't get.")
+            } catch (e: UnknownFunctionOrVariableException) {
+                if (logger.isWarnEnabled) logger.warn("Unable to calculate: $args", e)
+                event.respond("No idea. I must've some form of Dyscalculia.")
             }
         } else {
-            helpResponse(sender, isPrivate)
+            helpResponse(event)
         }
     }
 

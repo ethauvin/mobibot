@@ -31,10 +31,10 @@
  */
 package net.thauvin.erik.mobibot.modules
 
-import net.thauvin.erik.mobibot.Mobibot
 import net.thauvin.erik.mobibot.Utils.capitalise
 import net.thauvin.erik.mobibot.Utils.encodeUrl
 import net.thauvin.erik.mobibot.Utils.helpFormat
+import net.thauvin.erik.mobibot.Utils.sendMessage
 import net.thauvin.erik.mobibot.Utils.unescapeXml
 import net.thauvin.erik.mobibot.Utils.urlReader
 import net.thauvin.erik.mobibot.msg.ErrorMessage
@@ -43,31 +43,34 @@ import net.thauvin.erik.mobibot.msg.NoticeMessage
 import net.thauvin.erik.mobibot.msg.PublicMessage
 import org.json.JSONException
 import org.json.JSONObject
+import org.pircbotx.hooks.types.GenericMessageEvent
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import java.io.IOException
 import java.net.URL
 
 /**
  * The StockQuote module.
  */
-class StockQuote(bot: Mobibot) : ThreadedModule(bot) {
+class StockQuote : ThreadedModule() {
+    private val logger: Logger = LoggerFactory.getLogger(StockQuote::class.java)
+
     /**
      * Returns the specified stock quote from Alpha Vantage.
      */
-    override fun run(sender: String, cmd: String, args: String, isPrivate: Boolean) {
-        with(bot) {
-            if (args.isNotBlank()) {
-                try {
-                    val messages = getQuote(args, properties[ALPHAVANTAGE_API_KEY_PROP])
-                    for (msg in messages) {
-                        send(sender, msg)
-                    }
-                } catch (e: ModuleException) {
-                    if (logger.isWarnEnabled) logger.warn(e.debugMessage, e)
-                    send(e.message)
+    override fun run(channel: String, cmd: String, args: String, event: GenericMessageEvent) {
+        if (args.isNotBlank()) {
+            try {
+                val messages = getQuote(args, properties[ALPHAVANTAGE_API_KEY_PROP])
+                for (msg in messages) {
+                    event.sendMessage(channel, msg)
                 }
-            } else {
-                helpResponse(sender, isPrivate)
+            } catch (e: ModuleException) {
+                if (logger.isWarnEnabled) logger.warn(e.debugMessage, e)
+                event.sendMessage(e.message!!)
             }
+        } else {
+            helpResponse(event)
         }
     }
 
@@ -129,9 +132,9 @@ class StockQuote(bot: Mobibot) : ThreadedModule(bot) {
                     "${STOCK_CMD.capitalise()} is disabled. The API key is missing."
                 )
             }
-            return if (symbol.isNotBlank()) {
+            val messages = mutableListOf<Message>()
+            if (symbol.isNotBlank()) {
                 val debugMessage = "getQuote($symbol)"
-                val messages = mutableListOf<Message>()
                 var response: String
                 try {
                     with(messages) {
@@ -161,56 +164,55 @@ class StockQuote(bot: Mobibot) : ThreadedModule(bot) {
                             val quote = json.getJSONObject("Global Quote")
                             if (quote.isEmpty) {
                                 add(ErrorMessage(INVALID_SYMBOL))
-                                return messages
-                            }
+                            } else {
 
-                            add(
-                                PublicMessage(
-                                    "Symbol: " + unescapeXml(quote.getString("01. symbol"))
-                                            + " [" + unescapeXml(symbolInfo.getString("2. name")) + ']'
+                                add(
+                                    PublicMessage(
+                                        "Symbol: " + unescapeXml(quote.getString("01. symbol"))
+                                                + " [" + unescapeXml(symbolInfo.getString("2. name")) + ']'
+                                    )
                                 )
-                            )
 
-                            @Suppress("MagicNumber")
-                            val pad = 10
+                                val pad = 10
 
-                            add(
-                                PublicMessage(
-                                    "Price:".padEnd(pad).prependIndent()
-                                            + unescapeXml(quote.getString("05. price"))
+                                add(
+                                    PublicMessage(
+                                        "Price:".padEnd(pad).prependIndent()
+                                                + unescapeXml(quote.getString("05. price"))
+                                    )
                                 )
-                            )
-                            add(
-                                PublicMessage(
-                                    "Previous:".padEnd(pad).prependIndent()
-                                            + unescapeXml(quote.getString("08. previous close"))
+                                add(
+                                    PublicMessage(
+                                        "Previous:".padEnd(pad).prependIndent()
+                                                + unescapeXml(quote.getString("08. previous close"))
+                                    )
                                 )
-                            )
 
-                            val data = arrayOf(
-                                "Open" to "02. open",
-                                "High" to "03. high",
-                                "Low" to "04. low",
-                                "Volume" to "06. volume",
-                                "Latest" to "07. latest trading day"
-                            )
+                                val data = arrayOf(
+                                    "Open" to "02. open",
+                                    "High" to "03. high",
+                                    "Low" to "04. low",
+                                    "Volume" to "06. volume",
+                                    "Latest" to "07. latest trading day"
+                                )
 
-                            data.forEach {
+                                data.forEach {
+                                    add(
+                                        NoticeMessage(
+                                            "${it.first}:".padEnd(pad).prependIndent()
+                                                    + unescapeXml(quote.getString(it.second))
+                                        )
+                                    )
+                                }
+
                                 add(
                                     NoticeMessage(
-                                        "${it.first}:".padEnd(pad).prependIndent()
-                                                + unescapeXml(quote.getString(it.second))
+                                        "Change:".padEnd(pad).prependIndent()
+                                                + unescapeXml(quote.getString("09. change"))
+                                                + " [" + unescapeXml(quote.getString("10. change percent")) + ']'
                                     )
                                 )
                             }
-
-                            add(
-                                NoticeMessage(
-                                    "Change:".padEnd(pad).prependIndent()
-                                            + unescapeXml(quote.getString("09. change"))
-                                            + " [" + unescapeXml(quote.getString("10. change percent")) + ']'
-                                )
-                            )
                         }
                     }
                 } catch (e: IOException) {
@@ -218,10 +220,10 @@ class StockQuote(bot: Mobibot) : ThreadedModule(bot) {
                 } catch (e: NullPointerException) {
                     throw ModuleException(debugMessage, "An error has occurred retrieving a stock quote.", e)
                 }
-                messages
             } else {
-                throw ModuleException(INVALID_SYMBOL)
+                messages.add(ErrorMessage(INVALID_SYMBOL))
             }
+            return messages
         }
     }
 

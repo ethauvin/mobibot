@@ -32,27 +32,21 @@
 
 package net.thauvin.erik.mobibot.commands
 
-import net.thauvin.erik.mobibot.Mobibot
+import net.thauvin.erik.mobibot.Utils.bot
 import net.thauvin.erik.mobibot.Utils.helpFormat
+import net.thauvin.erik.mobibot.Utils.isChannelOp
+import org.pircbotx.hooks.types.GenericMessageEvent
 
-class Nick(bot: Mobibot) : AbstractCommand(bot) {
+class Nick : AbstractCommand() {
     override val name = "nick"
     override val help = listOf("To change the bot's nickname:", helpFormat("%c $name <new_nick>"))
-    override val isOp = true
+    override val isOpOnly = true
     override val isPublic = true
     override val isVisible = true
 
-    override fun commandResponse(
-        sender: String,
-        login: String,
-        args: String,
-        isOp: Boolean,
-        isPrivate: Boolean
-    ) {
-        if (isOp) {
-            bot.changeNick(args)
-        } else {
-            bot.helpDefault(sender, isOp, isPrivate)
+    override fun commandResponse(channel: String, args: String, event: GenericMessageEvent) {
+        if (isChannelOp(channel, event)) {
+            event.bot().sendIRC().changeNick(args)
         }
     }
 }
