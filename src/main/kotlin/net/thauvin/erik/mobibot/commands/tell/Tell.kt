@@ -32,6 +32,7 @@
 package net.thauvin.erik.mobibot.commands.tell
 
 import net.thauvin.erik.mobibot.Utils.bold
+import net.thauvin.erik.mobibot.Utils.bot
 import net.thauvin.erik.mobibot.Utils.buildCmdSyntax
 import net.thauvin.erik.mobibot.Utils.helpFormat
 import net.thauvin.erik.mobibot.Utils.isChannelOp
@@ -280,7 +281,7 @@ class Tell(private val serialObject: String) : AbstractCommand() {
                 helpFormat(
                     buildCmdSyntax(
                         "%c $name $TELL_DEL_KEYWORD <id|$TELL_ALL_KEYWORD>",
-                        event.user.nick,
+                        event.bot().nick,
                         true
                     )
                 )
