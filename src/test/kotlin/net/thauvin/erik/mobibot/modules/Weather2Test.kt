@@ -50,7 +50,6 @@ import net.thauvin.erik.mobibot.modules.Weather2.Companion.getCountry
 import net.thauvin.erik.mobibot.modules.Weather2.Companion.getWeather
 import net.thauvin.erik.mobibot.modules.Weather2.Companion.mphToKmh
 import org.testng.annotations.Test
-import kotlin.random.Random
 
 /**
  * The `Weather2Test` class.
@@ -69,7 +68,7 @@ class Weather2Test : LocalProperties() {
 
         val country = OWM.Country.values()
         repeat(3) {
-            val rand = country[Random.nextInt(0, country.size - 1)]
+            val rand = country[(country.indices).random()]
             assertThat(getCountry(rand.value), rand.name).isEqualTo(rand)
         }
     }

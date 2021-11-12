@@ -36,7 +36,6 @@ import net.thauvin.erik.mobibot.Utils.bot
 import net.thauvin.erik.mobibot.Utils.capitalise
 import net.thauvin.erik.mobibot.Utils.helpFormat
 import org.pircbotx.hooks.types.GenericMessageEvent
-import kotlin.random.Random
 
 
 /**
@@ -104,7 +103,7 @@ class RockPaperScissors : AbstractModule() {
 
     override fun commandResponse(channel: String, cmd: String, args: String, event: GenericMessageEvent) {
         val hand = Hands.valueOf(cmd.uppercase())
-        val botHand = Hands.values()[Random.nextInt(0, Hands.values().size)]
+        val botHand = Hands.values()[(0..Hands.values().size).random()]
         with(event.bot()) {
             sendIRC().message(channel, "${hand.emoji}  vs. ${botHand.emoji}")
             when {

@@ -35,7 +35,6 @@ import net.thauvin.erik.mobibot.Utils.bold
 import net.thauvin.erik.mobibot.Utils.bot
 import net.thauvin.erik.mobibot.Utils.helpFormat
 import org.pircbotx.hooks.types.GenericMessageEvent
-import kotlin.random.Random
 
 /**
  * The Dice module.
@@ -67,7 +66,7 @@ class Dice : AbstractModule() {
     }
 
     private fun roll(): Pair<Int, Int> {
-        return Random.nextInt(1, DICE_FACES.size) to Random.nextInt(1, DICE_FACES.size)
+        return (1..DICE_FACES.size).random() to (1..DICE_FACES.size).random()
     }
 
     companion object {

@@ -34,7 +34,6 @@ package net.thauvin.erik.mobibot.modules
 import net.thauvin.erik.mobibot.Utils.bot
 import net.thauvin.erik.mobibot.Utils.helpFormat
 import org.pircbotx.hooks.types.GenericMessageEvent
-import kotlin.random.Random
 
 /**
  * The Ping module.
@@ -69,7 +68,7 @@ class Ping : AbstractModule() {
 
         @JvmStatic
         fun randomPing(): String {
-            return PINGS[Random.nextInt(PINGS.size)]
+            return PINGS[PINGS.indices.random()]
         }
 
         /**
