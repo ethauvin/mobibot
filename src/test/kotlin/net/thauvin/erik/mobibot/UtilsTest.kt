@@ -31,8 +31,10 @@
  */
 package net.thauvin.erik.mobibot
 
+import assertk.all
 import assertk.assertThat
 import assertk.assertions.isEqualTo
+import assertk.assertions.length
 import net.thauvin.erik.mobibot.Utils.appendIfMissing
 import net.thauvin.erik.mobibot.Utils.bold
 import net.thauvin.erik.mobibot.Utils.buildCmdSyntax
@@ -187,8 +189,10 @@ class UtilsTest {
 
     @Test
     fun testObfuscate() {
-        assertThat(ascii.obfuscate().length, "obfuscate is right length").isEqualTo(ascii.length)
-        assertThat(ascii.obfuscate(), "obfuscate()").isEqualTo("x".repeat(ascii.length))
+        assertThat(ascii.obfuscate(), "obfuscate()").all {
+            length().isEqualTo(ascii.length)
+            isEqualTo(("x".repeat(ascii.length)))
+        }
         assertThat(" ".obfuscate(), "obfuscate(blank)").isEqualTo(" ")
     }
 

@@ -51,7 +51,7 @@ class FeedReaderTest {
     fun readFeedTest() {
         var messages = readFeed("https://feeds.thauvin.net/ethauvin")
         assertThat(messages.size, "size = 10").isEqualTo(10)
-        assertThat(messages[1].msg, "feed entry url").contains("ethauvin")
+        assertThat(messages[1].msg, "feed entry url").contains("erik.thauvin.net")
 
         messages = readFeed("https://lorem-rss.herokuapp.com/feed?length=0")
         assertThat(messages[0].msg, "nothing to view").contains("nothing")

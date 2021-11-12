@@ -48,9 +48,7 @@ class CalcTest {
     fun testCalculate() {
         assertThat(calculate("1 + 1"), "calculate(1+1)").isEqualTo("1+1 = ${bold(2)}")
         assertThat(calculate("1 -3"), "calculate(1 -3)").isEqualTo("1-3 = ${bold(-2)}")
-        assertThat(calculate("pi+π+e+φ"), "calculate(pi+π+e+φ)")
-            .isEqualTo("pi+π+e+φ = ${bold("10.62")}")
-        assertThat { calculate("one + one") }
-            .isFailure().isInstanceOf(UnknownFunctionOrVariableException::class.java)
+        assertThat(calculate("pi+π+e+φ"), "calculate(pi+π+e+φ)").isEqualTo("pi+π+e+φ = ${bold("10.62")}")
+        assertThat { calculate("one + one") }.isFailure().isInstanceOf(UnknownFunctionOrVariableException::class.java)
     }
 }
