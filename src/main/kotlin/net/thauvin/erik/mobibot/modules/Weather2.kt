@@ -144,31 +144,34 @@ class Weather2 : ThreadedModule() {
                                             country.name.replace('_', ' ').capitalizeWords() + " [${country.value}]"
                                 )
                             )
-                            with(cwd.mainData) {
-                                if (this != null) {
+                            cwd.mainData?.let {
+                                with(it) {
                                     if (hasTemp()) {
                                         val t = ftoC(temp)
                                         messages.add(PublicMessage("Temperature: ${t.first}°F, ${t.second}°C"))
                                     }
-                                    if (hasHumidity() && humidity != null) {
-                                        messages.add(NoticeMessage("Humidity: ${(humidity!!).roundToInt()}%"))
+                                    if (hasHumidity()) {
+                                        humidity?.let { h ->
+                                            messages.add(NoticeMessage("Humidity: ${h.roundToInt()}%"))
+                                        }
                                     }
                                 }
                             }
                             if (cwd.hasWindData()) {
-                                with(cwd.windData) {
-                                    if (this != null && hasSpeed() && speed != null) {
-                                        val w = mphToKmh(speed!!)
-                                        messages.add(NoticeMessage("Wind: ${w.first} mph, ${w.second} km/h"))
+                                cwd.windData?.let {
+                                    if (it.hasSpeed()) {
+                                        it.speed?.let { s ->
+                                            val w = mphToKmh(s)
+                                            messages.add(NoticeMessage("Wind: ${w.first} mph, ${w.second} km/h"))
+                                        }
                                     }
                                 }
                             }
                             if (cwd.hasWeatherList()) {
                                 val condition = StringBuilder("Condition:")
-                                val list = cwd.weatherList
-                                if (list != null) {
-                                    for (w in list) {
-                                        if (w != null) {
+                                cwd.weatherList?.let {
+                                    for (w in it) {
+                                        w?.let {
                                             condition.append(' ')
                                                 .append(w.getDescription().capitalise())
                                                 .append('.')
@@ -177,19 +180,21 @@ class Weather2 : ThreadedModule() {
                                     messages.add(NoticeMessage(condition.toString()))
                                 }
                             }
-                            if (cwd.hasCityId() && cwd.cityId != null) {
-                                if (cwd.cityId!! > 0) {
-                                    messages.add(
-                                        NoticeMessage("https://openweathermap.org/city/${cwd.cityId}", Colors.GREEN)
-                                    )
-                                } else {
-                                    messages.add(
-                                        NoticeMessage(
-                                            "https://openweathermap.org/find?q="
-                                                    + encodeUrl("$city,${code.uppercase()}"),
-                                            Colors.GREEN
+                            if (cwd.hasCityId()) {
+                                cwd.cityId?.let {
+                                    if (it > 0) {
+                                        messages.add(
+                                            NoticeMessage("https://openweathermap.org/city/$it", Colors.GREEN)
                                         )
-                                    )
+                                    } else {
+                                        messages.add(
+                                            NoticeMessage(
+                                                "https://openweathermap.org/find?q="
+                                                        + encodeUrl("$city,${code.uppercase()}"),
+                                                Colors.GREEN
+                                            )
+                                        )
+                                    }
                                 }
                             }
                         }

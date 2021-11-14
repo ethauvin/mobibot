@@ -61,7 +61,7 @@ open class LocalProperties {
                 localProps.getProperty(key)
             } else {
                 val env = System.getenv(keyToEnv(key))
-                if (env != null) {
+                env?.let {
                     localProps.setProperty(key, env)
                 }
                 env
