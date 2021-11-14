@@ -67,7 +67,7 @@ class FeedReaderTest {
         assertThat { readFeed("https://www.examples.com/foo") }.isFailure()
             .isInstanceOf(FileNotFoundException::class.java)
 
-        assertThat { readFeed("https://www.doesnotexists.com") }.isFailure()
+        assertThat { readFeed("https://www.examplesfoo.com/") }.isFailure()
             .isInstanceOf(UnknownHostException::class.java)
     }
 }
