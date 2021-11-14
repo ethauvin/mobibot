@@ -32,14 +32,17 @@
 
 package net.thauvin.erik.mobibot.msg
 
+import assertk.all
 import assertk.assertThat
+import assertk.assertions.isFalse
 import assertk.assertions.isTrue
+import assertk.assertions.prop
 import org.testng.annotations.Test
 
 class TestMessage {
     @Test
     fun testConstructor() {
-        var msg = Message()
+        var msg = Message("foo")
 
         msg.isError = true
         assertThat(msg.isNotice, "message is notice").isTrue()
@@ -51,6 +54,30 @@ class TestMessage {
     @Test
     fun testErrorMessage() {
         val msg = ErrorMessage("foo")
-        assertThat(msg.isNotice, "error message is notice").isTrue()
+        assertThat(msg).all {
+            prop(Message::isError).isTrue()
+            prop(Message::isNotice).isTrue()
+            prop(Message::isPrivate).isFalse()
+        }
+    }
+
+    @Test
+    fun testNoticeMessage() {
+        val msg = NoticeMessage("food")
+        assertThat(msg).all {
+            prop(Message::isError).isFalse()
+            prop(Message::isNotice).isTrue()
+            prop(Message::isPrivate).isFalse()
+        }
+    }
+
+    @Test
+    fun testPublicMessage() {
+        val msg = PublicMessage("foo")
+        assertThat(msg).all {
+            prop(Message::isError).isFalse()
+            prop(Message::isNotice).isFalse()
+            prop(Message::isPrivate).isFalse()
+        }
     }
 }

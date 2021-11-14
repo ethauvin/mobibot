@@ -36,52 +36,30 @@ import net.thauvin.erik.semver.Constants
 /**
  * The `Message` class.
  */
-open class Message {
+open class Message @JvmOverloads constructor(
+    var msg: String,
+    var color: String = DEFAULT_COLOR,
+    var isNotice: Boolean = false,
+    isError: Boolean = false,
+    var isPrivate: Boolean = false
+) {
     companion object {
         var DEFAULT_COLOR = Constants.EMPTY
+
     }
 
-    /** Message color. */
-    var color = DEFAULT_COLOR
+    init {
+        if (isError) {
+            isNotice = true
+        }
+    }
 
     /** Error flag. */
-    var isError = false
+    var isError = isError
         set(value) {
             if (value) isNotice = value
             field = value
         }
-
-    /** Notice flag. */
-    var isNotice = false
-
-    /** Private flag. */
-    var isPrivate = false
-
-    /** Message text. */
-    var msg = ""
-
-    /** Creates a new message. */
-    constructor() {
-        // This constructor is intentionally empty
-    }
-
-    /**
-     * Creates a new message.
-     */
-    @JvmOverloads
-    constructor(
-        msg: String,
-        color: String = DEFAULT_COLOR,
-        isNotice: Boolean = false,
-        isError: Boolean = false,
-        isPrivate: Boolean = false
-    ) {
-        this.msg = msg
-        this.color = color
-        this.isNotice = isNotice
-        this.isError = isError
-        this.isPrivate = isPrivate
-    }
 
     override fun toString(): String {
         return "Message(color='$color', isError=$isError, isNotice=$isNotice, isPrivate=$isPrivate, msg='$msg')"
