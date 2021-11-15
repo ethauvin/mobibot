@@ -167,7 +167,9 @@ class Twitter : ThreadedModule() {
             event.respond(post(event.user.nick, "$args (by ${event.user.nick} on $channel)", false))
         } catch (e: ModuleException) {
             if (logger.isWarnEnabled) logger.warn(e.debugMessage, e)
-            event.respond(e.message)
+            e.message?.let {
+                event.respond(it)
+            }
         }
     }
 

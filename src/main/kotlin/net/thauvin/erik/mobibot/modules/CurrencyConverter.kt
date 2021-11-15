@@ -210,13 +210,13 @@ class CurrencyConverter : ThreadedModule() {
                     EXCHANGE_RATES["EUR"] = "1"
                 } catch (e: JDOMException) {
                     throw ModuleException(
-                        e.message,
+                        "loadRates(): JDOM",
                         "An JDOM parsing error has occurred while parsing the exchange rates table.",
                         e
                     )
                 } catch (e: IOException) {
                     throw ModuleException(
-                        e.message,
+                        "loadRates(): IOE",
                         "An IO error has occurred while parsing the exchange rates table.",
                         e
                     )

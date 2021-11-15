@@ -34,33 +34,11 @@ package net.thauvin.erik.mobibot.modules
 /**
  * The `ModuleException` class.
  */
-class ModuleException : Exception {
-    /**
-     * Returns the debug message.
-     */
-    val debugMessage: String?
-
-    /**
-     * Creates a new exception.
-     */
-    constructor(message: String?) : super(message) {
-        debugMessage = message
-    }
-
-    /**
-     * Creates a new exception.
-     */
-    constructor(debugMessage: String?, message: String?, cause: Throwable?) : super(message, cause) {
-        this.debugMessage = debugMessage
-    }
-
-    /**
-     * Creates a new exception.
-     */
-    constructor(debugMessage: String?, message: String?) : super(message) {
-        this.debugMessage = debugMessage
-    }
-
+class ModuleException @JvmOverloads constructor(
+    val debugMessage: String,
+    message: String? = null,
+    cause: Throwable? = null
+) : Exception(message, cause) {
     companion object {
         private const val serialVersionUID = 1L
     }

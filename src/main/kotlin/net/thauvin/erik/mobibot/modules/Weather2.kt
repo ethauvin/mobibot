@@ -73,7 +73,9 @@ class Weather2 : ThreadedModule() {
                 }
             } catch (e: ModuleException) {
                 if (logger.isWarnEnabled) logger.warn(e.debugMessage, e)
-                event.respond(e.message)
+                e.message?.let {
+                    event.respond(it)
+                }
             }
         } else {
             helpResponse(event)
@@ -116,7 +118,10 @@ class Weather2 : ThreadedModule() {
         @Throws(ModuleException::class)
         fun getWeather(query: String, apiKey: String?): List<Message> {
             if (apiKey.isNullOrBlank()) {
-                throw ModuleException("${WEATHER_CMD.capitalise()} is disabled. The API key is missing.")
+                throw ModuleException(
+                    "${Weather2::class.java.name} is disabled.",
+                    "${WEATHER_CMD.capitalise()} is disabled. The API key is missing."
+                )
             }
             val owm = OWM(apiKey)
             val messages = mutableListOf<Message>()
@@ -199,9 +204,17 @@ class Weather2 : ThreadedModule() {
                             }
                         }
                     } catch (e: APIException) {
-                        throw ModuleException("getWeather($query)", e.message, e)
+                        if (e.code == 404) {
+                            throw ModuleException(
+                                "getWeather($query): API ${e.code}",
+                                "The requested city was not found.",
+                                e
+                            )
+                        } else {
+                            throw ModuleException("getWeather($query): API ${e.code}", e.message, e)
+                        }
                     } catch (e: NullPointerException) {
-                        throw ModuleException("getWeather($query)", "Unable to perform weather lookup.", e)
+                        throw ModuleException("getWeather($query): NPE", "Unable to perform weather lookup.", e)
                     }
                 }
             }

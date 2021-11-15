@@ -89,14 +89,14 @@ class ModuleExceptionTest {
         e = ModuleException(debugMessage, message, IOException())
         assertThat(e.sanitize(apiKey), "no cause message").hasMessage(message)
 
-        e = ModuleException(apiKey)
+        e = ModuleException(debugMessage, apiKey)
         assertThat(e.sanitize(apiKey).message, "api key in message").isNotNull().doesNotContain(apiKey)
 
         val msg: String? = null
         e = ModuleException(debugMessage, msg, IOException(msg))
         assertThat(e.sanitize(apiKey).message, "null message").isNull()
 
-        e = ModuleException(msg, msg, IOException("foo is $apiKey"))
+        e = ModuleException(debugMessage, msg, IOException("foo is $apiKey"))
         assertThat(e.sanitize("   ", apiKey, "foo").message, "key in cause").isNotNull().all {
             doesNotContain(apiKey)
             endsWith("xxx is xxxxxxxxxx")

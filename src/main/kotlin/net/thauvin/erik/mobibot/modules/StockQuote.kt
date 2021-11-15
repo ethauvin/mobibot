@@ -67,7 +67,9 @@ class StockQuote : ThreadedModule() {
                 }
             } catch (e: ModuleException) {
                 if (logger.isWarnEnabled) logger.warn(e.debugMessage, e)
-                event.sendMessage(e.message!!)
+                e.message?.let {
+                    event.sendMessage(it)
+                }
             }
         } else {
             helpResponse(event)
@@ -129,6 +131,7 @@ class StockQuote : ThreadedModule() {
         fun getQuote(symbol: String, apiKey: String?): List<Message> {
             if (apiKey.isNullOrBlank()) {
                 throw ModuleException(
+                    "${StockQuote::class.java.name} is disabled.",
                     "${STOCK_CMD.capitalise()} is disabled. The API key is missing."
                 )
             }
@@ -216,9 +219,9 @@ class StockQuote : ThreadedModule() {
                         }
                     }
                 } catch (e: IOException) {
-                    throw ModuleException(debugMessage, "An IO error has occurred retrieving a stock quote.", e)
+                    throw ModuleException("$debugMessage: IOE", "An IO error has occurred retrieving a stock quote.", e)
                 } catch (e: NullPointerException) {
-                    throw ModuleException(debugMessage, "An error has occurred retrieving a stock quote.", e)
+                    throw ModuleException("$debugMessage: NPE", "An error has occurred retrieving a stock quote.", e)
                 }
             } else {
                 messages.add(ErrorMessage(INVALID_SYMBOL))

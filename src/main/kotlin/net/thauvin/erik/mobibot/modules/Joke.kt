@@ -69,7 +69,9 @@ class Joke : ThreadedModule() {
                 sendIRC().notice(channel, cyan(randomJoke().msg))
             } catch (e: ModuleException) {
                 if (logger.isWarnEnabled) logger.warn(e.debugMessage, e)
-                event.sendMessage(e.message!!)
+                e.message?.let {
+                    event.sendMessage(it)
+                }
             }
         }
     }
@@ -96,9 +98,9 @@ class Joke : ThreadedModule() {
                         .replace("\\\"", "\"")
                 )
             } catch (e: IOException) {
-                throw ModuleException("randomJoke()", "An IO error has occurred retrieving a random joke.", e)
+                throw ModuleException("randomJoke(): IOE", "An IO error has occurred retrieving a random joke.", e)
             } catch (e: JSONException) {
-                throw ModuleException("randomJoke()", "An JSON error has occurred retrieving a random joke.", e)
+                throw ModuleException("randomJoke(): JSON", "An JSON error has occurred retrieving a random joke.", e)
             }
         }
     }

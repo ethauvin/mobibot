@@ -70,7 +70,9 @@ class GoogleSearch : ThreadedModule() {
                 }
             } catch (e: ModuleException) {
                 if (logger.isWarnEnabled) logger.warn(e.debugMessage, e)
-                event.sendMessage(e.message!!)
+                e.message?.let {
+                    event.sendMessage(it)
+                }
             }
         } else {
             helpResponse(event)
@@ -94,7 +96,10 @@ class GoogleSearch : ThreadedModule() {
         @Throws(ModuleException::class)
         fun searchGoogle(query: String, apiKey: String?, cseKey: String?): List<Message> {
             if (apiKey.isNullOrBlank() || cseKey.isNullOrBlank()) {
-                throw ModuleException("${GOOGLE_CMD.capitalise()} is disabled. The API keys are missing.")
+                throw ModuleException(
+                    "${GoogleSearch::class.java.name} is disabled.",
+                    "${GOOGLE_CMD.capitalise()} is disabled. The API keys are missing."
+                )
             }
             val results = mutableListOf<Message>()
             if (query.isNotBlank()) {
@@ -115,9 +120,13 @@ class GoogleSearch : ThreadedModule() {
                         results.add(ErrorMessage("No results found.", Colors.RED))
                     }
                 } catch (e: IOException) {
-                    throw ModuleException("searchGoogle($query)", "An IO error has occurred searching Google.", e)
+                    throw ModuleException("searchGoogle($query): IOE", "An IO error has occurred searching Google.", e)
                 } catch (e: JSONException) {
-                    throw ModuleException("searchGoogle($query)", "A JSON error has occurred searching Google.", e)
+                    throw ModuleException(
+                        "searchGoogle($query): JSON",
+                        "A JSON error has occurred searching Google.",
+                        e
+                    )
                 }
             } else {
                 results.add(ErrorMessage("Invalid query. Please try again."))
