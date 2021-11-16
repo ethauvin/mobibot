@@ -134,7 +134,7 @@ class Ignore : AbstractCommand() {
             event.sendMessage("The following nicks are ignored:")
             event.sendList(ignored.sorted(), 8, isIndent = true)
         } else {
-            event.sendMessage("No one is currently ${bold("ignored")}.")
+            event.sendMessage("No one is currently ${"ignored".bold()}.")
         }
     }
 

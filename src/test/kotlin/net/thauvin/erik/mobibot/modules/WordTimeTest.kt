@@ -55,10 +55,10 @@ class WordTimeTest {
                     "on ${Colors.BOLD}\\w+, \\d{1,2} \\w+ \\d{4}${Colors.BOLD} " +
                     "in ${Colors.BOLD}Los Angeles${Colors.BOLD}").toRegex()
         )
-        assertThat(time(""), "empty zone").endsWith(bold("Los Angeles"))
-        assertThat(time("PST"), "PST").endsWith(bold("Los Angeles"))
-        assertThat(time("GB"), "GB").endsWith(bold("London"))
-        assertThat(time("FR"), "FR").endsWith(bold("Paris"))
+        assertThat(time(""), "empty zone").endsWith("Los Angeles".bold())
+        assertThat(time("PST"), "PST").endsWith("Los Angeles".bold())
+        assertThat(time("GB"), "GB").endsWith("London".bold())
+        assertThat(time("FR"), "FR").endsWith("Paris".bold())
         assertThat(time("BLAH"), "BLAH").startsWith("Unsupported")
         assertThat(time("BEAT"), BEATS_KEYWORD).matches("[\\w ]+ .?@\\d{3}+.? .beats".toRegex())
     }

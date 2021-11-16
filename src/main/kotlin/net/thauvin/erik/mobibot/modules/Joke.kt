@@ -66,7 +66,7 @@ class Joke : ThreadedModule() {
     override fun run(channel: String, cmd: String, args: String, event: GenericMessageEvent) {
         with(event.bot()) {
             try {
-                sendIRC().notice(channel, cyan(randomJoke().msg))
+                sendIRC().notice(channel, randomJoke().msg.cyan())
             } catch (e: ModuleException) {
                 if (logger.isWarnEnabled) logger.warn(e.debugMessage, e)
                 e.message?.let {

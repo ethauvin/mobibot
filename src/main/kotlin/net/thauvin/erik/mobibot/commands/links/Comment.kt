@@ -47,7 +47,7 @@ class Comment : AbstractCommand() {
     override val help = listOf(
         "To add a comment:",
         helpFormat("${Constants.LINK_CMD}1:This is a comment"),
-        "I will reply with a label, for example: ${bold(Constants.LINK_CMD)}1.1",
+        "I will reply with a label, for example: ${Constants.LINK_CMD.bold()}1.1",
         "To edit a comment, use its label: ",
         helpFormat("${Constants.LINK_CMD}1.1:This is an edited comment"),
         "To delete a comment, use its label and a minus sign: ",

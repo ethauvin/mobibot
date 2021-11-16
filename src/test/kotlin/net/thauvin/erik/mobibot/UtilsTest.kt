@@ -97,10 +97,10 @@ class UtilsTest {
 
     @Test
     fun testBold() {
-        assertThat(bold(1), "bold(1)").isEqualTo(Colors.BOLD + "1" + Colors.BOLD)
-        assertThat(bold(2L), "bold(1)").isEqualTo(Colors.BOLD + "2" + Colors.BOLD)
-        assertThat(bold(ascii), "bold(ascii)").isEqualTo(Colors.BOLD + ascii + Colors.BOLD)
-        assertThat(bold("test"), "bold(test)").isEqualTo(Colors.BOLD + "test" + Colors.BOLD)
+        assertThat(1.bold(), "1.bold()").isEqualTo(Colors.BOLD + "1" + Colors.BOLD)
+        assertThat(2L.bold(), "1.bold()").isEqualTo(Colors.BOLD + "2" + Colors.BOLD)
+        assertThat(ascii.bold(), "ascii.bold()").isEqualTo(Colors.BOLD + ascii + Colors.BOLD)
+        assertThat("test".bold(), "test.bold()").isEqualTo(Colors.BOLD + "test" + Colors.BOLD)
     }
 
     @Test
@@ -131,23 +131,23 @@ class UtilsTest {
 
     @Test
     fun testColorize() {
-        assertThat(colorize(ascii, Colors.REVERSE), "colorize(reverse)").isEqualTo(
+        assertThat(ascii.colorize(Colors.REVERSE), "reverse.colorize()").isEqualTo(
             Colors.REVERSE + ascii + Colors.REVERSE
         )
-        assertThat(colorize(ascii, Colors.RED), "colorize(red)")
+        assertThat(ascii.colorize(Colors.RED), "red.colorize()")
             .isEqualTo(Colors.RED + ascii + Colors.NORMAL)
-        assertThat(colorize(ascii, Colors.BOLD), "colorized(bold)")
+        assertThat(ascii.colorize(Colors.BOLD), "colorized(bold)")
             .isEqualTo(Colors.BOLD + ascii + Colors.BOLD)
-        assertThat(colorize(null, Colors.RED), "colorize(null)").isEqualTo("")
-        assertThat(colorize("", Colors.RED), "colorize()").isEqualTo("")
-        assertThat(colorize(ascii, DEFAULT_COLOR), "colorize(none)").isEqualTo(ascii)
-        assertThat(colorize("   ", Colors.NORMAL), "colorize(blank)")
+        assertThat(null.colorize(Colors.RED), "null.colorize()").isEqualTo("")
+        assertThat("".colorize(Colors.RED), "colorize()").isEqualTo("")
+        assertThat(ascii.colorize(DEFAULT_COLOR), "none.colorize()").isEqualTo(ascii)
+        assertThat("   ".colorize(Colors.NORMAL), "blank.colorize()")
             .isEqualTo(Colors.NORMAL + "   " + Colors.NORMAL)
     }
 
     @Test
     fun testCyan() {
-        assertThat(cyan(ascii)).isEqualTo(Colors.CYAN + ascii + Colors.NORMAL)
+        assertThat(ascii.cyan()).isEqualTo(Colors.CYAN + ascii + Colors.NORMAL)
     }
 
     @Test
@@ -167,7 +167,7 @@ class UtilsTest {
 
     @Test
     fun testGreen() {
-        assertThat(green(ascii)).isEqualTo(Colors.DARK_GREEN + ascii + Colors.NORMAL)
+        assertThat(ascii.green()).isEqualTo(Colors.DARK_GREEN + ascii + Colors.NORMAL)
     }
 
     @Test
@@ -177,7 +177,7 @@ class UtilsTest {
         assertThat(helpFormat(test, isBold = false, isIndent = true), "indent")
             .isEqualTo(test.prependIndent())
         assertThat(helpFormat(test, isBold = true, isIndent = true), "bold-indent")
-            .isEqualTo(colorize(test, Colors.BOLD).prependIndent())
+            .isEqualTo(test.colorize(Colors.BOLD).prependIndent())
 
     }
 
@@ -224,12 +224,12 @@ class UtilsTest {
 
     @Test
     fun testRed() {
-        assertThat(red(ascii)).isEqualTo(colorize(ascii, Colors.RED))
+        assertThat(ascii.red()).isEqualTo(ascii.colorize(Colors.RED))
     }
 
     @Test
     fun testReverseColor() {
-        assertThat(reverseColor(ascii)).isEqualTo(Colors.REVERSE + ascii + Colors.REVERSE)
+        assertThat(ascii.reverseColor()).isEqualTo(Colors.REVERSE + ascii + Colors.REVERSE)
     }
 
     @Test

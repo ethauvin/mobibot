@@ -75,19 +75,19 @@ object Utils {
      * Makes the given int bold.
      */
     @JvmStatic
-    fun bold(i: Int): String = bold(i.toString())
+    fun Int.bold(): String = this.toString().bold()
 
     /**
      * Makes the given long bold.
      */
     @JvmStatic
-    fun bold(i: Long): String = bold(i.toString())
+    fun Long.bold(): String = this.toString().bold()
 
     /**
      * Makes the given string bold.
      */
     @JvmStatic
-    fun bold(s: String?): String = colorize(s, Colors.BOLD)
+    fun String?.bold(): String = this.colorize(Colors.BOLD)
 
     /**
      * Returns the [PircBotX] instance.
@@ -122,15 +122,15 @@ object Utils {
      * Colorize a string.
      */
     @JvmStatic
-    fun colorize(s: String?, color: String): String {
-        return if (s.isNullOrEmpty()) {
+    fun String?.colorize(color: String): String {
+        return if (this.isNullOrEmpty()) {
             ""
         } else if (color == DEFAULT_COLOR) {
-            s
+            this
         } else if (Colors.BOLD == color || Colors.REVERSE == color) {
-            color + s + color
+            color + this + color
         } else {
-            color + s + Colors.NORMAL
+            color + this + Colors.NORMAL
         }
     }
 
@@ -138,7 +138,7 @@ object Utils {
      * Makes the given string cyan.
      */
     @JvmStatic
-    fun cyan(s: String?): String = colorize(s, Colors.CYAN)
+    fun String?.cyan(): String = this.colorize(Colors.CYAN)
 
     /**
      * URL encodes the given string.
@@ -158,7 +158,7 @@ object Utils {
      * Makes the given string green.
      */
     @JvmStatic
-    fun green(s: String?): String = colorize(s, Colors.DARK_GREEN)
+    fun String?.green(): String = this.colorize(Colors.DARK_GREEN)
 
     /**
      * Returns a formatted help string.
@@ -166,7 +166,7 @@ object Utils {
     @JvmStatic
     @JvmOverloads
     fun helpFormat(help: String, isBold: Boolean = true, isIndent: Boolean = true): String {
-        val s = if (isBold) bold(help) else help
+        val s = if (isBold) help.bold() else help
         return if (isIndent) s.prependIndent() else s
     }
 
@@ -200,7 +200,7 @@ object Utils {
      * Makes the given string red.
      */
     @JvmStatic
-    fun red(s: String?): String = colorize(s, Colors.RED)
+    fun String?.red(): String = this.colorize(Colors.RED)
 
     /**
      * Replaces all occurrences of Strings within another String.
@@ -220,7 +220,7 @@ object Utils {
      * Makes the given string reverse color.
      */
     @JvmStatic
-    fun reverseColor(s: String?): String = colorize(s, Colors.REVERSE)
+    fun String?.reverseColor(): String = this.colorize(Colors.REVERSE)
 
     /**
      * Send a formatted commands/modules, etc. list.
@@ -252,11 +252,11 @@ object Utils {
     @JvmStatic
     fun GenericMessageEvent.sendMessage(channel: String, message: Message) {
         if (message.isNotice) {
-            bot().sendIRC().notice(user.nick, colorize(message.msg, message.color))
+            bot().sendIRC().notice(user.nick, message.msg.colorize(message.color))
         } else if (message.isPrivate || this is PrivateMessageEvent || channel.isBlank()) {
-            respondPrivateMessage(colorize(message.msg, message.color))
+            respondPrivateMessage(message.msg.colorize(message.color))
         } else {
-            bot().sendIRC().message(channel, colorize(message.msg, message.color))
+            bot().sendIRC().message(channel, message.msg.colorize(message.color))
         }
     }
 

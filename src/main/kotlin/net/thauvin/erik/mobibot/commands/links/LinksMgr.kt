@@ -167,7 +167,7 @@ class LinksMgr : AbstractCommand() {
             for (i in entries.links.indices) {
                 if (link == entries.links[i].link) {
                     val entry: EntryLink = entries.links[i]
-                    event.sendMessage(bold("Duplicate") + " >> " + EntriesUtils.buildLink(i, entry))
+                    event.sendMessage("Duplicate".bold() + " >> " + EntriesUtils.buildLink(i, entry))
                     return true
                 }
             }

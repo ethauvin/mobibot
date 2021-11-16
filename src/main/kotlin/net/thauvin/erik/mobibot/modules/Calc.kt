@@ -74,7 +74,7 @@ class Calc : AbstractModule() {
         fun calculate(query: String): String {
             val decimalFormat = DecimalFormat("#.##")
             val calc = ExpressionBuilder(query).build()
-            return query.replace(" ", "") + " = " + bold(decimalFormat.format(calc.evaluate()))
+            return query.replace(" ", "") + " = " + decimalFormat.format(calc.evaluate()).bold()
         }
     }
 

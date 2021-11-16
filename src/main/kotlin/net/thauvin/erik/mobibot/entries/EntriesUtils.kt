@@ -65,9 +65,9 @@ object EntriesUtils {
             if (Constants.NO_TITLE == title) {
                 buff.append(title)
             } else {
-                buff.append(bold(title))
+                buff.append(title.bold())
             }
-            buff.append(" ( ").append(green(link)).append(" )")
+            buff.append(" ( ").append(link.green()).append(" )")
         }
         return buff.toString()
     }

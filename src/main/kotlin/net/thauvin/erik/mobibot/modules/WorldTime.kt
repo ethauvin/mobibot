@@ -64,7 +64,7 @@ class WorldTime : AbstractModule() {
 
         // Date/Time Format
         private var dtf =
-            DateTimeFormatter.ofPattern("'The time is ${bold("'HH:mm'")} on ${bold("'EEEE, d MMMM yyyy'")} in '")
+            DateTimeFormatter.ofPattern("'The time is ${"'HH:mm'".bold()} on ${"'EEEE, d MMMM yyyy'".bold()} in '")
 
         /**
          * Returns the current Internet (beat) Time.
@@ -84,10 +84,10 @@ class WorldTime : AbstractModule() {
             val tz = COUNTRIES_MAP[(if (query.isNotBlank()) query.trim().uppercase() else DEFAULT_ZONE)]
             return if (tz != null) {
                 if (BEATS_KEYWORD == tz) {
-                    "The current Internet Time is ${bold(internetTime())} $BEATS_KEYWORD"
+                    "The current Internet Time is ${internetTime().bold()} $BEATS_KEYWORD"
                 } else {
                     (ZonedDateTime.now().withZoneSameInstant(ZoneId.of(tz)).format(dtf)
-                            + bold(tz.substring(tz.lastIndexOf('/') + 1).replace('_', ' ')))
+                            + tz.substring(tz.lastIndexOf('/') + 1).replace('_', ' ').bold())
                 }
             } else {
                 "Unsupported country/zone. Please try again."
@@ -362,13 +362,8 @@ class WorldTime : AbstractModule() {
             zones["ZM"] = "Africa/Lusaka"
             zones["ZULU"] = "Zulu"
             zones["ZW"] = "Africa/Harare"
-            ZoneId.getAvailableZoneIds().stream()
-                .filter { tz: String ->
-                    tz.length <= 3 && !zones.containsKey(tz)
-                }
-                .forEach { tz: String ->
-                    zones[tz] = tz
-                }
+            ZoneId.getAvailableZoneIds().filter { it.length <= 3 && !zones.containsKey(it) }
+                .forEach { tz -> zones[tz] = tz }
             COUNTRIES_MAP = Collections.unmodifiableMap(zones)
         }
     }

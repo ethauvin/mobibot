@@ -89,7 +89,7 @@ class CurrencyConverter : ThreadedModule() {
                 helpResponse(event)
             }
         } else if (args.contains(CURRENCY_RATES_KEYWORD)) {
-            event.sendMessage("The reference rates for ${bold(pubDate)} are:")
+            event.sendMessage("The reference rates for ${pubDate.bold()} are:")
             event.sendList(currencyRates(), 3, "   ", isIndent = true)
         } else {
             helpResponse(event)

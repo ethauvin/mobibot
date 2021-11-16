@@ -46,9 +46,9 @@ import org.testng.annotations.Test
 class CalcTest {
     @Test
     fun testCalculate() {
-        assertThat(calculate("1 + 1"), "calculate(1+1)").isEqualTo("1+1 = ${bold(2)}")
-        assertThat(calculate("1 -3"), "calculate(1 -3)").isEqualTo("1-3 = ${bold(-2)}")
-        assertThat(calculate("pi+π+e+φ"), "calculate(pi+π+e+φ)").isEqualTo("pi+π+e+φ = ${bold("10.62")}")
+        assertThat(calculate("1 + 1"), "calculate(1+1)").isEqualTo("1+1 = ${2.bold()}")
+        assertThat(calculate("1 -3"), "calculate(1 -3)").isEqualTo("1-3 = ${(-2).bold()}")
+        assertThat(calculate("pi+π+e+φ"), "calculate(pi+π+e+φ)").isEqualTo("pi+π+e+φ = ${"10.62".bold()}")
         assertThat { calculate("one + one") }.isFailure().isInstanceOf(UnknownFunctionOrVariableException::class.java)
     }
 }

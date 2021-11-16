@@ -47,11 +47,11 @@ class Dice : AbstractModule() {
         val total = roll.first + roll.second
         with(event.bot()) {
             event.respond(
-                "you rolled ${DICE_FACES[roll.first]}  ${DICE_FACES[roll.second]}  for a total of ${bold(total)}"
+                "you rolled ${DICE_FACES[roll.first]}  ${DICE_FACES[roll.second]}  for a total of ${total.bold()}"
             )
             sendIRC().action(
                 channel,
-                "rolled ${DICE_FACES[botRoll.first]}  ${DICE_FACES[botRoll.second]}  for a total of ${bold(botTotal)}"
+                "rolled ${DICE_FACES[botRoll.first]}  ${DICE_FACES[botRoll.second]}  for a total of ${botTotal.bold()}"
             )
             when (winLoseOrTie(botTotal, total)) {
                 Result.WIN -> sendIRC().action(channel, "wins.")

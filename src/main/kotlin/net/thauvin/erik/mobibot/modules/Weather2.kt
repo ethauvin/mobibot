@@ -240,7 +240,7 @@ class Weather2 : ThreadedModule() {
             add(helpFormat("%c $WEATHER_CMD <city> [, <country code>]"))
             add("For example:")
             add(helpFormat("%c $WEATHER_CMD paris, fr"))
-            add("The default ISO 3166 country code is ${bold("US")}. Zip codes supported in most countries.")
+            add("The default ISO 3166 country code is ${"US".bold()}. Zip codes supported in most countries.")
         }
         initProperties(OWM_API_KEY_PROP)
     }
