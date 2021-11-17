@@ -6,8 +6,9 @@ plugins {
     id 'jacoco'
     id 'java'
     id 'net.thauvin.erik.gradle.semver' version '1.0.4'
-    id 'org.jetbrains.kotlin.jvm' version '1.6.0-RC2'
-    id 'org.jetbrains.kotlin.kapt' version '1.6.0-RC2'
+    id 'org.jetbrains.kotlin.jvm' version '1.6.0'
+    id 'org.jetbrains.kotlin.kapt' version '1.6.0'
+    id 'org.jetbrains.kotlinx.kover' version '0.4.2'
     id 'org.sonarqube' version '3.3'
     id 'pmd'
 }
@@ -59,7 +60,7 @@ dependencies {
 
     implementation 'net.aksingh:owm-japis:2.5.3.0'
     implementation 'com.google.code.gson:gson:2.8.9'
-    
+
     implementation 'net.objecthunter:exp4j:0.4.8'
 
     implementation 'net.thauvin.erik:cryptoprice:0.9.0-SNAPSHOT'
@@ -154,6 +155,7 @@ incrementBuildMeta {
 
 sonarqube {
     properties {
+        property('sonar.jacoco.reportPaths', "$buildDir/reports/kover/report.xml")
         property('sonar.organization', 'ethauvin-github')
         property('sonar.projectKey', 'ethauvin_mobibot')
         property('sonar.host.url', 'https://sonarcloud.io')
@@ -173,7 +175,7 @@ jacocoTestReport {
 }
 
 tasks.sonarqube {
-    dependsOn 'jacocoTestReport'
+    dependsOn 'koverReport'
 }
 
 task copyToDeploy(type: Copy) {
