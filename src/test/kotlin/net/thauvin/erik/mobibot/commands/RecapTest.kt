@@ -1,5 +1,5 @@
 /*
- * Recap.kt
+ * RecapTest.kt
  *
  * Copyright (c) 2004-2021, Erik C. Thauvin (erik@thauvin.net)
  * All rights reserved.
@@ -32,51 +32,23 @@
 
 package net.thauvin.erik.mobibot.commands
 
-import net.thauvin.erik.mobibot.Utils.helpFormat
-import net.thauvin.erik.mobibot.Utils.sendMessage
-import net.thauvin.erik.mobibot.Utils.toUtcDateTime
-import org.pircbotx.hooks.types.GenericMessageEvent
-import java.time.Clock
-import java.time.LocalDateTime
+import assertk.all
+import assertk.assertThat
+import assertk.assertions.contains
+import assertk.assertions.isEqualTo
+import assertk.assertions.prop
+import assertk.assertions.size
+import org.testng.annotations.Test
 
-class Recap : AbstractCommand() {
-    override val name = "recap"
-    override val help = listOf(
-        "To list the last 10 public channel messages:",
-        helpFormat("%c $name")
-    )
-    override val isOpOnly = false
-    override val isPublic = true
-    override val isVisible = true
-
-    companion object {
-        const val MAX_RECAPS = 10
-
-        @JvmField
-        val recaps = mutableListOf<String>()
-
-        /**
-         * Stores the last 10 public messages and actions.
-         */
-        @JvmStatic
-        fun storeRecap(sender: String, message: String, isAction: Boolean) {
-            recaps.add(
-                LocalDateTime.now(Clock.systemUTC()).toUtcDateTime()
-                        + " - $sender" + (if (isAction) " " else ": ") + message
-            )
-            if (recaps.size > MAX_RECAPS) {
-                recaps.removeFirst()
-            }
+class RecapTest {
+    @Test
+    fun storeRecapTest() {
+        for (i in 1..20) {
+            Recap.storeRecap("sender$i", "test $1", false)
         }
-    }
-
-    override fun commandResponse(channel: String, args: String, event: GenericMessageEvent) {
-        if (recaps.isNotEmpty()) {
-            for (r in recaps) {
-                event.sendMessage(r)
-            }
-        } else {
-            event.sendMessage("Sorry, nothing to recap.")
+        assertThat(Recap.recaps).all {
+            size().isEqualTo(Recap.MAX_RECAPS)
+            prop(MutableList<String>::last).contains("sender20")
         }
     }
 }

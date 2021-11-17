@@ -60,56 +60,60 @@ class View : AbstractCommand() {
 
     override fun commandResponse(channel: String, args: String, event: GenericMessageEvent) {
         if (entries.links.isNotEmpty()) {
-            showPosts(args, event)
+            val p = parseArgs(args)
+            showPosts(p.first, p.second, event)
         } else {
             event.sendMessage("There is currently nothing to view. Why don't you post something?")
         }
     }
 
-    private fun showPosts(args: String, event: GenericMessageEvent) {
-        val max = entries.links.size
-        var lcArgs = args.lowercase()
-        var i = 0
-        if (lcArgs.isEmpty() && max > maxEntries) {
-            i = max - maxEntries
+    internal fun parseArgs(args: String): Pair<Int, String> {
+        var query = args.lowercase().trim()
+        var start = 0
+        if (query.isEmpty() && entries.links.size > maxEntries) {
+            start = entries.links.size - maxEntries
         }
-        if (lcArgs.matches("^\\d+(| .*)".toRegex())) {
-            val split = lcArgs.split(" ", limit = 2)
+        if (query.matches("^\\d+(| .*)".toRegex())) { // view [<start>] [<query>]
+            val split = query.split(" ", limit = 2)
             try {
-                i = split[0].toInt() - 1
-                lcArgs = if (split.size == 2) {
+                start = split[0].toInt() - 1
+                query = if (split.size == 2) {
                     split[1].trim()
                 } else {
                     ""
                 }
-                if (i > max) {
-                    i = 0
+                if (start > entries.links.size) {
+                    start = 0
                 }
             } catch (ignore: NumberFormatException) {
                 // Do nothing
             }
         }
+        return Pair(start, query)
+    }
 
+    private fun showPosts(start: Int, query: String, event: GenericMessageEvent) {
+        var index = start
         var entry: EntryLink
         var sent = 0
-        while (i < max && sent < maxEntries) {
-            entry = entries.links[i]
-            if (lcArgs.isNotBlank()) {
-                if (entry.matches(lcArgs)) {
-                    event.sendMessage(EntriesUtils.buildLink(i, entry, true))
+        while (index < entries.links.size && sent < maxEntries) {
+            entry = entries.links[index]
+            if (query.isNotBlank()) {
+                if (entry.matches(query)) {
+                    event.sendMessage(EntriesUtils.buildLink(index, entry, true))
                     sent++
                 }
             } else {
-                event.sendMessage(EntriesUtils.buildLink(i, entry, true))
+                event.sendMessage(EntriesUtils.buildLink(index, entry, true))
                 sent++
             }
-            i++
-            if (sent == maxEntries && i < max) {
+            index++
+            if (sent == maxEntries && index < entries.links.size) {
                 event.sendMessage("To view more, try: ")
                 event.sendMessage(
                     helpFormat(
                         buildCmdSyntax(
-                            "%c $name ${i + 1} $lcArgs",
+                            "%c $name ${index + 1} $query",
                             event.bot().nick,
                             event is PrivateMessageEvent
                         )

@@ -42,7 +42,8 @@ import net.thauvin.erik.mobibot.Utils.today
 import net.thauvin.erik.mobibot.commands.AbstractCommand
 import net.thauvin.erik.mobibot.commands.Ignore.Companion.isNotIgnored
 import net.thauvin.erik.mobibot.entries.Entries
-import net.thauvin.erik.mobibot.entries.EntriesUtils
+import net.thauvin.erik.mobibot.entries.EntriesUtils.buildLink
+import net.thauvin.erik.mobibot.entries.EntriesUtils.buildLinkLabel
 import net.thauvin.erik.mobibot.entries.EntryLink
 import net.thauvin.erik.mobibot.modules.Twitter
 import org.jsoup.Jsoup
@@ -124,7 +125,7 @@ class LinksMgr : AbstractCommand() {
                 val entry = EntryLink(link, title, sender, login, channel, tags)
                 entries.links.add(entry)
                 val index = entries.links.lastIndexOf(entry)
-                event.sendMessage(EntriesUtils.buildLink(index, entry))
+                event.sendMessage(buildLink(index, entry))
 
                 pinboard.addPin(event.bot().serverHostname, entry)
 
@@ -135,7 +136,7 @@ class LinksMgr : AbstractCommand() {
 
                 if (Constants.NO_TITLE == entry.title) {
                     event.sendMessage("Please specify a title, by typing:")
-                    event.sendMessage(helpFormat("${EntriesUtils.buildLinkLabel(index)}:|This is the title"))
+                    event.sendMessage(helpFormat("${buildLinkLabel(index)}:|This is the title"))
                 }
             }
         }
@@ -147,7 +148,7 @@ class LinksMgr : AbstractCommand() {
         return message.matches(LINK_MATCH.toRegex())
     }
 
-    private fun fetchTitle(link: String): String {
+    internal fun fetchTitle(link: String): String {
         try {
             val html = Jsoup.connect(link)
                 .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:74.0) Gecko/20100101 Firefox/74.0")
@@ -164,18 +165,19 @@ class LinksMgr : AbstractCommand() {
 
     private fun isDupEntry(link: String, event: GenericMessageEvent): Boolean {
         synchronized(entries) {
-            for (i in entries.links.indices) {
-                if (link == entries.links[i].link) {
-                    val entry: EntryLink = entries.links[i]
-                    event.sendMessage("Duplicate".bold() + " >> " + EntriesUtils.buildLink(i, entry))
-                    return true
-                }
+            return try {
+                val match = entries.links.single { it.link == link }
+                event.sendMessage(
+                    "Duplicate".bold() + " >> " + buildLink(entries.links.indexOf(match), match)
+                )
+                true
+            } catch (ignore: NoSuchElementException) {
+                false
             }
         }
-        return false
     }
 
-    private fun matchTagKeywords(title: String, tags: MutableList<String>) {
+    internal fun matchTagKeywords(title: String, tags: MutableList<String>) {
         for (match in keywords) {
             val m = Regex.escape(match)
             if (title.matches("(?i).*\\b$m\\b.*".toRegex())) {
