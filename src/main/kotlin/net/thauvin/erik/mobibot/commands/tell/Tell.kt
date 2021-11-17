@@ -62,62 +62,6 @@ class Tell(private val serialObject: String) : AbstractCommand() {
     private var maxSize = 50
 
     /**
-     * Cleans the messages queue.
-     */
-    private fun clean(): Boolean {
-        // if (bot.logger.isDebugEnabled) bot.logger.debug("Cleaning the messages.")
-        return TellMessagesMgr.clean(messages, maxDays.toLong())
-    }
-
-    // Delete message.
-    private fun deleteMessage(channel: String, args: String, event: GenericMessageEvent) {
-        val split = args.split(" ")
-        if (split.size == 2) {
-            val id = split[1]
-            var deleted = false
-            if (TELL_ALL_KEYWORD.equals(id, ignoreCase = true)) {
-                for (message in messages) {
-                    if (message.sender.equals(event.user.nick, ignoreCase = true) && message.isReceived) {
-                        messages.remove(message)
-                        deleted = true
-                    }
-                }
-                if (deleted) {
-                    save()
-                    event.sendMessage("Delivered messages have been deleted.")
-                } else {
-                    event.sendMessage("No delivered messages were found.")
-                }
-            } else {
-                var found = false
-                for (message in messages) {
-                    found = (message.id == id)
-                    if (found && (message.sender.equals(event.user.nick, ignoreCase = true) || isChannelOp(
-                            channel,
-                            event
-                        ))
-                    ) {
-                        messages.remove(message)
-                        save()
-                        event.sendMessage("Your message was deleted from the queue.")
-                        deleted = true
-                        break
-                    }
-                }
-                if (!deleted) {
-                    if (found) {
-                        event.sendMessage("Only messages that you sent can be deleted.")
-                    } else {
-                        event.sendMessage("The specified message [ID $id] could not be found.")
-                    }
-                }
-            }
-        } else {
-            helpResponse(channel, args, event)
-        }
-    }
-
-    /**
      * The tell command.
      */
     override val name = "tell"
@@ -127,11 +71,19 @@ class Tell(private val serialObject: String) : AbstractCommand() {
         helpFormat("%c $name <nick> <message>"),
         "To view queued and sent messages:",
         helpFormat("%c $name ${View.VIEW_CMD}"),
-        "Messages are kept for ${bold(maxDays)}" + " day".plural(maxDays.toLong()) + '.'
+        "Messages are kept for ${maxDays.bold()}" + " day".plural(maxDays.toLong()) + '.'
     )
     override val isOpOnly: Boolean = false
     override val isPublic: Boolean = isEnabled()
     override val isVisible: Boolean = isEnabled()
+
+    /**
+     * Cleans the messages queue.
+     */
+    private fun clean(): Boolean {
+        // if (bot.logger.isDebugEnabled) bot.logger.debug("Cleaning the messages.")
+        return TellMessagesMgr.clean(messages, maxDays.toLong())
+    }
 
     override fun commandResponse(channel: String, args: String, event: GenericMessageEvent) {
         if (isEnabled()) {
@@ -151,6 +103,34 @@ class Tell(private val serialObject: String) : AbstractCommand() {
             if (clean()) {
                 save()
             }
+        }
+    }
+
+    // Delete message.
+    private fun deleteMessage(channel: String, args: String, event: GenericMessageEvent) {
+        val split = args.split(" ")
+        if (split.size == 2) {
+            val id = split[1]
+            if (TELL_ALL_KEYWORD.equals(id, ignoreCase = true)) {
+                if (messages.removeIf { it.sender.equals(event.user.nick, true) && it.isReceived }) {
+                    save()
+                    event.sendMessage("Delivered messages have been deleted.")
+                } else {
+                    event.sendMessage("No delivered messages were found.")
+                }
+            } else {
+                if (messages.removeIf {
+                        it.id == id &&
+                                (it.sender.equals(event.user.nick, true) || isChannelOp(channel, event))
+                    }) {
+                    save()
+                    event.sendMessage("The message was deleted from the queue.")
+                } else {
+                    event.sendMessage("The specified message [ID $id] could not be found.")
+                }
+            }
+        } else {
+            helpResponse(channel, args, event)
         }
     }
 
@@ -175,7 +155,7 @@ class Tell(private val serialObject: String) : AbstractCommand() {
                 val message = TellMessage(event.user.nick, split[0], split[1].trim())
                 messages.add(message)
                 save()
-                event.sendMessage("Message [ID ${message.id}] was queued for ${bold(message.recipient)}")
+                event.sendMessage("Message [ID ${message.id}] was queued for ${message.recipient.bold()}")
             } else {
                 event.sendMessage("Sorry, the messages queue is currently full.")
             }
@@ -197,36 +177,35 @@ class Tell(private val serialObject: String) : AbstractCommand() {
     fun send(event: GenericUserEvent) {
         val nickname = event.user.nick
         if (isEnabled() && nickname != event.getBot<PircBotX>().nick) {
-            messages.stream().filter { message: TellMessage -> message.isMatch(nickname) }
-                .forEach { message: TellMessage ->
-                    if (message.recipient.equals(nickname, ignoreCase = true) && !message.isReceived) {
-                        if (message.sender == nickname) {
-                            if (event !is MessageEvent) {
-                                event.user.send().message(
-                                    "${bold("You")} wanted me to remind you: ${reverseColor(message.message)}"
-                                )
-                                message.isReceived = true
-                                message.isNotified = true
-                                save()
-                            }
-                        } else {
+            messages.filter { it.isMatch(nickname) }.forEach { message ->
+                if (message.recipient.equals(nickname, ignoreCase = true) && !message.isReceived) {
+                    if (message.sender == nickname) {
+                        if (event !is MessageEvent) {
                             event.user.send().message(
-                                "${message.sender} wanted me to tell you: ${reverseColor(message.message)}"
+                                "${"You".bold()} wanted me to remind you: ${message.message.reverseColor()}"
                             )
                             message.isReceived = true
+                            message.isNotified = true
                             save()
                         }
-                    } else if (message.sender.equals(nickname, ignoreCase = true) && message.isReceived
-                        && !message.isNotified
-                    ) {
+                    } else {
                         event.user.send().message(
-                            "Your message ${reverseColor("[ID ${message.id}]")} was sent to "
-                                    + "${bold(message.recipient)} on ${message.receptionDate}"
+                            "${message.sender} wanted me to tell you: ${message.message.reverseColor()}"
                         )
-                        message.isNotified = true
+                        message.isReceived = true
                         save()
                     }
+                } else if (message.sender.equals(nickname, ignoreCase = true) && message.isReceived
+                    && !message.isNotified
+                ) {
+                    event.user.send().message(
+                        "Your message ${"[ID ${message.id}]".reverseColor()} was sent to "
+                                + "${message.recipient.bold()} on ${message.receptionDate}"
+                    )
+                    message.isNotified = true
+                    save()
                 }
+            }
         }
     }
 
@@ -242,7 +221,7 @@ class Tell(private val serialObject: String) : AbstractCommand() {
         if (messages.isNotEmpty()) {
             for (message in messages) {
                 event.sendMessage(
-                    "${bold(message.sender)}$ARROW${bold(message.recipient)} [ID: ${message.id}, " +
+                    "${message.sender.bold()}$ARROW${message.recipient.bold()} [ID: ${message.id}, " +
                             (if (message.isReceived) "DELIVERED]" else "QUEUED]")
                 )
             }
@@ -254,24 +233,23 @@ class Tell(private val serialObject: String) : AbstractCommand() {
     // View messages.
     private fun viewMessages(event: GenericMessageEvent) {
         var hasMessage = false
-        for (message in messages) {
-            if (message.isMatch(event.user.nick)) {
-                if (!hasMessage) {
-                    hasMessage = true; event.sendMessage("Here are your messages: ")
-                }
-                if (message.isReceived) {
-                    event.sendMessage(
-                        bold(message.sender) + ARROW + bold(message.recipient) +
-                                " [${message.receptionDate.toUtcDateTime()}, ID: ${bold(message.id)}, DELIVERED]"
-                    )
-                } else {
-                    event.sendMessage(
-                        bold(message.sender) + ARROW + bold(message.recipient) +
-                                " [${message.queued.toUtcDateTime()}, ID: ${bold(message.id)}, QUEUED]"
-                    )
-                }
-                event.sendMessage(helpFormat(message.message))
+        for (message in messages.filter { it.isMatch(event.user.nick) }) {
+            if (!hasMessage) {
+                hasMessage = true
+                event.sendMessage("Here are your messages: ")
             }
+            if (message.isReceived) {
+                event.sendMessage(
+                    message.sender.bold() + ARROW + message.recipient.bold() +
+                            " [${message.receptionDate.toUtcDateTime()}, ID: ${message.id.bold()}, DELIVERED]"
+                )
+            } else {
+                event.sendMessage(
+                    message.sender.bold() + ARROW + message.recipient.bold() +
+                            " [${message.queued.toUtcDateTime()}, ID: ${message.id.bold()}, QUEUED]"
+                )
+            }
+            event.sendMessage(helpFormat(message.message))
         }
         if (!hasMessage) {
             event.sendMessage("You have no messages in the queue.")
