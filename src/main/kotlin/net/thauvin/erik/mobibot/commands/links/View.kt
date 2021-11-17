@@ -44,7 +44,6 @@ import org.pircbotx.hooks.events.PrivateMessageEvent
 import org.pircbotx.hooks.types.GenericMessageEvent
 
 class View : AbstractCommand() {
-    private val maxEntries = 6
     override val name = VIEW_CMD
     override val help = listOf(
         "To list or search the current URL posts:",
@@ -55,6 +54,7 @@ class View : AbstractCommand() {
     override val isVisible = true
 
     companion object {
+        const val MAX_ENTRIES = 6
         const val VIEW_CMD = "view"
     }
 
@@ -70,8 +70,8 @@ class View : AbstractCommand() {
     internal fun parseArgs(args: String): Pair<Int, String> {
         var query = args.lowercase().trim()
         var start = 0
-        if (query.isEmpty() && entries.links.size > maxEntries) {
-            start = entries.links.size - maxEntries
+        if (query.isEmpty() && entries.links.size > MAX_ENTRIES) {
+            start = entries.links.size - MAX_ENTRIES
         }
         if (query.matches("^\\d+(| .*)".toRegex())) { // view [<start>] [<query>]
             val split = query.split(" ", limit = 2)
@@ -96,7 +96,7 @@ class View : AbstractCommand() {
         var index = start
         var entry: EntryLink
         var sent = 0
-        while (index < entries.links.size && sent < maxEntries) {
+        while (index < entries.links.size && sent < MAX_ENTRIES) {
             entry = entries.links[index]
             if (query.isNotBlank()) {
                 if (entry.matches(query)) {
@@ -108,7 +108,7 @@ class View : AbstractCommand() {
                 sent++
             }
             index++
-            if (sent == maxEntries && index < entries.links.size) {
+            if (sent == MAX_ENTRIES && index < entries.links.size) {
                 event.sendMessage("To view more, try: ")
                 event.sendMessage(
                     helpFormat(

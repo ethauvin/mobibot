@@ -44,7 +44,7 @@ class ViewTest {
     fun testParseArgs() {
         val view = View()
 
-        for (i in 1..3) {
+        for (i in 1..10) {
             LinksMgr.entries.links.add(
                 EntryLink(
                     "https://www.example.com/$i",
@@ -77,8 +77,28 @@ class ViewTest {
             prop(Pair<Int, String>::second).isEqualTo("foo bar")
         }
 
-        assertThat(view.parseArgs("5"), "parseArgs(5)").all {
+        assertThat(view.parseArgs("foo bar"), "parseArgs(foo bar)").all {
             prop(Pair<Int, String>::first).isEqualTo(0)
+            prop(Pair<Int, String>::second).isEqualTo("foo bar")
+        }
+
+        assertThat(view.parseArgs("${Int.MAX_VALUE}1"), "parseArgs(overflow)").all {
+            prop(Pair<Int, String>::first).isEqualTo(0)
+            prop(Pair<Int, String>::second).isEqualTo("${Int.MAX_VALUE}1")
+        }
+
+        assertThat(view.parseArgs("1a"), "parseArgs(1a)").all {
+            prop(Pair<Int, String>::first).isEqualTo(0)
+            prop(Pair<Int, String>::second).isEqualTo("1a")
+        }
+
+        assertThat(view.parseArgs("20"), "parseArgs(20)").all {
+            prop(Pair<Int, String>::first).isEqualTo(0)
+            prop(Pair<Int, String>::second).isEqualTo("")
+        }
+
+        assertThat(view.parseArgs(""), "parseArgs()").all {
+            prop(Pair<Int, String>::first).isEqualTo(LinksMgr.entries.links.size - View.MAX_ENTRIES)
             prop(Pair<Int, String>::second).isEqualTo("")
         }
 
