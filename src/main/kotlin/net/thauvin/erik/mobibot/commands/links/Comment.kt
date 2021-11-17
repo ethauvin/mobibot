@@ -38,7 +38,8 @@ import net.thauvin.erik.mobibot.Utils.helpFormat
 import net.thauvin.erik.mobibot.Utils.isChannelOp
 import net.thauvin.erik.mobibot.Utils.sendMessage
 import net.thauvin.erik.mobibot.commands.AbstractCommand
-import net.thauvin.erik.mobibot.entries.EntriesUtils
+import net.thauvin.erik.mobibot.entries.EntriesUtils.buildComment
+import net.thauvin.erik.mobibot.entries.EntriesUtils.buildLinkLabel
 import net.thauvin.erik.mobibot.entries.EntryLink
 import org.pircbotx.hooks.types.GenericMessageEvent
 
@@ -110,7 +111,7 @@ class Comment : AbstractCommand() {
         if (isChannelOp(channel, event) && cmd.length > 1) {
             val comment = entry.getComment(commentIndex)
             comment.nick = cmd.substring(1)
-            event.sendMessage(EntriesUtils.buildComment(entryIndex, commentIndex, comment))
+            event.sendMessage(buildComment(entryIndex, commentIndex, comment))
             LinksMgr.entries.save()
         } else {
             event.sendMessage("Please ask a channel op to change the author of this comment for you.")
@@ -126,7 +127,7 @@ class Comment : AbstractCommand() {
     ) {
         if (isChannelOp(channel, event) || event.user.nick == entry.getComment(commentIndex).nick) {
             entry.deleteComment(commentIndex)
-            event.sendMessage("Comment ${EntriesUtils.buildLinkLabel(entryIndex)}.${commentIndex + 1} removed.")
+            event.sendMessage("Comment ${buildLinkLabel(entryIndex)}.${commentIndex + 1} removed.")
             LinksMgr.entries.save()
         } else {
             event.sendMessage("Please ask a channel op to delete this comment for you.")
@@ -141,11 +142,11 @@ class Comment : AbstractCommand() {
         event: GenericMessageEvent
     ) {
         entry.setComment(commentIndex, cmd, event.user.nick)
-        event.sendMessage(EntriesUtils.buildComment(entryIndex, commentIndex, entry.getComment(commentIndex)))
+        event.sendMessage(buildComment(entryIndex, commentIndex, entry.getComment(commentIndex)))
         LinksMgr.entries.save()
     }
 
     private fun showComment(entry: EntryLink, entryIndex: Int, commentIndex: Int, event: GenericMessageEvent) {
-        event.sendMessage(EntriesUtils.buildComment(entryIndex, commentIndex, entry.getComment(commentIndex)))
+        event.sendMessage(buildComment(entryIndex, commentIndex, entry.getComment(commentIndex)))
     }
 }

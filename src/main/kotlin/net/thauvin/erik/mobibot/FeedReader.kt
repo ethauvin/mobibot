@@ -34,7 +34,6 @@ package net.thauvin.erik.mobibot
 import com.rometools.rome.io.FeedException
 import com.rometools.rome.io.SyndFeedInput
 import com.rometools.rome.io.XmlReader
-import net.thauvin.erik.mobibot.Utils.cyan
 import net.thauvin.erik.mobibot.Utils.green
 import net.thauvin.erik.mobibot.Utils.helpFormat
 import net.thauvin.erik.mobibot.Utils.sendMessage
@@ -84,7 +83,7 @@ class FeedReader(private val url: String, val event: GenericMessageEvent) : Runn
                 } else {
                     items.take(maxItems).forEach {
                         messages.add(NoticeMessage(it.title))
-                        messages.add(NoticeMessage(helpFormat(it.link.cyan(), false)))
+                        messages.add(NoticeMessage(helpFormat(it.link.green(), false)))
                     }
                 }
             }

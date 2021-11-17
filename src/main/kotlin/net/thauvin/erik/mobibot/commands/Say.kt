@@ -44,7 +44,6 @@ class Say : AbstractCommand() {
     override val isPublic = false
     override val isVisible = true
 
-
     override fun commandResponse(channel: String, args: String, event: GenericMessageEvent) {
         if (isChannelOp(channel, event)) {
             event.bot().sendIRC().message(channel, args)

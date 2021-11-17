@@ -47,7 +47,6 @@ class Cycle : AbstractCommand() {
     override val isPublic = false
     override val isVisible = true
 
-
     override fun commandResponse(channel: String, args: String, event: GenericMessageEvent) {
         with(event.bot()) {
             if (isChannelOp(channel, event)) {

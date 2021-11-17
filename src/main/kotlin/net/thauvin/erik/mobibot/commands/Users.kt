@@ -44,7 +44,6 @@ class Users : AbstractCommand() {
     override val isPublic = true
     override val isVisible = true
 
-
     override fun commandResponse(channel: String, args: String, event: GenericMessageEvent) {
         val nicks = mutableListOf<String>()
         val ch = event.bot().userChannelDao.getChannel(channel)
