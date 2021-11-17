@@ -63,7 +63,9 @@ class CryptoPrices : ThreadedModule() {
                 event.respond("${price.base} current price is $amount [${price.currency}]")
             } catch (e: CryptoException) {
                 if (logger.isWarnEnabled) logger.warn("$debugMessage => ${e.statusCode}", e)
-                event.sendMessage(e.message!!)
+                e.message?.let {
+                    event.sendMessage(it)
+                }
             } catch (e: IOException) {
                 if (logger.isErrorEnabled) logger.error(debugMessage, e)
                 event.sendMessage("An IO error has occurred while retrieving the cryptocurrency market price.")

@@ -162,73 +162,87 @@ class Mobibot(nickname: String, channel: String, logsDirPath: String, p: Propert
     }
 
     override fun onAction(event: ActionEvent?) {
-        if (channel == event?.channel?.name) {
-            storeRecap(event.user!!.nick, event.action, true)
+        event?.channel?.let {
+            if (channel == it.name) {
+                event.user?.let { user ->
+                    storeRecap(user.nick, event.action, true)
+                }
+            }
         }
     }
 
     override fun onDisconnect(event: DisconnectEvent?) {
-        with(event!!.getBot<PircBotX>()) {
-            LinksMgr.twitter.notification("$nick disconnected from irc://$serverHostname")
+        event?.let {
+            with(event.getBot<PircBotX>()) {
+                LinksMgr.twitter.notification("$nick disconnected from irc://$serverHostname")
+            }
         }
         LinksMgr.twitter.shutdown()
     }
 
     override fun onPrivateMessage(event: PrivateMessageEvent?) {
-        if (logger.isTraceEnabled) logger.trace("<<< ${event!!.user!!.nick}: ${event.message}")
-        val cmds = event!!.message.trim().split(" ".toRegex(), 2)
-        val cmd = cmds[0].lowercase()
-        val args = if (cmds.size > 1) {
-            cmds[1].trim()
-        } else ""
-        if (cmd.startsWith(Constants.HELP_CMD)) { // help
-            helpResponse(event, args)
-        } else if (!addons.exec(channel, cmd, args, event)) { // Execute command or module
-            helpDefault(event)
+        event?.user?.let { user ->
+            if (logger.isTraceEnabled) logger.trace("<<< ${user.nick}: ${event.message}")
+            val cmds = event.message.trim().split(" ".toRegex(), 2)
+            val cmd = cmds[0].lowercase()
+            val args = if (cmds.size > 1) {
+                cmds[1].trim()
+            } else ""
+            if (cmd.startsWith(Constants.HELP_CMD)) { // help
+                helpResponse(event, args)
+            } else if (!addons.exec(channel, cmd, args, event)) { // Execute command or module
+                helpDefault(event)
+            }
         }
     }
 
     override fun onJoin(event: JoinEvent?) {
-        with(event!!.getBot<PircBotX>()) {
-            if (event.user!!.nick == nick) {
-                LinksMgr.twitter.notification("$nick has joined ${event.channel.name} on irc://$serverHostname")
-            } else {
-                tell.send(event)
+        event?.user?.let { user ->
+            with(event.getBot<PircBotX>()) {
+                if (user.nick == nick) {
+                    LinksMgr.twitter.notification("$nick has joined ${event.channel.name} on irc://$serverHostname")
+                } else {
+                    tell.send(event)
+                }
             }
         }
     }
 
     override fun onMessage(event: MessageEvent?) {
-        val sender = event!!.user!!.nick
-        val message = event.message
-        tell.send(event)
-        if (message.matches("(?i)${Pattern.quote(event.bot().nick)}:.*".toRegex())) { // mobibot: <command>
-            if (logger.isTraceEnabled) logger.trace(">>> $sender: $message")
-            val cmds = message.substring(message.indexOf(':') + 1).trim().split(" ".toRegex(), 2)
-            val cmd = cmds[0].lowercase()
-            val args = if (cmds.size > 1) {
-                cmds[1].trim()
-            } else ""
-            if (cmd.startsWith(Constants.HELP_CMD)) { // mobibot: help
-                helpResponse(event, args)
-            } else {
-                // Execute module or command
-                addons.exec(channel, cmd, args, event)
+        event?.user?.let { user ->
+            val sender = user.nick
+            val message = event.message
+            tell.send(event)
+            if (message.matches("(?i)${Pattern.quote(event.bot().nick)}:.*".toRegex())) { // mobibot: <command>
+                if (logger.isTraceEnabled) logger.trace(">>> $sender: $message")
+                val cmds = message.substring(message.indexOf(':') + 1).trim().split(" ".toRegex(), 2)
+                val cmd = cmds[0].lowercase()
+                val args = if (cmds.size > 1) {
+                    cmds[1].trim()
+                } else ""
+                if (cmd.startsWith(Constants.HELP_CMD)) { // mobibot: help
+                    helpResponse(event, args)
+                } else {
+                    // Execute module or command
+                    addons.exec(channel, cmd, args, event)
+                }
+            } else if (addons.match(channel, event)) { // Links, e.g.: https://www.example.com/ or L1: , etc.
+                if (logger.isTraceEnabled) logger.trace(">>> $sender: $message")
             }
-        } else if (addons.match(channel, event)) { // Links, e.g.: https://www.example.com/ or L1: , etc.
-            if (logger.isTraceEnabled) logger.trace(">>> $sender: $message")
+            storeRecap(sender, message, false)
         }
-        storeRecap(sender, message, false)
     }
 
     override fun onNickChange(event: NickChangeEvent?) {
-        tell.send(event!!)
+        event?.let { tell.send(event) }
     }
 
     override fun onPart(event: PartEvent?) {
-        with(event!!.getBot<PircBotX>()) {
-            if (event.user!!.nick == nick) {
-                LinksMgr.twitter.notification("$nick has left ${event.channel.name} on irc://$serverHostname")
+        event?.user?.let { user ->
+            with(event.getBot<PircBotX>()) {
+                if (user.nick == nick) {
+                    LinksMgr.twitter.notification("$nick has left ${event.channel.name} on irc://$serverHostname")
+                }
             }
         }
     }
