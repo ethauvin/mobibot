@@ -155,7 +155,6 @@ incrementBuildMeta {
 
 sonarqube {
     properties {
-        property('sonar.jacoco.reportPaths', "$buildDir/reports/kover/report.xml")
         property('sonar.organization', 'ethauvin-github')
         property('sonar.projectKey', 'ethauvin_mobibot')
         property('sonar.host.url', 'https://sonarcloud.io')
@@ -175,7 +174,7 @@ jacocoTestReport {
 }
 
 tasks.sonarqube {
-    dependsOn 'koverReport'
+    dependsOn 'jacocoTestReport'
 }
 
 task copyToDeploy(type: Copy) {
