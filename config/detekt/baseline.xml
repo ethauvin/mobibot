@@ -9,6 +9,7 @@
     <ID>LongMethod:StockQuote.kt$StockQuote.Companion$ @JvmStatic @Throws(ModuleException::class) fun getQuote(symbol: String, apiKey: String?): List&lt;Message&gt;</ID>
     <ID>LongMethod:Weather2.kt$Weather2.Companion$ @JvmStatic @Throws(ModuleException::class) fun getWeather(query: String, apiKey: String?): List&lt;Message&gt;</ID>
     <ID>LongParameterList:Comment.kt$Comment$( channel: String, cmd: String, entry: EntryLink, entryIndex: Int, commentIndex: Int, event: GenericMessageEvent )</ID>
+    <ID>LongParameterList:EntryLink.kt$EntryLink$( // Link's comments val comments: MutableList&lt;EntryComment&gt; = mutableListOf(), // Tags/categories val tags: MutableList&lt;SyndCategory&gt; = mutableListOf(), // Channel var channel: String, // Creation date var date: Date = Calendar.getInstance().time, // Link's URL var link: String, // Author's login var login: String = "", // Author's nickname var nick: String, // Link's title var title: String )</ID>
     <ID>LongParameterList:Twitter.kt$Twitter.Companion$( consumerKey: String?, consumerSecret: String?, token: String?, tokenSecret: String?, handle: String?, message: String, isDm: Boolean )</ID>
     <ID>MagicNumber:Comment.kt$Comment$3</ID>
     <ID>MagicNumber:CurrencyConverter.kt$CurrencyConverter$11</ID>
@@ -21,7 +22,6 @@
     <ID>MagicNumber:Ignore.kt$Ignore$8</ID>
     <ID>MagicNumber:Mobibot.kt$Mobibot$8</ID>
     <ID>MagicNumber:Modules.kt$Modules$7</ID>
-    <ID>MagicNumber:Recap.kt$Recap.Companion$10</ID>
     <ID>MagicNumber:StockQuote.kt$StockQuote.Companion$10</ID>
     <ID>MagicNumber:Tell.kt$Tell$50</ID>
     <ID>MagicNumber:Tell.kt$Tell$7</ID>
@@ -32,7 +32,6 @@
     <ID>MagicNumber:Utils.kt$Utils$30</ID>
     <ID>MagicNumber:Utils.kt$Utils$365</ID>
     <ID>MagicNumber:Utils.kt$Utils$7</ID>
-    <ID>MagicNumber:View.kt$View$6</ID>
     <ID>MagicNumber:Weather2.kt$Weather2.Companion$1.60934</ID>
     <ID>MagicNumber:Weather2.kt$Weather2.Companion$32</ID>
     <ID>MagicNumber:Weather2.kt$Weather2.Companion$404</ID>
@@ -40,7 +39,6 @@
     <ID>MagicNumber:Weather2.kt$Weather2.Companion$9</ID>
     <ID>MagicNumber:WorldTime.kt$WorldTime$14</ID>
     <ID>MagicNumber:WorldTime.kt$WorldTime$4</ID>
-    <ID>MagicNumber:WorldTime.kt$WorldTime.Companion$3</ID>
     <ID>MagicNumber:WorldTime.kt$WorldTime.Companion$3600</ID>
     <ID>MagicNumber:WorldTime.kt$WorldTime.Companion$60</ID>
     <ID>MagicNumber:WorldTime.kt$WorldTime.Companion$86.4</ID>
@@ -56,7 +54,6 @@
     <ID>NestedBlockDepth:Posting.kt$Posting$override fun commandResponse(channel: String, args: String, event: GenericMessageEvent)</ID>
     <ID>NestedBlockDepth:StockQuote.kt$StockQuote.Companion$ @JvmStatic @Throws(ModuleException::class) fun getQuote(symbol: String, apiKey: String?): List&lt;Message&gt;</ID>
     <ID>NestedBlockDepth:Tell.kt$Tell$ fun send(event: GenericUserEvent)</ID>
-    <ID>NestedBlockDepth:Tell.kt$Tell$// Delete message. private fun deleteMessage(channel: String, args: String, event: GenericMessageEvent)</ID>
     <ID>NestedBlockDepth:TellMessagesMgr.kt$TellMessagesMgr$ fun load(file: String): List&lt;TellMessage&gt;</ID>
     <ID>NestedBlockDepth:TellMessagesMgr.kt$TellMessagesMgr$ fun save(file: String, messages: List&lt;TellMessage?&gt;?)</ID>
     <ID>NestedBlockDepth:TwitterOAuth.kt$TwitterOAuth$ @Throws(TwitterException::class, IOException::class) @JvmStatic fun main(args: Array&lt;String&gt;)</ID>
