@@ -180,9 +180,10 @@ class CurrencyConverter : ThreadedModule() {
 
         @JvmStatic
         fun currencyRates(): List<String> {
-            val rates = mutableListOf<String>()
-            for ((key, value) in EXCHANGE_RATES.toSortedMap()) {
-                rates.add("$key: ${value.padStart(8)}")
+            val rates = buildList {
+                for ((key, value) in EXCHANGE_RATES.toSortedMap()) {
+                    add("$key: ${value.padStart(8)}")
+                }
             }
             return rates
         }

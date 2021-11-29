@@ -40,7 +40,6 @@ import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoField
-import java.util.Collections
 
 /**
  * The WorldTime module.
@@ -51,7 +50,275 @@ class WorldTime : AbstractModule() {
         const val BEATS_KEYWORD = ".beats"
 
         // Supported countries
-        var COUNTRIES_MAP: Map<String, String>
+        val COUNTRIES_MAP = buildMap<String, String> {
+            put("AG", "America/Antigua")
+            put("AI", "America/Anguilla")
+            put("AE", "Asia/Dubai")
+            put("AD", "Europe/Andorra")
+            put("AKDT", "America/Anchorage")
+            put("AF", "Asia/Kabul")
+            put("AKST", "America/Anchorage")
+            put("AL", "Europe/Tirane")
+            put("AM", "Asia/Yerevan")
+            put("AO", "Africa/Luanda")
+            put("AQ", "Antarctica/South_Pole")
+            put("AR", "America/Argentina/Buenos_Aires")
+            put("AS", "Pacific/Pago_Pago")
+            put("AT", "Europe/Vienna")
+            put("AU", "Australia/Sydney")
+            put("AW", "America/Aruba")
+            put("AX", "Europe/Mariehamn")
+            put("AZ", "Asia/Baku")
+            put("BA", "Europe/Sarajevo")
+            put("BB", "America/Barbados")
+            put("BD", "Asia/Dhaka")
+            put("BE", "Europe/Brussels")
+            put("BEAT", BEATS_KEYWORD)
+            put("BF", "Africa/Ouagadougou")
+            put("BG", "Europe/Sofia")
+            put("BH", "Asia/Bahrain")
+            put("BI", "Africa/Bujumbura")
+            put("BJ", "Africa/Porto-Novo")
+            put("BL", "America/St_Barthelemy")
+            put("BM", "Atlantic/Bermuda")
+            put("BMT", BEATS_KEYWORD)
+            put("BN", "Asia/Brunei")
+            put("BO", "America/La_Paz")
+            put("BQ", "America/Kralendijk")
+            put("BR", "America/Sao_Paulo")
+            put("BS", "America/Nassau")
+            put("BT", "Asia/Thimphu")
+            put("BW", "Africa/Gaborone")
+            put("BY", "Europe/Minsk")
+            put("BZ", "America/Belize")
+            put("CA", "America/Montreal")
+            put("CC", "Indian/Cocos")
+            put("CD", "Africa/Kinshasa")
+            put("CDT", "America/Chicago")
+            put("CET", "CET")
+            put("CF", "Africa/Bangui")
+            put("CG", "Africa/Brazzaville")
+            put("CH", "Europe/Zurich")
+            put("CI", "Africa/Abidjan")
+            put("CK", "Pacific/Rarotonga")
+            put("CL", "America/Santiago")
+            put("CM", "Africa/Douala")
+            put("CN", "Asia/Shanghai")
+            put("CO", "America/Bogota")
+            put("CR", "America/Costa_Rica")
+            put("CST", "America/Chicago")
+            put("CU", "Cuba")
+            put("CV", "Atlantic/Cape_Verde")
+            put("CW", "America/Curacao")
+            put("CX", "Indian/Christmas")
+            put("CY", "Asia/Nicosia")
+            put("CZ", "Europe/Prague")
+            put("DE", "Europe/Berlin")
+            put("DJ", "Africa/Djibouti")
+            put("DK", "Europe/Copenhagen")
+            put("DM", "America/Dominica")
+            put("DO", "America/Santo_Domingo")
+            put("DZ", "Africa/Algiers")
+            put("EC", "Pacific/Galapagos")
+            put("EDT", "America/New_York")
+            put("EE", "Europe/Tallinn")
+            put("EG", "Africa/Cairo")
+            put("EH", "Africa/El_Aaiun")
+            put("ER", "Africa/Asmara")
+            put("ES", "Europe/Madrid")
+            put("EST", "America/New_York")
+            put("ET", "Africa/Addis_Ababa")
+            put("FI", "Europe/Helsinki")
+            put("FJ", "Pacific/Fiji")
+            put("FK", "Atlantic/Stanley")
+            put("FM", "Pacific/Yap")
+            put("FO", "Atlantic/Faroe")
+            put("FR", "Europe/Paris")
+            put("GA", "Africa/Libreville")
+            put("GB", "Europe/London")
+            put("GD", "America/Grenada")
+            put("GE", "Asia/Tbilisi")
+            put("GF", "America/Cayenne")
+            put("GG", "Europe/Guernsey")
+            put("GH", "Africa/Accra")
+            put("GI", "Europe/Gibraltar")
+            put("GL", "America/Thule")
+            put("GM", "Africa/Banjul")
+            put("GMT", "GMT")
+            put("GN", "Africa/Conakry")
+            put("GP", "America/Guadeloupe")
+            put("GQ", "Africa/Malabo")
+            put("GR", "Europe/Athens")
+            put("GS", "Atlantic/South_Georgia")
+            put("GT", "America/Guatemala")
+            put("GU", "Pacific/Guam")
+            put("GW", "Africa/Bissau")
+            put("GY", "America/Guyana")
+            put("HK", "Asia/Hong_Kong")
+            put("HN", "America/Tegucigalpa")
+            put("HR", "Europe/Zagreb")
+            put("HST", "Pacific/Honolulu")
+            put("HT", "America/Port-au-Prince")
+            put("HU", "Europe/Budapest")
+            put("ID", "Asia/Jakarta")
+            put("IE", "Europe/Dublin")
+            put("IL", "Asia/Tel_Aviv")
+            put("IM", "Europe/Isle_of_Man")
+            put("IN", "Asia/Kolkata")
+            put("IO", "Indian/Chagos")
+            put("IQ", "Asia/Baghdad")
+            put("IR", "Asia/Tehran")
+            put("IS", "Atlantic/Reykjavik")
+            put("IT", "Europe/Rome")
+            put("JE", "Europe/Jersey")
+            put("JM", "Jamaica")
+            put("JO", "Asia/Amman")
+            put("JP", "Asia/Tokyo")
+            put("KE", "Africa/Nairobi")
+            put("KG", "Asia/Bishkek")
+            put("KH", "Asia/Phnom_Penh")
+            put("KI", "Pacific/Tarawa")
+            put("KM", "Indian/Comoro")
+            put("KN", "America/St_Kitts")
+            put("KP", "Asia/Pyongyang")
+            put("KR", "Asia/Seoul")
+            put("KW", "Asia/Riyadh")
+            put("KY", "America/Cayman")
+            put("KZ", "Asia/Oral")
+            put("LA", "Asia/Vientiane")
+            put("LB", "Asia/Beirut")
+            put("LC", "America/St_Lucia")
+            put("LI", "Europe/Vaduz")
+            put("LK", "Asia/Colombo")
+            put("LR", "Africa/Monrovia")
+            put("LS", "Africa/Maseru")
+            put("LT", "Europe/Vilnius")
+            put("LU", "Europe/Luxembourg")
+            put("LV", "Europe/Riga")
+            put("LY", "Africa/Tripoli")
+            put("MA", "Africa/Casablanca")
+            put("MC", "Europe/Monaco")
+            put("MD", "Europe/Chisinau")
+            put("MDT", "America/Denver")
+            put("ME", "Europe/Podgorica")
+            put("MF", "America/Marigot")
+            put("MG", "Indian/Antananarivo")
+            put("MH", "Pacific/Majuro")
+            put("MK", "Europe/Skopje")
+            put("ML", "Africa/Timbuktu")
+            put("MM", "Asia/Yangon")
+            put("MN", "Asia/Ulaanbaatar")
+            put("MO", "Asia/Macau")
+            put("MP", "Pacific/Saipan")
+            put("MQ", "America/Martinique")
+            put("MR", "Africa/Nouakchott")
+            put("MS", "America/Montserrat")
+            put("MST", "America/Denver")
+            put("MT", "Europe/Malta")
+            put("MU", "Indian/Mauritius")
+            put("MV", "Indian/Maldives")
+            put("MW", "Africa/Blantyre")
+            put("MX", "America/Mexico_City")
+            put("MY", "Asia/Kuala_Lumpur")
+            put("MZ", "Africa/Maputo")
+            put("NA", "Africa/Windhoek")
+            put("NC", "Pacific/Noumea")
+            put("NE", "Africa/Niamey")
+            put("NF", "Pacific/Norfolk")
+            put("NG", "Africa/Lagos")
+            put("NI", "America/Managua")
+            put("NL", "Europe/Amsterdam")
+            put("NO", "Europe/Oslo")
+            put("NP", "Asia/Kathmandu")
+            put("NR", "Pacific/Nauru")
+            put("NU", "Pacific/Niue")
+            put("NZ", "Pacific/Auckland")
+            put("OM", "Asia/Muscat")
+            put("PA", "America/Panama")
+            put("PDT", "America/Los_Angeles")
+            put("PE", "America/Lima")
+            put("PF", "Pacific/Tahiti")
+            put("PG", "Pacific/Port_Moresby")
+            put("PH", "Asia/Manila")
+            put("PK", "Asia/Karachi")
+            put("PL", "Europe/Warsaw")
+            put("PM", "America/Miquelon")
+            put("PN", "Pacific/Pitcairn")
+            put("PR", "America/Puerto_Rico")
+            put("PS", "Asia/Gaza")
+            put("PST", "America/Los_Angeles")
+            put("PT", "Europe/Lisbon")
+            put("PW", "Pacific/Palau")
+            put("PY", "America/Asuncion")
+            put("QA", "Asia/Qatar")
+            put("RE", "Indian/Reunion")
+            put("RO", "Europe/Bucharest")
+            put("RS", "Europe/Belgrade")
+            put("RU", "Europe/Moscow")
+            put("RW", "Africa/Kigali")
+            put("SA", "Asia/Riyadh")
+            put("SB", "Pacific/Guadalcanal")
+            put("SC", "Indian/Mahe")
+            put("SD", "Africa/Khartoum")
+            put("SE", "Europe/Stockholm")
+            put("SG", "Asia/Singapore")
+            put("SH", "Atlantic/St_Helena")
+            put("SI", "Europe/Ljubljana")
+            put("SJ", "Atlantic/Jan_Mayen")
+            put("SK", "Europe/Bratislava")
+            put("SL", "Africa/Freetown")
+            put("SM", "Europe/San_Marino")
+            put("SN", "Africa/Dakar")
+            put("SO", "Africa/Mogadishu")
+            put("SR", "America/Paramaribo")
+            put("SS", "Africa/Juba")
+            put("ST", "Africa/Sao_Tome")
+            put("SV", "America/El_Salvador")
+            put("SX", "America/Lower_Princes")
+            put("SY", "Asia/Damascus")
+            put("SZ", "Africa/Mbabane")
+            put("TC", "America/Grand_Turk")
+            put("TD", "Africa/Ndjamena")
+            put("TF", "Indian/Kerguelen")
+            put("TG", "Africa/Lome")
+            put("TH", "Asia/Bangkok")
+            put("TJ", "Asia/Dushanbe")
+            put("TK", "Pacific/Fakaofo")
+            put("TL", "Asia/Dili")
+            put("TM", "Asia/Ashgabat")
+            put("TN", "Africa/Tunis")
+            put("TO", "Pacific/Tongatapu")
+            put("TR", "Europe/Istanbul")
+            put("TT", "America/Port_of_Spain")
+            put("TV", "Pacific/Funafuti")
+            put("TW", "Asia/Taipei")
+            put("TZ", "Africa/Dar_es_Salaam")
+            put("UA", "Europe/Kiev")
+            put("UG", "Africa/Kampala")
+            put("UK", "Europe/London")
+            put("UM", "Pacific/Wake")
+            put("US", "America/New_York")
+            put("UTC", "UTC")
+            put("UY", "America/Montevideo")
+            put("UZ", "Asia/Tashkent")
+            put("VA", "Europe/Vatican")
+            put("VC", "America/St_Vincent")
+            put("VE", "America/Caracas")
+            put("VG", "America/Tortola")
+            put("VI", "America/St_Thomas")
+            put("VN", "Asia/Ho_Chi_Minh")
+            put("VU", "Pacific/Efate")
+            put("WF", "Pacific/Wallis")
+            put("WS", "Pacific/Apia")
+            put("YE", "Asia/Aden")
+            put("YT", "Indian/Mayotte")
+            put("ZA", "Africa/Johannesburg")
+            put("ZM", "Africa/Lusaka")
+            put("ZULU", "Zulu")
+            put("ZW", "Africa/Harare")
+            ZoneId.getAvailableZoneIds().filter { it.length <= 3 && !containsKey(it) }
+                .forEach { tz -> put(tz, tz) }
+        }
 
         // The Time command
         private const val TIME_CMD = "time"
@@ -92,279 +359,6 @@ class WorldTime : AbstractModule() {
             } else {
                 "Unsupported country/zone. Please try again."
             }
-        }
-
-        init {
-            // Initialize the zones map
-            val zones = mutableMapOf<String, String>()
-            zones["AD"] = "Europe/Andorra"
-            zones["AE"] = "Asia/Dubai"
-            zones["AF"] = "Asia/Kabul"
-            zones["AG"] = "America/Antigua"
-            zones["AI"] = "America/Anguilla"
-            zones["AKDT"] = "America/Anchorage"
-            zones["AKST"] = "America/Anchorage"
-            zones["AL"] = "Europe/Tirane"
-            zones["AM"] = "Asia/Yerevan"
-            zones["AO"] = "Africa/Luanda"
-            zones["AQ"] = "Antarctica/South_Pole"
-            zones["AR"] = "America/Argentina/Buenos_Aires"
-            zones["AS"] = "Pacific/Pago_Pago"
-            zones["AT"] = "Europe/Vienna"
-            zones["AU"] = "Australia/Sydney"
-            zones["AW"] = "America/Aruba"
-            zones["AX"] = "Europe/Mariehamn"
-            zones["AZ"] = "Asia/Baku"
-            zones["BA"] = "Europe/Sarajevo"
-            zones["BB"] = "America/Barbados"
-            zones["BD"] = "Asia/Dhaka"
-            zones["BE"] = "Europe/Brussels"
-            zones["BEAT"] = BEATS_KEYWORD
-            zones["BF"] = "Africa/Ouagadougou"
-            zones["BG"] = "Europe/Sofia"
-            zones["BH"] = "Asia/Bahrain"
-            zones["BI"] = "Africa/Bujumbura"
-            zones["BJ"] = "Africa/Porto-Novo"
-            zones["BL"] = "America/St_Barthelemy"
-            zones["BM"] = "Atlantic/Bermuda"
-            zones["BMT"] = BEATS_KEYWORD
-            zones["BN"] = "Asia/Brunei"
-            zones["BO"] = "America/La_Paz"
-            zones["BQ"] = "America/Kralendijk"
-            zones["BR"] = "America/Sao_Paulo"
-            zones["BS"] = "America/Nassau"
-            zones["BT"] = "Asia/Thimphu"
-            zones["BW"] = "Africa/Gaborone"
-            zones["BY"] = "Europe/Minsk"
-            zones["BZ"] = "America/Belize"
-            zones["CA"] = "America/Montreal"
-            zones["CC"] = "Indian/Cocos"
-            zones["CD"] = "Africa/Kinshasa"
-            zones["CDT"] = "America/Chicago"
-            zones["CET"] = "CET"
-            zones["CF"] = "Africa/Bangui"
-            zones["CG"] = "Africa/Brazzaville"
-            zones["CH"] = "Europe/Zurich"
-            zones["CI"] = "Africa/Abidjan"
-            zones["CK"] = "Pacific/Rarotonga"
-            zones["CL"] = "America/Santiago"
-            zones["CM"] = "Africa/Douala"
-            zones["CN"] = "Asia/Shanghai"
-            zones["CO"] = "America/Bogota"
-            zones["CR"] = "America/Costa_Rica"
-            zones["CST"] = "America/Chicago"
-            zones["CU"] = "Cuba"
-            zones["CV"] = "Atlantic/Cape_Verde"
-            zones["CW"] = "America/Curacao"
-            zones["CX"] = "Indian/Christmas"
-            zones["CY"] = "Asia/Nicosia"
-            zones["CZ"] = "Europe/Prague"
-            zones["DE"] = "Europe/Berlin"
-            zones["DJ"] = "Africa/Djibouti"
-            zones["DK"] = "Europe/Copenhagen"
-            zones["DM"] = "America/Dominica"
-            zones["DO"] = "America/Santo_Domingo"
-            zones["DZ"] = "Africa/Algiers"
-            zones["EC"] = "Pacific/Galapagos"
-            zones["EDT"] = "America/New_York"
-            zones["EE"] = "Europe/Tallinn"
-            zones["EG"] = "Africa/Cairo"
-            zones["EH"] = "Africa/El_Aaiun"
-            zones["ER"] = "Africa/Asmara"
-            zones["ES"] = "Europe/Madrid"
-            zones["EST"] = "America/New_York"
-            zones["ET"] = "Africa/Addis_Ababa"
-            zones["FI"] = "Europe/Helsinki"
-            zones["FJ"] = "Pacific/Fiji"
-            zones["FK"] = "Atlantic/Stanley"
-            zones["FM"] = "Pacific/Yap"
-            zones["FO"] = "Atlantic/Faroe"
-            zones["FR"] = "Europe/Paris"
-            zones["GA"] = "Africa/Libreville"
-            zones["GB"] = "Europe/London"
-            zones["GD"] = "America/Grenada"
-            zones["GE"] = "Asia/Tbilisi"
-            zones["GF"] = "America/Cayenne"
-            zones["GG"] = "Europe/Guernsey"
-            zones["GH"] = "Africa/Accra"
-            zones["GI"] = "Europe/Gibraltar"
-            zones["GL"] = "America/Thule"
-            zones["GM"] = "Africa/Banjul"
-            zones["GMT"] = "GMT"
-            zones["GN"] = "Africa/Conakry"
-            zones["GP"] = "America/Guadeloupe"
-            zones["GQ"] = "Africa/Malabo"
-            zones["GR"] = "Europe/Athens"
-            zones["GS"] = "Atlantic/South_Georgia"
-            zones["GT"] = "America/Guatemala"
-            zones["GU"] = "Pacific/Guam"
-            zones["GW"] = "Africa/Bissau"
-            zones["GY"] = "America/Guyana"
-            zones["HK"] = "Asia/Hong_Kong"
-            zones["HN"] = "America/Tegucigalpa"
-            zones["HR"] = "Europe/Zagreb"
-            zones["HST"] = "Pacific/Honolulu"
-            zones["HT"] = "America/Port-au-Prince"
-            zones["HU"] = "Europe/Budapest"
-            zones["ID"] = "Asia/Jakarta"
-            zones["IE"] = "Europe/Dublin"
-            zones["IL"] = "Asia/Tel_Aviv"
-            zones["IM"] = "Europe/Isle_of_Man"
-            zones["IN"] = "Asia/Kolkata"
-            zones["IO"] = "Indian/Chagos"
-            zones["IQ"] = "Asia/Baghdad"
-            zones["IR"] = "Asia/Tehran"
-            zones["IS"] = "Atlantic/Reykjavik"
-            zones["IT"] = "Europe/Rome"
-            zones["JE"] = "Europe/Jersey"
-            zones["JM"] = "Jamaica"
-            zones["JO"] = "Asia/Amman"
-            zones["JP"] = "Asia/Tokyo"
-            zones["KE"] = "Africa/Nairobi"
-            zones["KG"] = "Asia/Bishkek"
-            zones["KH"] = "Asia/Phnom_Penh"
-            zones["KI"] = "Pacific/Tarawa"
-            zones["KM"] = "Indian/Comoro"
-            zones["KN"] = "America/St_Kitts"
-            zones["KP"] = "Asia/Pyongyang"
-            zones["KR"] = "Asia/Seoul"
-            zones["KW"] = "Asia/Riyadh"
-            zones["KY"] = "America/Cayman"
-            zones["KZ"] = "Asia/Oral"
-            zones["LA"] = "Asia/Vientiane"
-            zones["LB"] = "Asia/Beirut"
-            zones["LC"] = "America/St_Lucia"
-            zones["LI"] = "Europe/Vaduz"
-            zones["LK"] = "Asia/Colombo"
-            zones["LR"] = "Africa/Monrovia"
-            zones["LS"] = "Africa/Maseru"
-            zones["LT"] = "Europe/Vilnius"
-            zones["LU"] = "Europe/Luxembourg"
-            zones["LV"] = "Europe/Riga"
-            zones["LY"] = "Africa/Tripoli"
-            zones["MA"] = "Africa/Casablanca"
-            zones["MC"] = "Europe/Monaco"
-            zones["MD"] = "Europe/Chisinau"
-            zones["MDT"] = "America/Denver"
-            zones["ME"] = "Europe/Podgorica"
-            zones["MF"] = "America/Marigot"
-            zones["MG"] = "Indian/Antananarivo"
-            zones["MH"] = "Pacific/Majuro"
-            zones["MK"] = "Europe/Skopje"
-            zones["ML"] = "Africa/Timbuktu"
-            zones["MM"] = "Asia/Yangon"
-            zones["MN"] = "Asia/Ulaanbaatar"
-            zones["MO"] = "Asia/Macau"
-            zones["MP"] = "Pacific/Saipan"
-            zones["MQ"] = "America/Martinique"
-            zones["MR"] = "Africa/Nouakchott"
-            zones["MS"] = "America/Montserrat"
-            zones["MST"] = "America/Denver"
-            zones["MT"] = "Europe/Malta"
-            zones["MU"] = "Indian/Mauritius"
-            zones["MV"] = "Indian/Maldives"
-            zones["MW"] = "Africa/Blantyre"
-            zones["MX"] = "America/Mexico_City"
-            zones["MY"] = "Asia/Kuala_Lumpur"
-            zones["MZ"] = "Africa/Maputo"
-            zones["NA"] = "Africa/Windhoek"
-            zones["NC"] = "Pacific/Noumea"
-            zones["NE"] = "Africa/Niamey"
-            zones["NF"] = "Pacific/Norfolk"
-            zones["NG"] = "Africa/Lagos"
-            zones["NI"] = "America/Managua"
-            zones["NL"] = "Europe/Amsterdam"
-            zones["NO"] = "Europe/Oslo"
-            zones["NP"] = "Asia/Kathmandu"
-            zones["NR"] = "Pacific/Nauru"
-            zones["NU"] = "Pacific/Niue"
-            zones["NZ"] = "Pacific/Auckland"
-            zones["OM"] = "Asia/Muscat"
-            zones["PA"] = "America/Panama"
-            zones["PDT"] = "America/Los_Angeles"
-            zones["PE"] = "America/Lima"
-            zones["PF"] = "Pacific/Tahiti"
-            zones["PG"] = "Pacific/Port_Moresby"
-            zones["PH"] = "Asia/Manila"
-            zones["PK"] = "Asia/Karachi"
-            zones["PL"] = "Europe/Warsaw"
-            zones["PM"] = "America/Miquelon"
-            zones["PN"] = "Pacific/Pitcairn"
-            zones["PR"] = "America/Puerto_Rico"
-            zones["PS"] = "Asia/Gaza"
-            zones["PST"] = "America/Los_Angeles"
-            zones["PT"] = "Europe/Lisbon"
-            zones["PW"] = "Pacific/Palau"
-            zones["PY"] = "America/Asuncion"
-            zones["QA"] = "Asia/Qatar"
-            zones["RE"] = "Indian/Reunion"
-            zones["RO"] = "Europe/Bucharest"
-            zones["RS"] = "Europe/Belgrade"
-            zones["RU"] = "Europe/Moscow"
-            zones["RW"] = "Africa/Kigali"
-            zones["SA"] = "Asia/Riyadh"
-            zones["SB"] = "Pacific/Guadalcanal"
-            zones["SC"] = "Indian/Mahe"
-            zones["SD"] = "Africa/Khartoum"
-            zones["SE"] = "Europe/Stockholm"
-            zones["SG"] = "Asia/Singapore"
-            zones["SH"] = "Atlantic/St_Helena"
-            zones["SI"] = "Europe/Ljubljana"
-            zones["SJ"] = "Atlantic/Jan_Mayen"
-            zones["SK"] = "Europe/Bratislava"
-            zones["SL"] = "Africa/Freetown"
-            zones["SM"] = "Europe/San_Marino"
-            zones["SN"] = "Africa/Dakar"
-            zones["SO"] = "Africa/Mogadishu"
-            zones["SR"] = "America/Paramaribo"
-            zones["SS"] = "Africa/Juba"
-            zones["ST"] = "Africa/Sao_Tome"
-            zones["SV"] = "America/El_Salvador"
-            zones["SX"] = "America/Lower_Princes"
-            zones["SY"] = "Asia/Damascus"
-            zones["SZ"] = "Africa/Mbabane"
-            zones["TC"] = "America/Grand_Turk"
-            zones["TD"] = "Africa/Ndjamena"
-            zones["TF"] = "Indian/Kerguelen"
-            zones["TG"] = "Africa/Lome"
-            zones["TH"] = "Asia/Bangkok"
-            zones["TJ"] = "Asia/Dushanbe"
-            zones["TK"] = "Pacific/Fakaofo"
-            zones["TL"] = "Asia/Dili"
-            zones["TM"] = "Asia/Ashgabat"
-            zones["TN"] = "Africa/Tunis"
-            zones["TO"] = "Pacific/Tongatapu"
-            zones["TR"] = "Europe/Istanbul"
-            zones["TT"] = "America/Port_of_Spain"
-            zones["TV"] = "Pacific/Funafuti"
-            zones["TW"] = "Asia/Taipei"
-            zones["TZ"] = "Africa/Dar_es_Salaam"
-            zones["UA"] = "Europe/Kiev"
-            zones["UG"] = "Africa/Kampala"
-            zones["UK"] = "Europe/London"
-            zones["UM"] = "Pacific/Wake"
-            zones["US"] = "America/New_York"
-            zones["UTC"] = "UTC"
-            zones["UY"] = "America/Montevideo"
-            zones["UZ"] = "Asia/Tashkent"
-            zones["VA"] = "Europe/Vatican"
-            zones["VC"] = "America/St_Vincent"
-            zones["VE"] = "America/Caracas"
-            zones["VG"] = "America/Tortola"
-            zones["VI"] = "America/St_Thomas"
-            zones["VN"] = "Asia/Ho_Chi_Minh"
-            zones["VU"] = "Pacific/Efate"
-            zones["WF"] = "Pacific/Wallis"
-            zones["WS"] = "Pacific/Apia"
-            zones["YE"] = "Asia/Aden"
-            zones["YT"] = "Indian/Mayotte"
-            zones["ZA"] = "Africa/Johannesburg"
-            zones["ZM"] = "Africa/Lusaka"
-            zones["ZULU"] = "Zulu"
-            zones["ZW"] = "Africa/Harare"
-            ZoneId.getAvailableZoneIds().filter { it.length <= 3 && !zones.containsKey(it) }
-                .forEach { tz -> zones[tz] = tz }
-            COUNTRIES_MAP = Collections.unmodifiableMap(zones)
         }
     }
 
