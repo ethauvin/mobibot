@@ -45,8 +45,11 @@ class LookupTest {
     @Test
     @Throws(Exception::class)
     fun testLookup() {
-        val result = nslookup("apple.com")
+        var result = nslookup("apple.com")
         assertThat(result, "lookup(apple.com)").contains("17.253.144.10")
+
+        result = nslookup("204.122.17.9")
+        assertThat(result, "lookup(204.122.17.9)").contains("nix3.thauvin.us")
     }
 
     @Test
