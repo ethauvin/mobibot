@@ -39,7 +39,7 @@ import java.time.format.DateTimeFormatter
 /**
  * The `TellMessage` class.
  */
-class TellMessage internal constructor(
+class TellMessage(
     /**
      * Returns the message's sender.
      */
