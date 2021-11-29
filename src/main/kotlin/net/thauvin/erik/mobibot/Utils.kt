@@ -49,8 +49,9 @@ import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.Date
 import java.util.Properties
-import java.util.concurrent.TimeUnit
 import java.util.stream.Collectors
+import kotlin.time.DurationUnit
+import kotlin.time.toDuration
 
 /**
  * Miscellaneous utilities.
@@ -64,7 +65,7 @@ object Utils {
      */
     @JvmStatic
     fun String.appendIfMissing(suffix: Char): String {
-        return if (this.last() != suffix) {
+        return if (last() != suffix) {
             "$this${suffix}"
         } else {
             this
@@ -75,19 +76,19 @@ object Utils {
      * Makes the given int bold.
      */
     @JvmStatic
-    fun Int.bold(): String = this.toString().bold()
+    fun Int.bold(): String = toString().bold()
 
     /**
      * Makes the given long bold.
      */
     @JvmStatic
-    fun Long.bold(): String = this.toString().bold()
+    fun Long.bold(): String = toString().bold()
 
     /**
      * Makes the given string bold.
      */
     @JvmStatic
-    fun String?.bold(): String = this.colorize(Colors.BOLD)
+    fun String?.bold(): String = colorize(Colors.BOLD)
 
     /**
      * Returns the [PircBotX] instance.
@@ -110,7 +111,7 @@ object Utils {
      * Capitalize a string.
      */
     @JvmStatic
-    fun String.capitalise(): String = this.lowercase().replaceFirstChar { it.uppercase() }
+    fun String.capitalise(): String = lowercase().replaceFirstChar { it.uppercase() }
 
     /**
      * Capitalize words
@@ -123,7 +124,7 @@ object Utils {
      */
     @JvmStatic
     fun String?.colorize(color: String): String {
-        return if (this.isNullOrEmpty()) {
+        return if (isNullOrEmpty()) {
             ""
         } else if (color == DEFAULT_COLOR) {
             this
@@ -138,7 +139,7 @@ object Utils {
      * Makes the given string cyan.
      */
     @JvmStatic
-    fun String?.cyan(): String = this.colorize(Colors.CYAN)
+    fun String?.cyan(): String = colorize(Colors.CYAN)
 
     /**
      * URL encodes the given string.
@@ -151,14 +152,14 @@ object Utils {
      */
     @JvmStatic
     fun Properties.getIntProperty(key: String, defaultValue: Int): Int {
-        return this.getProperty(key)?.toIntOrDefault(defaultValue) ?: defaultValue
+        return getProperty(key)?.toIntOrDefault(defaultValue) ?: defaultValue
     }
 
     /**
      * Makes the given string green.
      */
     @JvmStatic
-    fun String?.green(): String = this.colorize(Colors.DARK_GREEN)
+    fun String?.green(): String = colorize(Colors.DARK_GREEN)
 
     /**
      * Returns a formatted help string.
@@ -179,12 +180,22 @@ object Utils {
     }
 
     /**
+     * Return the last item of a list of strings or empty if none.
+     */
+    fun List<String>.lastOrEmpty() : String {
+        return if (this.size >= 2) {
+            this.last()
+        } else
+            ""
+    }
+
+    /**
      * Obfuscates the given string.
      */
     @JvmStatic
     fun String.obfuscate(): String {
-        return if (this.isNotBlank()) {
-            "x".repeat(this.length)
+        return if (isNotBlank()) {
+            "x".repeat(length)
         } else this
     }
 
@@ -200,7 +211,7 @@ object Utils {
      * Makes the given string red.
      */
     @JvmStatic
-    fun String?.red(): String = this.colorize(Colors.RED)
+    fun String?.red(): String = colorize(Colors.RED)
 
     /**
      * Replaces all occurrences of Strings within another String.
@@ -220,7 +231,7 @@ object Utils {
      * Makes the given string reverse color.
      */
     @JvmStatic
-    fun String?.reverseColor(): String = this.colorize(Colors.REVERSE)
+    fun String?.reverseColor(): String = colorize(Colors.REVERSE)
 
     /**
      * Send a formatted commands/modules, etc. list.
@@ -284,7 +295,7 @@ object Utils {
     @JvmStatic
     fun String.toIntOrDefault(defaultValue: Int): Int {
         return try {
-            this.toInt()
+            toInt()
         } catch (e: NumberFormatException) {
             defaultValue
         }
@@ -295,28 +306,28 @@ object Utils {
      */
     @JvmStatic
     fun Date.toIsoLocalDate(): String {
-        return LocalDateTime.ofInstant(this.toInstant(), ZoneId.systemDefault()).toIsoLocalDate()
+        return LocalDateTime.ofInstant(toInstant(), ZoneId.systemDefault()).toIsoLocalDate()
     }
 
     /**
      * Returns the specified date as an ISO local date string.
      */
     @JvmStatic
-    fun LocalDateTime.toIsoLocalDate(): String = this.format(DateTimeFormatter.ISO_LOCAL_DATE)
+    fun LocalDateTime.toIsoLocalDate(): String = format(DateTimeFormatter.ISO_LOCAL_DATE)
 
     /**
      * Returns the specified date formatted as `yyyy-MM-dd HH:mm`.
      */
     @JvmStatic
     fun Date.toUtcDateTime(): String {
-        return LocalDateTime.ofInstant(this.toInstant(), ZoneId.systemDefault()).toUtcDateTime()
+        return LocalDateTime.ofInstant(toInstant(), ZoneId.systemDefault()).toUtcDateTime()
     }
 
     /**
      * Returns the specified date formatted as `yyyy-MM-dd HH:mm`.
      */
     @JvmStatic
-    fun LocalDateTime.toUtcDateTime(): String = this.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))
+    fun LocalDateTime.toUtcDateTime(): String = format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))
 
     /**
      * Converts XML/XHTML entities to plain text.
@@ -329,38 +340,35 @@ object Utils {
      */
     @JvmStatic
     fun uptime(uptime: Long): String {
-        val info = StringBuilder()
-        var days = TimeUnit.MILLISECONDS.toDays(uptime)
-        val years = days / 365
-        days %= 365
-        val months = days / 30
-        days %= 30
-        val weeks = days / 7
-        days %= 7
-        val hours = TimeUnit.MILLISECONDS.toHours(uptime) - TimeUnit.DAYS.toHours(TimeUnit.MILLISECONDS.toDays(uptime))
-        val minutes =
-            TimeUnit.MILLISECONDS.toMinutes(uptime) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(uptime))
+        uptime.toDuration(DurationUnit.MILLISECONDS).toComponents { wholeDays, hours, minutes, _, _ ->
+            val years = wholeDays / 365
+            var days = wholeDays % 365
+            val months = days / 30
+            days %= 30
+            val weeks = days / 7
+            days %= 7
 
-        with(info) {
-            if (years > 0) {
-                append(years).append(" year".plural(years)).append(' ')
-            }
-            if (months > 0) {
-                append(weeks).append(" month".plural(months)).append(' ')
-            }
-            if (weeks > 0) {
-                append(weeks).append(" week".plural(weeks)).append(' ')
-            }
-            if (days > 0) {
-                append(days).append(" day".plural(days)).append(' ')
-            }
-            if (hours > 0) {
-                append(hours).append(" hour".plural(hours)).append(' ')
-            }
+            with(StringBuffer()) {
+                if (years > 0) {
+                    append(years).append(" year".plural(years)).append(' ')
+                }
+                if (months > 0) {
+                    append(weeks).append(" month".plural(months)).append(' ')
+                }
+                if (weeks > 0) {
+                    append(weeks).append(" week".plural(weeks)).append(' ')
+                }
+                if (days > 0) {
+                    append(days).append(" day".plural(days)).append(' ')
+                }
+                if (hours > 0) {
+                    append(hours).append(" hour".plural(hours.toLong())).append(' ')
+                }
 
-            append(minutes).append(" minute".plural(minutes))
+                append(minutes).append(" minute".plural(minutes.toLong()))
 
-            return toString()
+                return toString()
+            }
         }
     }
 
