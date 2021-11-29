@@ -60,8 +60,8 @@ class Addons {
 
             if (isEnabled) {
                 modules.add(this)
-                modulesNames.add(this.javaClass.simpleName)
-                names.addAll(this.commands)
+                modulesNames.add(javaClass.simpleName)
+                names.addAll(commands)
             }
         }
     }

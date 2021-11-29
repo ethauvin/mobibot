@@ -110,7 +110,7 @@ class Pinboard {
      */
     private fun Date.toTimestamp(): String {
         return ZonedDateTime.ofInstant(
-            this.toInstant().truncatedTo(ChronoUnit.SECONDS),
+            toInstant().truncatedTo(ChronoUnit.SECONDS),
             ZoneId.systemDefault()
         ).format(DateTimeFormatter.ISO_INSTANT)
     }
@@ -119,7 +119,7 @@ class Pinboard {
      * Returns the pinboard.in extended attribution line.
      */
     private fun EntryLink.postedBy(ircServer: String): String {
-        return "Posted by ${this.nick} on ${this.channel} ( $ircServer )"
+        return "Posted by $nick on $channel ( $ircServer )"
     }
 }
 
