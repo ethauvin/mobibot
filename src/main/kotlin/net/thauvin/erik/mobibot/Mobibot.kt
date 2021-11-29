@@ -36,6 +36,7 @@ import net.thauvin.erik.mobibot.Utils.appendIfMissing
 import net.thauvin.erik.mobibot.Utils.bot
 import net.thauvin.erik.mobibot.Utils.getIntProperty
 import net.thauvin.erik.mobibot.Utils.isChannelOp
+import net.thauvin.erik.mobibot.Utils.lastOrEmpty
 import net.thauvin.erik.mobibot.Utils.sendList
 import net.thauvin.erik.mobibot.Utils.sendMessage
 import net.thauvin.erik.mobibot.Utils.toIsoLocalDate
@@ -106,7 +107,7 @@ import java.util.regex.Pattern
 import kotlin.system.exitProcess
 
 @Version(properties = "version.properties", className = "ReleaseInfo", template = "version.mustache", type = "kt")
-class Mobibot(nickname: String, channel: String, logsDirPath: String, p: Properties) : ListenerAdapter() {
+class Mobibot(nickname: String, val channel: String, logsDirPath: String, p: Properties) : ListenerAdapter() {
     // The bot configuration.
     private val config: Configuration
 
@@ -115,9 +116,6 @@ class Mobibot(nickname: String, channel: String, logsDirPath: String, p: Propert
 
     // Tell module
     private val tell: Tell
-
-    /** Main channel. */
-    val channel: String
 
     /** Logger. */
     val logger: Logger = LoggerFactory.getLogger(Mobibot::class.java)
@@ -185,9 +183,7 @@ class Mobibot(nickname: String, channel: String, logsDirPath: String, p: Propert
             if (logger.isTraceEnabled) logger.trace("<<< ${user.nick}: ${event.message}")
             val cmds = event.message.trim().split(" ".toRegex(), 2)
             val cmd = cmds[0].lowercase()
-            val args = if (cmds.size > 1) {
-                cmds[1].trim()
-            } else ""
+            val args = cmds.lastOrEmpty().trim()
             if (cmd.startsWith(Constants.HELP_CMD)) { // help
                 helpResponse(event, args)
             } else if (!addons.exec(channel, cmd, args, event)) { // Execute command or module
@@ -217,9 +213,7 @@ class Mobibot(nickname: String, channel: String, logsDirPath: String, p: Propert
                 if (logger.isTraceEnabled) logger.trace(">>> $sender: $message")
                 val cmds = message.substring(message.indexOf(':') + 1).trim().split(" ".toRegex(), 2)
                 val cmd = cmds[0].lowercase()
-                val args = if (cmds.size > 1) {
-                    cmds[1].trim()
-                } else ""
+                val args = cmds.lastOrEmpty().trim()
                 if (cmd.startsWith(Constants.HELP_CMD)) { // mobibot: help
                     helpResponse(event, args)
                 } else {
@@ -354,7 +348,6 @@ class Mobibot(nickname: String, channel: String, logsDirPath: String, p: Propert
      * Initialize the bot.
      */
     init {
-        this.channel = channel
         val ircServer = p.getProperty("server", Constants.DEFAULT_SERVER)
         config = Configuration.Builder().apply {
             name = nickname

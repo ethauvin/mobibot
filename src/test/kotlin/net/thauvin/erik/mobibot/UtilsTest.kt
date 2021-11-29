@@ -46,6 +46,7 @@ import net.thauvin.erik.mobibot.Utils.encodeUrl
 import net.thauvin.erik.mobibot.Utils.getIntProperty
 import net.thauvin.erik.mobibot.Utils.green
 import net.thauvin.erik.mobibot.Utils.helpFormat
+import net.thauvin.erik.mobibot.Utils.lastOrEmpty
 import net.thauvin.erik.mobibot.Utils.obfuscate
 import net.thauvin.erik.mobibot.Utils.plural
 import net.thauvin.erik.mobibot.Utils.red
@@ -185,6 +186,14 @@ class UtilsTest {
     fun testIsoLocalDate() {
         assertThat(cal.time.toIsoLocalDate(), "isoLocalDate(date)").isEqualTo("1952-02-17")
         assertThat(localDateTime.toIsoLocalDate(), "isoLocalDate(localDate)").isEqualTo("1952-02-17")
+    }
+
+    @Test
+    fun testLastOrEmpty() {
+        val two = listOf("1", "2")
+        assertThat(two.lastOrEmpty(), "two").isEqualTo("2")
+        val one = listOf("1")
+        assertThat(one.lastOrEmpty(), "one").isEqualTo("")
     }
 
     @Test

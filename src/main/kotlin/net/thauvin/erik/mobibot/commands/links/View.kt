@@ -35,6 +35,7 @@ package net.thauvin.erik.mobibot.commands.links
 import net.thauvin.erik.mobibot.Utils.bot
 import net.thauvin.erik.mobibot.Utils.buildCmdSyntax
 import net.thauvin.erik.mobibot.Utils.helpFormat
+import net.thauvin.erik.mobibot.Utils.lastOrEmpty
 import net.thauvin.erik.mobibot.Utils.sendMessage
 import net.thauvin.erik.mobibot.commands.AbstractCommand
 import net.thauvin.erik.mobibot.commands.links.LinksMgr.Companion.entries
@@ -77,11 +78,7 @@ class View : AbstractCommand() {
             val split = query.split(" ", limit = 2)
             try {
                 start = split[0].toInt() - 1
-                query = if (split.size == 2) {
-                    split[1].trim()
-                } else {
-                    ""
-                }
+                query = split.lastOrEmpty().trim()
                 if (start > entries.links.size) {
                     start = 0
                 }
