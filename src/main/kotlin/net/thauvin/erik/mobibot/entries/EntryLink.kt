@@ -95,11 +95,18 @@ class EntryLink(
     }
 
     /**
+     * Adds a new comment
+     */
+    fun addComment(comment: EntryComment): Int {
+        comments.add(comment)
+        return comments.lastIndex
+    }
+
+    /**
      * Adds a new comment.
      */
     fun addComment(comment: String, nick: String): Int {
-        comments.add(EntryComment(comment, nick))
-        return comments.lastIndex
+        return addComment(EntryComment(comment, nick))
     }
 
     /**
