@@ -81,7 +81,6 @@ class Tell(private val serialObject: String) : AbstractCommand() {
      * Cleans the messages queue.
      */
     private fun clean(): Boolean {
-        // if (bot.logger.isDebugEnabled) bot.logger.debug("Cleaning the messages.")
         return TellMessagesMgr.clean(messages, maxDays.toLong())
     }
 

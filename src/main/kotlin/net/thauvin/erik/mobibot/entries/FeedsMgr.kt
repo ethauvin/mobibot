@@ -68,6 +68,7 @@ class FeedsMgr private constructor() {
         /**
          * Loads the current feed.
          */
+        @JvmStatic
         @Throws(IOException::class, FeedException::class)
         fun loadFeed(entries: Entries, currentFile: String = currentXml): String {
             entries.links.clear()
@@ -113,6 +114,7 @@ class FeedsMgr private constructor() {
         /**
          * Saves the feeds.
          */
+        @JvmStatic
         fun saveFeed(entries: Entries, currentFile: String = currentXml) {
             if (logger.isDebugEnabled) logger.debug("Saving the feeds...")
             if (entries.logsDir.isNotBlank()) {

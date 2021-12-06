@@ -46,10 +46,14 @@ import java.time.temporal.ChronoField
  */
 class WorldTime : AbstractModule() {
     companion object {
-        // Beats (Internet Time) keyword
+        /**
+         * Beats (Internet Time) keyword
+         */
         const val BEATS_KEYWORD = ".beats"
 
-        // Supported countries
+        /**
+         * Supported countries
+         */
         val COUNTRIES_MAP = buildMap<String, String> {
             put("AG", "America/Antigua")
             put("AI", "America/Anguilla")

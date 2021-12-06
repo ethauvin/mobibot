@@ -76,6 +76,7 @@ class Dice : AbstractModule() {
         // Dice faces
         private val DICE_FACES = arrayOf("", "⚀", "⚁", "⚂", "⚃", "⚄", "⚅")
 
+        @JvmStatic
         fun winLoseOrTie(bot: Int, player: Int): Result {
             return when {
                 bot > player -> {

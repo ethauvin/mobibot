@@ -48,12 +48,14 @@ import kotlin.io.path.exists
  * The Tell Messages Manager.
  */
 object TellMessagesMgr {
-    val logger: Logger = LoggerFactory.getLogger(TellMessagesMgr::class.java)
+    private val logger: Logger = LoggerFactory.getLogger(TellMessagesMgr::class.java)
 
     /**
      * Cleans the messages queue.
      */
+    @JvmStatic
     fun clean(tellMessages: MutableList<TellMessage>, tellMaxDays: Long): Boolean {
+        if (logger.isDebugEnabled) logger.debug("Cleaning the messages.")
         val today = LocalDateTime.now(Clock.systemUTC())
         return tellMessages.removeIf { o: TellMessage -> o.queued.plusDays(tellMaxDays).isBefore(today) }
     }
@@ -61,6 +63,7 @@ object TellMessagesMgr {
     /**
      * Loads the messages.
      */
+    @JvmStatic
     fun load(file: String): List<TellMessage> {
         val serialFile = Paths.get(file)
         if (serialFile.exists()) {
@@ -84,6 +87,7 @@ object TellMessagesMgr {
     /**
      * Saves the messages.
      */
+    @JvmStatic
     fun save(file: String, messages: List<TellMessage?>?) {
         try {
             BufferedOutputStream(Files.newOutputStream(Paths.get(file))).use { bos ->

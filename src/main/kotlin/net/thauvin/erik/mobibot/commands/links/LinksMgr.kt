@@ -70,16 +70,27 @@ class LinksMgr : AbstractCommand() {
         const val TAGS_PROP = "tags"
         const val TAG_MATCH = ", *| +"
 
-        /** Entries array **/
+        /**
+         * Entries array
+         */
+        @JvmField
         val entries = Entries()
 
-        /** Pinboard handler. **/
+        /**
+         * Pinboard handler.
+         */
+        @JvmField
         val pinboard = Pinboard()
 
-        /** Twitter handler. **/
+        /**
+         * Twitter handler.
+         */
+        @JvmField
         val twitter = Twitter()
 
-        /** Let the user know if the entries are too old to be modified. **/
+        /**
+         * Let the user know if the entries are too old to be modified.
+         */
         @JvmStatic
         fun isUpToDate(event: GenericMessageEvent): Boolean {
             if (entries.lastPubDate != today()) {

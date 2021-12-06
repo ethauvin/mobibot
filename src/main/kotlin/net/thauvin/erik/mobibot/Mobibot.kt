@@ -242,8 +242,8 @@ class Mobibot(nickname: String, val channel: String, logsDirPath: String, p: Pro
     }
 
     companion object {
-        @Throws(Exception::class)
         @JvmStatic
+        @Throws(Exception::class)
         fun main(args: Array<String>) {
             // Set up the command line options
             val options = Options()

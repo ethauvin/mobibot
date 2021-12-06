@@ -83,6 +83,7 @@ class CryptoPrices : ThreadedModule() {
         /**
          * Get current market price.
          */
+        @JvmStatic
         fun currentPrice(args: List<String>): CryptoPrice {
             return if (args.size == 2)
                 spotPrice(args[0], args[1])

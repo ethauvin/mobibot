@@ -42,17 +42,20 @@ object EntriesUtils {
     /**
      * Build link label based on its index. e.g: L1
      */
+    @JvmStatic
     fun buildLinkLabel(index: Int): String = Constants.LINK_CMD + (index + 1)
 
     /**
      * Builds an entry's comment for display on the channel.
      */
+    @JvmStatic
     fun buildComment(entryIndex: Int, commentIndex: Int, comment: EntryComment): String =
         ("${buildLinkLabel(entryIndex)}.${commentIndex + 1}: [${comment.nick}] ${comment.comment}")
 
     /**
      * Builds an entry's link for display on the channel.
      */
+    @JvmStatic
     @JvmOverloads
     fun buildLink(entryIndex: Int, entry: EntryLink, isView: Boolean = false): String {
         val buff = StringBuilder().append(buildLinkLabel(entryIndex)).append(": ")
@@ -75,6 +78,7 @@ object EntriesUtils {
     /**
      * Build an entry's tags/categories for display on the channel.
      */
+    @JvmStatic
     fun buildTags(entryIndex: Int, entry: EntryLink): String =
         buildLinkLabel(entryIndex) + "${Constants.TAG_CMD}: " + entry.pinboardTags.replace(",", ", ")
 }

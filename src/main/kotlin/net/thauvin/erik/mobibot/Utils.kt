@@ -182,7 +182,8 @@ object Utils {
     /**
      * Return the last item of a list of strings or empty if none.
      */
-    fun List<String>.lastOrEmpty() : String {
+    @JvmStatic
+    fun List<String>.lastOrEmpty(): String {
         return if (this.size >= 2) {
             this.last()
         } else

@@ -59,8 +59,8 @@ object TwitterOAuth {
      *
      * @param args The consumerKey and consumerSecret should be passed as arguments.
      */
-    @Throws(TwitterException::class, IOException::class)
     @JvmStatic
+    @Throws(TwitterException::class, IOException::class)
     fun main(args: Array<String>) {
         if (args.size == 2) {
             with(TwitterFactory.getSingleton()) {

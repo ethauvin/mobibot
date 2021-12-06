@@ -45,7 +45,6 @@ open class Message @JvmOverloads constructor(
 ) {
     companion object {
         var DEFAULT_COLOR = Constants.EMPTY
-
     }
 
     init {
