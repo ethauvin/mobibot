@@ -36,7 +36,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import net.thauvin.erik.mobibot.FeedReader
 import net.thauvin.erik.mobibot.Utils.helpFormat
-import net.thauvin.erik.mobibot.Utils.sendMessage
 import org.pircbotx.hooks.types.GenericMessageEvent
 
 class ChannelFeed(channel: String) : AbstractCommand() {
@@ -55,16 +54,16 @@ class ChannelFeed(channel: String) : AbstractCommand() {
     }
 
     override fun commandResponse(channel: String, args: String, event: GenericMessageEvent) {
-        with(properties[FEED_PROP]) {
-            if (!isNullOrBlank()) {
-                runBlocking {
-                    launch {
-                        FeedReader(this@with, event).run()
-                    }
+        if (isEnabled()) {
+            runBlocking {
+                launch {
+                    FeedReader(properties[FEED_PROP]!!, event).run()
                 }
-            } else {
-                event.sendMessage("There is no feed setup for this channel.")
             }
         }
+    }
+
+    override fun isEnabled(): Boolean {
+        return !properties[FEED_PROP].isNullOrBlank()
     }
 }
