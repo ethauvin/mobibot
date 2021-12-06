@@ -1,5 +1,5 @@
 /*
- * RecapTest.kt
+ * AddonsTest.kt
  *
  * Copyright (c) 2004-2021, Erik C. Thauvin (erik@thauvin.net)
  * All rights reserved.
@@ -30,32 +30,57 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package net.thauvin.erik.mobibot.commands
+package net.thauvin.erik.mobibot
 
-import assertk.all
 import assertk.assertThat
-import assertk.assertions.contains
+import assertk.assertions.containsExactly
 import assertk.assertions.isEqualTo
-import assertk.assertions.prop
-import assertk.assertions.size
+import net.thauvin.erik.mobibot.commands.ChannelFeed
+import net.thauvin.erik.mobibot.commands.Cycle
+import net.thauvin.erik.mobibot.commands.Die
+import net.thauvin.erik.mobibot.commands.Ignore
+import net.thauvin.erik.mobibot.commands.links.Comment
+import net.thauvin.erik.mobibot.commands.links.View
+import net.thauvin.erik.mobibot.modules.Joke
+import net.thauvin.erik.mobibot.modules.RockPaperScissors
+import net.thauvin.erik.mobibot.modules.Twitter
 import org.testng.annotations.Test
+import java.util.*
 
-class RecapTest {
+class AddonsTest {
+    private val addons = Addons()
+
     @Test
-    fun storeRecapTest() {
-        for (i in 1..20) {
-            Recap.storeRecap("sender$i", "test $i", false)
-        }
-        assertThat(Recap.recaps, "recap first and last").all {
-            size().isEqualTo(Recap.MAX_RECAPS)
-            prop(MutableList<String>::first)
-                .matches("[1-2]\\d{3}-[01]\\d-[0-3]\\d [0-2]\\d:[0-6]\\d - sender11: test 11".toRegex())
-            prop(MutableList<String>::last)
-                .matches("[1-2]\\d{3}-[01]\\d-[0-3]\\d [0-2]\\d:[0-6]\\d - sender20: test 20".toRegex())
-        }
+    fun addTest() {
+        val p = Properties()
 
-        Recap.storeRecap("sender", "test action", true)
-        assertThat(Recap.recaps.last())
-            .matches("[1-2]\\d{3}-[01]\\d-[0-3]\\d [0-2]\\d:[0-6]\\d - sender test action".toRegex())
+        // Modules
+        addons.add(Joke(), p)
+        addons.add(RockPaperScissors(), p)
+        addons.add(Twitter(), p) // no properties, disabled.
+        assertThat(addons.modules.size, "modules = 2").isEqualTo(2)
+
+        assertThat(addons.modulesNames, "module names").containsExactly("Joke", "RockPaperScissors")
+
+        // Commands
+        addons.add(View(), p)
+        addons.add(Comment(), p)
+        addons.add(Cycle(), p)
+        addons.add(Die(), p) // invisible
+        addons.add(ChannelFeed("channel"), p) // no properties, disabled
+        addons.add(Ignore(), p.apply { put(Ignore.IGNORE_PROP, "nick") })
+        assertThat(addons.commands.size, "commands = 4").isEqualTo(5)
+
+        assertThat(addons.ops, "ops").containsExactly("cycle")
+
+        assertThat(addons.names, "names").containsExactly(
+            "joke",
+            "rock",
+            "paper",
+            "scissors",
+            "view",
+            "comment",
+            "ignore"
+        )
     }
 }

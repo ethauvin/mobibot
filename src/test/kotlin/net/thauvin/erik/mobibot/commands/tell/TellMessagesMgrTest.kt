@@ -1,5 +1,5 @@
 /*
- * TellMessageTest.kt
+ * TellMessagesMgrTest.kt
  *
  * Copyright (c) 2004-2021, Erik C. Thauvin (erik@thauvin.net)
  * All rights reserved.
@@ -29,45 +29,60 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
 package net.thauvin.erik.mobibot.commands.tell
 
 import assertk.all
 import assertk.assertThat
-import assertk.assertions.isEqualTo
-import assertk.assertions.isFalse
-import assertk.assertions.isTrue
-import assertk.assertions.prop
+import assertk.assertions.*
+import org.testng.annotations.AfterClass
+import org.testng.annotations.BeforeClass
 import org.testng.annotations.Test
-import java.time.Duration
 import java.time.LocalDateTime
-import java.time.temporal.Temporal
+import kotlin.io.path.createTempFile
+import kotlin.io.path.deleteIfExists
+import kotlin.io.path.fileSize
 
-/**
- * The `TellMessageTest` class.
- */
-class TellMessageTest {
-    private fun isValidDate(date: Temporal): Boolean {
-        return Duration.between(date, LocalDateTime.now()).toMinutes() < 1
+class TellMessagesMgrTest {
+    private val testFile = createTempFile(suffix = ".ser")
+    private val maxDays = 10L
+    private val testMessages = mutableListOf<TellMessage>().apply {
+        for (i in 0..5) {
+            this.add(i, TellMessage("sender$i", "recipient$i", "message $i"))
+        }
+    }
+
+    @BeforeClass
+    fun saveTest() {
+        TellMessagesMgr.save(testFile.toAbsolutePath().toString(), testMessages)
+        assertThat(testFile.fileSize()).isGreaterThan(0)
+    }
+
+    @AfterClass
+    fun afterClass() {
+        testFile.deleteIfExists()
     }
 
     @Test
-    fun testTellMessage() {
-        val message = "Test message."
-        val recipient = "recipient"
-        val sender = "sender"
-        val tellMessage = TellMessage(sender, recipient, message)
-        assertThat(tellMessage).all {
-            prop(TellMessage::sender).isEqualTo(sender)
-            prop(TellMessage::recipient).isEqualTo(recipient)
-            prop(TellMessage::message).isEqualTo(message)
+    fun cleanTest() {
+        testMessages.add(TellMessage("sender", "recipient", "message").apply {
+            queued = LocalDateTime.now().minusDays(maxDays)
+        })
+        val size = testMessages.size
+        assertThat(TellMessagesMgr.clean(testMessages, maxDays + 2), "maxDays = 12").isFalse()
+        assertThat(TellMessagesMgr.clean(testMessages, maxDays), "maxDays = 10").isTrue()
+        assertThat(testMessages.size, "size-- after clean").isEqualTo(size - 1)
+    }
+
+    @Test
+    fun loadTest() {
+        val messages = TellMessagesMgr.load(testFile.toAbsolutePath().toString())
+        for (i in messages.indices) {
+            assertThat(messages[i]).all {
+                prop(TellMessage::sender).isEqualTo(testMessages[i].sender)
+                prop(TellMessage::recipient).isEqualTo(testMessages[i].recipient)
+                prop(TellMessage::message).isEqualTo(testMessages[i].message)
+            }
         }
-        assertThat(isValidDate(tellMessage.queued), "queued is valid date/time").isTrue()
-        assertThat(tellMessage.isMatch(sender), "match sender").isTrue()
-        assertThat(tellMessage.isMatch(recipient), "match recipient").isTrue()
-        assertThat(tellMessage.isMatch("foo"), "foo is no match").isFalse()
-        tellMessage.isReceived = false
-        assertThat(tellMessage.receptionDate, "reception date not set").isEqualTo(LocalDateTime.MIN)
-        tellMessage.isReceived = true
-        assertThat(isValidDate(tellMessage.receptionDate), "received is valid date/time").isTrue()
     }
 }

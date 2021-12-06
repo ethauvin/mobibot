@@ -81,13 +81,13 @@ class FeedMgrTest {
         with(entries.links.first()) {
             assertThat(nick, "first nick").isEqualTo("ErikT")
             assertThat(date, "first date").isEqualTo(Date(1635638400000L))
-            comments.forEachIndexed { i, entryComment ->
-                assertThat(entryComment.comment, "comment ${i + 1}").endsWith("comment ${i + 1}.")
-                if (i == 0) {
-                    assertThat(entryComment.nick, "comment ${i + 1} nick").isEqualTo("ErikT")
-                } else {
-                    assertThat(entryComment.nick, "comment ${i + 1} nick").isEqualTo("Skynx")
-                }
+            assertThat(comments.first(), "first comment").all {
+                prop(EntryComment::comment).endsWith("comment 1.")
+                prop(EntryComment::nick).isEqualTo("ErikT")
+            }
+            assertThat(comments.last(), "last comment").all {
+                prop(EntryComment::comment).endsWith("comment 2.")
+                prop(EntryComment::nick).isEqualTo("Skynx")
             }
         }
 

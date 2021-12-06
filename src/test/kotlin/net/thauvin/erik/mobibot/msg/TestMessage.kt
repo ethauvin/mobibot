@@ -72,6 +72,16 @@ class TestMessage {
     }
 
     @Test
+    fun testPrivateMessage() {
+        val msg = PrivateMessage("foo")
+        assertThat(msg).all {
+            prop(Message::isPrivate).isTrue()
+            prop(Message::isError).isFalse()
+            prop(Message::isNotice).isFalse()
+        }
+    }
+
+    @Test
     fun testPublicMessage() {
         val msg = PublicMessage("foo")
         assertThat(msg).all {
