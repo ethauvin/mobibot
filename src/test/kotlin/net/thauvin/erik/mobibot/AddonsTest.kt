@@ -45,7 +45,7 @@ import net.thauvin.erik.mobibot.modules.Joke
 import net.thauvin.erik.mobibot.modules.RockPaperScissors
 import net.thauvin.erik.mobibot.modules.Twitter
 import org.testng.annotations.Test
-import java.util.*
+import java.util.Properties
 
 class AddonsTest {
     private val addons = Addons()

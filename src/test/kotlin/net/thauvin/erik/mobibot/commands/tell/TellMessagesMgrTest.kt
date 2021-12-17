@@ -34,7 +34,12 @@ package net.thauvin.erik.mobibot.commands.tell
 
 import assertk.all
 import assertk.assertThat
-import assertk.assertions.*
+import assertk.assertions.index
+import assertk.assertions.isEqualTo
+import assertk.assertions.isFalse
+import assertk.assertions.isGreaterThan
+import assertk.assertions.isTrue
+import assertk.assertions.prop
 import org.testng.annotations.AfterClass
 import org.testng.annotations.BeforeClass
 import org.testng.annotations.Test
@@ -78,7 +83,7 @@ class TellMessagesMgrTest {
     fun loadTest() {
         val messages = TellMessagesMgr.load(testFile.toAbsolutePath().toString())
         for (i in messages.indices) {
-            assertThat(messages[i]).all {
+            assertThat(messages).index(i).all {
                 prop(TellMessage::sender).isEqualTo(testMessages[i].sender)
                 prop(TellMessage::recipient).isEqualTo(testMessages[i].recipient)
                 prop(TellMessage::message).isEqualTo(testMessages[i].message)

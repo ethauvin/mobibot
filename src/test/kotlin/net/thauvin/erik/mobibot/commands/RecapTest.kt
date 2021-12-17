@@ -34,8 +34,8 @@ package net.thauvin.erik.mobibot.commands
 
 import assertk.all
 import assertk.assertThat
-import assertk.assertions.contains
 import assertk.assertions.isEqualTo
+import assertk.assertions.matches
 import assertk.assertions.prop
 import assertk.assertions.size
 import org.testng.annotations.Test
