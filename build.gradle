@@ -27,7 +27,7 @@ def isNonStable = { String version ->
 mainClassName = packageName + '.Mobibot'
 
 ext.versions = [
-        log4j: '2.16.0',
+        log4j: '2.17.0',
         pmd  : '6.41.0',
 ]
 
