@@ -180,7 +180,7 @@ object Utils {
     }
 
     /**
-     * Return the last item of a list of strings or empty if none.
+     * Returns the last item of a list of strings or empty if none.
      */
     @JvmStatic
     fun List<String>.lastOrEmpty(): String {
@@ -189,6 +189,12 @@ object Utils {
         } else
             ""
     }
+
+    /**
+     * Returns {@code true} if the list does not contain the given string.
+     */
+    @JvmStatic
+    fun List<String>.notContains(text: String, ignoreCase: Boolean = false) = this.none { it.equals(text, ignoreCase) }
 
     /**
      * Obfuscates the given string.

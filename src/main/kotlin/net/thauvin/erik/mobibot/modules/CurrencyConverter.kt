@@ -59,6 +59,8 @@ import javax.xml.XMLConstants
 class CurrencyConverter : ThreadedModule() {
     private val logger: Logger = LoggerFactory.getLogger(CurrencyConverter::class.java)
 
+    override val name = "CurrencyConverter"
+
     override fun commandResponse(channel: String, cmd: String, args: String, event: GenericMessageEvent) {
         synchronized(this) {
             if (pubDate != today()) {

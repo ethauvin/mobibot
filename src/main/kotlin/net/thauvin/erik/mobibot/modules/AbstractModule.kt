@@ -42,6 +42,11 @@ import org.pircbotx.hooks.types.GenericMessageEvent
  */
 abstract class AbstractModule {
     /**
+     * The module name.
+     */
+    abstract val name: String
+
+    /**
      * The module's commands, if any.
      */
     @JvmField

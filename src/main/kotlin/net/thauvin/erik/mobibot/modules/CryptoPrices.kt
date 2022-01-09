@@ -47,6 +47,8 @@ import java.io.IOException
 class CryptoPrices : ThreadedModule() {
     private val logger: Logger = LoggerFactory.getLogger(CryptoPrices::class.java)
 
+    override val name = "CryptoPrices"
+
     /**
      * Returns the cryptocurrency market price from [Coinbase](https://developers.coinbase.com/api/v2#get-spot-price).
      */

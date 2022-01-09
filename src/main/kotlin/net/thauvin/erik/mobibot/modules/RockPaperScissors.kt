@@ -42,6 +42,8 @@ import org.pircbotx.hooks.types.GenericMessageEvent
  * Simple module example in Kotlin.
  */
 class RockPaperScissors : AbstractModule() {
+    override val name = "RockPaperScissors"
+
     init {
         with(commands) {
             add(Hands.ROCK.name.lowercase())

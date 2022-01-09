@@ -40,6 +40,8 @@ import org.pircbotx.hooks.types.GenericMessageEvent
  * The Dice module.
  */
 class Dice : AbstractModule() {
+    override val name = "Dice"
+
     override fun commandResponse(channel: String, cmd: String, args: String, event: GenericMessageEvent) {
         val botRoll = roll()
         val roll = roll()

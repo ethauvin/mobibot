@@ -54,6 +54,8 @@ import java.net.URL
 class Joke : ThreadedModule() {
     private val logger: Logger = LoggerFactory.getLogger(Joke::class.java)
 
+    override val name = "Joke"
+
     override fun commandResponse(channel: String, cmd: String, args: String, event: GenericMessageEvent) {
         runBlocking {
             launch { run(channel, cmd, args, event) }

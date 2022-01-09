@@ -57,6 +57,8 @@ import kotlin.math.roundToInt
 class Weather2 : ThreadedModule() {
     private val logger: Logger = LoggerFactory.getLogger(Weather2::class.java)
 
+    override val name = "Weather"
+
     /**
      * Fetches the weather data from a specific city.
      */

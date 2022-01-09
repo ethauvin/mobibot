@@ -45,6 +45,8 @@ import java.time.temporal.ChronoField
  * The WorldTime module.
  */
 class WorldTime : AbstractModule() {
+    override val name = "WorldTime"
+
     companion object {
         /**
          * Beats (Internet Time) keyword

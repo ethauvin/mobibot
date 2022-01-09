@@ -57,6 +57,8 @@ class Twitter : ThreadedModule() {
     // Twitter auto-posts.
     private val entries: MutableSet<Int> = HashSet()
 
+    override val name = "Twitter"
+
     /**
      * Add an entry to be posted on Twitter.
      */

@@ -31,7 +31,9 @@
  */
 package net.thauvin.erik.mobibot
 
+import net.thauvin.erik.mobibot.Utils.notContains
 import net.thauvin.erik.mobibot.commands.AbstractCommand
+import net.thauvin.erik.mobibot.commands.links.LinksMgr
 import net.thauvin.erik.mobibot.modules.AbstractModule
 import org.pircbotx.hooks.events.PrivateMessageEvent
 import org.pircbotx.hooks.types.GenericMessageEvent
@@ -40,7 +42,10 @@ import java.util.Properties
 /**
  * Modules and Commands addons.
  */
-class Addons {
+class Addons(private val props: Properties) {
+    private val disabledModules = props.getProperty("disabled-modules", "").split(LinksMgr.TAG_MATCH.toRegex())
+    private val disableCommands = props.getProperty("disabled-commands", "").split(LinksMgr.TAG_MATCH.toRegex())
+
     val commands: MutableList<AbstractCommand> = mutableListOf()
     val modules: MutableList<AbstractModule> = mutableListOf()
     val modulesNames: MutableList<String> = mutableListOf()
@@ -50,18 +55,20 @@ class Addons {
     /**
      * Add a module with properties.
      */
-    fun add(module: AbstractModule, props: Properties) {
+    fun add(module: AbstractModule) {
         with(module) {
-            if (hasProperties()) {
-                propertyKeys.forEach {
-                    setProperty(it, props.getProperty(it, ""))
+            if (disabledModules.notContains(name, true)) {
+                if (hasProperties()) {
+                    propertyKeys.forEach {
+                        setProperty(it, props.getProperty(it, ""))
+                    }
                 }
-            }
 
-            if (isEnabled) {
-                modules.add(this)
-                modulesNames.add(javaClass.simpleName)
-                names.addAll(commands)
+                if (isEnabled) {
+                    modules.add(this)
+                    modulesNames.add(name)
+                    names.addAll(commands)
+                }
             }
         }
     }
@@ -69,20 +76,22 @@ class Addons {
     /**
      * Add a command with properties.
      */
-    fun add(command: AbstractCommand, props: Properties) {
+    fun add(command: AbstractCommand) {
         with(command) {
-            if (properties.isNotEmpty()) {
-                properties.keys.forEach {
-                    setProperty(it, props.getProperty(it, ""))
+            if (disableCommands.notContains(name, true)) {
+                if (properties.isNotEmpty()) {
+                    properties.keys.forEach {
+                        setProperty(it, props.getProperty(it, ""))
+                    }
                 }
-            }
-            if (isEnabled()) {
-                commands.add(this)
-                if (isVisible) {
-                    if (isOpOnly) {
-                        ops.add(name)
-                    } else {
-                        names.add(name)
+                if (isEnabled()) {
+                    commands.add(this)
+                    if (isVisible) {
+                        if (isOpOnly) {
+                            ops.add(name)
+                        } else {
+                            names.add(name)
+                        }
                     }
                 }
             }

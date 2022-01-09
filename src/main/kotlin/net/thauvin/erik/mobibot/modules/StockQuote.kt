@@ -55,6 +55,8 @@ import java.net.URL
 class StockQuote : ThreadedModule() {
     private val logger: Logger = LoggerFactory.getLogger(StockQuote::class.java)
 
+    override val name = "StockQuote"
+
     /**
      * Returns the specified stock quote from Alpha Vantage.
      */

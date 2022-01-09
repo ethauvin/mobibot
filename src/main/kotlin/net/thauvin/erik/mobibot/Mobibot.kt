@@ -112,7 +112,7 @@ class Mobibot(nickname: String, val channel: String, logsDirPath: String, p: Pro
     private val config: Configuration
 
     // Commands and Modules
-    private val addons = Addons()
+    private val addons: Addons
 
     // Tell module
     private val tell: Tell
@@ -391,46 +391,48 @@ class Mobibot(nickname: String, val channel: String, logsDirPath: String, p: Pro
             pinboard.setApiToken(p.getProperty("pinboard-api-token", ""))
         }
 
+        addons = Addons(p)
+
         // Load the commands
-        addons.add(ChannelFeed(channel.removePrefix("#")), p)
-        addons.add(Comment(), p)
-        addons.add(Cycle(), p)
-        addons.add(Die(), p)
-        addons.add(Ignore(), p)
-        addons.add(LinksMgr(), p)
-        addons.add(Me(), p)
-        addons.add(Msg(), p)
-        addons.add(Nick(), p)
-        addons.add(Posting(), p)
-        addons.add(Recap(), p)
-        addons.add(Say(), p)
-        addons.add(Tags(), p)
+        addons.add(ChannelFeed(channel.removePrefix("#")))
+        addons.add(Comment())
+        addons.add(Cycle())
+        addons.add(Die())
+        addons.add(Ignore())
+        addons.add(LinksMgr())
+        addons.add(Me())
+        addons.add(Msg())
+        addons.add(Nick())
+        addons.add(Posting())
+        addons.add(Recap())
+        addons.add(Say())
+        addons.add(Tags())
 
         // Tell command
         tell = Tell("${logsDirPath}${nickname}.ser")
-        addons.add(tell, p)
+        addons.add(tell)
 
-        addons.add(LinksMgr.twitter, p)
-        addons.add(Users(), p)
-        addons.add(Versions(), p)
-        addons.add(View(), p)
+        addons.add(LinksMgr.twitter)
+        addons.add(Users())
+        addons.add(Versions())
+        addons.add(View())
 
         // Load the modules
-        addons.add(Calc(), p)
-        addons.add(CryptoPrices(), p)
-        addons.add(CurrencyConverter(), p)
-        addons.add(Dice(), p)
-        addons.add(GoogleSearch(), p)
-        addons.add(Info(tell), p)
-        addons.add(Joke(), p)
-        addons.add(Lookup(), p)
-        addons.add(Modules(addons.modulesNames), p)
-        addons.add(Ping(), p)
-        addons.add(RockPaperScissors(), p)
-        addons.add(StockQuote(), p)
-        addons.add(Weather2(), p)
-        addons.add(WorldTime(), p)
-        addons.add(War(), p)
+        addons.add(Calc())
+        addons.add(CryptoPrices())
+        addons.add(CurrencyConverter())
+        addons.add(Dice())
+        addons.add(GoogleSearch())
+        addons.add(Info(tell))
+        addons.add(Joke())
+        addons.add(Lookup())
+        addons.add(Modules(addons.modulesNames))
+        addons.add(Ping())
+        addons.add(RockPaperScissors())
+        addons.add(StockQuote())
+        addons.add(Weather2())
+        addons.add(WorldTime())
+        addons.add(War())
 
         // Sort the addons
         addons.sort()

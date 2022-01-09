@@ -41,35 +41,43 @@ import net.thauvin.erik.mobibot.commands.Die
 import net.thauvin.erik.mobibot.commands.Ignore
 import net.thauvin.erik.mobibot.commands.links.Comment
 import net.thauvin.erik.mobibot.commands.links.View
+import net.thauvin.erik.mobibot.modules.Dice
 import net.thauvin.erik.mobibot.modules.Joke
+import net.thauvin.erik.mobibot.modules.Lookup
 import net.thauvin.erik.mobibot.modules.RockPaperScissors
 import net.thauvin.erik.mobibot.modules.Twitter
+import net.thauvin.erik.mobibot.modules.War
 import org.testng.annotations.Test
 import java.util.Properties
 
 class AddonsTest {
-    private val addons = Addons()
+    private val p = Properties().apply {
+        put("disabled-modules", "war,dice Lookup")
+        put("disabled-commands", "View | comment")
+    }
+    private val addons = Addons(p)
 
     @Test
     fun addTest() {
-        val p = Properties()
-
         // Modules
-        addons.add(Joke(), p)
-        addons.add(RockPaperScissors(), p)
-        addons.add(Twitter(), p) // no properties, disabled.
+        addons.add(Joke())
+        addons.add(RockPaperScissors())
+        addons.add(Twitter()) // no properties, disabled.
+        addons.add(War())
+        addons.add(Dice())
+        addons.add(Lookup())
         assertThat(addons.modules.size, "modules = 2").isEqualTo(2)
-
         assertThat(addons.modulesNames, "module names").containsExactly("Joke", "RockPaperScissors")
 
         // Commands
-        addons.add(View(), p)
-        addons.add(Comment(), p)
-        addons.add(Cycle(), p)
-        addons.add(Die(), p) // invisible
-        addons.add(ChannelFeed("channel"), p) // no properties, disabled
-        addons.add(Ignore(), p.apply { put(Ignore.IGNORE_PROP, "nick") })
-        assertThat(addons.commands.size, "commands = 4").isEqualTo(5)
+        addons.add(View())
+        addons.add(Comment())
+        addons.add(Cycle())
+        addons.add(Die()) // invisible
+        addons.add(ChannelFeed("channel")) // no properties, disabled
+        p[Ignore.IGNORE_PROP] = "nick"
+        addons.add(Ignore())
+        assertThat(addons.commands.size, "commands = 3").isEqualTo(3)
 
         assertThat(addons.ops, "ops").containsExactly("cycle")
 
@@ -78,8 +86,6 @@ class AddonsTest {
             "rock",
             "paper",
             "scissors",
-            "view",
-            "comment",
             "ignore"
         )
     }

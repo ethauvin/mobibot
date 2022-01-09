@@ -39,9 +39,8 @@ import org.pircbotx.hooks.types.GenericMessageEvent
  * The Ping module.
  */
 class Ping : AbstractModule() {
-    /**
-     * {@inheritDoc}
-     */
+    override val name = "Ping"
+
     override fun commandResponse(channel: String, cmd: String, args: String, event: GenericMessageEvent) {
         event.bot().sendIRC().action(channel, randomPing())
     }

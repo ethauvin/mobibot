@@ -55,6 +55,8 @@ import java.net.URL
 class GoogleSearch : ThreadedModule() {
     private val logger: Logger = LoggerFactory.getLogger(GoogleSearch::class.java)
 
+    override val name = "GoogleSearch"
+
     /**
      * Searches Google.
      */

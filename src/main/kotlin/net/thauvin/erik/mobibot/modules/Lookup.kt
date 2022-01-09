@@ -48,6 +48,8 @@ import java.net.UnknownHostException
 class Lookup : AbstractModule() {
     private val logger: Logger = LoggerFactory.getLogger(Lookup::class.java)
 
+    override val name = "Lookup"
+
     override fun commandResponse(channel: String, cmd: String, args: String, event: GenericMessageEvent) {
         if (args.matches("(\\S.)+(\\S)+".toRegex())) {
             try {
