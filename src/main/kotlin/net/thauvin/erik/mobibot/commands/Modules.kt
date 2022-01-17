@@ -32,12 +32,13 @@
 
 package net.thauvin.erik.mobibot.commands
 
+import net.thauvin.erik.mobibot.Addons
 import net.thauvin.erik.mobibot.Utils.helpFormat
 import net.thauvin.erik.mobibot.Utils.isChannelOp
 import net.thauvin.erik.mobibot.Utils.sendList
 import org.pircbotx.hooks.types.GenericMessageEvent
 
-class Modules(private val modulesNames: List<String>) : AbstractCommand() {
+class Modules(private val addons: Addons) : AbstractCommand() {
     override val name = "modules"
     override val help = listOf("To view a list of enabled modules:", helpFormat("%c $name"))
     override val isOpOnly = true
@@ -46,11 +47,11 @@ class Modules(private val modulesNames: List<String>) : AbstractCommand() {
 
     override fun commandResponse(channel: String, args: String, event: GenericMessageEvent) {
         if (isChannelOp(channel, event)) {
-            if (modulesNames.isEmpty()) {
+            if (addons.modulesNames.isEmpty()) {
                 event.respondPrivateMessage("There are no enabled modules.")
             } else {
                 event.respondPrivateMessage("The enabled modules are: ")
-                event.sendList(modulesNames, 7, isIndent = true)
+                event.sendList(addons.modulesNames, 7, isIndent = true)
             }
         } else {
             helpResponse(channel, args, event)
