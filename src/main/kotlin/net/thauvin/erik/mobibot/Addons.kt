@@ -48,9 +48,7 @@ class Addons(private val props: Properties) {
 
     val commands: MutableList<AbstractCommand> = mutableListOf()
     val modules: MutableList<AbstractModule> = mutableListOf()
-    val modulesNames: MutableList<String> = mutableListOf()
-    val names: MutableList<String> = mutableListOf()
-    val ops: MutableList<String> = mutableListOf()
+    val names = Names
 
     /**
      * Add a module with properties.
@@ -66,8 +64,8 @@ class Addons(private val props: Properties) {
 
                 if (isEnabled) {
                     modules.add(this)
-                    modulesNames.add(name)
-                    names.addAll(commands)
+                    names.modules.add(name)
+                    names.commands.addAll(commands)
                 }
             }
         }
@@ -88,9 +86,9 @@ class Addons(private val props: Properties) {
                     commands.add(this)
                     if (isVisible) {
                         if (isOpOnly) {
-                            ops.add(name)
+                            names.ops.add(name)
                         } else {
-                            names.add(name)
+                            names.commands.add(name)
                         }
                     }
                 }
@@ -150,11 +148,17 @@ class Addons(private val props: Properties) {
     }
 
     /**
-     * Sort commands and modules names.
+     * Holds commands and modules names.
      */
-    fun sort() {
-        names.sort()
-        ops.sort()
-        modulesNames.sort()
+    object Names {
+        val modules: MutableList<String> = mutableListOf()
+        val commands: MutableList<String> = mutableListOf()
+        val ops: MutableList<String> = mutableListOf()
+
+        fun sort() {
+            modules.sort()
+            commands.sort()
+            ops.sort()
+        }
     }
 }

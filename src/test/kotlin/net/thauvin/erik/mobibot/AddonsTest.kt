@@ -67,7 +67,7 @@ class AddonsTest {
         addons.add(Dice())
         addons.add(Lookup())
         assertThat(addons.modules.size, "modules = 2").isEqualTo(2)
-        assertThat(addons.modulesNames, "module names").containsExactly("Joke", "RockPaperScissors")
+        assertThat(addons.names.modules, "module names").containsExactly("Joke", "RockPaperScissors")
 
         // Commands
         addons.add(View())
@@ -79,9 +79,9 @@ class AddonsTest {
         addons.add(Ignore())
         assertThat(addons.commands.size, "commands = 3").isEqualTo(3)
 
-        assertThat(addons.ops, "ops").containsExactly("cycle")
+        assertThat(addons.names.ops, "ops names").containsExactly("cycle")
 
-        assertThat(addons.names, "names").containsExactly(
+        assertThat(addons.names.commands, "command names").containsExactly(
             "joke",
             "rock",
             "paper",

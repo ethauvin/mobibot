@@ -143,10 +143,10 @@ class Mobibot(nickname: String, val channel: String, logsDirPath: String, p: Pro
             ),
         )
         event.sendMessage("The commands are:")
-        event.sendList(addons.names, 8, isBold = true, isIndent = true)
+        event.sendList(addons.names.commands, 8, isBold = true, isIndent = true)
         if (isChannelOp(channel, event)) {
             event.sendMessage("The op commands are:")
-            event.sendList(addons.ops, 8, isBold = true, isIndent = true)
+            event.sendList(addons.names.ops, 8, isBold = true, isIndent = true)
         }
     }
 
@@ -401,7 +401,7 @@ class Mobibot(nickname: String, val channel: String, logsDirPath: String, p: Pro
         addons.add(Ignore())
         addons.add(LinksMgr())
         addons.add(Me())
-        addons.add(Modules(addons))
+        addons.add(Modules(addons.names.modules))
         addons.add(Msg())
         addons.add(Nick())
         addons.add(Posting())
@@ -435,7 +435,7 @@ class Mobibot(nickname: String, val channel: String, logsDirPath: String, p: Pro
         addons.add(War())
 
         // Sort the addons
-        addons.sort()
+        addons.names.sort()
     }
 }
 
