@@ -1,7 +1,7 @@
 /*
  * War.java
  *
- * Copyright (c) 2004-2020, Erik C. Thauvin (erik@thauvin.net)
+ * Copyright (c) 2004-2022, Erik C. Thauvin (erik@thauvin.net)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -32,77 +32,82 @@
 
 package net.thauvin.erik.mobibot.modules;
 
-import net.thauvin.erik.mobibot.Mobibot;
 import net.thauvin.erik.mobibot.Utils;
+import org.jetbrains.annotations.NotNull;
+import org.pircbotx.hooks.types.GenericMessageEvent;
 
 import java.security.SecureRandom;
+
+import static net.thauvin.erik.mobibot.Utils.bold;
 
 /**
  * The War module.
  *
  * @author <a href="https://erik.thauvin.net" target="_blank">Erik C. Thauvin</a>
- * @created 2014-04-28
  * @since 1.0
  */
 public final class War extends AbstractModule {
+    // Random
+    private static final SecureRandom RANDOM = new SecureRandom();
     // War command
     private static final String WAR_CMD = "war";
-    // Deck of card
-    private static final String[] WAR_DECK =
-            new String[]{ "Ace", "King", "Queen", "Jack", "10", "9", "8", "7", "6", "5", "4", "3", "2" };
-    // Suits for the deck of card
-    private static final String[] WAR_SUITS = new String[]{ "Hearts", "Spades", "Diamonds", "Clubs" };
+
+    private static final String[] HEARTS =
+            {"🂱", "🂾", "🂽", "🂼", "🂻", "🂺", "🂹", "🂸", "🂷", "🂶", "🂵", "🂴", "🂳", "🂲"};
+    private static final String[] SPADES =
+            {"🂡", "🂮", "🂭", "🂬", "🂫", "🂪", "🂩", "🂨", "🂧", "🂦", "🂥", "🂤", "🂣", "🂢"};
+    private static final String[] DIAMONDS =
+            {"🃁", "🃎", "🃍", "🃌", "🃋", "🃊", "🃉", "🃈", "🃇", "🃆", "🃅", "🃄", "🃃", "🃂"};
+    private static final String[] CLUBS =
+            {"🃑", "🃞", "🃝", "🃜", "🃛", "🃚", "🃙", "🃘", "🃗", "🃖", "🃕", "🃔", "🃓", "🃒"};
+
+    private static final String[][] DECK = {HEARTS, SPADES, DIAMONDS, CLUBS};
 
     /**
      * The default constructor.
      */
     public War() {
         super();
+
         commands.add(WAR_CMD);
+
+        help.add("To play war:");
+        help.add(Utils.helpFormat("%c " + WAR_CMD));
+    }
+
+    @NotNull
+    @Override
+    public String getName() {
+        return "War";
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void commandResponse(final Mobibot bot,
-                                final String sender,
-                                final String cmd,
-                                final String args,
-                                final boolean isPrivate) {
-        final SecureRandom r = new SecureRandom();
-
+    public void commandResponse(@NotNull final String channel, @NotNull final String cmd, @NotNull final String args,
+                                @NotNull final GenericMessageEvent event) {
         int i;
         int y;
 
         while (true) {
-            i = r.nextInt(WAR_DECK.length);
-            y = r.nextInt(WAR_DECK.length);
+            i = RANDOM.nextInt(HEARTS.length);
+            y = RANDOM.nextInt(HEARTS.length);
 
-            bot.send(bot.getChannel(),
-                     sender + " drew the " + Utils.bold(WAR_DECK[i]) + " of " + WAR_SUITS[r.nextInt(WAR_SUITS.length)]);
-            bot.action("drew the " + Utils.bold(WAR_DECK[y]) + " of " + WAR_SUITS[r.nextInt(WAR_SUITS.length)]);
+            event.respond("you drew " + DECK[RANDOM.nextInt(DECK.length)][i]);
+            event.getBot().sendIRC().action(channel, "drew " + DECK[RANDOM.nextInt(DECK.length)][y]);
 
             if (i != y) {
                 break;
             }
 
-            bot.send("This means " + Utils.bold("WAR") + '!');
+            event.respond("This means " + bold("WAR") + '!');
         }
 
         if (i < y) {
-            bot.action("lost.");
+            event.getBot().sendIRC().action(channel, "lost.");
         } else {
-            bot.action("wins.");
+            event.getBot().sendIRC().action(channel, "wins.");
         }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void helpResponse(final Mobibot bot, final String sender, final String args, final boolean isPrivate) {
-        bot.send(sender, "To play war:");
-        bot.send(sender, bot.helpIndent(bot.getNick() + ": " + WAR_CMD));
     }
 }

@@ -4,7 +4,7 @@ defaults: &defaults
   environment:
     JVM_OPTS: -Xmx3200m
     TERM: dumb
-    CI: true
+    CI_NAME: "CircleCI"
 
 defaults_gradle: &defaults_gradle
   steps:
@@ -18,7 +18,8 @@ defaults_gradle: &defaults_gradle
         name: Gradle Dependencies
         command: ./gradlew dependencies
     - save_cache:
-        paths: ~/.m2
+        paths:
+          - ~/.m2
         key: gradle-dependencies-{{ checksum "build.gradle" }}
     - run:
         name: Run All Checks
@@ -30,26 +31,25 @@ defaults_gradle: &defaults_gradle
         path: build/reports/
 
 jobs:
-  build_gradle_jdk12:
+  build_gradle_jdk17:
     <<: *defaults
 
     docker:
-      - image: openjdk:12-jdk
+      - image: cimg/openjdk:17.0
 
     <<: *defaults_gradle
 
-  build_gradle_jdk8:
+  build_gradle_jdk11:
     <<: *defaults
 
     docker:
-      - image: circleci/openjdk:8-jdk
+      - image: cimg/openjdk:11.0
 
     <<: *defaults_gradle
 
 workflows:
   version: 2
   gradle:
-        jobs:
-        - build_gradle_jdk8
-        - build_gradle_jdk12
-
+    jobs:
+      - build_gradle_jdk11
+      - build_gradle_jdk17

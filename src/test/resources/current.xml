@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss xmlns:dc="http://purl.org/dc/elements/1.1/" version="2.0">
+    <channel>
+        <title>#mobibot IRC Links</title>
+        <link>https://www.mobitopia.org/mobibot/logs</link>
+        <description>Links from irc.example.com on #mobibot</description>
+        <language>en</language>
+        <pubDate>Sun, 31 Oct 2021 21:45:11 GMT</pubDate>
+        <dc:date>2021-10-31T21:45:11Z</dc:date>
+        <dc:language>en</dc:language>
+        <item>
+            <title>Example 2</title>
+            <link>https://www.example.com/2</link>
+            <description>Posted by &lt;b&gt;Skynx&lt;/b&gt; on &lt;a href="irc://irc.libera.chat/#mobibot"&gt;&lt;b&gt;#mobibot&lt;/b&gt;&lt;/a&gt;</description>
+            <category>tag2-1</category>
+            <category>tag2-2</category>
+            <pubDate>Sun, 31 Oct 2021 21:45:11 GMT</pubDate>
+            <guid>https://www.foo.com</guid>
+            <dc:creator>mobibot@irc.libera.chat (Skynx)</dc:creator>
+            <dc:date>2021-10-31T00:01:00Z</dc:date>
+        </item>
+        <item>
+            <title>Example 1</title>
+            <link>https://www.example.com/1</link>
+            <description>Posted by &lt;b&gt;ErikT&lt;/b&gt; on &lt;a href="irc://irc.libera.chat/#mobibot"&gt;&lt;b&gt;#mobibot&lt;/b&gt;&lt;/a&gt;
+                &lt;br/&gt;&lt;br/&gt;ErikT: This is comment 1. &lt;br/&gt;Skynx: This is comment 2.
+            </description>
+            <category>tag1-1</category>
+            <category>tag1-2</category>
+            <pubDate>Sun, 31 Oct 2021 21:43:15 GMT</pubDate>
+            <guid>https://www.example.com/</guid>
+            <dc:creator>mobibot@irc.libera.chat (ErikT)</dc:creator>
+            <dc:date>2021-10-31T00:00:00Z</dc:date>
+        </item>
+    </channel>
+</rss>
