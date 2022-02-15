@@ -46,7 +46,7 @@ class PinboardTest : LocalProperties() {
     @Test
     fun testPinboard() {
         val apiToken = getProperty("pinboard-api-token")
-        val url = "https://www.example.com/"
+        val url = "https://www.example.com/${(1000..5000).random()}"
         val ircServer = "irc.test.com"
         val entry = EntryLink(url, "Test Example", "ErikT", "", "#mobitopia", listOf("test"))
 
@@ -55,7 +55,7 @@ class PinboardTest : LocalProperties() {
         pinboard.addPin(ircServer, entry)
         assertTrue(validatePin(apiToken, url = entry.link, entry.title, entry.nick, entry.channel), "validate add")
 
-        entry.link = "https://www.foo.com/"
+        entry.link = "https://www.example.com/${(5001..9999).random()}"
         pinboard.updatePin(ircServer, url, entry)
         assertTrue(validatePin(apiToken, url = entry.link, ircServer), "validate update")
 
