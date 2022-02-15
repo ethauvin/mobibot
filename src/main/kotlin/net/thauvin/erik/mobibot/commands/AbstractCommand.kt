@@ -33,12 +33,11 @@
 package net.thauvin.erik.mobibot.commands
 
 import net.thauvin.erik.mobibot.Utils.bot
-import net.thauvin.erik.mobibot.Utils.buildCmdSyntax
+import net.thauvin.erik.mobibot.Utils.helpCmdSyntax
 import net.thauvin.erik.mobibot.Utils.isChannelOp
 import net.thauvin.erik.mobibot.Utils.sendMessage
 import org.pircbotx.hooks.events.PrivateMessageEvent
 import org.pircbotx.hooks.types.GenericMessageEvent
-import java.util.concurrent.ConcurrentHashMap
 
 abstract class AbstractCommand {
     abstract val name: String
@@ -47,16 +46,14 @@ abstract class AbstractCommand {
     abstract val isPublic: Boolean
     abstract val isVisible: Boolean
 
-    val properties: MutableMap<String, String> = ConcurrentHashMap()
+    val properties: MutableMap<String, String> = mutableMapOf()
 
     abstract fun commandResponse(channel: String, args: String, event: GenericMessageEvent)
 
     open fun helpResponse(channel: String, topic: String, event: GenericMessageEvent): Boolean {
         if (!isOpOnly || isOpOnly == isChannelOp(channel, event)) {
             for (h in help) {
-                event.sendMessage(
-                    buildCmdSyntax(h, event.bot().nick, event is PrivateMessageEvent || !isPublic),
-                )
+                event.sendMessage(helpCmdSyntax(h, event.bot().nick, event is PrivateMessageEvent || !isPublic))
             }
             return true
         }

@@ -33,7 +33,7 @@
 package net.thauvin.erik.mobibot.commands.links
 
 import net.thauvin.erik.mobibot.Utils.bot
-import net.thauvin.erik.mobibot.Utils.buildCmdSyntax
+import net.thauvin.erik.mobibot.Utils.helpCmdSyntax
 import net.thauvin.erik.mobibot.Utils.helpFormat
 import net.thauvin.erik.mobibot.Utils.lastOrEmpty
 import net.thauvin.erik.mobibot.Utils.sendMessage
@@ -109,11 +109,7 @@ class View : AbstractCommand() {
                 event.sendMessage("To view more, try: ")
                 event.sendMessage(
                     helpFormat(
-                        buildCmdSyntax(
-                            "%c $name ${index + 1} $query",
-                            event.bot().nick,
-                            event is PrivateMessageEvent
-                        )
+                        helpCmdSyntax("%c $name ${index + 1} $query", event.bot().nick, event is PrivateMessageEvent)
                     )
                 )
             }

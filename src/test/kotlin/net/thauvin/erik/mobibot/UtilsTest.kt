@@ -37,7 +37,6 @@ import assertk.assertions.isEqualTo
 import assertk.assertions.length
 import net.thauvin.erik.mobibot.Utils.appendIfMissing
 import net.thauvin.erik.mobibot.Utils.bold
-import net.thauvin.erik.mobibot.Utils.buildCmdSyntax
 import net.thauvin.erik.mobibot.Utils.capitalise
 import net.thauvin.erik.mobibot.Utils.capitalizeWords
 import net.thauvin.erik.mobibot.Utils.colorize
@@ -45,6 +44,7 @@ import net.thauvin.erik.mobibot.Utils.cyan
 import net.thauvin.erik.mobibot.Utils.encodeUrl
 import net.thauvin.erik.mobibot.Utils.getIntProperty
 import net.thauvin.erik.mobibot.Utils.green
+import net.thauvin.erik.mobibot.Utils.helpCmdSyntax
 import net.thauvin.erik.mobibot.Utils.helpFormat
 import net.thauvin.erik.mobibot.Utils.lastOrEmpty
 import net.thauvin.erik.mobibot.Utils.obfuscate
@@ -58,8 +58,6 @@ import net.thauvin.erik.mobibot.Utils.toIsoLocalDate
 import net.thauvin.erik.mobibot.Utils.toUtcDateTime
 import net.thauvin.erik.mobibot.Utils.today
 import net.thauvin.erik.mobibot.Utils.unescapeXml
-import net.thauvin.erik.mobibot.Utils.uptime
-import net.thauvin.erik.mobibot.Utils.urlReader
 import net.thauvin.erik.mobibot.msg.Message.Companion.DEFAULT_COLOR
 import org.pircbotx.Colors
 import org.testng.annotations.BeforeClass
@@ -103,15 +101,6 @@ class UtilsTest {
         assertThat(2L.bold(), "1.bold()").isEqualTo(Colors.BOLD + "2" + Colors.BOLD)
         assertThat(ascii.bold(), "ascii.bold()").isEqualTo(Colors.BOLD + ascii + Colors.BOLD)
         assertThat("test".bold(), "test.bold()").isEqualTo(Colors.BOLD + "test" + Colors.BOLD)
-    }
-
-    @Test
-    fun testBuildCmdSyntax() {
-        val bot = "mobibot"
-        assertThat(buildCmdSyntax("%c $test %n $test", bot, false), "public")
-            .isEqualTo("$bot: $test $bot $test")
-        assertThat(buildCmdSyntax("%c %n $test %c $test %n", bot, true), "public")
-            .isEqualTo("/msg $bot $bot $test /msg $bot $test $bot")
     }
 
 
@@ -170,6 +159,15 @@ class UtilsTest {
     @Test
     fun testGreen() {
         assertThat(ascii.green()).isEqualTo(Colors.DARK_GREEN + ascii + Colors.NORMAL)
+    }
+
+    @Test
+    fun testHelpCmdSyntax() {
+        val bot = "mobibot"
+        assertThat(helpCmdSyntax("%c $test %n $test", bot, false), "public")
+            .isEqualTo("$bot: $test $bot $test")
+        assertThat(helpCmdSyntax("%c %n $test %c $test %n", bot, true), "public")
+            .isEqualTo("/msg $bot $bot $test /msg $bot $test $bot")
     }
 
     @Test
@@ -258,18 +256,6 @@ class UtilsTest {
         assertThat("&lt;a name=&quot;test &amp; &apos;&#39;&quot;&gt;".unescapeXml()).isEqualTo(
             "<a name=\"test & ''\">"
         )
-    }
-
-    @Test
-    fun testUptime() {
-        assertThat(uptime(547800300076L), "full")
-            .isEqualTo("17 years 2 months 2 weeks 1 day 6 hours 45 minutes")
-        assertThat(uptime(2700000L), "minutes").isEqualTo("45 minutes")
-        assertThat(uptime(24300000L), "hours minutes").isEqualTo("6 hours 45 minutes")
-        assertThat(uptime(110700000L), "days hours minutes").isEqualTo("1 day 6 hours 45 minutes")
-        assertThat(uptime(1320300000L), "weeks days hours minutes")
-            .isEqualTo("2 weeks 1 day 6 hours 45 minutes")
-        assertThat(uptime(0L), "0 minutes").isEqualTo("0 minute")
     }
 
     @Test

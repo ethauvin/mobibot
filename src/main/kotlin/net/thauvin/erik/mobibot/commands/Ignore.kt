@@ -34,7 +34,7 @@ package net.thauvin.erik.mobibot.commands
 
 import net.thauvin.erik.mobibot.Utils.bold
 import net.thauvin.erik.mobibot.Utils.bot
-import net.thauvin.erik.mobibot.Utils.buildCmdSyntax
+import net.thauvin.erik.mobibot.Utils.helpCmdSyntax
 import net.thauvin.erik.mobibot.Utils.helpFormat
 import net.thauvin.erik.mobibot.Utils.isChannelOp
 import net.thauvin.erik.mobibot.Utils.sendList
@@ -90,7 +90,7 @@ class Ignore : AbstractCommand() {
     override fun helpResponse(channel: String, topic: String, event: GenericMessageEvent): Boolean {
         return if (isChannelOp(channel, event)) {
             for (h in helpOp) {
-                event.sendMessage(buildCmdSyntax(h, event.bot().nick, true))
+                event.sendMessage(helpCmdSyntax(h, event.bot().nick, true))
             }
             true
         } else {

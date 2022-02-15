@@ -32,7 +32,7 @@
 package net.thauvin.erik.mobibot.modules
 
 import net.thauvin.erik.mobibot.Utils.bot
-import net.thauvin.erik.mobibot.Utils.buildCmdSyntax
+import net.thauvin.erik.mobibot.Utils.helpCmdSyntax
 import net.thauvin.erik.mobibot.Utils.sendMessage
 import org.pircbotx.hooks.events.PrivateMessageEvent
 import org.pircbotx.hooks.types.GenericMessageEvent
@@ -79,7 +79,7 @@ abstract class AbstractModule {
      */
     open fun helpResponse(event: GenericMessageEvent): Boolean {
         for (h in help) {
-            event.sendMessage(buildCmdSyntax(h, event.bot().nick, isPrivateMsgEnabled && event is PrivateMessageEvent))
+            event.sendMessage(helpCmdSyntax(h, event.bot().nick, isPrivateMsgEnabled && event is PrivateMessageEvent))
         }
         return true
     }

@@ -35,6 +35,8 @@ package net.thauvin.erik.mobibot
 import net.thauvin.erik.mobibot.Utils.appendIfMissing
 import net.thauvin.erik.mobibot.Utils.bot
 import net.thauvin.erik.mobibot.Utils.getIntProperty
+import net.thauvin.erik.mobibot.Utils.helpCmdSyntax
+import net.thauvin.erik.mobibot.Utils.helpFormat
 import net.thauvin.erik.mobibot.Utils.isChannelOp
 import net.thauvin.erik.mobibot.Utils.lastOrEmpty
 import net.thauvin.erik.mobibot.Utils.sendList
@@ -134,13 +136,9 @@ class Mobibot(nickname: String, val channel: String, logsDirPath: String, p: Pro
         event.sendMessage("Type a URL on $channel to post it.")
         event.sendMessage("For more information on a specific command, type:")
         event.sendMessage(
-            Utils.helpFormat(
-                Utils.buildCmdSyntax(
-                    "%c ${Constants.HELP_CMD} <command>",
-                    event.bot().nick,
-                    event is PrivateMessageEvent
-                )
-            ),
+            helpFormat(
+                helpCmdSyntax("%c ${Constants.HELP_CMD} <command>", event.bot().nick, event is PrivateMessageEvent)
+            )
         )
         event.sendMessage("The commands are:")
         event.sendList(addons.names.commands, 8, isBold = true, isIndent = true)

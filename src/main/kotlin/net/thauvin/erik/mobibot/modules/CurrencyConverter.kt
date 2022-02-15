@@ -33,7 +33,7 @@ package net.thauvin.erik.mobibot.modules
 
 import net.thauvin.erik.mobibot.Utils.bold
 import net.thauvin.erik.mobibot.Utils.bot
-import net.thauvin.erik.mobibot.Utils.buildCmdSyntax
+import net.thauvin.erik.mobibot.Utils.helpCmdSyntax
 import net.thauvin.erik.mobibot.Utils.helpFormat
 import net.thauvin.erik.mobibot.Utils.sendList
 import net.thauvin.erik.mobibot.Utils.sendMessage
@@ -111,11 +111,11 @@ class CurrencyConverter : ThreadedModule() {
         } else {
             val nick = event.bot().nick
             event.sendMessage("To convert from one currency to another:")
-            event.sendMessage(helpFormat(buildCmdSyntax("%c $CURRENCY_CMD 100 USD to EUR", nick, isPrivateMsgEnabled)))
+            event.sendMessage(helpFormat(helpCmdSyntax("%c $CURRENCY_CMD 100 USD to EUR", nick, isPrivateMsgEnabled)))
             event.sendMessage("For a listing of current reference rates:")
             event.sendMessage(
                 helpFormat(
-                    buildCmdSyntax("%c $CURRENCY_CMD $CURRENCY_RATES_KEYWORD", nick, isPrivateMsgEnabled)
+                    helpCmdSyntax("%c $CURRENCY_CMD $CURRENCY_RATES_KEYWORD", nick, isPrivateMsgEnabled)
                 )
             )
             event.sendMessage("The supported currencies are: ")
@@ -161,13 +161,14 @@ class CurrencyConverter : ThreadedModule() {
                 } else {
                     val to = cmds[1].uppercase()
                     val from = cmds[3].uppercase()
-                    if (EXCHANGE_RATES.containsKey(to) && EXCHANGE_RATES.containsKey(from)) {
+                    val toRate = EXCHANGE_RATES[to]
+                    val fromRate = EXCHANGE_RATES[from]
+                    if (!toRate.isNullOrBlank() && !fromRate.isNullOrBlank()) {
                         try {
                             val amt = cmds[0].replace(",", "").toDouble()
-                            val doubleFrom = EXCHANGE_RATES[to]!!.toDouble()
-                            val doubleTo = EXCHANGE_RATES[from]!!.toDouble()
                             PublicMessage(
-                                amt.formatCurrency(to) + " = " + (amt * doubleTo / doubleFrom).formatCurrency(from)
+                                amt.formatCurrency(to) + " = "
+                                        + (amt * toRate.toDouble() / fromRate.toDouble()).formatCurrency(from)
                             )
                         } catch (e: NumberFormatException) {
                             ErrorMessage("Let's try with some real numbers next time, okay?")

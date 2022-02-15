@@ -162,6 +162,16 @@ object Utils {
     fun String?.green(): String = colorize(Colors.DARK_GREEN)
 
     /**
+     * Build a help command by replacing `%c` with the bot's pub/priv command, and `%n` with the bot's
+     * nick.
+     */
+    @JvmStatic
+    fun helpCmdSyntax(text: String, botNick: String, isPrivate: Boolean): String {
+        val replace = arrayOf(if (isPrivate) "/msg $botNick" else "$botNick:", botNick)
+        return text.replaceEach(searchFlags, replace)
+    }
+
+    /**
      * Returns a formatted help string.
      */
     @JvmStatic

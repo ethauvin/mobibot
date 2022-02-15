@@ -33,7 +33,7 @@ package net.thauvin.erik.mobibot.commands.tell
 
 import net.thauvin.erik.mobibot.Utils.bold
 import net.thauvin.erik.mobibot.Utils.bot
-import net.thauvin.erik.mobibot.Utils.buildCmdSyntax
+import net.thauvin.erik.mobibot.Utils.helpCmdSyntax
 import net.thauvin.erik.mobibot.Utils.helpFormat
 import net.thauvin.erik.mobibot.Utils.isChannelOp
 import net.thauvin.erik.mobibot.Utils.plural
@@ -256,11 +256,7 @@ class Tell(private val serialObject: String) : AbstractCommand() {
             event.sendMessage("To delete one or all delivered messages:")
             event.sendMessage(
                 helpFormat(
-                    buildCmdSyntax(
-                        "%c $name $TELL_DEL_KEYWORD <id|$TELL_ALL_KEYWORD>",
-                        event.bot().nick,
-                        true
-                    )
+                    helpCmdSyntax("%c $name $TELL_DEL_KEYWORD <id|$TELL_ALL_KEYWORD>", event.bot().nick, true)
                 )
             )
             event.sendMessage(help.last())
