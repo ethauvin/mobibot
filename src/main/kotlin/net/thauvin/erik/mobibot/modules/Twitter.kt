@@ -37,7 +37,7 @@ import net.thauvin.erik.mobibot.Constants
 import net.thauvin.erik.mobibot.TwitterTimer
 import net.thauvin.erik.mobibot.Utils.helpFormat
 import net.thauvin.erik.mobibot.commands.links.LinksMgr
-import net.thauvin.erik.mobibot.entries.EntriesUtils
+import net.thauvin.erik.mobibot.entries.EntriesUtils.toLinkLabel
 import org.pircbotx.hooks.types.GenericMessageEvent
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -135,7 +135,7 @@ class Twitter : ThreadedModule() {
                 launch {
                     try {
                         if (logger.isDebugEnabled) {
-                            logger.debug("Posting {} to Twitter.", EntriesUtils.buildLinkLabel(index))
+                            logger.debug("Posting {} to Twitter.", index.toLinkLabel())
                         }
                         post(message = msg, isDm = false)
                     } catch (e: ModuleException) {
@@ -151,7 +151,7 @@ class Twitter : ThreadedModule() {
         if (isAutoPost) {
             addEntry(index)
             if (logger.isDebugEnabled) {
-                logger.debug("Scheduling {} for posting on Twitter.", EntriesUtils.buildLinkLabel(index))
+                logger.debug("Scheduling {} for posting on Twitter.", index.toLinkLabel())
             }
             timer.schedule(TwitterTimer(this, index), Constants.TIMER_DELAY * 60L * 1000L)
         }

@@ -38,8 +38,8 @@ import assertk.assertions.isEqualTo
 import net.thauvin.erik.mobibot.Constants
 import net.thauvin.erik.mobibot.entries.EntriesUtils.buildComment
 import net.thauvin.erik.mobibot.entries.EntriesUtils.buildLink
-import net.thauvin.erik.mobibot.entries.EntriesUtils.buildLinkLabel
 import net.thauvin.erik.mobibot.entries.EntriesUtils.buildTags
+import net.thauvin.erik.mobibot.entries.EntriesUtils.toLinkLabel
 import org.testng.annotations.Test
 
 class EntriesUtilsTest {
@@ -61,7 +61,7 @@ class EntriesUtilsTest {
 
     @Test
     fun buildLinkLabelTest() {
-        assertThat(buildLinkLabel(1)).isEqualTo("${Constants.LINK_CMD}2")
+        assertThat(1.toLinkLabel()).isEqualTo("${Constants.LINK_CMD}2")
     }
 
     @Test

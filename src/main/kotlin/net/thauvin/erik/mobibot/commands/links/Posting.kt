@@ -41,6 +41,7 @@ import net.thauvin.erik.mobibot.Utils.sendMessage
 import net.thauvin.erik.mobibot.commands.AbstractCommand
 import net.thauvin.erik.mobibot.commands.links.LinksMgr.Companion.entries
 import net.thauvin.erik.mobibot.entries.EntriesUtils
+import net.thauvin.erik.mobibot.entries.EntriesUtils.toLinkLabel
 import net.thauvin.erik.mobibot.entries.EntryLink
 import org.pircbotx.hooks.types.GenericMessageEvent
 
@@ -86,7 +87,7 @@ class Posting : AbstractCommand() {
     }
 
     override fun matches(message: String): Boolean {
-        return message.matches("${Constants.LINK_CMD}[0-9]+:.*".toRegex())
+        return message.matches("${Constants.LINK_CMD}\\d+:.*".toRegex())
     }
 
     private fun addComment(cmd: String, entryIndex: Int, event: GenericMessageEvent) {
@@ -141,7 +142,7 @@ class Posting : AbstractCommand() {
             LinksMgr.pinboard.deletePin(entry)
             LinksMgr.twitter.removeEntry(index)
             entries.links.removeAt(index)
-            event.sendMessage("Entry ${EntriesUtils.buildLinkLabel(index)} removed.")
+            event.sendMessage("Entry ${index.toLinkLabel()} removed.")
             entries.save()
         } else {
             event.sendMessage("Please ask a channel op to remove this entry for you.")

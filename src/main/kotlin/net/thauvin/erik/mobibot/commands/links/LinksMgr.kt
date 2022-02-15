@@ -43,7 +43,7 @@ import net.thauvin.erik.mobibot.commands.AbstractCommand
 import net.thauvin.erik.mobibot.commands.Ignore.Companion.isNotIgnored
 import net.thauvin.erik.mobibot.entries.Entries
 import net.thauvin.erik.mobibot.entries.EntriesUtils.buildLink
-import net.thauvin.erik.mobibot.entries.EntriesUtils.buildLinkLabel
+import net.thauvin.erik.mobibot.entries.EntriesUtils.toLinkLabel
 import net.thauvin.erik.mobibot.entries.EntryLink
 import net.thauvin.erik.mobibot.modules.Twitter
 import org.jsoup.Jsoup
@@ -147,7 +147,7 @@ class LinksMgr : AbstractCommand() {
 
                 if (Constants.NO_TITLE == entry.title) {
                     event.sendMessage("Please specify a title, by typing:")
-                    event.sendMessage(helpFormat("${buildLinkLabel(index)}:|This is the title"))
+                    event.sendMessage(helpFormat("${index.toLinkLabel()}:|This is the title"))
                 }
             }
         }

@@ -39,7 +39,7 @@ import net.thauvin.erik.mobibot.Utils.isChannelOp
 import net.thauvin.erik.mobibot.Utils.sendMessage
 import net.thauvin.erik.mobibot.commands.AbstractCommand
 import net.thauvin.erik.mobibot.entries.EntriesUtils.buildComment
-import net.thauvin.erik.mobibot.entries.EntriesUtils.buildLinkLabel
+import net.thauvin.erik.mobibot.entries.EntriesUtils.toLinkLabel
 import net.thauvin.erik.mobibot.entries.EntryLink
 import org.pircbotx.hooks.types.GenericMessageEvent
 
@@ -97,7 +97,7 @@ class Comment : AbstractCommand() {
     }
 
     override fun matches(message: String): Boolean {
-        return message.matches("^${Constants.LINK_CMD}[0-9]+\\.[0-9]+:.*".toRegex())
+        return message.matches("^${Constants.LINK_CMD}\\d+\\.\\d+:.*".toRegex())
     }
 
     private fun changeAuthor(
@@ -127,7 +127,7 @@ class Comment : AbstractCommand() {
     ) {
         if (isChannelOp(channel, event) || event.user.nick == entry.getComment(commentIndex).nick) {
             entry.deleteComment(commentIndex)
-            event.sendMessage("Comment ${buildLinkLabel(entryIndex)}.${commentIndex + 1} removed.")
+            event.sendMessage("Comment ${entryIndex.toLinkLabel()}.${commentIndex + 1} removed.")
             LinksMgr.entries.save()
         } else {
             event.sendMessage("Please ask a channel op to delete this comment for you.")
