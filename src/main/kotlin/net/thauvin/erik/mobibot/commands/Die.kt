@@ -54,9 +54,6 @@ class Die : AbstractCommand() {
     }
 
     companion object {
-        /**
-         * Max days property.
-         */
         const val DIE_PROP = "die"
     }
 

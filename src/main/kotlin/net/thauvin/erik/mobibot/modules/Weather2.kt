@@ -96,8 +96,8 @@ class Weather2 : ThreadedModule() {
         /**
          * Converts and rounds temperature from °F to °C.
          */
-        fun ftoC(d: Double?): Pair<Int, Int> {
-            val c = (d!! - 32) * 5 / 9
+        fun ftoC(d: Double): Pair<Int, Int> {
+            val c = (d - 32) * 5 / 9
             return d.roundToInt() to c.roundToInt()
         }
 
@@ -154,8 +154,10 @@ class Weather2 : ThreadedModule() {
                             cwd.mainData?.let {
                                 with(it) {
                                     if (hasTemp()) {
-                                        val t = ftoC(temp)
-                                        messages.add(PublicMessage("Temperature: ${t.first}°F, ${t.second}°C"))
+                                        temp?.let { t ->
+                                            val (f, c) = ftoC(t)
+                                            messages.add(PublicMessage("Temperature: ${f}°F, ${c}°C"))
+                                        }
                                     }
                                     if (hasHumidity()) {
                                         humidity?.let { h ->

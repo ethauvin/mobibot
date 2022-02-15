@@ -83,6 +83,6 @@ class Tags : AbstractCommand() {
     }
 
     override fun matches(message: String): Boolean {
-        return message.matches("^${Constants.LINK_CMD}[0-9]+${Constants.TAG_CMD}:.*".toRegex())
+        return message.matches("^${Constants.LINK_CMD}\\d+${Constants.TAG_CMD}:.*".toRegex())
     }
 }

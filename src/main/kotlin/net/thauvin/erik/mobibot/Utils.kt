@@ -50,8 +50,6 @@ import java.time.format.DateTimeFormatter
 import java.util.Date
 import java.util.Properties
 import java.util.stream.Collectors
-import kotlin.time.DurationUnit
-import kotlin.time.toDuration
 
 /**
  * Miscellaneous utilities.
@@ -98,16 +96,6 @@ object Utils {
     }
 
     /**
-     * Build a help command by replacing `%c` with the bot's pub/priv command, and `%n` with the bot's
-     * nick.
-     */
-    @JvmStatic
-    fun buildCmdSyntax(text: String, botNick: String, isPrivate: Boolean): String {
-        val replace = arrayOf(if (isPrivate) "/msg $botNick" else "$botNick:", botNick)
-        return text.replaceEach(searchFlags, replace)
-    }
-
-    /**
      * Capitalize a string.
      */
     @JvmStatic
@@ -116,8 +104,8 @@ object Utils {
     /**
      * Capitalize words
      */
+    @JvmStatic
     fun String.capitalizeWords(): String = split(" ").joinToString(" ") { it.capitalise() }
-
 
     /**
      * Colorize a string.
@@ -254,6 +242,7 @@ object Utils {
      * Send a formatted commands/modules, etc. list.
      */
     @JvmStatic
+    @JvmOverloads
     fun GenericMessageEvent.sendList(
         list: List<String>,
         maxPerLine: Int,

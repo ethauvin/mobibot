@@ -48,11 +48,11 @@ object ExceptionSanitizer {
                 if (!cause?.message.isNullOrBlank()) {
                     return ModuleException(
                         debugMessage,
-                        cause!!.javaClass.name + ": " + cause!!.message!!.replaceEach(search, obfuscate),
+                        cause?.javaClass?.name + ": " + cause?.message?.replaceEach(search, obfuscate),
                         this
                     )
                 } else if (!message.isNullOrBlank()) {
-                    return ModuleException(debugMessage, message!!.replaceEach(search, obfuscate), this)
+                    return ModuleException(debugMessage, message?.replaceEach(search, obfuscate), this)
                 }
             }
         }
