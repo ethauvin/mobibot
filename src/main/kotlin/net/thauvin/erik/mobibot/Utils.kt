@@ -145,7 +145,7 @@ object Utils {
      * URL encodes the given string.
      */
     @JvmStatic
-    fun encodeUrl(s: String): String = URLEncoder.encode(s, StandardCharsets.UTF_8)
+    fun String.encodeUrl(): String = URLEncoder.encode(this, StandardCharsets.UTF_8)
 
     /**
      * Returns a property as an int.
@@ -347,8 +347,8 @@ object Utils {
      */
     @JvmStatic
     @Throws(IOException::class)
-    fun urlReader(url: URL): String {
-        BufferedReader(InputStreamReader(url.openStream(), StandardCharsets.UTF_8))
+    fun URL.reader(): String {
+        BufferedReader(InputStreamReader(this.openStream(), StandardCharsets.UTF_8))
             .use { reader -> return reader.lines().collect(Collectors.joining(System.lineSeparator())) }
     }
 }

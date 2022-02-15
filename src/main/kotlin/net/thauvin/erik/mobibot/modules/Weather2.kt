@@ -197,7 +197,7 @@ class Weather2 : ThreadedModule() {
                                         messages.add(
                                             NoticeMessage(
                                                 "https://openweathermap.org/find?q="
-                                                        + encodeUrl("$city,${code.uppercase()}"),
+                                                        + "$city,${code.uppercase()}".encodeUrl(),
                                                 Colors.GREEN
                                             )
                                         )

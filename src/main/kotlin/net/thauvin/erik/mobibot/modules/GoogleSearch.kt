@@ -34,9 +34,9 @@ package net.thauvin.erik.mobibot.modules
 import net.thauvin.erik.mobibot.Utils.capitalise
 import net.thauvin.erik.mobibot.Utils.encodeUrl
 import net.thauvin.erik.mobibot.Utils.helpFormat
+import net.thauvin.erik.mobibot.Utils.reader
 import net.thauvin.erik.mobibot.Utils.sendMessage
 import net.thauvin.erik.mobibot.Utils.unescapeXml
-import net.thauvin.erik.mobibot.Utils.urlReader
 import net.thauvin.erik.mobibot.msg.ErrorMessage
 import net.thauvin.erik.mobibot.msg.Message
 import net.thauvin.erik.mobibot.msg.NoticeMessage
@@ -108,9 +108,9 @@ class GoogleSearch : ThreadedModule() {
                 try {
                     val url = URL(
                         "https://www.googleapis.com/customsearch/v1?key=$apiKey&cx=$cseKey" +
-                                "&q=${encodeUrl(query)}&filter=1&num=5&alt=json"
+                                "&q=${query.encodeUrl()}&filter=1&num=5&alt=json"
                     )
-                    val json = JSONObject(urlReader(url))
+                    val json = JSONObject(url.reader())
                     if (json.has("items")) {
                         val ja = json.getJSONArray("items")
                         for (i in 0 until ja.length()) {

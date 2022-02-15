@@ -36,8 +36,8 @@ import kotlinx.coroutines.runBlocking
 import net.thauvin.erik.mobibot.Utils.bot
 import net.thauvin.erik.mobibot.Utils.cyan
 import net.thauvin.erik.mobibot.Utils.helpFormat
+import net.thauvin.erik.mobibot.Utils.reader
 import net.thauvin.erik.mobibot.Utils.sendMessage
-import net.thauvin.erik.mobibot.Utils.urlReader
 import net.thauvin.erik.mobibot.msg.Message
 import net.thauvin.erik.mobibot.msg.PublicMessage
 import org.json.JSONException
@@ -94,7 +94,7 @@ class Joke : ThreadedModule() {
         fun randomJoke(): Message {
             return try {
                 val url = URL(JOKE_URL)
-                val json = JSONObject(urlReader(url))
+                val json = JSONObject(url.reader())
                 PublicMessage(
                     json.getJSONObject("value")["joke"].toString().replace("\\'", "'")
                         .replace("\\\"", "\"")

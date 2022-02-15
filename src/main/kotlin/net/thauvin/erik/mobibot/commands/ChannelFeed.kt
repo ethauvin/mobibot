@@ -57,7 +57,7 @@ class ChannelFeed(channel: String) : AbstractCommand() {
         if (isEnabled()) {
             runBlocking {
                 launch {
-                    FeedReader(properties[FEED_PROP]!!, event).run()
+                    properties[FEED_PROP]?.let { FeedReader(it, event).run() }
                 }
             }
         }

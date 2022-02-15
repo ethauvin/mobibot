@@ -34,9 +34,9 @@ package net.thauvin.erik.mobibot.modules
 import net.thauvin.erik.mobibot.Utils.capitalise
 import net.thauvin.erik.mobibot.Utils.encodeUrl
 import net.thauvin.erik.mobibot.Utils.helpFormat
+import net.thauvin.erik.mobibot.Utils.reader
 import net.thauvin.erik.mobibot.Utils.sendMessage
 import net.thauvin.erik.mobibot.Utils.unescapeXml
-import net.thauvin.erik.mobibot.Utils.urlReader
 import net.thauvin.erik.mobibot.msg.ErrorMessage
 import net.thauvin.erik.mobibot.msg.Message
 import net.thauvin.erik.mobibot.msg.NoticeMessage
@@ -144,12 +144,10 @@ class StockQuote : ThreadedModule() {
                 try {
                     with(messages) {
                         // Search for symbol/keywords
-                        response = urlReader(
-                            URL(
-                                "${ALPHAVANTAGE_URL}SYMBOL_SEARCH&keywords=" + encodeUrl(symbol)
-                                        + "&apikey=" + encodeUrl(apiKey)
-                            )
-                        )
+                        response = URL(
+                            "${ALPHAVANTAGE_URL}SYMBOL_SEARCH&keywords=" + symbol.encodeUrl() + "&apikey="
+                                    + apiKey.encodeUrl()
+                        ).reader()
                         var json = getJsonResponse(response, debugMessage)
                         val symbols = json.getJSONArray("bestMatches")
                         if (symbols.isEmpty) {
@@ -158,13 +156,11 @@ class StockQuote : ThreadedModule() {
                             val symbolInfo = symbols.getJSONObject(0)
 
                             // Get quote for symbol
-                            response = urlReader(
-                                URL(
-                                    "${ALPHAVANTAGE_URL}GLOBAL_QUOTE&symbol="
-                                            + encodeUrl(symbolInfo.getString("1. symbol"))
-                                            + "&apikey=" + encodeUrl(apiKey)
-                                )
-                            )
+                            response = URL(
+                                "${ALPHAVANTAGE_URL}GLOBAL_QUOTE&symbol="
+                                        + symbolInfo.getString("1. symbol").encodeUrl() + "&apikey="
+                                        + apiKey.encodeUrl()
+                            ).reader()
                             json = getJsonResponse(response, debugMessage)
                             val quote = json.getJSONObject("Global Quote")
                             if (quote.isEmpty) {

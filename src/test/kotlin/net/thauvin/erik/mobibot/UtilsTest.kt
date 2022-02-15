@@ -49,6 +49,7 @@ import net.thauvin.erik.mobibot.Utils.helpFormat
 import net.thauvin.erik.mobibot.Utils.lastOrEmpty
 import net.thauvin.erik.mobibot.Utils.obfuscate
 import net.thauvin.erik.mobibot.Utils.plural
+import net.thauvin.erik.mobibot.Utils.reader
 import net.thauvin.erik.mobibot.Utils.red
 import net.thauvin.erik.mobibot.Utils.replaceEach
 import net.thauvin.erik.mobibot.Utils.reverseColor
@@ -153,7 +154,7 @@ class UtilsTest {
 
     @Test
     fun testEncodeUrl() {
-        assertThat(encodeUrl("Hello Günter")).isEqualTo("Hello+G%C3%BCnter")
+        assertThat("Hello Günter".encodeUrl()).isEqualTo("Hello+G%C3%BCnter")
     }
 
     @Test
@@ -274,7 +275,7 @@ class UtilsTest {
     @Test
     @Throws(IOException::class)
     fun testUrlReader() {
-        assertThat(urlReader(URL("https://postman-echo.com/status/200")), "urlReader()")
+        assertThat(URL("https://postman-echo.com/status/200").reader(), "urlReader()")
             .isEqualTo("{\"status\":200}")
     }
 
