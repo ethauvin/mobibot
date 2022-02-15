@@ -20,6 +20,9 @@
     <ID>MagicNumber:Cycle.kt$Cycle$10</ID>
     <ID>MagicNumber:Cycle.kt$Cycle$1000L</ID>
     <ID>MagicNumber:Ignore.kt$Ignore$8</ID>
+    <ID>MagicNumber:Info.kt$Info.Companion$30</ID>
+    <ID>MagicNumber:Info.kt$Info.Companion$365</ID>
+    <ID>MagicNumber:Info.kt$Info.Companion$7</ID>
     <ID>MagicNumber:Mobibot.kt$Mobibot$8</ID>
     <ID>MagicNumber:Modules.kt$Modules$7</ID>
     <ID>MagicNumber:StockQuote.kt$StockQuote.Companion$10</ID>
@@ -29,9 +32,6 @@
     <ID>MagicNumber:Twitter.kt$Twitter$60L</ID>
     <ID>MagicNumber:TwitterOAuth.kt$TwitterOAuth$401</ID>
     <ID>MagicNumber:Users.kt$Users$8</ID>
-    <ID>MagicNumber:Utils.kt$Utils$30</ID>
-    <ID>MagicNumber:Utils.kt$Utils$365</ID>
-    <ID>MagicNumber:Utils.kt$Utils$7</ID>
     <ID>MagicNumber:Weather2.kt$Weather2.Companion$1.60934</ID>
     <ID>MagicNumber:Weather2.kt$Weather2.Companion$32</ID>
     <ID>MagicNumber:Weather2.kt$Weather2.Companion$404</ID>
