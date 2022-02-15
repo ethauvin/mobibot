@@ -102,7 +102,7 @@ class StockQuote : ThreadedModule() {
                 try {
                     val info = json.getString("Information")
                     if (info.isNotEmpty()) {
-                        throw ModuleException(debugMessage, unescapeXml(info))
+                        throw ModuleException(debugMessage, info.unescapeXml())
                     }
                 } catch (ignore: JSONException) {
                     // Do nothing
@@ -110,11 +110,11 @@ class StockQuote : ThreadedModule() {
                 try {
                     var error = json.getString("Note")
                     if (error.isNotEmpty()) {
-                        throw ModuleException(debugMessage, unescapeXml(error))
+                        throw ModuleException(debugMessage, error.unescapeXml())
                     }
                     error = json.getString("Error Message")
                     if (error.isNotEmpty()) {
-                        throw ModuleException(debugMessage, unescapeXml(error))
+                        throw ModuleException(debugMessage, error.unescapeXml())
                     }
                 } catch (ignore: JSONException) {
                     // Do nothing
@@ -173,8 +173,8 @@ class StockQuote : ThreadedModule() {
 
                                 add(
                                     PublicMessage(
-                                        "Symbol: " + unescapeXml(quote.getString("01. symbol"))
-                                                + " [" + unescapeXml(symbolInfo.getString("2. name")) + ']'
+                                        "Symbol: " + quote.getString("01. symbol").unescapeXml()
+                                                + " [" + symbolInfo.getString("2. name").unescapeXml() + ']'
                                     )
                                 )
 
@@ -183,13 +183,13 @@ class StockQuote : ThreadedModule() {
                                 add(
                                     PublicMessage(
                                         "Price:".padEnd(pad).prependIndent()
-                                                + unescapeXml(quote.getString("05. price"))
+                                                + quote.getString("05. price").unescapeXml()
                                     )
                                 )
                                 add(
                                     PublicMessage(
                                         "Previous:".padEnd(pad).prependIndent()
-                                                + unescapeXml(quote.getString("08. previous close"))
+                                                + quote.getString("08. previous close").unescapeXml()
                                     )
                                 )
 
@@ -205,7 +205,7 @@ class StockQuote : ThreadedModule() {
                                     add(
                                         NoticeMessage(
                                             "${it.first}:".padEnd(pad).prependIndent()
-                                                    + unescapeXml(quote.getString(it.second))
+                                                    + quote.getString(it.second).unescapeXml()
                                         )
                                     )
                                 }
@@ -213,8 +213,8 @@ class StockQuote : ThreadedModule() {
                                 add(
                                     NoticeMessage(
                                         "Change:".padEnd(pad).prependIndent()
-                                                + unescapeXml(quote.getString("09. change"))
-                                                + " [" + unescapeXml(quote.getString("10. change percent")) + ']'
+                                                + quote.getString("09. change").unescapeXml()
+                                                + " [" + quote.getString("10. change percent").unescapeXml() + ']'
                                     )
                                 )
                             }

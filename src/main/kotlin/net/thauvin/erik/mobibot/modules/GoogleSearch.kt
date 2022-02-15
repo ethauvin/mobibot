@@ -115,7 +115,7 @@ class GoogleSearch : ThreadedModule() {
                         val ja = json.getJSONArray("items")
                         for (i in 0 until ja.length()) {
                             val j = ja.getJSONObject(i)
-                            results.add(NoticeMessage(unescapeXml(j.getString("title"))))
+                            results.add(NoticeMessage(j.getString("title").unescapeXml()))
                             results.add(NoticeMessage(helpFormat(j.getString("link"), false), Colors.DARK_GREEN))
                         }
                     } else {

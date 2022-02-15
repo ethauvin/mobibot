@@ -340,44 +340,7 @@ object Utils {
      * Converts XML/XHTML entities to plain text.
      */
     @JvmStatic
-    fun unescapeXml(str: String): String = Jsoup.parse(str).text()
-
-    /**
-     * Converts milliseconds to year month week day hour and minutes.
-     */
-    @JvmStatic
-    fun uptime(uptime: Long): String {
-        uptime.toDuration(DurationUnit.MILLISECONDS).toComponents { wholeDays, hours, minutes, _, _ ->
-            val years = wholeDays / 365
-            var days = wholeDays % 365
-            val months = days / 30
-            days %= 30
-            val weeks = days / 7
-            days %= 7
-
-            with(StringBuffer()) {
-                if (years > 0) {
-                    append(years).append(" year".plural(years)).append(' ')
-                }
-                if (months > 0) {
-                    append(weeks).append(" month".plural(months)).append(' ')
-                }
-                if (weeks > 0) {
-                    append(weeks).append(" week".plural(weeks)).append(' ')
-                }
-                if (days > 0) {
-                    append(days).append(" day".plural(days)).append(' ')
-                }
-                if (hours > 0) {
-                    append(hours).append(" hour".plural(hours.toLong())).append(' ')
-                }
-
-                append(minutes).append(" minute".plural(minutes.toLong()))
-
-                return toString()
-            }
-        }
-    }
+    fun String.unescapeXml(): String = Jsoup.parse(this).text()
 
     /**
      * Reads contents of a URL.

@@ -254,7 +254,7 @@ class UtilsTest {
 
     @Test
     fun testUnescapeXml() {
-        assertThat(unescapeXml("&lt;a name=&quot;test &amp; &apos;&#39;&quot;&gt;")).isEqualTo(
+        assertThat("&lt;a name=&quot;test &amp; &apos;&#39;&quot;&gt;".unescapeXml()).isEqualTo(
             "<a name=\"test & ''\">"
         )
     }
