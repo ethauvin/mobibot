@@ -36,6 +36,7 @@ import assertk.assertThat
 import assertk.assertions.any
 import assertk.assertions.contains
 import assertk.assertions.isEqualTo
+import assertk.assertions.isGreaterThan
 import assertk.assertions.isInstanceOf
 import assertk.assertions.matches
 import assertk.assertions.prop
@@ -79,7 +80,7 @@ class CurrencyConverterTest {
     fun testCurrencyRates() {
         val rates = currencyRates()
         assertThat(rates).all {
-            size().isEqualTo(33)
+            size().isGreaterThan(30)
             any { it.matches("[A-Z]{3}: +[\\d.]+".toRegex()) }
             contains("EUR:        1")
         }

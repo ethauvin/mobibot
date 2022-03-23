@@ -39,7 +39,7 @@ import assertk.assertions.isInstanceOf
 import com.rometools.rome.io.FeedException
 import net.thauvin.erik.mobibot.FeedReader.Companion.readFeed
 import org.testng.annotations.Test
-import java.io.FileNotFoundException
+import java.io.IOException
 import java.net.MalformedURLException
 import java.net.UnknownHostException
 
@@ -64,8 +64,8 @@ class FeedReaderTest {
 
         assertThat { readFeed("https://www.example.com") }.isFailure().isInstanceOf(FeedException::class.java)
 
-        assertThat { readFeed("https://www.examples.com/foo") }.isFailure()
-            .isInstanceOf(FileNotFoundException::class.java)
+        assertThat { readFeed("https://www.thauvin.net/foo") }.isFailure()
+            .isInstanceOf(IOException::class.java)
 
         assertThat { readFeed("https://www.examplesfoo.com/") }.isFailure()
             .isInstanceOf(UnknownHostException::class.java)
