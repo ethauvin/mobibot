@@ -32,8 +32,8 @@
 
 package net.thauvin.erik.mobibot.modules
 
+import net.thauvin.erik.mobibot.Utils.bold
 import net.thauvin.erik.mobibot.Utils.bot
-import net.thauvin.erik.mobibot.Utils.capitalise
 import net.thauvin.erik.mobibot.Utils.helpFormat
 import org.pircbotx.hooks.types.GenericMessageEvent
 
@@ -67,26 +67,19 @@ class RockPaperScissors : AbstractModule() {
             override fun beats(hand: Hands): Boolean {
                 return hand == SCISSORS
             }
-
-            override var emoji = "\u270A"
         },
         PAPER("covers") {
             override fun beats(hand: Hands): Boolean {
                 return hand == ROCK
             }
-
-            override var emoji = "\u270B"
         },
         SCISSORS("cuts") {
             override fun beats(hand: Hands): Boolean {
                 return hand == PAPER
             }
-
-            override var emoji = "\u270C"
         };
 
         abstract fun beats(hand: Hands): Boolean
-        abstract var emoji: String
     }
 
     companion object {
@@ -107,21 +100,20 @@ class RockPaperScissors : AbstractModule() {
         val hand = Hands.valueOf(cmd.uppercase())
         val botHand = Hands.values()[(0..Hands.values().size).random()]
         with(event.bot()) {
-            sendIRC().message(channel, "${hand.emoji}  vs. ${botHand.emoji}")
             when {
                 hand == botHand -> {
-                    sendIRC().action(channel, "tied.")
+                    sendIRC().action(channel, "tied: ${hand.name} vs. ${botHand.name}")
                 }
                 hand.beats(botHand) -> {
                     sendIRC().action(
                         channel,
-                        "lost. ${hand.name.capitalise()} ${hand.action} ${botHand.name.lowercase()}."
+                        "lost: ${hand.name.bold()} ${hand.action} ${botHand.name}"
                     )
                 }
                 else -> {
                     sendIRC().action(
                         channel,
-                        "wins. ${botHand.name.capitalise()} ${botHand.action} ${hand.name.lowercase()}."
+                        "wins: ${botHand.name.bold()} ${botHand.action} ${hand.name}"
                     )
                 }
             }

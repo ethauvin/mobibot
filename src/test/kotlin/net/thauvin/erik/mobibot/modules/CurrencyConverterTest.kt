@@ -35,7 +35,6 @@ import assertk.all
 import assertk.assertThat
 import assertk.assertions.any
 import assertk.assertions.contains
-import assertk.assertions.isEqualTo
 import assertk.assertions.isGreaterThan
 import assertk.assertions.isInstanceOf
 import assertk.assertions.matches

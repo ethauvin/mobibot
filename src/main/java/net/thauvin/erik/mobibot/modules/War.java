@@ -52,16 +52,8 @@ public final class War extends AbstractModule {
     // War command
     private static final String WAR_CMD = "war";
 
-    private static final String[] HEARTS =
-            {"🂱", "🂾", "🂽", "🂼", "🂻", "🂺", "🂹", "🂸", "🂷", "🂶", "🂵", "🂴", "🂳", "🂲"};
-    private static final String[] SPADES =
-            {"🂡", "🂮", "🂭", "🂬", "🂫", "🂪", "🂩", "🂨", "🂧", "🂦", "🂥", "🂤", "🂣", "🂢"};
-    private static final String[] DIAMONDS =
-            {"🃁", "🃎", "🃍", "🃌", "🃋", "🃊", "🃉", "🃈", "🃇", "🃆", "🃅", "🃄", "🃃", "🃂"};
-    private static final String[] CLUBS =
-            {"🃑", "🃞", "🃝", "🃜", "🃛", "🃚", "🃙", "🃘", "🃗", "🃖", "🃕", "🃔", "🃓", "🃒"};
-
-    private static final String[][] DECK = {HEARTS, SPADES, DIAMONDS, CLUBS};
+    private static final String[] DECK = {"A", "K", "Q", "J", "10", "9", "8", "7", "6", "5", "4", "3", "2"};
+    private static final String[] SUITS = {"♥", "♠", "♦", "♣"};
 
     /**
      * The default constructor.
@@ -91,11 +83,11 @@ public final class War extends AbstractModule {
         int y;
 
         while (true) {
-            i = RANDOM.nextInt(HEARTS.length);
-            y = RANDOM.nextInt(HEARTS.length);
+            i = RANDOM.nextInt(DECK.length);
+            y = RANDOM.nextInt(DECK.length);
 
-            event.respond("you drew " + DECK[RANDOM.nextInt(DECK.length)][i]);
-            event.getBot().sendIRC().action(channel, "drew " + DECK[RANDOM.nextInt(DECK.length)][y]);
+            event.respond("you drew " + bold(DECK[i]) + SUITS[RANDOM.nextInt(SUITS.length)]);
+            event.getBot().sendIRC().action(channel, "drew " + bold(DECK[y]) + SUITS[RANDOM.nextInt(SUITS.length)]);
 
             if (i != y) {
                 break;

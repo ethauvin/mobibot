@@ -41,6 +41,7 @@ import org.pircbotx.hooks.types.GenericMessageEvent
  */
 class Dice : AbstractModule() {
     override val name = "Dice"
+    private val sides = 6
 
     override fun commandResponse(channel: String, cmd: String, args: String, event: GenericMessageEvent) {
         val botRoll = roll()
@@ -49,11 +50,11 @@ class Dice : AbstractModule() {
         val total = roll.first + roll.second
         with(event.bot()) {
             event.respond(
-                "you rolled ${DICE_FACES[roll.first]}  ${DICE_FACES[roll.second]}  for a total of ${total.bold()}"
+                "you rolled ${roll.first.bold()} and ${roll.second.bold()} for a total of ${total.bold()}"
             )
             sendIRC().action(
                 channel,
-                "rolled ${DICE_FACES[botRoll.first]}  ${DICE_FACES[botRoll.second]}  for a total of ${botTotal.bold()}"
+                "rolled ${botRoll.first.bold()} and ${botRoll.second.bold()} for a total of ${botTotal.bold()}"
             )
             when (winLoseOrTie(botTotal, total)) {
                 Result.WIN -> sendIRC().action(channel, "wins.")
@@ -68,15 +69,12 @@ class Dice : AbstractModule() {
     }
 
     private fun roll(): Pair<Int, Int> {
-        return (1..DICE_FACES.size).random() to (1..DICE_FACES.size).random()
+        return (1..6).random() to (1..6).random()
     }
 
     companion object {
         // Dice command
         private const val DICE_CMD = "dice"
-
-        // Dice faces
-        private val DICE_FACES = arrayOf("", "⚀", "⚁", "⚂", "⚃", "⚄", "⚅")
 
         @JvmStatic
         fun winLoseOrTie(bot: Int, player: Int): Result {

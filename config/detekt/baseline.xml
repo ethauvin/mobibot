@@ -19,6 +19,7 @@
     <ID>MagicNumber:CurrencyConverter.kt$CurrencyConverter.Companion$8</ID>
     <ID>MagicNumber:Cycle.kt$Cycle$10</ID>
     <ID>MagicNumber:Cycle.kt$Cycle$1000L</ID>
+    <ID>MagicNumber:Dice.kt$Dice$6</ID>
     <ID>MagicNumber:Ignore.kt$Ignore$8</ID>
     <ID>MagicNumber:Info.kt$Info.Companion$30</ID>
     <ID>MagicNumber:Info.kt$Info.Companion$365</ID>
@@ -72,5 +73,6 @@
     <ID>TooGenericExceptionCaught:StockQuote.kt$StockQuote.Companion$e: NullPointerException</ID>
     <ID>TooGenericExceptionCaught:Weather2.kt$Weather2.Companion$e: NullPointerException</ID>
     <ID>TooManyFunctions:Tell.kt$Tell : AbstractCommand</ID>
+    <ID>UnusedPrivateMember:Dice.kt$Dice$private val sides = 6</ID>
   </CurrentIssues>
 </SmellBaseline>
