@@ -41,7 +41,6 @@ import org.pircbotx.hooks.types.GenericMessageEvent
  */
 class Dice : AbstractModule() {
     override val name = "Dice"
-    private val sides = 6
 
     override fun commandResponse(channel: String, cmd: String, args: String, event: GenericMessageEvent) {
         val botRoll = roll()
@@ -50,17 +49,21 @@ class Dice : AbstractModule() {
         val total = roll.first + roll.second
         with(event.bot()) {
             event.respond(
-                "you rolled ${roll.first.bold()} and ${roll.second.bold()} for a total of ${total.bold()}"
+                "you rolled 2 dice: ${roll.first.bold()} + ${roll.second.bold()} for a total of ${total.bold()}"
             )
+
+            val result = when (winLoseOrTie(botTotal, total)) {
+                Result.WIN -> "wins"
+                Result.LOSE -> "lost"
+                else -> "tied"
+            }
+
             sendIRC().action(
                 channel,
-                "rolled ${botRoll.first.bold()} and ${botRoll.second.bold()} for a total of ${botTotal.bold()}"
+                "rolled 2 dice: ${botRoll.first.bold()} + ${botRoll.second.bold()} for a total of ${botTotal.bold()}" +
+                        " and ${result.bold()}."
             )
-            when (winLoseOrTie(botTotal, total)) {
-                Result.WIN -> sendIRC().action(channel, "wins.")
-                Result.LOSE -> sendIRC().action(channel, "lost.")
-                else -> sendIRC().action(channel, "tied.")
-            }
+
         }
     }
 
