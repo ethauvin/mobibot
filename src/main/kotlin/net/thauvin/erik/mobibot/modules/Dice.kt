@@ -32,7 +32,6 @@
 package net.thauvin.erik.mobibot.modules
 
 import net.thauvin.erik.mobibot.Utils.bold
-import net.thauvin.erik.mobibot.Utils.bot
 import net.thauvin.erik.mobibot.Utils.helpFormat
 import org.pircbotx.hooks.types.GenericMessageEvent
 
@@ -43,36 +42,14 @@ class Dice : AbstractModule() {
     override val name = "Dice"
 
     override fun commandResponse(channel: String, cmd: String, args: String, event: GenericMessageEvent) {
-        val botRoll = roll()
-        val roll = roll()
-        val botTotal = botRoll.first + botRoll.second
-        val total = roll.first + roll.second
-        with(event.bot()) {
-            event.respond(
-                "you rolled 2 dice: ${roll.first.bold()} + ${roll.second.bold()} for a total of ${total.bold()}"
-            )
-
-            val result = when (winLoseOrTie(botTotal, total)) {
-                Result.WIN -> "wins"
-                Result.LOSE -> "lost"
-                else -> "tied"
-            }
-
-            sendIRC().action(
-                channel,
-                "rolled 2 dice: ${botRoll.first.bold()} + ${botRoll.second.bold()} for a total of ${botTotal.bold()}" +
-                        " and ${result.bold()}."
-            )
-
+        val arg = if (args.isBlank()) "2d6" else args.trim()
+        val match = Regex("^([1-9]|[12][0-9]|3[0-2])[dD]([1-9]|[12][0-9]|3[0-2])$").find(arg)
+        if (match != null) {
+            val (dice, sides) = match.destructured
+            event.respond("you rolled " + roll(dice.toInt(), sides.toInt()))
+        } else {
+            helpResponse(event)
         }
-    }
-
-    enum class Result {
-        WIN, LOSE, TIE
-    }
-
-    private fun roll(): Pair<Int, Int> {
-        return (1..6).random() to (1..6).random()
     }
 
     companion object {
@@ -80,24 +57,32 @@ class Dice : AbstractModule() {
         private const val DICE_CMD = "dice"
 
         @JvmStatic
-        fun winLoseOrTie(bot: Int, player: Int): Result {
-            return when {
-                bot > player -> {
-                    Result.WIN
+        fun roll(dice: Int, sides: Int): String {
+            val result = StringBuilder()
+            var total = 0
+
+            repeat(dice) {
+                val roll = (1..sides).random()
+                total += roll
+
+                if (result.isNotEmpty()) {
+                    result.append(" + ")
                 }
-                bot < player -> {
-                    Result.LOSE
-                }
-                else -> {
-                    Result.TIE
-                }
+
+                result.append(roll.bold())
             }
+
+            if (dice != 1) {
+                result.append(" = ${total.bold()}")
+            }
+
+            return result.toString()
         }
     }
 
     init {
         commands.add(DICE_CMD)
-        help.add("To roll the dice:")
-        help.add(helpFormat("%c $DICE_CMD"))
+        help.add("To roll 2 dice with 6 sides:")
+        help.add(helpFormat("%c $DICE_CMD [2d6]"))
     }
 }

@@ -105,16 +105,10 @@ class RockPaperScissors : AbstractModule() {
                     sendIRC().action(channel, "tied: ${hand.name} vs. ${botHand.name}")
                 }
                 hand.beats(botHand) -> {
-                    sendIRC().action(
-                        channel,
-                        "lost: ${hand.name.bold()} ${hand.action} ${botHand.name}"
-                    )
+                    sendIRC().action(channel, "lost: ${hand.name.bold()} ${hand.action} ${botHand.name}")
                 }
                 else -> {
-                    sendIRC().action(
-                        channel,
-                        "wins: ${botHand.name.bold()} ${botHand.action} ${hand.name}"
-                    )
+                    sendIRC().action(channel, "wins: ${botHand.name.bold()} ${botHand.action} ${hand.name}")
                 }
             }
         }

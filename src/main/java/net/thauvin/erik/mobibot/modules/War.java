@@ -86,6 +86,8 @@ public final class War extends AbstractModule {
             i = RANDOM.nextInt(DECK.length);
             y = RANDOM.nextInt(DECK.length);
 
+            event.respond("you drew " + bold(DECK[i]) + SUITS[RANDOM.nextInt(SUITS.length)]);
+
             final String result;
             if (i < y) {
                 result = bold("lost") + '.';
@@ -95,7 +97,6 @@ public final class War extends AbstractModule {
                 result = bold("tied") + ". This means " + bold("WAR!");
             }
 
-            event.respond("you drew " + bold(DECK[i]) + SUITS[RANDOM.nextInt(SUITS.length)]);
             event.getBot().sendIRC().action(channel, "drew " + bold(DECK[y]) + SUITS[RANDOM.nextInt(SUITS.length)] +
                     " and " + result);
         } while (i == y);
