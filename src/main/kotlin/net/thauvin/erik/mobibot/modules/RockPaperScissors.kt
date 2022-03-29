@@ -33,7 +33,6 @@
 package net.thauvin.erik.mobibot.modules
 
 import net.thauvin.erik.mobibot.Utils.bold
-import net.thauvin.erik.mobibot.Utils.bot
 import net.thauvin.erik.mobibot.Utils.helpFormat
 import org.pircbotx.hooks.types.GenericMessageEvent
 
@@ -99,17 +98,15 @@ class RockPaperScissors : AbstractModule() {
     override fun commandResponse(channel: String, cmd: String, args: String, event: GenericMessageEvent) {
         val hand = Hands.valueOf(cmd.uppercase())
         val botHand = Hands.values()[(0..Hands.values().size).random()]
-        with(event.bot()) {
-            when {
-                hand == botHand -> {
-                    sendIRC().action(channel, "tied: ${hand.name} vs. ${botHand.name}")
-                }
-                hand.beats(botHand) -> {
-                    sendIRC().action(channel, "lost: ${hand.name.bold()} ${hand.action} ${botHand.name}")
-                }
-                else -> {
-                    sendIRC().action(channel, "wins: ${botHand.name.bold()} ${botHand.action} ${hand.name}")
-                }
+        when {
+            hand == botHand -> {
+                event.respond("${hand.name} vs. ${botHand.name} » You ${"tie".bold()}.")
+            }
+            hand.beats(botHand) -> {
+                event.respond("${hand.name.bold()} ${hand.action} ${botHand.name} » You ${"win".bold()}!")
+            }
+            else -> {
+                event.respond("${botHand.name.bold()} ${botHand.action} ${hand.name} » You ${"lose".bold()}!")
             }
         }
     }

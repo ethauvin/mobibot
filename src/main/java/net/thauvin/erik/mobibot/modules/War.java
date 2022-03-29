@@ -52,8 +52,16 @@ public final class War extends AbstractModule {
     // War command
     private static final String WAR_CMD = "war";
 
-    private static final String[] DECK = {"A", "K", "Q", "J", "10", "9", "8", "7", "6", "5", "4", "3", "2"};
-    private static final String[] SUITS = {"♥", "♠", "♦", "♣"};
+    private static final String[] HEARTS =
+            {"🂱", "🂾", "🂽", "🂻", "🂺", "🂹", "🂸", "🂷", "🂶", "🂵", "🂴", "🂳", "🂲"};
+    private static final String[] SPADES =
+            {"🂡", "🂮", "🂭", "🂫", "🂪", "🂩", "🂨", "🂧", "🂦", "🂥", "🂤", "🂣", "🂢"};
+    private static final String[] DIAMONDS =
+            {"🃁", "🃎", "🃍", "🃋", "🃊", "🃉", "🃈", "🃇", "🃆", "🃅", "🃄", "🃃", "🃂"};
+    private static final String[] CLUBS =
+            {"🃑", "🃞", "🃝", "🃛", "🃚", "🃙", "🃘", "🃗", "🃖", "🃕", "🃔", "🃓", "🃒"};
+
+    private static final String[][] DECK = {HEARTS, SPADES, DIAMONDS, CLUBS};
 
     /**
      * The default constructor.
@@ -83,22 +91,21 @@ public final class War extends AbstractModule {
         int y;
 
         do {
-            i = RANDOM.nextInt(DECK.length);
-            y = RANDOM.nextInt(DECK.length);
-
-            event.respond("you drew " + bold(DECK[i]) + SUITS[RANDOM.nextInt(SUITS.length)]);
+            i = RANDOM.nextInt(HEARTS.length);
+            y = RANDOM.nextInt(HEARTS.length);
 
             final String result;
             if (i < y) {
-                result = bold("lost") + '.';
+                result = bold("win");
             } else if (i > y) {
-                result = bold("wins") + '.';
+                result = bold("lose");
             } else {
-                result = bold("tied") + ". This means " + bold("WAR!");
+                result = bold("tie") + ". This means " + bold("WAR");
             }
 
-            event.getBot().sendIRC().action(channel, "drew " + bold(DECK[y]) + SUITS[RANDOM.nextInt(SUITS.length)] +
-                    " and " + result);
+            event.respond(DECK[RANDOM.nextInt(DECK.length)][i] + "  " +  DECK[RANDOM.nextInt(DECK.length)][y] +
+                    "  » You " + result + '!');
+
         } while (i == y);
     }
 }
