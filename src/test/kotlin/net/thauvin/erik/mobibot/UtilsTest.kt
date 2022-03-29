@@ -57,6 +57,7 @@ import net.thauvin.erik.mobibot.Utils.toIntOrDefault
 import net.thauvin.erik.mobibot.Utils.toIsoLocalDate
 import net.thauvin.erik.mobibot.Utils.toUtcDateTime
 import net.thauvin.erik.mobibot.Utils.today
+import net.thauvin.erik.mobibot.Utils.underline
 import net.thauvin.erik.mobibot.Utils.unescapeXml
 import net.thauvin.erik.mobibot.msg.Message.Companion.DEFAULT_COLOR
 import org.pircbotx.Colors
@@ -249,6 +250,11 @@ class UtilsTest {
     fun testToIntOrDefault() {
         assertThat("10".toIntOrDefault(1), "toIntOrDefault(10, 1)").isEqualTo(10)
         assertThat("a".toIntOrDefault(2), "toIntOrDefault(a, 2)").isEqualTo(2)
+    }
+
+    @Test
+    fun testUnderline() {
+        assertThat(ascii.underline()).isEqualTo(ascii.colorize(Colors.UNDERLINE))
     }
 
     @Test

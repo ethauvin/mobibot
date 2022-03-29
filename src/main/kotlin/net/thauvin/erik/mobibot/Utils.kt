@@ -336,6 +336,13 @@ object Utils {
     fun LocalDateTime.toUtcDateTime(): String = format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))
 
     /**
+     * Makes the given string bold.
+     */
+    @JvmStatic
+    fun String?.underline(): String = colorize(Colors.UNDERLINE)
+
+
+    /**
      * Converts XML/XHTML entities to plain text.
      */
     @JvmStatic
