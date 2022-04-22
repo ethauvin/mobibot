@@ -43,7 +43,7 @@ class Dice : AbstractModule() {
 
     override fun commandResponse(channel: String, cmd: String, args: String, event: GenericMessageEvent) {
         val arg = if (args.isBlank()) "2d6" else args.trim()
-        val match = Regex("^([1-9]|[12][0-9]|3[0-2])[dD]([1-9]|[12][0-9]|3[0-2])$").find(arg)
+        val match = Regex("^([1-9]|[12]\\d|3[0-2])[dD]([1-9]|[12]\\d|3[0-2])$").find(arg)
         if (match != null) {
             val (dice, sides) = match.destructured
             event.respond("you rolled " + roll(dice.toInt(), sides.toInt()))
