@@ -33,16 +33,12 @@ package net.thauvin.erik.mobibot.modules
 
 import assertk.all
 import assertk.assertThat
-import assertk.assertions.any
 import assertk.assertions.contains
-import assertk.assertions.isGreaterThan
 import assertk.assertions.isInstanceOf
 import assertk.assertions.matches
 import assertk.assertions.prop
-import assertk.assertions.size
 import net.thauvin.erik.mobibot.modules.CurrencyConverter.Companion.convertCurrency
-import net.thauvin.erik.mobibot.modules.CurrencyConverter.Companion.currencyRates
-import net.thauvin.erik.mobibot.modules.CurrencyConverter.Companion.loadRates
+import net.thauvin.erik.mobibot.modules.CurrencyConverter.Companion.loadSymbols
 import net.thauvin.erik.mobibot.msg.ErrorMessage
 import net.thauvin.erik.mobibot.msg.Message
 import net.thauvin.erik.mobibot.msg.PublicMessage
@@ -56,7 +52,7 @@ class CurrencyConverterTest {
     @BeforeClass
     @Throws(ModuleException::class)
     fun before() {
-        loadRates()
+        loadSymbols()
     }
 
     @Test
@@ -64,7 +60,11 @@ class CurrencyConverterTest {
         assertThat(
             convertCurrency("100 USD to EUR").msg,
             "100 USD to EUR"
-        ).matches("\\$100\\.00 = €\\d{2,3}\\.\\d{2}".toRegex())
+        ).matches("100 United States Dollar = \\d{2,3}\\.\\d+ Euro".toRegex())
+        assertThat(
+            convertCurrency("100,000.00 GBP to BTC").msg,
+            "100 USD to EUR"
+        ).matches("100,000.00 British Pound Sterling = \\d{1,2}\\.\\d+ Bitcoin".toRegex())
         assertThat(convertCurrency("100 USD to USD"), "100 USD to USD").all {
             prop(Message::msg).contains("You're kidding, right?")
             isInstanceOf(PublicMessage::class.java)
@@ -73,16 +73,5 @@ class CurrencyConverterTest {
             prop(Message::msg).contains("Invalid query.")
             isInstanceOf(ErrorMessage::class.java)
         }
-    }
-
-    @Test
-    fun testCurrencyRates() {
-        val rates = currencyRates()
-        assertThat(rates).all {
-            size().isGreaterThan(30)
-            any { it.matches("[A-Z]{3}: +[\\d.]+".toRegex()) }
-            contains("EUR:        1")
-        }
-
     }
 }

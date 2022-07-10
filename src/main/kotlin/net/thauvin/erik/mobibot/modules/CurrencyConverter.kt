@@ -31,27 +31,22 @@
  */
 package net.thauvin.erik.mobibot.modules
 
-import net.thauvin.erik.mobibot.Utils.bold
 import net.thauvin.erik.mobibot.Utils.bot
 import net.thauvin.erik.mobibot.Utils.helpCmdSyntax
 import net.thauvin.erik.mobibot.Utils.helpFormat
+import net.thauvin.erik.mobibot.Utils.reader
 import net.thauvin.erik.mobibot.Utils.sendList
 import net.thauvin.erik.mobibot.Utils.sendMessage
 import net.thauvin.erik.mobibot.Utils.today
 import net.thauvin.erik.mobibot.msg.ErrorMessage
 import net.thauvin.erik.mobibot.msg.Message
 import net.thauvin.erik.mobibot.msg.PublicMessage
-import org.jdom2.JDOMException
-import org.jdom2.input.SAXBuilder
+import org.json.JSONObject
 import org.pircbotx.hooks.types.GenericMessageEvent
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.io.IOException
 import java.net.URL
-import java.text.NumberFormat
-import java.util.Currency
-import java.util.Locale
-import javax.xml.XMLConstants
 
 /**
  * The CurrencyConverter module.
@@ -64,7 +59,7 @@ class CurrencyConverter : ThreadedModule() {
     override fun commandResponse(channel: String, cmd: String, args: String, event: GenericMessageEvent) {
         synchronized(this) {
             if (pubDate != today()) {
-                EXCHANGE_RATES.clear()
+                SYMBOLS.clear()
             }
         }
         super.commandResponse(channel, cmd, args, event)
@@ -74,52 +69,55 @@ class CurrencyConverter : ThreadedModule() {
      * Converts the specified currencies.
      */
     override fun run(channel: String, cmd: String, args: String, event: GenericMessageEvent) {
-        if (EXCHANGE_RATES.isEmpty()) {
+        if (SYMBOLS.isEmpty()) {
             try {
-                loadRates()
+                loadSymbols()
             } catch (e: ModuleException) {
                 if (logger.isWarnEnabled) logger.warn(e.debugMessage, e)
             }
         }
 
-        if (EXCHANGE_RATES.isEmpty()) {
-            event.respond(EMPTY_RATE_TABLE)
+        if (SYMBOLS.isEmpty()) {
+            event.respond(EMPTY_SYMBOLS_TABLE)
         } else if (args.matches("\\d+([,\\d]+)?(\\.\\d+)? [a-zA-Z]{3}+ to [a-zA-Z]{3}+".toRegex())) {
             val msg = convertCurrency(args)
             event.respond(msg.msg)
             if (msg.isError) {
                 helpResponse(event)
             }
-        } else if (args.contains(CURRENCY_RATES_KEYWORD)) {
-            event.sendMessage("The reference rates for ${pubDate.bold()} are:")
-            event.sendList(currencyRates(), 3, "   ", isIndent = true)
+        } else if (args.contains(CURRENCY_SYMBOLS_KEYWORD)) {
+            event.sendMessage("The supported currency symbols are: ")
+            event.sendList(ArrayList(SYMBOLS.keys.sorted()), 11, isIndent = true)
         } else {
             helpResponse(event)
         }
     }
 
     override fun helpResponse(event: GenericMessageEvent): Boolean {
-        if (EXCHANGE_RATES.isEmpty()) {
+        if (SYMBOLS.isEmpty()) {
             try {
-                loadRates()
+                loadSymbols()
             } catch (e: ModuleException) {
                 if (logger.isWarnEnabled) logger.warn(e.debugMessage, e)
             }
         }
-        if (EXCHANGE_RATES.isEmpty()) {
-            event.sendMessage(EMPTY_RATE_TABLE)
+        if (SYMBOLS.isEmpty()) {
+            event.sendMessage(EMPTY_SYMBOLS_TABLE)
         } else {
             val nick = event.bot().nick
             event.sendMessage("To convert from one currency to another:")
             event.sendMessage(helpFormat(helpCmdSyntax("%c $CURRENCY_CMD 100 USD to EUR", nick, isPrivateMsgEnabled)))
-            event.sendMessage("For a listing of current reference rates:")
             event.sendMessage(
                 helpFormat(
-                    helpCmdSyntax("%c $CURRENCY_CMD $CURRENCY_RATES_KEYWORD", nick, isPrivateMsgEnabled)
+                    helpCmdSyntax("%c $CURRENCY_CMD 50,000 GBP to BTC", nick, isPrivateMsgEnabled)
                 )
             )
-            event.sendMessage("The supported currencies are: ")
-            event.sendList(ArrayList(EXCHANGE_RATES.keys), 11, isIndent = true)
+            event.sendMessage("To list the supported currency symbols: ")
+            event.sendMessage(
+                helpFormat(
+                    helpCmdSyntax("%c $CURRENCY_CMD $CURRENCY_SYMBOLS_KEYWORD", nick, isPrivateMsgEnabled)
+                )
+            )
         }
         return true
     }
@@ -128,26 +126,17 @@ class CurrencyConverter : ThreadedModule() {
         // Currency command
         private const val CURRENCY_CMD = "currency"
 
-        // Rates keyword
-        private const val CURRENCY_RATES_KEYWORD = "rates"
+        // Currency synbols keywords
+        private const val CURRENCY_SYMBOLS_KEYWORD = "symbols"
 
-        // Empty rate table.
-        private const val EMPTY_RATE_TABLE = "Sorry, but the exchange rate table is empty."
+        // Empty symbols table.
+        private const val EMPTY_SYMBOLS_TABLE = "Sorry, but the currency symbols table is empty."
 
-        // Exchange rates
-        private val EXCHANGE_RATES: MutableMap<String, String> = mutableMapOf()
-
-        // Exchange rates table URL
-        private const val EXCHANGE_TABLE_URL = "https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml"
+        // Currency Symbols
+        private val SYMBOLS: MutableMap<String, String> = mutableMapOf()
 
         // Last exchange rates table publication date
         private var pubDate = ""
-
-        private fun Double.formatCurrency(currency: String): String =
-            NumberFormat.getCurrencyInstance(Locale.getDefault(Locale.Category.FORMAT)).let {
-                it.currency = Currency.getInstance(currency)
-                it.format(this)
-            }
 
         /**
          * Converts from a currency to another.
@@ -161,17 +150,21 @@ class CurrencyConverter : ThreadedModule() {
                 } else {
                     val to = cmds[1].uppercase()
                     val from = cmds[3].uppercase()
-                    val toRate = EXCHANGE_RATES[to]
-                    val fromRate = EXCHANGE_RATES[from]
-                    if (!toRate.isNullOrBlank() && !fromRate.isNullOrBlank()) {
+                    if (SYMBOLS.contains(to) && SYMBOLS.contains(from)) {
                         try {
-                            val amt = cmds[0].replace(",", "").toDouble()
-                            PublicMessage(
-                                amt.formatCurrency(to) + " = "
-                                        + (amt * toRate.toDouble() / fromRate.toDouble()).formatCurrency(from)
-                            )
-                        } catch (e: NumberFormatException) {
-                            ErrorMessage("Let's try with some real numbers next time, okay?")
+                            val amt = cmds[0].replace(",", "")
+                            val url = URL("https://api.exchangerate.host/convert?from=$to&to=$from&amount=$amt")
+                            val json = JSONObject(url.reader())
+
+                            if (json.getBoolean("success")) {
+                                PublicMessage(
+                                    "${cmds[0]} ${SYMBOLS[to]} = ${json.get("result")} ${SYMBOLS[from]}"
+                                )
+                            } else {
+                                ErrorMessage("Sorry, an error occurred while converting the currencies.")
+                            }
+                        } catch (ignore: IOException) {
+                            ErrorMessage("Sorry, an IO error occurred while converting the currencies.")
                         }
                     } else {
                         ErrorMessage("Sounds like monopoly money to me!")
@@ -180,48 +173,23 @@ class CurrencyConverter : ThreadedModule() {
             } else ErrorMessage("Invalid query. Let's try again.")
         }
 
-
-        @JvmStatic
-        fun currencyRates(): List<String> {
-            val rates = buildList {
-                for ((key, value) in EXCHANGE_RATES.toSortedMap()) {
-                    add("$key: ${value.padStart(8)}")
-                }
-            }
-            return rates
-        }
-
         @JvmStatic
         @Throws(ModuleException::class)
-        fun loadRates() {
-            if (EXCHANGE_RATES.isEmpty()) {
+        fun loadSymbols() {
+            if (SYMBOLS.isEmpty()) {
                 try {
-                    val builder = SAXBuilder()
-                    // See https://rules.sonarsourcecom/java/tag/owasp/RSPEC-2755
-                    builder.setProperty(XMLConstants.ACCESS_EXTERNAL_DTD, "")
-                    builder.setProperty(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "")
-                    builder.ignoringElementContentWhitespace = true
-                    val doc = builder.build(URL(EXCHANGE_TABLE_URL))
-                    val root = doc.rootElement
-                    val ns = root.getNamespace("")
-                    val cubeRoot = root.getChild("Cube", ns)
-                    val cubeTime = cubeRoot.getChild("Cube", ns)
-                    pubDate = cubeTime.getAttribute("time").value
-                    val cubes = cubeTime.children
-                    for (cube in cubes) {
-                        EXCHANGE_RATES[cube.getAttribute("currency").value] = cube.getAttribute("rate").value
+                    val url = URL("https://api.exchangerate.host/symbols")
+                    val json = JSONObject(url.reader())
+                    if (json.getBoolean("success")) {
+                        val symbols = json.getJSONObject("symbols")
+                        for (key in symbols.keys()) {
+                            SYMBOLS[key] = symbols.getJSONObject(key).getString("description")
+                        }
                     }
-                    EXCHANGE_RATES["EUR"] = "1"
-                } catch (e: JDOMException) {
-                    throw ModuleException(
-                        "loadRates(): JDOM",
-                        "An JDOM parsing error has occurred while parsing the exchange rates table.",
-                        e
-                    )
                 } catch (e: IOException) {
                     throw ModuleException(
-                        "loadRates(): IOE",
-                        "An IO error has occurred while parsing the exchange rates table.",
+                        "loadSymbols(): IOE",
+                        "An IO error has occurred while retrieving the currency symbols table.",
                         e
                     )
                 }
