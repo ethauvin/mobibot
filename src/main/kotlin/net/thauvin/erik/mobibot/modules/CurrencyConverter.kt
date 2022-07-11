@@ -47,6 +47,7 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.io.IOException
 import java.net.URL
+import java.util.*
 
 
 /**
@@ -60,50 +61,50 @@ class CurrencyConverter : ThreadedModule() {
     override fun commandResponse(channel: String, cmd: String, args: String, event: GenericMessageEvent) {
         synchronized(this) {
             if (pubDate != today()) {
-                CODES.clear()
+                SYMBOLS.clear()
             }
         }
         super.commandResponse(channel, cmd, args, event)
+    }
+
+    // Reload currency codes
+    private fun reload() {
+        if (SYMBOLS.isEmpty()) {
+            try {
+                loadSymbols()
+            } catch (e: ModuleException) {
+                if (logger.isWarnEnabled) logger.warn(e.debugMessage, e)
+            }
+        }
     }
 
     /**
      * Converts the specified currencies.
      */
     override fun run(channel: String, cmd: String, args: String, event: GenericMessageEvent) {
-        if (CODES.isEmpty()) {
-            try {
-                loadCodes()
-            } catch (e: ModuleException) {
-                if (logger.isWarnEnabled) logger.warn(e.debugMessage, e)
-            }
-        }
+        reload()
 
-        if (CODES.isEmpty()) {
-            event.respond(EMPTY_CODES_TABLE)
+        if (SYMBOLS.isEmpty()) {
+            event.respond(EMPTY_SYMBOLS_TABLE)
         } else if (args.matches("\\d+([,\\d]+)?(\\.\\d+)? [a-zA-Z]{3}+ to [a-zA-Z]{3}+".toRegex())) {
             val msg = convertCurrency(args)
             event.respond(msg.msg)
             if (msg.isError) {
                 helpResponse(event)
             }
-        } else if (args.contains(CURRENCY_CODES_KEYWORD)) {
+        } else if (args.contains(CODES_KEYWORD)) {
             event.sendMessage("The supported currency codes are:")
-            event.sendList(ArrayList(CODES.keys.sorted()), 11, isIndent = true)
+            event.sendList(SYMBOLS.keys.toList(), 11, isIndent = true)
         } else {
             helpResponse(event)
         }
     }
 
     override fun helpResponse(event: GenericMessageEvent): Boolean {
-        if (CODES.isEmpty()) {
-            try {
-                loadCodes()
-            } catch (e: ModuleException) {
-                if (logger.isWarnEnabled) logger.warn(e.debugMessage, e)
-            }
-        }
-        if (CODES.isEmpty()) {
-            event.sendMessage(EMPTY_CODES_TABLE)
+        reload()
+
+        if (SYMBOLS.isEmpty()) {
+            event.sendMessage(EMPTY_SYMBOLS_TABLE)
         } else {
             val nick = event.bot().nick
             event.sendMessage("To convert from one currency to another:")
@@ -116,7 +117,7 @@ class CurrencyConverter : ThreadedModule() {
             event.sendMessage("To list the supported currency codes:")
             event.sendMessage(
                 helpFormat(
-                    helpCmdSyntax("%c $CURRENCY_CMD $CURRENCY_CODES_KEYWORD", nick, isPrivateMsgEnabled)
+                    helpCmdSyntax("%c $CURRENCY_CMD $CODES_KEYWORD", nick, isPrivateMsgEnabled)
                 )
             )
         }
@@ -128,15 +129,15 @@ class CurrencyConverter : ThreadedModule() {
         private const val CURRENCY_CMD = "currency"
 
         // Currency codes keyword
-        private const val CURRENCY_CODES_KEYWORD = "codes"
+        private const val CODES_KEYWORD = "codes"
 
-        // Empty code table.
-        private const val EMPTY_CODES_TABLE = "Sorry, but the currency table is empty."
+        // Empty symbols table.
+        private const val EMPTY_SYMBOLS_TABLE = "Sorry, but the currency table is empty."
 
-        // Currency codes
-        private val CODES: MutableMap<String, String> = mutableMapOf()
+        // Currency symbols
+        private val SYMBOLS: TreeMap<String, String> = TreeMap()
 
-        // Last currency table retrieval date
+        // Last currency retrieval date
         private var pubDate = ""
 
         /**
@@ -151,7 +152,7 @@ class CurrencyConverter : ThreadedModule() {
                 } else {
                     val to = cmds[1].uppercase()
                     val from = cmds[3].uppercase()
-                    if (CODES.contains(to) && CODES.contains(from)) {
+                    if (SYMBOLS.contains(to) && SYMBOLS.contains(from)) {
                         try {
                             val amt = cmds[0].replace(",", "")
                             val url = URL("https://api.exchangerate.host/convert?from=$to&to=$from&amount=$amt")
@@ -159,7 +160,7 @@ class CurrencyConverter : ThreadedModule() {
 
                             if (json.getBoolean("success")) {
                                 PublicMessage(
-                                    "${cmds[0]} ${CODES[to]} = ${json.getDouble("result")} ${CODES[from]}"
+                                    "${cmds[0]} ${SYMBOLS[to]} = ${json.getDouble("result")} ${SYMBOLS[from]}"
                                 )
                             } else {
                                 ErrorMessage("Sorry, an error occurred while converting the currencies.")
@@ -175,29 +176,30 @@ class CurrencyConverter : ThreadedModule() {
         }
 
         /**
-         * Loads the country ISO codes.
+         * Loads the currency ISO symbols.
          */
         @JvmStatic
         @Throws(ModuleException::class)
-        fun loadCodes() {
-            if (CODES.isEmpty()) {
-                try {
-                    val url = URL("https://api.exchangerate.host/symbols")
-                    val json = JSONObject(url.reader())
-                    if (json.getBoolean("success")) {
-                        val symbols = json.getJSONObject("symbols")
-                        for (key in symbols.keys()) {
-                            CODES[key] = symbols.getJSONObject(key).getString("description")
-                        }
-                        pubDate = today()
+        fun loadSymbols() {
+            try {
+                val url = URL("https://api.exchangerate.host/symbols")
+                val json = JSONObject(url.reader())
+                if (json.getBoolean("success")) {
+                    val symbols = json.getJSONObject("symbols")
+                    if (SYMBOLS.isNotEmpty()) {
+                        SYMBOLS.clear()
                     }
-                } catch (e: IOException) {
-                    throw ModuleException(
-                        "loadCodes(): IOE",
-                        "An IO error has occurred while retrieving the currency table.",
-                        e
-                    )
+                    for (key in symbols.keys()) {
+                        SYMBOLS[key] = symbols.getJSONObject(key).getString("description")
+                    }
+                    pubDate = today()
                 }
+            } catch (e: IOException) {
+                throw ModuleException(
+                    "loadCodes(): IOE",
+                    "An IO error has occurred while retrieving the currencies.",
+                    e
+                )
             }
         }
     }

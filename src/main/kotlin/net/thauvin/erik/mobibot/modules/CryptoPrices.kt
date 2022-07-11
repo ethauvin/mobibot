@@ -54,19 +54,20 @@ class CryptoPrices : ThreadedModule() {
     override fun commandResponse(channel: String, cmd: String, args: String, event: GenericMessageEvent) {
         synchronized(this) {
             if (pubDate != today()) {
-                CODES.clear()
+                CURRENCIES.clear()
             }
         }
         super.commandResponse(channel, cmd, args, event)
     }
 
     /**
-     * Returns the cryptocurrency market price from [Coinbase](https://developers.coinbase.com/api/v2#get-spot-price).
+     * Returns the cryptocurrency market price from
+     * [Coinbase](https://docs.cloud.coinbase.com/sign-in-with-coinbase/docs/api-prices#get-spot-price).
      */
     override fun run(channel: String, cmd: String, args: String, event: GenericMessageEvent) {
-        if (CODES.isEmpty()) {
+        if (CURRENCIES.isEmpty()) {
             try {
-                loadCodes()
+                loadCurrencies()
             } catch (e: ModuleException) {
                 if (logger.isWarnEnabled) logger.warn(e.debugMessage, e)
             }
@@ -74,8 +75,8 @@ class CryptoPrices : ThreadedModule() {
 
         val debugMessage = "crypto($cmd $args)"
         if (args == CURRENCY_CODES_KEYWORD) {
-            event.sendMessage("The supported currency codes are:")
-            event.sendList(ArrayList(CODES.keys), 10, isIndent = true)
+            event.sendMessage("The supported currencies are:")
+            event.sendList(ArrayList(CURRENCIES.keys), 10, isIndent = true)
         } else if (args.matches("\\w+( [a-zA-Z]{3}+)?".toRegex())) {
             try {
                 val price = currentPrice(args.split(' '))
@@ -84,7 +85,7 @@ class CryptoPrices : ThreadedModule() {
                 } catch (ignore: IllegalArgumentException) {
                     price.amount
                 }
-                event.respond("${price.base} current price is $amount [${CODES[price.currency]}]")
+                event.respond("${price.base} current price is $amount [${CURRENCIES[price.currency]}]")
             } catch (e: CryptoException) {
                 if (logger.isWarnEnabled) logger.warn("$debugMessage => ${e.statusCode}", e)
                 e.message?.let {
@@ -104,13 +105,13 @@ class CryptoPrices : ThreadedModule() {
         // Crypto command
         private const val CRYPTO_CMD = "crypto"
 
-        // Currency codes
-        private val CODES: MutableMap<String, String> = mutableMapOf()
+        // Fiat Currencies
+        private val CURRENCIES: MutableMap<String, String> = mutableMapOf()
 
         // Currency codes keyword
         private const val CURRENCY_CODES_KEYWORD = "codes"
 
-        // Last currency table retrieval date
+        // Last currencies retrieval date
         private var pubDate = ""
 
         /**
@@ -128,31 +129,32 @@ class CryptoPrices : ThreadedModule() {
          * For testing purposes.
          */
         fun getCurrencyName(code: String): String? {
-            return CODES[code]
+            return CURRENCIES[code]
         }
 
         /**
-         * Loads the country ISO codes.
+         * Loads the Fiat currencies..
          */
         @JvmStatic
         @Throws(ModuleException::class)
-        fun loadCodes() {
-            if (CODES.isEmpty()) {
-                try {
-                    val json = JSONObject(CryptoPrice.apiCall(listOf("currencies")))
-                    val data = json.getJSONArray("data")
-                    for (i in 0 until data.length()) {
-                        val d = data.getJSONObject(i)
-                        CODES[d.getString("id")] = d.getString("name")
-                    }
-                    pubDate = today()
-                } catch (e: CryptoException) {
-                    throw ModuleException(
-                        "loadCodes(): CE",
-                        "An error has occurred while retrieving the currency table.",
-                        e
-                    )
+        fun loadCurrencies() {
+            try {
+                val json = JSONObject(CryptoPrice.apiCall(listOf("currencies")))
+                val data = json.getJSONArray("data")
+                if (CURRENCIES.isNotEmpty()) {
+                    CURRENCIES.clear()
                 }
+                for (i in 0 until data.length()) {
+                    val d = data.getJSONObject(i)
+                    CURRENCIES[d.getString("id")] = d.getString("name")
+                }
+                pubDate = today()
+            } catch (e: CryptoException) {
+                throw ModuleException(
+                    "loadCurrencies(): CE",
+                    "An error has occurred while retrieving the currencies table.",
+                    e
+                )
             }
         }
     }
@@ -166,7 +168,7 @@ class CryptoPrices : ThreadedModule() {
             add(helpFormat("%c $CRYPTO_CMD BTC"))
             add(helpFormat("%c $CRYPTO_CMD ETH EUR"))
             add(helpFormat("%c $CRYPTO_CMD ETH2 GPB"))
-            add("To list the supported currency codes:")
+            add("To list the supported currencies:")
             add(helpFormat("%c $CRYPTO_CMD $CURRENCY_CODES_KEYWORD"))
         }
     }

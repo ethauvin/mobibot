@@ -38,7 +38,7 @@ import assertk.assertions.isInstanceOf
 import assertk.assertions.matches
 import assertk.assertions.prop
 import net.thauvin.erik.mobibot.modules.CurrencyConverter.Companion.convertCurrency
-import net.thauvin.erik.mobibot.modules.CurrencyConverter.Companion.loadCodes
+import net.thauvin.erik.mobibot.modules.CurrencyConverter.Companion.loadSymbols
 import net.thauvin.erik.mobibot.msg.ErrorMessage
 import net.thauvin.erik.mobibot.msg.Message
 import net.thauvin.erik.mobibot.msg.PublicMessage
@@ -53,7 +53,7 @@ class CurrencyConverterTest {
     @BeforeClass
     @Throws(ModuleException::class)
     fun before() {
-        loadCodes()
+        loadSymbols()
     }
 
     @Test

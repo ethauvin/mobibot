@@ -39,7 +39,7 @@ import assertk.assertions.prop
 import net.thauvin.erik.crypto.CryptoPrice
 import net.thauvin.erik.mobibot.modules.CryptoPrices.Companion.currentPrice
 import net.thauvin.erik.mobibot.modules.CryptoPrices.Companion.getCurrencyName
-import net.thauvin.erik.mobibot.modules.CryptoPrices.Companion.loadCodes
+import net.thauvin.erik.mobibot.modules.CryptoPrices.Companion.loadCurrencies
 import org.testng.annotations.BeforeClass
 import org.testng.annotations.Test
 
@@ -50,7 +50,7 @@ class CryptoPricesTest {
     @BeforeClass
     @Throws(ModuleException::class)
     fun before() {
-        loadCodes()
+        loadCurrencies()
     }
 
     @Test
