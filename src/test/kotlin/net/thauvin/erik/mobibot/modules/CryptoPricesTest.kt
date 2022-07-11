@@ -38,12 +38,21 @@ import assertk.assertions.isGreaterThan
 import assertk.assertions.prop
 import net.thauvin.erik.crypto.CryptoPrice
 import net.thauvin.erik.mobibot.modules.CryptoPrices.Companion.currentPrice
+import net.thauvin.erik.mobibot.modules.CryptoPrices.Companion.getCurrencyName
+import net.thauvin.erik.mobibot.modules.CryptoPrices.Companion.loadCodes
+import org.testng.annotations.BeforeClass
 import org.testng.annotations.Test
 
 /**
  * The `CryptoPricesTest` class.
  */
 class CryptoPricesTest {
+    @BeforeClass
+    @Throws(ModuleException::class)
+    fun before() {
+        loadCodes()
+    }
+
     @Test
     @Throws(ModuleException::class)
     fun testMarketPrice() {
@@ -60,5 +69,11 @@ class CryptoPricesTest {
             prop(CryptoPrice::currency).isEqualTo("EUR")
             prop(CryptoPrice::amount).transform { it.signum() }.isGreaterThan(0)
         }
+    }
+
+    @Test
+    fun testGetCurrencyName() {
+        assertThat(getCurrencyName("USD")).isEqualTo("US Dollar")
+        assertThat(getCurrencyName("EUR")).isEqualTo("Euro")
     }
 }

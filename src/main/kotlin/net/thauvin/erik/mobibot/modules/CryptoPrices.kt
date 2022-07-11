@@ -35,7 +35,10 @@ import net.thauvin.erik.crypto.CryptoException
 import net.thauvin.erik.crypto.CryptoPrice
 import net.thauvin.erik.crypto.CryptoPrice.Companion.spotPrice
 import net.thauvin.erik.mobibot.Utils.helpFormat
+import net.thauvin.erik.mobibot.Utils.sendList
 import net.thauvin.erik.mobibot.Utils.sendMessage
+import net.thauvin.erik.mobibot.Utils.today
+import org.json.JSONObject
 import org.pircbotx.hooks.types.GenericMessageEvent
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -48,13 +51,32 @@ class CryptoPrices : ThreadedModule() {
     private val logger: Logger = LoggerFactory.getLogger(CryptoPrices::class.java)
 
     override val name = "CryptoPrices"
+    override fun commandResponse(channel: String, cmd: String, args: String, event: GenericMessageEvent) {
+        synchronized(this) {
+            if (pubDate != today()) {
+                CODES.clear()
+            }
+        }
+        super.commandResponse(channel, cmd, args, event)
+    }
 
     /**
      * Returns the cryptocurrency market price from [Coinbase](https://developers.coinbase.com/api/v2#get-spot-price).
      */
     override fun run(channel: String, cmd: String, args: String, event: GenericMessageEvent) {
+        if (CODES.isEmpty()) {
+            try {
+                loadCodes()
+            } catch (e: ModuleException) {
+                if (logger.isWarnEnabled) logger.warn(e.debugMessage, e)
+            }
+        }
+
         val debugMessage = "crypto($cmd $args)"
-        if (args.matches("\\w+( [a-zA-Z]{3}+)?".toRegex())) {
+        if (args == CURRENCY_CODES_KEYWORD) {
+            event.sendMessage("The supported currency codes are:")
+            event.sendList(ArrayList(CODES.keys), 10, isIndent = true)
+        } else if (args.matches("\\w+( [a-zA-Z]{3}+)?".toRegex())) {
             try {
                 val price = currentPrice(args.split(' '))
                 val amount = try {
@@ -62,7 +84,7 @@ class CryptoPrices : ThreadedModule() {
                 } catch (ignore: IllegalArgumentException) {
                     price.amount
                 }
-                event.respond("${price.base} current price is $amount [${price.currency}]")
+                event.respond("${price.base} current price is $amount [${CODES[price.currency]}]")
             } catch (e: CryptoException) {
                 if (logger.isWarnEnabled) logger.warn("$debugMessage => ${e.statusCode}", e)
                 e.message?.let {
@@ -82,6 +104,15 @@ class CryptoPrices : ThreadedModule() {
         // Crypto command
         private const val CRYPTO_CMD = "crypto"
 
+        // Currency codes
+        private val CODES: MutableMap<String, String> = mutableMapOf()
+
+        // Currency codes keyword
+        private const val CURRENCY_CODES_KEYWORD = "codes"
+
+        // Last currency table retrieval date
+        private var pubDate = ""
+
         /**
          * Get current market price.
          */
@@ -91,6 +122,38 @@ class CryptoPrices : ThreadedModule() {
                 spotPrice(args[0], args[1])
             else
                 spotPrice(args[0])
+        }
+
+        /**
+         * For testing purposes.
+         */
+        fun getCurrencyName(code: String): String? {
+            return CODES[code]
+        }
+
+        /**
+         * Loads the country ISO codes.
+         */
+        @JvmStatic
+        @Throws(ModuleException::class)
+        fun loadCodes() {
+            if (CODES.isEmpty()) {
+                try {
+                    val json = JSONObject(CryptoPrice.apiCall(listOf("currencies")))
+                    val data = json.getJSONArray("data")
+                    for (i in 0 until data.length()) {
+                        val d = data.getJSONObject(i)
+                        CODES[d.getString("id")] = d.getString("name")
+                    }
+                    pubDate = today()
+                } catch (e: CryptoException) {
+                    throw ModuleException(
+                        "loadCodes(): CE",
+                        "An error has occurred while retrieving the currency table.",
+                        e
+                    )
+                }
+            }
         }
     }
 
@@ -103,6 +166,8 @@ class CryptoPrices : ThreadedModule() {
             add(helpFormat("%c $CRYPTO_CMD BTC"))
             add(helpFormat("%c $CRYPTO_CMD ETH EUR"))
             add(helpFormat("%c $CRYPTO_CMD ETH2 GPB"))
+            add("To list the supported currency codes:")
+            add(helpFormat("%c $CRYPTO_CMD $CURRENCY_CODES_KEYWORD"))
         }
     }
 }
