@@ -87,7 +87,7 @@ class CurrencyConverter : ThreadedModule() {
                 helpResponse(event)
             }
         } else if (args.contains(CURRENCY_CODES_KEYWORD)) {
-            event.sendMessage("The supported currency codes are: ")
+            event.sendMessage("The supported currency codes are:")
             event.sendList(ArrayList(CODES.keys.sorted()), 11, isIndent = true)
         } else {
             helpResponse(event)
@@ -113,7 +113,7 @@ class CurrencyConverter : ThreadedModule() {
                     helpCmdSyntax("%c $CURRENCY_CMD 50,000 GBP to BTC", nick, isPrivateMsgEnabled)
                 )
             )
-            event.sendMessage("To list the supported currency codes: ")
+            event.sendMessage("To list the supported currency codes:")
             event.sendMessage(
                 helpFormat(
                     helpCmdSyntax("%c $CURRENCY_CMD $CURRENCY_CODES_KEYWORD", nick, isPrivateMsgEnabled)
@@ -136,7 +136,7 @@ class CurrencyConverter : ThreadedModule() {
         // Currency codes
         private val CODES: MutableMap<String, String> = mutableMapOf()
 
-        // Last exchange rates table publication date
+        // Last currency table retrieval date
         private var pubDate = ""
 
         /**
@@ -189,6 +189,7 @@ class CurrencyConverter : ThreadedModule() {
                         for (key in symbols.keys()) {
                             CODES[key] = symbols.getJSONObject(key).getString("description")
                         }
+                        pubDate = today()
                     }
                 } catch (e: IOException) {
                     throw ModuleException(
