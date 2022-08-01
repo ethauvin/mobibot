@@ -37,7 +37,6 @@ import net.thauvin.erik.crypto.CryptoPrice.Companion.spotPrice
 import net.thauvin.erik.mobibot.Utils.helpFormat
 import net.thauvin.erik.mobibot.Utils.sendList
 import net.thauvin.erik.mobibot.Utils.sendMessage
-import net.thauvin.erik.mobibot.Utils.today
 import org.json.JSONObject
 import org.pircbotx.hooks.types.GenericMessageEvent
 import org.slf4j.Logger
@@ -51,14 +50,6 @@ class CryptoPrices : ThreadedModule() {
     private val logger: Logger = LoggerFactory.getLogger(CryptoPrices::class.java)
 
     override val name = "CryptoPrices"
-    override fun commandResponse(channel: String, cmd: String, args: String, event: GenericMessageEvent) {
-        synchronized(this) {
-            if (pubDate != today()) {
-                CURRENCIES.clear()
-            }
-        }
-        super.commandResponse(channel, cmd, args, event)
-    }
 
     /**
      * Returns the cryptocurrency market price from
@@ -111,9 +102,6 @@ class CryptoPrices : ThreadedModule() {
         // Currency codes keyword
         private const val CURRENCY_CODES_KEYWORD = "codes"
 
-        // Last currencies retrieval date
-        private var pubDate = ""
-
         /**
          * Get current market price.
          */
@@ -141,14 +129,10 @@ class CryptoPrices : ThreadedModule() {
             try {
                 val json = JSONObject(CryptoPrice.apiCall(listOf("currencies")))
                 val data = json.getJSONArray("data")
-                if (CURRENCIES.isNotEmpty()) {
-                    CURRENCIES.clear()
-                }
                 for (i in 0 until data.length()) {
                     val d = data.getJSONObject(i)
                     CURRENCIES[d.getString("id")] = d.getString("name")
                 }
-                pubDate = today()
             } catch (e: CryptoException) {
                 throw ModuleException(
                     "loadCurrencies(): CE",
@@ -171,5 +155,6 @@ class CryptoPrices : ThreadedModule() {
             add("To list the supported currencies:")
             add(helpFormat("%c $CRYPTO_CMD $CURRENCY_CODES_KEYWORD"))
         }
+        loadCurrencies()
     }
 }

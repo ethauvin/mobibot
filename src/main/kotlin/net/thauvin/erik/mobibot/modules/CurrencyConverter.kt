@@ -37,7 +37,6 @@ import net.thauvin.erik.mobibot.Utils.helpFormat
 import net.thauvin.erik.mobibot.Utils.reader
 import net.thauvin.erik.mobibot.Utils.sendList
 import net.thauvin.erik.mobibot.Utils.sendMessage
-import net.thauvin.erik.mobibot.Utils.today
 import net.thauvin.erik.mobibot.msg.ErrorMessage
 import net.thauvin.erik.mobibot.msg.Message
 import net.thauvin.erik.mobibot.msg.PublicMessage
@@ -47,7 +46,7 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.io.IOException
 import java.net.URL
-import java.util.*
+import java.util.TreeMap
 
 
 /**
@@ -57,15 +56,6 @@ class CurrencyConverter : ThreadedModule() {
     private val logger: Logger = LoggerFactory.getLogger(CurrencyConverter::class.java)
 
     override val name = "CurrencyConverter"
-
-    override fun commandResponse(channel: String, cmd: String, args: String, event: GenericMessageEvent) {
-        synchronized(this) {
-            if (pubDate != today()) {
-                SYMBOLS.clear()
-            }
-        }
-        super.commandResponse(channel, cmd, args, event)
-    }
 
     // Reload currency codes
     private fun reload() {
@@ -137,9 +127,6 @@ class CurrencyConverter : ThreadedModule() {
         // Currency symbols
         private val SYMBOLS: TreeMap<String, String> = TreeMap()
 
-        // Last currency retrieval date
-        private var pubDate = ""
-
         /**
          * Converts from a currency to another.
          */
@@ -186,13 +173,9 @@ class CurrencyConverter : ThreadedModule() {
                 val json = JSONObject(url.reader())
                 if (json.getBoolean("success")) {
                     val symbols = json.getJSONObject("symbols")
-                    if (SYMBOLS.isNotEmpty()) {
-                        SYMBOLS.clear()
-                    }
                     for (key in symbols.keys()) {
                         SYMBOLS[key] = symbols.getJSONObject(key).getString("description")
                     }
-                    pubDate = today()
                 }
             } catch (e: IOException) {
                 throw ModuleException(
@@ -206,5 +189,6 @@ class CurrencyConverter : ThreadedModule() {
 
     init {
         commands.add(CURRENCY_CMD)
+        loadSymbols()
     }
 }
