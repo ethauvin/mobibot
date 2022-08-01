@@ -39,7 +39,7 @@ import assertk.assertions.isTrue
 import assertk.assertions.prop
 import org.testng.annotations.Test
 
-class TestMessage {
+class MessageTest {
     @Test
     fun testConstructor() {
         var msg = Message("foo")
@@ -56,6 +56,23 @@ class TestMessage {
         val msg = ErrorMessage("foo")
         assertThat(msg).all {
             prop(Message::isError).isTrue()
+            prop(Message::isNotice).isTrue()
+            prop(Message::isPrivate).isFalse()
+        }
+    }
+
+    @Test
+    fun testIsError() {
+        val msg = Message("foo")
+        msg.isError = true
+        assertThat(msg).all {
+            prop(Message::isError).isTrue()
+            prop(Message::isNotice).isTrue()
+            prop(Message::isPrivate).isFalse()
+        }
+        msg.isError = false
+        assertThat(msg).all {
+            prop(Message::isError).isFalse()
             prop(Message::isNotice).isTrue()
             prop(Message::isPrivate).isFalse()
         }

@@ -56,7 +56,7 @@ open class Message @JvmOverloads constructor(
     /** Error flag. */
     var isError = isError
         set(value) {
-            if (value) isNotice = value
+            if (value) isNotice = true
             field = value
         }
 
