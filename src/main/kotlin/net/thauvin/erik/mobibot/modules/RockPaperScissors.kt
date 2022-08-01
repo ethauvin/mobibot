@@ -102,9 +102,11 @@ class RockPaperScissors : AbstractModule() {
             hand == botHand -> {
                 event.respond("${hand.name} vs. ${botHand.name} » You ${"tie".bold()}.")
             }
+
             hand.beats(botHand) -> {
                 event.respond("${hand.name.bold()} ${hand.action} ${botHand.name} » You ${"win".bold()}!")
             }
+
             else -> {
                 event.respond("${botHand.name.bold()} ${botHand.action} ${hand.name} » You ${"lose".bold()}!")
             }

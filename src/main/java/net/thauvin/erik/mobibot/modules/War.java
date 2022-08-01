@@ -103,7 +103,7 @@ public final class War extends AbstractModule {
                 result = bold("tie") + ". This means " + bold("WAR");
             }
 
-            event.respond(DECK[RANDOM.nextInt(DECK.length)][i] + "  " +  DECK[RANDOM.nextInt(DECK.length)][y] +
+            event.respond(DECK[RANDOM.nextInt(DECK.length)][i] + "  " + DECK[RANDOM.nextInt(DECK.length)][y] +
                     "  » You " + result + '!');
 
         } while (i == y);

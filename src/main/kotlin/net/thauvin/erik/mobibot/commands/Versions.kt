@@ -43,7 +43,7 @@ class Versions : AbstractCommand() {
         "Version  : ${ReleaseInfo.VERSION} (${ReleaseInfo.BUILDDATE.toIsoLocalDate()})",
         "Platform : ${System.getProperty("os.name")} ${System.getProperty("os.version")}" +
                 " (${System.getProperty("os.arch")})",
-        "Runtimes : Java ${System.getProperty("java.runtime.version")}, Kotlin " +  KotlinVersion.CURRENT
+        "Runtimes : Java ${System.getProperty("java.runtime.version")}, Kotlin " + KotlinVersion.CURRENT
     )
     override val name = "versions"
     override val help = listOf("To view the versions data (bot, platform, java, etc.):", helpFormat("%c $name"))

@@ -282,11 +282,13 @@ class Mobibot(nickname: String, val channel: String, logsDirPath: String, p: Pro
                     // Output the usage
                     HelpFormatter().printHelp(Mobibot::class.java.name, options)
                 }
+
                 commandLine.hasOption(Constants.VERSION_ARG[0]) -> {
                     // Output the version
                     println("${ReleaseInfo.PROJECT} ${ReleaseInfo.VERSION} (${ReleaseInfo.BUILDDATE.toIsoLocalDate()})")
                     println(ReleaseInfo.WEBSITE)
                 }
+
                 else -> {
                     // Load the properties
                     val p = Properties()
