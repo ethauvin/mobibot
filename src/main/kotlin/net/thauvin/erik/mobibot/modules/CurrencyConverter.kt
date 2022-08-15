@@ -147,7 +147,7 @@ class CurrencyConverter : ThreadedModule() {
 
                             if (json.getBoolean("success")) {
                                 PublicMessage(
-                                    "${cmds[0]} ${SYMBOLS[to]} = ${json.getDouble("result")} ${SYMBOLS[from]}"
+                                    "${cmds[0]} ${SYMBOLS[to]} = ${json.get("result")} ${SYMBOLS[from]}"
                                 )
                             } else {
                                 ErrorMessage("Sorry, an error occurred while converting the currencies.")
