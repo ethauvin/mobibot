@@ -28,7 +28,7 @@ mainClassName = packageName + '.Mobibot'
 
 ext.versions = [
     log4j: '2.18.0',
-    pmd  : '6.48.0',
+    pmd  : '6.49.0',
 ]
 
 repositories {
@@ -43,7 +43,9 @@ dependencies {
     compileOnly(semverProcessor)
 
     // PircBotX
-    implementation 'com.github.pircbotx:pircbotx:-SNAPSHOT'
+    //implementation 'com.github.pircbotx:pircbotx:-SNAPSHOT'
+    implementation fileTree(dir: 'lib', include: '*.jar')
+
 
     // Commons
     implementation 'org.apache.commons:commons-lang3:3.12.0'
@@ -76,7 +78,7 @@ dependencies {
     implementation 'org.twitter4j:twitter4j-core:4.0.7'
 
     // Thauvin
-    implementation 'net.thauvin.erik:cryptoprice:0.9.0'
+    implementation 'net.thauvin.erik:cryptoprice:1.0.0-SNAPSHOT'
     implementation 'net.thauvin.erik:pinboard-poster:1.0.3'
 
     testImplementation 'com.willowtreeapps.assertk:assertk-jvm:0.25'

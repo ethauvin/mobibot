@@ -36,14 +36,15 @@ import net.thauvin.erik.mobibot.Utils.helpFormat
 import net.thauvin.erik.mobibot.Utils.isChannelOp
 import net.thauvin.erik.mobibot.Utils.sendList
 import net.thauvin.erik.mobibot.Utils.toIsoLocalDate
+import org.pircbotx.PircBotX
 import org.pircbotx.hooks.types.GenericMessageEvent
 
 class Versions : AbstractCommand() {
     private val allVersions = listOf(
-        "Version  : ${ReleaseInfo.VERSION} (${ReleaseInfo.BUILDDATE.toIsoLocalDate()})",
-        "Platform : ${System.getProperty("os.name")} ${System.getProperty("os.version")}" +
-                " (${System.getProperty("os.arch")})",
-        "Runtimes : Java ${System.getProperty("java.runtime.version")}, Kotlin " + KotlinVersion.CURRENT
+        "Version: ${ReleaseInfo.VERSION} (${ReleaseInfo.BUILDDATE.toIsoLocalDate()})",
+        "${System.getProperty("os.name")} ${System.getProperty("os.version")} (${System.getProperty("os.arch")})" +
+                ", JVM ${System.getProperty("java.runtime.version")}",
+        "Kotlin ${KotlinVersion.CURRENT}, PircBotX ${PircBotX.VERSION}"
     )
     override val name = "versions"
     override val help = listOf("To view the versions data (bot, platform, java, etc.):", helpFormat("%c $name"))
