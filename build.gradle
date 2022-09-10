@@ -78,7 +78,7 @@ dependencies {
     implementation 'org.twitter4j:twitter4j-core:4.0.7'
 
     // Thauvin
-    implementation 'net.thauvin.erik:cryptoprice:1.0.0-SNAPSHOT'
+    implementation 'net.thauvin.erik:cryptoprice:1.0.0'
     implementation 'net.thauvin.erik:pinboard-poster:1.0.3'
 
     testImplementation 'com.willowtreeapps.assertk:assertk-jvm:0.25'
