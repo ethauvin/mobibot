@@ -6,25 +6,25 @@
 Some very basic instructions:
 
 ```sh
-    { clone with git or download the ZIP }
+    # clone with git or download the ZIP
     git clone https://github.com/ethauvin/mobibot.git
 
     cd mobibot
 
-    { build with gradle }
+    # build with gradle
     ./gradlew
 
     cd deploy
 
-    { configure the properties }
+    # configure the properties
     vi *.properties *.xml
 
-    { help }
+    # help
     java -jar mobibot.jar -h
 
-    { twitter oauth token request }
+    # twitter oauth token request
     java -cp mobibot.jar net.thauvin.erik.mobibot.TwitterOAuth <consumerKey> <consumerSecret>
 
-    { launch }
+    # launch
     /usr/bin/nohup java -jar mobibot.jar &
 ```

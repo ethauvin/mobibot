@@ -34,6 +34,7 @@ package net.thauvin.erik.mobibot
 
 import net.thauvin.erik.mobibot.Utils.appendIfMissing
 import net.thauvin.erik.mobibot.Utils.bot
+import net.thauvin.erik.mobibot.Utils.capitalise
 import net.thauvin.erik.mobibot.Utils.getIntProperty
 import net.thauvin.erik.mobibot.Utils.helpCmdSyntax
 import net.thauvin.erik.mobibot.Utils.helpFormat
@@ -274,18 +275,20 @@ class Mobibot(nickname: String, val channel: String, logsDirPath: String, p: Pro
             try {
                 commandLine = parser.parse(options, args)
             } catch (e: ParseException) {
-                System.err.println("CLI Parsing failed. Reason: ${e.message}")
+                System.err.println(e.message)
+                HelpFormatter().printHelp(Constants.CLI_CMD, options)
                 exitProcess(1)
             }
             when {
                 commandLine.hasOption(Constants.HELP_ARG[0]) -> {
                     // Output the usage
-                    HelpFormatter().printHelp(Mobibot::class.java.name, options)
+                    HelpFormatter().printHelp(Constants.CLI_CMD, options)
                 }
 
                 commandLine.hasOption(Constants.VERSION_ARG[0]) -> {
                     // Output the version
-                    println("${ReleaseInfo.PROJECT} ${ReleaseInfo.VERSION} (${ReleaseInfo.BUILDDATE.toIsoLocalDate()})")
+                    println("${ReleaseInfo.PROJECT.capitalise()} ${ReleaseInfo.VERSION}" +
+                            " (${ReleaseInfo.BUILDDATE.toIsoLocalDate()})")
                     println(ReleaseInfo.WEBSITE)
                 }
 

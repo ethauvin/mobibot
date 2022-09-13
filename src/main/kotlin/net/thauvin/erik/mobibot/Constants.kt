@@ -56,6 +56,11 @@ object Constants {
     const val DEFAULT_SERVER = "irc.libera.chat"
 
     /**
+     * CLI command for usage.
+     */
+    const val CLI_CMD = "java -jar ${ReleaseInfo.PROJECT}.jar [OPTIONS]"
+
+    /**
      * Help command line argument.
      */
     const val HELP_ARG = "help"
