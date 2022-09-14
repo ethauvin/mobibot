@@ -58,12 +58,7 @@ object Constants {
     /**
      * CLI command for usage.
      */
-    const val CLI_CMD = "java -jar ${ReleaseInfo.PROJECT}.jar [OPTIONS]"
-
-    /**
-     * Help command line argument.
-     */
-    const val HELP_ARG = "help"
+    const val CLI_CMD = "java -jar ${ReleaseInfo.PROJECT}.jar"
 
     /**
      * The help command.

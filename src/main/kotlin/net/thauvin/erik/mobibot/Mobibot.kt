@@ -32,6 +32,9 @@
 
 package net.thauvin.erik.mobibot
 
+import kotlinx.cli.ArgParser
+import kotlinx.cli.ArgType
+import kotlinx.cli.default
 import net.thauvin.erik.mobibot.Utils.appendIfMissing
 import net.thauvin.erik.mobibot.Utils.bot
 import net.thauvin.erik.mobibot.Utils.capitalise
@@ -77,13 +80,6 @@ import net.thauvin.erik.mobibot.modules.War
 import net.thauvin.erik.mobibot.modules.Weather2
 import net.thauvin.erik.mobibot.modules.WorldTime
 import net.thauvin.erik.semver.Version
-import org.apache.commons.cli.CommandLine
-import org.apache.commons.cli.CommandLineParser
-import org.apache.commons.cli.DefaultParser
-import org.apache.commons.cli.HelpFormatter
-import org.apache.commons.cli.Option
-import org.apache.commons.cli.Options
-import org.apache.commons.cli.ParseException
 import org.pircbotx.Configuration
 import org.pircbotx.PircBotX
 import org.pircbotx.hooks.ListenerAdapter
@@ -245,104 +241,86 @@ class Mobibot(nickname: String, val channel: String, logsDirPath: String, p: Pro
         @Throws(Exception::class)
         fun main(args: Array<String>) {
             // Set up the command line options
-            val options = Options()
-                .addOption(
-                    Constants.HELP_ARG.substring(0, 1),
-                    Constants.HELP_ARG,
-                    false,
-                    "print this help message"
-                )
-                .addOption(
-                    Constants.DEBUG_ARG.substring(0, 1), Constants.DEBUG_ARG, false,
-                    "print debug & logging data directly to the console"
-                )
-                .addOption(
-                    Option.builder(Constants.PROPS_ARG.substring(0, 1)).hasArg()
-                        .argName("file")
-                        .desc("use alternate properties file")
-                        .longOpt(Constants.PROPS_ARG).build()
-                )
-                .addOption(
-                    Constants.VERSION_ARG.substring(0, 1),
-                    Constants.VERSION_ARG,
-                    false,
-                    "print version info"
-                )
+            val parser = ArgParser(Constants.CLI_CMD)
+            val debug by parser.option(
+                ArgType.Boolean,
+                Constants.DEBUG_ARG,
+                Constants.DEBUG_ARG.substring(0, 1),
+                "Print debug & logging data directly to the console"
+            ).default(false)
+            val property by parser.option(
+                ArgType.String,
+                Constants.PROPS_ARG,
+                Constants.PROPS_ARG.substring(0, 1),
+                "Use alternate properties file"
+            ).default("./mobibot.properties")
+            val version by parser.option(
+                ArgType.Boolean,
+                Constants.VERSION_ARG,
+                Constants.VERSION_ARG.substring(0, 1),
+                "Print version info"
+            ).default(false)
 
             // Parse the command line
-            val parser: CommandLineParser = DefaultParser()
-            val commandLine: CommandLine
-            try {
-                commandLine = parser.parse(options, args)
-            } catch (e: ParseException) {
-                System.err.println(e.message)
-                HelpFormatter().printHelp(Constants.CLI_CMD, options)
-                exitProcess(1)
-            }
-            when {
-                commandLine.hasOption(Constants.HELP_ARG[0]) -> {
-                    // Output the usage
-                    HelpFormatter().printHelp(Constants.CLI_CMD, options)
-                }
+            parser.parse(args)
 
-                commandLine.hasOption(Constants.VERSION_ARG[0]) -> {
-                    // Output the version
-                    println("${ReleaseInfo.PROJECT.capitalise()} ${ReleaseInfo.VERSION}" +
-                            " (${ReleaseInfo.BUILDDATE.toIsoLocalDate()})")
-                    println(ReleaseInfo.WEBSITE)
+            if (version) {
+                // Output the version
+                println(
+                    "${ReleaseInfo.PROJECT.capitalise()} ${ReleaseInfo.VERSION}" +
+                            " (${ReleaseInfo.BUILDDATE.toIsoLocalDate()})"
+                )
+                println(ReleaseInfo.WEBSITE)
+            } else {
+                // Load the properties
+                val p = Properties()
+                try {
+                    Files.newInputStream(
+                        Paths.get(property)
+                    ).use { fis ->
+                        p.load(fis)
+                    }
+                } catch (ignore: FileNotFoundException) {
+                    System.err.println("Unable to find properties file.")
+                    exitProcess(1)
+                } catch (ignore: IOException) {
+                    System.err.println("Unable to open properties file.")
+                    exitProcess(1)
                 }
+                val nickname = p.getProperty("nick", Mobibot::class.java.name.lowercase())
+                val channel = p.getProperty("channel")
+                val logsDir = p.getProperty("logs", ".").appendIfMissing(File.separatorChar)
 
-                else -> {
-                    // Load the properties
-                    val p = Properties()
+                // Redirect stdout and stderr
+                if (!debug) {
                     try {
-                        Files.newInputStream(
-                            Paths.get(commandLine.getOptionValue(Constants.PROPS_ARG[0], "./mobibot.properties"))
-                        ).use { fis ->
-                            p.load(fis)
-                        }
-                    } catch (ignore: FileNotFoundException) {
-                        System.err.println("Unable to find properties file.")
-                        exitProcess(1)
+                        val stdout = PrintStream(
+                            BufferedOutputStream(
+                                FileOutputStream(
+                                    logsDir + channel.substring(1) + '.' + Utils.today() + ".log", true
+                                )
+                            ), true
+                        )
+                        System.setOut(stdout)
                     } catch (ignore: IOException) {
-                        System.err.println("Unable to open properties file.")
+                        System.err.println("Unable to open output (stdout) log file.")
                         exitProcess(1)
                     }
-                    val nickname = p.getProperty("nick", Mobibot::class.java.name.lowercase())
-                    val channel = p.getProperty("channel")
-                    val logsDir = p.getProperty("logs", ".").appendIfMissing(File.separatorChar)
-
-                    // Redirect stdout and stderr
-                    if (!commandLine.hasOption(Constants.DEBUG_ARG[0])) {
-                        try {
-                            val stdout = PrintStream(
-                                BufferedOutputStream(
-                                    FileOutputStream(
-                                        logsDir + channel.substring(1) + '.' + Utils.today() + ".log", true
-                                    )
-                                ), true
-                            )
-                            System.setOut(stdout)
-                        } catch (ignore: IOException) {
-                            System.err.println("Unable to open output (stdout) log file.")
-                            exitProcess(1)
-                        }
-                        try {
-                            val stderr = PrintStream(
-                                BufferedOutputStream(
-                                    FileOutputStream("$logsDir$nickname.err", true)
-                                ), true
-                            )
-                            System.setErr(stderr)
-                        } catch (ignore: IOException) {
-                            System.err.println("Unable to open error (stderr) log file.")
-                            exitProcess(1)
-                        }
+                    try {
+                        val stderr = PrintStream(
+                            BufferedOutputStream(
+                                FileOutputStream("$logsDir$nickname.err", true)
+                            ), true
+                        )
+                        System.setErr(stderr)
+                    } catch (ignore: IOException) {
+                        System.err.println("Unable to open error (stderr) log file.")
+                        exitProcess(1)
                     }
-
-                    // Start the bot
-                    Mobibot(nickname, channel, logsDir, p).connect()
                 }
+
+                // Start the bot
+                Mobibot(nickname, channel, logsDir, p).connect()
             }
         }
     }
