@@ -38,18 +38,27 @@ import org.pircbotx.Colors
 import org.pircbotx.PircBotX
 import org.pircbotx.hooks.events.PrivateMessageEvent
 import org.pircbotx.hooks.types.GenericMessageEvent
+import org.slf4j.Logger
+import java.io.BufferedInputStream
+import java.io.BufferedOutputStream
 import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStreamReader
+import java.io.ObjectInputStream
+import java.io.ObjectOutputStream
 import java.net.URL
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
+import java.nio.file.Files
+import java.nio.file.Paths
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.Date
 import java.util.Properties
 import java.util.stream.Collectors
+import kotlin.io.path.exists
+import kotlin.io.path.fileSize
 
 /**
  * Miscellaneous utilities.
@@ -189,6 +198,29 @@ object Utils {
     }
 
     /**
+     * Load data.
+     */
+    @JvmStatic
+    fun loadData(file: String, default: Any, logger: Logger, description: String): Any {
+        val serialFile = Paths.get(file)
+        if (serialFile.exists() && serialFile.fileSize() > 0) {
+            try {
+                ObjectInputStream(
+                    BufferedInputStream(Files.newInputStream(serialFile))
+                ).use { input ->
+                    if (logger.isDebugEnabled) logger.debug("Loading the ${description}.")
+                    return input.readObject()
+                }
+            } catch (e: IOException) {
+                logger.error("An IO error occurred loading the ${description}.", e)
+            } catch (e: ClassNotFoundException) {
+                logger.error("An error occurred loading the {$description}.", e)
+            }
+        }
+        return default
+    }
+
+    /**
      * Returns {@code true} if the list does not contain the given string.
      */
     @JvmStatic
@@ -237,6 +269,23 @@ object Utils {
      */
     @JvmStatic
     fun String?.reverseColor(): String = colorize(Colors.REVERSE)
+
+    /**
+     * Save data
+     */
+    @JvmStatic
+    fun saveData(file: String, data: Any, logger: Logger, description: String) {
+        try {
+            BufferedOutputStream(Files.newOutputStream(Paths.get(file))).use { bos ->
+                ObjectOutputStream(bos).use { output ->
+                    if (logger.isDebugEnabled) logger.debug("Saving the ${description}.")
+                    output.writeObject(data)
+                }
+            }
+        } catch (e: IOException) {
+            logger.error("Unable to save the ${description}.", e)
+        }
+    }
 
     /**
      * Send a formatted commands/modules, etc. list.

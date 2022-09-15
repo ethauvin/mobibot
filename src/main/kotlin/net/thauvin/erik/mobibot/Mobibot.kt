@@ -65,6 +65,7 @@ import net.thauvin.erik.mobibot.commands.links.LinksMgr
 import net.thauvin.erik.mobibot.commands.links.Posting
 import net.thauvin.erik.mobibot.commands.links.Tags
 import net.thauvin.erik.mobibot.commands.links.View
+import net.thauvin.erik.mobibot.commands.seen.Seen
 import net.thauvin.erik.mobibot.commands.tell.Tell
 import net.thauvin.erik.mobibot.modules.Calc
 import net.thauvin.erik.mobibot.modules.CryptoPrices
@@ -113,7 +114,10 @@ class Mobibot(nickname: String, val channel: String, logsDirPath: String, p: Pro
     // Commands and Modules
     private val addons: Addons
 
-    // Tell module
+    // Seen command
+    private val seen: Seen
+
+    // Tell command
     private val tell: Tell
 
     /** Logger. */
@@ -231,6 +235,8 @@ class Mobibot(nickname: String, val channel: String, logsDirPath: String, p: Pro
             with(event.getBot<PircBotX>()) {
                 if (user.nick == nick) {
                     LinksMgr.twitter.notification("$nick has left ${event.channel.name} on irc://$serverHostname")
+                } else {
+                    seen.add(user.nick)
                 }
             }
         }
@@ -253,7 +259,7 @@ class Mobibot(nickname: String, val channel: String, logsDirPath: String, p: Pro
                 Constants.PROPS_ARG,
                 Constants.PROPS_ARG.substring(0, 1),
                 "Use alternate properties file"
-            ).default("./mobibot.properties")
+            ).default("./${ReleaseInfo.PROJECT}.properties")
             val version by parser.option(
                 ArgType.Boolean,
                 Constants.VERSION_ARG,
@@ -355,6 +361,7 @@ class Mobibot(nickname: String, val channel: String, logsDirPath: String, p: Pro
                 nickservCustomMessage = identMsg
             }
             isAutoReconnect = true
+
             //socketConnectTimeout = Constants.CONNECT_TIMEOUT
             //socketTimeout = Constants.CONNECT_TIMEOUT
             //messageDelay = StaticDelay(500)
@@ -388,6 +395,11 @@ class Mobibot(nickname: String, val channel: String, logsDirPath: String, p: Pro
         addons.add(Posting())
         addons.add(Recap())
         addons.add(Say())
+
+        // Seen command
+        seen = Seen("${logsDirPath}${nickname}-seen.ser")
+        addons.add(seen)
+
         addons.add(Tags())
 
         // Tell command

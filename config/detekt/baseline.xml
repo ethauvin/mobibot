@@ -52,11 +52,13 @@
     <ID>NestedBlockDepth:LinksMgr.kt$LinksMgr$override fun commandResponse(channel: String, args: String, event: GenericMessageEvent)</ID>
     <ID>NestedBlockDepth:Lookup.kt$Lookup$override fun commandResponse(channel: String, cmd: String, args: String, event: GenericMessageEvent)</ID>
     <ID>NestedBlockDepth:Posting.kt$Posting$override fun commandResponse(channel: String, args: String, event: GenericMessageEvent)</ID>
+    <ID>NestedBlockDepth:Seen.kt$Seen$fun add(nick: String)</ID>
+    <ID>NestedBlockDepth:Seen.kt$Seen$override fun commandResponse(channel: String, args: String, event: GenericMessageEvent)</ID>
     <ID>NestedBlockDepth:StockQuote.kt$StockQuote.Companion$@JvmStatic @Throws(ModuleException::class) fun getQuote(symbol: String, apiKey: String?): List&lt;Message&gt;</ID>
     <ID>NestedBlockDepth:Tell.kt$Tell$fun send(event: GenericUserEvent)</ID>
-    <ID>NestedBlockDepth:TellMessagesMgr.kt$TellMessagesMgr$@JvmStatic fun load(file: String): List&lt;TellMessage&gt;</ID>
-    <ID>NestedBlockDepth:TellMessagesMgr.kt$TellMessagesMgr$@JvmStatic fun save(file: String, messages: List&lt;TellMessage?&gt;?)</ID>
     <ID>NestedBlockDepth:TwitterOAuth.kt$TwitterOAuth$@JvmStatic @Throws(TwitterException::class, IOException::class) fun main(args: Array&lt;String&gt;)</ID>
+    <ID>NestedBlockDepth:Utils.kt$Utils$@JvmStatic fun loadData(file: String, default: Any, logger: Logger, description: String): Any</ID>
+    <ID>NestedBlockDepth:Utils.kt$Utils$@JvmStatic fun saveData(file: String, data: Any, logger: Logger, description: String)</ID>
     <ID>NestedBlockDepth:Weather2.kt$Weather2$override fun run(channel: String, cmd: String, args: String, event: GenericMessageEvent)</ID>
     <ID>NestedBlockDepth:Weather2.kt$Weather2.Companion$@JvmStatic @Throws(ModuleException::class) fun getWeather(query: String, apiKey: String?): List&lt;Message&gt;</ID>
     <ID>ReturnCount:Addons.kt$Addons$fun exec(channel: String, cmd: String, args: String, event: GenericMessageEvent): Boolean</ID>

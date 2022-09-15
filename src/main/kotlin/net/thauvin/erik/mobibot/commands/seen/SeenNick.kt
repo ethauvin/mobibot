@@ -1,5 +1,5 @@
 /*
- * InfoTest.kt
+ * SeenNick.kt
  *
  * Copyright (c) 2004-2022, Erik C. Thauvin (erik@thauvin.net)
  * All rights reserved.
@@ -30,24 +30,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package net.thauvin.erik.mobibot.commands
+package net.thauvin.erik.mobibot.commands.seen
 
-import assertk.assertThat
-import assertk.assertions.isEqualTo
-import net.thauvin.erik.mobibot.commands.Info.Companion.toUptime
-import org.testng.annotations.Test
+import java.io.Serializable
 
-class InfoTest {
-    @Test
-    fun testToUptime() {
-        assertThat(547800300076L.toUptime(), "full").isEqualTo("17 years 2 months 2 weeks 1 day 6 hours 45 minutes")
-        assertThat(24300000L.toUptime(), "hours minutes").isEqualTo("6 hours 45 minutes")
-        assertThat(110700000L.toUptime(), "days hours minutes").isEqualTo("1 day 6 hours 45 minutes")
-        assertThat(1320300000L.toUptime(), "weeks days hours minutes").isEqualTo("2 weeks 1 day 6 hours 45 minutes")
-        assertThat(2700000L.toUptime(), "45 minutes").isEqualTo("45 minutes")
-        assertThat(60000L.toUptime(), "1 minute").isEqualTo("1 minute")
-        assertThat(59000L.toUptime(), "59 seconds").isEqualTo("59 seconds")
-        assertThat(0L.toUptime(), "0 second").isEqualTo("0 second")
-
+data class SeenNick(var nick: String, var last: Long = System.currentTimeMillis()) : Serializable {
+    companion object {
+        private const val serialVersionUID = 1L
     }
 }

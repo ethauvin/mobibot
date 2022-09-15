@@ -63,7 +63,7 @@ class Info(private val tell: Tell) : AbstractCommand() {
          */
         @JvmStatic
         fun Long.toUptime(): String {
-            this.toDuration(DurationUnit.MILLISECONDS).toComponents { wholeDays, hours, minutes, _, _ ->
+            this.toDuration(DurationUnit.MILLISECONDS).toComponents { wholeDays, hours, minutes, seconds, _ ->
                 val years = wholeDays / 365
                 var days = wholeDays % 365
                 val months = days / 30
@@ -88,7 +88,11 @@ class Info(private val tell: Tell) : AbstractCommand() {
                         append(hours).append(" hour".plural(hours.toLong())).append(' ')
                     }
 
-                    append(minutes).append(" minute".plural(minutes.toLong()))
+                    if (minutes > 0) {
+                        append(minutes).append(" minute".plural(minutes.toLong()))
+                    } else {
+                        append(seconds).append(" second".plural(seconds.toLong()))
+                    }
 
                     return toString()
                 }
