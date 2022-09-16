@@ -92,6 +92,7 @@ import org.pircbotx.hooks.events.MessageEvent
 import org.pircbotx.hooks.events.NickChangeEvent
 import org.pircbotx.hooks.events.PartEvent
 import org.pircbotx.hooks.events.PrivateMessageEvent
+import org.pircbotx.hooks.events.QuitEvent
 import org.pircbotx.hooks.types.GenericMessageEvent
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -250,6 +251,12 @@ class Mobibot(nickname: String, val channel: String, logsDirPath: String, p: Pro
                     seen.add(user.nick)
                 }
             }
+        }
+    }
+
+    override fun onQuit(event: QuitEvent?) {
+        event?.user?.let { user ->
+            seen.add(user.nick)
         }
     }
 
