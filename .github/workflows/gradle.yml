@@ -58,6 +58,8 @@ jobs:
           TWITTER_HANDLE: ${{ secrets.TWITTER_HANDLE }}
           TWITTER_TOKEN: ${{ secrets.TWITTER_TOKEN }}
           TWITTER_TOKENSECRET: ${{ secrets.TWITTER_TOKENSECRET }}
+          WOLFRAM_API_KEY: ${{ secrets.WOLFRAM_API_KEY }}
+          WOLFRAM_UNITS: ${{ secrets.WOLFRAM_UNITS }}
         run: ./gradlew build check --stacktrace
 
       - name: SonarCloud
