@@ -32,6 +32,7 @@
 
 package net.thauvin.erik.mobibot.commands.seen
 
+import com.google.common.collect.ImmutableSortedSet
 import net.thauvin.erik.mobibot.Utils.bot
 import net.thauvin.erik.mobibot.Utils.helpFormat
 import net.thauvin.erik.mobibot.Utils.loadData
@@ -39,19 +40,23 @@ import net.thauvin.erik.mobibot.Utils.saveData
 import net.thauvin.erik.mobibot.Utils.sendMessage
 import net.thauvin.erik.mobibot.commands.AbstractCommand
 import net.thauvin.erik.mobibot.commands.Info.Companion.toUptime
+import org.pircbotx.User
 import org.pircbotx.hooks.types.GenericMessageEvent
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import java.util.TreeMap
+
 
 class Seen(private val serialObject: String) : AbstractCommand() {
     private val logger: Logger = LoggerFactory.getLogger(Seen::class.java)
-    val seenNicks: MutableList<SeenNick> = mutableListOf()
+    val seenNicks = TreeMap<String, SeenNick>(NickComparator())
 
     override val name = "seen"
     override val help = listOf("To view when a nickname was last seen:", helpFormat("%c $name <nick>"))
     override val isOpOnly = false
     override val isPublic = true
     override val isVisible = true
+
 
     override fun commandResponse(channel: String, args: String, event: GenericMessageEvent) {
         if (isEnabled()) {
@@ -63,12 +68,11 @@ class Seen(private val serialObject: String) : AbstractCommand() {
                         return
                     }
                 }
-                seenNicks.forEach {
-                    if (it.nick.equals(args, true)) {
-                        val lastSeen = System.currentTimeMillis() - it.last
-                        event.sendMessage("${it.nick} was last seen on $channel ${lastSeen.toUptime()} ago.")
-                        return
-                    }
+                if (seenNicks.containsKey(args)) {
+                    val seenNick = seenNicks.getValue(args)
+                    val lastSeen = System.currentTimeMillis() - seenNick.lastSeen
+                    event.sendMessage("${seenNick.nick} was last seen on $channel ${lastSeen.toUptime()} ago.")
+                    return
                 }
                 event.sendMessage("I haven't seen $args on $channel lately.")
             } else {
@@ -79,15 +83,16 @@ class Seen(private val serialObject: String) : AbstractCommand() {
 
     fun add(nick: String) {
         if (isEnabled()) {
-            seenNicks.forEach {
-                if (it.nick.equals(nick, true)) {
-                    if (it.nick != nick) it.nick = nick
-                    it.last = System.currentTimeMillis()
-                    save()
-                    return
-                }
+            seenNicks[nick] = SeenNick(nick, System.currentTimeMillis())
+            save()
+        }
+    }
+
+    fun add(users: ImmutableSortedSet<User>) {
+        if (isEnabled()) {
+            users.forEach {
+                seenNicks[it.nick] = SeenNick(it.nick, System.currentTimeMillis())
             }
-            seenNicks.add(SeenNick(nick))
             save()
         }
     }
@@ -99,12 +104,14 @@ class Seen(private val serialObject: String) : AbstractCommand() {
     fun load() {
         if (isEnabled()) {
             @Suppress("UNCHECKED_CAST")
-            seenNicks += loadData(
-                serialObject,
-                mutableListOf<SeenNick>(),
-                logger,
-                "seen nicknames"
-            ) as MutableList<SeenNick>
+            seenNicks.putAll(
+                loadData(
+                    serialObject,
+                    TreeMap<String, SeenNick>(),
+                    logger,
+                    "seen nicknames"
+                ) as TreeMap<String, SeenNick>
+            )
         }
     }
 

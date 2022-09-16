@@ -214,7 +214,7 @@ object Utils {
             } catch (e: IOException) {
                 logger.error("An IO error occurred loading the ${description}.", e)
             } catch (e: ClassNotFoundException) {
-                logger.error("An error occurred loading the {$description}.", e)
+                logger.error("An error occurred loading the ${description}.", e)
             }
         }
         return default

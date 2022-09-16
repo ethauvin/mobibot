@@ -173,6 +173,7 @@ class Mobibot(nickname: String, val channel: String, logsDirPath: String, p: Pro
         event?.let {
             with(event.getBot<PircBotX>()) {
                 LinksMgr.twitter.notification("$nick disconnected from irc://$serverHostname")
+                seen.add(userChannelDao.getChannel(channel).users)
             }
         }
         LinksMgr.twitter.shutdown()
@@ -197,8 +198,10 @@ class Mobibot(nickname: String, val channel: String, logsDirPath: String, p: Pro
             with(event.getBot<PircBotX>()) {
                 if (user.nick == nick) {
                     LinksMgr.twitter.notification("$nick has joined ${event.channel.name} on irc://$serverHostname")
+                    seen.add(userChannelDao.getChannel(channel).users)
                 } else {
                     tell.send(event)
+                    seen.add(user.nick)
                 }
             }
         }
@@ -228,7 +231,13 @@ class Mobibot(nickname: String, val channel: String, logsDirPath: String, p: Pro
     }
 
     override fun onNickChange(event: NickChangeEvent?) {
-        event?.let { tell.send(event) }
+        event?.let {
+            tell.send(event)
+            if (!it.oldNick.equals(it.newNick, true)) {
+                seen.add(it.oldNick)
+            }
+            seen.add(it.newNick)
+        }
     }
 
     override fun onPart(event: PartEvent?) {
@@ -236,6 +245,7 @@ class Mobibot(nickname: String, val channel: String, logsDirPath: String, p: Pro
             with(event.getBot<PircBotX>()) {
                 if (user.nick == nick) {
                     LinksMgr.twitter.notification("$nick has left ${event.channel.name} on irc://$serverHostname")
+                    seen.add(userChannelDao.getChannel(channel).users)
                 } else {
                     seen.add(user.nick)
                 }
@@ -424,10 +434,10 @@ class Mobibot(nickname: String, val channel: String, logsDirPath: String, p: Pro
         addons.add(Ping())
         addons.add(RockPaperScissors())
         addons.add(StockQuote())
-        addons.add(Weather2())
-        addons.add(WorldTime())
         addons.add(War())
+        addons.add(Weather2())
         addons.add(WolframAlpha())
+        addons.add(WorldTime())
 
         // Sort the addons
         addons.names.sort()

@@ -1,5 +1,5 @@
 /*
- * SeenTest.kt
+ * SeenComparator.kt
  *
  * Copyright (c) 2004-2022, Erik C. Thauvin (erik@thauvin.net)
  * All rights reserved.
@@ -32,55 +32,13 @@
 
 package net.thauvin.erik.mobibot.commands.seen
 
-import assertk.assertThat
-import assertk.assertions.isEqualTo
-import assertk.assertions.isGreaterThan
-import assertk.assertions.isNotEqualTo
-import assertk.assertions.isTrue
-import org.testng.annotations.AfterClass
-import org.testng.annotations.BeforeClass
-import org.testng.annotations.Test
-import kotlin.io.path.deleteIfExists
-import kotlin.io.path.fileSize
+import java.io.Serializable
 
-class SeenTest {
-    private val tmpFile = kotlin.io.path.createTempFile(suffix = ".ser")
-    private val seen = Seen(tmpFile.toAbsolutePath().toString())
-    private val nick = "ErikT"
-
-    @BeforeClass
-    fun saveTest() {
-        seen.add("ErikT")
-        assertThat(tmpFile.fileSize(), "temporary file is empty").isGreaterThan(0)
+class NickComparator: Comparator<String>, Serializable {
+    override fun compare(a: String, b: String): Int {
+        return a.lowercase().compareTo(b.lowercase())
     }
-
-    @AfterClass(alwaysRun = true)
-    fun afterClass() {
-        tmpFile.deleteIfExists()
-    }
-
-    @Test(priority = 1)
-    fun loadTest() {
-        seen.clear()
-        assertThat(seen.seenNicks.isEmpty(), "nicknames map is not empty").isTrue()
-        seen.load()
-        assertThat(seen.seenNicks.containsKey(nick), "nick is missing").isTrue()
-    }
-
-    @Test
-    fun addTest() {
-        val last = seen.seenNicks[nick]?.lastSeen
-        seen.add(nick.lowercase())
-        assertThat(seen.seenNicks.size, "nick is duplicated").isEqualTo(1)
-        assertThat(seen.seenNicks[nick]?.lastSeen, "last seen is not different").isNotEqualTo(last)
-        assertThat(seen.seenNicks[nick]?.nick, "nick is not lowercase").isEqualTo(nick.lowercase())
-    }
-
-    @Test(priority = 10)
-    fun clearTest() {
-        seen.clear()
-        seen.save()
-        seen.load()
-        assertThat(seen.seenNicks.size, "nicknames are not empty.").isEqualTo(0)
+    companion object {
+        private const val serialVersionUID = 1L
     }
 }

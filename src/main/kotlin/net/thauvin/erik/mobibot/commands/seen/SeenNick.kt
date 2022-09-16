@@ -34,7 +34,7 @@ package net.thauvin.erik.mobibot.commands.seen
 
 import java.io.Serializable
 
-data class SeenNick(var nick: String, var last: Long = System.currentTimeMillis()) : Serializable {
+data class SeenNick(val nick: String, val lastSeen: Long) : Serializable {
     companion object {
         private const val serialVersionUID = 1L
     }
