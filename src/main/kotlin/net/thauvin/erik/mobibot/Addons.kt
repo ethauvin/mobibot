@@ -37,12 +37,15 @@ import net.thauvin.erik.mobibot.commands.links.LinksMgr
 import net.thauvin.erik.mobibot.modules.AbstractModule
 import org.pircbotx.hooks.events.PrivateMessageEvent
 import org.pircbotx.hooks.types.GenericMessageEvent
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import java.util.Properties
 
 /**
  * Modules and Commands addons.
  */
 class Addons(private val props: Properties) {
+    private val logger: Logger = LoggerFactory.getLogger(Addons::class.java)
     private val disabledModules = props.getProperty("disabled-modules", "").split(LinksMgr.TAG_MATCH.toRegex())
     private val disableCommands = props.getProperty("disabled-commands", "").split(LinksMgr.TAG_MATCH.toRegex())
 
@@ -66,6 +69,10 @@ class Addons(private val props: Properties) {
                     modules.add(this)
                     names.modules.add(name)
                     names.commands.addAll(commands)
+                } else {
+                    if (logger.isDebugEnabled) {
+                        logger.debug("Module $name is disabled.")
+                    }
                 }
             }
         }
@@ -90,6 +97,10 @@ class Addons(private val props: Properties) {
                         } else {
                             names.commands.add(name)
                         }
+                    }
+                } else {
+                    if (logger.isDebugEnabled) {
+                        logger.debug("Command $name is disabled.")
                     }
                 }
             }
