@@ -79,6 +79,7 @@ import net.thauvin.erik.mobibot.modules.RockPaperScissors
 import net.thauvin.erik.mobibot.modules.StockQuote
 import net.thauvin.erik.mobibot.modules.War
 import net.thauvin.erik.mobibot.modules.Weather2
+import net.thauvin.erik.mobibot.modules.WolframAlpha
 import net.thauvin.erik.mobibot.modules.WorldTime
 import net.thauvin.erik.semver.Version
 import org.pircbotx.Configuration
@@ -426,6 +427,7 @@ class Mobibot(nickname: String, val channel: String, logsDirPath: String, p: Pro
         addons.add(Weather2())
         addons.add(WorldTime())
         addons.add(War())
+        addons.add(WolframAlpha())
 
         // Sort the addons
         addons.names.sort()
