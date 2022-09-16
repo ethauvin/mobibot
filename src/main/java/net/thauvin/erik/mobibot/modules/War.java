@@ -47,21 +47,19 @@ import static net.thauvin.erik.mobibot.Utils.bold;
  * @since 1.0
  */
 public final class War extends AbstractModule {
-    // Random
-    private static final SecureRandom RANDOM = new SecureRandom();
-    // War command
-    private static final String WAR_CMD = "war";
-
-    private static final String[] HEARTS =
-            {"🂱", "🂾", "🂽", "🂻", "🂺", "🂹", "🂸", "🂷", "🂶", "🂵", "🂴", "🂳", "🂲"};
-    private static final String[] SPADES =
-            {"🂡", "🂮", "🂭", "🂫", "🂪", "🂩", "🂨", "🂧", "🂦", "🂥", "🂤", "🂣", "🂢"};
-    private static final String[] DIAMONDS =
-            {"🃁", "🃎", "🃍", "🃋", "🃊", "🃉", "🃈", "🃇", "🃆", "🃅", "🃄", "🃃", "🃂"};
     private static final String[] CLUBS =
             {"🃑", "🃞", "🃝", "🃛", "🃚", "🃙", "🃘", "🃗", "🃖", "🃕", "🃔", "🃓", "🃒"};
-
+    private static final String[] DIAMONDS =
+            {"🃁", "🃎", "🃍", "🃋", "🃊", "🃉", "🃈", "🃇", "🃆", "🃅", "🃄", "🃃", "🃂"};
+    private static final String[] HEARTS =
+            {"🂱", "🂾", "🂽", "🂻", "🂺", "🂹", "🂸", "🂷", "🂶", "🂵", "🂴", "🂳", "🂲"};
+    // Random
+    private static final SecureRandom RANDOM = new SecureRandom();
+    private static final String[] SPADES =
+            {"🂡", "🂮", "🂭", "🂫", "🂪", "🂩", "🂨", "🂧", "🂦", "🂥", "🂤", "🂣", "🂢"};
     private static final String[][] DECK = {HEARTS, SPADES, DIAMONDS, CLUBS};
+    // War command
+    private static final String WAR_CMD = "war";
 
     /**
      * The default constructor.
@@ -73,12 +71,6 @@ public final class War extends AbstractModule {
 
         help.add("To play war:");
         help.add(Utils.helpFormat("%c " + WAR_CMD));
-    }
-
-    @NotNull
-    @Override
-    public String getName() {
-        return "War";
     }
 
     /**
@@ -107,5 +99,11 @@ public final class War extends AbstractModule {
                     "  » You " + result + '!');
 
         } while (i == y);
+    }
+
+    @NotNull
+    @Override
+    public String getName() {
+        return "War";
     }
 }
