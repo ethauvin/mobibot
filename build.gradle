@@ -99,6 +99,7 @@ tasks.withType(Test).configureEach {
     }
 }
 
+
 task testAll(type: Test, group: 'verification', description: 'Run all tests.') {
     useTestNG() {
         suites('src/test/resources/testng.xml')
@@ -176,6 +177,12 @@ incrementBuildMeta {
         } else {
             println 'No increment with CI.'
         }
+    }
+}
+
+kover {
+    instrumentation {
+        excludeTasks.add('testAll')
     }
 }
 
