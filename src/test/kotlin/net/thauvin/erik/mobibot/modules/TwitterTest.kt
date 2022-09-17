@@ -54,7 +54,7 @@ class TwitterTest : LocalProperties() {
             }
         }
 
-    @Test
+    @Test(groups = ["modules"])
     @Throws(ModuleException::class)
     fun testPostTwitter() {
         val msg = "Testing Twitter API from $ci"

@@ -40,7 +40,7 @@ import net.thauvin.erik.mobibot.entries.EntryLink
 import org.testng.annotations.Test
 
 class ViewTest {
-    @Test
+    @Test(groups = ["commands", "links"])
     fun testParseArgs() {
         val view = View()
 

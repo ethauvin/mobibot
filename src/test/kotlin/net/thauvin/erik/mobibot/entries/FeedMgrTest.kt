@@ -61,7 +61,7 @@ class FeedMgrTest {
         entries.backlogs = "https://www.mobitopia.org/mobibot/logs"
     }
 
-    @Test
+    @Test(groups = ["entries"])
     fun testFeedMgr() {
         // Load the feed
         assertThat(FeedsMgr.loadFeed(entries), "pubDate").isEqualTo("2021-10-31")

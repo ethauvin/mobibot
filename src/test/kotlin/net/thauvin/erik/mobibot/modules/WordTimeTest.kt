@@ -48,7 +48,7 @@ import java.time.ZoneId
  * The `WordTimeTest` class.
  */
 class WordTimeTest {
-    @Test
+    @Test(groups = ["modules"])
     fun testTime() {
         assertThat(time(), "no zone").matches(
             ("The time is ${Colors.BOLD}\\d{1,2}:\\d{2}${Colors.BOLD} " +
@@ -63,7 +63,7 @@ class WordTimeTest {
         assertThat(time("BEAT"), BEATS_KEYWORD).matches("[\\w ]+ .?@\\d{3}+.? .beats".toRegex())
     }
 
-    @Test
+    @Test(groups = ["modules"])
     fun testZones() {
         COUNTRIES_MAP.filter { it.value != BEATS_KEYWORD }.forEach {
             assertThat { ZoneId.of(it.value) }.isSuccess()

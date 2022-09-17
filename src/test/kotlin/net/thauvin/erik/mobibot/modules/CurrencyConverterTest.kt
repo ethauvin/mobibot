@@ -56,7 +56,7 @@ class CurrencyConverterTest {
         loadSymbols()
     }
 
-    @Test
+    @Test(groups = ["modules"])
     fun testConvertCurrency() {
         assertThat(
             convertCurrency("100 USD to EUR").msg,

@@ -55,7 +55,7 @@ class StockQuoteTest : LocalProperties() {
         return "${label}:[ ]+[0-9.]+".prependIndent()
     }
 
-    @Test
+    @Test(groups = ["modules"])
     @Throws(ModuleException::class)
     fun testGetQuote() {
         val apiKey = getProperty(StockQuote.ALPHAVANTAGE_API_KEY_PROP)

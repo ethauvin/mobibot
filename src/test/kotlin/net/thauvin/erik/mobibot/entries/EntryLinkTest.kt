@@ -58,7 +58,7 @@ class EntryLinkTest {
         listOf("tag1", "tag2", "tag3", "TAG4", "Tag5")
     )
 
-    @Test
+    @Test(groups = ["entries"])
     fun testAddDeleteComment() {
         var i = 0
         while (i < 5) {
@@ -91,7 +91,7 @@ class EntryLinkTest {
         assertThat(entryLink.deleteComment(comment), "comment is already deleted").isFalse()
     }
 
-    @Test
+    @Test(groups = ["entries"])
     fun testConstructor() {
         val tag = "test"
         val tags = listOf(SyndCategoryImpl().apply { name = tag })
@@ -101,7 +101,7 @@ class EntryLinkTest {
         assertThat(link.pinboardTags, "check pinboard tags").isEqualTo("nick,$tag")
     }
 
-    @Test
+    @Test(groups = ["entries"])
     fun testMatches() {
         assertThat(entryLink.matches("mobitopia"), "match mobitopia").isTrue()
         assertThat(entryLink.matches("skynx"), "match nick").isTrue()
@@ -112,7 +112,7 @@ class EntryLinkTest {
     }
 
 
-    @Test
+    @Test(groups = ["entries"])
     fun testTags() {
         val tags: List<SyndCategory> = entryLink.tags
         for ((i, tag) in tags.withIndex()) {

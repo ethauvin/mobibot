@@ -42,7 +42,7 @@ import org.testng.annotations.Test
  * The `JokeTest` class.
  */
 class JokeTest {
-    @Test
+    @Test(groups = ["modules"])
     @Throws(ModuleException::class)
     fun testRandomJoke() {
         assertThat(randomJoke().msg, "randomJoke() > 0").all {

@@ -50,7 +50,7 @@ class TellMessageTest {
         return Duration.between(date, LocalDateTime.now()).toMinutes() < 1
     }
 
-    @Test
+    @Test(groups = ["commands", "tell"])
     fun testTellMessage() {
         val message = "Test message."
         val recipient = "recipient"

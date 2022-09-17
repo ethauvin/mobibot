@@ -39,7 +39,7 @@ import assertk.assertions.matches
 import org.testng.annotations.Test
 
 class DiceTest {
-    @Test
+    @Test(groups = ["modules"])
     fun testRoll() {
         assertThat(Dice.roll(1, 1), "1d1").isEqualTo("\u00021\u0002")
         assertThat(Dice.roll(2, 1), "2d1")

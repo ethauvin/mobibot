@@ -68,7 +68,7 @@ class TellMessagesMgrTest {
         testFile.deleteIfExists()
     }
 
-    @Test
+    @Test(groups = ["commands", "tell"])
     fun cleanTest() {
         testMessages.add(TellMessage("sender", "recipient", "message").apply {
             queued = LocalDateTime.now().minusDays(maxDays)
@@ -79,7 +79,7 @@ class TellMessagesMgrTest {
         assertThat(testMessages.size, "size-- after clean").isEqualTo(size - 1)
     }
 
-    @Test
+    @Test(groups = ["commands", "tell"])
     fun loadTest() {
         val messages = TellMessagesMgr.load(testFile.toAbsolutePath().toString())
         for (i in messages.indices) {

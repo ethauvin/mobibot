@@ -41,7 +41,7 @@ import assertk.assertions.size
 import org.testng.annotations.Test
 
 class RecapTest {
-    @Test
+    @Test(groups = ["commands"])
     fun storeRecapTest() {
         for (i in 1..20) {
             Recap.storeRecap("sender$i", "test $i", false)

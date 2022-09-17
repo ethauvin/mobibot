@@ -44,7 +44,7 @@ import org.testng.annotations.Test
  * The `CalcTest` class.
  */
 class CalcTest {
-    @Test
+    @Test(groups = ["modules"])
     fun testCalculate() {
         assertThat(calculate("1 + 1"), "calculate(1+1)").isEqualTo("1+1 = ${2.bold()}")
         assertThat(calculate("1 -3"), "calculate(1 -3)").isEqualTo("1-3 = ${(-2).bold()}")

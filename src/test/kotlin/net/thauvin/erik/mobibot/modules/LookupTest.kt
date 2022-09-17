@@ -42,7 +42,7 @@ import org.testng.annotations.Test
  * The `Lookup Test` class.
  */
 class LookupTest {
-    @Test
+    @Test(groups = ["modules"])
     @Throws(Exception::class)
     fun testLookup() {
         var result = nslookup("apple.com")
@@ -52,7 +52,7 @@ class LookupTest {
         assertThat(result, "lookup(204.122.17.9)").contains("nix3.thauvin.us")
     }
 
-    @Test
+    @Test(groups = ["modules"])
     @Throws(Exception::class)
     fun testWhois() {
         val result = whois("17.178.96.59", Lookup.WHOIS_HOST)

@@ -55,13 +55,13 @@ import org.testng.annotations.Test
  * The `Weather2Test` class.
  */
 class Weather2Test : LocalProperties() {
-    @Test
+    @Test(groups = ["modules"])
     fun testFtoC() {
         val t = ftoC(32.0)
         assertThat(t.second, "32 °F is 0 °C").isEqualTo(0)
     }
 
-    @Test
+    @Test(groups = ["modules"])
     fun testGetCountry() {
         assertThat(getCountry("foo"), "not a country").isEqualTo(OWM.Country.UNITED_STATES)
         assertThat(getCountry("fr"), "fr is france").isEqualTo(OWM.Country.FRANCE)
@@ -73,13 +73,13 @@ class Weather2Test : LocalProperties() {
         }
     }
 
-    @Test
+    @Test(groups = ["modules"])
     fun testMphToKmh() {
         val w = mphToKmh(0.62)
         assertThat(w.second, "0.62 mph is 1 km/h").isEqualTo(1)
     }
 
-    @Test
+    @Test(groups = ["modules"])
     @Throws(ModuleException::class)
     fun testWeather() {
         var messages = getWeather("98204", getProperty(OWM_API_KEY_PROP))

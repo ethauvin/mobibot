@@ -41,7 +41,7 @@ import net.thauvin.erik.mobibot.LocalProperties
 import org.testng.annotations.Test
 
 class WolframAlphaTest : LocalProperties() {
-    @Test
+    @Test(groups = ["modules"])
     @Throws(ModuleException::class)
     fun queryWolframTest() {
         val apiKey = getProperty(WolframAlpha.WOLFRAM_API_KEY_PROP)

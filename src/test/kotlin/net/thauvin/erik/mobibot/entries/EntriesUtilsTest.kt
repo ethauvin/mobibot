@@ -59,17 +59,17 @@ class EntriesUtilsTest {
         }
     }
 
-    @Test
+    @Test(groups = ["entries"])
     fun buildLinkLabelTest() {
         assertThat(1.toLinkLabel()).isEqualTo("${Constants.LINK_CMD}2")
     }
 
-    @Test
+    @Test(groups = ["entries"])
     fun buildCommentTest() {
         assertThat(buildComment(0, 0, comment)).isEqualTo("${Constants.LINK_CMD}1.1: [nick] comment")
     }
 
-    @Test
+    @Test(groups = ["entries"])
     fun buildLinkTest() {
         for (i in links.indices) {
             assertThat(
@@ -81,7 +81,7 @@ class EntriesUtilsTest {
         assertThat(buildLink(0, links.first(), isView = true), "isView = true").contains("[+1]")
     }
 
-    @Test
+    @Test(groups = ["entries"])
     fun buildTagsTest() {
         for (i in links.indices) {
             assertThat(

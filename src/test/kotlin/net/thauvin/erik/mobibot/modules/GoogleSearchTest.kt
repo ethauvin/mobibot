@@ -51,7 +51,7 @@ import org.testng.annotations.Test
  * The `GoogleSearchTest` class.
  */
 class GoogleSearchTest : LocalProperties() {
-    @Test
+    @Test(groups = ["modules"])
     fun testAPIKeys() {
         assertThat(
             searchGoogle("", "apikey", "cssKey").first(),
@@ -65,7 +65,7 @@ class GoogleSearchTest : LocalProperties() {
             .isInstanceOf(ModuleException::class.java).hasNoCause()
     }
 
-    @Test(groups = ["no-ci"])
+    @Test(groups = ["no-ci", "modules"])
     @Throws(ModuleException::class)
     fun testSearchGoogle() {
         val apiKey = getProperty(GoogleSearch.GOOGLE_API_KEY_PROP)

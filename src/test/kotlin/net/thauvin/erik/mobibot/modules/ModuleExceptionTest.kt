@@ -74,7 +74,7 @@ class ModuleExceptionTest {
         assertThat(e, "get message").hasMessage(message)
     }
 
-    @Test
+    @Test(groups = ["modules"])
     fun testSanitizeMessage() {
         val apiKey = "1234567890"
         var e = ModuleException(debugMessage, message, IOException("URL http://foo.com?apiKey=$apiKey&userID=me"))

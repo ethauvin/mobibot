@@ -37,7 +37,7 @@ import assertk.assertions.isEqualTo
 import org.testng.annotations.Test
 
 class RockPaperScissorsTest {
-    @Test
+    @Test(groups = ["modules"])
     fun testWinLoseOrDraw() {
         assertThat(RockPaperScissors.winLoseOrDraw("scissors", "paper"), "scissors vs. paper").isEqualTo("win")
         assertThat(RockPaperScissors.winLoseOrDraw("paper", "rock"), "paper vs. rock").isEqualTo("win")

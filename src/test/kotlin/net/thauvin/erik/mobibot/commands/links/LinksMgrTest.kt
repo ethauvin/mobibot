@@ -44,19 +44,19 @@ import org.testng.annotations.Test
 class LinksMgrTest {
     private val linksMgr = LinksMgr()
 
-    @Test
+    @Test(groups = ["commands", "links"])
     fun fetchTitle() {
         assertThat(linksMgr.fetchTitle("https://erik.thauvin.net/"), "Erik").contains("Erik's Weblog")
         assertThat(linksMgr.fetchTitle("https://www.google.com/foo"), "Foo").isEqualTo(Constants.NO_TITLE)
     }
 
-    @Test
+    @Test(groups = ["commands", "links"])
     fun testMatches() {
         assertThat(linksMgr.matches("https://www.example.com/"), "https").isTrue()
         assertThat(linksMgr.matches("HTTP://erik.thauvin.net/blog/ Erik's Weblog"), "HTTP").isTrue()
     }
 
-    @Test
+    @Test(groups = ["commands", "links"])
     fun matchTagKeywordsTest() {
         linksMgr.setProperty(LinksMgr.KEYWORDS_PROP, "key1 key2,key3")
         val tags = mutableListOf<String>()

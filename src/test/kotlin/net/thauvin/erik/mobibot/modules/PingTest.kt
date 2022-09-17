@@ -41,12 +41,12 @@ import org.testng.annotations.Test
  * The `PingTest` class.
  */
 class PingTest {
-    @Test
+    @Test(groups = ["modules"])
     fun testPingsArray() {
         assertThat(Ping.PINGS, "Pings array is not empty.").isNotEmpty()
     }
 
-    @Test
+    @Test(groups = ["modules"])
     fun testRandomPing() {
         for (i in 0..9) {
             assertThat(Ping.PINGS, "Random ping $i").contains(randomPing())

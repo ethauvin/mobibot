@@ -59,7 +59,7 @@ class SeenTest {
         tmpFile.deleteIfExists()
     }
 
-    @Test(priority = 1)
+    @Test(priority = 1, groups = ["commands"])
     fun loadTest() {
         seen.clear()
         assertThat(seen.seenNicks.isEmpty(), "nicknames map is not empty").isTrue()
@@ -67,7 +67,7 @@ class SeenTest {
         assertThat(seen.seenNicks.containsKey(nick), "nick is missing").isTrue()
     }
 
-    @Test
+    @Test(groups = ["commands"])
     fun addTest() {
         val last = seen.seenNicks[nick]?.lastSeen
         seen.add(nick.lowercase())
@@ -76,7 +76,7 @@ class SeenTest {
         assertThat(seen.seenNicks[nick]?.nick, "nick is not lowercase").isEqualTo(nick.lowercase())
     }
 
-    @Test(priority = 10)
+    @Test(priority = 10, groups = ["commands"])
     fun clearTest() {
         seen.clear()
         seen.save()

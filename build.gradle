@@ -131,7 +131,6 @@ compileJava {
     options.compilerArgs += ['-Xlint:unchecked', '-Xlint:deprecation']
 }
 
-
 tasks.named("dependencyUpdates").configure {
     rejectVersionIf {
         isNonStable(it.candidate.version)

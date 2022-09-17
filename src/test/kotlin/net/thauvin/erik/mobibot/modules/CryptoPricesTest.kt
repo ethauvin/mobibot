@@ -53,7 +53,7 @@ class CryptoPricesTest {
         loadCurrencies()
     }
 
-    @Test
+    @Test(groups = ["modules"])
     @Throws(ModuleException::class)
     fun testMarketPrice() {
         var price = currentPrice(listOf("BTC"))
@@ -71,7 +71,7 @@ class CryptoPricesTest {
         }
     }
 
-    @Test
+    @Test(groups = ["modules"])
     fun testGetCurrencyName() {
         assertThat(getCurrencyName("USD")).isEqualTo("US Dollar")
         assertThat(getCurrencyName("EUR")).isEqualTo("Euro")

@@ -38,7 +38,7 @@ import net.thauvin.erik.mobibot.commands.Info.Companion.toUptime
 import org.testng.annotations.Test
 
 class InfoTest {
-    @Test
+    @Test(groups = ["commands"])
     fun testToUptime() {
         assertThat(547800300076L.toUptime(), "full").isEqualTo("17 years 2 months 2 weeks 1 day 6 hours 45 minutes")
         assertThat(24300000L.toUptime(), "hours minutes").isEqualTo("6 hours 45 minutes")
