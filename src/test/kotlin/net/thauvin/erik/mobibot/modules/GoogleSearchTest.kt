@@ -52,35 +52,35 @@ import org.testng.annotations.Test
  */
 class GoogleSearchTest : LocalProperties() {
     @Test
+    fun testAPIKeys() {
+        assertThat(
+            searchGoogle("", "apikey", "cssKey").first(),
+            "empty query"
+        ).isInstanceOf(ErrorMessage::class.java)
+
+        assertThat { searchGoogle("test", "", "apiKey") }.isFailure()
+            .isInstanceOf(ModuleException::class.java).hasNoCause()
+
+        assertThat { searchGoogle("test", "apiKey", "") }.isFailure()
+            .isInstanceOf(ModuleException::class.java).hasNoCause()
+    }
+
+    @Test(groups = ["no-ci"])
     @Throws(ModuleException::class)
     fun testSearchGoogle() {
         val apiKey = getProperty(GoogleSearch.GOOGLE_API_KEY_PROP)
         val cseKey = getProperty(GoogleSearch.GOOGLE_CSE_KEY_PROP)
-        try {
-            var messages = searchGoogle("mobitopia", apiKey, cseKey)
-            assertThat(messages, "mobitopia results not empty").isNotEmpty()
-            assertThat(messages[0].msg, "found mobibtopia").contains("mobitopia", true)
 
-            messages = searchGoogle("aapl", apiKey, cseKey)
-            assertThat(messages, "aapl results not empty").isNotEmpty()
-            assertThat(messages[0].msg, "found apple").contains("apple", true)
+        try {
+            var messages = searchGoogle("mobibot", apiKey, cseKey)
+            assertThat(messages, "mobibot results not empty").isNotEmpty()
+            assertThat(messages[0].msg, "found mobibot").contains("mobibot", true)
 
             messages = searchGoogle("adadflkjl", apiKey, cseKey)
             assertThat(messages[0], "not found").all {
                 isInstanceOf(ErrorMessage::class.java)
                 prop(Message::msg).isEqualTo("No results found.")
             }
-
-            assertThat(
-                searchGoogle("", "apikey", "cssKey").first(),
-                "empty query"
-            ).isInstanceOf(ErrorMessage::class.java)
-
-            assertThat { searchGoogle("test", "", "apiKey") }.isFailure()
-                .isInstanceOf(ModuleException::class.java).hasNoCause()
-
-            assertThat { searchGoogle("test", "apiKey", "") }.isFailure()
-                .isInstanceOf(ModuleException::class.java).hasNoCause()
         } catch (e: ModuleException) {
             // Avoid displaying api keys in CI logs
             if ("true" == System.getenv("CI")) {

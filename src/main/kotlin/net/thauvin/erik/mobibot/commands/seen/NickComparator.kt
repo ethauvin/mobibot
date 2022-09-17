@@ -34,10 +34,11 @@ package net.thauvin.erik.mobibot.commands.seen
 
 import java.io.Serializable
 
-class NickComparator: Comparator<String>, Serializable {
+class NickComparator : Comparator<String>, Serializable {
     override fun compare(a: String, b: String): Int {
         return a.lowercase().compareTo(b.lowercase())
     }
+
     companion object {
         private const val serialVersionUID = 1L
     }

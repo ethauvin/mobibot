@@ -19,16 +19,16 @@ final def deployDir = 'deploy'
 final def semverProcessor = "net.thauvin.erik:semver:1.2.0"
 
 def isNonStable = { String version ->
-  def stableKeyword = ['RELEASE', 'FINAL', 'GA', 'JRE'].any { it -> version.toUpperCase().contains(it) }
-  def regex = /^[0-9,.v-]+(-r)?$/
-  return !stableKeyword && !(version ==~ regex)
+    def stableKeyword = ['RELEASE', 'FINAL', 'GA', 'JRE'].any { it -> version.toUpperCase().contains(it) }
+    def regex = /^[0-9,.v-]+(-r)?$/
+    return !stableKeyword && !(version ==~ regex)
 }
 
 mainClassName = packageName + '.Mobibot'
 
 ext.versions = [
-    log4j: '2.18.0',
-    pmd  : '6.49.0',
+        log4j: '2.18.0',
+        pmd  : '6.49.0',
 ]
 
 repositories {
@@ -46,12 +46,12 @@ dependencies {
     //implementation 'com.github.pircbotx:pircbotx:-SNAPSHOT'
     implementation fileTree(dir: 'lib', include: '*.jar')
 
-    // Commons
+    // Commons (mostly for PircBotX)
     implementation 'org.apache.commons:commons-lang3:3.12.0'
     implementation 'org.apache.commons:commons-text:1.9'
     implementation 'commons-codec:commons-codec:1.15'
     implementation 'commons-net:commons-net:3.8.0'
-  
+
     // Google
     implementation 'com.google.code.gson:gson:2.9.1'
     implementation 'com.google.guava:guava:31.1-jre'
@@ -60,7 +60,7 @@ dependencies {
     implementation platform('org.jetbrains.kotlin:kotlin-bom')
     implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4'
-    implementation'org.jetbrains.kotlinx:kotlinx-cli:0.3.5'
+    implementation 'org.jetbrains.kotlinx:kotlinx-cli:0.3.5'
 
     // Logging
     implementation 'org.slf4j:slf4j-api:2.0.1'
@@ -87,12 +87,21 @@ dependencies {
 }
 
 test {
+    useTestNG() {
+        suites('src/test/resources/testng-ci.xml')
+    }
+}
+
+tasks.withType(Test).configureEach {
     testLogging {
         exceptionFormat = 'full'
         events('skipped', 'failed')
     }
+}
+
+task testAll(type: Test, group: 'verification', description: 'Run all tests.') {
     useTestNG() {
-        options.suites('src/test/resources/testng.xml')
+        suites('src/test/resources/testng.xml')
     }
 }
 
@@ -112,16 +121,17 @@ tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
 }
 
-compileJava {
-    dependsOn 'incrementBuildMeta'
-    options.compilerArgs += ['-Xlint:unchecked', '-Xlint:deprecation']
-}
-
 tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
     kotlinOptions {
         jvmTarget = java.targetCompatibility.toString()
     }
 }
+
+compileJava {
+    dependsOn 'incrementBuildMeta'
+    options.compilerArgs += ['-Xlint:unchecked', '-Xlint:deprecation']
+}
+
 
 tasks.named("dependencyUpdates").configure {
     rejectVersionIf {
@@ -164,7 +174,7 @@ incrementBuildMeta {
         if (!System.getenv('CI')) {
             buildMeta = sprintf("%03d", (buildMeta as Integer) + 1)
         } else {
-            println 'No increment on CIs.'
+            println 'No increment with CI.'
         }
     }
 }
@@ -209,5 +219,5 @@ task deploy {
 task release {
     group = 'Publishing'
     description = 'Releases new version.'
-    dependsOn(wrapper, 'deploy')
+    dependsOn(wrapper, deploy)
 }

@@ -1,9 +1,14 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd" >
-<suite name="testng">
-    <test name="all">
+<suite name="testng-ci">
+    <test name="ci">
+        <groups>
+            <run>
+                <exclude name="no-ci"/>
+            </run>
+        </groups>
         <packages>
             <package name="net.thauvin.erik.mobibot.*"/>
         </packages>
     </test>
 </suite>
+

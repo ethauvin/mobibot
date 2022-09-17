@@ -31,6 +31,7 @@
  */
 package net.thauvin.erik.mobibot.modules
 
+import net.thauvin.erik.mobibot.ReleaseInfo
 import net.thauvin.erik.mobibot.Utils.capitalise
 import net.thauvin.erik.mobibot.Utils.encodeUrl
 import net.thauvin.erik.mobibot.Utils.helpFormat
@@ -64,8 +65,10 @@ class GoogleSearch : ThreadedModule() {
         if (args.isNotBlank()) {
             try {
                 val results = searchGoogle(
-                    args, properties[GOOGLE_API_KEY_PROP],
-                    properties[GOOGLE_CSE_KEY_PROP]
+                    args,
+                    properties[GOOGLE_API_KEY_PROP],
+                    properties[GOOGLE_CSE_KEY_PROP],
+                    event.user.nick
                 )
                 for (msg in results) {
                     event.sendMessage(channel, msg)
@@ -96,7 +99,12 @@ class GoogleSearch : ThreadedModule() {
          */
         @JvmStatic
         @Throws(ModuleException::class)
-        fun searchGoogle(query: String, apiKey: String?, cseKey: String?): List<Message> {
+        fun searchGoogle(
+            query: String,
+            apiKey: String?,
+            cseKey: String?,
+            quotaUser: String = ReleaseInfo.PROJECT
+        ): List<Message> {
             if (apiKey.isNullOrBlank() || cseKey.isNullOrBlank()) {
                 throw ModuleException(
                     "${GoogleSearch::class.java.name} is disabled.",
@@ -108,7 +116,7 @@ class GoogleSearch : ThreadedModule() {
                 try {
                     val url = URL(
                         "https://www.googleapis.com/customsearch/v1?key=$apiKey&cx=$cseKey" +
-                                "&q=${query.encodeUrl()}&filter=1&num=5&alt=json"
+                                "&quotaUser=${quotaUser}&q=${query.encodeUrl()}&filter=1&num=5&alt=json"
                     )
                     val json = JSONObject(url.reader())
                     if (json.has("items")) {
