@@ -18,6 +18,8 @@ final def packageName = 'net.thauvin.erik.mobibot'
 final def deployDir = 'deploy'
 final def semverProcessor = "net.thauvin.erik:semver:1.2.0"
 
+final def isCI = (System.getenv('CI') != null)
+
 def isNonStable = { String version ->
     def stableKeyword = ['RELEASE', 'FINAL', 'GA', 'JRE'].any { it -> version.toUpperCase().contains(it) }
     def regex = /^[0-9,.v-]+(-r)?$/
@@ -88,20 +90,18 @@ dependencies {
 
 test {
     useTestNG() {
-        excludeGroups('no-ci')
+        if (isCI) {
+            excludeGroups('no-ci')
+            println "Excluded test groups: ${excludeGroups}"
+        }
     }
 }
 
 tasks.withType(Test).configureEach {
     testLogging {
         exceptionFormat = 'full'
-        events('skipped', 'failed')
+        events('passed', 'skipped', 'failed')
     }
-}
-
-
-task testAll(type: Test, group: 'verification', description: 'Run all tests.') {
-    useTestNG()
 }
 
 java {
@@ -169,17 +169,11 @@ run {
 
 incrementBuildMeta {
     doFirst {
-        if (!System.getenv('CI')) {
-            buildMeta = sprintf("%03d", (buildMeta as Integer) + 1)
-        } else {
+        if (isCI) {
             println 'No increment with CI.'
+        } else {
+            buildMeta = sprintf("%03d", (buildMeta as Integer) + 1)
         }
-    }
-}
-
-kover {
-    instrumentation {
-        excludeTasks.add('testAll')
     }
 }
 
