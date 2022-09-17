@@ -1,6 +1,6 @@
 #!/bin/bash
 
-./gradlew deploy
+./gradlew release
 [ $? -eq 0 ] && sftp nix3.thauvin.us <<EOF
 cd mobitopia/mobibot
 lcd deploy

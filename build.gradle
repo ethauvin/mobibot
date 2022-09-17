@@ -100,7 +100,7 @@ test {
 tasks.withType(Test).configureEach {
     testLogging {
         exceptionFormat = 'full'
-        events('passed', 'skipped', 'failed')
+        events('skipped', 'failed')
     }
 }
 
@@ -158,7 +158,7 @@ jar {
 }
 
 clean {
-    doLast {
+    doFirst {
         project.delete(fileTree(deployDir))
     }
 }
@@ -205,17 +205,17 @@ task copyToDeployLib(type: Copy) {
 task deploy {
     description = "Copies all needed files to the ${deployDir} directory."
     group = 'Publishing'
-    dependsOn(clean, build, jar)
+    dependsOn(assemble, jar)
     outputs.dir deployDir
     inputs.files(copyToDeploy, copyToDeployLib)
     doLast {
         file(deployDir + '/logs').mkdir()
     }
-    mustRunAfter clean
 }
 
 task release {
     group = 'Publishing'
     description = 'Releases new version.'
-    dependsOn(wrapper, deploy)
+    dependsOn(clean, wrapper, check, deploy)
+    mustRunAfter clean
 }
