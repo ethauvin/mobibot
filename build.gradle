@@ -88,7 +88,7 @@ dependencies {
 
 test {
     useTestNG() {
-        suites('src/test/resources/testng-ci.xml')
+        excludeGroups('no-ci')
     }
 }
 
@@ -101,9 +101,7 @@ tasks.withType(Test).configureEach {
 
 
 task testAll(type: Test, group: 'verification', description: 'Run all tests.') {
-    useTestNG() {
-        suites('src/test/resources/testng.xml')
-    }
+    useTestNG()
 }
 
 java {
