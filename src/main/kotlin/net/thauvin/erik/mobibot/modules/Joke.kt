@@ -34,14 +34,15 @@ package net.thauvin.erik.mobibot.modules
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import net.thauvin.erik.mobibot.Utils.bot
-import net.thauvin.erik.mobibot.Utils.cyan
+import net.thauvin.erik.mobibot.Utils.colorize
 import net.thauvin.erik.mobibot.Utils.helpFormat
 import net.thauvin.erik.mobibot.Utils.reader
-import net.thauvin.erik.mobibot.Utils.sendMessage
+import net.thauvin.erik.mobibot.msg.ErrorMessage
 import net.thauvin.erik.mobibot.msg.Message
 import net.thauvin.erik.mobibot.msg.PublicMessage
 import org.json.JSONException
 import org.json.JSONObject
+import org.pircbotx.Colors
 import org.pircbotx.hooks.types.GenericMessageEvent
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -63,16 +64,18 @@ class Joke : ThreadedModule() {
     }
 
     /**
-     * Returns a random joke from [Geek-Jokes](https://geek-jokes.sameerkumar.website/).
+     * Returns a random joke from [JokeAPI](https://sv443.net/jokeapi/v2/).
      */
     override fun run(channel: String, cmd: String, args: String, event: GenericMessageEvent) {
         with(event.bot()) {
             try {
-                sendIRC().notice(channel, randomJoke().msg.cyan())
+                randomJoke().forEach {
+                    sendIRC().notice(channel, it.msg.colorize(it.color))
+                }
             } catch (e: ModuleException) {
                 if (logger.isWarnEnabled) logger.warn(e.debugMessage, e)
                 e.message?.let {
-                    event.sendMessage(it)
+                    event.respond(it)
                 }
             }
         }
@@ -84,18 +87,27 @@ class Joke : ThreadedModule() {
 
         // ICNDB URL
         private const val JOKE_URL =
-            "https://geek-jokes.sameerkumar.website/api?format=json"
+            "https://v2.jokeapi.dev/joke/Any?blacklistFlags=nsfw,religious,political,racist,sexist,explicit&type=single"
 
         /**
          * Retrieves a random joke.
          */
         @JvmStatic
         @Throws(ModuleException::class)
-        fun randomJoke(): Message {
+        fun randomJoke(): List<Message> {
             return try {
+                val messages = mutableListOf<Message>()
                 val url = URL(JOKE_URL)
                 val json = JSONObject(url.reader().body)
-                PublicMessage(json.getString("joke"))
+                if (json.has("joke")) {
+                    val joke = json.getString("joke").split("\n")
+                    joke.forEach {
+                        messages.add(PublicMessage(it, Colors.CYAN))
+                    }
+                } else {
+                    messages.add(ErrorMessage(json.getString("message"), Colors.RED))
+                }
+                messages
             } catch (e: IOException) {
                 throw ModuleException("randomJoke(): IOE", "An IO error has occurred retrieving a random joke.", e)
             } catch (e: JSONException) {
