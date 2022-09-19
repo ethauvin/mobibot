@@ -228,6 +228,7 @@ class Mobibot(nickname: String, val channel: String, logsDirPath: String, p: Pro
                 if (logger.isTraceEnabled) logger.trace(">>> $sender: $message")
             }
             storeRecap(sender, message, false)
+            seen.add(sender)
         }
     }
 
