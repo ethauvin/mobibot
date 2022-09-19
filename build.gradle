@@ -211,6 +211,7 @@ task deploy {
     doLast {
         file(deployDir + '/logs').mkdir()
     }
+    mustRunAfter(clean)
 }
 
 task release {

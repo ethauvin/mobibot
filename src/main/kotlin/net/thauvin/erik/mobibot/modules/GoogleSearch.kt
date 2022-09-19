@@ -33,6 +33,7 @@ package net.thauvin.erik.mobibot.modules
 
 import net.thauvin.erik.mobibot.ReleaseInfo
 import net.thauvin.erik.mobibot.Utils.capitalise
+import net.thauvin.erik.mobibot.Utils.colorize
 import net.thauvin.erik.mobibot.Utils.encodeUrl
 import net.thauvin.erik.mobibot.Utils.helpFormat
 import net.thauvin.erik.mobibot.Utils.reader
@@ -71,7 +72,11 @@ class GoogleSearch : ThreadedModule() {
                     event.user.nick
                 )
                 for (msg in results) {
-                    event.sendMessage(channel, msg)
+                    if (msg.isError) {
+                        event.respond(msg.msg.colorize(msg.color))
+                    } else {
+                        event.sendMessage(channel, msg)
+                    }
                 }
             } catch (e: ModuleException) {
                 if (logger.isWarnEnabled) logger.warn(e.debugMessage, e)

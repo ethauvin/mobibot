@@ -42,7 +42,7 @@ import net.thauvin.erik.mobibot.LocalProperties
 import org.testng.annotations.Test
 
 class WolframAlphaTest : LocalProperties() {
-    @Test(groups=["modules"])
+    @Test(groups = ["modules"])
     fun testAppId() {
         assertThat { WolframAlpha.queryWolfram("1 gallon to liter", appId = "DEMO") }
             .isFailure()
