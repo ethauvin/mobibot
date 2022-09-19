@@ -63,7 +63,7 @@ class Joke : ThreadedModule() {
     }
 
     /**
-     * Returns a random joke from [The Internet Chuck Norris Database](http://www.icndb.com/).
+     * Returns a random joke from [Geek-Jokes](https://geek-jokes.sameerkumar.website/).
      */
     override fun run(channel: String, cmd: String, args: String, event: GenericMessageEvent) {
         with(event.bot()) {
@@ -84,7 +84,7 @@ class Joke : ThreadedModule() {
 
         // ICNDB URL
         private const val JOKE_URL =
-            "http://api.icndb.com/jokes/random?escape=javascript&exclude=[explicit]&limitTo=[nerdy]"
+            "https://geek-jokes.sameerkumar.website/api?format=json"
 
         /**
          * Retrieves a random joke.
@@ -94,11 +94,8 @@ class Joke : ThreadedModule() {
         fun randomJoke(): Message {
             return try {
                 val url = URL(JOKE_URL)
-                val json = JSONObject(url.reader())
-                PublicMessage(
-                    json.getJSONObject("value")["joke"].toString().replace("\\'", "'")
-                        .replace("\\\"", "\"")
-                )
+                val json = JSONObject(url.reader().body)
+                PublicMessage(json.getString("joke"))
             } catch (e: IOException) {
                 throw ModuleException("randomJoke(): IOE", "An IO error has occurred retrieving a random joke.", e)
             } catch (e: JSONException) {

@@ -33,7 +33,7 @@ package net.thauvin.erik.mobibot.modules
 
 import assertk.all
 import assertk.assertThat
-import assertk.assertions.contains
+import assertk.assertions.endsWith
 import assertk.assertions.isNotEmpty
 import net.thauvin.erik.mobibot.modules.Joke.Companion.randomJoke
 import org.testng.annotations.Test
@@ -47,7 +47,7 @@ class JokeTest {
     fun testRandomJoke() {
         assertThat(randomJoke().msg, "randomJoke() > 0").all {
             isNotEmpty()
-            contains("chuck", true)
+            endsWith(".")
         }
     }
 }
