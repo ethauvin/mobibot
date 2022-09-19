@@ -41,11 +41,10 @@ import org.pircbotx.hooks.types.GenericMessageEvent
 import org.slf4j.Logger
 import java.io.BufferedInputStream
 import java.io.BufferedOutputStream
-import java.io.BufferedReader
 import java.io.IOException
-import java.io.InputStreamReader
 import java.io.ObjectInputStream
 import java.io.ObjectOutputStream
+import java.net.HttpURLConnection
 import java.net.URL
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
@@ -56,7 +55,6 @@ import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.Date
 import java.util.Properties
-import java.util.stream.Collectors
 import kotlin.io.path.exists
 import kotlin.io.path.fileSize
 
@@ -185,6 +183,12 @@ object Utils {
     fun isChannelOp(channel: String, event: GenericMessageEvent): Boolean {
         return event.bot().userChannelDao.getChannel(channel).isOp(event.user)
     }
+
+    /**
+     * Returns {@code true} if a HTTP status code indicates a successful response.
+     */
+    @JvmStatic
+    fun Int.isHttpSuccess() = this in 200..399
 
     /**
      * Returns the last item of a list of strings or empty if none.
@@ -402,8 +406,21 @@ object Utils {
      */
     @JvmStatic
     @Throws(IOException::class)
-    fun URL.reader(): String {
-        BufferedReader(InputStreamReader(this.openStream(), StandardCharsets.UTF_8))
-            .use { reader -> return reader.lines().collect(Collectors.joining(System.lineSeparator())) }
+    fun URL.reader(): UrlReaderResponse {
+        val connection = this.openConnection() as HttpURLConnection
+        connection.setRequestProperty(
+            "User-Agent",
+            "Mozilla/5.0 (Linux x86_64; rv:104.0) Gecko/20100101 Firefox/104.0"
+        )
+        return if (connection.responseCode.isHttpSuccess()) {
+            UrlReaderResponse(connection.responseCode, connection.inputStream.bufferedReader().readText())
+        } else {
+            UrlReaderResponse(connection.responseCode, connection.errorStream.bufferedReader().readText())
+        }
     }
+
+    /**
+     * Holds the [URL.reader] response code and body text.
+     */
+    data class UrlReaderResponse(val responseCode: Int, val body: String)
 }

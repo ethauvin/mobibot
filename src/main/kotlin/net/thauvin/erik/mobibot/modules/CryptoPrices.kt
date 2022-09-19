@@ -80,11 +80,11 @@ class CryptoPrices : ThreadedModule() {
             } catch (e: CryptoException) {
                 if (logger.isWarnEnabled) logger.warn("$debugMessage => ${e.statusCode}", e)
                 e.message?.let {
-                    event.sendMessage(it)
+                    event.respond(it)
                 }
             } catch (e: IOException) {
                 if (logger.isErrorEnabled) logger.error(debugMessage, e)
-                event.sendMessage("An IO error has occurred while retrieving the cryptocurrency market price.")
+                event.respond("An IO error has occurred while retrieving the cryptocurrency market price.")
             }
         } else {
             helpResponse(event)

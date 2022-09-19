@@ -267,7 +267,7 @@ class UtilsTest {
     @Test
     @Throws(IOException::class)
     fun testUrlReader() {
-        assertThat(URL("https://postman-echo.com/status/200").reader(), "urlReader()")
+        assertThat(URL("https://postman-echo.com/status/200").reader().body, "urlReader()")
             .isEqualTo("{\"status\":200}")
     }
 

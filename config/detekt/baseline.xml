@@ -31,6 +31,8 @@
     <ID>MagicNumber:Twitter.kt$Twitter$60L</ID>
     <ID>MagicNumber:TwitterOAuth.kt$TwitterOAuth$401</ID>
     <ID>MagicNumber:Users.kt$Users$8</ID>
+    <ID>MagicNumber:Utils.kt$Utils$200</ID>
+    <ID>MagicNumber:Utils.kt$Utils$399</ID>
     <ID>MagicNumber:Weather2.kt$Weather2.Companion$1.60934</ID>
     <ID>MagicNumber:Weather2.kt$Weather2.Companion$32</ID>
     <ID>MagicNumber:Weather2.kt$Weather2.Companion$404</ID>
@@ -65,12 +67,12 @@
     <ID>ReturnCount:ExceptionSanitizer.kt$ExceptionSanitizer$fun ModuleException.sanitize(vararg sanitize: String): ModuleException</ID>
     <ID>SwallowedException:GoogleSearchTest.kt$GoogleSearchTest$e: ModuleException</ID>
     <ID>SwallowedException:StockQuoteTest.kt$StockQuoteTest$e: ModuleException</ID>
-    <ID>SwallowedException:WolframAlpha.kt$WolframAlpha.Companion$ioe: IOException</ID>
     <ID>SwallowedException:WolframAlphaTest.kt$WolframAlphaTest$e: ModuleException</ID>
     <ID>ThrowsCount:GoogleSearch.kt$GoogleSearch.Companion$@JvmStatic @Throws(ModuleException::class) fun searchGoogle( query: String, apiKey: String?, cseKey: String?, quotaUser: String = ReleaseInfo.PROJECT ): List&lt;Message&gt;</ID>
     <ID>ThrowsCount:StockQuote.kt$StockQuote.Companion$@JvmStatic @Throws(ModuleException::class) fun getQuote(symbol: String, apiKey: String?): List&lt;Message&gt;</ID>
     <ID>ThrowsCount:StockQuote.kt$StockQuote.Companion$@Throws(ModuleException::class) private fun getJsonResponse(response: String, debugMessage: String): JSONObject</ID>
     <ID>ThrowsCount:Weather2.kt$Weather2.Companion$@JvmStatic @Throws(ModuleException::class) fun getWeather(query: String, apiKey: String?): List&lt;Message&gt;</ID>
+    <ID>ThrowsCount:WolframAlpha.kt$WolframAlpha.Companion$@JvmStatic @Throws(ModuleException::class) fun queryWolfram(query: String, units: String = IMPERIAL, appId: String?): String</ID>
     <ID>TooGenericExceptionCaught:StockQuote.kt$StockQuote.Companion$e: NullPointerException</ID>
     <ID>TooGenericExceptionCaught:Weather2.kt$Weather2.Companion$e: NullPointerException</ID>
     <ID>TooManyFunctions:Mobibot.kt$Mobibot : ListenerAdapter</ID>

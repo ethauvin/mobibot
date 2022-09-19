@@ -34,6 +34,7 @@ package net.thauvin.erik.mobibot.modules
 
 import net.thauvin.erik.mobibot.Utils
 import net.thauvin.erik.mobibot.Utils.encodeUrl
+import net.thauvin.erik.mobibot.Utils.isHttpSuccess
 import net.thauvin.erik.mobibot.Utils.reader
 import net.thauvin.erik.mobibot.Utils.sendMessage
 import org.pircbotx.hooks.types.GenericMessageEvent
@@ -68,13 +69,13 @@ class WolframAlpha : ThreadedModule() {
                         } else {
                             getUnits(properties[WOLFRAM_UNITS_PROP])
                         },
-                        apiKey = properties[WOLFRAM_API_KEY_PROP]
+                        appId = properties[WOLFRAM_APPID_KEY]
                     )
                 )
             } catch (e: ModuleException) {
                 if (logger.isWarnEnabled) logger.warn(e.debugMessage, e)
                 e.message?.let {
-                    event.sendMessage(it)
+                    event.respond(it)
                 }
             }
         } else {
@@ -86,7 +87,7 @@ class WolframAlpha : ThreadedModule() {
         /**
          * The Wolfram Alpha API Key property.
          */
-        const val WOLFRAM_API_KEY_PROP = "wolfram-api-key"
+        const val WOLFRAM_APPID_KEY = "wolfram-appid"
 
         /**
          * The Wolfram units properties
@@ -103,14 +104,23 @@ class WolframAlpha : ThreadedModule() {
 
         @JvmStatic
         @Throws(ModuleException::class)
-        fun queryWolfram(query: String, units: String = IMPERIAL, apiKey: String?): String {
-            if (!apiKey.isNullOrEmpty()) {
+        fun queryWolfram(query: String, units: String = IMPERIAL, appId: String?): String {
+            if (!appId.isNullOrEmpty()) {
                 try {
-                    return URL("${API_URL}${apiKey}&units=${units}&i=" + query.encodeUrl()).reader()
+                    val urlReader = URL("${API_URL}${appId}&units=${units}&i=" + query.encodeUrl()).reader()
+                    if (urlReader.responseCode.isHttpSuccess()) {
+                        return urlReader.body
+                    } else {
+                        throw ModuleException(
+                            "wolfram($query): ${urlReader.responseCode} : ${urlReader.body} ",
+                            urlReader.body.ifEmpty {
+                                "Looks like Wolfram Alpha isn't able to answer that. (${urlReader.responseCode})"
+                            }
+                        )
+                    }
                 } catch (ioe: IOException) {
                     throw ModuleException(
-                        "wolfram($query): IOE",
-                        "Looks like Wolfram Alpha isn't able to answer that.",
+                        "wolfram($query): IOE", "An IO Error occurred while querying Wolfram Alpha.", ioe
                     )
                 }
             } else {
@@ -128,6 +138,6 @@ class WolframAlpha : ThreadedModule() {
             add(Utils.helpFormat("%c $WOLFRAM_CMD days until christmas"))
             add(Utils.helpFormat("%c $WOLFRAM_CMD distance earth moon units=metric"))
         }
-        initProperties(WOLFRAM_API_KEY_PROP, WOLFRAM_UNITS_PROP)
+        initProperties(WOLFRAM_APPID_KEY, WOLFRAM_UNITS_PROP)
     }
 }

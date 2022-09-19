@@ -34,6 +34,7 @@ package net.thauvin.erik.mobibot.modules
 import assertk.all
 import assertk.assertThat
 import assertk.assertions.contains
+import assertk.assertions.hasMessage
 import assertk.assertions.hasNoCause
 import assertk.assertions.isEqualTo
 import assertk.assertions.isFailure
@@ -63,6 +64,11 @@ class GoogleSearchTest : LocalProperties() {
 
         assertThat { searchGoogle("test", "apiKey", "") }.isFailure()
             .isInstanceOf(ModuleException::class.java).hasNoCause()
+
+        assertThat { searchGoogle("test", "apiKey", "cssKey") }
+            .isFailure()
+            .isInstanceOf(ModuleException::class.java)
+            .hasMessage("API key not valid. Please pass a valid API key.")
     }
 
     @Test(groups = ["no-ci", "modules"])

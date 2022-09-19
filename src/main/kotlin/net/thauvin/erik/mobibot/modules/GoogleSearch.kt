@@ -76,7 +76,7 @@ class GoogleSearch : ThreadedModule() {
             } catch (e: ModuleException) {
                 if (logger.isWarnEnabled) logger.warn(e.debugMessage, e)
                 e.message?.let {
-                    event.sendMessage(it)
+                    event.respond(it)
                 }
             }
         } else {
@@ -118,7 +118,7 @@ class GoogleSearch : ThreadedModule() {
                         "https://www.googleapis.com/customsearch/v1?key=$apiKey&cx=$cseKey" +
                                 "&quotaUser=${quotaUser}&q=${query.encodeUrl()}&filter=1&num=5&alt=json"
                     )
-                    val json = JSONObject(url.reader())
+                    val json = JSONObject(url.reader().body)
                     if (json.has("items")) {
                         val ja = json.getJSONArray("items")
                         for (i in 0 until ja.length()) {
@@ -126,6 +126,10 @@ class GoogleSearch : ThreadedModule() {
                             results.add(NoticeMessage(j.getString("title").unescapeXml()))
                             results.add(NoticeMessage(helpFormat(j.getString("link"), false), Colors.DARK_GREEN))
                         }
+                    } else if (json.has("error")) {
+                        val error = json.getJSONObject("error")
+                        val message = error.getString("message")
+                        throw ModuleException("searchGoogle($query): ${error.getInt("code")} : $message", message)
                     } else {
                         results.add(ErrorMessage("No results found.", Colors.RED))
                     }

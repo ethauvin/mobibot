@@ -143,7 +143,7 @@ class CurrencyConverter : ThreadedModule() {
                         try {
                             val amt = cmds[0].replace(",", "")
                             val url = URL("https://api.exchangerate.host/convert?from=$to&to=$from&amount=$amt")
-                            val json = JSONObject(url.reader())
+                            val json = JSONObject(url.reader().body)
 
                             if (json.getBoolean("success")) {
                                 PublicMessage(
@@ -170,7 +170,7 @@ class CurrencyConverter : ThreadedModule() {
         fun loadSymbols() {
             try {
                 val url = URL("https://api.exchangerate.host/symbols")
-                val json = JSONObject(url.reader())
+                val json = JSONObject(url.reader().body)
                 if (json.getBoolean("success")) {
                     val symbols = json.getJSONObject("symbols")
                     for (key in symbols.keys()) {

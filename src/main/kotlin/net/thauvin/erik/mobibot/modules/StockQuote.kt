@@ -70,7 +70,7 @@ class StockQuote : ThreadedModule() {
             } catch (e: ModuleException) {
                 if (logger.isWarnEnabled) logger.warn(e.debugMessage, e)
                 e.message?.let {
-                    event.sendMessage(it)
+                    event.respond(it)
                 }
             }
         } else {
@@ -147,7 +147,7 @@ class StockQuote : ThreadedModule() {
                         response = URL(
                             "${ALPHAVANTAGE_URL}SYMBOL_SEARCH&keywords=" + symbol.encodeUrl() + "&apikey="
                                     + apiKey.encodeUrl()
-                        ).reader()
+                        ).reader().body
                         var json = getJsonResponse(response, debugMessage)
                         val symbols = json.getJSONArray("bestMatches")
                         if (symbols.isEmpty) {
@@ -160,7 +160,7 @@ class StockQuote : ThreadedModule() {
                                 "${ALPHAVANTAGE_URL}GLOBAL_QUOTE&symbol="
                                         + symbolInfo.getString("1. symbol").encodeUrl() + "&apikey="
                                         + apiKey.encodeUrl()
-                            ).reader()
+                            ).reader().body
                             json = getJsonResponse(response, debugMessage)
                             val quote = json.getJSONObject("Global Quote")
                             if (quote.isEmpty) {
