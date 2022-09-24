@@ -70,6 +70,7 @@
     <ID>SwallowedException:StockQuoteTest.kt$StockQuoteTest$e: ModuleException</ID>
     <ID>SwallowedException:WolframAlphaTest.kt$WolframAlphaTest$e: ModuleException</ID>
     <ID>ThrowsCount:GoogleSearch.kt$GoogleSearch.Companion$@JvmStatic @Throws(ModuleException::class) fun searchGoogle( query: String, apiKey: String?, cseKey: String?, quotaUser: String = ReleaseInfo.PROJECT ): List&lt;Message&gt;</ID>
+    <ID>ThrowsCount:Joke.kt$Joke.Companion$@JvmStatic @Throws(ModuleException::class) fun randomJoke(): List&lt;Message&gt;</ID>
     <ID>ThrowsCount:StockQuote.kt$StockQuote.Companion$@JvmStatic @Throws(ModuleException::class) fun getQuote(symbol: String, apiKey: String?): List&lt;Message&gt;</ID>
     <ID>ThrowsCount:StockQuote.kt$StockQuote.Companion$@Throws(ModuleException::class) private fun getJsonResponse(response: String, debugMessage: String): JSONObject</ID>
     <ID>ThrowsCount:Weather2.kt$Weather2.Companion$@JvmStatic @Throws(ModuleException::class) fun getWeather(query: String, apiKey: String?): List&lt;Message&gt;</ID>

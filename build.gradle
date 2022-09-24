@@ -80,6 +80,7 @@ dependencies {
 
     // Thauvin
     implementation 'net.thauvin.erik:cryptoprice:1.0.0'
+    implementation 'net.thauvin.erik:jokeapi:0.9-SNAPSHOT'
     implementation 'net.thauvin.erik:pinboard-poster:1.0.3'
 
     testImplementation 'com.willowtreeapps.assertk:assertk-jvm:0.25'

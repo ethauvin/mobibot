@@ -47,10 +47,10 @@ class JokeTest {
     @Throws(ModuleException::class)
     fun testRandomJoke() {
         val joke = randomJoke()
-        assertThat(joke.size, "joke is empty").isGreaterThan(0)
+        assertThat(joke.size, "joke should not be empty").isGreaterThan(0)
         joke.forEach {
-            assertThat(it, "is not a public message").isInstanceOf(PublicMessage::class.java)
-            assertThat(it.msg, "msg is empty").isNotEmpty()
+            assertThat(it, "message should be public").isInstanceOf(PublicMessage::class.java)
+            assertThat(it.msg, "message should not be empty").isNotEmpty()
         }
     }
 }

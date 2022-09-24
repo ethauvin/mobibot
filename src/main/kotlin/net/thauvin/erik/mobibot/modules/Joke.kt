@@ -33,6 +33,11 @@ package net.thauvin.erik.mobibot.modules
 
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import net.thauvin.erik.jokeapi.JokeApi
+import net.thauvin.erik.jokeapi.JokeApi.Companion.getJoke
+import net.thauvin.erik.jokeapi.exceptions.HttpErrorException
+import net.thauvin.erik.jokeapi.exceptions.JokeException
+import net.thauvin.erik.jokeapi.models.Type
 import net.thauvin.erik.mobibot.Utils.bot
 import net.thauvin.erik.mobibot.Utils.colorize
 import net.thauvin.erik.mobibot.Utils.helpFormat
@@ -64,7 +69,7 @@ class Joke : ThreadedModule() {
     }
 
     /**
-     * Returns a random joke from [JokeAPI](https://sv443.net/jokeapi/v2/).
+     * Returns a random joke from [JokeAPI](https://v2.jokeapi.dev/).
      */
     override fun run(channel: String, cmd: String, args: String, event: GenericMessageEvent) {
         with(event.bot()) {
@@ -85,10 +90,6 @@ class Joke : ThreadedModule() {
         // Joke command
         private const val JOKE_CMD = "joke"
 
-        // ICNDB URL
-        private const val JOKE_URL =
-            "https://v2.jokeapi.dev/joke/Any?blacklistFlags=nsfw,religious,political,racist,sexist,explicit&type=single"
-
         /**
          * Retrieves a random joke.
          */
@@ -97,28 +98,26 @@ class Joke : ThreadedModule() {
         fun randomJoke(): List<Message> {
             return try {
                 val messages = mutableListOf<Message>()
-                val url = URL(JOKE_URL)
-                val json = JSONObject(url.reader().body)
-                if (json.has("joke")) {
-                    val joke = json.getString("joke").split("\n")
-                    joke.forEach {
-                        messages.add(PublicMessage(it, Colors.CYAN))
-                    }
-                } else {
-                    messages.add(ErrorMessage(json.getString("message"), Colors.RED))
+                val joke = getJoke(safe = true, type = Type.SINGLE)
+                joke.joke.forEach {
+                    messages.add(PublicMessage(it, Colors.CYAN))
                 }
                 messages
+            } catch (e: JokeException) {
+                throw ModuleException("randomJoke(): ${e.additionalInfo}", e.message, e)
+            } catch (e: HttpErrorException) {
+                throw ModuleException("randomJoke(): HTTP: ${e.statusCode}", e.message, e)
             } catch (e: IOException) {
                 throw ModuleException("randomJoke(): IOE", "An IO error has occurred retrieving a random joke.", e)
             } catch (e: JSONException) {
-                throw ModuleException("randomJoke(): JSON", "An JSON error has occurred retrieving a random joke.", e)
+                throw ModuleException("randomJoke(): JSON", "A parsing error has occurred retrieving a random joke.", e)
             }
         }
     }
 
     init {
         commands.add(JOKE_CMD)
-        help.add("To retrieve a random joke:")
+        help.add("To display a random joke:")
         help.add(helpFormat("%c $JOKE_CMD"))
     }
 }
