@@ -43,7 +43,7 @@ import org.testng.annotations.Test
 class PingTest {
     @Test(groups = ["modules"])
     fun testPingsArray() {
-        assertThat(Ping.PINGS, "Pings array is not empty.").isNotEmpty()
+        assertThat(Ping.PINGS, "Pings array should be empty").isNotEmpty()
     }
 
     @Test(groups = ["modules"])

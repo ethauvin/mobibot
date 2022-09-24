@@ -63,8 +63,8 @@ class Weather2Test : LocalProperties() {
 
     @Test(groups = ["modules"])
     fun testGetCountry() {
-        assertThat(getCountry("foo"), "not a country").isEqualTo(OWM.Country.UNITED_STATES)
-        assertThat(getCountry("fr"), "fr is france").isEqualTo(OWM.Country.FRANCE)
+        assertThat(getCountry("foo"), "foo is not a valid country").isEqualTo(OWM.Country.UNITED_STATES)
+        assertThat(getCountry("fr"), "country should France").isEqualTo(OWM.Country.FRANCE)
 
         val country = OWM.Country.values()
         repeat(3) {
@@ -83,30 +83,30 @@ class Weather2Test : LocalProperties() {
     @Throws(ModuleException::class)
     fun testWeather() {
         var messages = getWeather("98204", getProperty(OWM_API_KEY_PROP))
-        assertThat(messages[0].msg, "is Everett").all {
+        assertThat(messages[0].msg, "city is not Everett").all {
             contains("Everett, United States")
             contains("US")
         }
-        assertThat(messages[messages.size - 1].msg, "is Everett zip code").endsWith("98204%2CUS")
+        assertThat(messages[messages.size - 1].msg, "zip code is not Everett").endsWith("98204%2CUS")
 
         messages = getWeather("San Francisco", getProperty(OWM_API_KEY_PROP))
-        assertThat(messages[0].msg, "is San Francisco").all {
+        assertThat(messages[0].msg, "city is not San Francisco").all {
             contains("San Francisco")
             contains("US")
         }
-        assertThat(messages[messages.size - 1].msg, "is San Fran city code").endsWith("5391959")
+        assertThat(messages[messages.size - 1].msg, "city code is not San Fran").endsWith("5391959")
 
         messages = getWeather("London, GB", getProperty(OWM_API_KEY_PROP))
-        assertThat(messages[0].msg, "is UK").all {
+        assertThat(messages[0].msg, "city is not London").all {
             contains("London, United Kingdom")
             contains("GB")
         }
-        assertThat(messages[messages.size - 1].msg, "is London city code").endsWith("2643743")
+        assertThat(messages[messages.size - 1].msg, "city code is not London").endsWith("2643743")
 
         try {
             getWeather("Foo, US", getProperty(OWM_API_KEY_PROP))
         } catch (e: ModuleException) {
-            assertThat(e.cause, "cause is API exception").isNotNull().isInstanceOf(APIException::class.java)
+            assertThat(e.cause, "cause is not an API exception").isNotNull().isInstanceOf(APIException::class.java)
         }
 
         assertThat { getWeather("test", "") }.isFailure()
@@ -115,6 +115,6 @@ class Weather2Test : LocalProperties() {
             .isInstanceOf(ModuleException::class.java).hasNoCause()
 
         messages = getWeather("", "apikey")
-        assertThat(messages[0].isError, "no query").isTrue()
+        assertThat(messages[0].isError, "empty query should be an error").isTrue()
     }
 }

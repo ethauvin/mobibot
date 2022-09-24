@@ -60,21 +60,21 @@ class CurrencyConverterTest {
     fun testConvertCurrency() {
         assertThat(
             convertCurrency("100 USD to EUR").msg,
-            "100 USD to EUR"
+            "100 USD to EUR is invalid"
         ).matches("100 United States Dollar = \\d{2,3}\\.\\d+ Euro".toRegex())
         assertThat(
             convertCurrency("1 USD to BTC").msg,
-            "1 USD to BTC"
+            "1 USD to BTC is invalid"
         ).matches("1 United States Dollar = 0\\.\\d+ Bitcoin".toRegex())
         assertThat(
             convertCurrency("100,000.00 GBP to BTC").msg,
-            "100 USD to EUR"
+            "100 USD to EUR is invalid"
         ).matches("100,000.00 British Pound Sterling = \\d{1,2}\\.\\d+ Bitcoin".toRegex())
-        assertThat(convertCurrency("100 USD to USD"), "100 USD to USD").all {
+        assertThat(convertCurrency("100 USD to USD"), "100 USD to USD is invalid").all {
             prop(Message::msg).contains("You're kidding, right?")
             isInstanceOf(PublicMessage::class.java)
         }
-        assertThat(convertCurrency("100 USD"), "100 USD").all {
+        assertThat(convertCurrency("100 USD"), "100 USD should be invalid").all {
             prop(Message::msg).contains("Invalid query.")
             isInstanceOf(ErrorMessage::class.java)
         }

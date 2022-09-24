@@ -79,8 +79,8 @@ class GoogleSearchTest : LocalProperties() {
 
         try {
             var messages = searchGoogle("mobibot", apiKey, cseKey)
-            assertThat(messages, "mobibot results not empty").isNotEmpty()
-            assertThat(messages[0].msg, "found mobibot").contains("mobibot", true)
+            assertThat(messages, "search result should not be empty").isNotEmpty()
+            assertThat(messages[0].msg, "search query not found").contains("mobibot", true)
 
             messages = searchGoogle("adadflkjl", apiKey, cseKey)
             assertThat(messages[0], "not found").all {

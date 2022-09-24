@@ -55,12 +55,12 @@ class WordTimeTest {
                     "on ${Colors.BOLD}\\w+, \\d{1,2} \\w+ \\d{4}${Colors.BOLD} " +
                     "in ${Colors.BOLD}Los Angeles${Colors.BOLD}").toRegex()
         )
-        assertThat(time(""), "empty zone").endsWith("Los Angeles".bold())
-        assertThat(time("PST"), "PST").endsWith("Los Angeles".bold())
-        assertThat(time("GB"), "GB").endsWith("London".bold())
-        assertThat(time("FR"), "FR").endsWith("Paris".bold())
-        assertThat(time("BLAH"), "BLAH").startsWith("Unsupported")
-        assertThat(time("BEAT"), BEATS_KEYWORD).matches("[\\w ]+ .?@\\d{3}+.? .beats".toRegex())
+        assertThat(time(""), "zone is not LA").endsWith("Los Angeles".bold())
+        assertThat(time("PST"), "zone is not PST").endsWith("Los Angeles".bold())
+        assertThat(time("GB"), "zone is not London").endsWith("London".bold())
+        assertThat(time("FR"), "zone is not Paris").endsWith("Paris".bold())
+        assertThat(time("BLAH"), "zone should be unsupported").startsWith("Unsupported")
+        assertThat(time("BEAT"), "$BEATS_KEYWORD is invalid").matches("[\\w ]+ .?@\\d{3}+.? .beats".toRegex())
     }
 
     @Test(groups = ["modules"])

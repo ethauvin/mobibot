@@ -66,41 +66,41 @@ class ModuleExceptionTest {
 
     @Test(dataProvider = "dp")
     fun testGetDebugMessage(e: ModuleException) {
-        assertThat(e.debugMessage, "get debug message").isEqualTo(debugMessage)
+        assertThat(e.debugMessage, "debug message is invalid").isEqualTo(debugMessage)
     }
 
     @Test(dataProvider = "dp")
     fun testGetMessage(e: ModuleException) {
-        assertThat(e, "get message").hasMessage(message)
+        assertThat(e, "message is invalid").hasMessage(message)
     }
 
     @Test(groups = ["modules"])
     fun testSanitizeMessage() {
         val apiKey = "1234567890"
         var e = ModuleException(debugMessage, message, IOException("URL http://foo.com?apiKey=$apiKey&userID=me"))
-        assertThat(e.sanitize(apiKey, "", "me").message, "sanitized url").isNotNull().all {
+        assertThat(e.sanitize(apiKey, "", "me").message, "sanitized url is invalid").isNotNull().all {
             contains("xxxxxxxxxx", "userID=xx", "java.io.IOException")
             doesNotContain(apiKey, "me")
         }
 
         e = ModuleException(debugMessage, message, null)
-        assertThat(e.sanitize(apiKey), "no cause").hasMessage(message)
+        assertThat(e.sanitize(apiKey), "cause should be null").hasMessage(message)
 
         e = ModuleException(debugMessage, message, IOException())
-        assertThat(e.sanitize(apiKey), "no cause message").hasMessage(message)
+        assertThat(e.sanitize(apiKey), "cause message is invalid").hasMessage(message)
 
         e = ModuleException(debugMessage, apiKey)
-        assertThat(e.sanitize(apiKey).message, "api key in message").isNotNull().doesNotContain(apiKey)
+        assertThat(e.sanitize(apiKey).message, "message should not contain api key").isNotNull().doesNotContain(apiKey)
 
         val msg: String? = null
         e = ModuleException(debugMessage, msg, IOException(msg))
-        assertThat(e.sanitize(apiKey).message, "null message").isNull()
+        assertThat(e.sanitize(apiKey).message, "message should be null").isNull()
 
         e = ModuleException(debugMessage, msg, IOException("foo is $apiKey"))
-        assertThat(e.sanitize("   ", apiKey, "foo").message, "key in cause").isNotNull().all {
+        assertThat(e.sanitize("   ", apiKey, "foo").message, "message should not contain key").isNotNull().all {
             doesNotContain(apiKey)
             endsWith("xxx is xxxxxxxxxx")
         }
-        assertThat(e.sanitize(), "empty").isEqualTo(e)
+        assertThat(e.sanitize(), "exception should be unchanged").isEqualTo(e)
     }
 }

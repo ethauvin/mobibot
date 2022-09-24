@@ -62,16 +62,16 @@ class StockQuoteTest : LocalProperties() {
         try {
             val messages = getQuote("apple inc", apiKey)
             assertThat(messages, "response not empty").isNotEmpty()
-            assertThat(messages[0].msg, "same stock symbol").matches("Symbol: AAPL .*".toRegex())
-            assertThat(messages[1].msg, "price label").matches(buildMatch("Price").toRegex())
-            assertThat(messages[2].msg, "previous label").matches(buildMatch("Previous").toRegex())
-            assertThat(messages[3].msg, "open label").matches(buildMatch("Open").toRegex())
+            assertThat(messages[0].msg, "stock symbol should be AAPL").matches("Symbol: AAPL .*".toRegex())
+            assertThat(messages[1].msg, "price label is invalid").matches(buildMatch("Price").toRegex())
+            assertThat(messages[2].msg, "previous label is invalid").matches(buildMatch("Previous").toRegex())
+            assertThat(messages[3].msg, "open label is invalid").matches(buildMatch("Open").toRegex())
 
-            assertThat(getQuote("blahfoo", apiKey).first(), "invalid symbol").all {
+            assertThat(getQuote("blahfoo", apiKey).first(), "symbol should be invalid").all {
                 isInstanceOf(ErrorMessage::class.java)
                 prop(Message::msg).isEqualTo(StockQuote.INVALID_SYMBOL)
             }
-            assertThat(getQuote("", "apikey").first(), "empty symbol").all {
+            assertThat(getQuote("", "apikey").first(), "symbol should be empty").all {
                 isInstanceOf(ErrorMessage::class.java)
                 prop(Message::msg).isEqualTo(StockQuote.INVALID_SYMBOL)
             }
