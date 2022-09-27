@@ -141,6 +141,9 @@ object Utils {
      */
     @JvmStatic
     fun String.encodeUrl(): String = URLEncoder.encode(this, StandardCharsets.UTF_8)
+        .replace("+", "%20")
+        .replace("*", "%2A")
+        .replace("%7E", "~")
 
     /**
      * Returns a property as an int.

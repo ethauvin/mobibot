@@ -144,7 +144,7 @@ class UtilsTest {
 
     @Test
     fun testEncodeUrl() {
-        assertThat("Hello Günter".encodeUrl()).isEqualTo("Hello+G%C3%BCnter")
+        assertThat("Hello Günter".encodeUrl()).isEqualTo("Hello%20G%C3%BCnter")
     }
 
     @Test
