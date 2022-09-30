@@ -5,8 +5,8 @@ plugins {
     id 'io.gitlab.arturbosch.detekt' version '1.21.0'
     id 'java'
     id 'net.thauvin.erik.gradle.semver' version '1.0.4'
-    id 'org.jetbrains.kotlin.jvm' version '1.7.10'
-    id 'org.jetbrains.kotlin.kapt' version '1.7.10'
+    id 'org.jetbrains.kotlin.jvm' version '1.7.20'
+    id 'org.jetbrains.kotlin.kapt' version '1.7.20'
     id 'org.jetbrains.kotlinx.kover' version '0.6.0'
     id 'org.sonarqube' version '3.4.0.2513'
     id 'pmd'
@@ -50,7 +50,7 @@ dependencies {
 
     // Commons (mostly for PircBotX)
     implementation 'org.apache.commons:commons-lang3:3.12.0'
-    implementation 'org.apache.commons:commons-text:1.9'
+    implementation 'org.apache.commons:commons-text:1.10.0'
     implementation 'commons-codec:commons-codec:1.15'
     implementation 'commons-net:commons-net:3.8.0'
 
@@ -65,7 +65,7 @@ dependencies {
     implementation 'org.jetbrains.kotlinx:kotlinx-cli:0.3.5'
 
     // Logging
-    implementation 'org.slf4j:slf4j-api:2.0.2'
+    implementation 'org.slf4j:slf4j-api:2.0.3'
     implementation "org.apache.logging.log4j:log4j-api:$versions.log4j"
     implementation "org.apache.logging.log4j:log4j-core:$versions.log4j"
     implementation "org.apache.logging.log4j:log4j-slf4j2-impl:$versions.log4j"
