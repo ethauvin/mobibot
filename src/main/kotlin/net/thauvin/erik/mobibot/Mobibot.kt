@@ -436,7 +436,7 @@ class Mobibot(nickname: String, val channel: String, logsDirPath: String, p: Pro
         addons.add(CurrencyConverter())
         addons.add(Dice())
         addons.add(GoogleSearch())
-        addons.add(Info(tell))
+        addons.add(Info(tell, seen))
         addons.add(Joke())
         addons.add(Lookup())
         addons.add(Ping())

@@ -40,13 +40,14 @@ import net.thauvin.erik.mobibot.Utils.plural
 import net.thauvin.erik.mobibot.Utils.sendList
 import net.thauvin.erik.mobibot.Utils.sendMessage
 import net.thauvin.erik.mobibot.commands.links.LinksMgr
+import net.thauvin.erik.mobibot.commands.seen.Seen
 import net.thauvin.erik.mobibot.commands.tell.Tell
 import org.pircbotx.hooks.types.GenericMessageEvent
 import java.lang.management.ManagementFactory
 import kotlin.time.DurationUnit
 import kotlin.time.toDuration
 
-class Info(private val tell: Tell) : AbstractCommand() {
+class Info(private val tell: Tell, private val seen: Seen) : AbstractCommand() {
     private val allVersions = listOf(
         "${ReleaseInfo.PROJECT.capitalise()} ${ReleaseInfo.VERSION} (${ReleaseInfo.WEBSITE.green()})",
         "Written by ${ReleaseInfo.AUTHOR} (${ReleaseInfo.AUTHOR_URL.green()})"
@@ -107,6 +108,9 @@ class Info(private val tell: Tell) : AbstractCommand() {
             .append(ManagementFactory.getRuntimeMXBean().uptime.toUptime())
             .append(" [Entries: ")
             .append(LinksMgr.entries.links.size)
+        if (seen.isEnabled()) {
+            info.append(", Seen: ").append(seen.count())
+        }
         if (isChannelOp(channel, event)) {
             if (tell.isEnabled()) {
                 info.append(", Messages: ").append(tell.size())

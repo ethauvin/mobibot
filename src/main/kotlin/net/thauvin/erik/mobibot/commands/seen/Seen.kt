@@ -101,6 +101,8 @@ class Seen(private val serialObject: String) : AbstractCommand() {
         seenNicks.clear()
     }
 
+    fun count(): Int = seenNicks.size
+
     fun load() {
         if (isEnabled()) {
             @Suppress("UNCHECKED_CAST")
