@@ -53,18 +53,18 @@ class PinboardTest : LocalProperties() {
         pinboard.setApiToken(apiToken)
 
         pinboard.addPin(ircServer, entry)
-        assertTrue(validatePin(apiToken, url = entry.link, entry.title, entry.nick, entry.channel), "validate add")
+        assertTrue(validatePin(apiToken, url = entry.link, entry.title, entry.nick, entry.channel), "addPin")
 
         entry.link = "https://www.example.com/${(5001..9999).random()}"
         pinboard.updatePin(ircServer, url, entry)
-        assertTrue(validatePin(apiToken, url = entry.link, ircServer), "validate update")
+        assertTrue(validatePin(apiToken, url = entry.link, ircServer), "updatePin")
 
         entry.title = "Foo Title"
         pinboard.updatePin(ircServer, entry.link, entry)
-        assertTrue(validatePin(apiToken, url = entry.link, entry.title), "validate title")
+        assertTrue(validatePin(apiToken, url = entry.link, entry.title), "updatePin(${entry.title}")
 
         pinboard.deletePin(entry)
-        assertFalse(validatePin(apiToken, url = entry.link), "validate delete")
+        assertFalse(validatePin(apiToken, url = entry.link), "deletePin")
     }
 
     private fun validatePin(apiToken: String, url: String, vararg matches: String): Boolean {

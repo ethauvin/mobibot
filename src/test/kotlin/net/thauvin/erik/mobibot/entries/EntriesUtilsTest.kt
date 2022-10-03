@@ -77,8 +77,8 @@ class EntriesUtilsTest {
             ).isEqualTo("L$i: [Skynx$i] \u0002Mobitopia$i\u0002 ( \u000303https://www.mobitopia.org/$i\u000F )")
         }
 
-        assertThat(links.first().addComment(comment), "add comment").isEqualTo(0)
-        assertThat(buildLink(0, links.first(), isView = true), "isView = true").contains("[+1]")
+        assertThat(links.first().addComment(comment), "addComment()").isEqualTo(0)
+        assertThat(buildLink(0, links.first(), isView = true), "buildLink(isView=true)").contains("[+1]")
     }
 
     @Test(groups = ["entries"])

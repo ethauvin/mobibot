@@ -57,14 +57,14 @@ class CryptoPricesTest {
     @Throws(ModuleException::class)
     fun testMarketPrice() {
         var price = currentPrice(listOf("BTC"))
-        assertThat(price, "BTC in USD").all {
+        assertThat(price, "currentPrice(BTC)").all {
             prop(CryptoPrice::base).isEqualTo("BTC")
             prop(CryptoPrice::currency).isEqualTo("USD")
             prop(CryptoPrice::amount).transform { it.signum() }.isGreaterThan(0)
         }
 
         price = currentPrice(listOf("ETH", "EUR"))
-        assertThat(price, "ETH in EUR").all {
+        assertThat(price, "currentPrice(ETH, EUR)").all {
             prop(CryptoPrice::base).isEqualTo("ETH")
             prop(CryptoPrice::currency).isEqualTo("EUR")
             prop(CryptoPrice::amount).transform { it.signum() }.isGreaterThan(0)

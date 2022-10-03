@@ -47,7 +47,7 @@ class CalcTest {
     @Test(groups = ["modules"])
     fun testCalculate() {
         assertThat(calculate("1 + 1"), "calculate(1+1)").isEqualTo("1+1 = ${2.bold()}")
-        assertThat(calculate("1 -3"), "calculate(1 -3)").isEqualTo("1-3 = ${(-2).bold()}")
+        assertThat(calculate("1 -3"), "calculate(1-3)").isEqualTo("1-3 = ${(-2).bold()}")
         assertThat(calculate("pi+π+e+φ"), "calculate(pi+π+e+φ)").isEqualTo("pi+π+e+φ = ${"10.62".bold()}")
         assertThat { calculate("one + one") }.isFailure().isInstanceOf(UnknownFunctionOrVariableException::class.java)
     }

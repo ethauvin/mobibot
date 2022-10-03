@@ -59,11 +59,13 @@ class WolframAlphaTest : LocalProperties() {
     fun queryWolframTest() {
         val apiKey = getProperty(WolframAlpha.WOLFRAM_APPID_KEY)
         try {
-            assertThat(WolframAlpha.queryWolfram("SFO to SEA", appId = apiKey), "SFO to SEA").contains("miles")
+            var query = "SFO to SEA"
+            assertThat(WolframAlpha.queryWolfram(query, appId = apiKey), "queryWolfram($query)").contains("miles")
 
+            query = "SFO to LAX"
             assertThat(
-                WolframAlpha.queryWolfram("SFO to LAX", WolframAlpha.METRIC, apiKey),
-                "SFO to LA"
+                WolframAlpha.queryWolfram(query, WolframAlpha.METRIC, apiKey),
+                "queryWolfram($query)"
             ).contains("kilometers")
         } catch (e: ModuleException) {
             // Avoid displaying api key in CI logs

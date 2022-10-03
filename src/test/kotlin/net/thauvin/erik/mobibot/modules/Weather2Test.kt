@@ -36,11 +36,13 @@ import assertk.assertThat
 import assertk.assertions.contains
 import assertk.assertions.endsWith
 import assertk.assertions.hasNoCause
+import assertk.assertions.index
 import assertk.assertions.isEqualTo
 import assertk.assertions.isFailure
 import assertk.assertions.isInstanceOf
 import assertk.assertions.isNotNull
 import assertk.assertions.isTrue
+import assertk.assertions.prop
 import net.aksingh.owmjapis.api.APIException
 import net.aksingh.owmjapis.core.OWM
 import net.thauvin.erik.mobibot.LocalProperties
@@ -49,6 +51,7 @@ import net.thauvin.erik.mobibot.modules.Weather2.Companion.ftoC
 import net.thauvin.erik.mobibot.modules.Weather2.Companion.getCountry
 import net.thauvin.erik.mobibot.modules.Weather2.Companion.getWeather
 import net.thauvin.erik.mobibot.modules.Weather2.Companion.mphToKmh
+import net.thauvin.erik.mobibot.msg.Message
 import org.testng.annotations.Test
 
 /**
@@ -82,39 +85,42 @@ class Weather2Test : LocalProperties() {
     @Test(groups = ["modules"])
     @Throws(ModuleException::class)
     fun testWeather() {
-        var messages = getWeather("98204", getProperty(OWM_API_KEY_PROP))
-        assertThat(messages[0].msg, "city is not Everett").all {
+        var query = "98204"
+        var messages = getWeather(query, getProperty(OWM_API_KEY_PROP))
+        assertThat(messages, "getWeather($query)").index(0).prop(Message::msg).all {
             contains("Everett, United States")
             contains("US")
         }
-        assertThat(messages[messages.size - 1].msg, "zip code is not Everett").endsWith("98204%2CUS")
+        assertThat(messages, "getWeather($query)").index(messages.size - 1).prop(Message::msg).endsWith("98204%2CUS")
 
-        messages = getWeather("San Francisco", getProperty(OWM_API_KEY_PROP))
-        assertThat(messages[0].msg, "city is not San Francisco").all {
+        query = "San Francisco"
+        messages = getWeather(query, getProperty(OWM_API_KEY_PROP))
+        assertThat(messages, "getWeather($query)").index(0).prop(Message::msg).all {
             contains("San Francisco")
             contains("US")
         }
-        assertThat(messages[messages.size - 1].msg, "city code is not San Fran").endsWith("5391959")
+        assertThat(messages, "getWeather($query)").index(messages.size - 1).prop(Message::msg).endsWith("5391959")
 
-        messages = getWeather("London, GB", getProperty(OWM_API_KEY_PROP))
-        assertThat(messages[0].msg, "city is not London").all {
+        query = "London, GB"
+        messages = getWeather(query, getProperty(OWM_API_KEY_PROP))
+        assertThat(messages, "getWeather($query)").index(0).prop(Message::msg).all {
             contains("London, United Kingdom")
             contains("GB")
         }
-        assertThat(messages[messages.size - 1].msg, "city code is not London").endsWith("2643743")
+        assertThat(messages, "getWeather($query)").index(messages.size - 1).prop(Message::msg).endsWith("2643743")
 
         try {
-            getWeather("Foo, US", getProperty(OWM_API_KEY_PROP))
+            query = "Foo, US"
+            getWeather(query, getProperty(OWM_API_KEY_PROP))
         } catch (e: ModuleException) {
-            assertThat(e.cause, "cause is not an API exception").isNotNull().isInstanceOf(APIException::class.java)
+            assertThat(e.cause, "getWeather($query)").isNotNull().isInstanceOf(APIException::class.java)
         }
 
-        assertThat { getWeather("test", "") }.isFailure()
-            .isInstanceOf(ModuleException::class.java).hasNoCause()
-        assertThat { getWeather("test", null) }.isFailure()
-            .isInstanceOf(ModuleException::class.java).hasNoCause()
+        query = "test"
+        assertThat { getWeather(query, "") }.isFailure().isInstanceOf(ModuleException::class.java).hasNoCause()
+        assertThat { getWeather(query, null) }.isFailure().isInstanceOf(ModuleException::class.java).hasNoCause()
 
         messages = getWeather("", "apikey")
-        assertThat(messages[0].isError, "empty query should be an error").isTrue()
+        assertThat(messages, "getWeather(empty)").index(0).prop(Message::isError).isTrue()
     }
 }

@@ -61,13 +61,13 @@ class TellMessageTest {
             prop(TellMessage::recipient).isEqualTo(recipient)
             prop(TellMessage::message).isEqualTo(message)
         }
-        assertThat(isValidDate(tellMessage.queued), "queued is valid date/time").isTrue()
-        assertThat(tellMessage.isMatch(sender), "match sender").isTrue()
-        assertThat(tellMessage.isMatch(recipient), "match recipient").isTrue()
-        assertThat(tellMessage.isMatch("foo"), "foo is no match").isFalse()
+        assertThat(isValidDate(tellMessage.queued), "isValidDate()").isTrue()
+        assertThat(tellMessage.isMatch(sender), "isMatch(sender)").isTrue()
+        assertThat(tellMessage.isMatch(recipient), "isMatch(recipient)").isTrue()
+        assertThat(tellMessage.isMatch("foo"), "isMatch(foo)").isFalse()
         tellMessage.isReceived = false
-        assertThat(tellMessage.receptionDate, "reception date not set").isEqualTo(LocalDateTime.MIN)
+        assertThat(tellMessage.receptionDate, "receptionDate").isEqualTo(LocalDateTime.MIN)
         tellMessage.isReceived = true
-        assertThat(isValidDate(tellMessage.receptionDate), "received is valid date/time").isTrue()
+        assertThat(isValidDate(tellMessage.receptionDate), "isValidDate(creationDate)").isTrue()
     }
 }

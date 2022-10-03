@@ -35,6 +35,7 @@ package net.thauvin.erik.mobibot
 import assertk.assertThat
 import assertk.assertions.containsExactly
 import assertk.assertions.isEqualTo
+import assertk.assertions.size
 import net.thauvin.erik.mobibot.commands.ChannelFeed
 import net.thauvin.erik.mobibot.commands.Cycle
 import net.thauvin.erik.mobibot.commands.Die
@@ -66,8 +67,8 @@ class AddonsTest {
         addons.add(War())
         addons.add(Dice())
         addons.add(Lookup())
-        assertThat(addons.modules.size, "modules = 2").isEqualTo(2)
-        assertThat(addons.names.modules, "module names").containsExactly("Joke", "RockPaperScissors")
+        assertThat(addons.modules, "modules").size().isEqualTo(2)
+        assertThat(addons.names.modules, "names.modules").containsExactly("Joke", "RockPaperScissors")
 
         // Commands
         addons.add(View())
@@ -77,11 +78,11 @@ class AddonsTest {
         addons.add(ChannelFeed("channel")) // no properties, disabled
         p[Ignore.IGNORE_PROP] = "nick"
         addons.add(Ignore())
-        assertThat(addons.commands.size, "commands = 3").isEqualTo(3)
+        assertThat(addons.commands, "command").size().isEqualTo(3)
 
-        assertThat(addons.names.ops, "ops names").containsExactly("cycle")
+        assertThat(addons.names.ops, "names.ops").containsExactly("cycle")
 
-        assertThat(addons.names.commands, "command names").containsExactly(
+        assertThat(addons.names.commands, "names.command").containsExactly(
             "joke",
             "rock",
             "paper",

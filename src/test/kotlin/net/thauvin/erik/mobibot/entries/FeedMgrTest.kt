@@ -35,17 +35,18 @@ package net.thauvin.erik.mobibot.entries
 import assertk.all
 import assertk.assertThat
 import assertk.assertions.endsWith
+import assertk.assertions.exists
+import assertk.assertions.index
 import assertk.assertions.isEqualTo
 import assertk.assertions.isTrue
 import assertk.assertions.prop
+import assertk.assertions.size
 import net.thauvin.erik.mobibot.Utils.today
 import org.testng.annotations.BeforeSuite
 import org.testng.annotations.Test
 import java.nio.file.Paths
 import java.util.Date
-import kotlin.io.path.absolutePathString
 import kotlin.io.path.deleteIfExists
-import kotlin.io.path.exists
 import kotlin.io.path.fileSize
 import kotlin.io.path.name
 
@@ -64,11 +65,11 @@ class FeedMgrTest {
     @Test(groups = ["entries"])
     fun testFeedMgr() {
         // Load the feed
-        assertThat(FeedsMgr.loadFeed(entries), "pubDate").isEqualTo("2021-10-31")
+        assertThat(FeedsMgr.loadFeed(entries), "loadFeed()").isEqualTo("2021-10-31")
 
-        assertThat(entries.links.size, "2 links").isEqualTo(2)
+        assertThat(entries.links, "entries.links").size().isEqualTo(2)
         entries.links.forEachIndexed { i, entryLink ->
-            assertThat(entryLink, "Example $(i + 1)").all {
+            assertThat(entryLink, "entryLink[${i + 1}]").all {
                 prop(EntryLink::title).isEqualTo("Example ${i + 1}")
                 prop(EntryLink::link).isEqualTo("https://www.example.com/${i + 1}")
                 prop(EntryLink::channel).isEqualTo(channel)
@@ -79,19 +80,19 @@ class FeedMgrTest {
         }
 
         with(entries.links.first()) {
-            assertThat(nick, "first nick").isEqualTo("ErikT")
-            assertThat(date, "first date").isEqualTo(Date(1635638400000L))
-            assertThat(comments.first(), "first comment").all {
+            assertThat(nick, "nick[first]").isEqualTo("ErikT")
+            assertThat(date, "date[first]").isEqualTo(Date(1635638400000L))
+            assertThat(comments.first(), "comments[first]").all {
                 prop(EntryComment::comment).endsWith("comment 1.")
                 prop(EntryComment::nick).isEqualTo("ErikT")
             }
-            assertThat(comments.last(), "last comment").all {
+            assertThat(comments.last(), "comments[last]").all {
                 prop(EntryComment::comment).endsWith("comment 2.")
                 prop(EntryComment::nick).isEqualTo("Skynx")
             }
         }
 
-        assertThat(entries.links[1], "second link").all {
+        assertThat(entries.links, "links").index(1).all {
             prop(EntryLink::nick).isEqualTo("Skynx")
             prop(EntryLink::date).isEqualTo(Date(1635638460000L))
         }
@@ -102,20 +103,20 @@ class FeedMgrTest {
         // Save the feed
         FeedsMgr.saveFeed(entries, currentFile.name)
 
-        assertThat(currentFile.exists(), "${currentFile.absolutePathString()} exists").isTrue()
-        assertThat(backlogFile.exists(), "${backlogFile.absolutePathString()} exits").isTrue()
+        assertThat(currentFile, "currentFile").exists()
+        assertThat(backlogFile, "backlogFile").exists()
 
-        assertThat(currentFile.fileSize(), "files are identical").isEqualTo(backlogFile.fileSize())
+        assertThat(currentFile.fileSize(), "currentFile == backlogFile").isEqualTo(backlogFile.fileSize())
 
         // Load the test feed
         entries.links.clear()
         FeedsMgr.loadFeed(entries, currentFile.name)
 
         entries.links.forEachIndexed { i, entryLink ->
-            assertThat(entryLink.title, "${currentFile.name} title ${i + 1}").isEqualTo("Example ${i + 1}")
+            assertThat(entryLink.title, "entryLink.title[${i + 1}]").isEqualTo("Example ${i + 1}")
         }
 
-        assertThat(currentFile.deleteIfExists(), "delete ${currentFile.absolutePathString()}").isTrue()
-        assertThat(backlogFile.deleteIfExists(), "delete ${backlogFile.absolutePathString()}").isTrue()
+        assertThat(currentFile.deleteIfExists(), "currentFile.deleteIfExists()").isTrue()
+        assertThat(backlogFile.deleteIfExists(), "backlogFile.deleteIfExists()").isTrue()
     }
 }

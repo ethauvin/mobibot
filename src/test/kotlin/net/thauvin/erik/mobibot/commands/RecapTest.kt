@@ -46,7 +46,7 @@ class RecapTest {
         for (i in 1..20) {
             Recap.storeRecap("sender$i", "test $i", false)
         }
-        assertThat(Recap.recaps, "recap first and last").all {
+        assertThat(Recap.recaps, "Recap.recaps").all {
             size().isEqualTo(Recap.MAX_RECAPS)
             prop(MutableList<String>::first)
                 .matches("[1-2]\\d{3}-[01]\\d-[0-3]\\d [0-2]\\d:[0-6]\\d - sender11: test 11".toRegex())

@@ -50,17 +50,17 @@ import java.time.ZoneId
 class WordTimeTest {
     @Test(groups = ["modules"])
     fun testTime() {
-        assertThat(time(), "no zone").matches(
+        assertThat(time(), "time()").matches(
             ("The time is ${Colors.BOLD}\\d{1,2}:\\d{2}${Colors.BOLD} " +
                     "on ${Colors.BOLD}\\w+, \\d{1,2} \\w+ \\d{4}${Colors.BOLD} " +
                     "in ${Colors.BOLD}Los Angeles${Colors.BOLD}").toRegex()
         )
-        assertThat(time(""), "zone is not LA").endsWith("Los Angeles".bold())
-        assertThat(time("PST"), "zone is not PST").endsWith("Los Angeles".bold())
-        assertThat(time("GB"), "zone is not London").endsWith("London".bold())
-        assertThat(time("FR"), "zone is not Paris").endsWith("Paris".bold())
-        assertThat(time("BLAH"), "zone should be unsupported").startsWith("Unsupported")
-        assertThat(time("BEAT"), "$BEATS_KEYWORD is invalid").matches("[\\w ]+ .?@\\d{3}+.? .beats".toRegex())
+        assertThat(time(""), "time()").endsWith("Los Angeles".bold())
+        assertThat(time("PST"), "time(PST)").endsWith("Los Angeles".bold())
+        assertThat(time("GB"), "time(GB)").endsWith("London".bold())
+        assertThat(time("FR"), "time(FR)").endsWith("Paris".bold())
+        assertThat(time("BLAH"), "time(BLAH)").startsWith("Unsupported")
+        assertThat(time("BEAT"), "time($BEATS_KEYWORD)").matches("[\\w ]+ .?@\\d{3}+.? .beats".toRegex())
     }
 
     @Test(groups = ["modules"])

@@ -78,26 +78,32 @@ class ModuleExceptionTest {
     fun testSanitizeMessage() {
         val apiKey = "1234567890"
         var e = ModuleException(debugMessage, message, IOException("URL http://foo.com?apiKey=$apiKey&userID=me"))
-        assertThat(e.sanitize(apiKey, "", "me").message, "sanitized url is invalid").isNotNull().all {
+        assertThat(
+            e.sanitize(apiKey, "", "me").message, "ModuleException(debugMessage, message, IOException(url))"
+        ).isNotNull().all {
             contains("xxxxxxxxxx", "userID=xx", "java.io.IOException")
             doesNotContain(apiKey, "me")
         }
 
         e = ModuleException(debugMessage, message, null)
-        assertThat(e.sanitize(apiKey), "cause should be null").hasMessage(message)
+        assertThat(e.sanitize(apiKey), "ModuleException(debugMessage, message, null)").hasMessage(message)
 
         e = ModuleException(debugMessage, message, IOException())
-        assertThat(e.sanitize(apiKey), "cause message is invalid").hasMessage(message)
+        assertThat(e.sanitize(apiKey), "ModuleException(debugMessage, message, IOException())").hasMessage(message)
 
         e = ModuleException(debugMessage, apiKey)
-        assertThat(e.sanitize(apiKey).message, "message should not contain api key").isNotNull().doesNotContain(apiKey)
+        assertThat(e.sanitize(apiKey).message, "ModuleException(debugMessage, apiKey)").isNotNull()
+            .doesNotContain(apiKey)
 
         val msg: String? = null
         e = ModuleException(debugMessage, msg, IOException(msg))
-        assertThat(e.sanitize(apiKey).message, "message should be null").isNull()
+        assertThat(e.sanitize(apiKey).message, "ModuleException(debugMessage, msg, IOException(msg))").isNull()
 
         e = ModuleException(debugMessage, msg, IOException("foo is $apiKey"))
-        assertThat(e.sanitize("   ", apiKey, "foo").message, "message should not contain key").isNotNull().all {
+        assertThat(
+            e.sanitize("   ", apiKey, "foo").message,
+            "ModuleException(debugMessage, msg, IOException(foo is $apiKey))"
+        ).isNotNull().all {
             doesNotContain(apiKey)
             endsWith("xxx is xxxxxxxxxx")
         }

@@ -33,10 +33,13 @@
 package net.thauvin.erik.mobibot.commands.seen
 
 import assertk.assertThat
+import assertk.assertions.isEmpty
 import assertk.assertions.isEqualTo
 import assertk.assertions.isGreaterThan
 import assertk.assertions.isNotEqualTo
-import assertk.assertions.isTrue
+import assertk.assertions.isNotNull
+import assertk.assertions.key
+import assertk.assertions.size
 import org.testng.annotations.AfterClass
 import org.testng.annotations.BeforeClass
 import org.testng.annotations.Test
@@ -51,7 +54,7 @@ class SeenTest {
     @BeforeClass
     fun saveTest() {
         seen.add("ErikT")
-        assertThat(tmpFile.fileSize(), "temporary file is empty").isGreaterThan(0)
+        assertThat(tmpFile.fileSize(), "tmpFile.size").isGreaterThan(0)
     }
 
     @AfterClass(alwaysRun = true)
@@ -62,18 +65,18 @@ class SeenTest {
     @Test(priority = 1, groups = ["commands"])
     fun loadTest() {
         seen.clear()
-        assertThat(seen.seenNicks.isEmpty(), "nicknames map is not empty").isTrue()
+        assertThat(seen.seenNicks, "seenNicks").isEmpty()
         seen.load()
-        assertThat(seen.seenNicks.containsKey(nick), "nick is missing").isTrue()
+        assertThat(seen.seenNicks).key(nick).isNotNull()
     }
 
     @Test(groups = ["commands"])
     fun addTest() {
         val last = seen.seenNicks[nick]?.lastSeen
         seen.add(nick.lowercase())
-        assertThat(seen.seenNicks.size, "nick is duplicated").isEqualTo(1)
-        assertThat(seen.seenNicks[nick]?.lastSeen, "last seen is not different").isNotEqualTo(last)
-        assertThat(seen.seenNicks[nick]?.nick, "nick is not lowercase").isEqualTo(nick.lowercase())
+        assertThat(seen.seenNicks, "seenNicks").size().isEqualTo(1)
+        assertThat(seen.seenNicks[nick]?.lastSeen, "seenNicks[$nick].lastSeen").isNotEqualTo(last)
+        assertThat(seen.seenNicks[nick]?.nick, "seenNicks[$nick].nick").isEqualTo(nick.lowercase())
     }
 
     @Test(priority = 10, groups = ["commands"])
@@ -81,6 +84,6 @@ class SeenTest {
         seen.clear()
         seen.save()
         seen.load()
-        assertThat(seen.seenNicks.size, "nicknames are not empty.").isEqualTo(0)
+        assertThat(seen.seenNicks, "seenNicks").size().isEqualTo(0)
     }
 }

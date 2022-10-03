@@ -34,6 +34,7 @@ package net.thauvin.erik.mobibot.modules
 import assertk.all
 import assertk.assertThat
 import assertk.assertions.hasNoCause
+import assertk.assertions.index
 import assertk.assertions.isEqualTo
 import assertk.assertions.isFailure
 import assertk.assertions.isInstanceOf
@@ -60,18 +61,21 @@ class StockQuoteTest : LocalProperties() {
     fun testGetQuote() {
         val apiKey = getProperty(StockQuote.ALPHAVANTAGE_API_KEY_PROP)
         try {
-            val messages = getQuote("apple inc", apiKey)
+            var symbol = "apple inc"
+            val messages = getQuote(symbol, apiKey)
             assertThat(messages, "response not empty").isNotEmpty()
-            assertThat(messages[0].msg, "stock symbol should be AAPL").matches("Symbol: AAPL .*".toRegex())
-            assertThat(messages[1].msg, "price label is invalid").matches(buildMatch("Price").toRegex())
-            assertThat(messages[2].msg, "previous label is invalid").matches(buildMatch("Previous").toRegex())
-            assertThat(messages[3].msg, "open label is invalid").matches(buildMatch("Open").toRegex())
+            assertThat(messages, "getQuote($symbol)").index(0).prop(Message::msg).matches("Symbol: AAPL .*".toRegex())
+            assertThat(messages, "getQuote($symbol)").index(1).prop(Message::msg).matches(buildMatch("Price").toRegex())
+            assertThat(messages, "getQuote($symbol)").index(2).prop(Message::msg)
+                .matches(buildMatch("Previous").toRegex())
+            assertThat(messages, "getQuote($symbol)").index(3).prop(Message::msg).matches(buildMatch("Open").toRegex())
 
-            assertThat(getQuote("blahfoo", apiKey).first(), "symbol should be invalid").all {
+            symbol = "blahfoo"
+            assertThat(getQuote(symbol, apiKey).first(), "getQuote($symbol)").all {
                 isInstanceOf(ErrorMessage::class.java)
                 prop(Message::msg).isEqualTo(StockQuote.INVALID_SYMBOL)
             }
-            assertThat(getQuote("", "apikey").first(), "symbol should be empty").all {
+            assertThat(getQuote("", "apikey").first(), "getQuote(empty)").all {
                 isInstanceOf(ErrorMessage::class.java)
                 prop(Message::msg).isEqualTo(StockQuote.INVALID_SYMBOL)
             }

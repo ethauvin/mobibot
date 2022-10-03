@@ -36,6 +36,7 @@ import assertk.assertThat
 import assertk.assertions.contains
 import assertk.assertions.hasMessage
 import assertk.assertions.hasNoCause
+import assertk.assertions.index
 import assertk.assertions.isEqualTo
 import assertk.assertions.isFailure
 import assertk.assertions.isInstanceOf
@@ -56,7 +57,7 @@ class GoogleSearchTest : LocalProperties() {
     fun testAPIKeys() {
         assertThat(
             searchGoogle("", "apikey", "cssKey").first(),
-            "empty query"
+            "searchGoogle(empty)"
         ).isInstanceOf(ErrorMessage::class.java)
 
         assertThat { searchGoogle("test", "", "apiKey") }.isFailure()
@@ -78,12 +79,14 @@ class GoogleSearchTest : LocalProperties() {
         val cseKey = getProperty(GoogleSearch.GOOGLE_CSE_KEY_PROP)
 
         try {
-            var messages = searchGoogle("mobibot", apiKey, cseKey)
-            assertThat(messages, "search result should not be empty").isNotEmpty()
-            assertThat(messages[0].msg, "search query not found").contains("mobibot", true)
+            var query = "mobibot"
+            var messages = searchGoogle(query, apiKey, cseKey)
+            assertThat(messages, "searchGoogle($query)").isNotEmpty()
+            assertThat(messages, "searchGoogle($query)").index(0).prop(Message::msg).contains(query, true)
 
-            messages = searchGoogle("adadflkjl", apiKey, cseKey)
-            assertThat(messages[0], "not found").all {
+            query = "adadflkjl"
+            messages = searchGoogle(query, apiKey, cseKey)
+            assertThat(messages, "searchGoogle($query)").index(0).all {
                 isInstanceOf(ErrorMessage::class.java)
                 prop(Message::msg).isEqualTo("No results found.")
             }

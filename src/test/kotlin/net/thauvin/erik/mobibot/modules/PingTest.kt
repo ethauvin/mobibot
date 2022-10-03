@@ -43,13 +43,13 @@ import org.testng.annotations.Test
 class PingTest {
     @Test(groups = ["modules"])
     fun testPingsArray() {
-        assertThat(Ping.PINGS, "Pings array should be empty").isNotEmpty()
+        assertThat(Ping.PINGS, "Ping.PINGS").isNotEmpty()
     }
 
     @Test(groups = ["modules"])
     fun testRandomPing() {
         for (i in 0..9) {
-            assertThat(Ping.PINGS, "Random ping $i").contains(randomPing())
+            assertThat(Ping.PINGS, "Ping.PINGS[$i]").contains(randomPing())
         }
     }
 }

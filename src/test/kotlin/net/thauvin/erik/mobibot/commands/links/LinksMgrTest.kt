@@ -46,14 +46,14 @@ class LinksMgrTest {
 
     @Test(groups = ["commands", "links"])
     fun fetchTitle() {
-        assertThat(linksMgr.fetchTitle("https://erik.thauvin.net/"), "Erik").contains("Erik's Weblog")
-        assertThat(linksMgr.fetchTitle("https://www.google.com/foo"), "Foo").isEqualTo(Constants.NO_TITLE)
+        assertThat(linksMgr.fetchTitle("https://erik.thauvin.net/"), "fetchTitle(Erik)").contains("Erik's Weblog")
+        assertThat(linksMgr.fetchTitle("https://www.google.com/foo"), "fetchTitle(Foo)").isEqualTo(Constants.NO_TITLE)
     }
 
     @Test(groups = ["commands", "links"])
     fun testMatches() {
-        assertThat(linksMgr.matches("https://www.example.com/"), "https").isTrue()
-        assertThat(linksMgr.matches("HTTP://erik.thauvin.net/blog/ Erik's Weblog"), "HTTP").isTrue()
+        assertThat(linksMgr.matches("https://www.example.com/"), "matches(url)").isTrue()
+        assertThat(linksMgr.matches("HTTP://erik.thauvin.net/blog/ Erik's Weblog"), "matches(HTTP)").isTrue()
     }
 
     @Test(groups = ["commands", "links"])
@@ -62,11 +62,11 @@ class LinksMgrTest {
         val tags = mutableListOf<String>()
 
         linksMgr.matchTagKeywords("Test title with key2", tags)
-        assertThat(tags, "key2").contains("key2")
+        assertThat(tags, "tags").contains("key2")
         tags.clear()
 
         linksMgr.matchTagKeywords("Test key3 title with key1", tags)
-        assertThat(tags, "key1 & key 3").all {
+        assertThat(tags, "tags(key1, key3)").all {
             contains("key1")
             contains("key3")
             size().isEqualTo(2)

@@ -98,8 +98,8 @@ class UtilsTest {
 
     @Test
     fun testBold() {
-        assertThat(1.bold(), "1.bold()").isEqualTo(Colors.BOLD + "1" + Colors.BOLD)
-        assertThat(2L.bold(), "1.bold()").isEqualTo(Colors.BOLD + "2" + Colors.BOLD)
+        assertThat(1.bold(), "bold(1)").isEqualTo(Colors.BOLD + "1" + Colors.BOLD)
+        assertThat(2L.bold(), "bold(2L)").isEqualTo(Colors.BOLD + "2" + Colors.BOLD)
         assertThat(ascii.bold(), "ascii.bold()").isEqualTo(Colors.BOLD + ascii + Colors.BOLD)
         assertThat("test".bold(), "test.bold()").isEqualTo(Colors.BOLD + "test" + Colors.BOLD)
     }
@@ -132,7 +132,7 @@ class UtilsTest {
             .isEqualTo(Colors.BOLD + ascii + Colors.BOLD)
         assertThat(null.colorize(Colors.RED), "null.colorize()").isEqualTo("")
         assertThat("".colorize(Colors.RED), "colorize()").isEqualTo("")
-        assertThat(ascii.colorize(DEFAULT_COLOR), "none.colorize()").isEqualTo(ascii)
+        assertThat(ascii.colorize(DEFAULT_COLOR), "ascii.colorize()").isEqualTo(ascii)
         assertThat("   ".colorize(Colors.NORMAL), "blank.colorize()")
             .isEqualTo(Colors.NORMAL + "   " + Colors.NORMAL)
     }
@@ -165,19 +165,19 @@ class UtilsTest {
     @Test
     fun testHelpCmdSyntax() {
         val bot = "mobibot"
-        assertThat(helpCmdSyntax("%c $test %n $test", bot, false), "public")
+        assertThat(helpCmdSyntax("%c $test %n $test", bot, false), "helpCmdSyntax(private)")
             .isEqualTo("$bot: $test $bot $test")
-        assertThat(helpCmdSyntax("%c %n $test %c $test %n", bot, true), "public")
+        assertThat(helpCmdSyntax("%c %n $test %c $test %n", bot, true), "helpCmdSyntax(public)")
             .isEqualTo("/msg $bot $bot $test /msg $bot $test $bot")
     }
 
     @Test
     fun testHelpFormat() {
-        assertThat(helpFormat(test, isBold = true, isIndent = false), "bold")
+        assertThat(helpFormat(test, isBold = true, isIndent = false), "helpFormat(bold)")
             .isEqualTo("${Colors.BOLD}$test${Colors.BOLD}")
-        assertThat(helpFormat(test, isBold = false, isIndent = true), "indent")
+        assertThat(helpFormat(test, isBold = false, isIndent = true), "helpFormat(indent)")
             .isEqualTo(test.prependIndent())
-        assertThat(helpFormat(test, isBold = true, isIndent = true), "bold-indent")
+        assertThat(helpFormat(test, isBold = true, isIndent = true), "helpFormat(bold,indent)")
             .isEqualTo(test.colorize(Colors.BOLD).prependIndent())
 
     }
@@ -191,9 +191,9 @@ class UtilsTest {
     @Test
     fun testLastOrEmpty() {
         val two = listOf("1", "2")
-        assertThat(two.lastOrEmpty(), "two").isEqualTo("2")
+        assertThat(two.lastOrEmpty(), "lastOrEmpty(1,2)").isEqualTo("2")
         val one = listOf("1")
-        assertThat(one.lastOrEmpty(), "one").isEqualTo("")
+        assertThat(one.lastOrEmpty(), "lastOrEmpty(1)").isEqualTo("")
     }
 
     @Test

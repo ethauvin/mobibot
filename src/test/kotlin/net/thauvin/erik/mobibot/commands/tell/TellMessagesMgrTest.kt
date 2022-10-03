@@ -40,6 +40,7 @@ import assertk.assertions.isFalse
 import assertk.assertions.isGreaterThan
 import assertk.assertions.isTrue
 import assertk.assertions.prop
+import assertk.assertions.size
 import org.testng.annotations.AfterClass
 import org.testng.annotations.BeforeClass
 import org.testng.annotations.Test
@@ -74,9 +75,9 @@ class TellMessagesMgrTest {
             queued = LocalDateTime.now().minusDays(maxDays)
         })
         val size = testMessages.size
-        assertThat(TellMessagesMgr.clean(testMessages, maxDays + 2), "maxDays = 12").isFalse()
-        assertThat(TellMessagesMgr.clean(testMessages, maxDays), "maxDays = 10").isTrue()
-        assertThat(testMessages.size, "size-- after clean").isEqualTo(size - 1)
+        assertThat(TellMessagesMgr.clean(testMessages, maxDays + 2), "clean(maxDays=${maxDays + 2})").isFalse()
+        assertThat(TellMessagesMgr.clean(testMessages, maxDays), "clean(maxDays=$maxDays)").isTrue()
+        assertThat(testMessages, "testMessages").size().isEqualTo(size - 1)
     }
 
     @Test(groups = ["commands", "tell"])

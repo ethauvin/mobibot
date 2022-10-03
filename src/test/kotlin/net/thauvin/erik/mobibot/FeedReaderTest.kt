@@ -33,11 +33,15 @@ package net.thauvin.erik.mobibot
 
 import assertk.assertThat
 import assertk.assertions.contains
+import assertk.assertions.index
 import assertk.assertions.isEqualTo
 import assertk.assertions.isFailure
 import assertk.assertions.isInstanceOf
+import assertk.assertions.prop
+import assertk.assertions.size
 import com.rometools.rome.io.FeedException
 import net.thauvin.erik.mobibot.FeedReader.Companion.readFeed
+import net.thauvin.erik.mobibot.msg.Message
 import org.testng.annotations.Test
 import java.io.IOException
 import java.net.MalformedURLException
@@ -50,15 +54,15 @@ class FeedReaderTest {
     @Test
     fun readFeedTest() {
         var messages = readFeed("https://feeds.thauvin.net/ethauvin")
-        assertThat(messages.size, "size = 10").isEqualTo(10)
-        assertThat(messages[1].msg, "feed entry url").contains("erik.thauvin.net")
+        assertThat(messages, "messages").size().isEqualTo(10)
+        assertThat(messages, "messages").index(1).prop(Message::msg).contains("erik.thauvin.net")
 
         messages = readFeed("https://lorem-rss.herokuapp.com/feed?length=0")
-        assertThat(messages[0].msg, "nothing to view").contains("nothing")
+        assertThat(messages, "messages").index(0).prop(Message::msg).contains("nothing")
 
         messages = readFeed("https://lorem-rss.herokuapp.com/feed?length=42", 42)
-        assertThat(messages.size, "messages = 84").isEqualTo(84)
-        assertThat(messages.last().msg, "example entry url").contains("http://example.com/test/")
+        assertThat(messages, "messages").size().isEqualTo(84)
+        assertThat(messages.last(), "messages.last").prop(Message::msg).contains("http://example.com/test/")
 
         assertThat { readFeed("blah") }.isFailure().isInstanceOf(MalformedURLException::class.java)
 

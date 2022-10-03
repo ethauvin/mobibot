@@ -35,7 +35,10 @@ import assertk.assertThat
 import assertk.assertions.isGreaterThan
 import assertk.assertions.isInstanceOf
 import assertk.assertions.isNotEmpty
+import assertk.assertions.prop
+import assertk.assertions.size
 import net.thauvin.erik.mobibot.modules.Joke.Companion.randomJoke
+import net.thauvin.erik.mobibot.msg.Message
 import net.thauvin.erik.mobibot.msg.PublicMessage
 import org.testng.annotations.Test
 
@@ -47,10 +50,10 @@ class JokeTest {
     @Throws(ModuleException::class)
     fun testRandomJoke() {
         val joke = randomJoke()
-        assertThat(joke.size, "joke should not be empty").isGreaterThan(0)
+        assertThat(joke, "randomJoke()").size().isGreaterThan(0)
         joke.forEach {
-            assertThat(it, "message should be public").isInstanceOf(PublicMessage::class.java)
-            assertThat(it.msg, "message should not be empty").isNotEmpty()
+            assertThat(it, "randomJoke()").isInstanceOf(PublicMessage::class.java)
+            assertThat(it, "randomJoke()").prop(Message::msg).isNotEmpty()
         }
     }
 }

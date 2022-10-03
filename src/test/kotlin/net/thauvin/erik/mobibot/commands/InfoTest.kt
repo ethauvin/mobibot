@@ -40,14 +40,20 @@ import org.testng.annotations.Test
 class InfoTest {
     @Test(groups = ["commands"])
     fun testToUptime() {
-        assertThat(547800300076L.toUptime(), "full").isEqualTo("17 years 2 months 2 weeks 1 day 6 hours 45 minutes")
-        assertThat(24300000L.toUptime(), "hours minutes").isEqualTo("6 hours 45 minutes")
-        assertThat(110700000L.toUptime(), "days hours minutes").isEqualTo("1 day 6 hours 45 minutes")
-        assertThat(1320300000L.toUptime(), "weeks days hours minutes").isEqualTo("2 weeks 1 day 6 hours 45 minutes")
-        assertThat(2700000L.toUptime(), "45 minutes").isEqualTo("45 minutes")
-        assertThat(60000L.toUptime(), "1 minute").isEqualTo("1 minute")
-        assertThat(59000L.toUptime(), "59 seconds").isEqualTo("59 seconds")
-        assertThat(0L.toUptime(), "0 second").isEqualTo("0 second")
+        assertThat(
+            547800300076L.toUptime(),
+            "upTime(full)"
+        ).isEqualTo("17 years 2 months 2 weeks 1 day 6 hours 45 minutes")
+        assertThat(24300000L.toUptime(), "upTime(hours minutes)").isEqualTo("6 hours 45 minutes")
+        assertThat(110700000L.toUptime(), "upTime(days hours minutes)").isEqualTo("1 day 6 hours 45 minutes")
+        assertThat(
+            1320300000L.toUptime(),
+            "upTime(weeks days hours minutes)"
+        ).isEqualTo("2 weeks 1 day 6 hours 45 minutes")
+        assertThat(2700000L.toUptime(), "upTime(45 minutes)").isEqualTo("45 minutes")
+        assertThat(60000L.toUptime(), "upTime(1 minute)").isEqualTo("1 minute")
+        assertThat(59000L.toUptime(), "upTime(59 seconds)").isEqualTo("59 seconds")
+        assertThat(0L.toUptime(), "upTime(0 second)").isEqualTo("0 second")
 
     }
 }
