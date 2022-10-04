@@ -39,17 +39,18 @@ import assertk.assertions.isFailure
 import assertk.assertions.isInstanceOf
 import net.thauvin.erik.mobibot.ExceptionSanitizer.sanitize
 import net.thauvin.erik.mobibot.LocalProperties
+import net.thauvin.erik.mobibot.modules.WolframAlpha.Companion.queryWolfram
 import org.testng.annotations.Test
 
 class WolframAlphaTest : LocalProperties() {
     @Test(groups = ["modules"])
     fun testAppId() {
-        assertThat { WolframAlpha.queryWolfram("1 gallon to liter", appId = "DEMO") }
+        assertThat { queryWolfram("1 gallon to liter", appId = "DEMO") }
             .isFailure()
             .isInstanceOf(ModuleException::class.java)
             .hasMessage("Error 1: Invalid appid")
 
-        assertThat { WolframAlpha.queryWolfram("1 gallon to liter", appId = "") }
+        assertThat { queryWolfram("1 gallon to liter", appId = "") }
             .isFailure()
             .isInstanceOf(ModuleException::class.java)
     }
@@ -60,11 +61,11 @@ class WolframAlphaTest : LocalProperties() {
         val apiKey = getProperty(WolframAlpha.WOLFRAM_APPID_KEY)
         try {
             var query = "SFO to SEA"
-            assertThat(WolframAlpha.queryWolfram(query, appId = apiKey), "queryWolfram($query)").contains("miles")
+            assertThat(queryWolfram(query, appId = apiKey), "queryWolfram($query)").contains("miles")
 
             query = "SFO to LAX"
             assertThat(
-                WolframAlpha.queryWolfram(query, WolframAlpha.METRIC, apiKey),
+                queryWolfram(query, WolframAlpha.METRIC, apiKey),
                 "queryWolfram($query)"
             ).contains("kilometers")
         } catch (e: ModuleException) {

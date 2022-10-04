@@ -33,6 +33,7 @@ package net.thauvin.erik.mobibot.entries
 
 import assertk.all
 import assertk.assertThat
+import assertk.assertions.index
 import assertk.assertions.isEmpty
 import assertk.assertions.isEqualTo
 import assertk.assertions.isFalse
@@ -96,9 +97,11 @@ class EntryLinkTest {
         val tag = "test"
         val tags = listOf(SyndCategoryImpl().apply { name = tag })
         val link = EntryLink("link", "title", "nick", "channel", Date(), tags)
-        assertThat(link.tags, "tags").size().isEqualTo(tags.size)
-        assertThat(link.tags[0].name, "tag[0].name").isEqualTo(tag)
-        assertThat(link.pinboardTags, "pinboardTags").isEqualTo("nick,$tag")
+        assertThat(link, "link").all {
+            prop(EntryLink::tags).size().isEqualTo(tags.size)
+            prop(EntryLink::tags).index(0).prop(SyndCategory::getName).isEqualTo(tag)
+            prop(EntryLink::pinboardTags).isEqualTo("nick,$tag")
+        }
     }
 
     @Test(groups = ["entries"])
@@ -118,13 +121,12 @@ class EntryLinkTest {
         for ((i, tag) in tags.withIndex()) {
             assertThat(tag.name, "tag.name($i)").isEqualTo("tag${i + 1}")
         }
-        assertThat(entryLink.tags, "tags").size().isEqualTo(5)
+        assertThat(entryLink::tags).size().isEqualTo(5)
         entryLink.setTags("-tag5")
         entryLink.setTags("+mobitopia")
         entryLink.setTags("tag4")
         entryLink.setTags("-mobitopia")
-        assertThat(entryLink.pinboardTags, "pinboardTags")
-            .isEqualTo(entryLink.nick + ",tag1,tag2,tag3,tag4,mobitopia")
+        assertThat(entryLink::pinboardTags).isEqualTo(entryLink.nick + ",tag1,tag2,tag3,tag4,mobitopia")
         val size = entryLink.tags.size
         entryLink.setTags("")
         assertThat(entryLink.tags, "setTags('')").size().isEqualTo(size)

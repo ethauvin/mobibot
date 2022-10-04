@@ -81,8 +81,10 @@ class GoogleSearchTest : LocalProperties() {
         try {
             var query = "mobibot"
             var messages = searchGoogle(query, apiKey, cseKey)
-            assertThat(messages, "searchGoogle($query)").isNotEmpty()
-            assertThat(messages, "searchGoogle($query)").index(0).prop(Message::msg).contains(query, true)
+            assertThat(messages, "searchGoogle($query)").all {
+                isNotEmpty()
+                index(0).prop(Message::msg).contains(query, true)
+            }
 
             query = "adadflkjl"
             messages = searchGoogle(query, apiKey, cseKey)

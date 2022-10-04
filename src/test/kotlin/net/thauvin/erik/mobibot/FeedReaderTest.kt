@@ -31,6 +31,7 @@
  */
 package net.thauvin.erik.mobibot
 
+import assertk.all
 import assertk.assertThat
 import assertk.assertions.contains
 import assertk.assertions.index
@@ -54,8 +55,10 @@ class FeedReaderTest {
     @Test
     fun readFeedTest() {
         var messages = readFeed("https://feeds.thauvin.net/ethauvin")
-        assertThat(messages, "messages").size().isEqualTo(10)
-        assertThat(messages, "messages").index(1).prop(Message::msg).contains("erik.thauvin.net")
+        assertThat(messages, "messages").all {
+            size().isEqualTo(10)
+            index(1).prop(Message::msg).contains("erik.thauvin.net")
+        }
 
         messages = readFeed("https://lorem-rss.herokuapp.com/feed?length=0")
         assertThat(messages, "messages").index(0).prop(Message::msg).contains("nothing")
@@ -68,8 +71,7 @@ class FeedReaderTest {
 
         assertThat { readFeed("https://www.example.com") }.isFailure().isInstanceOf(FeedException::class.java)
 
-        assertThat { readFeed("https://www.thauvin.net/foo") }.isFailure()
-            .isInstanceOf(IOException::class.java)
+        assertThat { readFeed("https://www.thauvin.net/foo") }.isFailure().isInstanceOf(IOException::class.java)
 
         assertThat { readFeed("https://www.examplesfoo.com/") }.isFailure()
             .isInstanceOf(UnknownHostException::class.java)

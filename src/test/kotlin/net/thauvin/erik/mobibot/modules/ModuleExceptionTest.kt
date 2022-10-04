@@ -66,12 +66,12 @@ class ModuleExceptionTest {
 
     @Test(dataProvider = "dp")
     fun testGetDebugMessage(e: ModuleException) {
-        assertThat(e.debugMessage, "debug message is invalid").isEqualTo(debugMessage)
+        assertThat(e::debugMessage).isEqualTo(debugMessage)
     }
 
     @Test(dataProvider = "dp")
     fun testGetMessage(e: ModuleException) {
-        assertThat(e, "message is invalid").hasMessage(message)
+        assertThat(e).hasMessage(message)
     }
 
     @Test(groups = ["modules"])

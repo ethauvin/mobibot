@@ -31,14 +31,13 @@
  */
 package net.thauvin.erik.mobibot.modules
 
+import assertk.all
 import assertk.assertThat
+import assertk.assertions.each
 import assertk.assertions.isGreaterThan
 import assertk.assertions.isInstanceOf
-import assertk.assertions.isNotEmpty
-import assertk.assertions.prop
 import assertk.assertions.size
 import net.thauvin.erik.mobibot.modules.Joke.Companion.randomJoke
-import net.thauvin.erik.mobibot.msg.Message
 import net.thauvin.erik.mobibot.msg.PublicMessage
 import org.testng.annotations.Test
 
@@ -50,10 +49,11 @@ class JokeTest {
     @Throws(ModuleException::class)
     fun testRandomJoke() {
         val joke = randomJoke()
-        assertThat(joke, "randomJoke()").size().isGreaterThan(0)
-        joke.forEach {
-            assertThat(it, "randomJoke()").isInstanceOf(PublicMessage::class.java)
-            assertThat(it, "randomJoke()").prop(Message::msg).isNotEmpty()
+        assertThat(joke, "randomJoke()").all {
+            size().isGreaterThan(0)
+            each {
+                it.isInstanceOf(PublicMessage::class.java)
+            }
         }
     }
 }
