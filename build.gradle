@@ -45,8 +45,8 @@ dependencies {
     compileOnly(semverProcessor)
 
     // PircBotX
-    //implementation 'com.github.pircbotx:pircbotx:-SNAPSHOT'
-    implementation fileTree(dir: 'lib', include: '*.jar')
+    implementation 'com.github.pircbotx:pircbotx:-SNAPSHOT'
+    // implementation fileTree(dir: 'lib', include: '*.jar')
 
     // Commons (mostly for PircBotX)
     implementation 'org.apache.commons:commons-lang3:3.12.0'
