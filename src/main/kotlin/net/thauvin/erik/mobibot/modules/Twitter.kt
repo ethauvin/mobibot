@@ -42,8 +42,6 @@ import org.pircbotx.hooks.types.GenericMessageEvent
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import twitter4j.TwitterException
-import twitter4j.TwitterFactory
-import twitter4j.conf.ConfigurationBuilder
 import java.util.Timer
 
 /**
@@ -214,20 +212,18 @@ class Twitter : ThreadedModule() {
             isDm: Boolean
         ): String {
             return try {
-                val cb = ConfigurationBuilder().apply {
-                    setDebugEnabled(true)
-                    setOAuthConsumerKey(consumerKey)
-                    setOAuthConsumerSecret(consumerSecret)
-                    setOAuthAccessToken(token)
-                    setOAuthAccessTokenSecret(tokenSecret)
-                }
-                val tf = TwitterFactory(cb.build())
-                val twitter = tf.instance
+                val twitter = twitter4j.Twitter.newBuilder()
+                    .prettyDebugEnabled(true)
+                    .oAuthConsumer(consumerKey, consumerSecret)
+                    .oAuthAccessToken(token, tokenSecret)
+                    .build()
                 if (!isDm) {
-                    val status = twitter.updateStatus(message)
-                    "Your message was posted to https://twitter.com/${twitter.screenName}/statuses/${status.id}"
+                    val status = twitter.v1().tweets().updateStatus(message)
+                    "Your message was posted to https://twitter.com/${
+                        twitter.v1().users().accountSettings.screenName
+                    }/statuses/${status.id}"
                 } else {
-                    val dm = twitter.sendDirectMessage(handle, message)
+                    val dm = twitter.v1().directMessages().sendDirectMessage(handle, message)
                     dm.text
                 }
             } catch (e: TwitterException) {

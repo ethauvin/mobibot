@@ -31,13 +31,14 @@
  */
 package net.thauvin.erik.mobibot
 
+import twitter4j.AccessToken
+import twitter4j.OAuthAuthorization
 import twitter4j.TwitterException
-import twitter4j.TwitterFactory
-import twitter4j.auth.AccessToken
 import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStreamReader
 import kotlin.system.exitProcess
+
 
 /**
  * The `TwitterOAuth` class.
@@ -51,7 +52,7 @@ import kotlin.system.exitProcess
  * and follow the prompts/instructions.
  *
  * @author [Erik C. Thauvin](https://erik.thauvin.net)
- * @author [Twitter4J Example](https://twitter4j.org/en/code-examples.html#oauth)
+ * @author [Yusuke Yamamoto](https://github.com/Twitter4J/Twitter4J/blob/main/twitter4j-examples/src/main/java/examples/oauth/GetAccessToken.java)
  */
 object TwitterOAuth {
     /**
@@ -60,49 +61,55 @@ object TwitterOAuth {
      * @param args The consumerKey and consumerSecret should be passed as arguments.
      */
     @JvmStatic
-    @Throws(TwitterException::class, IOException::class)
     fun main(args: Array<String>) {
         if (args.size == 2) {
-            with(TwitterFactory.getSingleton()) {
-                setOAuthConsumer(args[0], args[1])
-                val requestToken = oAuthRequestToken
+            try {
+                val oAuthAuthorization = OAuthAuthorization.getInstance(args[0], args[1])
+                val requestToken = oAuthAuthorization.oAuthRequestToken
                 var accessToken: AccessToken? = null
-                BufferedReader(InputStreamReader(System.`in`)).use { br ->
-                    while (null == accessToken) {
-                        print(
-                            """
-                            Open the following URL and grant access to your account:
-                        
-                            ${requestToken.authorizationURL}
+                val br = BufferedReader(InputStreamReader(System.`in`))
+                while (null == accessToken) {
+                    print(
+                        """
+                        Open the following URL and grant access to your account:
+                    
+                        ${requestToken.authorizationURL}
 
-                            Enter the PIN (if available) or just hit enter. [PIN]: """.trimIndent()
-                        )
-                        val pin = br.readLine()
-                        try {
-                            accessToken = if (!pin.isNullOrEmpty()) {
-                                getOAuthAccessToken(requestToken, pin)
-                            } else {
-                                oAuthAccessToken
-                            }
-                            println(
-                                """
-                                Please add the following to the bot's property file:
-                                
-                                twitter-consumerKey=${args[0]}
-                                twitter-consumerSecret=${args[1]}
-                                twitter-token=${accessToken?.token}
-                                twitter-tokenSecret=${accessToken?.tokenSecret}
-                                """.trimIndent()
-                            )
-                        } catch (te: TwitterException) {
-                            if (401 == te.statusCode) {
-                                println("Unable to get the access token.")
-                            } else {
-                                te.printStackTrace()
-                            }
+                        Enter the PIN (if available) or just hit enter. [PIN]: """.trimIndent()
+                    )
+                    val pin = br.readLine()
+                    try {
+                        accessToken = if (!pin.isNullOrEmpty()) {
+                            oAuthAuthorization.getOAuthAccessToken(requestToken, pin)
+                        } else {
+                            oAuthAuthorization.getOAuthAccessToken(requestToken)
+                        }
+                    } catch (te: TwitterException) {
+                        if (401 == te.statusCode) {
+                            println("Unable to get the access token.")
+                        } else {
+                            te.printStackTrace()
                         }
                     }
                 }
+                println(
+                    """
+                    Please add the following to the bot's property file:
+                    
+                    twitter-consumerKey=${args[0]}
+                    twitter-consumerSecret=${args[1]}
+                    twitter-token=${accessToken.token}
+                    twitter-tokenSecret=${accessToken.tokenSecret}
+                    """.trimIndent()
+                )
+            } catch (te: TwitterException) {
+                te.printStackTrace()
+                println("Failed to get accessToken: " + te.message)
+                exitProcess(-1)
+            } catch (ioe: IOException) {
+                ioe.printStackTrace()
+                println("Failed to read the system input.")
+                exitProcess(-1)
             }
         } else {
             println("Usage: ${TwitterOAuth::class.java.name} <consumerKey> <consumerSecret>")

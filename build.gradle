@@ -76,7 +76,7 @@ dependencies {
     implementation 'net.objecthunter:exp4j:0.4.8'
     implementation 'org.json:json:20220924'
     implementation 'org.jsoup:jsoup:1.15.3'
-    implementation 'org.twitter4j:twitter4j-core:4.0.7'
+    implementation 'org.twitter4j:twitter4j-core:4.1.0'
 
     // Thauvin
     implementation 'net.thauvin.erik:cryptoprice:1.0.0'

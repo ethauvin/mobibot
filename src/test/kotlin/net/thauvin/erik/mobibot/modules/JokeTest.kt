@@ -33,11 +33,14 @@ package net.thauvin.erik.mobibot.modules
 
 import assertk.all
 import assertk.assertThat
+import assertk.assertions.doesNotContain
 import assertk.assertions.each
 import assertk.assertions.isGreaterThan
 import assertk.assertions.isInstanceOf
+import assertk.assertions.prop
 import assertk.assertions.size
 import net.thauvin.erik.mobibot.modules.Joke.Companion.randomJoke
+import net.thauvin.erik.mobibot.msg.Message
 import net.thauvin.erik.mobibot.msg.PublicMessage
 import org.testng.annotations.Test
 
@@ -53,6 +56,7 @@ class JokeTest {
             size().isGreaterThan(0)
             each {
                 it.isInstanceOf(PublicMessage::class.java)
+                it.prop(Message::msg).doesNotContain("\n")
             }
         }
     }

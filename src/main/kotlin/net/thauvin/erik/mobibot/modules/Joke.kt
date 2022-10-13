@@ -33,9 +33,9 @@ package net.thauvin.erik.mobibot.modules
 
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import net.thauvin.erik.jokeapi.JokeApi.Companion.getJoke
 import net.thauvin.erik.jokeapi.exceptions.HttpErrorException
 import net.thauvin.erik.jokeapi.exceptions.JokeException
+import net.thauvin.erik.jokeapi.getJoke
 import net.thauvin.erik.jokeapi.models.Type
 import net.thauvin.erik.mobibot.Utils.bot
 import net.thauvin.erik.mobibot.Utils.colorize
@@ -93,7 +93,7 @@ class Joke : ThreadedModule() {
         fun randomJoke(): List<Message> {
             return try {
                 val messages = mutableListOf<Message>()
-                val joke = getJoke(safe = true, type = Type.SINGLE)
+                val joke = getJoke(safe = true, type = Type.SINGLE, splitNewLine = true)
                 joke.joke.forEach {
                     messages.add(PublicMessage(it, Colors.CYAN))
                 }
