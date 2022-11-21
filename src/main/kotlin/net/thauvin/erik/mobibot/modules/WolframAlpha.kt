@@ -49,7 +49,6 @@ class WolframAlpha : ThreadedModule() {
     override val name = "WolframAlpha"
 
     private fun getUnits(unit: String?): String {
-        println("--> $unit")
         return if (unit?.lowercase() == METRIC) {
             METRIC
         } else {

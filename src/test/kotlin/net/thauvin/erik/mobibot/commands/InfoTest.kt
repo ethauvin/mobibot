@@ -43,7 +43,7 @@ class InfoTest {
         assertThat(
             547800300076L.toUptime(),
             "upTime(full)"
-        ).isEqualTo("17 years 2 months 2 weeks 1 day 6 hours 45 minutes")
+        ).isEqualTo("17 years 4 months 2 weeks 1 day 6 hours 45 minutes")
         assertThat(24300000L.toUptime(), "upTime(hours minutes)").isEqualTo("6 hours 45 minutes")
         assertThat(110700000L.toUptime(), "upTime(days hours minutes)").isEqualTo("1 day 6 hours 45 minutes")
         assertThat(

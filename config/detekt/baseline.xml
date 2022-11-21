@@ -2,8 +2,8 @@
 <SmellBaseline>
   <ManuallySuppressedIssues></ManuallySuppressedIssues>
   <CurrentIssues>
-    <ID>ComplexMethod:FeedsMgr.kt$FeedsMgr.Companion$@JvmStatic fun saveFeed(entries: Entries, currentFile: String = currentXml)</ID>
-    <ID>ComplexMethod:Weather2.kt$Weather2.Companion$@JvmStatic @Throws(ModuleException::class) fun getWeather(query: String, apiKey: String?): List&lt;Message&gt;</ID>
+    <ID>CyclomaticComplexMethod:FeedsMgr.kt$FeedsMgr.Companion$@JvmStatic fun saveFeed(entries: Entries, currentFile: String = currentXml)</ID>
+    <ID>CyclomaticComplexMethod:Weather2.kt$Weather2.Companion$@JvmStatic @Throws(ModuleException::class) fun getWeather(query: String, apiKey: String?): List&lt;Message&gt;</ID>
     <ID>LongMethod:FeedsMgr.kt$FeedsMgr.Companion$@JvmStatic fun saveFeed(entries: Entries, currentFile: String = currentXml)</ID>
     <ID>LongMethod:Mobibot.kt$Mobibot.Companion$@JvmStatic @Throws(Exception::class) fun main(args: Array&lt;String&gt;)</ID>
     <ID>LongMethod:StockQuote.kt$StockQuote.Companion$@JvmStatic @Throws(ModuleException::class) fun getQuote(symbol: String, apiKey: String?): List&lt;Message&gt;</ID>

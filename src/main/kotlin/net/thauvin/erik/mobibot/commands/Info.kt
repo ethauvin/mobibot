@@ -77,7 +77,7 @@ class Info(private val tell: Tell, private val seen: Seen) : AbstractCommand() {
                         append(years).append(" year".plural(years)).append(' ')
                     }
                     if (months > 0) {
-                        append(weeks).append(" month".plural(months)).append(' ')
+                        append(months).append(" month".plural(months)).append(' ')
                     }
                     if (weeks > 0) {
                         append(weeks).append(" week".plural(weeks)).append(' ')
