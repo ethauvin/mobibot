@@ -77,7 +77,6 @@ class ChatGpt : ThreadedModule() {
          */
         const val CHATGPT_API_KEY = "chatgpt-api-key"
 
-
         // ChatGPT command
         private const val CHATGPT_CMD = "chatgpt"
 
@@ -113,8 +112,7 @@ class ChatGpt : ThreadedModule() {
                     if (response.statusCode() == 200) {
                         try {
                             val jsonResponse = JSONObject(response.body())
-                            println(response.body());
-                            var choices = jsonResponse.getJSONArray("choices")
+                            val choices = jsonResponse.getJSONArray("choices")
                             return choices.getJSONObject(0).getString("text").trim()
                         } catch (e: JSONException) {
                             throw ModuleException(
