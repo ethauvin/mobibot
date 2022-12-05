@@ -11,6 +11,7 @@
     <ID>LongParameterList:Comment.kt$Comment$( channel: String, cmd: String, entry: EntryLink, entryIndex: Int, commentIndex: Int, event: GenericMessageEvent )</ID>
     <ID>LongParameterList:EntryLink.kt$EntryLink$( // Link's comments val comments: MutableList&lt;EntryComment&gt; = mutableListOf(), // Tags/categories val tags: MutableList&lt;SyndCategory&gt; = mutableListOf(), // Channel var channel: String, // Creation date var date: Date = Calendar.getInstance().time, // Link's URL var link: String, // Author's login var login: String = "", // Author's nickname var nick: String, // Link's title var title: String )</ID>
     <ID>LongParameterList:Twitter.kt$Twitter.Companion$( consumerKey: String?, consumerSecret: String?, token: String?, tokenSecret: String?, handle: String?, message: String, isDm: Boolean )</ID>
+    <ID>MagicNumber:ChatGpt.kt$ChatGpt.Companion$200</ID>
     <ID>MagicNumber:Comment.kt$Comment$3</ID>
     <ID>MagicNumber:CryptoPrices.kt$CryptoPrices$10</ID>
     <ID>MagicNumber:CurrencyConverter.kt$CurrencyConverter$11</ID>
@@ -46,6 +47,7 @@
     <ID>MaxLineLength:TwitterOAuth.kt$TwitterOAuth$*</ID>
     <ID>NestedBlockDepth:Addons.kt$Addons$fun add(command: AbstractCommand)</ID>
     <ID>NestedBlockDepth:Addons.kt$Addons$fun add(module: AbstractModule)</ID>
+    <ID>NestedBlockDepth:ChatGpt.kt$ChatGpt.Companion$@JvmStatic @Throws(ModuleException::class) fun chat(query: String, apiKey: String?): String</ID>
     <ID>NestedBlockDepth:Comment.kt$Comment$override fun commandResponse(channel: String, args: String, event: GenericMessageEvent)</ID>
     <ID>NestedBlockDepth:CurrencyConverter.kt$CurrencyConverter.Companion$@JvmStatic fun convertCurrency(query: String): Message</ID>
     <ID>NestedBlockDepth:EntryLink.kt$EntryLink$private fun setTags(tags: List&lt;String?&gt;)</ID>
@@ -72,6 +74,7 @@
     <ID>SwallowedException:GoogleSearchTest.kt$GoogleSearchTest$e: ModuleException</ID>
     <ID>SwallowedException:StockQuoteTest.kt$StockQuoteTest$e: ModuleException</ID>
     <ID>SwallowedException:WolframAlphaTest.kt$WolframAlphaTest$e: ModuleException</ID>
+    <ID>ThrowsCount:ChatGpt.kt$ChatGpt.Companion$@JvmStatic @Throws(ModuleException::class) fun chat(query: String, apiKey: String?): String</ID>
     <ID>ThrowsCount:GoogleSearch.kt$GoogleSearch.Companion$@JvmStatic @Throws(ModuleException::class) fun searchGoogle( query: String, apiKey: String?, cseKey: String?, quotaUser: String = ReleaseInfo.PROJECT ): List&lt;Message&gt;</ID>
     <ID>ThrowsCount:Joke.kt$Joke.Companion$@JvmStatic @Throws(ModuleException::class) fun randomJoke(): List&lt;Message&gt;</ID>
     <ID>ThrowsCount:StockQuote.kt$StockQuote.Companion$@JvmStatic @Throws(ModuleException::class) fun getQuote(symbol: String, apiKey: String?): List&lt;Message&gt;</ID>

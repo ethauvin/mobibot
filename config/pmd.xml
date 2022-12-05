@@ -72,7 +72,6 @@
         <exclude name="AvoidFieldNameMatchingMethodName"/>
         <exclude name="AvoidFieldNameMatchingTypeName"/>
         <exclude name="AvoidLiteralsInIfCondition"/>
-        <exclude name="BeanMembersShouldSerialize"/>
         <exclude name="EmptyCatchBlock"/>
         <exclude name="NullAssignment"/>
     </rule>

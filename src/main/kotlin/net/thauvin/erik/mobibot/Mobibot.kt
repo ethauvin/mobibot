@@ -68,6 +68,7 @@ import net.thauvin.erik.mobibot.commands.links.View
 import net.thauvin.erik.mobibot.commands.seen.Seen
 import net.thauvin.erik.mobibot.commands.tell.Tell
 import net.thauvin.erik.mobibot.modules.Calc
+import net.thauvin.erik.mobibot.modules.ChatGpt
 import net.thauvin.erik.mobibot.modules.CryptoPrices
 import net.thauvin.erik.mobibot.modules.CurrencyConverter
 import net.thauvin.erik.mobibot.modules.Dice
@@ -432,6 +433,7 @@ class Mobibot(nickname: String, val channel: String, logsDirPath: String, p: Pro
 
         // Load the modules
         addons.add(Calc())
+        addons.add(ChatGpt())
         addons.add(CryptoPrices())
         addons.add(CurrencyConverter())
         addons.add(Dice())
