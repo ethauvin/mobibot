@@ -52,7 +52,6 @@ class Mastodon : SocialModule() {
         get() = properties[HANDLE_PROP]
 
     override val isAutoPost: Boolean
-        get() = isEnabled && properties[Twitter.AUTO_POST_PROP].toBoolean()
 
     override val isValidProperties: Boolean
         get() {
