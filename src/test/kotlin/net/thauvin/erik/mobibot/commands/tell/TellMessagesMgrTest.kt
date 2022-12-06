@@ -60,7 +60,7 @@ class TellMessagesMgrTest {
 
     @BeforeClass
     fun saveTest() {
-        TellMessagesMgr.save(testFile.toAbsolutePath().toString(), testMessages)
+        TellManager.save(testFile.toAbsolutePath().toString(), testMessages)
         assertThat(testFile.fileSize()).isGreaterThan(0)
     }
 
@@ -75,14 +75,14 @@ class TellMessagesMgrTest {
             queued = LocalDateTime.now().minusDays(maxDays)
         })
         val size = testMessages.size
-        assertThat(TellMessagesMgr.clean(testMessages, maxDays + 2), "clean(maxDays=${maxDays + 2})").isFalse()
-        assertThat(TellMessagesMgr.clean(testMessages, maxDays), "clean(maxDays=$maxDays)").isTrue()
+        assertThat(TellManager.clean(testMessages, maxDays + 2), "clean(maxDays=${maxDays + 2})").isFalse()
+        assertThat(TellManager.clean(testMessages, maxDays), "clean(maxDays=$maxDays)").isTrue()
         assertThat(testMessages, "testMessages").size().isEqualTo(size - 1)
     }
 
     @Test(groups = ["commands", "tell"])
     fun loadTest() {
-        val messages = TellMessagesMgr.load(testFile.toAbsolutePath().toString())
+        val messages = TellManager.load(testFile.toAbsolutePath().toString())
         for (i in messages.indices) {
             assertThat(messages).index(i).all {
                 prop(TellMessage::sender).isEqualTo(testMessages[i].sender)

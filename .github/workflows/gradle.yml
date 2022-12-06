@@ -57,6 +57,10 @@ jobs:
           TWITTER_HANDLE: ${{ secrets.TWITTER_HANDLE }}
           TWITTER_TOKEN: ${{ secrets.TWITTER_TOKEN }}
           TWITTER_TOKENSECRET: ${{ secrets.TWITTER_TOKENSECRET }}
+          MASTODON_ACCESS_TOKEN: ${{ secrets.MASTODON_ACCESS_TOKEN }}
+          MASTODON_HANDLE: ${{ secrets.MASTODON_HANDLE }}
+          MASTODON_INSTANCE: ${{ secrets.MASTODON_INSTANCE }}
+
         run: ./gradlew build check --stacktrace
 
       - name: SonarCloud

@@ -1,5 +1,5 @@
 /*
- * Say.kt
+ * LinksMgrTest.kt
  *
  * Copyright (c) 2004-2022, Erik C. Thauvin (erik@thauvin.net)
  * All rights reserved.
@@ -30,23 +30,49 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package net.thauvin.erik.mobibot.commands
+package net.thauvin.erik.mobibot.commands.links
 
-import net.thauvin.erik.mobibot.Utils.bot
-import net.thauvin.erik.mobibot.Utils.helpFormat
-import net.thauvin.erik.mobibot.Utils.isChannelOp
-import org.pircbotx.hooks.types.GenericMessageEvent
+import assertk.all
+import assertk.assertThat
+import assertk.assertions.contains
+import assertk.assertions.isEqualTo
+import assertk.assertions.isTrue
+import assertk.assertions.size
+import net.thauvin.erik.mobibot.Constants
+import org.testng.annotations.Test
 
-class Say : AbstractCommand() {
-    override val name = "say"
-    override val help = listOf("To have the bot say something on the channel:", helpFormat("%c $name <text>"))
-    override val isOpOnly = true
-    override val isPublic = false
-    override val isVisible = true
+class LinksManagerTest {
+    private val linksManager = LinksManager()
 
-    override fun commandResponse(channel: String, args: String, event: GenericMessageEvent) {
-        if (event.isChannelOp(channel)) {
-            event.bot().sendIRC().message(channel, args)
+    @Test(groups = ["commands", "links"])
+    fun fetchTitle() {
+        assertThat(linksManager.fetchTitle("https://erik.thauvin.net/"), "fetchTitle(Erik)").contains("Erik's Weblog")
+        assertThat(
+            linksManager.fetchTitle("https://www.google.com/foo"),
+            "fetchTitle(Foo)"
+        ).isEqualTo(Constants.NO_TITLE)
+    }
+
+    @Test(groups = ["commands", "links"])
+    fun testMatches() {
+        assertThat(linksManager.matches("https://www.example.com/"), "matches(url)").isTrue()
+        assertThat(linksManager.matches("HTTP://erik.thauvin.net/blog/ Erik's Weblog"), "matches(HTTP)").isTrue()
+    }
+
+    @Test(groups = ["commands", "links"])
+    fun matchTagKeywordsTest() {
+        linksManager.setProperty(LinksManager.KEYWORDS_PROP, "key1 key2,key3")
+        val tags = mutableListOf<String>()
+
+        linksManager.matchTagKeywords("Test title with key2", tags)
+        assertThat(tags, "tags").contains("key2")
+        tags.clear()
+
+        linksManager.matchTagKeywords("Test key3 title with key1", tags)
+        assertThat(tags, "tags(key1, key3)").all {
+            contains("key1")
+            contains("key3")
+            size().isEqualTo(2)
         }
     }
 }

@@ -37,7 +37,7 @@ import com.rometools.rome.io.XmlReader
 import net.thauvin.erik.mobibot.Utils.green
 import net.thauvin.erik.mobibot.Utils.helpFormat
 import net.thauvin.erik.mobibot.Utils.sendMessage
-import net.thauvin.erik.mobibot.entries.FeedsMgr
+import net.thauvin.erik.mobibot.entries.FeedsManager
 import net.thauvin.erik.mobibot.msg.Message
 import net.thauvin.erik.mobibot.msg.NoticeMessage
 import org.pircbotx.hooks.types.GenericMessageEvent
@@ -50,7 +50,7 @@ import java.net.URL
  * Reads an RSS feed.
  */
 class FeedReader(private val url: String, val event: GenericMessageEvent) : Runnable {
-    private val logger: Logger = LoggerFactory.getLogger(FeedsMgr::class.java)
+    private val logger: Logger = LoggerFactory.getLogger(FeedsManager::class.java)
 
     /**
      * Fetches the Feed's items.

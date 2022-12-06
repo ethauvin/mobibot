@@ -45,11 +45,11 @@ class Entries(
     var lastPubDate = today()
 
     fun load() {
-        lastPubDate = FeedsMgr.loadFeed(this)
+        lastPubDate = FeedsManager.loadFeed(this)
     }
 
     fun save() {
         lastPubDate = today()
-        FeedsMgr.saveFeed(this)
+        FeedsManager.saveFeed(this)
     }
 }

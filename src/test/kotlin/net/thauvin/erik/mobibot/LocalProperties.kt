@@ -33,6 +33,8 @@ package net.thauvin.erik.mobibot
 
 import org.testng.annotations.BeforeSuite
 import java.io.IOException
+import java.net.InetAddress
+import java.net.UnknownHostException
 import java.nio.file.Files
 import java.nio.file.Paths
 import java.util.Properties
@@ -55,6 +57,15 @@ open class LocalProperties {
 
     companion object {
         private val localProps = Properties()
+
+        fun getHostName(): String {
+            val ciName = System.getenv("CI_NAME")
+            return ciName ?: try {
+                InetAddress.getLocalHost().hostName
+            } catch (ignore: UnknownHostException) {
+                "Unknown Host"
+            }
+        }
 
         fun getProperty(key: String): String {
             return if (localProps.containsKey(key)) {

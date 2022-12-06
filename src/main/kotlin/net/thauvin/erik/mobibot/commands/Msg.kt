@@ -48,7 +48,7 @@ class Msg : AbstractCommand() {
     override val isVisible = true
 
     override fun commandResponse(channel: String, args: String, event: GenericMessageEvent) {
-        if (isChannelOp(channel, event)) {
+        if (event.isChannelOp(channel)) {
             val msg = args.split(" ", limit = 2)
             if (args.length > 2) {
                 event.bot().sendIRC().message(msg[0], msg[1])

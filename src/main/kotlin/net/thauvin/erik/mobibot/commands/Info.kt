@@ -39,7 +39,7 @@ import net.thauvin.erik.mobibot.Utils.isChannelOp
 import net.thauvin.erik.mobibot.Utils.plural
 import net.thauvin.erik.mobibot.Utils.sendList
 import net.thauvin.erik.mobibot.Utils.sendMessage
-import net.thauvin.erik.mobibot.commands.links.LinksMgr
+import net.thauvin.erik.mobibot.commands.links.LinksManager
 import net.thauvin.erik.mobibot.commands.seen.Seen
 import net.thauvin.erik.mobibot.commands.tell.Tell
 import org.pircbotx.hooks.types.GenericMessageEvent
@@ -107,16 +107,16 @@ class Info(private val tell: Tell, private val seen: Seen) : AbstractCommand() {
         info.append("Uptime: ")
             .append(ManagementFactory.getRuntimeMXBean().uptime.toUptime())
             .append(" [Entries: ")
-            .append(LinksMgr.entries.links.size)
+            .append(LinksManager.entries.links.size)
         if (seen.isEnabled()) {
             info.append(", Seen: ").append(seen.count())
         }
-        if (isChannelOp(channel, event)) {
+        if (event.isChannelOp(channel)) {
             if (tell.isEnabled()) {
                 info.append(", Messages: ").append(tell.size())
             }
-            if (LinksMgr.twitter.isAutoPost) {
-                info.append(", Twitter: ").append(LinksMgr.twitter.entriesCount())
+            if (LinksManager.socialManager.entriesCount() > 0) {
+                info.append(", Social: ").append(LinksManager.socialManager.entriesCount())
             }
         }
         info.append(", Recap: ").append(Recap.recaps.size).append(']')

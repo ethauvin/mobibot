@@ -61,7 +61,7 @@ import net.thauvin.erik.mobibot.commands.Say
 import net.thauvin.erik.mobibot.commands.Users
 import net.thauvin.erik.mobibot.commands.Versions
 import net.thauvin.erik.mobibot.commands.links.Comment
-import net.thauvin.erik.mobibot.commands.links.LinksMgr
+import net.thauvin.erik.mobibot.commands.links.LinksManager
 import net.thauvin.erik.mobibot.commands.links.Posting
 import net.thauvin.erik.mobibot.commands.links.Tags
 import net.thauvin.erik.mobibot.commands.links.View
@@ -75,9 +75,11 @@ import net.thauvin.erik.mobibot.modules.Dice
 import net.thauvin.erik.mobibot.modules.GoogleSearch
 import net.thauvin.erik.mobibot.modules.Joke
 import net.thauvin.erik.mobibot.modules.Lookup
+import net.thauvin.erik.mobibot.modules.Mastodon
 import net.thauvin.erik.mobibot.modules.Ping
 import net.thauvin.erik.mobibot.modules.RockPaperScissors
 import net.thauvin.erik.mobibot.modules.StockQuote
+import net.thauvin.erik.mobibot.modules.Twitter
 import net.thauvin.erik.mobibot.modules.War
 import net.thauvin.erik.mobibot.modules.Weather2
 import net.thauvin.erik.mobibot.modules.WolframAlpha
@@ -146,7 +148,7 @@ class Mobibot(nickname: String, val channel: String, logsDirPath: String, p: Pro
         )
         event.sendMessage("The commands are:")
         event.sendList(addons.names.commands, 8, isBold = true, isIndent = true)
-        if (isChannelOp(channel, event)) {
+        if (event.isChannelOp(channel)) {
             event.sendMessage("The op commands are:")
             event.sendList(addons.names.ops, 8, isBold = true, isIndent = true)
         }
@@ -174,11 +176,11 @@ class Mobibot(nickname: String, val channel: String, logsDirPath: String, p: Pro
     override fun onDisconnect(event: DisconnectEvent?) {
         event?.let {
             with(event.getBot<PircBotX>()) {
-                LinksMgr.twitter.notification("$nick disconnected from irc://$serverHostname")
+                LinksManager.socialManager.notification("$nick disconnected from irc://$serverHostname")
                 seen.add(userChannelDao.getChannel(channel).users)
             }
         }
-        LinksMgr.twitter.shutdown()
+        LinksManager.socialManager.shutdown()
     }
 
     override fun onPrivateMessage(event: PrivateMessageEvent?) {
@@ -199,7 +201,9 @@ class Mobibot(nickname: String, val channel: String, logsDirPath: String, p: Pro
         event?.user?.let { user ->
             with(event.getBot<PircBotX>()) {
                 if (user.nick == nick) {
-                    LinksMgr.twitter.notification("$nick has joined ${event.channel.name} on irc://$serverHostname")
+                    LinksManager.socialManager.notification(
+                        "$nick has joined ${event.channel.name} on irc://$serverHostname"
+                    )
                     seen.add(userChannelDao.getChannel(channel).users)
                 } else {
                     tell.send(event)
@@ -247,7 +251,9 @@ class Mobibot(nickname: String, val channel: String, logsDirPath: String, p: Pro
         event?.user?.let { user ->
             with(event.getBot<PircBotX>()) {
                 if (user.nick == nick) {
-                    LinksMgr.twitter.notification("$nick has left ${event.channel.name} on irc://$serverHostname")
+                    LinksManager.socialManager.notification(
+                        "$nick has left ${event.channel.name} on irc://$serverHostname"
+                    )
                     seen.add(userChannelDao.getChannel(channel).users)
                 } else {
                     seen.add(user.nick)
@@ -388,7 +394,7 @@ class Mobibot(nickname: String, val channel: String, logsDirPath: String, p: Pro
         }.buildConfiguration()
 
         // Load the current entries
-        with(LinksMgr) {
+        with(LinksManager) {
             entries.channel = channel
             entries.ircServer = ircServer
             entries.logsDir = logsDirPath
@@ -407,7 +413,7 @@ class Mobibot(nickname: String, val channel: String, logsDirPath: String, p: Pro
         addons.add(Cycle())
         addons.add(Die())
         addons.add(Ignore())
-        addons.add(LinksMgr())
+        addons.add(LinksManager())
         addons.add(Me())
         addons.add(Modules(addons.names.modules))
         addons.add(Msg())
@@ -426,10 +432,12 @@ class Mobibot(nickname: String, val channel: String, logsDirPath: String, p: Pro
         tell = Tell("${logsDirPath}${nickname}.ser")
         addons.add(tell)
 
-        addons.add(LinksMgr.twitter)
         addons.add(Users())
         addons.add(Versions())
         addons.add(View())
+
+        // Load social modules
+        LinksManager.socialManager.add(addons, Twitter(), Mastodon())
 
         // Load the modules
         addons.add(Calc())

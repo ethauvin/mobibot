@@ -33,7 +33,7 @@ package net.thauvin.erik.mobibot.entries
 
 import com.rometools.rome.feed.synd.SyndCategory
 import com.rometools.rome.feed.synd.SyndCategoryImpl
-import net.thauvin.erik.mobibot.commands.links.LinksMgr
+import net.thauvin.erik.mobibot.commands.links.LinksManager
 import java.io.Serializable
 import java.util.Calendar
 import java.util.Date
@@ -169,7 +169,7 @@ class EntryLink(
      * Sets the tags.
      */
     fun setTags(tags: String) {
-        setTags(tags.split(LinksMgr.TAG_MATCH))
+        setTags(tags.split(LinksManager.TAG_MATCH))
     }
 
     /**

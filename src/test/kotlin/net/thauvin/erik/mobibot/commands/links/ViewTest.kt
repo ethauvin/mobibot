@@ -45,7 +45,7 @@ class ViewTest {
         val view = View()
 
         for (i in 1..10) {
-            LinksMgr.entries.links.add(
+            LinksManager.entries.links.add(
                 EntryLink(
                     "https://www.example.com/$i",
                     "Example $i",
@@ -98,11 +98,11 @@ class ViewTest {
         }
 
         assertThat(view.parseArgs(""), "parseArgs()").all {
-            prop(Pair<Int, String>::first).isEqualTo(LinksMgr.entries.links.size - View.MAX_ENTRIES)
+            prop(Pair<Int, String>::first).isEqualTo(LinksManager.entries.links.size - View.MAX_ENTRIES)
             prop(Pair<Int, String>::second).isEqualTo("")
         }
 
-        LinksMgr.entries.links.clear()
+        LinksManager.entries.links.clear()
 
         assertThat(view.parseArgs("4"), "parseArgs(4)").all {
             prop(Pair<Int, String>::first).isEqualTo(0)

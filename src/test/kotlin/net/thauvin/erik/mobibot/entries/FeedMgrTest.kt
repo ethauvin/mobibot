@@ -65,7 +65,7 @@ class FeedMgrTest {
     @Test(groups = ["entries"])
     fun testFeedMgr() {
         // Load the feed
-        assertThat(FeedsMgr.loadFeed(entries), "loadFeed()").isEqualTo("2021-10-31")
+        assertThat(FeedsManager.loadFeed(entries), "loadFeed()").isEqualTo("2021-10-31")
 
         assertThat(entries.links, "entries.links").size().isEqualTo(2)
         entries.links.forEachIndexed { i, entryLink ->
@@ -101,7 +101,7 @@ class FeedMgrTest {
         val backlogFile = Paths.get("${entries.logsDir}${today()}.xml")
 
         // Save the feed
-        FeedsMgr.saveFeed(entries, currentFile.name)
+        FeedsManager.saveFeed(entries, currentFile.name)
 
         assertThat(currentFile, "currentFile").exists()
         assertThat(backlogFile, "backlogFile").exists()
@@ -110,7 +110,7 @@ class FeedMgrTest {
 
         // Load the test feed
         entries.links.clear()
-        FeedsMgr.loadFeed(entries, currentFile.name)
+        FeedsManager.loadFeed(entries, currentFile.name)
 
         entries.links.forEachIndexed { i, entryLink ->
             assertThat(entryLink.title, "entryLink.title[${i + 1}]").isEqualTo("Example ${i + 1}")

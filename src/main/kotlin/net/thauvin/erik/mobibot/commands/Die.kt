@@ -45,7 +45,7 @@ class Die : AbstractCommand() {
 
     override fun commandResponse(channel: String, args: String, event: GenericMessageEvent) {
         with(event.bot()) {
-            if (isChannelOp(channel, event) && (properties[DIE_PROP].isNullOrBlank() || args == properties[DIE_PROP])) {
+            if (event.isChannelOp(channel) && (properties[DIE_PROP].isNullOrBlank() || args == properties[DIE_PROP])) {
                 sendIRC().message(channel, "${event.user?.nick} has just signed my death sentence.")
                 stopBotReconnect()
                 sendIRC().quitServer("The Bot is Out There!")

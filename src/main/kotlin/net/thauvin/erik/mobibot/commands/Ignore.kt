@@ -39,7 +39,7 @@ import net.thauvin.erik.mobibot.Utils.helpFormat
 import net.thauvin.erik.mobibot.Utils.isChannelOp
 import net.thauvin.erik.mobibot.Utils.sendList
 import net.thauvin.erik.mobibot.Utils.sendMessage
-import net.thauvin.erik.mobibot.commands.links.LinksMgr
+import net.thauvin.erik.mobibot.commands.links.LinksManager
 import org.pircbotx.hooks.types.GenericMessageEvent
 
 class Ignore : AbstractCommand() {
@@ -79,7 +79,7 @@ class Ignore : AbstractCommand() {
 
     override fun commandResponse(channel: String, args: String, event: GenericMessageEvent) {
         val isMe = args.trim().equals(me, true)
-        if (isMe || !isChannelOp(channel, event)) {
+        if (isMe || !event.isChannelOp(channel)) {
             val nick = event.user.nick.lowercase()
             ignoreNick(nick, isMe, event)
         } else {
@@ -88,7 +88,7 @@ class Ignore : AbstractCommand() {
     }
 
     override fun helpResponse(channel: String, topic: String, event: GenericMessageEvent): Boolean {
-        return if (isChannelOp(channel, event)) {
+        return if (event.isChannelOp(channel)) {
             for (h in helpOp) {
                 event.sendMessage(helpCmdSyntax(h, event.bot().nick, true))
             }
@@ -141,7 +141,7 @@ class Ignore : AbstractCommand() {
     override fun setProperty(key: String, value: String) {
         super.setProperty(key, value)
         if (IGNORE_PROP == key) {
-            ignored.addAll(value.split(LinksMgr.TAG_MATCH.toRegex()))
+            ignored.addAll(value.split(LinksManager.TAG_MATCH.toRegex()))
         }
     }
 

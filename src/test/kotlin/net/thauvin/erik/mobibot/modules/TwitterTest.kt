@@ -35,31 +35,19 @@ import assertk.assertThat
 import assertk.assertions.isEqualTo
 import assertk.assertions.isSuccess
 import net.thauvin.erik.mobibot.LocalProperties
-import net.thauvin.erik.mobibot.modules.Twitter.Companion.twitterPost
+import net.thauvin.erik.mobibot.modules.Twitter.Companion.tweet
 import org.testng.annotations.Test
-import java.net.InetAddress
-import java.net.UnknownHostException
 
 /**
  * The `TwitterTest` class.
  */
 class TwitterTest : LocalProperties() {
-    private val ci: String
-        get() {
-            val ciName = System.getenv("CI_NAME")
-            return ciName ?: try {
-                InetAddress.getLocalHost().hostName
-            } catch (ignore: UnknownHostException) {
-                "Unknown Host"
-            }
-        }
-
     @Test(groups = ["modules"])
     @Throws(ModuleException::class)
-    fun testPostTwitter() {
-        val msg = "Testing Twitter API from $ci"
+    fun testTweet() {
+        val msg = "Testing Twitter API from ${getHostName()}"
         assertThat {
-            twitterPost(
+            tweet(
                 getProperty(Twitter.CONSUMER_KEY_PROP),
                 getProperty(Twitter.CONSUMER_SECRET_PROP),
                 getProperty(Twitter.TOKEN_PROP),

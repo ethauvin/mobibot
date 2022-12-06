@@ -51,7 +51,7 @@ abstract class AbstractCommand {
     abstract fun commandResponse(channel: String, args: String, event: GenericMessageEvent)
 
     open fun helpResponse(channel: String, topic: String, event: GenericMessageEvent): Boolean {
-        if (!isOpOnly || isOpOnly == isChannelOp(channel, event)) {
+        if (!isOpOnly || isOpOnly == event.isChannelOp(channel)) {
             for (h in help) {
                 event.sendMessage(helpCmdSyntax(h, event.bot().nick, event is PrivateMessageEvent || !isPublic))
             }

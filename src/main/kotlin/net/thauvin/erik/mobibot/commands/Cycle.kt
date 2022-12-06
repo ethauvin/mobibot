@@ -49,7 +49,7 @@ class Cycle : AbstractCommand() {
 
     override fun commandResponse(channel: String, args: String, event: GenericMessageEvent) {
         with(event.bot()) {
-            if (isChannelOp(channel, event)) {
+            if (event.isChannelOp(channel)) {
                 runBlocking {
                     sendIRC().message(channel, "${event.user.nick} asked me to leave. I'll be back!")
                     userChannelDao.getChannel(channel).send().part()

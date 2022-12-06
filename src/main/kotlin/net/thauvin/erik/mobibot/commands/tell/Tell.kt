@@ -81,7 +81,7 @@ class Tell(private val serialObject: String) : AbstractCommand() {
      * Cleans the messages queue.
      */
     private fun clean(): Boolean {
-        return TellMessagesMgr.clean(messages, maxDays.toLong())
+        return TellManager.clean(messages, maxDays.toLong())
     }
 
     override fun commandResponse(channel: String, args: String, event: GenericMessageEvent) {
@@ -89,7 +89,7 @@ class Tell(private val serialObject: String) : AbstractCommand() {
             if (args.isBlank()) {
                 helpResponse(channel, args, event)
             } else if (args.startsWith(View.VIEW_CMD)) {
-                if (isChannelOp(channel, event) && "${View.VIEW_CMD} $TELL_ALL_KEYWORD" == args) {
+                if (event.isChannelOp(channel) && "${View.VIEW_CMD} $TELL_ALL_KEYWORD" == args) {
                     viewAll(event)
                 } else {
                     viewMessages(event)
@@ -120,7 +120,7 @@ class Tell(private val serialObject: String) : AbstractCommand() {
             } else {
                 if (messages.removeIf {
                         it.id == id &&
-                                (it.sender.equals(event.user.nick, true) || isChannelOp(channel, event))
+                                (it.sender.equals(event.user.nick, true) || event.isChannelOp(channel))
                     }) {
                     save()
                     event.sendMessage("The message was deleted from the queue.")
@@ -167,7 +167,7 @@ class Tell(private val serialObject: String) : AbstractCommand() {
      * Saves the messages queue.
      */
     private fun save() {
-        TellMessagesMgr.save(serialObject, messages)
+        TellManager.save(serialObject, messages)
     }
 
     /**
@@ -291,7 +291,7 @@ class Tell(private val serialObject: String) : AbstractCommand() {
         initProperties(MAX_DAYS_PROP, MAX_SIZE_PROP)
 
         // Load the message queue
-        messages.addAll(TellMessagesMgr.load(serialObject))
+        messages.addAll(TellManager.load(serialObject))
         if (clean()) {
             save()
         }

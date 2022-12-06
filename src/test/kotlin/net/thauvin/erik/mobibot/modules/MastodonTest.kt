@@ -1,5 +1,5 @@
 /*
- * LinksMgrTest.kt
+ * MastodonTest.kt
  *
  * Copyright (c) 2004-2022, Erik C. Thauvin (erik@thauvin.net)
  * All rights reserved.
@@ -29,47 +29,28 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+package net.thauvin.erik.mobibot.modules
 
-package net.thauvin.erik.mobibot.commands.links
-
-import assertk.all
 import assertk.assertThat
 import assertk.assertions.contains
-import assertk.assertions.isEqualTo
-import assertk.assertions.isTrue
-import assertk.assertions.size
-import net.thauvin.erik.mobibot.Constants
+import assertk.assertions.isSuccess
+import net.thauvin.erik.mobibot.LocalProperties
+import net.thauvin.erik.mobibot.modules.Mastodon.Companion.toot
 import org.testng.annotations.Test
 
-class LinksMgrTest {
-    private val linksMgr = LinksMgr()
-
-    @Test(groups = ["commands", "links"])
-    fun fetchTitle() {
-        assertThat(linksMgr.fetchTitle("https://erik.thauvin.net/"), "fetchTitle(Erik)").contains("Erik's Weblog")
-        assertThat(linksMgr.fetchTitle("https://www.google.com/foo"), "fetchTitle(Foo)").isEqualTo(Constants.NO_TITLE)
-    }
-
-    @Test(groups = ["commands", "links"])
-    fun testMatches() {
-        assertThat(linksMgr.matches("https://www.example.com/"), "matches(url)").isTrue()
-        assertThat(linksMgr.matches("HTTP://erik.thauvin.net/blog/ Erik's Weblog"), "matches(HTTP)").isTrue()
-    }
-
-    @Test(groups = ["commands", "links"])
-    fun matchTagKeywordsTest() {
-        linksMgr.setProperty(LinksMgr.KEYWORDS_PROP, "key1 key2,key3")
-        val tags = mutableListOf<String>()
-
-        linksMgr.matchTagKeywords("Test title with key2", tags)
-        assertThat(tags, "tags").contains("key2")
-        tags.clear()
-
-        linksMgr.matchTagKeywords("Test key3 title with key1", tags)
-        assertThat(tags, "tags(key1, key3)").all {
-            contains("key1")
-            contains("key3")
-            size().isEqualTo(2)
-        }
+class MastodonTest : LocalProperties() {
+    @Test(groups = ["modules"])
+    @Throws(ModuleException::class)
+    fun testToot() {
+        val msg = "Testing Mastodon API from ${getHostName()}"
+        assertThat {
+            toot(
+                getProperty(Mastodon.ACCESS_TOKEN_PROP),
+                getProperty(Mastodon.INSTANCE_PROP),
+                getProperty(Mastodon.HANDLE_PROP),
+                msg,
+                true
+            )
+        }.isSuccess().contains(msg)
     }
 }

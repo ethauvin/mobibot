@@ -66,6 +66,18 @@ object Utils {
     private val searchFlags = arrayOf("%c", "%n")
 
     /**
+     * Prepends a prefix if not present.
+     */
+    @JvmStatic
+    fun String.prefixIfMissing(prefix: Char): String {
+        return if (first() != prefix) {
+            "$prefix${this}"
+        } else {
+            this
+        }
+    }
+
+    /**
      * Appends a suffix to the end of the String if not present.
      */
     @JvmStatic
@@ -183,8 +195,8 @@ object Utils {
      * Returns {@code true} if the specified user is an operator on the [channel].
      */
     @JvmStatic
-    fun isChannelOp(channel: String, event: GenericMessageEvent): Boolean {
-        return event.bot().userChannelDao.getChannel(channel).isOp(event.user)
+    fun GenericMessageEvent.isChannelOp(channel: String): Boolean {
+        return this.bot().userChannelDao.getChannel(channel).isOp(this.user)
     }
 
     /**

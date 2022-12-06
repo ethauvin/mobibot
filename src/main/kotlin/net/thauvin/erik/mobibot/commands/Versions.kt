@@ -53,7 +53,7 @@ class Versions : AbstractCommand() {
     override val isVisible = true
 
     override fun commandResponse(channel: String, args: String, event: GenericMessageEvent) {
-        if (isChannelOp(channel, event)) {
+        if (event.isChannelOp(channel)) {
             event.sendList(allVersions, 1)
         }
     }

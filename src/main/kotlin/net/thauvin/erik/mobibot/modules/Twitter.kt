@@ -31,57 +31,27 @@
  */
 package net.thauvin.erik.mobibot.modules
 
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
-import net.thauvin.erik.mobibot.Constants
-import net.thauvin.erik.mobibot.TwitterTimer
 import net.thauvin.erik.mobibot.Utils.helpFormat
-import net.thauvin.erik.mobibot.commands.links.LinksMgr
-import net.thauvin.erik.mobibot.entries.EntriesUtils.toLinkLabel
-import org.pircbotx.hooks.types.GenericMessageEvent
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
+import net.thauvin.erik.mobibot.entries.EntryLink
+import net.thauvin.erik.mobibot.social.SocialModule
 import twitter4j.TwitterException
-import java.util.Timer
 
 /**
  * The Twitter module.
  */
-class Twitter : ThreadedModule() {
-    private val logger: Logger = LoggerFactory.getLogger(Twitter::class.java)
-
-    private val timer = Timer(true)
-
-    // Twitter auto-posts.
-    private val entries: MutableSet<Int> = HashSet()
-
+class Twitter : SocialModule() {
     override val name = "Twitter"
 
-    /**
-     * Add an entry to be posted on Twitter.
-     */
-    private fun addEntry(index: Int) {
-        entries.add(index)
-    }
-
-    fun entriesCount(): Int {
-        return entries.size
-    }
-
-    private val handle: String?
+    override val handle: String?
         get() = properties[HANDLE_PROP]
 
-    private fun hasEntry(index: Int): Boolean {
-        return entries.contains(index)
-    }
-
-    val isAutoPost: Boolean
-        get() = isEnabled && properties[AUTOPOST_PROP].toBoolean()
+    override val isAutoPost: Boolean
+        get() = isEnabled && properties[AUTO_POST_PROP].toBoolean()
 
     override val isValidProperties: Boolean
         get() {
             for (s in propertyKeys) {
-                if (AUTOPOST_PROP != s && HANDLE_PROP != s && properties[s].isNullOrBlank()) {
+                if (AUTO_POST_PROP != s && HANDLE_PROP != s && properties[s].isNullOrBlank()) {
                     return false
                 }
             }
@@ -89,105 +59,31 @@ class Twitter : ThreadedModule() {
         }
 
     /**
-     * Send a notification to the registered Twitter handle.
+     * Formats the entry for posting.
      */
-    fun notification(msg: String) {
-        if (isEnabled && !handle.isNullOrBlank()) {
-            runBlocking {
-                launch {
-                    try {
-                        post(message = msg, isDm = true)
-                        if (logger.isDebugEnabled) logger.debug("Notified @$handle: $msg")
-                    } catch (e: ModuleException) {
-                        if (logger.isWarnEnabled) logger.warn("Failed to notify @$handle: $msg", e)
-                    }
-                }
-            }
-        }
+    override fun formatEntry(entry: EntryLink): String {
+        return "${entry.title} ${entry.link} via ${entry.nick} on ${entry.channel}"
     }
 
     /**
      * Posts on Twitter.
      */
     @Throws(ModuleException::class)
-    fun post(handle: String = "${properties[HANDLE_PROP]}", message: String, isDm: Boolean): String {
-        return twitterPost(
-            properties[CONSUMER_KEY_PROP],
-            properties[CONSUMER_SECRET_PROP],
-            properties[TOKEN_PROP],
-            properties[TOKEN_SECRET_PROP],
-            handle,
-            message,
-            isDm
+    override fun post(message: String, isDm: Boolean): String {
+        return tweet(
+            consumerKey = properties[CONSUMER_KEY_PROP],
+            consumerSecret = properties[CONSUMER_SECRET_PROP],
+            token = properties[TOKEN_PROP],
+            tokenSecret = properties[TOKEN_SECRET_PROP],
+            handle = handle,
+            message = message,
+            isDm = isDm
         )
-    }
-
-    /**
-     * Post an entry to twitter.
-     */
-    fun postEntry(index: Int) {
-        if (isAutoPost && hasEntry(index) && LinksMgr.entries.links.size >= index) {
-            val entry = LinksMgr.entries.links[index]
-            val msg = "${entry.title} ${entry.link} via ${entry.nick} on ${entry.channel}"
-            runBlocking {
-                launch {
-                    try {
-                        if (logger.isDebugEnabled) {
-                            logger.debug("Posting {} to Twitter.", index.toLinkLabel())
-                        }
-                        post(message = msg, isDm = false)
-                    } catch (e: ModuleException) {
-                        if (logger.isWarnEnabled) logger.warn("Failed to post entry on Twitter.", e)
-                    }
-                }
-            }
-            removeEntry(index)
-        }
-    }
-
-    fun queueEntry(index: Int) {
-        if (isAutoPost) {
-            addEntry(index)
-            if (logger.isDebugEnabled) {
-                logger.debug("Scheduling {} for posting on Twitter.", index.toLinkLabel())
-            }
-            timer.schedule(TwitterTimer(this, index), Constants.TIMER_DELAY * 60L * 1000L)
-        }
-    }
-
-    fun removeEntry(index: Int) {
-        entries.remove(index)
-    }
-
-    /**
-     * Posts to twitter.
-     */
-    override fun run(channel: String, cmd: String, args: String, event: GenericMessageEvent) {
-        try {
-            event.respond(post(event.user.nick, "$args (by ${event.user.nick} on $channel)", false))
-        } catch (e: ModuleException) {
-            if (logger.isWarnEnabled) logger.warn(e.debugMessage, e)
-            e.message?.let {
-                event.respond(it)
-            }
-        }
-    }
-
-    /**
-     * Post all the entries to Twitter on shutdown.
-     */
-    fun shutdown() {
-        timer.cancel()
-        if (isAutoPost) {
-            for (index in entries) {
-                postEntry(index)
-            }
-        }
     }
 
     companion object {
         // Property keys
-        const val AUTOPOST_PROP = "twitter-auto-post"
+        const val AUTO_POST_PROP = "twitter-auto-post"
         const val CONSUMER_KEY_PROP = "twitter-consumerKey"
         const val CONSUMER_SECRET_PROP = "twitter-consumerSecret"
         const val HANDLE_PROP = "twitter-handle"
@@ -198,11 +94,11 @@ class Twitter : ThreadedModule() {
         private const val TWITTER_CMD = "twitter"
 
         /**
-         * Posts on Twitter.
+         * Tweets on Twitter.
          */
         @JvmStatic
         @Throws(ModuleException::class)
-        fun twitterPost(
+        fun tweet(
             consumerKey: String?,
             consumerSecret: String?,
             token: String?,
@@ -236,7 +132,7 @@ class Twitter : ThreadedModule() {
         commands.add(TWITTER_CMD)
         help.add("To post to Twitter:")
         help.add(helpFormat("%c $TWITTER_CMD <message>"))
-        properties[AUTOPOST_PROP] = "false"
+        properties[AUTO_POST_PROP] = "false"
         initProperties(CONSUMER_KEY_PROP, CONSUMER_SECRET_PROP, HANDLE_PROP, TOKEN_PROP, TOKEN_SECRET_PROP)
     }
 }

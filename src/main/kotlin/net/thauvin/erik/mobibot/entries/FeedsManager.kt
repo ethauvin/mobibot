@@ -1,5 +1,5 @@
 /*
- * FeedsMgr.kt
+ * FeedsManager.kt
  *
  * Copyright (c) 2004-2022, Erik C. Thauvin (erik@thauvin.net)
  * All rights reserved.
@@ -55,9 +55,9 @@ import kotlin.io.path.exists
 /**
  * Manages the RSS feeds.
  */
-class FeedsMgr private constructor() {
+class FeedsManager private constructor() {
     companion object {
-        private val logger: Logger = LoggerFactory.getLogger(FeedsMgr::class.java)
+        private val logger: Logger = LoggerFactory.getLogger(FeedsManager::class.java)
 
         // The file containing the current entries.
         private const val currentXml = "current.xml"

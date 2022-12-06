@@ -60,15 +60,15 @@ class Tags : AbstractCommand() {
         val cmds = args.substring(1).split("${Constants.TAG_CMD}:", limit = 2)
         val index = cmds[0].toInt() - 1
 
-        if (index < LinksMgr.entries.links.size && LinksMgr.isUpToDate(event)) {
+        if (index < LinksManager.entries.links.size && LinksManager.isUpToDate(event)) {
             val cmd = cmds[1].trim()
-            val entry: EntryLink = LinksMgr.entries.links[index]
+            val entry: EntryLink = LinksManager.entries.links[index]
             if (cmd.isNotEmpty()) {
-                if (entry.login == event.user.login || isChannelOp(channel, event)) {
+                if (entry.login == event.user.login || event.isChannelOp(channel)) {
                     entry.setTags(cmd)
-                    LinksMgr.pinboard.updatePin(event.bot().serverHostname, entry.link, entry)
+                    LinksManager.pinboard.updatePin(event.bot().serverHostname, entry.link, entry)
                     event.sendMessage(EntriesUtils.buildTags(index, entry))
-                    LinksMgr.entries.save()
+                    LinksManager.entries.save()
                 } else {
                     event.sendMessage("Please ask a channel op to change the tags for you.")
                 }

@@ -33,7 +33,7 @@ package net.thauvin.erik.mobibot
 
 import net.thauvin.erik.mobibot.Utils.notContains
 import net.thauvin.erik.mobibot.commands.AbstractCommand
-import net.thauvin.erik.mobibot.commands.links.LinksMgr
+import net.thauvin.erik.mobibot.commands.links.LinksManager
 import net.thauvin.erik.mobibot.modules.AbstractModule
 import org.pircbotx.hooks.events.PrivateMessageEvent
 import org.pircbotx.hooks.types.GenericMessageEvent
@@ -46,8 +46,8 @@ import java.util.Properties
  */
 class Addons(private val props: Properties) {
     private val logger: Logger = LoggerFactory.getLogger(Addons::class.java)
-    private val disabledModules = props.getProperty("disabled-modules", "").split(LinksMgr.TAG_MATCH.toRegex())
-    private val disableCommands = props.getProperty("disabled-commands", "").split(LinksMgr.TAG_MATCH.toRegex())
+    private val disabledModules = props.getProperty("disabled-modules", "").split(LinksManager.TAG_MATCH.toRegex())
+    private val disableCommands = props.getProperty("disabled-commands", "").split(LinksManager.TAG_MATCH.toRegex())
 
     val commands: MutableList<AbstractCommand> = mutableListOf()
     val modules: MutableList<AbstractModule> = mutableListOf()
@@ -56,7 +56,8 @@ class Addons(private val props: Properties) {
     /**
      * Add a module with properties.
      */
-    fun add(module: AbstractModule) {
+    fun add(module: AbstractModule): Boolean {
+        var enabled = false
         with(module) {
             if (disabledModules.notContains(name, true)) {
                 if (hasProperties()) {
@@ -69,6 +70,7 @@ class Addons(private val props: Properties) {
                     modules.add(this)
                     names.modules.add(name)
                     names.commands.addAll(commands)
+                    enabled = true
                 } else {
                     if (logger.isDebugEnabled) {
                         logger.debug("Module $name is disabled.")
@@ -76,12 +78,14 @@ class Addons(private val props: Properties) {
                 }
             }
         }
+        return enabled
     }
 
     /**
      * Add a command with properties.
      */
-    fun add(command: AbstractCommand) {
+    fun add(command: AbstractCommand): Boolean {
+        var enabled = false
         with(command) {
             if (disableCommands.notContains(name, true)) {
                 if (properties.isNotEmpty()) {
@@ -98,6 +102,7 @@ class Addons(private val props: Properties) {
                             names.commands.add(name)
                         }
                     }
+                    enabled = true
                 } else {
                     if (logger.isDebugEnabled) {
                         logger.debug("Command $name is disabled.")
@@ -105,6 +110,7 @@ class Addons(private val props: Properties) {
                 }
             }
         }
+        return enabled
     }
 
     /**

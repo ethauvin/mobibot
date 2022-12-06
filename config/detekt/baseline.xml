@@ -2,9 +2,9 @@
 <SmellBaseline>
   <ManuallySuppressedIssues></ManuallySuppressedIssues>
   <CurrentIssues>
-    <ID>CyclomaticComplexMethod:FeedsMgr.kt$FeedsMgr.Companion$@JvmStatic fun saveFeed(entries: Entries, currentFile: String = currentXml)</ID>
+    <ID>CyclomaticComplexMethod:FeedsManager.kt$FeedsManager.Companion$@JvmStatic fun saveFeed(entries: Entries, currentFile: String = currentXml)</ID>
     <ID>CyclomaticComplexMethod:Weather2.kt$Weather2.Companion$@JvmStatic @Throws(ModuleException::class) fun getWeather(query: String, apiKey: String?): List&lt;Message&gt;</ID>
-    <ID>LongMethod:FeedsMgr.kt$FeedsMgr.Companion$@JvmStatic fun saveFeed(entries: Entries, currentFile: String = currentXml)</ID>
+    <ID>LongMethod:FeedsManager.kt$FeedsManager.Companion$@JvmStatic fun saveFeed(entries: Entries, currentFile: String = currentXml)</ID>
     <ID>LongMethod:Mobibot.kt$Mobibot.Companion$@JvmStatic @Throws(Exception::class) fun main(args: Array&lt;String&gt;)</ID>
     <ID>LongMethod:StockQuote.kt$StockQuote.Companion$@JvmStatic @Throws(ModuleException::class) fun getQuote(symbol: String, apiKey: String?): List&lt;Message&gt;</ID>
     <ID>LongMethod:Weather2.kt$Weather2.Companion$@JvmStatic @Throws(ModuleException::class) fun getWeather(query: String, apiKey: String?): List&lt;Message&gt;</ID>
@@ -23,13 +23,14 @@
     <ID>MagicNumber:Info.kt$Info.Companion$30</ID>
     <ID>MagicNumber:Info.kt$Info.Companion$365</ID>
     <ID>MagicNumber:Info.kt$Info.Companion$7</ID>
+    <ID>MagicNumber:Mastodon.kt$Mastodon.Companion$200</ID>
     <ID>MagicNumber:Mobibot.kt$Mobibot$8</ID>
     <ID>MagicNumber:Modules.kt$Modules$7</ID>
+    <ID>MagicNumber:SocialManager.kt$SocialManager$1000L</ID>
+    <ID>MagicNumber:SocialManager.kt$SocialManager$60L</ID>
     <ID>MagicNumber:StockQuote.kt$StockQuote.Companion$10</ID>
     <ID>MagicNumber:Tell.kt$Tell$50</ID>
     <ID>MagicNumber:Tell.kt$Tell$7</ID>
-    <ID>MagicNumber:Twitter.kt$Twitter$1000L</ID>
-    <ID>MagicNumber:Twitter.kt$Twitter$60L</ID>
     <ID>MagicNumber:TwitterOAuth.kt$TwitterOAuth$401</ID>
     <ID>MagicNumber:Users.kt$Users$8</ID>
     <ID>MagicNumber:Utils.kt$Utils$200</ID>
@@ -45,18 +46,19 @@
     <ID>MagicNumber:WorldTime.kt$WorldTime.Companion$60</ID>
     <ID>MagicNumber:WorldTime.kt$WorldTime.Companion$86.4</ID>
     <ID>MaxLineLength:TwitterOAuth.kt$TwitterOAuth$*</ID>
-    <ID>NestedBlockDepth:Addons.kt$Addons$fun add(command: AbstractCommand)</ID>
-    <ID>NestedBlockDepth:Addons.kt$Addons$fun add(module: AbstractModule)</ID>
+    <ID>NestedBlockDepth:Addons.kt$Addons$fun add(command: AbstractCommand): Boolean</ID>
+    <ID>NestedBlockDepth:Addons.kt$Addons$fun add(module: AbstractModule): Boolean</ID>
     <ID>NestedBlockDepth:ChatGpt.kt$ChatGpt.Companion$@JvmStatic @Throws(ModuleException::class) fun chat(query: String, apiKey: String?): String</ID>
     <ID>NestedBlockDepth:Comment.kt$Comment$override fun commandResponse(channel: String, args: String, event: GenericMessageEvent)</ID>
     <ID>NestedBlockDepth:CurrencyConverter.kt$CurrencyConverter.Companion$@JvmStatic fun convertCurrency(query: String): Message</ID>
     <ID>NestedBlockDepth:EntryLink.kt$EntryLink$private fun setTags(tags: List&lt;String?&gt;)</ID>
-    <ID>NestedBlockDepth:FeedsMgr.kt$FeedsMgr.Companion$@JvmStatic @Throws(IOException::class, FeedException::class) fun loadFeed(entries: Entries, currentFile: String = currentXml): String</ID>
-    <ID>NestedBlockDepth:FeedsMgr.kt$FeedsMgr.Companion$@JvmStatic fun saveFeed(entries: Entries, currentFile: String = currentXml)</ID>
+    <ID>NestedBlockDepth:FeedsManager.kt$FeedsManager.Companion$@JvmStatic @Throws(IOException::class, FeedException::class) fun loadFeed(entries: Entries, currentFile: String = currentXml): String</ID>
+    <ID>NestedBlockDepth:FeedsManager.kt$FeedsManager.Companion$@JvmStatic fun saveFeed(entries: Entries, currentFile: String = currentXml)</ID>
     <ID>NestedBlockDepth:GoogleSearch.kt$GoogleSearch$override fun run(channel: String, cmd: String, args: String, event: GenericMessageEvent)</ID>
     <ID>NestedBlockDepth:GoogleSearch.kt$GoogleSearch.Companion$@JvmStatic @Throws(ModuleException::class) fun searchGoogle( query: String, apiKey: String?, cseKey: String?, quotaUser: String = ReleaseInfo.PROJECT ): List&lt;Message&gt;</ID>
-    <ID>NestedBlockDepth:LinksMgr.kt$LinksMgr$override fun commandResponse(channel: String, args: String, event: GenericMessageEvent)</ID>
+    <ID>NestedBlockDepth:LinksManager.kt$LinksManager$override fun commandResponse(channel: String, args: String, event: GenericMessageEvent)</ID>
     <ID>NestedBlockDepth:Lookup.kt$Lookup$override fun commandResponse(channel: String, cmd: String, args: String, event: GenericMessageEvent)</ID>
+    <ID>NestedBlockDepth:Mastodon.kt$Mastodon.Companion$@JvmStatic @Throws(ModuleException::class) fun toot(apiKey: String?, instance: String?, handle: String?, message: String, isDm: Boolean): String</ID>
     <ID>NestedBlockDepth:Posting.kt$Posting$override fun commandResponse(channel: String, args: String, event: GenericMessageEvent)</ID>
     <ID>NestedBlockDepth:Seen.kt$Seen$override fun commandResponse(channel: String, args: String, event: GenericMessageEvent)</ID>
     <ID>NestedBlockDepth:StockQuote.kt$StockQuote.Companion$@JvmStatic @Throws(ModuleException::class) fun getQuote(symbol: String, apiKey: String?): List&lt;Message&gt;</ID>
@@ -77,6 +79,7 @@
     <ID>ThrowsCount:ChatGpt.kt$ChatGpt.Companion$@JvmStatic @Throws(ModuleException::class) fun chat(query: String, apiKey: String?): String</ID>
     <ID>ThrowsCount:GoogleSearch.kt$GoogleSearch.Companion$@JvmStatic @Throws(ModuleException::class) fun searchGoogle( query: String, apiKey: String?, cseKey: String?, quotaUser: String = ReleaseInfo.PROJECT ): List&lt;Message&gt;</ID>
     <ID>ThrowsCount:Joke.kt$Joke.Companion$@JvmStatic @Throws(ModuleException::class) fun randomJoke(): List&lt;Message&gt;</ID>
+    <ID>ThrowsCount:Mastodon.kt$Mastodon.Companion$@JvmStatic @Throws(ModuleException::class) fun toot(apiKey: String?, instance: String?, handle: String?, message: String, isDm: Boolean): String</ID>
     <ID>ThrowsCount:StockQuote.kt$StockQuote.Companion$@JvmStatic @Throws(ModuleException::class) fun getQuote(symbol: String, apiKey: String?): List&lt;Message&gt;</ID>
     <ID>ThrowsCount:StockQuote.kt$StockQuote.Companion$@Throws(ModuleException::class) private fun getJsonResponse(response: String, debugMessage: String): JSONObject</ID>
     <ID>ThrowsCount:Weather2.kt$Weather2.Companion$@JvmStatic @Throws(ModuleException::class) fun getWeather(query: String, apiKey: String?): List&lt;Message&gt;</ID>

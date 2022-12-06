@@ -38,7 +38,7 @@ import net.thauvin.erik.mobibot.Utils.helpFormat
 import net.thauvin.erik.mobibot.Utils.lastOrEmpty
 import net.thauvin.erik.mobibot.Utils.sendMessage
 import net.thauvin.erik.mobibot.commands.AbstractCommand
-import net.thauvin.erik.mobibot.commands.links.LinksMgr.Companion.entries
+import net.thauvin.erik.mobibot.commands.links.LinksManager.Companion.entries
 import net.thauvin.erik.mobibot.entries.EntriesUtils
 import net.thauvin.erik.mobibot.entries.EntryLink
 import org.pircbotx.hooks.events.PrivateMessageEvent

@@ -1,5 +1,5 @@
 /*
- * TwitterTimer.kt
+ * TellManager.kt
  *
  * Copyright (c) 2004-2022, Erik C. Thauvin (erik@thauvin.net)
  * All rights reserved.
@@ -29,14 +29,47 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+package net.thauvin.erik.mobibot.commands.tell
 
-package net.thauvin.erik.mobibot
+import net.thauvin.erik.mobibot.Utils.loadData
+import net.thauvin.erik.mobibot.Utils.saveData
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
+import java.time.Clock
+import java.time.LocalDateTime
 
-import net.thauvin.erik.mobibot.modules.Twitter
-import java.util.TimerTask
+/**
+ * The Tell Messages Manager.
+ */
+object TellManager {
+    private val logger: Logger = LoggerFactory.getLogger(TellManager::class.java)
 
-class TwitterTimer(private var twitter: Twitter, private var index: Int) : TimerTask() {
-    override fun run() {
-        twitter.postEntry(index)
+    /**
+     * Cleans the messages queue.
+     */
+    @JvmStatic
+    fun clean(tellMessages: MutableList<TellMessage>, tellMaxDays: Long): Boolean {
+        if (logger.isDebugEnabled) logger.debug("Cleaning the messages.")
+        val today = LocalDateTime.now(Clock.systemUTC())
+        return tellMessages.removeIf { o: TellMessage -> o.queued.plusDays(tellMaxDays).isBefore(today) }
+    }
+
+    /**
+     * Loads the messages.
+     */
+    @JvmStatic
+    fun load(file: String): List<TellMessage> {
+        @Suppress("UNCHECKED_CAST")
+        return loadData(file, emptyList<TellMessage>(), logger, "message queue") as List<TellMessage>
+    }
+
+    /**
+     * Saves the messages.
+     */
+    @JvmStatic
+    fun save(file: String, messages: List<TellMessage?>?) {
+        if (messages != null) {
+            saveData(file, messages, logger, "messages")
+        }
     }
 }

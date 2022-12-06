@@ -1,5 +1,5 @@
 /*
- * LinksMgr.kt
+ * LinksManager.kt
  *
  * Copyright (c) 2004-2022, Erik C. Thauvin (erik@thauvin.net)
  * All rights reserved.
@@ -45,12 +45,12 @@ import net.thauvin.erik.mobibot.entries.Entries
 import net.thauvin.erik.mobibot.entries.EntriesUtils.buildLink
 import net.thauvin.erik.mobibot.entries.EntriesUtils.toLinkLabel
 import net.thauvin.erik.mobibot.entries.EntryLink
-import net.thauvin.erik.mobibot.modules.Twitter
+import net.thauvin.erik.mobibot.social.SocialManager
 import org.jsoup.Jsoup
 import org.pircbotx.hooks.types.GenericMessageEvent
 import java.io.IOException
 
-class LinksMgr : AbstractCommand() {
+class LinksManager : AbstractCommand() {
     private val defaultTags: MutableList<String> = mutableListOf()
     private val keywords: MutableList<String> = mutableListOf()
 
@@ -83,10 +83,10 @@ class LinksMgr : AbstractCommand() {
         val pinboard = Pinboard()
 
         /**
-         * Twitter handler.
+         * Social Manager handler.
          */
         @JvmField
-        val twitter = Twitter()
+        val socialManager = SocialManager()
 
         /**
          * Let the user know if the entries are too old to be modified.
@@ -140,8 +140,8 @@ class LinksMgr : AbstractCommand() {
 
                 pinboard.addPin(event.bot().serverHostname, entry)
 
-                // Queue link for posting to Twitter.
-                twitter.queueEntry(index)
+                // Queue link for posting to social media.
+                socialManager.queueEntry(index)
 
                 entries.save()
 

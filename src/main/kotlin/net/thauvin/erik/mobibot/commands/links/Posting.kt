@@ -39,7 +39,7 @@ import net.thauvin.erik.mobibot.Utils.helpFormat
 import net.thauvin.erik.mobibot.Utils.isChannelOp
 import net.thauvin.erik.mobibot.Utils.sendMessage
 import net.thauvin.erik.mobibot.commands.AbstractCommand
-import net.thauvin.erik.mobibot.commands.links.LinksMgr.Companion.entries
+import net.thauvin.erik.mobibot.commands.links.LinksManager.Companion.entries
 import net.thauvin.erik.mobibot.entries.EntriesUtils
 import net.thauvin.erik.mobibot.entries.EntriesUtils.toLinkLabel
 import net.thauvin.erik.mobibot.entries.EntryLink
@@ -71,7 +71,7 @@ class Posting : AbstractCommand() {
             val cmd = cmds[1].trim()
             if (cmd.isBlank()) {
                 showEntry(entryIndex, event) // L1:
-            } else if (LinksMgr.isUpToDate(event)) {
+            } else if (LinksManager.isUpToDate(event)) {
                 if (cmd == "-") {
                     removeEntry(channel, entryIndex, event) // L1:-
                 } else {
@@ -102,7 +102,7 @@ class Posting : AbstractCommand() {
         if (cmd.length > 1) {
             val entry: EntryLink = entries.links[entryIndex]
             entry.title = cmd.substring(1).trim()
-            LinksMgr.pinboard.updatePin(event.bot().serverHostname, entry.link, entry)
+            LinksManager.pinboard.updatePin(event.bot().serverHostname, entry.link, entry)
             event.sendMessage(EntriesUtils.buildLink(entryIndex, entry))
             entries.save()
         }
@@ -110,12 +110,12 @@ class Posting : AbstractCommand() {
 
     private fun changeUrl(channel: String, cmd: String, entryIndex: Int, event: GenericMessageEvent) {
         val entry: EntryLink = entries.links[entryIndex]
-        if (entry.login == event.user.login || isChannelOp(channel, event)) {
+        if (entry.login == event.user.login || event.isChannelOp(channel)) {
             val link = cmd.substring(1)
-            if (link.matches(LinksMgr.LINK_MATCH.toRegex())) {
+            if (link.matches(LinksManager.LINK_MATCH.toRegex())) {
                 val oldLink = entry.link
                 entry.link = link
-                LinksMgr.pinboard.updatePin(event.bot().serverHostname, oldLink, entry)
+                LinksManager.pinboard.updatePin(event.bot().serverHostname, oldLink, entry)
                 event.sendMessage(EntriesUtils.buildLink(entryIndex, entry))
                 entries.save()
             }
@@ -123,11 +123,11 @@ class Posting : AbstractCommand() {
     }
 
     private fun changeAuthor(channel: String, cmd: String, index: Int, event: GenericMessageEvent) {
-        if (isChannelOp(channel, event)) {
+        if (event.isChannelOp(channel)) {
             if (cmd.length > 1) {
                 val entry: EntryLink = entries.links[index]
                 entry.nick = cmd.substring(1)
-                LinksMgr.pinboard.updatePin(event.bot().serverHostname, entry.link, entry)
+                LinksManager.pinboard.updatePin(event.bot().serverHostname, entry.link, entry)
                 event.sendMessage(EntriesUtils.buildLink(index, entry))
                 entries.save()
             }
@@ -138,9 +138,9 @@ class Posting : AbstractCommand() {
 
     private fun removeEntry(channel: String, index: Int, event: GenericMessageEvent) {
         val entry: EntryLink = entries.links[index]
-        if (entry.login == event.user.login || isChannelOp(channel, event)) {
-            LinksMgr.pinboard.deletePin(entry)
-            LinksMgr.twitter.removeEntry(index)
+        if (entry.login == event.user.login || event.isChannelOp(channel)) {
+            LinksManager.pinboard.deletePin(entry)
+            LinksManager.socialManager.removeEntry(index)
             entries.links.removeAt(index)
             event.sendMessage("Entry ${index.toLinkLabel()} removed.")
             entries.save()

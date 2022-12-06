@@ -45,7 +45,7 @@ class Modules(private val modules: List<String>) : AbstractCommand() {
     override val isVisible = true
 
     override fun commandResponse(channel: String, args: String, event: GenericMessageEvent) {
-        if (isChannelOp(channel, event)) {
+        if (event.isChannelOp(channel)) {
             if (modules.isEmpty()) {
                 event.respondPrivateMessage("There are no enabled modules.")
             } else {

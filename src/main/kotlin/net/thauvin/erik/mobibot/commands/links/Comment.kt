@@ -66,8 +66,8 @@ class Comment : AbstractCommand() {
         val cmds = args.substring(1).split("[.:]".toRegex(), 3)
         val entryIndex = cmds[0].toInt() - 1
 
-        if (entryIndex < LinksMgr.entries.links.size && LinksMgr.isUpToDate(event)) {
-            val entry: EntryLink = LinksMgr.entries.links[entryIndex]
+        if (entryIndex < LinksManager.entries.links.size && LinksManager.isUpToDate(event)) {
+            val entry: EntryLink = LinksManager.entries.links[entryIndex]
             val commentIndex = cmds[1].toInt() - 1
             if (commentIndex < entry.comments.size) {
                 when (val cmd = cmds[2].trim()) {
@@ -87,7 +87,7 @@ class Comment : AbstractCommand() {
 
     override fun helpResponse(channel: String, topic: String, event: GenericMessageEvent): Boolean {
         if (super.helpResponse(channel, topic, event)) {
-            if (isChannelOp(channel, event)) {
+            if (event.isChannelOp(channel)) {
                 event.sendMessage("To change a comment's author:")
                 event.sendMessage(helpFormat("${Constants.LINK_CMD}1.1:?<nick>"))
             }
@@ -108,11 +108,11 @@ class Comment : AbstractCommand() {
         commentIndex: Int,
         event: GenericMessageEvent
     ) {
-        if (isChannelOp(channel, event) && cmd.length > 1) {
+        if (event.isChannelOp(channel) && cmd.length > 1) {
             val comment = entry.getComment(commentIndex)
             comment.nick = cmd.substring(1)
             event.sendMessage(buildComment(entryIndex, commentIndex, comment))
-            LinksMgr.entries.save()
+            LinksManager.entries.save()
         } else {
             event.sendMessage("Please ask a channel op to change the author of this comment for you.")
         }
@@ -125,10 +125,10 @@ class Comment : AbstractCommand() {
         commentIndex: Int,
         event: GenericMessageEvent
     ) {
-        if (isChannelOp(channel, event) || event.user.nick == entry.getComment(commentIndex).nick) {
+        if (event.isChannelOp(channel) || event.user.nick == entry.getComment(commentIndex).nick) {
             entry.deleteComment(commentIndex)
             event.sendMessage("Comment ${entryIndex.toLinkLabel()}.${commentIndex + 1} removed.")
-            LinksMgr.entries.save()
+            LinksManager.entries.save()
         } else {
             event.sendMessage("Please ask a channel op to delete this comment for you.")
         }
@@ -143,7 +143,7 @@ class Comment : AbstractCommand() {
     ) {
         entry.setComment(commentIndex, cmd, event.user.nick)
         event.sendMessage(buildComment(entryIndex, commentIndex, entry.getComment(commentIndex)))
-        LinksMgr.entries.save()
+        LinksManager.entries.save()
     }
 
     private fun showComment(entry: EntryLink, entryIndex: Int, commentIndex: Int, event: GenericMessageEvent) {
