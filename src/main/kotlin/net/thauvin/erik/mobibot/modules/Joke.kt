@@ -31,8 +31,6 @@
  */
 package net.thauvin.erik.mobibot.modules
 
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import net.thauvin.erik.jokeapi.exceptions.HttpErrorException
 import net.thauvin.erik.jokeapi.exceptions.JokeException
 import net.thauvin.erik.jokeapi.getJoke
@@ -52,21 +50,15 @@ import java.io.IOException
 /**
  * The Joke module.
  */
-class Joke : ThreadedModule() {
+class Joke : AbstractModule() {
     private val logger: Logger = LoggerFactory.getLogger(Joke::class.java)
 
     override val name = "Joke"
 
-    override fun commandResponse(channel: String, cmd: String, args: String, event: GenericMessageEvent) {
-        runBlocking {
-            launch { run(channel, cmd, args, event) }
-        }
-    }
-
     /**
      * Returns a random joke from [JokeAPI](https://v2.jokeapi.dev/).
      */
-    override fun run(channel: String, cmd: String, args: String, event: GenericMessageEvent) {
+    override fun commandResponse(channel: String, cmd: String, args: String, event: GenericMessageEvent) {
         with(event.bot()) {
             try {
                 randomJoke().forEach {
@@ -92,12 +84,8 @@ class Joke : ThreadedModule() {
         @Throws(ModuleException::class)
         fun randomJoke(): List<Message> {
             return try {
-                val messages = mutableListOf<Message>()
                 val joke = getJoke(safe = true, type = Type.SINGLE, splitNewLine = true)
-                joke.joke.forEach {
-                    messages.add(PublicMessage(it, Colors.CYAN))
-                }
-                messages
+                joke.joke.map { PublicMessage(it, Colors.CYAN) }
             } catch (e: JokeException) {
                 throw ModuleException("randomJoke(): ${e.additionalInfo}", e.message, e)
             } catch (e: HttpErrorException) {

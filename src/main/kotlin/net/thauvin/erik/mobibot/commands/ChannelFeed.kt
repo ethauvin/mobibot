@@ -32,8 +32,6 @@
 
 package net.thauvin.erik.mobibot.commands
 
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import net.thauvin.erik.mobibot.FeedReader
 import net.thauvin.erik.mobibot.Utils.helpFormat
 import org.pircbotx.hooks.types.GenericMessageEvent
@@ -55,11 +53,7 @@ class ChannelFeed(channel: String) : AbstractCommand() {
 
     override fun commandResponse(channel: String, args: String, event: GenericMessageEvent) {
         if (isEnabled()) {
-            runBlocking {
-                launch {
-                    properties[FEED_PROP]?.let { FeedReader(it, event).run() }
-                }
-            }
+            properties[FEED_PROP]?.let { FeedReader(it, event).run() }
         }
     }
 

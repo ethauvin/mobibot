@@ -54,7 +54,7 @@ import java.net.URL
 /**
  * The GoogleSearch module.
  */
-class GoogleSearch : ThreadedModule() {
+class GoogleSearch : AbstractModule() {
     private val logger: Logger = LoggerFactory.getLogger(GoogleSearch::class.java)
 
     override val name = "GoogleSearch"
@@ -62,7 +62,7 @@ class GoogleSearch : ThreadedModule() {
     /**
      * Searches Google.
      */
-    override fun run(channel: String, cmd: String, args: String, event: GenericMessageEvent) {
+    override fun commandResponse(channel: String, cmd: String, args: String, event: GenericMessageEvent) {
         if (args.isNotBlank()) {
             try {
                 val results = searchGoogle(

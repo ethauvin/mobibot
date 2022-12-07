@@ -54,7 +54,7 @@ import kotlin.math.roundToInt
 /**
  * The `Weather2` module.
  */
-class Weather2 : ThreadedModule() {
+class Weather2 : AbstractModule() {
     private val logger: Logger = LoggerFactory.getLogger(Weather2::class.java)
 
     override val name = "Weather"
@@ -62,7 +62,7 @@ class Weather2 : ThreadedModule() {
     /**
      * Fetches the weather data from a specific city.
      */
-    override fun run(channel: String, cmd: String, args: String, event: GenericMessageEvent) {
+    override fun commandResponse(channel: String, cmd: String, args: String, event: GenericMessageEvent) {
         if (args.isNotBlank()) {
             try {
                 val messages = getWeather(args, properties[OWM_API_KEY_PROP])

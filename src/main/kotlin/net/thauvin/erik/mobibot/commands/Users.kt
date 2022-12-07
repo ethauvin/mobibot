@@ -45,15 +45,7 @@ class Users : AbstractCommand() {
     override val isVisible = true
 
     override fun commandResponse(channel: String, args: String, event: GenericMessageEvent) {
-        val nicks = mutableListOf<String>()
         val ch = event.bot().userChannelDao.getChannel(channel)
-        ch.users.forEach {
-            if (it.channelsOpIn.contains(ch)) {
-                nicks.add("@${it.nick}")
-            } else {
-                nicks.add(it.nick)
-            }
-        }
-        event.sendList(nicks, 8)
+        event.sendList(ch.users.map { if (it.channelsOpIn.contains(ch)) "@${it.nick}" else it.nick }, 8)
     }
 }

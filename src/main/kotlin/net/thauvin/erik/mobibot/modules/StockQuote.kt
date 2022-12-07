@@ -52,7 +52,7 @@ import java.net.URL
 /**
  * The StockQuote module.
  */
-class StockQuote : ThreadedModule() {
+class StockQuote : AbstractModule() {
     private val logger: Logger = LoggerFactory.getLogger(StockQuote::class.java)
 
     override val name = "StockQuote"
@@ -60,7 +60,7 @@ class StockQuote : ThreadedModule() {
     /**
      * Returns the specified stock quote from Alpha Vantage.
      */
-    override fun run(channel: String, cmd: String, args: String, event: GenericMessageEvent) {
+    override fun commandResponse(channel: String, cmd: String, args: String, event: GenericMessageEvent) {
         if (args.isNotBlank()) {
             try {
                 val messages = getQuote(args, properties[ALPHAVANTAGE_API_KEY_PROP])

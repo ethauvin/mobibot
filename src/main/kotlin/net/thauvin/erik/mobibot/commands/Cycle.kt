@@ -33,6 +33,7 @@
 package net.thauvin.erik.mobibot.commands
 
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import net.thauvin.erik.mobibot.Utils.bot
 import net.thauvin.erik.mobibot.Utils.helpFormat
@@ -51,10 +52,12 @@ class Cycle : AbstractCommand() {
         with(event.bot()) {
             if (event.isChannelOp(channel)) {
                 runBlocking {
-                    sendIRC().message(channel, "${event.user.nick} asked me to leave. I'll be back!")
-                    userChannelDao.getChannel(channel).send().part()
-                    delay(wait * 1000L)
-                    sendIRC().joinChannel(channel)
+                    launch {
+                        sendIRC().message(channel, "${event.user.nick} asked me to leave. I'll be back!")
+                        userChannelDao.getChannel(channel).send().part()
+                        delay(wait * 1000L)
+                        sendIRC().joinChannel(channel)
+                    }
                 }
             } else {
                 helpResponse(channel, args, event)

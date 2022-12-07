@@ -32,8 +32,6 @@
 
 package net.thauvin.erik.mobibot
 
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import net.thauvin.erik.mobibot.entries.EntryLink
 import net.thauvin.erik.pinboard.PinboardPoster
 import java.time.ZoneId
@@ -53,12 +51,8 @@ class Pinboard {
      */
     fun addPin(ircServer: String, entry: EntryLink) {
         if (poster.apiToken.isNotBlank()) {
-            runBlocking {
-                launch {
-                    with(entry) {
-                        poster.addPin(link, title, postedBy(ircServer), formatTags(), date.toTimestamp())
-                    }
-                }
+            with(entry) {
+                poster.addPin(link, title, postedBy(ircServer), formatTags(), date.toTimestamp())
             }
         }
     }
@@ -75,12 +69,9 @@ class Pinboard {
      */
     fun deletePin(entry: EntryLink) {
         if (poster.apiToken.isNotBlank()) {
-            runBlocking {
-                launch {
-                    poster.deletePin(entry.link)
-                }
-            }
+            poster.deletePin(entry.link)
         }
+
     }
 
     /**
@@ -88,15 +79,11 @@ class Pinboard {
      */
     fun updatePin(ircServer: String, oldUrl: String, entry: EntryLink) {
         if (poster.apiToken.isNotBlank()) {
-            runBlocking {
-                launch {
-                    with(entry) {
-                        if (oldUrl != link) {
-                            poster.deletePin(oldUrl)
-                        }
-                        poster.addPin(link, title, postedBy(ircServer), formatTags(), date.toTimestamp())
-                    }
+            with(entry) {
+                if (oldUrl != link) {
+                    poster.deletePin(oldUrl)
                 }
+                poster.addPin(link, title, postedBy(ircServer), formatTags(), date.toTimestamp())
             }
         }
     }
@@ -106,8 +93,7 @@ class Pinboard {
      */
     private fun Date.toTimestamp(): String {
         return ZonedDateTime.ofInstant(
-            toInstant().truncatedTo(ChronoUnit.SECONDS),
-            ZoneId.systemDefault()
+            toInstant().truncatedTo(ChronoUnit.SECONDS), ZoneId.systemDefault()
         ).format(DateTimeFormatter.ISO_INSTANT)
     }
 

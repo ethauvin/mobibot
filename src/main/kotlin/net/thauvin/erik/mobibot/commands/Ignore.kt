@@ -141,7 +141,7 @@ class Ignore : AbstractCommand() {
     override fun setProperty(key: String, value: String) {
         super.setProperty(key, value)
         if (IGNORE_PROP == key) {
-            ignored.addAll(value.split(LinksManager.TAG_MATCH)
+            ignored.addAll(value.split(LinksManager.TAG_MATCH))
         }
     }
 

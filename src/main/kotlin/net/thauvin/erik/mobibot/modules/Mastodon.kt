@@ -93,7 +93,7 @@ class Mastodon : SocialModule() {
         private const val MASTODON_CMD = "mastodon"
 
         /**
-         * Toots on Mastodon.
+         * Post on Mastodon.
          */
         @JvmStatic
         @Throws(ModuleException::class)

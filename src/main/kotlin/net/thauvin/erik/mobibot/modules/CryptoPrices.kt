@@ -46,7 +46,7 @@ import java.io.IOException
 /**
  * The Cryptocurrency Prices  module.
  */
-class CryptoPrices : ThreadedModule() {
+class CryptoPrices : AbstractModule() {
     private val logger: Logger = LoggerFactory.getLogger(CryptoPrices::class.java)
 
     override val name = "CryptoPrices"
@@ -55,7 +55,7 @@ class CryptoPrices : ThreadedModule() {
      * Returns the cryptocurrency market price from
      * [Coinbase](https://docs.cloud.coinbase.com/sign-in-with-coinbase/docs/api-prices#get-spot-price).
      */
-    override fun run(channel: String, cmd: String, args: String, event: GenericMessageEvent) {
+    override fun commandResponse(channel: String, cmd: String, args: String, event: GenericMessageEvent) {
         if (CURRENCIES.isEmpty()) {
             try {
                 loadCurrencies()

@@ -65,7 +65,7 @@ class FeedReader(private val url: String, val event: GenericMessageEvent) : Runn
             event.sendMessage("An error has occurred while parsing the feed: ${e.message}")
         } catch (e: IOException) {
             if (logger.isWarnEnabled) logger.warn("Unable to fetch the feed at $url", e)
-            event.sendMessage("An error has occurred while fetching the feed: ${e.message}")
+            event.sendMessage("An IO error has occurred while fetching the feed: ${e.message}")
         }
     }
 

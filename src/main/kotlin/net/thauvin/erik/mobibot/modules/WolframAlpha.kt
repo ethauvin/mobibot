@@ -43,7 +43,7 @@ import org.slf4j.LoggerFactory
 import java.io.IOException
 import java.net.URL
 
-class WolframAlpha : ThreadedModule() {
+class WolframAlpha : AbstractModule() {
     private val logger: Logger = LoggerFactory.getLogger(WolframAlpha::class.java)
 
     override val name = "WolframAlpha"
@@ -56,7 +56,7 @@ class WolframAlpha : ThreadedModule() {
         }
     }
 
-    override fun run(channel: String, cmd: String, args: String, event: GenericMessageEvent) {
+    override fun commandResponse(channel: String, cmd: String, args: String, event: GenericMessageEvent) {
         if (args.isNotBlank()) {
             try {
                 val query = args.trim().split("units=", limit = 2, ignoreCase = true)

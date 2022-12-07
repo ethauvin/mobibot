@@ -40,7 +40,6 @@ import assertk.assertions.isFalse
 import assertk.assertions.isTrue
 import assertk.assertions.prop
 import assertk.assertions.size
-import assertk.assertions.startsWith
 import com.rometools.rome.feed.synd.SyndCategory
 import com.rometools.rome.feed.synd.SyndCategoryImpl
 import org.testng.annotations.Test

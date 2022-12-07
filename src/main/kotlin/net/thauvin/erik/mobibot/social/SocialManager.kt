@@ -110,8 +110,8 @@ class SocialManager {
      */
     fun shutdown() {
         timer.cancel()
-        for (index in entries) {
-            postEntry(index)
+        entries.forEach {
+            postEntry(it)
         }
     }
 }

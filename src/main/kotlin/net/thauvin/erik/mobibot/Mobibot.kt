@@ -176,7 +176,7 @@ class Mobibot(nickname: String, val channel: String, logsDirPath: String, p: Pro
     override fun onDisconnect(event: DisconnectEvent?) {
         event?.let {
             with(event.getBot<PircBotX>()) {
-                LinksManager.socialManager.notification("$nick disconnected from irc://$serverHostname")
+                LinksManager.socialManager.notification("$nick disconnected from $serverHostname")
                 seen.add(userChannelDao.getChannel(channel).users)
             }
         }
@@ -202,7 +202,7 @@ class Mobibot(nickname: String, val channel: String, logsDirPath: String, p: Pro
             with(event.getBot<PircBotX>()) {
                 if (user.nick == nick) {
                     LinksManager.socialManager.notification(
-                        "$nick has joined ${event.channel.name} on irc://$serverHostname"
+                        "$nick has joined ${event.channel.name} on $serverHostname"
                     )
                     seen.add(userChannelDao.getChannel(channel).users)
                 } else {
@@ -215,12 +215,10 @@ class Mobibot(nickname: String, val channel: String, logsDirPath: String, p: Pro
 
     override fun onMessage(event: MessageEvent?) {
         event?.user?.let { user ->
-            val sender = user.nick
-            val message = event.message
             tell.send(event)
-            if (message.matches("(?i)${Pattern.quote(event.bot().nick)}:.*".toRegex())) { // mobibot: <command>
-                if (logger.isTraceEnabled) logger.trace(">>> $sender: $message")
-                val cmds = message.substring(message.indexOf(':') + 1).trim().split(" ".toRegex(), 2)
+            if (event.message.matches("(?i)${Pattern.quote(event.bot().nick)}:.*".toRegex())) { // mobibot: <command>
+                if (logger.isTraceEnabled) logger.trace(">>> ${user.nick}: ${event.message}")
+                val cmds = event.message.substring(event.bot().nick.length + 1).trim().split(" ".toRegex(), 2)
                 val cmd = cmds[0].lowercase()
                 val args = cmds.lastOrEmpty().trim()
                 if (cmd.startsWith(Constants.HELP_CMD)) { // mobibot: help
@@ -230,10 +228,10 @@ class Mobibot(nickname: String, val channel: String, logsDirPath: String, p: Pro
                     addons.exec(channel, cmd, args, event)
                 }
             } else if (addons.match(channel, event)) { // Links, e.g.: https://www.example.com/ or L1: , etc.
-                if (logger.isTraceEnabled) logger.trace(">>> $sender: $message")
+                if (logger.isTraceEnabled) logger.trace(">>> ${user.nick}: ${event.message}")
             }
-            storeRecap(sender, message, false)
-            seen.add(sender)
+            storeRecap(user.nick, event.message, false)
+            seen.add(user.nick)
         }
     }
 
@@ -252,7 +250,7 @@ class Mobibot(nickname: String, val channel: String, logsDirPath: String, p: Pro
             with(event.getBot<PircBotX>()) {
                 if (user.nick == nick) {
                     LinksManager.socialManager.notification(
-                        "$nick has left ${event.channel.name} on irc://$serverHostname"
+                        "$nick has left ${event.channel.name} on $serverHostname"
                     )
                     seen.add(userChannelDao.getChannel(channel).users)
                 } else {

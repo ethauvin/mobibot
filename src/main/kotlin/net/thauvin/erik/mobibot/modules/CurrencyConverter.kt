@@ -52,7 +52,7 @@ import java.util.TreeMap
 /**
  * The CurrencyConverter module.
  */
-class CurrencyConverter : ThreadedModule() {
+class CurrencyConverter : AbstractModule() {
     private val logger: Logger = LoggerFactory.getLogger(CurrencyConverter::class.java)
 
     override val name = "CurrencyConverter"
@@ -71,7 +71,7 @@ class CurrencyConverter : ThreadedModule() {
     /**
      * Converts the specified currencies.
      */
-    override fun run(channel: String, cmd: String, args: String, event: GenericMessageEvent) {
+    override fun commandResponse(channel: String, cmd: String, args: String, event: GenericMessageEvent) {
         reload()
 
         if (SYMBOLS.isEmpty()) {

@@ -32,18 +32,16 @@
 
 package net.thauvin.erik.mobibot.social
 
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import net.thauvin.erik.mobibot.commands.links.LinksManager
 import net.thauvin.erik.mobibot.entries.EntriesUtils.toLinkLabel
 import net.thauvin.erik.mobibot.entries.EntryLink
+import net.thauvin.erik.mobibot.modules.AbstractModule
 import net.thauvin.erik.mobibot.modules.ModuleException
-import net.thauvin.erik.mobibot.modules.ThreadedModule
 import org.pircbotx.hooks.types.GenericMessageEvent
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
-abstract class SocialModule : ThreadedModule() {
+abstract class SocialModule : AbstractModule() {
     private val logger: Logger = LoggerFactory.getLogger(SocialManager::class.java)
 
     abstract val handle: String?
@@ -56,15 +54,11 @@ abstract class SocialModule : ThreadedModule() {
      */
     fun notification(msg: String) {
         if (isEnabled && !handle.isNullOrBlank()) {
-            runBlocking {
-                launch {
-                    try {
-                        post(message = msg, isDm = true)
-                        if (logger.isDebugEnabled) logger.debug("Notified $handle on $name: $msg")
-                    } catch (e: ModuleException) {
-                        if (logger.isWarnEnabled) logger.warn("Failed to notify $handle on $name: $msg", e)
-                    }
-                }
+            try {
+                post(message = msg, isDm = true)
+                if (logger.isDebugEnabled) logger.debug("Notified $handle on $name: $msg")
+            } catch (e: ModuleException) {
+                if (logger.isWarnEnabled) logger.warn("Failed to notify $handle on $name: $msg", e)
             }
         }
     }
@@ -76,25 +70,21 @@ abstract class SocialModule : ThreadedModule() {
      */
     fun postEntry(index: Int) {
         if (isAutoPost && LinksManager.entries.links.size >= index) {
-            runBlocking {
-                launch {
-                    try {
-                        if (logger.isDebugEnabled) {
-                            logger.debug("Posting {} to $name.", index.toLinkLabel())
-                        }
-                        post(message = formatEntry(LinksManager.entries.links[index]), isDm = false)
-                    } catch (e: ModuleException) {
-                        if (logger.isWarnEnabled) logger.warn(
-                            "Failed to post entry ${index.toLinkLabel()} on $name.",
-                            e
-                        )
-                    }
+            try {
+                if (logger.isDebugEnabled) {
+                    logger.debug("Posting {} to $name.", index.toLinkLabel())
                 }
+                post(message = formatEntry(LinksManager.entries.links[index]), isDm = false)
+            } catch (e: ModuleException) {
+                if (logger.isWarnEnabled) logger.warn(
+                    "Failed to post entry ${index.toLinkLabel()} on $name.",
+                    e
+                )
             }
         }
     }
 
-    override fun run(channel: String, cmd: String, args: String, event: GenericMessageEvent) {
+    override fun commandResponse(channel: String, cmd: String, args: String, event: GenericMessageEvent) {
         try {
             event.respond(post("$args (by ${event.user.nick} on $channel)", false))
         } catch (e: ModuleException) {

@@ -88,7 +88,7 @@ class Twitter : SocialModule() {
         private const val TWITTER_CMD = "twitter"
 
         /**
-         * Tweets on Twitter.
+         * Post on Twitter.
          */
         @JvmStatic
         @Throws(ModuleException::class)

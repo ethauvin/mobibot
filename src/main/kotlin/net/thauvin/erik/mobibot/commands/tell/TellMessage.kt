@@ -37,7 +37,7 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 /**
- * The `TellMessage` class.
+ * Tell Message.
  */
 class TellMessage(
     /**

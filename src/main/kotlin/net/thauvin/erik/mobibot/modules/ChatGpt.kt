@@ -46,12 +46,12 @@ import java.net.http.HttpClient
 import java.net.http.HttpRequest
 import java.net.http.HttpResponse
 
-class ChatGpt : ThreadedModule() {
+class ChatGpt : AbstractModule() {
     private val logger: Logger = LoggerFactory.getLogger(ChatGpt::class.java)
 
     override val name = "ChatGPT"
 
-    override fun run(channel: String, cmd: String, args: String, event: GenericMessageEvent) {
+    override fun commandResponse(channel: String, cmd: String, args: String, event: GenericMessageEvent) {
         if (args.isNotBlank()) {
             try {
                 event.sendMessage(
