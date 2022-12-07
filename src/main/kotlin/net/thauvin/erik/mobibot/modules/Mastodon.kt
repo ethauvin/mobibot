@@ -52,22 +52,21 @@ class Mastodon : SocialModule() {
         get() = properties[HANDLE_PROP]
 
     override val isAutoPost: Boolean
+        get() = isEnabled && properties[AUTO_POST_PROP].toBoolean()
 
     override val isValidProperties: Boolean
-        get() {
-            for (s in propertyKeys) {
-                if (AUTO_POST_PROP != s && HANDLE_PROP != s && properties[s].isNullOrBlank()) {
-                    return false
-                }
-            }
-            return true
-        }
+        get() = !(properties[INSTANCE_PROP].isNullOrBlank() || properties[ACCESS_TOKEN_PROP].isNullOrBlank())
 
     /**
      * Formats the entry for posting.
      */
     override fun formatEntry(entry: EntryLink): String {
-        return "${entry.title} via ${entry.nick} on ${entry.channel}\n\n${entry.link}"
+        return "${entry.title} (via ${entry.nick} on ${entry.channel})${formatTags(entry)}\n\n${entry.link}"
+    }
+
+    private fun formatTags(entry: EntryLink): String {
+        return entry.tags.filter { !it.name.equals(entry.channel.removePrefix("#"), true) }
+            .joinToString(separator = " ", prefix = "\n\n") { "#${it.name}" }
     }
 
     /**

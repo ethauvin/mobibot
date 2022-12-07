@@ -94,7 +94,7 @@ class Posting : AbstractCommand() {
         val entry: EntryLink = entries.links[entryIndex]
         val commentIndex = entry.addComment(cmd, event.user.nick)
         val comment = entry.getComment(commentIndex)
-        event.sendMessage(EntriesUtils.buildComment(entryIndex, commentIndex, comment))
+        event.sendMessage(EntriesUtils.printComment(entryIndex, commentIndex, comment))
         entries.save()
     }
 
@@ -103,7 +103,7 @@ class Posting : AbstractCommand() {
             val entry: EntryLink = entries.links[entryIndex]
             entry.title = cmd.substring(1).trim()
             LinksManager.pinboard.updatePin(event.bot().serverHostname, entry.link, entry)
-            event.sendMessage(EntriesUtils.buildLink(entryIndex, entry))
+            event.sendMessage(EntriesUtils.printLink(entryIndex, entry))
             entries.save()
         }
     }
@@ -112,11 +112,11 @@ class Posting : AbstractCommand() {
         val entry: EntryLink = entries.links[entryIndex]
         if (entry.login == event.user.login || event.isChannelOp(channel)) {
             val link = cmd.substring(1)
-            if (link.matches(LinksManager.LINK_MATCH.toRegex())) {
+            if (link.matches(LinksManager.LINK_MATCH)) {
                 val oldLink = entry.link
                 entry.link = link
                 LinksManager.pinboard.updatePin(event.bot().serverHostname, oldLink, entry)
-                event.sendMessage(EntriesUtils.buildLink(entryIndex, entry))
+                event.sendMessage(EntriesUtils.printLink(entryIndex, entry))
                 entries.save()
             }
         }
@@ -128,7 +128,7 @@ class Posting : AbstractCommand() {
                 val entry: EntryLink = entries.links[index]
                 entry.nick = cmd.substring(1)
                 LinksManager.pinboard.updatePin(event.bot().serverHostname, entry.link, entry)
-                event.sendMessage(EntriesUtils.buildLink(index, entry))
+                event.sendMessage(EntriesUtils.printLink(index, entry))
                 entries.save()
             }
         } else {
@@ -151,14 +151,14 @@ class Posting : AbstractCommand() {
 
     private fun showEntry(index: Int, event: GenericMessageEvent) {
         val entry: EntryLink = entries.links[index]
-        event.sendMessage(EntriesUtils.buildLink(index, entry))
+        event.sendMessage(EntriesUtils.printLink(index, entry))
         if (entry.tags.isNotEmpty()) {
-            event.sendMessage(EntriesUtils.buildTags(index, entry))
+            event.sendMessage(EntriesUtils.printTags(index, entry))
         }
         if (entry.comments.isNotEmpty()) {
             val comments = entry.comments
             for (i in comments.indices) {
-                event.sendMessage(EntriesUtils.buildComment(index, i, comments[i]))
+                event.sendMessage(EntriesUtils.printComment(index, i, comments[i]))
             }
         }
     }

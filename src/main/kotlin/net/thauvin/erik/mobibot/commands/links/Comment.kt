@@ -38,7 +38,7 @@ import net.thauvin.erik.mobibot.Utils.helpFormat
 import net.thauvin.erik.mobibot.Utils.isChannelOp
 import net.thauvin.erik.mobibot.Utils.sendMessage
 import net.thauvin.erik.mobibot.commands.AbstractCommand
-import net.thauvin.erik.mobibot.entries.EntriesUtils.buildComment
+import net.thauvin.erik.mobibot.entries.EntriesUtils.printComment
 import net.thauvin.erik.mobibot.entries.EntriesUtils.toLinkLabel
 import net.thauvin.erik.mobibot.entries.EntryLink
 import org.pircbotx.hooks.types.GenericMessageEvent
@@ -111,7 +111,7 @@ class Comment : AbstractCommand() {
         if (event.isChannelOp(channel) && cmd.length > 1) {
             val comment = entry.getComment(commentIndex)
             comment.nick = cmd.substring(1)
-            event.sendMessage(buildComment(entryIndex, commentIndex, comment))
+            event.sendMessage(printComment(entryIndex, commentIndex, comment))
             LinksManager.entries.save()
         } else {
             event.sendMessage("Please ask a channel op to change the author of this comment for you.")
@@ -142,11 +142,11 @@ class Comment : AbstractCommand() {
         event: GenericMessageEvent
     ) {
         entry.setComment(commentIndex, cmd, event.user.nick)
-        event.sendMessage(buildComment(entryIndex, commentIndex, entry.getComment(commentIndex)))
+        event.sendMessage(printComment(entryIndex, commentIndex, entry.getComment(commentIndex)))
         LinksManager.entries.save()
     }
 
     private fun showComment(entry: EntryLink, entryIndex: Int, commentIndex: Int, event: GenericMessageEvent) {
-        event.sendMessage(buildComment(entryIndex, commentIndex, entry.getComment(commentIndex)))
+        event.sendMessage(printComment(entryIndex, commentIndex, entry.getComment(commentIndex)))
     }
 }

@@ -40,18 +40,18 @@ import net.thauvin.erik.mobibot.Utils.green
  */
 object EntriesUtils {
     /**
-     * Builds an entry's comment for display on the channel.
+     * Prints an entry's comment for display on the channel.
      */
     @JvmStatic
-    fun buildComment(entryIndex: Int, commentIndex: Int, comment: EntryComment): String =
+    fun printComment(entryIndex: Int, commentIndex: Int, comment: EntryComment): String =
         ("${entryIndex.toLinkLabel()}.${commentIndex + 1}: [${comment.nick}] ${comment.comment}")
 
     /**
-     * Builds an entry's link for display on the channel.
+     * Prints an entry's link for display on the channel.
      */
     @JvmStatic
     @JvmOverloads
-    fun buildLink(entryIndex: Int, entry: EntryLink, isView: Boolean = false): String {
+    fun printLink(entryIndex: Int, entry: EntryLink, isView: Boolean = false): String {
         val buff = StringBuilder().append(entryIndex.toLinkLabel()).append(": ")
             .append('[').append(entry.nick).append(']')
         if (isView && entry.comments.isNotEmpty()) {
@@ -70,14 +70,14 @@ object EntriesUtils {
     }
 
     /**
-     * Build an entry's tags/categories for display on the channel.
+     * Prints an entry's tags/categories for display on the channel. e.g. L1T: tag1, tag2
      */
     @JvmStatic
-    fun buildTags(entryIndex: Int, entry: EntryLink): String =
-        entryIndex.toLinkLabel() + "${Constants.TAG_CMD}: " + entry.pinboardTags.replace(",", ", ")
+    fun printTags(entryIndex: Int, entry: EntryLink): String =
+        entryIndex.toLinkLabel() + "${Constants.TAG_CMD}: " + entry.formatTags(", ")
 
     /**
-     * Build link label based on its index. e.g: L1
+     * Builds link label based on its index. e.g: L1
      */
     @JvmStatic
     fun Int.toLinkLabel(): String = Constants.LINK_CMD + (this + 1)

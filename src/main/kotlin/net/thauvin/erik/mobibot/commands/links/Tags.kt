@@ -67,14 +67,14 @@ class Tags : AbstractCommand() {
                 if (entry.login == event.user.login || event.isChannelOp(channel)) {
                     entry.setTags(cmd)
                     LinksManager.pinboard.updatePin(event.bot().serverHostname, entry.link, entry)
-                    event.sendMessage(EntriesUtils.buildTags(index, entry))
+                    event.sendMessage(EntriesUtils.printTags(index, entry))
                     LinksManager.entries.save()
                 } else {
                     event.sendMessage("Please ask a channel op to change the tags for you.")
                 }
             } else {
                 if (entry.tags.isNotEmpty()) {
-                    event.sendMessage(EntriesUtils.buildTags(index, entry))
+                    event.sendMessage(EntriesUtils.printTags(index, entry))
                 } else {
                     event.sendMessage("The entry has no tags. Why don't add some?")
                 }

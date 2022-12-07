@@ -49,14 +49,8 @@ class Twitter : SocialModule() {
         get() = isEnabled && properties[AUTO_POST_PROP].toBoolean()
 
     override val isValidProperties: Boolean
-        get() {
-            for (s in propertyKeys) {
-                if (AUTO_POST_PROP != s && HANDLE_PROP != s && properties[s].isNullOrBlank()) {
-                    return false
-                }
-            }
-            return true
-        }
+        get() = !(properties[CONSUMER_KEY_PROP].isNullOrBlank() || properties[CONSUMER_SECRET_PROP].isNullOrBlank()
+                || properties[TOKEN_PROP].isNullOrBlank() || properties[TOKEN_SECRET_PROP].isNullOrBlank())
 
     /**
      * Formats the entry for posting.

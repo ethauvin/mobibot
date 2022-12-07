@@ -128,22 +128,16 @@ class EntryLink(
     }
 
     /**
+     * Formats the tags.
+     */
+    fun formatTags(sep: String, prefix: String = "") : String {
+        return tags.joinToString(separator = sep, prefix = prefix){it.name}
+    }
+
+    /**
      * Returns a comment.
      */
     fun getComment(index: Int): EntryComment = comments[index]
-
-    /**
-     * Returns the tags formatted for pinboard.in
-     */
-    val pinboardTags: String
-        get() {
-            val pinboardTags = StringBuilder(nick)
-            for (tag in tags) {
-                pinboardTags.append(',')
-                pinboardTags.append(tag.name)
-            }
-            return pinboardTags.toString()
-        }
 
     /**
      * Returns true if a string is contained in the link, title, or nick.

@@ -42,7 +42,7 @@ import net.thauvin.erik.mobibot.Utils.today
 import net.thauvin.erik.mobibot.commands.AbstractCommand
 import net.thauvin.erik.mobibot.commands.Ignore.Companion.isNotIgnored
 import net.thauvin.erik.mobibot.entries.Entries
-import net.thauvin.erik.mobibot.entries.EntriesUtils.buildLink
+import net.thauvin.erik.mobibot.entries.EntriesUtils.printLink
 import net.thauvin.erik.mobibot.entries.EntriesUtils.toLinkLabel
 import net.thauvin.erik.mobibot.entries.EntryLink
 import net.thauvin.erik.mobibot.social.SocialManager
@@ -65,10 +65,10 @@ class LinksManager : AbstractCommand() {
     }
 
     companion object {
-        const val LINK_MATCH = "^[hH][tT][tT][pP](|[sS])://.*"
+        val LINK_MATCH = "^[hH][tT][tT][pP](|[sS])://.*".toRegex()
         const val KEYWORDS_PROP = "tags-keywords"
         const val TAGS_PROP = "tags"
-        const val TAG_MATCH = ", *| +"
+        val TAG_MATCH = ", *| +".toRegex()
 
         /**
          * Entries array
@@ -116,7 +116,7 @@ class LinksManager : AbstractCommand() {
                     val data = cmds[1].trim().split("${Tags.COMMAND}:", limit = 2)
                     title = data[0].trim()
                     if (data.size > 1) {
-                        tags.addAll(data[1].split(TAG_MATCH.toRegex()))
+                        tags.addAll(data[1].split(TAG_MATCH))
                     }
                 }
 
@@ -136,7 +136,7 @@ class LinksManager : AbstractCommand() {
                 val entry = EntryLink(link, title, sender, login, channel, tags)
                 entries.links.add(entry)
                 val index = entries.links.lastIndexOf(entry)
-                event.sendMessage(buildLink(index, entry))
+                event.sendMessage(printLink(index, entry))
 
                 pinboard.addPin(event.bot().serverHostname, entry)
 
@@ -156,7 +156,7 @@ class LinksManager : AbstractCommand() {
     override fun helpResponse(channel: String, topic: String, event: GenericMessageEvent): Boolean = false
 
     override fun matches(message: String): Boolean {
-        return message.matches(LINK_MATCH.toRegex())
+        return message.matches(LINK_MATCH)
     }
 
     internal fun fetchTitle(link: String): String {
@@ -179,7 +179,7 @@ class LinksManager : AbstractCommand() {
             return try {
                 val match = entries.links.single { it.link == link }
                 event.sendMessage(
-                    "Duplicate".bold() + " >> " + buildLink(entries.links.indexOf(match), match)
+                    "Duplicate".bold() + " >> " + printLink(entries.links.indexOf(match), match)
                 )
                 true
             } catch (ignore: NoSuchElementException) {
@@ -200,9 +200,9 @@ class LinksManager : AbstractCommand() {
     override fun setProperty(key: String, value: String) {
         super.setProperty(key, value)
         if (KEYWORDS_PROP == key) {
-            keywords.addAll(value.split(TAG_MATCH.toRegex()))
+            keywords.addAll(value.split(TAG_MATCH))
         } else if (TAGS_PROP == key) {
-            defaultTags.addAll(value.split(TAG_MATCH.toRegex()))
+            defaultTags.addAll(value.split(TAG_MATCH))
         }
     }
 }

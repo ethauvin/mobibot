@@ -40,6 +40,7 @@ import assertk.assertions.isFalse
 import assertk.assertions.isTrue
 import assertk.assertions.prop
 import assertk.assertions.size
+import assertk.assertions.startsWith
 import com.rometools.rome.feed.synd.SyndCategory
 import com.rometools.rome.feed.synd.SyndCategoryImpl
 import org.testng.annotations.Test
@@ -94,13 +95,11 @@ class EntryLinkTest {
 
     @Test(groups = ["entries"])
     fun testConstructor() {
-        val tag = "test"
-        val tags = listOf(SyndCategoryImpl().apply { name = tag })
+        val tags = listOf(SyndCategoryImpl().apply { name = "tag1" }, SyndCategoryImpl().apply { name = "tag2" })
         val link = EntryLink("link", "title", "nick", "channel", Date(), tags)
         assertThat(link, "link").all {
             prop(EntryLink::tags).size().isEqualTo(tags.size)
-            prop(EntryLink::tags).index(0).prop(SyndCategory::getName).isEqualTo(tag)
-            prop(EntryLink::pinboardTags).isEqualTo("nick,$tag")
+            prop(EntryLink::tags).index(0).prop(SyndCategory::getName).isEqualTo("tag1")
         }
     }
 
@@ -122,11 +121,17 @@ class EntryLinkTest {
             assertThat(tag.name, "tag.name($i)").isEqualTo("tag${i + 1}")
         }
         assertThat(entryLink::tags).size().isEqualTo(5)
-        entryLink.setTags("-tag5")
+        entryLink.setTags("-tag5, tag4")
         entryLink.setTags("+mobitopia")
-        entryLink.setTags("tag4")
         entryLink.setTags("-mobitopia")
-        assertThat(entryLink::pinboardTags).isEqualTo(entryLink.nick + ",tag1,tag2,tag3,tag4,mobitopia")
+        assertThat(
+            entryLink.formatTags(","),
+            "formatTags(',')"
+        ).isEqualTo("tag1,tag2,tag3,tag4,mobitopia")
+        entryLink.setTags("-tag4 tag5")
+        assertThat(
+            entryLink.formatTags(" ", ","), "formatTag(' ',',')"
+        ).isEqualTo(",tag1 tag2 tag3 mobitopia tag5")
         val size = entryLink.tags.size
         entryLink.setTags("")
         assertThat(entryLink.tags, "setTags('')").size().isEqualTo(size)

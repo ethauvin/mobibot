@@ -160,7 +160,7 @@ class FeedsManager private constructor() {
                                 item.description = SyndContentImpl().apply { value = buff.toString() }
                                 item.title = title
                                 item.publishedDate = date
-                                item.author = "${channel.substring(1)}@${entries.ircServer} ($nick)"
+                                item.author = "${channel.removePrefix("#")}@${entries.ircServer} ($nick)"
                                 item.categories = tags
                                 items.add(item)
                             }

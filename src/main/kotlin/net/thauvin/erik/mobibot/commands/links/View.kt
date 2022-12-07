@@ -97,11 +97,11 @@ class View : AbstractCommand() {
             entry = entries.links[index]
             if (query.isNotBlank()) {
                 if (entry.matches(query)) {
-                    event.sendMessage(EntriesUtils.buildLink(index, entry, true))
+                    event.sendMessage(EntriesUtils.printLink(index, entry, true))
                     sent++
                 }
             } else {
-                event.sendMessage(EntriesUtils.buildLink(index, entry, true))
+                event.sendMessage(EntriesUtils.printLink(index, entry, true))
                 sent++
             }
             index++

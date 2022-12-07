@@ -86,6 +86,7 @@
     <ID>ThrowsCount:WolframAlpha.kt$WolframAlpha.Companion$@JvmStatic @Throws(ModuleException::class) fun queryWolfram(query: String, units: String = IMPERIAL, appId: String?): String</ID>
     <ID>TooGenericExceptionCaught:StockQuote.kt$StockQuote.Companion$e: NullPointerException</ID>
     <ID>TooGenericExceptionCaught:Weather2.kt$Weather2.Companion$e: NullPointerException</ID>
+    <ID>TooManyFunctions:EntryLink.kt$EntryLink : Serializable</ID>
     <ID>TooManyFunctions:Mobibot.kt$Mobibot : ListenerAdapter</ID>
     <ID>TooManyFunctions:Tell.kt$Tell : AbstractCommand</ID>
   </CurrentIssues>

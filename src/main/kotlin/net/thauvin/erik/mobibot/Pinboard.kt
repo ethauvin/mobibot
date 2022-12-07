@@ -55,13 +55,9 @@ class Pinboard {
         if (poster.apiToken.isNotBlank()) {
             runBlocking {
                 launch {
-                    poster.addPin(
-                        entry.link,
-                        entry.title,
-                        entry.postedBy(ircServer),
-                        entry.pinboardTags,
-                        entry.date.toTimestamp()
-                    )
+                    with(entry) {
+                        poster.addPin(link, title, postedBy(ircServer), formatTags(), date.toTimestamp())
+                    }
                 }
             }
         }
@@ -98,7 +94,7 @@ class Pinboard {
                         if (oldUrl != link) {
                             poster.deletePin(oldUrl)
                         }
-                        poster.addPin(link, title, entry.postedBy(ircServer), pinboardTags, date.toTimestamp())
+                        poster.addPin(link, title, postedBy(ircServer), formatTags(), date.toTimestamp())
                     }
                 }
             }
@@ -106,13 +102,20 @@ class Pinboard {
     }
 
     /**
-     * Format a date to a UTC timestamp.
+     * Formats a date to a UTC timestamp.
      */
     private fun Date.toTimestamp(): String {
         return ZonedDateTime.ofInstant(
             toInstant().truncatedTo(ChronoUnit.SECONDS),
             ZoneId.systemDefault()
         ).format(DateTimeFormatter.ISO_INSTANT)
+    }
+
+    /**
+     * Formats the tags for pinboard.
+     */
+    private fun EntryLink.formatTags(): String {
+        return nick + formatTags(",", ",")
     }
 
     /**

@@ -36,9 +36,9 @@ import assertk.assertThat
 import assertk.assertions.contains
 import assertk.assertions.isEqualTo
 import net.thauvin.erik.mobibot.Constants
-import net.thauvin.erik.mobibot.entries.EntriesUtils.buildComment
-import net.thauvin.erik.mobibot.entries.EntriesUtils.buildLink
-import net.thauvin.erik.mobibot.entries.EntriesUtils.buildTags
+import net.thauvin.erik.mobibot.entries.EntriesUtils.printComment
+import net.thauvin.erik.mobibot.entries.EntriesUtils.printLink
+import net.thauvin.erik.mobibot.entries.EntriesUtils.printTags
 import net.thauvin.erik.mobibot.entries.EntriesUtils.toLinkLabel
 import org.testng.annotations.Test
 
@@ -60,33 +60,33 @@ class EntriesUtilsTest {
     }
 
     @Test(groups = ["entries"])
-    fun buildLinkLabelTest() {
-        assertThat(1.toLinkLabel()).isEqualTo("${Constants.LINK_CMD}2")
+    fun printCommentTest() {
+        assertThat(printComment(0, 0, comment)).isEqualTo("${Constants.LINK_CMD}1.1: [nick] comment")
     }
 
     @Test(groups = ["entries"])
-    fun buildCommentTest() {
-        assertThat(buildComment(0, 0, comment)).isEqualTo("${Constants.LINK_CMD}1.1: [nick] comment")
-    }
-
-    @Test(groups = ["entries"])
-    fun buildLinkTest() {
+    fun printLinkTest() {
         for (i in links.indices) {
             assertThat(
-                buildLink(i - 1, links[i]), "link $i"
+                printLink(i - 1, links[i]), "link $i"
             ).isEqualTo("L$i: [Skynx$i] \u0002Mobitopia$i\u0002 ( \u000303https://www.mobitopia.org/$i\u000F )")
         }
 
         assertThat(links.first().addComment(comment), "addComment()").isEqualTo(0)
-        assertThat(buildLink(0, links.first(), isView = true), "buildLink(isView=true)").contains("[+1]")
+        assertThat(printLink(0, links.first(), isView = true), "printLink(isView=true)").contains("[+1]")
     }
 
     @Test(groups = ["entries"])
-    fun buildTagsTest() {
+    fun printTagsTest() {
         for (i in links.indices) {
             assertThat(
-                buildTags(i - 1, links[i]), "tag $i"
-            ).isEqualTo("L${i}T: Skynx$i, tag1, tag2, tag3, tag4, tag5")
+                printTags(i - 1, links[i]), "tag $i"
+            ).isEqualTo("L${i}T: tag1, tag2, tag3, tag4, tag5")
         }
+    }
+
+    @Test(groups = ["entries"])
+    fun toLinkLabelTest() {
+        assertThat(1.toLinkLabel()).isEqualTo("${Constants.LINK_CMD}2")
     }
 }

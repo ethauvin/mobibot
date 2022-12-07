@@ -113,7 +113,7 @@ abstract class AbstractModule {
      */
     open val isValidProperties: Boolean
         get() {
-            for (s in propertyKeys) {
+            for (s in properties.keys) {
                 if (properties[s].isNullOrBlank()) {
                     return false
                 }

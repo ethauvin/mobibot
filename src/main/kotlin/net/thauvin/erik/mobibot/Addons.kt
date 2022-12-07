@@ -46,8 +46,8 @@ import java.util.Properties
  */
 class Addons(private val props: Properties) {
     private val logger: Logger = LoggerFactory.getLogger(Addons::class.java)
-    private val disabledModules = props.getProperty("disabled-modules", "").split(LinksManager.TAG_MATCH.toRegex())
-    private val disableCommands = props.getProperty("disabled-commands", "").split(LinksManager.TAG_MATCH.toRegex())
+    private val disabledModules = props.getProperty("disabled-modules", "").split(LinksManager.TAG_MATCH)
+    private val disableCommands = props.getProperty("disabled-commands", "").split(LinksManager.TAG_MATCH)
 
     val commands: MutableList<AbstractCommand> = mutableListOf()
     val modules: MutableList<AbstractModule> = mutableListOf()
