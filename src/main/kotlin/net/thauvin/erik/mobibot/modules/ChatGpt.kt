@@ -54,12 +54,12 @@ class ChatGpt : AbstractModule() {
     override fun commandResponse(channel: String, cmd: String, args: String, event: GenericMessageEvent) {
         if (args.isNotBlank()) {
             try {
-                event.sendMessage(
-                    chat(
-                        args.trim(),
-                        properties[CHATGPT_API_KEY]
-                    )
-                )
+                val answer = chat(args.trim(), properties[CHATGPT_API_KEY])
+                if (answer.isNotBlank()) {
+                    event.sendMessage(answer)
+                } else {
+                    event.respond("ChatGPT is stumped.")
+                }
             } catch (e: ModuleException) {
                 if (logger.isWarnEnabled) logger.warn(e.debugMessage, e)
                 e.message?.let {
