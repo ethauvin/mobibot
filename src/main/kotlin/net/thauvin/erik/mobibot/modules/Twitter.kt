@@ -86,6 +86,7 @@ class Twitter : SocialModule() {
 
         // Twitter command
         private const val TWITTER_CMD = "twitter"
+        private const val TWEET_CMD = "tweet"
 
         /**
          * Post on Twitter.
@@ -124,8 +125,9 @@ class Twitter : SocialModule() {
 
     init {
         commands.add(TWITTER_CMD)
-        help.add("To post to Twitter:")
-        help.add(helpFormat("%c $TWITTER_CMD <message>"))
+        commands.add(TWEET_CMD)
+        help.add("To tweet on Twitter:")
+        help.add(helpFormat("%c $TWEET_CMD <message>"))
         properties[AUTO_POST_PROP] = "false"
         initProperties(CONSUMER_KEY_PROP, CONSUMER_SECRET_PROP, HANDLE_PROP, TOKEN_PROP, TOKEN_SECRET_PROP)
     }

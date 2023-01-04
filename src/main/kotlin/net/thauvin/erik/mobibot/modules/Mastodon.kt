@@ -91,6 +91,7 @@ class Mastodon : SocialModule() {
         const val INSTANCE_PROP = "mastodon-instance"
 
         private const val MASTODON_CMD = "mastodon"
+        private const val TOOT_CMD = "toot"
 
         /**
          * Post on Mastodon.
@@ -140,8 +141,9 @@ class Mastodon : SocialModule() {
 
     init {
         commands.add(MASTODON_CMD)
-        help.add("To post to Mastodon:")
-        help.add(Utils.helpFormat("%c $MASTODON_CMD <message>"))
+        commands.add(TOOT_CMD)
+        help.add("To toot on Mastodon:")
+        help.add(Utils.helpFormat("%c $TOOT_CMD <message>"))
         properties[AUTO_POST_PROP] = "false"
         initProperties(ACCESS_TOKEN_PROP, HANDLE_PROP, INSTANCE_PROP)
     }
