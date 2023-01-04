@@ -33,6 +33,7 @@ package net.thauvin.erik.mobibot
 
 import net.thauvin.erik.mobibot.msg.Message
 import net.thauvin.erik.mobibot.msg.Message.Companion.DEFAULT_COLOR
+import net.thauvin.erik.urlencoder.UrlEncoder
 import org.jsoup.Jsoup
 import org.pircbotx.Colors
 import org.pircbotx.PircBotX
@@ -46,7 +47,6 @@ import java.io.ObjectInputStream
 import java.io.ObjectOutputStream
 import java.net.HttpURLConnection
 import java.net.URL
-import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
 import java.nio.file.Files
 import java.nio.file.Paths
@@ -152,10 +152,7 @@ object Utils {
      * URL encodes the given string.
      */
     @JvmStatic
-    fun String.encodeUrl(): String = URLEncoder.encode(this, StandardCharsets.UTF_8)
-        .replace("+", "%20")
-        .replace("*", "%2A")
-        .replace("%7E", "~")
+    fun String.encodeUrl(): String = UrlEncoder.encode(this)
 
     /**
      * Returns a property as an int.
