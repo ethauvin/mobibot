@@ -48,8 +48,8 @@ class LookupTest {
         var result = nslookup("apple.com")
         assertThat(result, "lookup(apple.com)").contains("17.253.144.10")
 
-        result = nslookup("204.122.17.9")
-        assertThat(result, "lookup(204.122.17.9)").contains("nix3.thauvin.us")
+        result = nslookup("204.122.16.136")
+        assertThat(result, "lookup(204.122.16.136)").contains("nix3.thauvin.us")
     }
 
     @Test(groups = ["modules"])
