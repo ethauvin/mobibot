@@ -98,11 +98,10 @@ class ChatGpt : AbstractModule() {
                                 "model": "text-davinci-003",
                                 "prompt": $prompt,
                                 "temperature": 0,
-                                "max_tokens": 100,
+                                "max_tokens": 1024,
                                 "top_p": 1,
                                 "frequency_penalty": 0,
-                                "presence_penalty": 0,
-                                "stop": ["\n"]
+                                "presence_penalty": 0
                             }""".trimIndent()
                         )
                     )
@@ -127,7 +126,7 @@ class ChatGpt : AbstractModule() {
                 } catch (e: IOException) {
                     throw ModuleException(
                         "chatgpt($query): IO",
-                        "An IO error has occurred while conversing with GhatGPT.",
+                        "An IO error has occurred while conversing with ChatGPT.",
                         e
                     )
                 }
