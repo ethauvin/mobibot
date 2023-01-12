@@ -34,6 +34,7 @@ package net.thauvin.erik.mobibot.modules
 
 import net.thauvin.erik.mobibot.Utils
 import net.thauvin.erik.mobibot.Utils.sendMessage
+import org.apache.commons.text.WordUtils
 import org.json.JSONException
 import org.json.JSONObject
 import org.json.JSONWriter
@@ -54,9 +55,9 @@ class ChatGpt : AbstractModule() {
     override fun commandResponse(channel: String, cmd: String, args: String, event: GenericMessageEvent) {
         if (args.isNotBlank()) {
             try {
-                val answer = chat(args.trim(), properties[CHATGPT_API_KEY])
+                val answer = chat(args.trim(), properties[CHATGPT_API_KEY], properties[CHATGPT_MAX_TOKENS]!!.toInt())
                 if (answer.isNotBlank()) {
-                    event.sendMessage(answer)
+                    event.sendMessage(WordUtils.wrap(answer, 400))
                 } else {
                     event.respond("ChatGPT is stumped.")
                 }
@@ -65,6 +66,9 @@ class ChatGpt : AbstractModule() {
                 e.message?.let {
                     event.respond(it)
                 }
+            } catch (e: NumberFormatException) {
+                if (logger.isErrorEnabled) logger.error("Invalid $CHATGPT_MAX_TOKENS property.", e)
+                event.respond("The $name module is misconfigured.")
             }
         } else {
             helpResponse(event)
@@ -77,6 +81,11 @@ class ChatGpt : AbstractModule() {
          */
         const val CHATGPT_API_KEY = "chatgpt-api-key"
 
+        /**
+         * The ChatGPT max tokens property.
+         */
+        const val CHATGPT_MAX_TOKENS = "chatgpt-max-tokens"
+
         // ChatGPT command
         private const val CHATGPT_CMD = "chatgpt"
 
@@ -85,7 +94,7 @@ class ChatGpt : AbstractModule() {
 
         @JvmStatic
         @Throws(ModuleException::class)
-        fun chat(query: String, apiKey: String?): String {
+        fun chat(query: String, apiKey: String?, maxTokens: Int): String {
             if (!apiKey.isNullOrEmpty()) {
                 val prompt = JSONWriter.valueToString("Q:$query\nA:")
                 val request = HttpRequest.newBuilder()
@@ -98,7 +107,7 @@ class ChatGpt : AbstractModule() {
                                 "model": "text-davinci-003",
                                 "prompt": $prompt,
                                 "temperature": 0,
-                                "max_tokens": 1024,
+                                "max_tokens": $maxTokens,
                                 "top_p": 1,
                                 "frequency_penalty": 0,
                                 "presence_penalty": 0
@@ -145,6 +154,6 @@ class ChatGpt : AbstractModule() {
             add(Utils.helpFormat("%c $CHATGPT_CMD explain quantum computing in simple terms"))
             add(Utils.helpFormat("%c $CHATGPT_CMD how do I make an HTTP request in Javascript?"))
         }
-        initProperties(CHATGPT_API_KEY)
+        initProperties(CHATGPT_API_KEY, CHATGPT_MAX_TOKENS)
     }
 }
