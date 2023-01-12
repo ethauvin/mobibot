@@ -50,7 +50,7 @@ class ChatGptTest : LocalProperties() {
             .hasNoCause()
     }
 
-    @Test(groups = ["modules"])
+    @Test(groups = ["modules", "no-ci"])
     fun testChat() {
         val apiKey = getProperty(ChatGpt.CHATGPT_API_KEY)
         assertThat(
