@@ -31,8 +31,8 @@
  */
 package net.thauvin.erik.mobibot.commands.tell
 
-import net.thauvin.erik.mobibot.Utils.loadData
-import net.thauvin.erik.mobibot.Utils.saveData
+import net.thauvin.erik.mobibot.Utils.loadSerialData
+import net.thauvin.erik.mobibot.Utils.saveSerialData
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.time.Clock
@@ -60,7 +60,7 @@ object TellManager {
     @JvmStatic
     fun load(file: String): List<TellMessage> {
         @Suppress("UNCHECKED_CAST")
-        return loadData(file, emptyList<TellMessage>(), logger, "message queue") as List<TellMessage>
+        return loadSerialData(file, emptyList<TellMessage>(), logger, "message queue") as List<TellMessage>
     }
 
     /**
@@ -69,7 +69,7 @@ object TellManager {
     @JvmStatic
     fun save(file: String, messages: List<TellMessage?>?) {
         if (messages != null) {
-            saveData(file, messages, logger, "messages")
+            saveSerialData(file, messages, logger, "messages")
         }
     }
 }

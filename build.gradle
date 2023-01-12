@@ -55,7 +55,7 @@ dependencies {
     implementation 'commons-net:commons-net:3.9.0'
 
     // Google
-    implementation 'com.google.code.gson:gson:2.10'
+    implementation 'com.google.code.gson:gson:2.10.1'
     implementation 'com.google.guava:guava:31.1-jre'
 
     // Kotlin
@@ -82,7 +82,7 @@ dependencies {
     implementation 'net.thauvin.erik:cryptoprice:1.0.0'
     implementation 'net.thauvin.erik:jokeapi:0.9-SNAPSHOT'
     implementation 'net.thauvin.erik:pinboard-poster:1.0.3'
-    implementation 'net.thauvin.erik:urlencoder:1.0.1'
+    implementation 'net.thauvin.erik:urlencoder:1.3.0'
 
     testImplementation 'com.willowtreeapps.assertk:assertk-jvm:0.25'
 //    testImplementation 'org.mockito.kotlin:mockito-kotlin:4.0.0'
@@ -188,7 +188,7 @@ sonarqube {
     }
 }
 
-tasks.sonarqube {
+tasks.sonar {
     dependsOn 'koverReport'
 }
 
@@ -219,6 +219,6 @@ task deploy {
 task release {
     group = 'Publishing'
     description = 'Releases new version.'
-    dependsOn(clean, wrapper, check, deploy)
+    dependsOn(clean, check, deploy)
     mustRunAfter clean
 }

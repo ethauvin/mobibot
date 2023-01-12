@@ -35,8 +35,8 @@ package net.thauvin.erik.mobibot.commands.seen
 import com.google.common.collect.ImmutableSortedSet
 import net.thauvin.erik.mobibot.Utils.bot
 import net.thauvin.erik.mobibot.Utils.helpFormat
-import net.thauvin.erik.mobibot.Utils.loadData
-import net.thauvin.erik.mobibot.Utils.saveData
+import net.thauvin.erik.mobibot.Utils.loadSerialData
+import net.thauvin.erik.mobibot.Utils.saveSerialData
 import net.thauvin.erik.mobibot.Utils.sendMessage
 import net.thauvin.erik.mobibot.commands.AbstractCommand
 import net.thauvin.erik.mobibot.commands.Info.Companion.toUptime
@@ -107,7 +107,7 @@ class Seen(private val serialObject: String) : AbstractCommand() {
         if (isEnabled()) {
             @Suppress("UNCHECKED_CAST")
             seenNicks.putAll(
-                loadData(
+                loadSerialData(
                     serialObject,
                     TreeMap<String, SeenNick>(),
                     logger,
@@ -118,7 +118,7 @@ class Seen(private val serialObject: String) : AbstractCommand() {
     }
 
     fun save() {
-        saveData(serialObject, seenNicks, logger, "seen nicknames")
+        saveSerialData(serialObject, seenNicks, logger, "seen nicknames")
     }
 
     init {

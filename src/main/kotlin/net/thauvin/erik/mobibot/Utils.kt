@@ -47,7 +47,6 @@ import java.io.ObjectInputStream
 import java.io.ObjectOutputStream
 import java.net.HttpURLConnection
 import java.net.URL
-import java.nio.charset.StandardCharsets
 import java.nio.file.Files
 import java.nio.file.Paths
 import java.time.LocalDateTime
@@ -189,7 +188,7 @@ object Utils {
     }
 
     /**
-     * Returns {@code true} if the specified user is an operator on the [channel].
+     * Returns `true` if the specified user is an operator on the [channel].
      */
     @JvmStatic
     fun GenericMessageEvent.isChannelOp(channel: String): Boolean {
@@ -197,7 +196,7 @@ object Utils {
     }
 
     /**
-     * Returns {@code true} if a HTTP status code indicates a successful response.
+     * Returns `true` if a HTTP status code indicates a successful response.
      */
     @JvmStatic
     fun Int.isHttpSuccess() = this in 200..399
@@ -214,10 +213,10 @@ object Utils {
     }
 
     /**
-     * Load data.
+     * Load serial data from file.
      */
     @JvmStatic
-    fun loadData(file: String, default: Any, logger: Logger, description: String): Any {
+    fun loadSerialData(file: String, default: Any, logger: Logger, description: String): Any {
         val serialFile = Paths.get(file)
         if (serialFile.exists() && serialFile.fileSize() > 0) {
             try {
@@ -237,7 +236,7 @@ object Utils {
     }
 
     /**
-     * Returns {@code true} if the list does not contain the given string.
+     * Returns `true` if the list does not contain the given string.
      */
     @JvmStatic
     fun List<String>.notContains(text: String, ignoreCase: Boolean = false) = this.none { it.equals(text, ignoreCase) }
@@ -290,7 +289,7 @@ object Utils {
      * Save data
      */
     @JvmStatic
-    fun saveData(file: String, data: Any, logger: Logger, description: String) {
+    fun saveSerialData(file: String, data: Any, logger: Logger, description: String) {
         try {
             BufferedOutputStream(Files.newOutputStream(Paths.get(file))).use { bos ->
                 ObjectOutputStream(bos).use { output ->

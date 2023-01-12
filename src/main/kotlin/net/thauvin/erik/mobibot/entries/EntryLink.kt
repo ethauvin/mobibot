@@ -130,8 +130,8 @@ class EntryLink(
     /**
      * Formats the tags.
      */
-    fun formatTags(sep: String, prefix: String = "") : String {
-        return tags.joinToString(separator = sep, prefix = prefix){it.name}
+    fun formatTags(sep: String, prefix: String = ""): String {
+        return tags.joinToString(separator = sep, prefix = prefix) { it.name }
     }
 
     /**

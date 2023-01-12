@@ -66,12 +66,12 @@ class TellMessage(
     var id: String = queued.format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"))
 
     /**
-     * Returns {@code true} if a notification was sent.
+     * Returns `true` if a notification was sent.
      */
     var isNotified = false
 
     /**
-     * Returns {@code true} if the message was received.
+     * Returns `true` if the message was received.
      */
     var isReceived = false
         set(value) {
