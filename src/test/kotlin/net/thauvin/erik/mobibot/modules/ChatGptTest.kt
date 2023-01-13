@@ -34,10 +34,8 @@ package net.thauvin.erik.mobibot.modules
 import assertk.assertThat
 import assertk.assertions.contains
 import assertk.assertions.hasNoCause
-import assertk.assertions.isEqualTo
 import assertk.assertions.isFailure
 import assertk.assertions.isInstanceOf
-import assertk.assertions.message
 import net.thauvin.erik.mobibot.LocalProperties
 import org.testng.annotations.Test
 
@@ -52,7 +50,7 @@ class ChatGptTest : LocalProperties() {
 
     @Test(groups = ["modules", "no-ci"])
     fun testChat() {
-        val apiKey = getProperty(ChatGpt.CHATGPT_API_KEY)
+        val apiKey = getProperty(ChatGpt.API_KEY_PROP)
         assertThat(
             ChatGpt.chat("how do I make an HTTP request in Javascript?", apiKey, 100)
         ).contains("XMLHttpRequest")

@@ -13,6 +13,7 @@
     <ID>LongParameterList:Twitter.kt$Twitter.Companion$( consumerKey: String?, consumerSecret: String?, token: String?, tokenSecret: String?, handle: String?, message: String, isDm: Boolean )</ID>
     <ID>MagicNumber:ChatGpt.kt$ChatGpt$400</ID>
     <ID>MagicNumber:ChatGpt.kt$ChatGpt.Companion$200</ID>
+    <ID>MagicNumber:ChatGpt.kt$ChatGpt.Companion$429</ID>
     <ID>MagicNumber:Comment.kt$Comment$3</ID>
     <ID>MagicNumber:CryptoPrices.kt$CryptoPrices$10</ID>
     <ID>MagicNumber:CurrencyConverter.kt$CurrencyConverter$11</ID>

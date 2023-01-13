@@ -65,7 +65,7 @@ class CryptoPrices : AbstractModule() {
         }
 
         val debugMessage = "crypto($cmd $args)"
-        if (args == CURRENCY_CODES_KEYWORD) {
+        if (args == CODES_KEYWORD) {
             event.sendMessage("The supported currencies are:")
             event.sendList(ArrayList(CURRENCIES.keys), 10, isIndent = true)
         } else if (args.matches("\\w+( [a-zA-Z]{3}+)?".toRegex())) {
@@ -100,7 +100,7 @@ class CryptoPrices : AbstractModule() {
         private val CURRENCIES: MutableMap<String, String> = mutableMapOf()
 
         // Currency codes keyword
-        private const val CURRENCY_CODES_KEYWORD = "codes"
+        private const val CODES_KEYWORD = "codes"
 
         /**
          * Get current market price.
@@ -153,7 +153,7 @@ class CryptoPrices : AbstractModule() {
             add(helpFormat("%c $CRYPTO_CMD ETH EUR"))
             add(helpFormat("%c $CRYPTO_CMD ETH2 GPB"))
             add("To list the supported currencies:")
-            add(helpFormat("%c $CRYPTO_CMD $CURRENCY_CODES_KEYWORD"))
+            add(helpFormat("%c $CRYPTO_CMD $CODES_KEYWORD"))
         }
         loadCurrencies()
     }

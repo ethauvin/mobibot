@@ -75,8 +75,8 @@ class GoogleSearchTest : LocalProperties() {
     @Test(groups = ["no-ci", "modules"])
     @Throws(ModuleException::class)
     fun testSearchGoogle() {
-        val apiKey = getProperty(GoogleSearch.GOOGLE_API_KEY_PROP)
-        val cseKey = getProperty(GoogleSearch.GOOGLE_CSE_KEY_PROP)
+        val apiKey = getProperty(GoogleSearch.API_KEY_PROP)
+        val cseKey = getProperty(GoogleSearch.CSE_KEY_PROP)
 
         try {
             var query = "mobibot"

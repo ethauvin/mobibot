@@ -63,7 +63,7 @@ class StockQuote : AbstractModule() {
     override fun commandResponse(channel: String, cmd: String, args: String, event: GenericMessageEvent) {
         if (args.isNotBlank()) {
             try {
-                val messages = getQuote(args, properties[ALPHAVANTAGE_API_KEY_PROP])
+                val messages = getQuote(args, properties[API_KEY_PROP])
                 for (msg in messages) {
                     event.sendMessage(channel, msg)
                 }
@@ -80,17 +80,17 @@ class StockQuote : AbstractModule() {
 
     companion object {
         /**
-         * The Alpha Advantage property key.
+         * The API property key.
          */
-        const val ALPHAVANTAGE_API_KEY_PROP = "alphavantage-api-key"
+        const val API_KEY_PROP = "alphavantage-api-key"
 
         /**
          * The Invalid Symbol error string.
          */
         const val INVALID_SYMBOL = "Invalid symbol."
 
-        // Alpha Advantage URL
-        private const val ALPHAVANTAGE_URL = "https://www.alphavantage.co/query?function="
+        // API URL
+        private const val API_URL = "https://www.alphavantage.co/query?function="
 
         // Quote command
         private const val STOCK_CMD = "stock"
@@ -145,7 +145,7 @@ class StockQuote : AbstractModule() {
                     with(messages) {
                         // Search for symbol/keywords
                         response = URL(
-                            "${ALPHAVANTAGE_URL}SYMBOL_SEARCH&keywords=" + symbol.encodeUrl() + "&apikey="
+                            "${API_URL}SYMBOL_SEARCH&keywords=" + symbol.encodeUrl() + "&apikey="
                                     + apiKey.encodeUrl()
                         ).reader().body
                         var json = getJsonResponse(response, debugMessage)
@@ -157,7 +157,7 @@ class StockQuote : AbstractModule() {
 
                             // Get quote for symbol
                             response = URL(
-                                "${ALPHAVANTAGE_URL}GLOBAL_QUOTE&symbol="
+                                "${API_URL}GLOBAL_QUOTE&symbol="
                                         + symbolInfo.getString("1. symbol").encodeUrl() + "&apikey="
                                         + apiKey.encodeUrl()
                             ).reader().body
@@ -232,6 +232,6 @@ class StockQuote : AbstractModule() {
         commands.add(STOCK_CMD)
         help.add("To retrieve a stock quote:")
         help.add(helpFormat("%c $STOCK_CMD <symbol|keywords>"))
-        initProperties(ALPHAVANTAGE_API_KEY_PROP)
+        initProperties(API_KEY_PROP)
     }
 }

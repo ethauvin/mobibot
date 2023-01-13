@@ -46,7 +46,7 @@ import assertk.assertions.prop
 import net.aksingh.owmjapis.api.APIException
 import net.aksingh.owmjapis.core.OWM
 import net.thauvin.erik.mobibot.LocalProperties
-import net.thauvin.erik.mobibot.modules.Weather2.Companion.OWM_API_KEY_PROP
+import net.thauvin.erik.mobibot.modules.Weather2.Companion.API_KEY_PROP
 import net.thauvin.erik.mobibot.modules.Weather2.Companion.ftoC
 import net.thauvin.erik.mobibot.modules.Weather2.Companion.getCountry
 import net.thauvin.erik.mobibot.modules.Weather2.Companion.getWeather
@@ -86,7 +86,7 @@ class Weather2Test : LocalProperties() {
     @Throws(ModuleException::class)
     fun testWeather() {
         var query = "98204"
-        var messages = getWeather(query, getProperty(OWM_API_KEY_PROP))
+        var messages = getWeather(query, getProperty(API_KEY_PROP))
         assertThat(messages, "getWeather($query)").index(0).prop(Message::msg).all {
             contains("Everett, United States")
             contains("US")
@@ -94,7 +94,7 @@ class Weather2Test : LocalProperties() {
         assertThat(messages, "getWeather($query)").index(messages.size - 1).prop(Message::msg).endsWith("98204%2CUS")
 
         query = "San Francisco"
-        messages = getWeather(query, getProperty(OWM_API_KEY_PROP))
+        messages = getWeather(query, getProperty(API_KEY_PROP))
         assertThat(messages, "getWeather($query)").index(0).prop(Message::msg).all {
             contains("San Francisco")
             contains("US")
@@ -102,7 +102,7 @@ class Weather2Test : LocalProperties() {
         assertThat(messages, "getWeather($query)").index(messages.size - 1).prop(Message::msg).endsWith("5391959")
 
         query = "London, GB"
-        messages = getWeather(query, getProperty(OWM_API_KEY_PROP))
+        messages = getWeather(query, getProperty(API_KEY_PROP))
         assertThat(messages, "getWeather($query)").index(0).prop(Message::msg).all {
             contains("London, United Kingdom")
             contains("GB")
@@ -111,7 +111,7 @@ class Weather2Test : LocalProperties() {
 
         try {
             query = "Foo, US"
-            getWeather(query, getProperty(OWM_API_KEY_PROP))
+            getWeather(query, getProperty(API_KEY_PROP))
         } catch (e: ModuleException) {
             assertThat(e.cause, "getWeather($query)").isNotNull().isInstanceOf(APIException::class.java)
         }

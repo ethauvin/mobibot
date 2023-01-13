@@ -59,7 +59,7 @@ class StockQuoteTest : LocalProperties() {
     @Test(groups = ["modules"])
     @Throws(ModuleException::class)
     fun testGetQuote() {
-        val apiKey = getProperty(StockQuote.ALPHAVANTAGE_API_KEY_PROP)
+        val apiKey = getProperty(StockQuote.API_KEY_PROP)
         try {
             var symbol = "apple inc"
             val messages = getQuote(symbol, apiKey)

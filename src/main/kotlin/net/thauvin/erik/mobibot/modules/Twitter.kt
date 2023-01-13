@@ -84,7 +84,7 @@ class Twitter : SocialModule() {
         const val TOKEN_PROP = "twitter-token"
         const val TOKEN_SECRET_PROP = "twitter-tokenSecret"
 
-        // Twitter command
+        // Twitter commands
         private const val TWITTER_CMD = "twitter"
         private const val TWEET_CMD = "tweet"
 
@@ -118,7 +118,7 @@ class Twitter : SocialModule() {
                     dm.text
                 }
             } catch (e: TwitterException) {
-                throw ModuleException("twitterPost($message)", "An error has occurred: ${e.message}", e)
+                throw ModuleException("tweet($message)", "An error has occurred: ${e.message}", e)
             }
         }
     }
@@ -126,7 +126,7 @@ class Twitter : SocialModule() {
     init {
         commands.add(TWITTER_CMD)
         commands.add(TWEET_CMD)
-        help.add("To tweet on Twitter:")
+        help.add("To $TWEET_CMD on $name:")
         help.add(helpFormat("%c $TWEET_CMD <message>"))
         properties[AUTO_POST_PROP] = "false"
         initProperties(CONSUMER_KEY_PROP, CONSUMER_SECRET_PROP, HANDLE_PROP, TOKEN_PROP, TOKEN_SECRET_PROP)

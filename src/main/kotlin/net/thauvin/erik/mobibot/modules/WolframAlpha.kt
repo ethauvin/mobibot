@@ -66,9 +66,9 @@ class WolframAlpha : AbstractModule() {
                         units = if (query.size == 2) {
                             getUnits(query[1].trim())
                         } else {
-                            getUnits(properties[WOLFRAM_UNITS_PROP])
+                            getUnits(properties[UNITS_PROP])
                         },
-                        appId = properties[WOLFRAM_APPID_KEY]
+                        appId = properties[APPID_KEY_PROP]
                     )
                 )
             } catch (e: ModuleException) {
@@ -86,12 +86,13 @@ class WolframAlpha : AbstractModule() {
         /**
          * The Wolfram Alpha API Key property.
          */
-        const val WOLFRAM_APPID_KEY = "wolfram-appid"
+        const val APPID_KEY_PROP = "wolfram-appid"
 
         /**
          * The Wolfram units properties
          */
-        const val WOLFRAM_UNITS_PROP = "wolfram-units"
+        const val UNITS_PROP = "wolfram-units"
+
         const val METRIC = "metric"
         const val IMPERIAL = "imperial"
 
@@ -137,6 +138,6 @@ class WolframAlpha : AbstractModule() {
             add(Utils.helpFormat("%c $WOLFRAM_CMD days until christmas"))
             add(Utils.helpFormat("%c $WOLFRAM_CMD distance earth moon units=metric"))
         }
-        initProperties(WOLFRAM_APPID_KEY, WOLFRAM_UNITS_PROP)
+        initProperties(APPID_KEY_PROP, UNITS_PROP)
     }
 }

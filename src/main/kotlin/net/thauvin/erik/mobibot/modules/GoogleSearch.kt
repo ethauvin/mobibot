@@ -67,8 +67,8 @@ class GoogleSearch : AbstractModule() {
             try {
                 val results = searchGoogle(
                     args,
-                    properties[GOOGLE_API_KEY_PROP],
-                    properties[GOOGLE_CSE_KEY_PROP],
+                    properties[API_KEY_PROP],
+                    properties[CSE_KEY_PROP],
                     event.user.nick
                 )
                 for (msg in results) {
@@ -91,10 +91,10 @@ class GoogleSearch : AbstractModule() {
 
     companion object {
         // Google API Key property
-        const val GOOGLE_API_KEY_PROP = "google-api-key"
+        const val API_KEY_PROP = "google-api-key"
 
         // Google Custom Search Engine ID property
-        const val GOOGLE_CSE_KEY_PROP = "google-cse-cx"
+        const val CSE_KEY_PROP = "google-cse-cx"
 
         // Google command
         private const val GOOGLE_CMD = "google"
@@ -158,6 +158,6 @@ class GoogleSearch : AbstractModule() {
         commands.add(GOOGLE_CMD)
         help.add("To search Google:")
         help.add(helpFormat("%c $GOOGLE_CMD <query>"))
-        initProperties(GOOGLE_API_KEY_PROP, GOOGLE_CSE_KEY_PROP)
+        initProperties(API_KEY_PROP, CSE_KEY_PROP)
     }
 }

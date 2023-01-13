@@ -58,7 +58,7 @@ class WolframAlphaTest : LocalProperties() {
     @Test(groups = ["modules", "no-ci"])
     @Throws(ModuleException::class)
     fun queryWolframTest() {
-        val apiKey = getProperty(WolframAlpha.WOLFRAM_APPID_KEY)
+        val apiKey = getProperty(WolframAlpha.APPID_KEY_PROP)
         try {
             var query = "SFO to SEA"
             assertThat(queryWolfram(query, appId = apiKey), "queryWolfram($query)").contains("miles")

@@ -65,7 +65,7 @@ class Weather2 : AbstractModule() {
     override fun commandResponse(channel: String, cmd: String, args: String, event: GenericMessageEvent) {
         if (args.isNotBlank()) {
             try {
-                val messages = getWeather(args, properties[OWM_API_KEY_PROP])
+                val messages = getWeather(args, properties[API_KEY_PROP])
                 if (messages[0].isError) {
                     helpResponse(event)
                 } else {
@@ -88,7 +88,7 @@ class Weather2 : AbstractModule() {
         /**
          * The OpenWeatherMap API Key property.
          */
-        const val OWM_API_KEY_PROP = "owm-api-key"
+        const val API_KEY_PROP = "owm-api-key"
 
         // Weather command
         private const val WEATHER_CMD = "weather"
@@ -246,6 +246,6 @@ class Weather2 : AbstractModule() {
             add(helpFormat("%c $WEATHER_CMD paris, fr"))
             add("The default ISO 3166 country code is ${"US".bold()}. Zip codes supported in most countries.")
         }
-        initProperties(OWM_API_KEY_PROP)
+        initProperties(API_KEY_PROP)
     }
 }
