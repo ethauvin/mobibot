@@ -50,16 +50,16 @@ import java.net.http.HttpResponse
 class ChatGpt : AbstractModule() {
     private val logger: Logger = LoggerFactory.getLogger(ChatGpt::class.java)
 
-    override val name = "ChatGPT"
+    override val name = CHATGPT_NAME
 
     override fun commandResponse(channel: String, cmd: String, args: String, event: GenericMessageEvent) {
         if (args.isNotBlank()) {
             try {
-                val answer = chat(args.trim(), properties[CHATGPT_API_KEY], properties[CHATGPT_MAX_TOKENS]!!.toInt())
+                val answer = chat(args.trim(), properties[API_KEY_PROP], properties[MAX_TOKENS_PROP]!!.toInt())
                 if (answer.isNotBlank()) {
                     event.sendMessage(WordUtils.wrap(answer, 400))
                 } else {
-                    event.respond("ChatGPT is stumped.")
+                    event.respond("$name is stumped.")
                 }
             } catch (e: ModuleException) {
                 if (logger.isWarnEnabled) logger.warn(e.debugMessage, e)
@@ -67,7 +67,7 @@ class ChatGpt : AbstractModule() {
                     event.respond(it)
                 }
             } catch (e: NumberFormatException) {
-                if (logger.isErrorEnabled) logger.error("Invalid $CHATGPT_MAX_TOKENS property.", e)
+                if (logger.isErrorEnabled) logger.error("Invalid $MAX_TOKENS_PROP property.", e)
                 event.respond("The $name module is misconfigured.")
             }
         } else {
@@ -77,20 +77,26 @@ class ChatGpt : AbstractModule() {
 
     companion object {
         /**
-         * The ChatGPT API Key property.
+         * The service name.
          */
-        const val CHATGPT_API_KEY = "chatgpt-api-key"
+        const val CHATGPT_NAME = "ChatGPT"
 
         /**
-         * The ChatGPT max tokens property.
+         * The API Key property.
          */
-        const val CHATGPT_MAX_TOKENS = "chatgpt-max-tokens"
+        const val API_KEY_PROP = "chatgpt-api-key"
+
+        /**
+         * The max tokens property.
+         */
+        const val MAX_TOKENS_PROP = "chatgpt-max-tokens"
+
+        // ChatGPT API URL
+        private const val API_URL = "https://api.openai.com/v1/completions"
 
         // ChatGPT command
         private const val CHATGPT_CMD = "chatgpt"
 
-        // ChatGPT API URL
-        private const val API_URL = "https://api.openai.com/v1/completions"
 
         @JvmStatic
         @Throws(ModuleException::class)
@@ -124,23 +130,28 @@ class ChatGpt : AbstractModule() {
                             return choices.getJSONObject(0).getString("text").trim()
                         } catch (e: JSONException) {
                             throw ModuleException(
-                                "chatgpt($query): JSON",
-                                "A JSON error has occurred while conversing with ChatGPT.",
+                                "$CHATGPT_CMD($query): JSON",
+                                "A JSON error has occurred while conversing with $CHATGPT_NAME.",
                                 e
                             )
                         }
                     } else {
-                        throw IOException("Status Code: " + response.statusCode())
+                        if (response.statusCode() == 429) {
+                            throw ModuleException("$CHATGPT_CMD($query): Rate limit reached",
+                                "Rate limit reached. Please try again later.")
+                        } else {
+                            throw IOException("HTTP Status Code: " + response.statusCode())
+                        }
                     }
                 } catch (e: IOException) {
                     throw ModuleException(
-                        "chatgpt($query): IO",
-                        "An IO error has occurred while conversing with ChatGPT.",
+                        "$CHATGPT_CMD($query): IO",
+                        "An IO error has occurred while conversing with $CHATGPT_NAME.",
                         e
                     )
                 }
             } else {
-                throw ModuleException("chatgpt($query)", "No ChatGPT API key specified.")
+                throw ModuleException("$CHATGPT_CMD($query)", "No $CHATGPT_NAME API key specified.")
             }
         }
     }
@@ -148,12 +159,12 @@ class ChatGpt : AbstractModule() {
     init {
         commands.add(CHATGPT_CMD)
         with(help) {
-            add("To get answers from ChatGPT:")
+            add("To get answers from $name:")
             add(Utils.helpFormat("%c $CHATGPT_CMD <query>"))
             add("For example:")
             add(Utils.helpFormat("%c $CHATGPT_CMD explain quantum computing in simple terms"))
             add(Utils.helpFormat("%c $CHATGPT_CMD how do I make an HTTP request in Javascript?"))
         }
-        initProperties(CHATGPT_API_KEY, CHATGPT_MAX_TOKENS)
+        initProperties(API_KEY_PROP, MAX_TOKENS_PROP)
     }
 }
