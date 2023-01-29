@@ -30,7 +30,7 @@ mainClassName = packageName + '.Mobibot'
 
 ext.versions = [
         log4j: '2.19.0',
-        pmd  : '6.52.0',
+        pmd  : '6.54.0',
 ]
 
 repositories {
