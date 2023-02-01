@@ -36,9 +36,9 @@ import net.thauvin.erik.mobibot.Utils.isChannelOp
 import net.thauvin.erik.mobibot.Utils.sendList
 import org.pircbotx.hooks.types.GenericMessageEvent
 
-class Modules(private val modules: List<String>) : AbstractCommand() {
+class Modules(private val modules: List<String>, private val disabledModules: List<String>) : AbstractCommand() {
     override val name = "modules"
-    override val help = listOf("To view a list of enabled modules:", helpFormat("%c $name"))
+    override val help = listOf("To view a list of enabled/disabled modules:", helpFormat("%c $name"))
     override val isOpOnly = true
     override val isPublic = false
     override val isVisible = true
@@ -50,6 +50,10 @@ class Modules(private val modules: List<String>) : AbstractCommand() {
             } else {
                 event.respondPrivateMessage("The enabled modules are: ")
                 event.sendList(modules, 7, isIndent = true)
+            }
+            if (disabledModules.isNotEmpty()) {
+                event.respondPrivateMessage("The disabled modules are: ")
+                event.sendList(disabledModules, 7, isIndent = true)
             }
         } else {
             helpResponse(channel, args, event)

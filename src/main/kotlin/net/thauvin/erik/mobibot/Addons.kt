@@ -74,7 +74,10 @@ class Addons(private val props: Properties) {
                     if (logger.isDebugEnabled) {
                         logger.debug("Module $name is disabled.")
                     }
+                    names.disabledModules.add(name)
                 }
+            } else {
+                names.disabledModules.add(name)
             }
         }
         return enabled
@@ -106,7 +109,10 @@ class Addons(private val props: Properties) {
                     if (logger.isDebugEnabled) {
                         logger.debug("Command $name is disabled.")
                     }
+                    names.disabledCommands.add(name)
                 }
+            } else {
+                names.disabledCommands.add(name)
             }
         }
         return enabled
@@ -168,12 +174,16 @@ class Addons(private val props: Properties) {
      */
     object Names {
         val modules: MutableList<String> = mutableListOf()
+        val disabledModules: MutableList<String> = mutableListOf()
         val commands: MutableList<String> = mutableListOf()
+        val disabledCommands: MutableList<String> = mutableListOf()
         val ops: MutableList<String> = mutableListOf()
 
         fun sort() {
             modules.sort()
+            disabledModules.sort()
             commands.sort()
+            disabledCommands.sort()
             ops.sort()
         }
     }

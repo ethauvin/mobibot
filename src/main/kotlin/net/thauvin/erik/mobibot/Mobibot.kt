@@ -148,6 +148,10 @@ class Mobibot(nickname: String, val channel: String, logsDirPath: String, p: Pro
         event.sendMessage("The commands are:")
         event.sendList(addons.names.commands, 8, isBold = true, isIndent = true)
         if (event.isChannelOp(channel)) {
+            if (addons.names.disabledCommands.isNotEmpty()) {
+                event.sendMessage("The disabled commands are:")
+                event.sendList(addons.names.disabledCommands, 8, isBold = false, isIndent = true)
+            }
             event.sendMessage("The op commands are:")
             event.sendList(addons.names.ops, 8, isBold = true, isIndent = true)
         }
@@ -412,7 +416,7 @@ class Mobibot(nickname: String, val channel: String, logsDirPath: String, p: Pro
         addons.add(Ignore())
         addons.add(LinksManager())
         addons.add(Me())
-        addons.add(Modules(addons.names.modules))
+        addons.add(Modules(addons.names.modules, addons.names.disabledModules))
         addons.add(Msg())
         addons.add(Nick())
         addons.add(Posting())
