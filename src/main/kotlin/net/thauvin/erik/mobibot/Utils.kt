@@ -420,12 +420,12 @@ object Utils {
         val connection = this.openConnection() as HttpURLConnection
         connection.setRequestProperty(
             "User-Agent",
-            "Mozilla/5.0 (Linux x86_64; rv:104.0) Gecko/20100101 Firefox/104.0"
+            "Mozilla/5.0 (X11; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/109.0"
         )
         return if (connection.responseCode.isHttpSuccess()) {
-            UrlReaderResponse(connection.responseCode, connection.inputStream.bufferedReader().readText())
+            UrlReaderResponse(connection.responseCode, connection.inputStream.bufferedReader().use { it.readText() })
         } else {
-            UrlReaderResponse(connection.responseCode, connection.errorStream.bufferedReader().readText())
+            UrlReaderResponse(connection.responseCode, connection.errorStream.bufferedReader().use { it.readText() })
         }
     }
 
