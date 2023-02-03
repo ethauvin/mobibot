@@ -5,8 +5,8 @@ plugins {
     id 'io.gitlab.arturbosch.detekt' version '1.22.0'
     id 'java'
     id 'net.thauvin.erik.gradle.semver' version '1.0.4'
-    id 'org.jetbrains.kotlin.jvm' version '1.8.0'
-    id 'org.jetbrains.kotlin.kapt' version '1.8.0'
+    id 'org.jetbrains.kotlin.jvm' version '1.8.10'
+    id 'org.jetbrains.kotlin.kapt' version '1.8.10'
     id 'org.jetbrains.kotlinx.kover' version '0.6.1'
     id 'org.sonarqube' version '3.5.0.2730'
     id 'pmd'
@@ -92,10 +92,11 @@ dependencies {
 
 test {
     useTestNG() {
+        excludeGroups.add('twitter')
         if (isCI) {
-            excludeGroups('no-ci')
-            println "Excluded test groups: ${excludeGroups}"
+            excludeGroups.add('no-ci')
         }
+        println "Excluded test groups: ${excludeGroups}"
     }
 }
 

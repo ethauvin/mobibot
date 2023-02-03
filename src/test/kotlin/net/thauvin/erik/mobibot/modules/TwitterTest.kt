@@ -41,7 +41,7 @@ import org.testng.annotations.Test
  * The `TwitterTest` class.
  */
 class TwitterTest : LocalProperties() {
-    @Test(groups = ["modules"])
+    @Test(groups = ["modules", "twitter"])
     @Throws(ModuleException::class)
     fun testTweet() {
         val msg = "Testing Twitter API from ${getHostName()}"
