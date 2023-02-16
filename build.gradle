@@ -70,7 +70,7 @@ dependencies {
     implementation "org.apache.logging.log4j:log4j-core:$versions.log4j"
     implementation "org.apache.logging.log4j:log4j-slf4j2-impl:$versions.log4j"
 
-    implementation 'com.rometools:rome:1.18.0'
+    implementation 'com.rometools:rome:1.19.0'
     implementation 'com.squareup.okhttp3:okhttp:4.10.0'
     implementation 'net.aksingh:owm-japis:2.5.3.0'
     implementation 'net.objecthunter:exp4j:0.4.8'
@@ -92,11 +92,13 @@ dependencies {
 
 test {
     useTestNG() {
-        excludeGroups.add('twitter')
+        // excludeGroups.add('twitter')
         if (isCI) {
             excludeGroups.add('no-ci')
         }
-        println "Excluded test groups: ${excludeGroups}"
+        if (!excludeGroups.isEmpty()) {
+            println "Excluded test groups: ${excludeGroups}"
+        }
     }
 }
 
@@ -152,6 +154,15 @@ detekt {
     //toolVersion = "main-SNAPSHOT"
     baseline = file("${projectDir}/config/detekt/baseline.xml")
 }
+
+tasks.withType(io.gitlab.arturbosch.detekt.Detekt).configureEach {
+    jvmTarget = java.targetCompatibility.toString()
+}
+
+tasks.withType(io.gitlab.arturbosch.detekt.DetektCreateBaselineTask).configureEach {
+    jvmTarget = java.targetCompatibility.toString()
+}
+
 
 jar {
     manifest.attributes('Main-Class': mainClassName,
