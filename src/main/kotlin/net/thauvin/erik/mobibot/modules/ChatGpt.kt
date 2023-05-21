@@ -55,7 +55,8 @@ class ChatGpt : AbstractModule() {
     override fun commandResponse(channel: String, cmd: String, args: String, event: GenericMessageEvent) {
         if (args.isNotBlank()) {
             try {
-                val answer = chat(args.trim(), properties[API_KEY_PROP], properties[MAX_TOKENS_PROP]!!.toInt())
+                val answer = chat(args.trim(), properties[API_KEY_PROP],
+                    properties.getOrDefault(MAX_TOKENS_PROP, "1024").toInt())
                 if (answer.isNotBlank()) {
                     event.sendMessage(WordUtils.wrap(answer, 400))
                 } else {

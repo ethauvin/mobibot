@@ -193,17 +193,24 @@ incrementBuildMeta {
     }
 }
 
+koverReport {
+    defaults {
+        xml {
+            onCheck = true
+        }
+        html {
+            onCheck = true
+        }
+    }
+}
+
 sonarqube {
     properties {
         property('sonar.organization', 'ethauvin-github')
         property('sonar.projectKey', 'ethauvin_mobibot')
         property('sonar.host.url', 'https://sonarcloud.io')
-        property('sonar.coverage.jacoco.xmlReportPaths', "${project.buildDir}/reports/kover/xml/report.xml")
+        property('sonar.coverage.jacoco.xmlReportPaths', "${project.buildDir}/reports/kover/report.xml")
     }
-}
-
-tasks.sonar {
-    dependsOn 'koverReport'
 }
 
 tasks.register('copyToDeploy', Copy) {
