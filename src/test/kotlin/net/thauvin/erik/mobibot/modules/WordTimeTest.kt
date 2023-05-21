@@ -30,6 +30,7 @@
  */
 package net.thauvin.erik.mobibot.modules
 
+import assertk.assertFailure
 import assertk.assertThat
 import assertk.assertions.endsWith
 import assertk.assertions.isSuccess
@@ -65,7 +66,7 @@ class WordTimeTest {
     @Test(groups = ["modules"])
     fun testZones() {
         COUNTRIES_MAP.filter { it.value != BEATS_KEYWORD }.forEach {
-            assertThat { ZoneId.of(it.value) }.isSuccess()
+            assertThat(ZoneId.of(it.value))
         }
     }
 }

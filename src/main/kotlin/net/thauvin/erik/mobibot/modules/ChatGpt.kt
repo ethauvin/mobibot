@@ -31,6 +31,7 @@
 
 package net.thauvin.erik.mobibot.modules
 
+import net.thauvin.erik.mobibot.Constants
 import net.thauvin.erik.mobibot.Utils
 import net.thauvin.erik.mobibot.Utils.sendMessage
 import org.apache.commons.text.WordUtils
@@ -106,6 +107,7 @@ class ChatGpt : AbstractModule() {
                     .uri(URI.create(API_URL))
                     .header("Content-Type", "application/json")
                     .header("Authorization", "Bearer $apiKey")
+                    .header("User-Agent", Constants.USER_AGENT)
                     .POST(
                         HttpRequest.BodyPublishers.ofString(
                             """{
@@ -136,8 +138,10 @@ class ChatGpt : AbstractModule() {
                         }
                     } else {
                         if (response.statusCode() == 429) {
-                            throw ModuleException("$CHATGPT_CMD($query): Rate limit reached",
-                                "Rate limit reached. Please try again later.")
+                            throw ModuleException(
+                                "$CHATGPT_CMD($query): Rate limit reached",
+                                "Rate limit reached. Please try again later."
+                            )
                         } else {
                             throw IOException("HTTP Status Code: " + response.statusCode())
                         }

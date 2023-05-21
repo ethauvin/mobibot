@@ -31,6 +31,7 @@
 package net.thauvin.erik.mobibot.modules
 
 import assertk.all
+import assertk.assertFailure
 import assertk.assertThat
 import assertk.assertions.hasNoCause
 import assertk.assertions.index
@@ -78,7 +79,7 @@ class StockQuoteTest : LocalProperties() {
                 isInstanceOf(ErrorMessage::class.java)
                 prop(Message::msg).isEqualTo(StockQuote.INVALID_SYMBOL)
             }
-            assertThat { getQuote("test", "") }.isFailure().isInstanceOf(ModuleException::class.java).hasNoCause()
+            assertFailure { getQuote("test", "") }.isInstanceOf(ModuleException::class.java).hasNoCause()
         } catch (e: ModuleException) {
             // Avoid displaying api keys in CI logs
             if ("true" == System.getenv("CI")) {

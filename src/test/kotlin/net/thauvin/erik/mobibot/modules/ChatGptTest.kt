@@ -30,6 +30,7 @@
  */
 package net.thauvin.erik.mobibot.modules
 
+import assertk.assertFailure
 import assertk.assertThat
 import assertk.assertions.contains
 import assertk.assertions.hasNoCause
@@ -41,8 +42,7 @@ import org.testng.annotations.Test
 class ChatGptTest : LocalProperties() {
     @Test(groups = ["modules"])
     fun testApiKey() {
-        assertThat { ChatGpt.chat("1 gallon to liter", "", 0) }
-            .isFailure()
+        assertFailure { ChatGpt.chat("1 gallon to liter", "", 0) }
             .isInstanceOf(ModuleException::class.java)
             .hasNoCause()
     }
@@ -57,8 +57,7 @@ class ChatGptTest : LocalProperties() {
             ChatGpt.chat("how do I encode a URL in java?", apiKey, 60)
         ).contains("URLEncoder")
 
-        assertThat { ChatGpt.chat("1 liter to gallon", apiKey, 0) }
-            .isFailure()
+        assertFailure { ChatGpt.chat("1 liter to gallon", apiKey, 0) }
             .isInstanceOf(ModuleException::class.java)
     }
 }

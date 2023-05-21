@@ -31,6 +31,7 @@
 package net.thauvin.erik.mobibot.modules
 
 import assertk.all
+import assertk.assertFailure
 import assertk.assertThat
 import assertk.assertions.contains
 import assertk.assertions.hasMessage
@@ -59,14 +60,13 @@ class GoogleSearchTest : LocalProperties() {
             "searchGoogle(empty)"
         ).isInstanceOf(ErrorMessage::class.java)
 
-        assertThat { searchGoogle("test", "", "apiKey") }.isFailure()
+        assertFailure { searchGoogle("test", "", "apiKey") }
             .isInstanceOf(ModuleException::class.java).hasNoCause()
 
-        assertThat { searchGoogle("test", "apiKey", "") }.isFailure()
+        assertFailure { searchGoogle("test", "apiKey", "") }
             .isInstanceOf(ModuleException::class.java).hasNoCause()
 
-        assertThat { searchGoogle("test", "apiKey", "cssKey") }
-            .isFailure()
+        assertFailure { searchGoogle("test", "apiKey", "cssKey") }
             .isInstanceOf(ModuleException::class.java)
             .hasMessage("API key not valid. Please pass a valid API key.")
     }

@@ -31,10 +31,10 @@
 
 package net.thauvin.erik.mobibot.modules
 
+import assertk.assertFailure
 import assertk.assertThat
 import assertk.assertions.contains
 import assertk.assertions.hasMessage
-import assertk.assertions.isFailure
 import assertk.assertions.isInstanceOf
 import net.thauvin.erik.mobibot.ExceptionSanitizer.sanitize
 import net.thauvin.erik.mobibot.LocalProperties
@@ -44,13 +44,11 @@ import org.testng.annotations.Test
 class WolframAlphaTest : LocalProperties() {
     @Test(groups = ["modules"])
     fun testAppId() {
-        assertThat { queryWolfram("1 gallon to liter", appId = "DEMO") }
-            .isFailure()
+        assertFailure { queryWolfram("1 gallon to liter", appId = "DEMO") }
             .isInstanceOf(ModuleException::class.java)
             .hasMessage("Error 1: Invalid appid")
 
-        assertThat { queryWolfram("1 gallon to liter", appId = "") }
-            .isFailure()
+        assertFailure { queryWolfram("1 gallon to liter", appId = "") }
             .isInstanceOf(ModuleException::class.java)
     }
 

@@ -31,6 +31,7 @@
 package net.thauvin.erik.mobibot.modules
 
 import assertk.all
+import assertk.assertFailure
 import assertk.assertThat
 import assertk.assertions.contains
 import assertk.assertions.endsWith
@@ -116,8 +117,8 @@ class Weather2Test : LocalProperties() {
         }
 
         query = "test"
-        assertThat { getWeather(query, "") }.isFailure().isInstanceOf(ModuleException::class.java).hasNoCause()
-        assertThat { getWeather(query, null) }.isFailure().isInstanceOf(ModuleException::class.java).hasNoCause()
+        assertFailure { getWeather(query, "") }.isInstanceOf(ModuleException::class.java).hasNoCause()
+        assertFailure { getWeather(query, null) }.isInstanceOf(ModuleException::class.java).hasNoCause()
 
         messages = getWeather("", "apikey")
         assertThat(messages, "getWeather(empty)").index(0).prop(Message::isError).isTrue()

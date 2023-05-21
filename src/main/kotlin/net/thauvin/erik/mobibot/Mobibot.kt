@@ -78,7 +78,6 @@ import net.thauvin.erik.mobibot.modules.Mastodon
 import net.thauvin.erik.mobibot.modules.Ping
 import net.thauvin.erik.mobibot.modules.RockPaperScissors
 import net.thauvin.erik.mobibot.modules.StockQuote
-import net.thauvin.erik.mobibot.modules.Twitter
 import net.thauvin.erik.mobibot.modules.War
 import net.thauvin.erik.mobibot.modules.Weather2
 import net.thauvin.erik.mobibot.modules.WolframAlpha
@@ -438,7 +437,7 @@ class Mobibot(nickname: String, val channel: String, logsDirPath: String, p: Pro
         addons.add(View())
 
         // Load social modules
-        LinksManager.socialManager.add(addons, Twitter(), Mastodon())
+        LinksManager.socialManager.add(addons, Mastodon())
 
         // Load the modules
         addons.add(Calc())

@@ -74,7 +74,7 @@ class FeedReader(private val url: String, val event: GenericMessageEvent) : Runn
         fun readFeed(url: String, maxItems: Int = 5): List<Message> {
             val messages = mutableListOf<Message>()
             val input = SyndFeedInput()
-            XmlReader(URL(url)).use { reader ->
+            XmlReader(URL(url).openStream()).use { reader ->
                 val feed = input.build(reader)
                 val items = feed.entries
                 if (items.isEmpty()) {

@@ -31,14 +31,9 @@
 package net.thauvin.erik.mobibot
 
 import assertk.all
+import assertk.assertFailure
 import assertk.assertThat
-import assertk.assertions.contains
-import assertk.assertions.index
-import assertk.assertions.isEqualTo
-import assertk.assertions.isFailure
-import assertk.assertions.isInstanceOf
-import assertk.assertions.prop
-import assertk.assertions.size
+import assertk.assertions.*
 import com.rometools.rome.io.FeedException
 import net.thauvin.erik.mobibot.FeedReader.Companion.readFeed
 import net.thauvin.erik.mobibot.msg.Message
@@ -66,13 +61,13 @@ class FeedReaderTest {
         assertThat(messages, "messages").size().isEqualTo(84)
         assertThat(messages.last(), "messages.last").prop(Message::msg).contains("techdigest.tv")
 
-        assertThat { readFeed("blah") }.isFailure().isInstanceOf(MalformedURLException::class.java)
+        assertFailure { readFeed("blah") }.isInstanceOf(MalformedURLException::class.java)
 
-        assertThat { readFeed("https://www.example.com") }.isFailure().isInstanceOf(FeedException::class.java)
+        assertFailure { readFeed("https://www.example.com") }.isInstanceOf(FeedException::class.java)
 
-        assertThat { readFeed("https://www.thauvin.net/foo") }.isFailure().isInstanceOf(IOException::class.java)
+        assertFailure { readFeed("https://www.thauvin.net/foo") }.isInstanceOf(IOException::class.java)
 
-        assertThat { readFeed("https://www.examplesfoo.com/") }.isFailure()
+        assertFailure { readFeed("https://www.examplesfoo.com/") }
             .isInstanceOf(UnknownHostException::class.java)
     }
 }

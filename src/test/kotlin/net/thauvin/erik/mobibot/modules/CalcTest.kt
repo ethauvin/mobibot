@@ -30,6 +30,7 @@
  */
 package net.thauvin.erik.mobibot.modules
 
+import assertk.assertFailure
 import assertk.assertThat
 import assertk.assertions.isEqualTo
 import assertk.assertions.isFailure
@@ -48,6 +49,6 @@ class CalcTest {
         assertThat(calculate("1 + 1"), "calculate(1+1)").isEqualTo("1+1 = ${2.bold()}")
         assertThat(calculate("1 -3"), "calculate(1-3)").isEqualTo("1-3 = ${(-2).bold()}")
         assertThat(calculate("pi+π+e+φ"), "calculate(pi+π+e+φ)").isEqualTo("pi+π+e+φ = ${"10.62".bold()}")
-        assertThat { calculate("one + one") }.isFailure().isInstanceOf(UnknownFunctionOrVariableException::class.java)
+        assertFailure { calculate("one + one") }.isInstanceOf(UnknownFunctionOrVariableException::class.java)
     }
 }

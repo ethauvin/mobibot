@@ -10,7 +10,6 @@
     <ID>LongMethod:Weather2.kt$Weather2.Companion$@JvmStatic @Throws(ModuleException::class) fun getWeather(query: String, apiKey: String?): List&lt;Message&gt;</ID>
     <ID>LongParameterList:Comment.kt$Comment$( channel: String, cmd: String, entry: EntryLink, entryIndex: Int, commentIndex: Int, event: GenericMessageEvent )</ID>
     <ID>LongParameterList:EntryLink.kt$EntryLink$( // Link's comments val comments: MutableList&lt;EntryComment&gt; = mutableListOf(), // Tags/categories val tags: MutableList&lt;SyndCategory&gt; = mutableListOf(), // Channel var channel: String, // Creation date var date: Date = Calendar.getInstance().time, // Link's URL var link: String, // Author's login var login: String = "", // Author's nickname var nick: String, // Link's title var title: String )</ID>
-    <ID>LongParameterList:Twitter.kt$Twitter.Companion$( consumerKey: String?, consumerSecret: String?, token: String?, tokenSecret: String?, handle: String?, message: String, isDm: Boolean )</ID>
     <ID>MagicNumber:ChatGpt.kt$ChatGpt$400</ID>
     <ID>MagicNumber:ChatGpt.kt$ChatGpt.Companion$200</ID>
     <ID>MagicNumber:ChatGpt.kt$ChatGpt.Companion$429</ID>
@@ -33,7 +32,6 @@
     <ID>MagicNumber:StockQuote.kt$StockQuote.Companion$10</ID>
     <ID>MagicNumber:Tell.kt$Tell$50</ID>
     <ID>MagicNumber:Tell.kt$Tell$7</ID>
-    <ID>MagicNumber:TwitterOAuth.kt$TwitterOAuth$401</ID>
     <ID>MagicNumber:Users.kt$Users$8</ID>
     <ID>MagicNumber:Utils.kt$Utils$200</ID>
     <ID>MagicNumber:Utils.kt$Utils$399</ID>
@@ -47,7 +45,6 @@
     <ID>MagicNumber:WorldTime.kt$WorldTime.Companion$3600</ID>
     <ID>MagicNumber:WorldTime.kt$WorldTime.Companion$60</ID>
     <ID>MagicNumber:WorldTime.kt$WorldTime.Companion$86.4</ID>
-    <ID>MaxLineLength:TwitterOAuth.kt$TwitterOAuth$*</ID>
     <ID>NestedBlockDepth:Addons.kt$Addons$fun add(command: AbstractCommand): Boolean</ID>
     <ID>NestedBlockDepth:Addons.kt$Addons$fun add(module: AbstractModule): Boolean</ID>
     <ID>NestedBlockDepth:ChatGpt.kt$ChatGpt.Companion$@JvmStatic @Throws(ModuleException::class) fun chat(query: String, apiKey: String?, maxTokens: Int): String</ID>
@@ -65,13 +62,10 @@
     <ID>NestedBlockDepth:Seen.kt$Seen$override fun commandResponse(channel: String, args: String, event: GenericMessageEvent)</ID>
     <ID>NestedBlockDepth:StockQuote.kt$StockQuote.Companion$@JvmStatic @Throws(ModuleException::class) fun getQuote(symbol: String, apiKey: String?): List&lt;Message&gt;</ID>
     <ID>NestedBlockDepth:Tell.kt$Tell$fun send(event: GenericUserEvent)</ID>
-    <ID>NestedBlockDepth:TwitterOAuth.kt$TwitterOAuth$@JvmStatic fun main(args: Array&lt;String&gt;)</ID>
     <ID>NestedBlockDepth:Utils.kt$Utils$@JvmStatic fun loadSerialData(file: String, default: Any, logger: Logger, description: String): Any</ID>
     <ID>NestedBlockDepth:Utils.kt$Utils$@JvmStatic fun saveSerialData(file: String, data: Any, logger: Logger, description: String)</ID>
     <ID>NestedBlockDepth:Weather2.kt$Weather2$override fun commandResponse(channel: String, cmd: String, args: String, event: GenericMessageEvent)</ID>
     <ID>NestedBlockDepth:Weather2.kt$Weather2.Companion$@JvmStatic @Throws(ModuleException::class) fun getWeather(query: String, apiKey: String?): List&lt;Message&gt;</ID>
-    <ID>PrintStackTrace:TwitterOAuth.kt$TwitterOAuth$ioe</ID>
-    <ID>PrintStackTrace:TwitterOAuth.kt$TwitterOAuth$te</ID>
     <ID>ReturnCount:Addons.kt$Addons$fun exec(channel: String, cmd: String, args: String, event: GenericMessageEvent): Boolean</ID>
     <ID>ReturnCount:Addons.kt$Addons$fun help(channel: String, topic: String, event: GenericMessageEvent): Boolean</ID>
     <ID>ReturnCount:ExceptionSanitizer.kt$ExceptionSanitizer$fun ModuleException.sanitize(vararg sanitize: String): ModuleException</ID>
@@ -91,5 +85,6 @@
     <ID>TooManyFunctions:EntryLink.kt$EntryLink : Serializable</ID>
     <ID>TooManyFunctions:Mobibot.kt$Mobibot : ListenerAdapter</ID>
     <ID>TooManyFunctions:Tell.kt$Tell : AbstractCommand</ID>
+    <ID>WildcardImport:FeedReaderTest.kt$import assertk.assertions.*</ID>
   </CurrentIssues>
 </SmellBaseline>

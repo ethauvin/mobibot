@@ -45,7 +45,6 @@ import net.thauvin.erik.mobibot.modules.Dice
 import net.thauvin.erik.mobibot.modules.Joke
 import net.thauvin.erik.mobibot.modules.Lookup
 import net.thauvin.erik.mobibot.modules.RockPaperScissors
-import net.thauvin.erik.mobibot.modules.Twitter
 import net.thauvin.erik.mobibot.modules.War
 import org.testng.annotations.Test
 import java.util.Properties
@@ -62,7 +61,6 @@ class AddonsTest {
         // Modules
         addons.add(Joke())
         addons.add(RockPaperScissors())
-        addons.add(Twitter()) // no properties, disabled.
         addons.add(War())
         addons.add(Dice())
         addons.add(Lookup())

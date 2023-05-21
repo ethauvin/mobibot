@@ -32,7 +32,6 @@ package net.thauvin.erik.mobibot.modules
 
 import assertk.assertThat
 import assertk.assertions.contains
-import assertk.assertions.isSuccess
 import net.thauvin.erik.mobibot.LocalProperties
 import net.thauvin.erik.mobibot.modules.Mastodon.Companion.toot
 import org.testng.annotations.Test
@@ -42,7 +41,7 @@ class MastodonTest : LocalProperties() {
     @Throws(ModuleException::class)
     fun testToot() {
         val msg = "Testing Mastodon API from ${getHostName()}"
-        assertThat {
+        assertThat(
             toot(
                 getProperty(Mastodon.ACCESS_TOKEN_PROP),
                 getProperty(Mastodon.INSTANCE_PROP),
@@ -50,6 +49,6 @@ class MastodonTest : LocalProperties() {
                 msg,
                 true
             )
-        }.isSuccess().contains(msg)
+        ).contains(msg)
     }
 }
