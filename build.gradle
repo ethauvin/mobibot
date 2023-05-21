@@ -158,6 +158,14 @@ detekt {
     baseline = file("${projectDir}/config/detekt/baseline.xml")
 }
 
+tasks.withType(Detekt).configureEach {
+    jvmTarget = java.targetCompatibility.toString()
+}
+
+tasks.withType(DetektCreateBaselineTask).configureEach {
+    jvmTarget = java.targetCompatibility.toString()
+}
+
 jar {
     manifest.attributes('Main-Class': mainClassName,
             'Class-Path': '. ./lib/' + configurations.runtimeClasspath.collect { it.getName() }.join(' ./lib/'))

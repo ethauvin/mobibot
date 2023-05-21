@@ -52,4 +52,3 @@ workflows:
   gradle:
     jobs:
       - build_gradle_jdk17
-      - build_gradle_jdk19
