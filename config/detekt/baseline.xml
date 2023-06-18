@@ -27,6 +27,7 @@
     <ID>MagicNumber:Mastodon.kt$Mastodon.Companion$200</ID>
     <ID>MagicNumber:Mobibot.kt$Mobibot$8</ID>
     <ID>MagicNumber:Modules.kt$Modules$7</ID>
+    <ID>MagicNumber:Seen.kt$Seen$8</ID>
     <ID>MagicNumber:SocialManager.kt$SocialManager$1000L</ID>
     <ID>MagicNumber:SocialManager.kt$SocialManager$60L</ID>
     <ID>MagicNumber:StockQuote.kt$StockQuote.Companion$10</ID>
@@ -69,6 +70,7 @@
     <ID>ReturnCount:Addons.kt$Addons$fun exec(channel: String, cmd: String, args: String, event: GenericMessageEvent): Boolean</ID>
     <ID>ReturnCount:Addons.kt$Addons$fun help(channel: String, topic: String, event: GenericMessageEvent): Boolean</ID>
     <ID>ReturnCount:ExceptionSanitizer.kt$ExceptionSanitizer$fun ModuleException.sanitize(vararg sanitize: String): ModuleException</ID>
+    <ID>ReturnCount:Seen.kt$Seen$override fun commandResponse(channel: String, args: String, event: GenericMessageEvent)</ID>
     <ID>SwallowedException:GoogleSearchTest.kt$GoogleSearchTest$e: ModuleException</ID>
     <ID>SwallowedException:StockQuoteTest.kt$StockQuoteTest$e: ModuleException</ID>
     <ID>SwallowedException:WolframAlphaTest.kt$WolframAlphaTest$e: ModuleException</ID>

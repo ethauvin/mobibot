@@ -208,6 +208,6 @@ class EntryLink(
 
     companion object {
         // Serial version UID
-        const val serialVersionUID = 1L
+        private const val serialVersionUID: Long = 1L
     }
 }

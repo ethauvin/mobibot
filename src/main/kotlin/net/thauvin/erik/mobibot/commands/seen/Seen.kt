@@ -32,10 +32,14 @@
 package net.thauvin.erik.mobibot.commands.seen
 
 import com.google.common.collect.ImmutableSortedSet
+import net.thauvin.erik.mobibot.Utils
+import net.thauvin.erik.mobibot.Utils.bold
 import net.thauvin.erik.mobibot.Utils.bot
 import net.thauvin.erik.mobibot.Utils.helpFormat
+import net.thauvin.erik.mobibot.Utils.isChannelOp
 import net.thauvin.erik.mobibot.Utils.loadSerialData
 import net.thauvin.erik.mobibot.Utils.saveSerialData
+import net.thauvin.erik.mobibot.Utils.sendList
 import net.thauvin.erik.mobibot.Utils.sendMessage
 import net.thauvin.erik.mobibot.commands.AbstractCommand
 import net.thauvin.erik.mobibot.commands.Info.Companion.toUptime
@@ -43,15 +47,19 @@ import org.pircbotx.User
 import org.pircbotx.hooks.types.GenericMessageEvent
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import java.util.TreeMap
+import java.util.*
 
 
 class Seen(private val serialObject: String) : AbstractCommand() {
     private val logger: Logger = LoggerFactory.getLogger(Seen::class.java)
+    private val allKeyword = "all"
     val seenNicks = TreeMap<String, SeenNick>(NickComparator())
 
     override val name = "seen"
     override val help = listOf("To view when a nickname was last seen:", helpFormat("%c $name <nick>"))
+    private val helpOp = help.plus(
+        arrayOf("To view all ${"seen".bold()} nicks:", helpFormat("%c $name $allKeyword"))
+    )
     override val isOpOnly = false
     override val isPublic = true
     override val isVisible = true
@@ -61,6 +69,11 @@ class Seen(private val serialObject: String) : AbstractCommand() {
         if (isEnabled()) {
             if (args.isNotBlank() && !args.contains(' ')) {
                 val ch = event.bot().userChannelDao.getChannel(channel)
+                if (args.equals(allKeyword) && ch.isOp(event.user) && seenNicks.isNotEmpty()) {
+                    event.sendMessage("The ${"seen".bold()} nicks are:")
+                    event.sendList(seenNicks.keys.toList(), 8, separator = ", ", isIndent = true)
+                    return
+                }
                 ch.users.forEach {
                     if (args.equals(it.nick, true)) {
                         event.sendMessage("${it.nick} is on ${channel}.")
@@ -101,6 +114,17 @@ class Seen(private val serialObject: String) : AbstractCommand() {
     }
 
     fun count(): Int = seenNicks.size
+
+    override fun helpResponse(channel: String, topic: String, event: GenericMessageEvent): Boolean {
+        return if (event.isChannelOp(channel)) {
+            for (h in helpOp) {
+                event.sendMessage(Utils.helpCmdSyntax(h, event.bot().nick, true))
+            }
+            true
+        } else {
+            super.helpResponse(channel, topic, event)
+        }
+    }
 
     fun load() {
         if (isEnabled()) {
