@@ -5,6 +5,11 @@
     <file type="web" url="file://$PROJECT_DIR$" />
   </component>
   <component name="PDMPlugin">
+    <option name="customRuleSets">
+      <list>
+        <option value="K:\java\semver\config\pmd.xml" />
+      </list>
+    </option>
     <option name="skipTestSources" value="false" />
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_17" project-jdk-name="19" project-jdk-type="JavaSDK" />

@@ -69,9 +69,9 @@ class Seen(private val serialObject: String) : AbstractCommand() {
         if (isEnabled()) {
             if (args.isNotBlank() && !args.contains(' ')) {
                 val ch = event.bot().userChannelDao.getChannel(channel)
-                if (args.equals(allKeyword) && ch.isOp(event.user) && seenNicks.isNotEmpty()) {
+                if (args == allKeyword && ch.isOp(event.user) && seenNicks.isNotEmpty()) {
                     event.sendMessage("The ${"seen".bold()} nicks are:")
-                    event.sendList(seenNicks.keys.toList(), 8, separator = ", ", isIndent = true)
+                    event.sendList(seenNicks.keys.toList(), 7, separator = ", ", isIndent = true)
                     return
                 }
                 ch.users.forEach {
