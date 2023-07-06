@@ -33,15 +33,7 @@ package net.thauvin.erik.mobibot.modules
 import assertk.all
 import assertk.assertFailure
 import assertk.assertThat
-import assertk.assertions.contains
-import assertk.assertions.hasMessage
-import assertk.assertions.hasNoCause
-import assertk.assertions.index
-import assertk.assertions.isEqualTo
-import assertk.assertions.isFailure
-import assertk.assertions.isInstanceOf
-import assertk.assertions.isNotEmpty
-import assertk.assertions.prop
+import assertk.assertions.*
 import net.thauvin.erik.mobibot.ExceptionSanitizer.sanitize
 import net.thauvin.erik.mobibot.LocalProperties
 import net.thauvin.erik.mobibot.modules.GoogleSearch.Companion.searchGoogle
@@ -56,19 +48,19 @@ class GoogleSearchTest : LocalProperties() {
     @Test(groups = ["modules"])
     fun testAPIKeys() {
         assertThat(
-            searchGoogle("", "apikey", "cssKey").first(),
-            "searchGoogle(empty)"
+                searchGoogle("", "apikey", "cssKey").first(),
+                "searchGoogle(empty)"
         ).isInstanceOf(ErrorMessage::class.java)
 
         assertFailure { searchGoogle("test", "", "apiKey") }
-            .isInstanceOf(ModuleException::class.java).hasNoCause()
+                .isInstanceOf(ModuleException::class.java).hasNoCause()
 
         assertFailure { searchGoogle("test", "apiKey", "") }
-            .isInstanceOf(ModuleException::class.java).hasNoCause()
+                .isInstanceOf(ModuleException::class.java).hasNoCause()
 
         assertFailure { searchGoogle("test", "apiKey", "cssKey") }
-            .isInstanceOf(ModuleException::class.java)
-            .hasMessage("API key not valid. Please pass a valid API key.")
+                .isInstanceOf(ModuleException::class.java)
+                .hasMessage("API key not valid. Please pass a valid API key.")
     }
 
     @Test(groups = ["no-ci", "modules"])

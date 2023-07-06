@@ -39,11 +39,7 @@ import org.pircbotx.PircBotX
 import org.pircbotx.hooks.events.PrivateMessageEvent
 import org.pircbotx.hooks.types.GenericMessageEvent
 import org.slf4j.Logger
-import java.io.BufferedInputStream
-import java.io.BufferedOutputStream
-import java.io.IOException
-import java.io.ObjectInputStream
-import java.io.ObjectOutputStream
+import java.io.*
 import java.net.HttpURLConnection
 import java.net.URL
 import java.nio.file.Files
@@ -51,8 +47,7 @@ import java.nio.file.Paths
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
-import java.util.Date
-import java.util.Properties
+import java.util.*
 import kotlin.io.path.exists
 import kotlin.io.path.fileSize
 
@@ -220,7 +215,7 @@ object Utils {
         if (serialFile.exists() && serialFile.fileSize() > 0) {
             try {
                 ObjectInputStream(
-                    BufferedInputStream(Files.newInputStream(serialFile))
+                        BufferedInputStream(Files.newInputStream(serialFile))
                 ).use { input ->
                     if (logger.isDebugEnabled) logger.debug("Loading the ${description}.")
                     return input.readObject()
@@ -307,20 +302,20 @@ object Utils {
     @JvmStatic
     @JvmOverloads
     fun GenericMessageEvent.sendList(
-        list: List<String>,
-        maxPerLine: Int,
-        separator: String = " ",
-        isBold: Boolean = false,
-        isIndent: Boolean = false
+            list: List<String>,
+            maxPerLine: Int,
+            separator: String = " ",
+            isBold: Boolean = false,
+            isIndent: Boolean = false
     ) {
         var i = 0
         while (i < list.size) {
             sendMessage(
-                helpFormat(
-                    list.subList(i, list.size.coerceAtMost(i + maxPerLine)).joinToString(separator, truncated = ""),
-                    isBold,
-                    isIndent
-                ),
+                    helpFormat(
+                            list.subList(i, list.size.coerceAtMost(i + maxPerLine)).joinToString(separator, truncated = ""),
+                            isBold,
+                            isIndent
+                    ),
             )
             i += maxPerLine
         }
@@ -419,8 +414,8 @@ object Utils {
     fun URL.reader(): UrlReaderResponse {
         val connection = this.openConnection() as HttpURLConnection
         connection.setRequestProperty(
-            "User-Agent",
-            "Mozilla/5.0 (X11; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/109.0"
+                "User-Agent",
+                "Mozilla/5.0 (X11; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/109.0"
         )
         return if (connection.responseCode.isHttpSuccess()) {
             UrlReaderResponse(connection.responseCode, connection.inputStream.bufferedReader().use { it.readText() })

@@ -48,13 +48,13 @@ class RecapTest {
         assertThat(Recap.recaps, "Recap.recaps").all {
             size().isEqualTo(Recap.MAX_RECAPS)
             prop(MutableList<String>::first)
-                .matches("[1-2]\\d{3}-[01]\\d-[0-3]\\d [0-2]\\d:[0-6]\\d - sender11: test 11".toRegex())
+                    .matches("[1-2]\\d{3}-[01]\\d-[0-3]\\d [0-2]\\d:[0-6]\\d - sender11: test 11".toRegex())
             prop(MutableList<String>::last)
-                .matches("[1-2]\\d{3}-[01]\\d-[0-3]\\d [0-2]\\d:[0-6]\\d - sender20: test 20".toRegex())
+                    .matches("[1-2]\\d{3}-[01]\\d-[0-3]\\d [0-2]\\d:[0-6]\\d - sender20: test 20".toRegex())
         }
 
         Recap.storeRecap("sender", "test action", true)
         assertThat(Recap.recaps.last())
-            .matches("[1-2]\\d{3}-[01]\\d-[0-3]\\d [0-2]\\d:[0-6]\\d - sender test action".toRegex())
+                .matches("[1-2]\\d{3}-[01]\\d-[0-3]\\d [0-2]\\d:[0-6]\\d - sender test action".toRegex())
     }
 }

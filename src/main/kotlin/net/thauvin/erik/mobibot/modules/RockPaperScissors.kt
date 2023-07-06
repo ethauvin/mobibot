@@ -52,10 +52,10 @@ class RockPaperScissors : AbstractModule() {
         with(help) {
             add("To play Rock Paper Scissors:")
             add(
-                helpFormat(
-                    "%c ${Hands.ROCK.name.lowercase()} | ${Hands.PAPER.name.lowercase()}"
-                            + " | ${Hands.SCISSORS.name.lowercase()}"
-                )
+                    helpFormat(
+                            "%c ${Hands.ROCK.name.lowercase()} | ${Hands.PAPER.name.lowercase()}"
+                                    + " | ${Hands.SCISSORS.name.lowercase()}"
+                    )
             )
         }
     }
@@ -96,7 +96,7 @@ class RockPaperScissors : AbstractModule() {
 
     override fun commandResponse(channel: String, cmd: String, args: String, event: GenericMessageEvent) {
         val hand = Hands.valueOf(cmd.uppercase())
-        val botHand = Hands.values()[(0..Hands.values().size).random()]
+        val botHand = Hands.entries[(0..Hands.entries.size).random()]
         when {
             hand == botHand -> {
                 event.respond("${hand.name} vs. ${botHand.name} » You ${"tie".bold()}.")

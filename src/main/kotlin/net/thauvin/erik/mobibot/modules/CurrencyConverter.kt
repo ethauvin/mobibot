@@ -45,7 +45,7 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.io.IOException
 import java.net.URL
-import java.util.TreeMap
+import java.util.*
 
 
 /**
@@ -99,15 +99,15 @@ class CurrencyConverter : AbstractModule() {
             event.sendMessage("To convert from one currency to another:")
             event.sendMessage(helpFormat(helpCmdSyntax("%c $CURRENCY_CMD 100 USD to EUR", nick, isPrivateMsgEnabled)))
             event.sendMessage(
-                helpFormat(
-                    helpCmdSyntax("%c $CURRENCY_CMD 50,000 GBP to BTC", nick, isPrivateMsgEnabled)
-                )
+                    helpFormat(
+                            helpCmdSyntax("%c $CURRENCY_CMD 50,000 GBP to BTC", nick, isPrivateMsgEnabled)
+                    )
             )
             event.sendMessage("To list the supported currency codes:")
             event.sendMessage(
-                helpFormat(
-                    helpCmdSyntax("%c $CURRENCY_CMD $CODES_KEYWORD", nick, isPrivateMsgEnabled)
-                )
+                    helpFormat(
+                            helpCmdSyntax("%c $CURRENCY_CMD $CODES_KEYWORD", nick, isPrivateMsgEnabled)
+                    )
             )
         }
         return true
@@ -146,7 +146,7 @@ class CurrencyConverter : AbstractModule() {
 
                             if (json.getBoolean("success")) {
                                 PublicMessage(
-                                    "${cmds[0]} ${SYMBOLS[to]} = ${json.get("result")} ${SYMBOLS[from]}"
+                                        "${cmds[0]} ${SYMBOLS[to]} = ${json.get("result")} ${SYMBOLS[from]}"
                                 )
                             } else {
                                 ErrorMessage("Sorry, an error occurred while converting the currencies.")
@@ -178,9 +178,9 @@ class CurrencyConverter : AbstractModule() {
                 }
             } catch (e: IOException) {
                 throw ModuleException(
-                    "loadCodes(): IOE",
-                    "An IO error has occurred while retrieving the currencies.",
-                    e
+                        "loadCodes(): IOE",
+                        "An IO error has occurred while retrieving the currencies.",
+                        e
                 )
             }
         }

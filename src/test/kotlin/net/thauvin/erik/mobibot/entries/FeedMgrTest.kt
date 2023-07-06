@@ -33,18 +33,12 @@ package net.thauvin.erik.mobibot.entries
 
 import assertk.all
 import assertk.assertThat
-import assertk.assertions.endsWith
-import assertk.assertions.exists
-import assertk.assertions.index
-import assertk.assertions.isEqualTo
-import assertk.assertions.isTrue
-import assertk.assertions.prop
-import assertk.assertions.size
+import assertk.assertions.*
 import net.thauvin.erik.mobibot.Utils.today
 import org.testng.annotations.BeforeSuite
 import org.testng.annotations.Test
 import java.nio.file.Paths
-import java.util.Date
+import java.util.*
 import kotlin.io.path.deleteIfExists
 import kotlin.io.path.fileSize
 import kotlin.io.path.name

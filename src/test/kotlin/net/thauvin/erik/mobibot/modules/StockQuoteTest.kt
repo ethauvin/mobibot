@@ -33,14 +33,7 @@ package net.thauvin.erik.mobibot.modules
 import assertk.all
 import assertk.assertFailure
 import assertk.assertThat
-import assertk.assertions.hasNoCause
-import assertk.assertions.index
-import assertk.assertions.isEqualTo
-import assertk.assertions.isFailure
-import assertk.assertions.isInstanceOf
-import assertk.assertions.isNotEmpty
-import assertk.assertions.matches
-import assertk.assertions.prop
+import assertk.assertions.*
 import net.thauvin.erik.mobibot.ExceptionSanitizer.sanitize
 import net.thauvin.erik.mobibot.LocalProperties
 import net.thauvin.erik.mobibot.modules.StockQuote.Companion.getQuote
@@ -67,7 +60,7 @@ class StockQuoteTest : LocalProperties() {
             assertThat(messages, "getQuote($symbol)").index(0).prop(Message::msg).matches("Symbol: AAPL .*".toRegex())
             assertThat(messages, "getQuote($symbol)").index(1).prop(Message::msg).matches(buildMatch("Price").toRegex())
             assertThat(messages, "getQuote($symbol)").index(2).prop(Message::msg)
-                .matches(buildMatch("Previous").toRegex())
+                    .matches(buildMatch("Previous").toRegex())
             assertThat(messages, "getQuote($symbol)").index(3).prop(Message::msg).matches(buildMatch("Open").toRegex())
 
             symbol = "blahfoo"

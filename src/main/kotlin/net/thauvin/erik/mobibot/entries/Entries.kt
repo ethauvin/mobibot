@@ -34,10 +34,10 @@ package net.thauvin.erik.mobibot.entries
 import net.thauvin.erik.mobibot.Utils.today
 
 class Entries(
-    var channel: String = "",
-    var ircServer: String = "",
-    var logsDir: String = "",
-    var backlogs: String = ""
+        var channel: String = "",
+        var ircServer: String = "",
+        var logsDir: String = "",
+        var backlogs: String = ""
 ) {
     val links = mutableListOf<EntryLink>()
 

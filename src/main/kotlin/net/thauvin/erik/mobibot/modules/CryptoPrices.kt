@@ -134,9 +134,9 @@ class CryptoPrices : AbstractModule() {
                 }
             } catch (e: CryptoException) {
                 throw ModuleException(
-                    "loadCurrencies(): CE",
-                    "An error has occurred while retrieving the currencies table.",
-                    e
+                        "loadCurrencies(): CE",
+                        "An error has occurred while retrieving the currencies table.",
+                        e
                 )
             }
         }

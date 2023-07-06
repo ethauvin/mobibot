@@ -45,11 +45,11 @@ class WolframAlphaTest : LocalProperties() {
     @Test(groups = ["modules"])
     fun testAppId() {
         assertFailure { queryWolfram("1 gallon to liter", appId = "DEMO") }
-            .isInstanceOf(ModuleException::class.java)
-            .hasMessage("Error 1: Invalid appid")
+                .isInstanceOf(ModuleException::class.java)
+                .hasMessage("Error 1: Invalid appid")
 
         assertFailure { queryWolfram("1 gallon to liter", appId = "") }
-            .isInstanceOf(ModuleException::class.java)
+                .isInstanceOf(ModuleException::class.java)
     }
 
     @Test(groups = ["modules", "no-ci"])
@@ -62,8 +62,8 @@ class WolframAlphaTest : LocalProperties() {
 
             query = "SFO to LAX"
             assertThat(
-                queryWolfram(query, WolframAlpha.METRIC, apiKey),
-                "queryWolfram($query)"
+                    queryWolfram(query, WolframAlpha.METRIC, apiKey),
+                    "queryWolfram($query)"
             ).contains("kilometers")
         } catch (e: ModuleException) {
             // Avoid displaying api key in CI logs

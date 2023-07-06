@@ -45,67 +45,24 @@ import net.thauvin.erik.mobibot.Utils.lastOrEmpty
 import net.thauvin.erik.mobibot.Utils.sendList
 import net.thauvin.erik.mobibot.Utils.sendMessage
 import net.thauvin.erik.mobibot.Utils.toIsoLocalDate
-import net.thauvin.erik.mobibot.commands.ChannelFeed
-import net.thauvin.erik.mobibot.commands.Cycle
-import net.thauvin.erik.mobibot.commands.Die
-import net.thauvin.erik.mobibot.commands.Ignore
-import net.thauvin.erik.mobibot.commands.Info
-import net.thauvin.erik.mobibot.commands.Me
-import net.thauvin.erik.mobibot.commands.Modules
-import net.thauvin.erik.mobibot.commands.Msg
-import net.thauvin.erik.mobibot.commands.Nick
-import net.thauvin.erik.mobibot.commands.Recap
+import net.thauvin.erik.mobibot.commands.*
 import net.thauvin.erik.mobibot.commands.Recap.Companion.storeRecap
-import net.thauvin.erik.mobibot.commands.Say
-import net.thauvin.erik.mobibot.commands.Users
-import net.thauvin.erik.mobibot.commands.Versions
-import net.thauvin.erik.mobibot.commands.links.Comment
-import net.thauvin.erik.mobibot.commands.links.LinksManager
-import net.thauvin.erik.mobibot.commands.links.Posting
-import net.thauvin.erik.mobibot.commands.links.Tags
-import net.thauvin.erik.mobibot.commands.links.View
+import net.thauvin.erik.mobibot.commands.links.*
 import net.thauvin.erik.mobibot.commands.seen.Seen
 import net.thauvin.erik.mobibot.commands.tell.Tell
-import net.thauvin.erik.mobibot.modules.Calc
-import net.thauvin.erik.mobibot.modules.ChatGpt
-import net.thauvin.erik.mobibot.modules.CryptoPrices
-import net.thauvin.erik.mobibot.modules.CurrencyConverter
-import net.thauvin.erik.mobibot.modules.Dice
-import net.thauvin.erik.mobibot.modules.GoogleSearch
-import net.thauvin.erik.mobibot.modules.Joke
-import net.thauvin.erik.mobibot.modules.Lookup
-import net.thauvin.erik.mobibot.modules.Mastodon
-import net.thauvin.erik.mobibot.modules.Ping
-import net.thauvin.erik.mobibot.modules.RockPaperScissors
-import net.thauvin.erik.mobibot.modules.StockQuote
-import net.thauvin.erik.mobibot.modules.War
-import net.thauvin.erik.mobibot.modules.Weather2
-import net.thauvin.erik.mobibot.modules.WolframAlpha
-import net.thauvin.erik.mobibot.modules.WorldTime
+import net.thauvin.erik.mobibot.modules.*
 import net.thauvin.erik.semver.Version
 import org.pircbotx.Configuration
 import org.pircbotx.PircBotX
 import org.pircbotx.hooks.ListenerAdapter
-import org.pircbotx.hooks.events.ActionEvent
-import org.pircbotx.hooks.events.DisconnectEvent
-import org.pircbotx.hooks.events.JoinEvent
-import org.pircbotx.hooks.events.MessageEvent
-import org.pircbotx.hooks.events.NickChangeEvent
-import org.pircbotx.hooks.events.PartEvent
-import org.pircbotx.hooks.events.PrivateMessageEvent
-import org.pircbotx.hooks.events.QuitEvent
+import org.pircbotx.hooks.events.*
 import org.pircbotx.hooks.types.GenericMessageEvent
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import java.io.BufferedOutputStream
-import java.io.File
-import java.io.FileNotFoundException
-import java.io.FileOutputStream
-import java.io.IOException
-import java.io.PrintStream
+import java.io.*
 import java.nio.file.Files
 import java.nio.file.Paths
-import java.util.Properties
+import java.util.*
 import java.util.regex.Pattern
 import kotlin.system.exitProcess
 
@@ -140,9 +97,9 @@ class Mobibot(nickname: String, val channel: String, logsDirPath: String, p: Pro
         event.sendMessage("Type a URL on $channel to post it.")
         event.sendMessage("For more information on a specific command, type:")
         event.sendMessage(
-            helpFormat(
-                helpCmdSyntax("%c ${Constants.HELP_CMD} <command>", event.bot().nick, event is PrivateMessageEvent)
-            )
+                helpFormat(
+                        helpCmdSyntax("%c ${Constants.HELP_CMD} <command>", event.bot().nick, event is PrivateMessageEvent)
+                )
         )
         event.sendMessage("The commands are:")
         event.sendList(addons.names.commands, 8, isBold = true, isIndent = true)
@@ -204,7 +161,7 @@ class Mobibot(nickname: String, val channel: String, logsDirPath: String, p: Pro
             with(event.getBot<PircBotX>()) {
                 if (user.nick == nick) {
                     LinksManager.socialManager.notification(
-                        "$nick has joined ${event.channel.name} on $serverHostname"
+                            "$nick has joined ${event.channel.name} on $serverHostname"
                     )
                     seen.add(userChannelDao.getChannel(channel).users)
                 } else {
@@ -252,7 +209,7 @@ class Mobibot(nickname: String, val channel: String, logsDirPath: String, p: Pro
             with(event.getBot<PircBotX>()) {
                 if (user.nick == nick) {
                     LinksManager.socialManager.notification(
-                        "$nick has left ${event.channel.name} on $serverHostname"
+                            "$nick has left ${event.channel.name} on $serverHostname"
                     )
                     seen.add(userChannelDao.getChannel(channel).users)
                 } else {
@@ -275,22 +232,22 @@ class Mobibot(nickname: String, val channel: String, logsDirPath: String, p: Pro
             // Set up the command line options
             val parser = ArgParser(Constants.CLI_CMD)
             val debug by parser.option(
-                ArgType.Boolean,
-                Constants.DEBUG_ARG,
-                Constants.DEBUG_ARG.substring(0, 1),
-                "Print debug & logging data directly to the console"
+                    ArgType.Boolean,
+                    Constants.DEBUG_ARG,
+                    Constants.DEBUG_ARG.substring(0, 1),
+                    "Print debug & logging data directly to the console"
             ).default(false)
             val property by parser.option(
-                ArgType.String,
-                Constants.PROPS_ARG,
-                Constants.PROPS_ARG.substring(0, 1),
-                "Use alternate properties file"
+                    ArgType.String,
+                    Constants.PROPS_ARG,
+                    Constants.PROPS_ARG.substring(0, 1),
+                    "Use alternate properties file"
             ).default("./${ReleaseInfo.PROJECT}.properties")
             val version by parser.option(
-                ArgType.Boolean,
-                Constants.VERSION_ARG,
-                Constants.VERSION_ARG.substring(0, 1),
-                "Print version info"
+                    ArgType.Boolean,
+                    Constants.VERSION_ARG,
+                    Constants.VERSION_ARG.substring(0, 1),
+                    "Print version info"
             ).default(false)
 
             // Parse the command line
@@ -299,8 +256,8 @@ class Mobibot(nickname: String, val channel: String, logsDirPath: String, p: Pro
             if (version) {
                 // Output the version
                 println(
-                    "${ReleaseInfo.PROJECT.capitalise()} ${ReleaseInfo.VERSION}" +
-                            " (${ReleaseInfo.BUILDDATE.toIsoLocalDate()})"
+                        "${ReleaseInfo.PROJECT.capitalise()} ${ReleaseInfo.VERSION}" +
+                                " (${ReleaseInfo.BUILDDATE.toIsoLocalDate()})"
                 )
                 println(ReleaseInfo.WEBSITE)
             } else {
@@ -308,7 +265,7 @@ class Mobibot(nickname: String, val channel: String, logsDirPath: String, p: Pro
                 val p = Properties()
                 try {
                     Files.newInputStream(
-                        Paths.get(property)
+                            Paths.get(property)
                     ).use { fis ->
                         p.load(fis)
                     }
@@ -327,11 +284,11 @@ class Mobibot(nickname: String, val channel: String, logsDirPath: String, p: Pro
                 if (!debug) {
                     try {
                         val stdout = PrintStream(
-                            BufferedOutputStream(
-                                FileOutputStream(
-                                    logsDir + channel.substring(1) + '.' + Utils.today() + ".log", true
-                                )
-                            ), true
+                                BufferedOutputStream(
+                                        FileOutputStream(
+                                                logsDir + channel.substring(1) + '.' + Utils.today() + ".log", true
+                                        )
+                                ), true
                         )
                         System.setOut(stdout)
                     } catch (ignore: IOException) {
@@ -340,9 +297,9 @@ class Mobibot(nickname: String, val channel: String, logsDirPath: String, p: Pro
                     }
                     try {
                         val stderr = PrintStream(
-                            BufferedOutputStream(
-                                FileOutputStream("$logsDir$nickname.err", true)
-                            ), true
+                                BufferedOutputStream(
+                                        FileOutputStream("$logsDir$nickname.err", true)
+                                ), true
                         )
                         System.setErr(stderr)
                     } catch (ignore: IOException) {
@@ -367,8 +324,8 @@ class Mobibot(nickname: String, val channel: String, logsDirPath: String, p: Pro
             login = p.getProperty("login", nickname)
             realName = p.getProperty("realname", nickname)
             addServer(
-                ircServer,
-                p.getIntProperty("port", Constants.DEFAULT_PORT)
+                    ircServer,
+                    p.getIntProperty("port", Constants.DEFAULT_PORT)
             )
             addAutoJoinChannel(channel)
             addListener(this@Mobibot)

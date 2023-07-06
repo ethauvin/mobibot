@@ -72,6 +72,12 @@ public final class War extends AbstractModule {
         help.add(Utils.helpFormat("%c " + WAR_CMD));
     }
 
+    @NotNull
+    @Override
+    public String getName() {
+        return "War";
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -98,11 +104,5 @@ public final class War extends AbstractModule {
                     "  » You " + result + '!');
 
         } while (i == y);
-    }
-
-    @NotNull
-    @Override
-    public String getName() {
-        return "War";
     }
 }

@@ -32,18 +32,12 @@ package net.thauvin.erik.mobibot.entries
 
 import assertk.all
 import assertk.assertThat
-import assertk.assertions.index
-import assertk.assertions.isEmpty
-import assertk.assertions.isEqualTo
-import assertk.assertions.isFalse
-import assertk.assertions.isTrue
-import assertk.assertions.prop
-import assertk.assertions.size
+import assertk.assertions.*
 import com.rometools.rome.feed.synd.SyndCategory
 import com.rometools.rome.feed.synd.SyndCategoryImpl
 import org.testng.annotations.Test
 import java.security.SecureRandom
-import java.util.Date
+import java.util.*
 
 /**
  * The `EntryUtilsTest` class.
@@ -54,8 +48,8 @@ import java.util.Date
  */
 class EntryLinkTest {
     private val entryLink = EntryLink(
-        "https://www.mobitopia.org/", "Mobitopia", "Skynx", "JimH", "#mobitopia",
-        listOf("tag1", "tag2", "tag3", "TAG4", "Tag5")
+            "https://www.mobitopia.org/", "Mobitopia", "Skynx", "JimH", "#mobitopia",
+            listOf("tag1", "tag2", "tag3", "TAG4", "Tag5")
     )
 
     @Test(groups = ["entries"])
@@ -123,12 +117,12 @@ class EntryLinkTest {
         entryLink.setTags("+mobitopia")
         entryLink.setTags("-mobitopia")
         assertThat(
-            entryLink.formatTags(","),
-            "formatTags(',')"
+                entryLink.formatTags(","),
+                "formatTags(',')"
         ).isEqualTo("tag1,tag2,tag3,tag4,mobitopia")
         entryLink.setTags("-tag4 tag5")
         assertThat(
-            entryLink.formatTags(" ", ","), "formatTag(' ',',')"
+                entryLink.formatTags(" ", ","), "formatTag(' ',',')"
         ).isEqualTo(",tag1 tag2 tag3 mobitopia tag5")
         val size = entryLink.tags.size
         entryLink.setTags("")

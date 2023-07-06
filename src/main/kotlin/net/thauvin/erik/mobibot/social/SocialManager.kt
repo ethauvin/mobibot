@@ -36,7 +36,7 @@ import net.thauvin.erik.mobibot.Constants
 import net.thauvin.erik.mobibot.entries.EntriesUtils.toLinkLabel
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import java.util.Timer
+import java.util.*
 
 /**
  * Social Manager.

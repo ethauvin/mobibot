@@ -34,5 +34,5 @@ package net.thauvin.erik.mobibot.msg
  * The `NoticeMessage` class.
  */
 class NoticeMessage @JvmOverloads constructor(msg: String, color: String = DEFAULT_COLOR) :
-    Message(msg, color, isNotice = true)
+        Message(msg, color, isNotice = true)
 

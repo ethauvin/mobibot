@@ -43,7 +43,7 @@ object EntriesUtils {
      */
     @JvmStatic
     fun printComment(entryIndex: Int, commentIndex: Int, comment: EntryComment): String =
-        ("${entryIndex.toLinkLabel()}.${commentIndex + 1}: [${comment.nick}] ${comment.comment}")
+            ("${entryIndex.toLinkLabel()}.${commentIndex + 1}: [${comment.nick}] ${comment.comment}")
 
     /**
      * Prints an entry's link for display on the channel.
@@ -52,7 +52,7 @@ object EntriesUtils {
     @JvmOverloads
     fun printLink(entryIndex: Int, entry: EntryLink, isView: Boolean = false): String {
         val buff = StringBuilder().append(entryIndex.toLinkLabel()).append(": ")
-            .append('[').append(entry.nick).append(']')
+                .append('[').append(entry.nick).append(']')
         if (isView && entry.comments.isNotEmpty()) {
             buff.append("[+").append(entry.comments.size).append(']')
         }
@@ -73,7 +73,7 @@ object EntriesUtils {
      */
     @JvmStatic
     fun printTags(entryIndex: Int, entry: EntryLink): String =
-        entryIndex.toLinkLabel() + "${Constants.TAG_CMD}: " + entry.formatTags(", ")
+            entryIndex.toLinkLabel() + "${Constants.TAG_CMD}: " + entry.formatTags(", ")
 
     /**
      * Builds link label based on its index. e.g: L1

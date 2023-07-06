@@ -37,7 +37,7 @@ import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
-import java.util.Date
+import java.util.*
 
 /**
  * Handles posts to pinboard.in.
@@ -92,7 +92,7 @@ class Pinboard {
      */
     private fun Date.toTimestamp(): String {
         return ZonedDateTime.ofInstant(
-            toInstant().truncatedTo(ChronoUnit.SECONDS), ZoneId.systemDefault()
+                toInstant().truncatedTo(ChronoUnit.SECONDS), ZoneId.systemDefault()
         ).format(DateTimeFormatter.ISO_INSTANT)
     }
 

@@ -32,13 +32,7 @@ package net.thauvin.erik.mobibot.modules
 
 import assertk.all
 import assertk.assertThat
-import assertk.assertions.contains
-import assertk.assertions.doesNotContain
-import assertk.assertions.endsWith
-import assertk.assertions.hasMessage
-import assertk.assertions.isEqualTo
-import assertk.assertions.isNotNull
-import assertk.assertions.isNull
+import assertk.assertions.*
 import net.thauvin.erik.mobibot.ExceptionSanitizer.sanitize
 import org.testng.annotations.DataProvider
 import org.testng.annotations.Test
@@ -57,9 +51,9 @@ class ModuleExceptionTest {
     @DataProvider(name = "dp")
     fun createData(@Suppress("UNUSED_PARAMETER") m: Method?): Array<Array<Any>> {
         return arrayOf(
-            arrayOf(ModuleException(debugMessage, message, IOException("URL http://foobar.com"))),
-            arrayOf(ModuleException(debugMessage, message, IOException("URL http://foobar.com?"))),
-            arrayOf(ModuleException(debugMessage, message))
+                arrayOf(ModuleException(debugMessage, message, IOException("URL http://foobar.com"))),
+                arrayOf(ModuleException(debugMessage, message, IOException("URL http://foobar.com?"))),
+                arrayOf(ModuleException(debugMessage, message))
         )
     }
 
@@ -78,7 +72,7 @@ class ModuleExceptionTest {
         val apiKey = "1234567890"
         var e = ModuleException(debugMessage, message, IOException("URL http://foo.com?apiKey=$apiKey&userID=me"))
         assertThat(
-            e.sanitize(apiKey, "", "me").message, "ModuleException(debugMessage, message, IOException(url))"
+                e.sanitize(apiKey, "", "me").message, "ModuleException(debugMessage, message, IOException(url))"
         ).isNotNull().all {
             contains("xxxxxxxxxx", "userID=xx", "java.io.IOException")
             doesNotContain(apiKey, "me")
@@ -92,7 +86,7 @@ class ModuleExceptionTest {
 
         e = ModuleException(debugMessage, apiKey)
         assertThat(e.sanitize(apiKey).message, "ModuleException(debugMessage, apiKey)").isNotNull()
-            .doesNotContain(apiKey)
+                .doesNotContain(apiKey)
 
         val msg: String? = null
         e = ModuleException(debugMessage, msg, IOException(msg))
@@ -100,8 +94,8 @@ class ModuleExceptionTest {
 
         e = ModuleException(debugMessage, msg, IOException("foo is $apiKey"))
         assertThat(
-            e.sanitize("   ", apiKey, "foo").message,
-            "ModuleException(debugMessage, msg, IOException(foo is $apiKey))"
+                e.sanitize("   ", apiKey, "foo").message,
+                "ModuleException(debugMessage, msg, IOException(foo is $apiKey))"
         ).isNotNull().all {
             doesNotContain(apiKey)
             endsWith("xxx is xxxxxxxxxx")

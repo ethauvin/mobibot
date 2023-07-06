@@ -55,9 +55,9 @@ class Lookup : AbstractModule() {
                 event.respondWith(nslookup(args).prependIndent())
             } catch (ignore: UnknownHostException) {
                 if (args.matches(
-                        ("(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)")
-                            .toRegex()
-                    )
+                                ("(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)")
+                                        .toRegex()
+                        )
                 ) {
                     try {
                         val lines = whois(args)

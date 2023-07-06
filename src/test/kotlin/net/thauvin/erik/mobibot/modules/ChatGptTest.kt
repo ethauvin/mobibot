@@ -34,7 +34,6 @@ import assertk.assertFailure
 import assertk.assertThat
 import assertk.assertions.contains
 import assertk.assertions.hasNoCause
-import assertk.assertions.isFailure
 import assertk.assertions.isInstanceOf
 import net.thauvin.erik.mobibot.LocalProperties
 import org.testng.annotations.Test
@@ -43,21 +42,21 @@ class ChatGptTest : LocalProperties() {
     @Test(groups = ["modules"])
     fun testApiKey() {
         assertFailure { ChatGpt.chat("1 gallon to liter", "", 0) }
-            .isInstanceOf(ModuleException::class.java)
-            .hasNoCause()
+                .isInstanceOf(ModuleException::class.java)
+                .hasNoCause()
     }
 
     @Test(groups = ["modules", "no-ci"])
     fun testChat() {
         val apiKey = getProperty(ChatGpt.API_KEY_PROP)
         assertThat(
-            ChatGpt.chat("how do I make an HTTP request in Javascript?", apiKey, 100)
+                ChatGpt.chat("how do I make an HTTP request in Javascript?", apiKey, 100)
         ).contains("XMLHttpRequest")
         assertThat(
-            ChatGpt.chat("how do I encode a URL in java?", apiKey, 60)
+                ChatGpt.chat("how do I encode a URL in java?", apiKey, 60)
         ).contains("URLEncoder")
 
         assertFailure { ChatGpt.chat("1 liter to gallon", apiKey, 0) }
-            .isInstanceOf(ModuleException::class.java)
+                .isInstanceOf(ModuleException::class.java)
     }
 }

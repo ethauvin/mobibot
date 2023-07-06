@@ -32,12 +32,7 @@ package net.thauvin.erik.mobibot.modules
 
 import assertk.all
 import assertk.assertThat
-import assertk.assertions.doesNotContain
-import assertk.assertions.each
-import assertk.assertions.isGreaterThan
-import assertk.assertions.isInstanceOf
-import assertk.assertions.prop
-import assertk.assertions.size
+import assertk.assertions.*
 import net.thauvin.erik.mobibot.modules.Joke.Companion.randomJoke
 import net.thauvin.erik.mobibot.msg.Message
 import net.thauvin.erik.mobibot.msg.PublicMessage

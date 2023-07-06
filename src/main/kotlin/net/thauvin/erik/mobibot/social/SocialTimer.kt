@@ -31,7 +31,7 @@
 
 package net.thauvin.erik.mobibot.social
 
-import java.util.TimerTask
+import java.util.*
 
 class SocialTimer(private var socialManager: SocialManager, private var index: Int) : TimerTask() {
     override fun run() {

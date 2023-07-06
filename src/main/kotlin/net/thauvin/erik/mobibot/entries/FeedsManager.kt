@@ -30,11 +30,7 @@
  */
 package net.thauvin.erik.mobibot.entries
 
-import com.rometools.rome.feed.synd.SyndContentImpl
-import com.rometools.rome.feed.synd.SyndEntry
-import com.rometools.rome.feed.synd.SyndEntryImpl
-import com.rometools.rome.feed.synd.SyndFeed
-import com.rometools.rome.feed.synd.SyndFeedImpl
+import com.rometools.rome.feed.synd.*
 import com.rometools.rome.io.FeedException
 import com.rometools.rome.io.SyndFeedInput
 import com.rometools.rome.io.SyndFeedOutput
@@ -48,7 +44,7 @@ import java.io.OutputStreamWriter
 import java.nio.charset.StandardCharsets
 import java.nio.file.Files
 import java.nio.file.Paths
-import java.util.Calendar
+import java.util.*
 import kotlin.io.path.exists
 
 /**
@@ -76,7 +72,7 @@ class FeedsManager private constructor() {
             if (xml.exists()) {
                 val input = SyndFeedInput()
                 InputStreamReader(
-                    Files.newInputStream(xml), StandardCharsets.UTF_8
+                        Files.newInputStream(xml), StandardCharsets.UTF_8
                 ).use { reader ->
                     val feed = input.build(reader)
                     pubDate = feed.publishedDate.toIsoLocalDate()
@@ -85,12 +81,12 @@ class FeedsManager private constructor() {
                     for (i in items.indices.reversed()) {
                         with(items[i]) {
                             entry = EntryLink(
-                                link,
-                                title,
-                                author.substring(author.lastIndexOf('(') + 1, author.length - 1),
-                                entries.channel,
-                                publishedDate,
-                                categories
+                                    link,
+                                    title,
+                                    author.substring(author.lastIndexOf('(') + 1, author.length - 1),
+                                    entries.channel,
+                                    publishedDate,
+                                    categories
                             )
                             var split: List<String>
                             for (comment in description.value.split("<br/>")) {
@@ -123,7 +119,7 @@ class FeedsManager private constructor() {
                     val items: MutableList<SyndEntry> = mutableListOf()
                     var item: SyndEntry
                     OutputStreamWriter(
-                        Files.newOutputStream(Paths.get("${entries.logsDir}${currentFile}")), StandardCharsets.UTF_8
+                            Files.newOutputStream(Paths.get("${entries.logsDir}${currentFile}")), StandardCharsets.UTF_8
                     ).use { fw ->
                         with(rss) {
                             feedType = "rss_2.0"
@@ -138,13 +134,13 @@ class FeedsManager private constructor() {
                             with(entries.links[i]) {
                                 buff.setLength(0)
                                 buff.append("Posted by <b>")
-                                    .append(nick)
-                                    .append("</b> on <a href=\"irc://")
-                                    .append(entries.ircServer).append('/')
-                                    .append(channel)
-                                    .append("\"><b>")
-                                    .append(channel)
-                                    .append("</b></a>")
+                                        .append(nick)
+                                        .append("</b> on <a href=\"irc://")
+                                        .append(entries.ircServer).append('/')
+                                        .append(channel)
+                                        .append("\"><b>")
+                                        .append(channel)
+                                        .append("</b></a>")
                                 if (comments.size > 0) {
                                     buff.append(" <br/><br/>")
                                     for (j in comments.indices) {
@@ -169,11 +165,11 @@ class FeedsManager private constructor() {
                         output.output(rss, fw)
                     }
                     OutputStreamWriter(
-                        Files.newOutputStream(
-                            Paths.get(
-                                entries.logsDir + today() + dotXml
-                            )
-                        ), StandardCharsets.UTF_8
+                            Files.newOutputStream(
+                                    Paths.get(
+                                            entries.logsDir + today() + dotXml
+                                    )
+                            ), StandardCharsets.UTF_8
                     ).use { fw -> output.output(rss, fw) }
                 } catch (e: FeedException) {
                     if (logger.isWarnEnabled) logger.warn("Unable to generate the entries feed.", e)

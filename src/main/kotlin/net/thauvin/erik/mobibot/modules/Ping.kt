@@ -50,18 +50,18 @@ class Ping : AbstractModule() {
          */
         @JvmField
         val PINGS = listOf(
-            "is barely alive.",
-            "is trying to stay awake.",
-            "has gone fishing.",
-            "is somewhere over the rainbow.",
-            "has fallen and can't get up.",
-            "is running. You better go chase it.",
-            "has just spontaneously combusted.",
-            "is talking to itself... don't interrupt. That's rude.",
-            "is bartending at an AA meeting.",
-            "is hibernating.",
-            "is saving energy: apathetic mode activated.",
-            "is busy. Go away!"
+                "is barely alive.",
+                "is trying to stay awake.",
+                "has gone fishing.",
+                "is somewhere over the rainbow.",
+                "has fallen and can't get up.",
+                "is running. You better go chase it.",
+                "has just spontaneously combusted.",
+                "is talking to itself... don't interrupt. That's rude.",
+                "is bartending at an AA meeting.",
+                "is hibernating.",
+                "is saving energy: apathetic mode activated.",
+                "is busy. Go away!"
         )
 
         @JvmStatic

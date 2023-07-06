@@ -41,13 +41,9 @@ import net.thauvin.erik.mobibot.commands.Die
 import net.thauvin.erik.mobibot.commands.Ignore
 import net.thauvin.erik.mobibot.commands.links.Comment
 import net.thauvin.erik.mobibot.commands.links.View
-import net.thauvin.erik.mobibot.modules.Dice
-import net.thauvin.erik.mobibot.modules.Joke
-import net.thauvin.erik.mobibot.modules.Lookup
-import net.thauvin.erik.mobibot.modules.RockPaperScissors
-import net.thauvin.erik.mobibot.modules.War
+import net.thauvin.erik.mobibot.modules.*
 import org.testng.annotations.Test
-import java.util.Properties
+import java.util.*
 
 class AddonsTest {
     private val p = Properties().apply {
@@ -80,11 +76,11 @@ class AddonsTest {
         assertThat(addons.names.ops, "names.ops").containsExactly("cycle")
 
         assertThat(addons.names.commands, "names.command").containsExactly(
-            "joke",
-            "rock",
-            "paper",
-            "scissors",
-            "ignore"
+                "joke",
+                "rock",
+                "paper",
+                "scissors",
+                "ignore"
         )
     }
 }

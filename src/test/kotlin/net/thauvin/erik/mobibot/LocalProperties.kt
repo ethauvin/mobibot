@@ -36,7 +36,7 @@ import java.net.InetAddress
 import java.net.UnknownHostException
 import java.nio.file.Files
 import java.nio.file.Paths
-import java.util.Properties
+import java.util.*
 
 /**
  * Access to `local.properties`.

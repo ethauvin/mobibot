@@ -34,4 +34,4 @@ package net.thauvin.erik.mobibot.msg
  * The `ErrorMessage` class.
  */
 class ErrorMessage @JvmOverloads constructor(msg: String, color: String = DEFAULT_COLOR) :
-    Message(msg, color, isError = true)
+        Message(msg, color, isError = true)

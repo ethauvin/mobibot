@@ -46,9 +46,9 @@ object ExceptionSanitizer {
             with(this) {
                 if (!cause?.message.isNullOrBlank()) {
                     return ModuleException(
-                        debugMessage,
-                        cause?.javaClass?.name + ": " + cause?.message?.replaceEach(search, obfuscate),
-                        this
+                            debugMessage,
+                            cause?.javaClass?.name + ": " + cause?.message?.replaceEach(search, obfuscate),
+                            this
                     )
                 } else if (!message.isNullOrBlank()) {
                     return ModuleException(debugMessage, message?.replaceEach(search, obfuscate), this)

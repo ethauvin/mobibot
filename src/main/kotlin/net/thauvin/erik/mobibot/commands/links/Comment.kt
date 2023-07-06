@@ -45,13 +45,13 @@ import org.pircbotx.hooks.types.GenericMessageEvent
 class Comment : AbstractCommand() {
     override val name = COMMAND
     override val help = listOf(
-        "To add a comment:",
-        helpFormat("${Constants.LINK_CMD}1:This is a comment"),
-        "I will reply with a label, for example: ${Constants.LINK_CMD.bold()}1.1",
-        "To edit a comment, use its label: ",
-        helpFormat("${Constants.LINK_CMD}1.1:This is an edited comment"),
-        "To delete a comment, use its label and a minus sign: ",
-        helpFormat("${Constants.LINK_CMD}1.1:-")
+            "To add a comment:",
+            helpFormat("${Constants.LINK_CMD}1:This is a comment"),
+            "I will reply with a label, for example: ${Constants.LINK_CMD.bold()}1.1",
+            "To edit a comment, use its label: ",
+            helpFormat("${Constants.LINK_CMD}1.1:This is an edited comment"),
+            "To delete a comment, use its label and a minus sign: ",
+            helpFormat("${Constants.LINK_CMD}1.1:-")
     )
     override val isOpOnly = false
     override val isPublic = true
@@ -100,12 +100,12 @@ class Comment : AbstractCommand() {
     }
 
     private fun changeAuthor(
-        channel: String,
-        cmd: String,
-        entry: EntryLink,
-        entryIndex: Int,
-        commentIndex: Int,
-        event: GenericMessageEvent
+            channel: String,
+            cmd: String,
+            entry: EntryLink,
+            entryIndex: Int,
+            commentIndex: Int,
+            event: GenericMessageEvent
     ) {
         if (event.isChannelOp(channel) && cmd.length > 1) {
             val comment = entry.getComment(commentIndex)
@@ -118,11 +118,11 @@ class Comment : AbstractCommand() {
     }
 
     private fun deleteComment(
-        channel: String,
-        entry: EntryLink,
-        entryIndex: Int,
-        commentIndex: Int,
-        event: GenericMessageEvent
+            channel: String,
+            entry: EntryLink,
+            entryIndex: Int,
+            commentIndex: Int,
+            event: GenericMessageEvent
     ) {
         if (event.isChannelOp(channel) || event.user.nick == entry.getComment(commentIndex).nick) {
             entry.deleteComment(commentIndex)
@@ -134,11 +134,11 @@ class Comment : AbstractCommand() {
     }
 
     private fun setComment(
-        cmd: String,
-        entry: EntryLink,
-        entryIndex: Int,
-        commentIndex: Int,
-        event: GenericMessageEvent
+            cmd: String,
+            entry: EntryLink,
+            entryIndex: Int,
+            commentIndex: Int,
+            event: GenericMessageEvent
     ) {
         entry.setComment(commentIndex, cmd, event.user.nick)
         event.sendMessage(printComment(entryIndex, commentIndex, entry.getComment(commentIndex)))

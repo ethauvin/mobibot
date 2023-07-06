@@ -132,8 +132,8 @@ class StockQuote : AbstractModule() {
         fun getQuote(symbol: String, apiKey: String?): List<Message> {
             if (apiKey.isNullOrBlank()) {
                 throw ModuleException(
-                    "${StockQuote::class.java.name} is disabled.",
-                    "${STOCK_CMD.capitalise()} is disabled. The API key is missing."
+                        "${StockQuote::class.java.name} is disabled.",
+                        "${STOCK_CMD.capitalise()} is disabled. The API key is missing."
                 )
             }
             val messages = mutableListOf<Message>()
@@ -144,8 +144,8 @@ class StockQuote : AbstractModule() {
                     with(messages) {
                         // Search for symbol/keywords
                         response = URL(
-                            "${API_URL}SYMBOL_SEARCH&keywords=" + symbol.encodeUrl() + "&apikey="
-                                    + apiKey.encodeUrl()
+                                "${API_URL}SYMBOL_SEARCH&keywords=" + symbol.encodeUrl() + "&apikey="
+                                        + apiKey.encodeUrl()
                         ).reader().body
                         var json = getJsonResponse(response, debugMessage)
                         val symbols = json.getJSONArray("bestMatches")
@@ -156,9 +156,9 @@ class StockQuote : AbstractModule() {
 
                             // Get quote for symbol
                             response = URL(
-                                "${API_URL}GLOBAL_QUOTE&symbol="
-                                        + symbolInfo.getString("1. symbol").encodeUrl() + "&apikey="
-                                        + apiKey.encodeUrl()
+                                    "${API_URL}GLOBAL_QUOTE&symbol="
+                                            + symbolInfo.getString("1. symbol").encodeUrl() + "&apikey="
+                                            + apiKey.encodeUrl()
                             ).reader().body
                             json = getJsonResponse(response, debugMessage)
                             val quote = json.getJSONObject("Global Quote")
@@ -167,50 +167,50 @@ class StockQuote : AbstractModule() {
                             } else {
 
                                 add(
-                                    PublicMessage(
-                                        "Symbol: " + quote.getString("01. symbol").unescapeXml()
-                                                + " [" + symbolInfo.getString("2. name").unescapeXml() + ']'
-                                    )
+                                        PublicMessage(
+                                                "Symbol: " + quote.getString("01. symbol").unescapeXml()
+                                                        + " [" + symbolInfo.getString("2. name").unescapeXml() + ']'
+                                        )
                                 )
 
                                 val pad = 10
 
                                 add(
-                                    PublicMessage(
-                                        "Price:".padEnd(pad).prependIndent()
-                                                + quote.getString("05. price").unescapeXml()
-                                    )
+                                        PublicMessage(
+                                                "Price:".padEnd(pad).prependIndent()
+                                                        + quote.getString("05. price").unescapeXml()
+                                        )
                                 )
                                 add(
-                                    PublicMessage(
-                                        "Previous:".padEnd(pad).prependIndent()
-                                                + quote.getString("08. previous close").unescapeXml()
-                                    )
+                                        PublicMessage(
+                                                "Previous:".padEnd(pad).prependIndent()
+                                                        + quote.getString("08. previous close").unescapeXml()
+                                        )
                                 )
 
                                 val data = arrayOf(
-                                    "Open" to "02. open",
-                                    "High" to "03. high",
-                                    "Low" to "04. low",
-                                    "Volume" to "06. volume",
-                                    "Latest" to "07. latest trading day"
+                                        "Open" to "02. open",
+                                        "High" to "03. high",
+                                        "Low" to "04. low",
+                                        "Volume" to "06. volume",
+                                        "Latest" to "07. latest trading day"
                                 )
 
                                 data.forEach {
                                     add(
-                                        NoticeMessage(
-                                            "${it.first}:".padEnd(pad).prependIndent()
-                                                    + quote.getString(it.second).unescapeXml()
-                                        )
+                                            NoticeMessage(
+                                                    "${it.first}:".padEnd(pad).prependIndent()
+                                                            + quote.getString(it.second).unescapeXml()
+                                            )
                                     )
                                 }
 
                                 add(
-                                    NoticeMessage(
-                                        "Change:".padEnd(pad).prependIndent()
-                                                + quote.getString("09. change").unescapeXml()
-                                                + " [" + quote.getString("10. change percent").unescapeXml() + ']'
-                                    )
+                                        NoticeMessage(
+                                                "Change:".padEnd(pad).prependIndent()
+                                                        + quote.getString("09. change").unescapeXml()
+                                                        + " [" + quote.getString("10. change percent").unescapeXml() + ']'
+                                        )
                                 )
                             }
                         }

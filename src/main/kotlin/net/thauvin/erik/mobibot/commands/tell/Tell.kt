@@ -66,11 +66,11 @@ class Tell(private val serialObject: String) : AbstractCommand() {
     override val name = "tell"
 
     override val help = listOf(
-        "To send a message to someone when they join the channel:",
-        helpFormat("%c $name <nick> <message>"),
-        "To view queued and sent messages:",
-        helpFormat("%c $name ${View.VIEW_CMD}"),
-        "Messages are kept for ${maxDays.bold()}" + " day".plural(maxDays.toLong()) + '.'
+            "To send a message to someone when they join the channel:",
+            helpFormat("%c $name <nick> <message>"),
+            "To view queued and sent messages:",
+            helpFormat("%c $name ${View.VIEW_CMD}"),
+            "Messages are kept for ${maxDays.bold()}" + " day".plural(maxDays.toLong()) + '.'
     )
     override val isOpOnly: Boolean = false
     override val isPublic: Boolean = isEnabled()
@@ -118,9 +118,9 @@ class Tell(private val serialObject: String) : AbstractCommand() {
                 }
             } else {
                 if (messages.removeIf {
-                        it.id == id &&
-                                (it.sender.equals(event.user.nick, true) || event.isChannelOp(channel))
-                    }) {
+                            it.id == id &&
+                                    (it.sender.equals(event.user.nick, true) || event.isChannelOp(channel))
+                        }) {
                     save()
                     event.sendMessage("The message was deleted from the queue.")
                 } else {
@@ -180,7 +180,7 @@ class Tell(private val serialObject: String) : AbstractCommand() {
                     if (message.sender == nickname) {
                         if (event !is MessageEvent) {
                             event.user.send().message(
-                                "${"You".bold()} wanted me to remind you: ${message.message.reverseColor()}"
+                                    "${"You".bold()} wanted me to remind you: ${message.message.reverseColor()}"
                             )
                             message.isReceived = true
                             message.isNotified = true
@@ -188,17 +188,17 @@ class Tell(private val serialObject: String) : AbstractCommand() {
                         }
                     } else {
                         event.user.send().message(
-                            "${message.sender} wanted me to tell you: ${message.message.reverseColor()}"
+                                "${message.sender} wanted me to tell you: ${message.message.reverseColor()}"
                         )
                         message.isReceived = true
                         save()
                     }
                 } else if (message.sender.equals(nickname, ignoreCase = true) && message.isReceived
-                    && !message.isNotified
+                        && !message.isNotified
                 ) {
                     event.user.send().message(
-                        "Your message ${"[ID ${message.id}]".reverseColor()} was sent to "
-                                + "${message.recipient.bold()} on ${message.receptionDate}"
+                            "Your message ${"[ID ${message.id}]".reverseColor()} was sent to "
+                                    + "${message.recipient.bold()} on ${message.receptionDate}"
                     )
                     message.isNotified = true
                     save()
@@ -219,8 +219,8 @@ class Tell(private val serialObject: String) : AbstractCommand() {
         if (messages.isNotEmpty()) {
             for (message in messages) {
                 event.sendMessage(
-                    "${message.sender.bold()}$ARROW${message.recipient.bold()} [ID: ${message.id}, " +
-                            (if (message.isReceived) "DELIVERED]" else "QUEUED]")
+                        "${message.sender.bold()}$ARROW${message.recipient.bold()} [ID: ${message.id}, " +
+                                (if (message.isReceived) "DELIVERED]" else "QUEUED]")
                 )
             }
         } else {
@@ -238,13 +238,13 @@ class Tell(private val serialObject: String) : AbstractCommand() {
             }
             if (message.isReceived) {
                 event.sendMessage(
-                    message.sender.bold() + ARROW + message.recipient.bold() +
-                            " [${message.receptionDate.toUtcDateTime()}, ID: ${message.id.bold()}, DELIVERED]"
+                        message.sender.bold() + ARROW + message.recipient.bold() +
+                                " [${message.receptionDate.toUtcDateTime()}, ID: ${message.id.bold()}, DELIVERED]"
                 )
             } else {
                 event.sendMessage(
-                    message.sender.bold() + ARROW + message.recipient.bold() +
-                            " [${message.queued.toUtcDateTime()}, ID: ${message.id.bold()}, QUEUED]"
+                        message.sender.bold() + ARROW + message.recipient.bold() +
+                                " [${message.queued.toUtcDateTime()}, ID: ${message.id.bold()}, QUEUED]"
                 )
             }
             event.sendMessage(helpFormat(message.message))
@@ -254,9 +254,9 @@ class Tell(private val serialObject: String) : AbstractCommand() {
         } else {
             event.sendMessage("To delete one or all delivered messages:")
             event.sendMessage(
-                helpFormat(
-                    helpCmdSyntax("%c $name $TELL_DEL_KEYWORD <id|$TELL_ALL_KEYWORD>", event.bot().nick, true)
-                )
+                    helpFormat(
+                            helpCmdSyntax("%c $name $TELL_DEL_KEYWORD <id|$TELL_ALL_KEYWORD>", event.bot().nick, true)
+                    )
             )
             event.sendMessage(help.last())
         }

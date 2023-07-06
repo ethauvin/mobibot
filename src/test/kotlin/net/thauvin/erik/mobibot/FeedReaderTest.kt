@@ -68,6 +68,6 @@ class FeedReaderTest {
         assertFailure { readFeed("https://www.thauvin.net/foo") }.isInstanceOf(IOException::class.java)
 
         assertFailure { readFeed("https://www.examplesfoo.com/") }
-            .isInstanceOf(UnknownHostException::class.java)
+                .isInstanceOf(UnknownHostException::class.java)
     }
 }

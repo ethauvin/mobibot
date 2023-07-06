@@ -40,14 +40,14 @@ class InfoTest {
     @Test(groups = ["commands"])
     fun testToUptime() {
         assertThat(
-            547800300076L.toUptime(),
-            "upTime(full)"
+                547800300076L.toUptime(),
+                "upTime(full)"
         ).isEqualTo("17 years 4 months 2 weeks 1 day 6 hours 45 minutes")
         assertThat(24300000L.toUptime(), "upTime(hours minutes)").isEqualTo("6 hours 45 minutes")
         assertThat(110700000L.toUptime(), "upTime(days hours minutes)").isEqualTo("1 day 6 hours 45 minutes")
         assertThat(
-            1320300000L.toUptime(),
-            "upTime(weeks days hours minutes)"
+                1320300000L.toUptime(),
+                "upTime(weeks days hours minutes)"
         ).isEqualTo("2 weeks 1 day 6 hours 45 minutes")
         assertThat(2700000L.toUptime(), "upTime(45 minutes)").isEqualTo("45 minutes")
         assertThat(60000L.toUptime(), "upTime(1 minute)").isEqualTo("1 minute")

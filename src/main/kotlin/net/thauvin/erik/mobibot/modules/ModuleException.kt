@@ -34,9 +34,9 @@ package net.thauvin.erik.mobibot.modules
  * The `ModuleException` class.
  */
 class ModuleException @JvmOverloads constructor(
-    val debugMessage: String,
-    message: String? = null,
-    cause: Throwable? = null
+        val debugMessage: String,
+        message: String? = null,
+        cause: Throwable? = null
 ) : Exception(message, cause) {
     companion object {
         private const val serialVersionUID = 1L

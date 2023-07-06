@@ -33,13 +33,7 @@ package net.thauvin.erik.mobibot.commands.tell
 
 import assertk.all
 import assertk.assertThat
-import assertk.assertions.index
-import assertk.assertions.isEqualTo
-import assertk.assertions.isFalse
-import assertk.assertions.isGreaterThan
-import assertk.assertions.isTrue
-import assertk.assertions.prop
-import assertk.assertions.size
+import assertk.assertions.*
 import org.testng.annotations.AfterClass
 import org.testng.annotations.BeforeClass
 import org.testng.annotations.Test

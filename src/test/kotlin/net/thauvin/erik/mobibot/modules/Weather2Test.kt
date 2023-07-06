@@ -33,16 +33,7 @@ package net.thauvin.erik.mobibot.modules
 import assertk.all
 import assertk.assertFailure
 import assertk.assertThat
-import assertk.assertions.contains
-import assertk.assertions.endsWith
-import assertk.assertions.hasNoCause
-import assertk.assertions.index
-import assertk.assertions.isEqualTo
-import assertk.assertions.isFailure
-import assertk.assertions.isInstanceOf
-import assertk.assertions.isNotNull
-import assertk.assertions.isTrue
-import assertk.assertions.prop
+import assertk.assertions.*
 import net.aksingh.owmjapis.api.APIException
 import net.aksingh.owmjapis.core.OWM
 import net.thauvin.erik.mobibot.LocalProperties
@@ -69,7 +60,7 @@ class Weather2Test : LocalProperties() {
         assertThat(getCountry("foo"), "foo is not a valid country").isEqualTo(OWM.Country.UNITED_STATES)
         assertThat(getCountry("fr"), "country should France").isEqualTo(OWM.Country.FRANCE)
 
-        val country = OWM.Country.values()
+        val country = OWM.Country.entries.toTypedArray()
         repeat(3) {
             val rand = country[(country.indices).random()]
             assertThat(getCountry(rand.value), rand.name).isEqualTo(rand)

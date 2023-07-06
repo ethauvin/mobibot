@@ -60,15 +60,15 @@ class WolframAlpha : AbstractModule() {
             try {
                 val query = args.trim().split("units=", limit = 2, ignoreCase = true)
                 event.sendMessage(
-                    queryWolfram(
-                        query[0].trim(),
-                        units = if (query.size == 2) {
-                            getUnits(query[1].trim())
-                        } else {
-                            getUnits(properties[UNITS_PROP])
-                        },
-                        appId = properties[APPID_KEY_PROP]
-                    )
+                        queryWolfram(
+                                query[0].trim(),
+                                units = if (query.size == 2) {
+                                    getUnits(query[1].trim())
+                                } else {
+                                    getUnits(properties[UNITS_PROP])
+                                },
+                                appId = properties[APPID_KEY_PROP]
+                        )
                 )
             } catch (e: ModuleException) {
                 if (logger.isWarnEnabled) logger.warn(e.debugMessage, e)
@@ -111,15 +111,15 @@ class WolframAlpha : AbstractModule() {
                         return urlReader.body
                     } else {
                         throw ModuleException(
-                            "wolfram($query): ${urlReader.responseCode} : ${urlReader.body} ",
-                            urlReader.body.ifEmpty {
-                                "Looks like Wolfram Alpha isn't able to answer that. (${urlReader.responseCode})"
-                            }
+                                "wolfram($query): ${urlReader.responseCode} : ${urlReader.body} ",
+                                urlReader.body.ifEmpty {
+                                    "Looks like Wolfram Alpha isn't able to answer that. (${urlReader.responseCode})"
+                                }
                         )
                     }
                 } catch (ioe: IOException) {
                     throw ModuleException(
-                        "wolfram($query): IOE", "An IO Error occurred while querying Wolfram Alpha.", ioe
+                            "wolfram($query): IOE", "An IO Error occurred while querying Wolfram Alpha.", ioe
                     )
                 }
             } else {
