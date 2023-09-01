@@ -72,7 +72,7 @@ class CryptoPricesTest {
 
     @Test(groups = ["modules"])
     fun testGetCurrencyName() {
-        assertThat(getCurrencyName("USD"), "USD").isEqualTo("US Dollar")
+        assertThat(getCurrencyName("USD"), "USD").isEqualTo("United States Dollar")
         assertThat(getCurrencyName("EUR"), "EUR").isEqualTo("Euro")
     }
 }

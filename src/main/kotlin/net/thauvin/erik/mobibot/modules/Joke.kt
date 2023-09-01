@@ -32,7 +32,7 @@ package net.thauvin.erik.mobibot.modules
 
 import net.thauvin.erik.jokeapi.exceptions.HttpErrorException
 import net.thauvin.erik.jokeapi.exceptions.JokeException
-import net.thauvin.erik.jokeapi.getJoke
+import net.thauvin.erik.jokeapi.joke
 import net.thauvin.erik.jokeapi.models.Type
 import net.thauvin.erik.mobibot.Utils.bot
 import net.thauvin.erik.mobibot.Utils.colorize
@@ -83,7 +83,7 @@ class Joke : AbstractModule() {
         @Throws(ModuleException::class)
         fun randomJoke(): List<Message> {
             return try {
-                val joke = getJoke(safe = true, type = Type.SINGLE, splitNewLine = true)
+                val joke = joke(safe = true, type = Type.SINGLE, splitNewLine = true)
                 joke.joke.map { PublicMessage(it, Colors.CYAN) }
             } catch (e: JokeException) {
                 throw ModuleException("randomJoke(): ${e.additionalInfo}", e.message, e)
