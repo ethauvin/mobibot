@@ -44,6 +44,7 @@ import org.pircbotx.hooks.types.GenericMessageEvent
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.io.IOException
+import java.math.BigDecimal
 import java.net.URL
 import java.util.*
 
@@ -57,10 +58,10 @@ class CurrencyConverter : AbstractModule() {
     override val name = "CurrencyConverter"
 
     // Reload currency codes
-    private fun reload() {
-        if (SYMBOLS.isEmpty()) {
+    private fun reload(apiKey: String?) {
+        if (!apiKey.isNullOrEmpty() && SYMBOLS.isEmpty()) {
             try {
-                loadSymbols()
+                loadSymbols(apiKey)
             } catch (e: ModuleException) {
                 if (logger.isWarnEnabled) logger.warn(e.debugMessage, e)
             }
@@ -71,12 +72,12 @@ class CurrencyConverter : AbstractModule() {
      * Converts the specified currencies.
      */
     override fun commandResponse(channel: String, cmd: String, args: String, event: GenericMessageEvent) {
-        reload()
+        reload(properties[API_KEY_PROP])
 
         if (SYMBOLS.isEmpty()) {
             event.respond(EMPTY_SYMBOLS_TABLE)
         } else if (args.matches("\\d+([,\\d]+)?(\\.\\d+)? [a-zA-Z]{3}+ to [a-zA-Z]{3}+".toRegex())) {
-            val msg = convertCurrency(args)
+            val msg = convertCurrency(properties[API_KEY_PROP], args)
             event.respond(msg.msg)
             if (msg.isError) {
                 helpResponse(event)
@@ -90,7 +91,7 @@ class CurrencyConverter : AbstractModule() {
     }
 
     override fun helpResponse(event: GenericMessageEvent): Boolean {
-        reload()
+        reload(properties[API_KEY_PROP])
 
         if (SYMBOLS.isEmpty()) {
             event.sendMessage(EMPTY_SYMBOLS_TABLE)
@@ -99,21 +100,26 @@ class CurrencyConverter : AbstractModule() {
             event.sendMessage("To convert from one currency to another:")
             event.sendMessage(helpFormat(helpCmdSyntax("%c $CURRENCY_CMD 100 USD to EUR", nick, isPrivateMsgEnabled)))
             event.sendMessage(
-                    helpFormat(
-                            helpCmdSyntax("%c $CURRENCY_CMD 50,000 GBP to BTC", nick, isPrivateMsgEnabled)
-                    )
+                helpFormat(
+                    helpCmdSyntax("%c $CURRENCY_CMD 50,000 GBP to BTC", nick, isPrivateMsgEnabled)
+                )
             )
             event.sendMessage("To list the supported currency codes:")
             event.sendMessage(
-                    helpFormat(
-                            helpCmdSyntax("%c $CURRENCY_CMD $CODES_KEYWORD", nick, isPrivateMsgEnabled)
-                    )
+                helpFormat(
+                    helpCmdSyntax("%c $CURRENCY_CMD $CODES_KEYWORD", nick, isPrivateMsgEnabled)
+                )
             )
         }
         return true
     }
 
     companion object {
+        /**
+         * The API Key property.
+         */
+        const val API_KEY_PROP = "exchangerate-api-key"
+
         // Currency command
         private const val CURRENCY_CMD = "currency"
 
@@ -130,7 +136,11 @@ class CurrencyConverter : AbstractModule() {
          * Converts from a currency to another.
          */
         @JvmStatic
-        fun convertCurrency(query: String): Message {
+        fun convertCurrency(apiKey: String?, query: String): Message {
+            if (apiKey.isNullOrEmpty()) {
+                throw ModuleException("${CURRENCY_CMD}($query)", "No Exchange Rate API key specified.")
+            }
+
             val cmds = query.split(" ")
             return if (cmds.size == 4) {
                 if (cmds[3] == cmds[1] || "0" == cmds[0]) {
@@ -141,12 +151,14 @@ class CurrencyConverter : AbstractModule() {
                     if (SYMBOLS.contains(to) && SYMBOLS.contains(from)) {
                         try {
                             val amt = cmds[0].replace(",", "")
-                            val url = URL("https://api.exchangerate.host/convert?from=$to&to=$from&amount=$amt")
-                            val json = JSONObject(url.reader().body)
+                            val url = URL("https://v6.exchangerate-api.com/v6/$apiKey/pair/$to/$from/$amt")
+                            val body = url.reader().body
+                            val json = JSONObject(body)
 
-                            if (json.getBoolean("success")) {
+                            if (json.getString("result") == "success") {
+                                val result = json.getDouble("conversion_result")
                                 PublicMessage(
-                                        "${cmds[0]} ${SYMBOLS[to]} = ${json.get("result")} ${SYMBOLS[from]}"
+                                    "${cmds[0]} ${SYMBOLS[to]} = $result ${SYMBOLS[from]}"
                                 )
                             } else {
                                 ErrorMessage("Sorry, an error occurred while converting the currencies.")
@@ -158,7 +170,9 @@ class CurrencyConverter : AbstractModule() {
                         ErrorMessage("Sounds like monopoly money to me!")
                     }
                 }
-            } else ErrorMessage("Invalid query. Let's try again.")
+            } else {
+                ErrorMessage("Invalid query. Let's try again.")
+            }
         }
 
         /**
@@ -166,28 +180,32 @@ class CurrencyConverter : AbstractModule() {
          */
         @JvmStatic
         @Throws(ModuleException::class)
-        fun loadSymbols() {
-            try {
-                val url = URL("https://api.exchangerate.host/symbols")
-                val json = JSONObject(url.reader().body)
-                if (json.getBoolean("success")) {
-                    val symbols = json.getJSONObject("symbols")
-                    for (key in symbols.keys()) {
-                        SYMBOLS[key] = symbols.getJSONObject(key).getString("description")
+        fun loadSymbols(apiKey: String?) {
+            if (!apiKey.isNullOrEmpty()) {
+                try {
+                    val url = URL("https://v6.exchangerate-api.com/v6/$apiKey/codes")
+                    val json = JSONObject(url.reader().body)
+                    if (json.getString("result") == "success") {
+                        val codes = json.getJSONArray("supported_codes")
+                        for (i in 0 until codes.length()) {
+                            val code = codes.getJSONArray(i);
+                            SYMBOLS[code.getString(0)] = code.getString(1);
+                        }
                     }
-                }
-            } catch (e: IOException) {
-                throw ModuleException(
+                } catch (e: IOException) {
+                    throw ModuleException(
                         "loadCodes(): IOE",
                         "An IO error has occurred while retrieving the currencies.",
                         e
-                )
+                    )
+                }
             }
         }
     }
 
     init {
         commands.add(CURRENCY_CMD)
-        loadSymbols()
+        initProperties(API_KEY_PROP)
+        loadSymbols(properties[ChatGpt.API_KEY_PROP])
     }
 }

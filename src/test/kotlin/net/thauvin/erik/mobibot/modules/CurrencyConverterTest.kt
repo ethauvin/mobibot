@@ -36,6 +36,7 @@ import assertk.assertions.contains
 import assertk.assertions.isInstanceOf
 import assertk.assertions.matches
 import assertk.assertions.prop
+import net.thauvin.erik.mobibot.LocalProperties
 import net.thauvin.erik.mobibot.modules.CurrencyConverter.Companion.convertCurrency
 import net.thauvin.erik.mobibot.modules.CurrencyConverter.Companion.loadSymbols
 import net.thauvin.erik.mobibot.msg.ErrorMessage
@@ -48,32 +49,35 @@ import org.testng.annotations.Test
 /**
  * The `CurrencyConvertTest` class.
  */
-class CurrencyConverterTest {
+class CurrencyConverterTest: LocalProperties() {
+
     @BeforeClass
     @Throws(ModuleException::class)
     fun before() {
-        loadSymbols()
+        val apiKey = getProperty(CurrencyConverter.API_KEY_PROP)
+        loadSymbols(apiKey)
     }
 
     @Test(groups = ["modules"])
     fun testConvertCurrency() {
+        val apiKey = getProperty(CurrencyConverter.API_KEY_PROP)
         assertThat(
-                convertCurrency("100 USD to EUR").msg,
+                convertCurrency(apiKey,"100 USD to EUR").msg,
                 "convertCurrency(100 USD to EUR)"
         ).matches("100 United States Dollar = \\d{2,3}\\.\\d+ Euro".toRegex())
         assertThat(
-                convertCurrency("1 USD to BTC").msg,
-                "convertCurrency(1 USD to BTC)"
-        ).matches("1 United States Dollar = 0\\.\\d+ Bitcoin".toRegex())
+                convertCurrency(apiKey,"1 USD to GBP").msg,
+                "convertCurrency(1 USD to BGP)"
+        ).matches("1 United States Dollar = 0\\.\\d+ Pound Sterling".toRegex())
         assertThat(
-                convertCurrency("100,000.00 GBP to BTC").msg,
-                "convertCurrency(100,000.00 GBP to BTC)"
-        ).matches("100,000.00 British Pound Sterling = \\d{1,2}\\.\\d+ Bitcoin".toRegex())
-        assertThat(convertCurrency("100 USD to USD"), "convertCurrency(100 USD to USD)").all {
+                convertCurrency(apiKey,"100,000.00 CAD to USD").msg,
+                "convertCurrency(100,000.00 GBP to USD)"
+        ).matches("100,000.00 Canadian Dollar = \\d+\\.\\d+ United States Dollar".toRegex())
+        assertThat(convertCurrency(apiKey,"100 USD to USD"), "convertCurrency(100 USD to USD)").all {
             prop(Message::msg).contains("You're kidding, right?")
             isInstanceOf(PublicMessage::class.java)
         }
-        assertThat(convertCurrency("100 USD"), "convertCurrency(100 USD)").all {
+        assertThat(convertCurrency(apiKey,"100 USD"), "convertCurrency(100 USD)").all {
             prop(Message::msg).contains("Invalid query.")
             isInstanceOf(ErrorMessage::class.java)
         }
