@@ -47,6 +47,7 @@ jobs:
           MASTODON_ACCESS_TOKEN: ${{ secrets.MASTODON_ACCESS_TOKEN }}
           MASTODON_HANDLE: ${{ secrets.MASTODON_HANDLE }}
           MASTODON_INSTANCE: ${{ secrets.MASTODON_INSTANCE }}
+          EXCHANGERATE_API_KEY: ${{ secrets.EXCHANGERATE_API_KEY }}
         with:
           arguments: build check --stacktrace
 
