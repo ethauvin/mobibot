@@ -44,8 +44,8 @@ import org.pircbotx.hooks.types.GenericMessageEvent
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.io.IOException
-import java.math.BigDecimal
 import java.net.URL
+import java.text.DecimalFormat
 import java.util.*
 
 
@@ -101,7 +101,7 @@ class CurrencyConverter : AbstractModule() {
             event.sendMessage(helpFormat(helpCmdSyntax("%c $CURRENCY_CMD 100 USD to EUR", nick, isPrivateMsgEnabled)))
             event.sendMessage(
                 helpFormat(
-                    helpCmdSyntax("%c $CURRENCY_CMD 50,000 GBP to BTC", nick, isPrivateMsgEnabled)
+                    helpCmdSyntax("%c $CURRENCY_CMD 50,000 GBP to USD", nick, isPrivateMsgEnabled)
                 )
             )
             event.sendMessage("To list the supported currency codes:")
@@ -132,6 +132,9 @@ class CurrencyConverter : AbstractModule() {
         // Currency symbols
         private val SYMBOLS: TreeMap<String, String> = TreeMap()
 
+        // Decimal format
+        private val DECIMAL_FORMAT = DecimalFormat("0.00")
+
         /**
          * Converts from a currency to another.
          */
@@ -156,7 +159,7 @@ class CurrencyConverter : AbstractModule() {
                             val json = JSONObject(body)
 
                             if (json.getString("result") == "success") {
-                                val result = json.getDouble("conversion_result")
+                                val result = DECIMAL_FORMAT.format(json.getDouble("conversion_result"))
                                 PublicMessage(
                                     "${cmds[0]} ${SYMBOLS[to]} = $result ${SYMBOLS[from]}"
                                 )
@@ -188,8 +191,8 @@ class CurrencyConverter : AbstractModule() {
                     if (json.getString("result") == "success") {
                         val codes = json.getJSONArray("supported_codes")
                         for (i in 0 until codes.length()) {
-                            val code = codes.getJSONArray(i);
-                            SYMBOLS[code.getString(0)] = code.getString(1);
+                            val code = codes.getJSONArray(i)
+                            SYMBOLS[code.getString(0)] = code.getString(1)
                         }
                     }
                 } catch (e: IOException) {
