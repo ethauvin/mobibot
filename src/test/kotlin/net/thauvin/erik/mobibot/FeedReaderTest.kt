@@ -54,12 +54,13 @@ class FeedReaderTest {
             index(1).prop(Message::msg).contains("erik.thauvin.net")
         }
 
-        messages = readFeed("https://www.mobitopia.org/mobibot/logs/2021-10-27.xml")
+        messages = readFeed("https://lorem-rss.herokuapp.com/feed?length=0")
         assertThat(messages, "messages").index(0).prop(Message::msg).contains("nothing")
 
-        messages = readFeed("https://www.mobitopia.org/mobibot/logs/2005-10-11.xml", 42)
+        messages = readFeed("https://lorem-rss.herokuapp.com/feed?length=84", 42)
         assertThat(messages, "messages").size().isEqualTo(84)
-        assertThat(messages.last(), "messages.last").prop(Message::msg).contains("techdigest.tv")
+        assertThat(messages[messages.size - 2], "messages.size - 2").prop(Message::msg).startsWith("Lorem ipsum")
+        assertThat(messages.last(), "messages.last").prop(Message::msg).contains("http://example.com/test/")
 
         assertFailure { readFeed("blah") }.isInstanceOf(MalformedURLException::class.java)
 
