@@ -133,7 +133,7 @@ class CurrencyConverter : AbstractModule() {
         private val SYMBOLS: TreeMap<String, String> = TreeMap()
 
         // Decimal format
-        private val DECIMAL_FORMAT = DecimalFormat("0.00")
+        private val DECIMAL_FORMAT = DecimalFormat("0.00#")
 
         /**
          * Converts from a currency to another.
