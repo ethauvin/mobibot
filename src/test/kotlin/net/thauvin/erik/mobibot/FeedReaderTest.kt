@@ -59,8 +59,13 @@ class FeedReaderTest {
 
         messages = readFeed("https://lorem-rss.herokuapp.com/feed?length=84", 42)
         assertThat(messages, "messages").size().isEqualTo(84)
-        assertThat(messages[messages.size - 2], "messages.size - 2").prop(Message::msg).startsWith("Lorem ipsum")
-        assertThat(messages.last(), "messages.last").prop(Message::msg).contains("http://example.com/test/")
+        messages.forEachIndexed { i, m ->
+            if (i % 2 == 0) {
+                assertThat(m, "messages($i)").prop(Message::msg).startsWith("Lorem ipsum")
+            } else {
+                assertThat(m, "messages($i)").prop(Message::msg).contains("http://example.com/test/")
+            }
+        }
 
         assertFailure { readFeed("blah") }.isInstanceOf(MalformedURLException::class.java)
 
@@ -68,7 +73,6 @@ class FeedReaderTest {
 
         assertFailure { readFeed("https://www.thauvin.net/foo") }.isInstanceOf(IOException::class.java)
 
-        assertFailure { readFeed("https://www.examplesfoo.com/") }
-                .isInstanceOf(UnknownHostException::class.java)
+        assertFailure { readFeed("https://www.examplesfoo.com/") }.isInstanceOf(UnknownHostException::class.java)
     }
 }
