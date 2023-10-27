@@ -76,7 +76,7 @@ class CurrencyConverter : AbstractModule() {
 
         if (SYMBOLS.isEmpty()) {
             event.respond(EMPTY_SYMBOLS_TABLE)
-        } else if (args.matches("\\d+([,\\d]+)?(\\.\\d+)? [a-zA-Z]{3}+ to [a-zA-Z]{3}+".toRegex())) {
+        } else if (args.matches("\\d+([,\\d]+)?(\\.\\d+)? [a-zA-Z]{3}+ (to|in) [a-zA-Z]{3}+".toRegex())) {
             val msg = convertCurrency(properties[API_KEY_PROP], args)
             event.respond(msg.msg)
             if (msg.isError) {
