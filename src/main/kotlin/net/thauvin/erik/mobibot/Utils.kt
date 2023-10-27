@@ -42,7 +42,6 @@ import org.slf4j.Logger
 import java.io.*
 import java.net.HttpURLConnection
 import java.net.URL
-import java.net.URLEncoder
 import java.nio.file.Files
 import java.nio.file.Paths
 import java.time.LocalDateTime
@@ -125,14 +124,19 @@ object Utils {
      */
     @JvmStatic
     fun String?.colorize(color: String): String {
-        return if (isNullOrEmpty()) {
-            ""
-        } else if (color == DEFAULT_COLOR) {
-            this
-        } else if (Colors.BOLD == color || Colors.REVERSE == color) {
-            color + this + color
-        } else {
-            color + this + Colors.NORMAL
+        return when {
+            isNullOrEmpty() -> {
+                ""
+            }
+            color == DEFAULT_COLOR -> {
+                this
+            }
+            Colors.BOLD == color || Colors.REVERSE == color -> {
+                color + this + color
+            }
+            else -> {
+                color + this + Colors.NORMAL
+            }
         }
     }
 

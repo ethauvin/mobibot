@@ -74,19 +74,24 @@ class CurrencyConverter : AbstractModule() {
     override fun commandResponse(channel: String, cmd: String, args: String, event: GenericMessageEvent) {
         reload(properties[API_KEY_PROP])
 
-        if (SYMBOLS.isEmpty()) {
-            event.respond(EMPTY_SYMBOLS_TABLE)
-        } else if (args.matches("\\d+([,\\d]+)?(\\.\\d+)? [a-zA-Z]{3}+ (to|in) [a-zA-Z]{3}+".toRegex())) {
-            val msg = convertCurrency(properties[API_KEY_PROP], args)
-            event.respond(msg.msg)
-            if (msg.isError) {
+        when {
+            SYMBOLS.isEmpty() -> {
+                event.respond(EMPTY_SYMBOLS_TABLE)
+            }
+            args.matches("\\d+([,\\d]+)?(\\.\\d+)? [a-zA-Z]{3}+ (to|in) [a-zA-Z]{3}+".toRegex()) -> {
+                val msg = convertCurrency(properties[API_KEY_PROP], args)
+                event.respond(msg.msg)
+                if (msg.isError) {
+                    helpResponse(event)
+                }
+            }
+            args.contains(CODES_KEYWORD) -> {
+                event.sendMessage("The supported currency codes are:")
+                event.sendList(SYMBOLS.keys.toList(), 11, isIndent = true)
+            }
+            else -> {
                 helpResponse(event)
             }
-        } else if (args.contains(CODES_KEYWORD)) {
-            event.sendMessage("The supported currency codes are:")
-            event.sendList(SYMBOLS.keys.toList(), 11, isIndent = true)
-        } else {
-            helpResponse(event)
         }
     }
 

@@ -141,7 +141,7 @@ class FeedsManager private constructor() {
                                         .append("\"><b>")
                                         .append(channel)
                                         .append("</b></a>")
-                                if (comments.size > 0) {
+                                if (comments.isNotEmpty()) {
                                     buff.append(" <br/><br/>")
                                     for (j in comments.indices) {
                                         if (j > 0) {

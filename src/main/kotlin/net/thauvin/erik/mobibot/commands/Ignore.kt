@@ -129,7 +129,7 @@ class Ignore : AbstractCommand() {
             }
         }
 
-        if (ignored.size > 0) {
+        if (ignored.isNotEmpty()) {
             event.sendMessage("The following nicks are ignored:")
             event.sendList(ignored.sorted(), 8, isIndent = true)
         } else {

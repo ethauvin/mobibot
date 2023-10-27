@@ -85,18 +85,23 @@ class Tell(private val serialObject: String) : AbstractCommand() {
 
     override fun commandResponse(channel: String, args: String, event: GenericMessageEvent) {
         if (isEnabled()) {
-            if (args.isBlank()) {
-                helpResponse(channel, args, event)
-            } else if (args.startsWith(View.VIEW_CMD)) {
-                if (event.isChannelOp(channel) && "${View.VIEW_CMD} $TELL_ALL_KEYWORD" == args) {
-                    viewAll(event)
-                } else {
-                    viewMessages(event)
+            when {
+                args.isBlank() -> {
+                    helpResponse(channel, args, event)
                 }
-            } else if (args.startsWith("$TELL_DEL_KEYWORD ")) {
-                deleteMessage(channel, args, event)
-            } else {
-                newMessage(channel, args, event)
+                args.startsWith(View.VIEW_CMD) -> {
+                    if (event.isChannelOp(channel) && "${View.VIEW_CMD} $TELL_ALL_KEYWORD" == args) {
+                        viewAll(event)
+                    } else {
+                        viewMessages(event)
+                    }
+                }
+                args.startsWith("$TELL_DEL_KEYWORD ") -> {
+                    deleteMessage(channel, args, event)
+                }
+                else -> {
+                    newMessage(channel, args, event)
+                }
             }
             if (clean()) {
                 save()
