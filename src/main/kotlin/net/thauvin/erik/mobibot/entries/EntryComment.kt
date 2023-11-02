@@ -46,6 +46,7 @@ data class EntryComment(var comment: String, var nick: String) : Serializable {
 
     companion object {
         // Serial version UID
+        @Suppress("ConstPropertyName")
         private const val serialVersionUID: Long = 1L
     }
 }

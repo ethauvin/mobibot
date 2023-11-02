@@ -39,20 +39,20 @@ import java.time.format.DateTimeFormatter
  * Tell Message.
  */
 class TellMessage(
-        /**
-         * Returns the message's sender.
-         */
-        val sender: String,
+    /**
+     * Returns the message's sender.
+     */
+    val sender: String,
 
-        /**
-         * Returns the message's recipient.
-         */
-        val recipient: String,
+    /**
+     * Returns the message's recipient.
+     */
+    val recipient: String,
 
-        /**
-         * Returns the message text.
-         */
-        val message: String
+    /**
+     * Returns the message text.
+     */
+    val message: String
 ) : Serializable {
     /**
      * Returns the queued date/time.
@@ -98,6 +98,7 @@ class TellMessage(
     }
 
     companion object {
+        @Suppress("ConstPropertyName")
         private const val serialVersionUID = 2L
     }
 }

@@ -60,7 +60,7 @@ class StockQuoteTest : LocalProperties() {
             assertThat(messages, "getQuote($symbol)").index(0).prop(Message::msg).matches("Symbol: AAPL .*".toRegex())
             assertThat(messages, "getQuote($symbol)").index(1).prop(Message::msg).matches(buildMatch("Price").toRegex())
             assertThat(messages, "getQuote($symbol)").index(2).prop(Message::msg)
-                    .matches(buildMatch("Previous").toRegex())
+                .matches(buildMatch("Previous").toRegex())
             assertThat(messages, "getQuote($symbol)").index(3).prop(Message::msg).matches(buildMatch("Open").toRegex())
 
             symbol = "blahfoo"

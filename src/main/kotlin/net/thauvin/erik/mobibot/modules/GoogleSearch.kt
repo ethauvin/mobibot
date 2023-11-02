@@ -65,10 +65,10 @@ class GoogleSearch : AbstractModule() {
         if (args.isNotBlank()) {
             try {
                 val results = searchGoogle(
-                        args,
-                        properties[API_KEY_PROP],
-                        properties[CSE_KEY_PROP],
-                        event.user.nick
+                    args,
+                    properties[API_KEY_PROP],
+                    properties[CSE_KEY_PROP],
+                    event.user.nick
                 )
                 for (msg in results) {
                     if (msg.isError) {
@@ -104,23 +104,23 @@ class GoogleSearch : AbstractModule() {
         @JvmStatic
         @Throws(ModuleException::class)
         fun searchGoogle(
-                query: String,
-                apiKey: String?,
-                cseKey: String?,
-                quotaUser: String = ReleaseInfo.PROJECT
+            query: String,
+            apiKey: String?,
+            cseKey: String?,
+            quotaUser: String = ReleaseInfo.PROJECT
         ): List<Message> {
             if (apiKey.isNullOrBlank() || cseKey.isNullOrBlank()) {
                 throw ModuleException(
-                        "${GoogleSearch::class.java.name} is disabled.",
-                        "${GOOGLE_CMD.capitalise()} is disabled. The API keys are missing."
+                    "${GoogleSearch::class.java.name} is disabled.",
+                    "${GOOGLE_CMD.capitalise()} is disabled. The API keys are missing."
                 )
             }
             val results = mutableListOf<Message>()
             if (query.isNotBlank()) {
                 try {
                     val url = URL(
-                            "https://www.googleapis.com/customsearch/v1?key=$apiKey&cx=$cseKey" +
-                                    "&quotaUser=${quotaUser}&q=${query.encodeUrl()}&filter=1&num=5&alt=json"
+                        "https://www.googleapis.com/customsearch/v1?key=$apiKey&cx=$cseKey" +
+                                "&quotaUser=${quotaUser}&q=${query.encodeUrl()}&filter=1&num=5&alt=json"
                     )
                     val json = JSONObject(url.reader().body)
                     if (json.has("items")) {
@@ -141,9 +141,9 @@ class GoogleSearch : AbstractModule() {
                     throw ModuleException("searchGoogle($query): IOE", "An IO error has occurred searching Google.", e)
                 } catch (e: JSONException) {
                     throw ModuleException(
-                            "searchGoogle($query): JSON",
-                            "A JSON error has occurred searching Google.",
-                            e
+                        "searchGoogle($query): JSON",
+                        "A JSON error has occurred searching Google.",
+                        e
                     )
                 }
             } else {

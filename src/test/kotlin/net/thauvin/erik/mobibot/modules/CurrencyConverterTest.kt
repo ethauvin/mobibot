@@ -49,7 +49,7 @@ import org.testng.annotations.Test
 /**
  * The `CurrencyConvertTest` class.
  */
-class CurrencyConverterTest: LocalProperties() {
+class CurrencyConverterTest : LocalProperties() {
 
     @BeforeClass
     @Throws(ModuleException::class)
@@ -62,22 +62,22 @@ class CurrencyConverterTest: LocalProperties() {
     fun testConvertCurrency() {
         val apiKey = getProperty(CurrencyConverter.API_KEY_PROP)
         assertThat(
-                convertCurrency(apiKey,"100 USD to EUR").msg,
-                "convertCurrency(100 USD to EUR)"
+            convertCurrency(apiKey, "100 USD to EUR").msg,
+            "convertCurrency(100 USD to EUR)"
         ).matches("100 United States Dollar = \\d{2,3}\\.\\d{2,3} Euro".toRegex())
         assertThat(
-                convertCurrency(apiKey,"1 USD to GBP").msg,
-                "convertCurrency(1 USD to BGP)"
+            convertCurrency(apiKey, "1 USD to GBP").msg,
+            "convertCurrency(1 USD to BGP)"
         ).matches("1 United States Dollar = 0\\.\\d{2,3} Pound Sterling".toRegex())
         assertThat(
-                convertCurrency(apiKey,"100,000.00 CAD to USD").msg,
-                "convertCurrency(100,000.00 GBP to USD)"
+            convertCurrency(apiKey, "100,000.00 CAD to USD").msg,
+            "convertCurrency(100,000.00 GBP to USD)"
         ).matches("100,000.00 Canadian Dollar = \\d+\\.\\d{2,3} United States Dollar".toRegex())
-        assertThat(convertCurrency(apiKey,"100 USD to USD"), "convertCurrency(100 USD to USD)").all {
+        assertThat(convertCurrency(apiKey, "100 USD to USD"), "convertCurrency(100 USD to USD)").all {
             prop(Message::msg).contains("You're kidding, right?")
             isInstanceOf(PublicMessage::class.java)
         }
-        assertThat(convertCurrency(apiKey,"100 USD"), "convertCurrency(100 USD)").all {
+        assertThat(convertCurrency(apiKey, "100 USD"), "convertCurrency(100 USD)").all {
             prop(Message::msg).contains("Invalid query.")
             isInstanceOf(ErrorMessage::class.java)
         }

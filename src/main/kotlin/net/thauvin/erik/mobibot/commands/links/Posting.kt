@@ -47,16 +47,16 @@ import org.pircbotx.hooks.types.GenericMessageEvent
 class Posting : AbstractCommand() {
     override val name = "posting"
     override val help = listOf(
-            "Post a URL, by saying it on a line on its own:",
-            helpFormat("<url> [<title>] ${Tags.COMMAND}: <+tag> [...]]"),
-            "I will reply with a label, for example: ${Constants.LINK_CMD.bold()}1",
-            "To add a title, use its label and a pipe:",
-            helpFormat("${Constants.LINK_CMD}1:|This is the title"),
-            "To add a comment:",
-            helpFormat("${Constants.LINK_CMD}1:This is a comment"),
-            "I will reply with a label, for example: ${Constants.LINK_CMD.bold()}1.1",
-            "To edit a comment, see: ",
-            helpFormat("%c ${Constants.HELP_CMD} ${Comment.COMMAND}")
+        "Post a URL, by saying it on a line on its own:",
+        helpFormat("<url> [<title>] ${Tags.COMMAND}: <+tag> [...]]"),
+        "I will reply with a label, for example: ${Constants.LINK_CMD.bold()}1",
+        "To add a title, use its label and a pipe:",
+        helpFormat("${Constants.LINK_CMD}1:|This is the title"),
+        "To add a comment:",
+        helpFormat("${Constants.LINK_CMD}1:This is a comment"),
+        "I will reply with a label, for example: ${Constants.LINK_CMD.bold()}1.1",
+        "To edit a comment, see: ",
+        helpFormat("%c ${Constants.HELP_CMD} ${Comment.COMMAND}")
     )
     override val isOpOnly = false
     override val isPublic = true

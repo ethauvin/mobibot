@@ -120,8 +120,8 @@ class Weather2 : AbstractModule() {
         fun getWeather(query: String, apiKey: String?): List<Message> {
             if (apiKey.isNullOrBlank()) {
                 throw ModuleException(
-                        "${Weather2::class.java.name} is disabled.",
-                        "${WEATHER_CMD.capitalise()} is disabled. The API key is missing."
+                    "${Weather2::class.java.name} is disabled.",
+                    "${WEATHER_CMD.capitalise()} is disabled. The API key is missing."
                 )
             }
             val owm = OWM(apiKey)
@@ -145,10 +145,10 @@ class Weather2 : AbstractModule() {
                         }
                         if (cwd.hasCityName()) {
                             messages.add(
-                                    PublicMessage(
-                                            "City: ${cwd.cityName}, " +
-                                                    country.name.replace('_', ' ').capitalizeWords() + " [${country.value}]"
-                                    )
+                                PublicMessage(
+                                    "City: ${cwd.cityName}, " +
+                                            country.name.replace('_', ' ').capitalizeWords() + " [${country.value}]"
+                                )
                             )
                             cwd.mainData?.let {
                                 with(it) {
@@ -181,8 +181,8 @@ class Weather2 : AbstractModule() {
                                     for (w in it) {
                                         w?.let {
                                             condition.append(' ')
-                                                    .append(w.getDescription().capitalise())
-                                                    .append('.')
+                                                .append(w.getDescription().capitalise())
+                                                .append('.')
                                         }
                                     }
                                     messages.add(NoticeMessage(condition.toString()))
@@ -192,15 +192,15 @@ class Weather2 : AbstractModule() {
                                 cwd.cityId?.let {
                                     if (it > 0) {
                                         messages.add(
-                                                NoticeMessage("https://openweathermap.org/city/$it", Colors.GREEN)
+                                            NoticeMessage("https://openweathermap.org/city/$it", Colors.GREEN)
                                         )
                                     } else {
                                         messages.add(
-                                                NoticeMessage(
-                                                        "https://openweathermap.org/find?q="
-                                                                + "$city,${code.uppercase()}".encodeUrl(),
-                                                        Colors.GREEN
-                                                )
+                                            NoticeMessage(
+                                                "https://openweathermap.org/find?q="
+                                                        + "$city,${code.uppercase()}".encodeUrl(),
+                                                Colors.GREEN
+                                            )
                                         )
                                     }
                                 }
@@ -209,9 +209,9 @@ class Weather2 : AbstractModule() {
                     } catch (e: APIException) {
                         if (e.code == 404) {
                             throw ModuleException(
-                                    "getWeather($query): API ${e.code}",
-                                    "The requested city was not found.",
-                                    e
+                                "getWeather($query): API ${e.code}",
+                                "The requested city was not found.",
+                                e
                             )
                         } else {
                             throw ModuleException("getWeather($query): API ${e.code}", e.message, e)

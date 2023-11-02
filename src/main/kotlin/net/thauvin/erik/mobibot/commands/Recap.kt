@@ -41,8 +41,8 @@ import java.time.LocalDateTime
 class Recap : AbstractCommand() {
     override val name = "recap"
     override val help = listOf(
-            "To list the last 10 public channel messages:",
-            helpFormat("%c $name")
+        "To list the last 10 public channel messages:",
+        helpFormat("%c $name")
     )
     override val isOpOnly = false
     override val isPublic = true
@@ -60,8 +60,8 @@ class Recap : AbstractCommand() {
         @JvmStatic
         fun storeRecap(sender: String, message: String, isAction: Boolean) {
             recaps.add(
-                    LocalDateTime.now(Clock.systemUTC()).toUtcDateTime()
-                            + " - $sender" + (if (isAction) " " else ": ") + message
+                LocalDateTime.now(Clock.systemUTC()).toUtcDateTime()
+                        + " - $sender" + (if (isAction) " " else ": ") + message
             )
             if (recaps.size > MAX_RECAPS) {
                 recaps.removeFirst()

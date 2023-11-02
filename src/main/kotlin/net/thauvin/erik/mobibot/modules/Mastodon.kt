@@ -65,7 +65,7 @@ class Mastodon : SocialModule() {
 
     private fun formatTags(entry: EntryLink): String {
         return entry.tags.filter { !it.name.equals(entry.channel.removePrefix("#"), true) }
-                .joinToString(separator = " ", prefix = "\n\n") { "#${it.name}" }
+            .joinToString(separator = " ", prefix = "\n\n") { "#${it.name}" }
     }
 
     /**
@@ -74,11 +74,11 @@ class Mastodon : SocialModule() {
     @Throws(ModuleException::class)
     override fun post(message: String, isDm: Boolean): String {
         return toot(
-                apiKey = properties[ACCESS_TOKEN_PROP],
-                instance = properties[INSTANCE_PROP],
-                handle = handle,
-                message = message,
-                isDm = isDm
+            apiKey = properties[ACCESS_TOKEN_PROP],
+            instance = properties[INSTANCE_PROP],
+            handle = handle,
+            message = message,
+            isDm = isDm
         )
     }
 
@@ -99,21 +99,21 @@ class Mastodon : SocialModule() {
         @Throws(ModuleException::class)
         fun toot(apiKey: String?, instance: String?, handle: String?, message: String, isDm: Boolean): String {
             val request = HttpRequest.newBuilder()
-                    .uri(URI.create("https://$instance/api/v1/statuses"))
-                    .header("Content-Type", "application/json")
-                    .header("Authorization", "Bearer $apiKey")
-                    .POST(
-                            HttpRequest.BodyPublishers.ofString(
-                                    JSONWriter.valueToString(
-                                            if (isDm) {
-                                                mapOf("status" to "${handle?.prefixIfMissing('@')} $message", "visibility" to "direct")
-                                            } else {
-                                                mapOf("status" to message)
-                                            }
-                                    )
-                            )
+                .uri(URI.create("https://$instance/api/v1/statuses"))
+                .header("Content-Type", "application/json")
+                .header("Authorization", "Bearer $apiKey")
+                .POST(
+                    HttpRequest.BodyPublishers.ofString(
+                        JSONWriter.valueToString(
+                            if (isDm) {
+                                mapOf("status" to "${handle?.prefixIfMissing('@')} $message", "visibility" to "direct")
+                            } else {
+                                mapOf("status" to message)
+                            }
+                        )
                     )
-                    .build()
+                )
+                .build()
             try {
                 val response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString())
                 if (response.statusCode() == 200) {

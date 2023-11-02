@@ -58,7 +58,7 @@ class Seen(private val serialObject: String) : AbstractCommand() {
     override val name = "seen"
     override val help = listOf("To view when a nickname was last seen:", helpFormat("%c $name <nick>"))
     private val helpOp = help.plus(
-            arrayOf("To view all ${"seen".bold()} nicks:", helpFormat("%c $name $allKeyword"))
+        arrayOf("To view all ${"seen".bold()} nicks:", helpFormat("%c $name $allKeyword"))
     )
     override val isOpOnly = false
     override val isPublic = true
@@ -130,12 +130,12 @@ class Seen(private val serialObject: String) : AbstractCommand() {
         if (isEnabled()) {
             @Suppress("UNCHECKED_CAST")
             seenNicks.putAll(
-                    loadSerialData(
-                            serialObject,
-                            TreeMap<String, SeenNick>(),
-                            logger,
-                            "seen nicknames"
-                    ) as TreeMap<String, SeenNick>
+                loadSerialData(
+                    serialObject,
+                    TreeMap<String, SeenNick>(),
+                    logger,
+                    "seen nicknames"
+                ) as TreeMap<String, SeenNick>
             )
         }
     }

@@ -45,14 +45,14 @@ class ViewTest {
 
         for (i in 1..10) {
             LinksManager.entries.links.add(
-                    EntryLink(
-                            "https://www.example.com/$i",
-                            "Example $i",
-                            "nick$i",
-                            "login$i",
-                            "#channel",
-                            emptyList()
-                    )
+                EntryLink(
+                    "https://www.example.com/$i",
+                    "Example $i",
+                    "nick$i",
+                    "login$i",
+                    "#channel",
+                    emptyList()
+                )
             )
         }
 

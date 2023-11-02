@@ -48,8 +48,8 @@ import java.util.*
  */
 class EntryLinkTest {
     private val entryLink = EntryLink(
-            "https://www.mobitopia.org/", "Mobitopia", "Skynx", "JimH", "#mobitopia",
-            listOf("tag1", "tag2", "tag3", "TAG4", "Tag5")
+        "https://www.mobitopia.org/", "Mobitopia", "Skynx", "JimH", "#mobitopia",
+        listOf("tag1", "tag2", "tag3", "TAG4", "Tag5")
     )
 
     @Test(groups = ["entries"])
@@ -117,12 +117,12 @@ class EntryLinkTest {
         entryLink.setTags("+mobitopia")
         entryLink.setTags("-mobitopia")
         assertThat(
-                entryLink.formatTags(","),
-                "formatTags(',')"
+            entryLink.formatTags(","),
+            "formatTags(',')"
         ).isEqualTo("tag1,tag2,tag3,tag4,mobitopia")
         entryLink.setTags("-tag4 tag5")
         assertThat(
-                entryLink.formatTags(" ", ","), "formatTag(' ',',')"
+            entryLink.formatTags(" ", ","), "formatTag(' ',',')"
         ).isEqualTo(",tag1 tag2 tag3 mobitopia tag5")
         val size = entryLink.tags.size
         entryLink.setTags("")

@@ -76,11 +76,11 @@ class AddonsTest {
         assertThat(addons.names.ops, "names.ops").containsExactly("cycle")
 
         assertThat(addons.names.commands, "names.command").containsExactly(
-                "joke",
-                "rock",
-                "paper",
-                "scissors",
-                "ignore"
+            "joke",
+            "rock",
+            "paper",
+            "scissors",
+            "ignore"
         )
     }
 }

@@ -73,7 +73,7 @@ import java.util.*
  */
 class UtilsTest {
     private val ascii =
-            " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~"
+        " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~"
     private val cal = Calendar.getInstance()
     private val localDateTime = LocalDateTime.of(1952, 2, 17, 12, 30, 0)
     private val test = "This is a test."
@@ -89,7 +89,7 @@ class UtilsTest {
         val sep = '/'
         val url = "https://erik.thauvin.net"
         assertThat(dir.appendIfMissing(File.separatorChar), "appendIfMissing(dir)")
-                .isEqualTo(dir + File.separatorChar)
+            .isEqualTo(dir + File.separatorChar)
         assertThat(url.appendIfMissing(sep), "appendIfMissing(url)").isEqualTo("$url$sep")
         assertThat("$url$sep".appendIfMissing(sep), "appendIfMissing($url$sep)").isEqualTo("$url$sep")
     }
@@ -115,24 +115,24 @@ class UtilsTest {
     fun textCapitaliseWords() {
         assertThat(test.capitalizeWords(), "captiatlizeWords(test)").isEqualTo("This Is A Test.")
         assertThat("Already Capitalized".capitalizeWords(), "already capitalized")
-                .isEqualTo("Already Capitalized")
+            .isEqualTo("Already Capitalized")
         assertThat("    a  test  ".capitalizeWords(), "with spaces").isEqualTo("    A  Test  ")
     }
 
     @Test
     fun testColorize() {
         assertThat(ascii.colorize(Colors.REVERSE), "reverse.colorize()").isEqualTo(
-                Colors.REVERSE + ascii + Colors.REVERSE
+            Colors.REVERSE + ascii + Colors.REVERSE
         )
         assertThat(ascii.colorize(Colors.RED), "red.colorize()")
-                .isEqualTo(Colors.RED + ascii + Colors.NORMAL)
+            .isEqualTo(Colors.RED + ascii + Colors.NORMAL)
         assertThat(ascii.colorize(Colors.BOLD), "colorized(bold)")
-                .isEqualTo(Colors.BOLD + ascii + Colors.BOLD)
+            .isEqualTo(Colors.BOLD + ascii + Colors.BOLD)
         assertThat(null.colorize(Colors.RED), "null.colorize()").isEqualTo("")
         assertThat("".colorize(Colors.RED), "colorize()").isEqualTo("")
         assertThat(ascii.colorize(DEFAULT_COLOR), "ascii.colorize()").isEqualTo(ascii)
         assertThat("   ".colorize(Colors.NORMAL), "blank.colorize()")
-                .isEqualTo(Colors.NORMAL + "   " + Colors.NORMAL)
+            .isEqualTo(Colors.NORMAL + "   " + Colors.NORMAL)
     }
 
     @Test
@@ -164,19 +164,19 @@ class UtilsTest {
     fun testHelpCmdSyntax() {
         val bot = "mobibot"
         assertThat(helpCmdSyntax("%c $test %n $test", bot, false), "helpCmdSyntax(private)")
-                .isEqualTo("$bot: $test $bot $test")
+            .isEqualTo("$bot: $test $bot $test")
         assertThat(helpCmdSyntax("%c %n $test %c $test %n", bot, true), "helpCmdSyntax(public)")
-                .isEqualTo("/msg $bot $bot $test /msg $bot $test $bot")
+            .isEqualTo("/msg $bot $bot $test /msg $bot $test $bot")
     }
 
     @Test
     fun testHelpFormat() {
         assertThat(helpFormat(test, isBold = true, isIndent = false), "helpFormat(bold)")
-                .isEqualTo("${Colors.BOLD}$test${Colors.BOLD}")
+            .isEqualTo("${Colors.BOLD}$test${Colors.BOLD}")
         assertThat(helpFormat(test, isBold = false, isIndent = true), "helpFormat(indent)")
-                .isEqualTo(test.prependIndent())
+            .isEqualTo(test.prependIndent())
         assertThat(helpFormat(test, isBold = true, isIndent = true), "helpFormat(bold,indent)")
-                .isEqualTo(test.colorize(Colors.BOLD).prependIndent())
+            .isEqualTo(test.colorize(Colors.BOLD).prependIndent())
 
     }
 
@@ -218,15 +218,15 @@ class UtilsTest {
         val search = arrayOf("one", "two", "three")
         val replace = arrayOf("1", "2", "3")
         assertThat(search.joinToString(",").replaceEach(search, replace), "replaceEach(1,2,3")
-                .isEqualTo(replace.joinToString(","))
+            .isEqualTo(replace.joinToString(","))
 
         assertThat(test.replaceEach(search, replace), "replaceEach(nothing)").isEqualTo(test)
 
         assertThat(test.replaceEach(arrayOf("t", "e"), arrayOf("", "E")), "replaceEach($test)")
-                .isEqualTo(test.replace("t", "").replace("e", "E"))
+            .isEqualTo(test.replace("t", "").replace("e", "E"))
 
         assertThat(test.replaceEach(search, emptyArray()), "replaceEach(search, empty)")
-                .isEqualTo(test)
+            .isEqualTo(test)
     }
 
     @Test
@@ -258,7 +258,7 @@ class UtilsTest {
     @Test
     fun testUnescapeXml() {
         assertThat("&lt;a name=&quot;test &amp; &apos;&#39;&quot;&gt;".unescapeXml()).isEqualTo(
-                "<a name=\"test & ''\">"
+            "<a name=\"test & ''\">"
         )
     }
 

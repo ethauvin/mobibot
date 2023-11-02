@@ -47,8 +47,8 @@ class LinksManagerTest {
     fun fetchTitle() {
         assertThat(linksManager.fetchTitle("https://erik.thauvin.net/"), "fetchTitle(Erik)").contains("Erik's Weblog")
         assertThat(
-                linksManager.fetchTitle("https://www.google.com/foo"),
-                "fetchTitle(Foo)"
+            linksManager.fetchTitle("https://www.google.com/foo"),
+            "fetchTitle(Foo)"
         ).isEqualTo(Constants.NO_TITLE)
     }
 

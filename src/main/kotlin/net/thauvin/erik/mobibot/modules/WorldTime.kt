@@ -322,7 +322,7 @@ class WorldTime : AbstractModule() {
             put("ZULU", "Zulu")
             put("ZW", "Africa/Harare")
             ZoneId.getAvailableZoneIds().filter { it.length <= 3 && !containsKey(it) }
-                    .forEach { tz -> put(tz, tz) }
+                .forEach { tz -> put(tz, tz) }
         }
 
         // The Time command
@@ -336,7 +336,7 @@ class WorldTime : AbstractModule() {
 
         // Date/Time Format
         private var dtf =
-                DateTimeFormatter.ofPattern("'The time is ${"'HH:mm'".bold()} on ${"'EEEE, d MMMM yyyy'".bold()} in '")
+            DateTimeFormatter.ofPattern("'The time is ${"'HH:mm'".bold()} on ${"'EEEE, d MMMM yyyy'".bold()} in '")
 
         /**
          * Returns the current Internet (beat) Time.

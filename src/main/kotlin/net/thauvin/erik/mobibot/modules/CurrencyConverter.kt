@@ -78,6 +78,7 @@ class CurrencyConverter : AbstractModule() {
             SYMBOLS.isEmpty() -> {
                 event.respond(EMPTY_SYMBOLS_TABLE)
             }
+
             args.matches("\\d+([,\\d]+)?(\\.\\d+)? [a-zA-Z]{3}+ (to|in) [a-zA-Z]{3}+".toRegex()) -> {
                 val msg = convertCurrency(properties[API_KEY_PROP], args)
                 event.respond(msg.msg)
@@ -85,10 +86,12 @@ class CurrencyConverter : AbstractModule() {
                     helpResponse(event)
                 }
             }
+
             args.contains(CODES_KEYWORD) -> {
                 event.sendMessage("The supported currency codes are:")
                 event.sendList(SYMBOLS.keys.toList(), 11, isIndent = true)
             }
+
             else -> {
                 helpResponse(event)
             }

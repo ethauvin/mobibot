@@ -50,15 +50,15 @@ class Ignore : AbstractCommand() {
 
     override val name = IGNORE_CMD
     override val help = listOf(
-            "To ignore a link posted to the channel:",
-            helpFormat("https://www.foo.bar %n"),
-            "To check your ignore status:",
-            helpFormat("%c $name"),
-            "To toggle your ignore status:",
-            helpFormat("%c $name $me")
+        "To ignore a link posted to the channel:",
+        helpFormat("https://www.foo.bar %n"),
+        "To check your ignore status:",
+        helpFormat("%c $name"),
+        "To toggle your ignore status:",
+        helpFormat("%c $name $me")
     )
     private val helpOp = help.plus(
-            arrayOf("To add/remove nicks from the ignored list:", helpFormat("%c $name <nick> [<nick> ...]"))
+        arrayOf("To add/remove nicks from the ignored list:", helpFormat("%c $name <nick> [<nick> ...]"))
     )
 
     override val isOpOnly = false

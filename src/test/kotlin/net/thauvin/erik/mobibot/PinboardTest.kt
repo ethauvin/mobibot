@@ -68,7 +68,7 @@ class PinboardTest : LocalProperties() {
 
     private fun validatePin(apiToken: String, url: String, vararg matches: String): Boolean {
         val response =
-                URL("https://api.pinboard.in/v1/posts/get?auth_token=${apiToken}&tag=test&" + url.encodeUrl()).reader().body
+            URL("https://api.pinboard.in/v1/posts/get?auth_token=${apiToken}&tag=test&" + url.encodeUrl()).reader().body
 
         matches.forEach {
             if (!response.contains(it)) {

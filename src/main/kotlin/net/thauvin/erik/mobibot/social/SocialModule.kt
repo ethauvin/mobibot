@@ -76,8 +76,8 @@ abstract class SocialModule : AbstractModule() {
                 post(message = formatEntry(LinksManager.entries.links[index]), isDm = false)
             } catch (e: ModuleException) {
                 if (logger.isWarnEnabled) logger.warn(
-                        "Failed to post entry ${index.toLinkLabel()} on $name.",
-                        e
+                    "Failed to post entry ${index.toLinkLabel()} on $name.",
+                    e
                 )
             }
         }

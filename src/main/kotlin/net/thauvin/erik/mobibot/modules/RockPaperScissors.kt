@@ -52,10 +52,10 @@ class RockPaperScissors : AbstractModule() {
         with(help) {
             add("To play Rock Paper Scissors:")
             add(
-                    helpFormat(
-                            "%c ${Hands.ROCK.name.lowercase()} | ${Hands.PAPER.name.lowercase()}"
-                                    + " | ${Hands.SCISSORS.name.lowercase()}"
-                    )
+                helpFormat(
+                    "%c ${Hands.ROCK.name.lowercase()} | ${Hands.PAPER.name.lowercase()}"
+                            + " | ${Hands.SCISSORS.name.lowercase()}"
+                )
             )
         }
     }

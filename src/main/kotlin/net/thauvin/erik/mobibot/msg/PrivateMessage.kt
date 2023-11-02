@@ -34,4 +34,4 @@ package net.thauvin.erik.mobibot.msg
  * The `PrivateMessage` class.
  */
 class PrivateMessage @JvmOverloads constructor(msg: String, color: String = DEFAULT_COLOR) :
-        Message(msg, color, isPrivate = true)
+    Message(msg, color, isPrivate = true)

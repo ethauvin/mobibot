@@ -56,8 +56,8 @@ class ChatGpt : AbstractModule() {
         if (args.isNotBlank()) {
             try {
                 val answer = chat(
-                        args.trim(), properties[API_KEY_PROP],
-                        properties.getOrDefault(MAX_TOKENS_PROP, "1024").toInt()
+                    args.trim(), properties[API_KEY_PROP],
+                    properties.getOrDefault(MAX_TOKENS_PROP, "1024").toInt()
                 )
                 if (answer.isNotBlank()) {
                     event.sendMessage(WordUtils.wrap(answer, 400))
@@ -107,13 +107,13 @@ class ChatGpt : AbstractModule() {
             if (!apiKey.isNullOrEmpty()) {
                 val prompt = JSONWriter.valueToString("Q:$query\nA:")
                 val request = HttpRequest.newBuilder()
-                        .uri(URI.create(API_URL))
-                        .header("Content-Type", "application/json")
-                        .header("Authorization", "Bearer $apiKey")
-                        .header("User-Agent", Constants.USER_AGENT)
-                        .POST(
-                                HttpRequest.BodyPublishers.ofString(
-                                        """{
+                    .uri(URI.create(API_URL))
+                    .header("Content-Type", "application/json")
+                    .header("Authorization", "Bearer $apiKey")
+                    .header("User-Agent", Constants.USER_AGENT)
+                    .POST(
+                        HttpRequest.BodyPublishers.ofString(
+                            """{
                                 "model": "text-davinci-003",
                                 "prompt": $prompt,
                                 "temperature": 0,
@@ -122,9 +122,9 @@ class ChatGpt : AbstractModule() {
                                 "frequency_penalty": 0,
                                 "presence_penalty": 0
                             }""".trimIndent()
-                                )
                         )
-                        .build()
+                    )
+                    .build()
                 try {
                     val response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString())
                     if (response.statusCode() == 200) {
@@ -134,16 +134,16 @@ class ChatGpt : AbstractModule() {
                             return choices.getJSONObject(0).getString("text").trim()
                         } catch (e: JSONException) {
                             throw ModuleException(
-                                    "$CHATGPT_CMD($query): JSON",
-                                    "A JSON error has occurred while conversing with $CHATGPT_NAME.",
-                                    e
+                                "$CHATGPT_CMD($query): JSON",
+                                "A JSON error has occurred while conversing with $CHATGPT_NAME.",
+                                e
                             )
                         }
                     } else {
                         if (response.statusCode() == 429) {
                             throw ModuleException(
-                                    "$CHATGPT_CMD($query): Rate limit reached",
-                                    "Rate limit reached. Please try again later."
+                                "$CHATGPT_CMD($query): Rate limit reached",
+                                "Rate limit reached. Please try again later."
                             )
                         } else {
                             throw IOException("HTTP Status Code: " + response.statusCode())
@@ -151,9 +151,9 @@ class ChatGpt : AbstractModule() {
                     }
                 } catch (e: IOException) {
                     throw ModuleException(
-                            "$CHATGPT_CMD($query): IO",
-                            "An IO error has occurred while conversing with $CHATGPT_NAME.",
-                            e
+                        "$CHATGPT_CMD($query): IO",
+                        "An IO error has occurred while conversing with $CHATGPT_NAME.",
+                        e
                     )
                 }
             } else {

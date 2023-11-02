@@ -128,12 +128,15 @@ object Utils {
             isNullOrEmpty() -> {
                 ""
             }
+
             color == DEFAULT_COLOR -> {
                 this
             }
+
             Colors.BOLD == color || Colors.REVERSE == color -> {
                 color + this + color
             }
+
             else -> {
                 color + this + Colors.NORMAL
             }
@@ -220,7 +223,7 @@ object Utils {
         if (serialFile.exists() && serialFile.fileSize() > 0) {
             try {
                 ObjectInputStream(
-                        BufferedInputStream(Files.newInputStream(serialFile))
+                    BufferedInputStream(Files.newInputStream(serialFile))
                 ).use { input ->
                     if (logger.isDebugEnabled) logger.debug("Loading the ${description}.")
                     return input.readObject()
@@ -307,20 +310,20 @@ object Utils {
     @JvmStatic
     @JvmOverloads
     fun GenericMessageEvent.sendList(
-            list: List<String>,
-            maxPerLine: Int,
-            separator: String = " ",
-            isBold: Boolean = false,
-            isIndent: Boolean = false
+        list: List<String>,
+        maxPerLine: Int,
+        separator: String = " ",
+        isBold: Boolean = false,
+        isIndent: Boolean = false
     ) {
         var i = 0
         while (i < list.size) {
             sendMessage(
-                    helpFormat(
-                            list.subList(i, list.size.coerceAtMost(i + maxPerLine)).joinToString(separator, truncated = ""),
-                            isBold,
-                            isIndent
-                    ),
+                helpFormat(
+                    list.subList(i, list.size.coerceAtMost(i + maxPerLine)).joinToString(separator, truncated = ""),
+                    isBold,
+                    isIndent
+                ),
             )
             i += maxPerLine
         }
@@ -419,8 +422,8 @@ object Utils {
     fun URL.reader(): UrlReaderResponse {
         val connection = this.openConnection() as HttpURLConnection
         connection.setRequestProperty(
-                "User-Agent",
-                "Mozilla/5.0 (X11; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/109.0"
+            "User-Agent",
+            "Mozilla/5.0 (X11; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/109.0"
         )
         return if (connection.responseCode.isHttpSuccess()) {
             UrlReaderResponse(connection.responseCode, connection.inputStream.bufferedReader().use { it.readText() })

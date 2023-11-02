@@ -161,8 +161,8 @@ class LinksManager : AbstractCommand() {
     internal fun fetchTitle(link: String): String {
         try {
             val html = Jsoup.connect(link)
-                    .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:74.0) Gecko/20100101 Firefox/74.0")
-                    .get()
+                .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:74.0) Gecko/20100101 Firefox/74.0")
+                .get()
             val title = html.title()
             if (title.isNotBlank()) {
                 return title
@@ -178,7 +178,7 @@ class LinksManager : AbstractCommand() {
             return try {
                 val match = entries.links.single { it.link == link }
                 event.sendMessage(
-                        "Duplicate".bold() + " >> " + printLink(entries.links.indexOf(match), match)
+                    "Duplicate".bold() + " >> " + printLink(entries.links.indexOf(match), match)
                 )
                 true
             } catch (ignore: NoSuchElementException) {

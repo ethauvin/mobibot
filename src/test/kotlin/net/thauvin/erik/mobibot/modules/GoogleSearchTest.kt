@@ -48,19 +48,19 @@ class GoogleSearchTest : LocalProperties() {
     @Test(groups = ["modules"])
     fun testAPIKeys() {
         assertThat(
-                searchGoogle("", "apikey", "cssKey").first(),
-                "searchGoogle(empty)"
+            searchGoogle("", "apikey", "cssKey").first(),
+            "searchGoogle(empty)"
         ).isInstanceOf(ErrorMessage::class.java)
 
         assertFailure { searchGoogle("test", "", "apiKey") }
-                .isInstanceOf(ModuleException::class.java).hasNoCause()
+            .isInstanceOf(ModuleException::class.java).hasNoCause()
 
         assertFailure { searchGoogle("test", "apiKey", "") }
-                .isInstanceOf(ModuleException::class.java).hasNoCause()
+            .isInstanceOf(ModuleException::class.java).hasNoCause()
 
         assertFailure { searchGoogle("test", "apiKey", "cssKey") }
-                .isInstanceOf(ModuleException::class.java)
-                .hasMessage("API key not valid. Please pass a valid API key.")
+            .isInstanceOf(ModuleException::class.java)
+            .hasMessage("API key not valid. Please pass a valid API key.")
     }
 
     @Test(groups = ["no-ci", "modules"])

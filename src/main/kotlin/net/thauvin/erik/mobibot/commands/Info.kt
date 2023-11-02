@@ -48,8 +48,8 @@ import kotlin.time.toDuration
 
 class Info(private val tell: Tell, private val seen: Seen) : AbstractCommand() {
     private val allVersions = listOf(
-            "${ReleaseInfo.PROJECT.capitalise()} ${ReleaseInfo.VERSION} (${ReleaseInfo.WEBSITE.green()})",
-            "Written by ${ReleaseInfo.AUTHOR} (${ReleaseInfo.AUTHOR_URL.green()})"
+        "${ReleaseInfo.PROJECT.capitalise()} ${ReleaseInfo.VERSION} (${ReleaseInfo.WEBSITE.green()})",
+        "Written by ${ReleaseInfo.AUTHOR} (${ReleaseInfo.AUTHOR_URL.green()})"
     )
     override val name = "info"
     override val help = listOf("To view information about the bot:", helpFormat("%c $name"))
@@ -104,9 +104,9 @@ class Info(private val tell: Tell, private val seen: Seen) : AbstractCommand() {
         event.sendList(allVersions, 1)
         val info = StringBuilder()
         info.append("Uptime: ")
-                .append(ManagementFactory.getRuntimeMXBean().uptime.toUptime())
-                .append(" [Entries: ")
-                .append(LinksManager.entries.links.size)
+            .append(ManagementFactory.getRuntimeMXBean().uptime.toUptime())
+            .append(" [Entries: ")
+            .append(LinksManager.entries.links.size)
         if (seen.isEnabled()) {
             info.append(", Seen: ").append(seen.count())
         }

@@ -40,10 +40,10 @@ import org.pircbotx.hooks.types.GenericMessageEvent
 
 class Versions : AbstractCommand() {
     private val allVersions = listOf(
-            "Version: ${ReleaseInfo.VERSION} (${ReleaseInfo.BUILDDATE.toIsoLocalDate()})",
-            "${System.getProperty("os.name")} ${System.getProperty("os.version")} (${System.getProperty("os.arch")})" +
-                    ", JVM ${System.getProperty("java.runtime.version")}",
-            "Kotlin ${KotlinVersion.CURRENT}, PircBotX ${PircBotX.VERSION}"
+        "Version: ${ReleaseInfo.VERSION} (${ReleaseInfo.BUILDDATE.toIsoLocalDate()})",
+        "${System.getProperty("os.name")} ${System.getProperty("os.version")} (${System.getProperty("os.arch")})" +
+                ", JVM ${System.getProperty("java.runtime.version")}",
+        "Kotlin ${KotlinVersion.CURRENT}, PircBotX ${PircBotX.VERSION}"
     )
     override val name = "versions"
     override val help = listOf("To view the versions data (bot, platform, java, etc.):", helpFormat("%c $name"))

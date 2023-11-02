@@ -49,9 +49,9 @@ class WordTimeTest {
     @Test(groups = ["modules"])
     fun testTime() {
         assertThat(time(), "time()").matches(
-                ("The time is ${Colors.BOLD}\\d{1,2}:\\d{2}${Colors.BOLD} " +
-                        "on ${Colors.BOLD}\\w+, \\d{1,2} \\w+ \\d{4}${Colors.BOLD} " +
-                        "in ${Colors.BOLD}Los Angeles${Colors.BOLD}").toRegex()
+            ("The time is ${Colors.BOLD}\\d{1,2}:\\d{2}${Colors.BOLD} " +
+                    "on ${Colors.BOLD}\\w+, \\d{1,2} \\w+ \\d{4}${Colors.BOLD} " +
+                    "in ${Colors.BOLD}Los Angeles${Colors.BOLD}").toRegex()
         )
         assertThat(time(""), "time()").endsWith("Los Angeles".bold())
         assertThat(time("PST"), "time(PST)").endsWith("Los Angeles".bold())

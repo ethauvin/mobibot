@@ -40,40 +40,40 @@ import java.util.*
  * The class used to store link entries.
  */
 class EntryLink(
-        // Link's comments
-        val comments: MutableList<EntryComment> = mutableListOf(),
+    // Link's comments
+    val comments: MutableList<EntryComment> = mutableListOf(),
 
-        // Tags/categories
-        val tags: MutableList<SyndCategory> = mutableListOf(),
+    // Tags/categories
+    val tags: MutableList<SyndCategory> = mutableListOf(),
 
-        // Channel
-        var channel: String,
+    // Channel
+    var channel: String,
 
-        // Creation date
-        var date: Date = Calendar.getInstance().time,
+    // Creation date
+    var date: Date = Calendar.getInstance().time,
 
-        // Link's URL
-        var link: String,
+    // Link's URL
+    var link: String,
 
-        // Author's login
-        var login: String = "",
+    // Author's login
+    var login: String = "",
 
-        // Author's nickname
-        var nick: String,
+    // Author's nickname
+    var nick: String,
 
-        // Link's title
-        var title: String
+    // Link's title
+    var title: String
 ) : Serializable {
     /**
      * Creates a new entry.
      */
     constructor(
-            link: String,
-            title: String,
-            nick: String,
-            login: String,
-            channel: String,
-            tags: List<String?>
+        link: String,
+        title: String,
+        nick: String,
+        login: String,
+        channel: String,
+        tags: List<String?>
     ) : this(link = link, title = title, nick = nick, login = login, channel = channel) {
         setTags(tags)
     }
@@ -82,12 +82,12 @@ class EntryLink(
      * Creates a new entry.
      */
     constructor(
-            link: String,
-            title: String,
-            nick: String,
-            channel: String,
-            date: Date,
-            tags: List<SyndCategory>
+        link: String,
+        title: String,
+        nick: String,
+        channel: String,
+        date: Date,
+        tags: List<SyndCategory>
     ) : this(link = link, title = title, nick = nick, channel = channel, date = Date(date.time)) {
         this.tags.addAll(tags)
     }
@@ -207,6 +207,7 @@ class EntryLink(
 
     companion object {
         // Serial version UID
+        @Suppress("ConstPropertyName")
         private const val serialVersionUID: Long = 1L
     }
 }

@@ -42,13 +42,13 @@ class MastodonTest : LocalProperties() {
     fun testToot() {
         val msg = "Testing Mastodon API from ${getHostName()}"
         assertThat(
-                toot(
-                        getProperty(Mastodon.ACCESS_TOKEN_PROP),
-                        getProperty(Mastodon.INSTANCE_PROP),
-                        getProperty(Mastodon.HANDLE_PROP),
-                        msg,
-                        true
-                )
+            toot(
+                getProperty(Mastodon.ACCESS_TOKEN_PROP),
+                getProperty(Mastodon.INSTANCE_PROP),
+                getProperty(Mastodon.HANDLE_PROP),
+                msg,
+                true
+            )
         ).contains(msg)
     }
 }

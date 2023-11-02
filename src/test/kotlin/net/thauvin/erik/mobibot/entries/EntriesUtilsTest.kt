@@ -46,14 +46,14 @@ class EntriesUtilsTest {
     private val links = buildList {
         for (i in 0..5) {
             add(
-                    EntryLink(
-                            "https://www.mobitopia.org/$i",
-                            "Mobitopia$i",
-                            "Skynx$i",
-                            "JimH$i",
-                            "#mobitopia$i",
-                            listOf("tag1", "tag2", "tag3", "TAG4", "Tag5")
-                    )
+                EntryLink(
+                    "https://www.mobitopia.org/$i",
+                    "Mobitopia$i",
+                    "Skynx$i",
+                    "JimH$i",
+                    "#mobitopia$i",
+                    listOf("tag1", "tag2", "tag3", "TAG4", "Tag5")
+                )
             )
         }
     }
@@ -67,7 +67,7 @@ class EntriesUtilsTest {
     fun printLinkTest() {
         for (i in links.indices) {
             assertThat(
-                    printLink(i - 1, links[i]), "link $i"
+                printLink(i - 1, links[i]), "link $i"
             ).isEqualTo("L$i: [Skynx$i] \u0002Mobitopia$i\u0002 ( \u000303https://www.mobitopia.org/$i\u000F )")
         }
 
@@ -79,7 +79,7 @@ class EntriesUtilsTest {
     fun printTagsTest() {
         for (i in links.indices) {
             assertThat(
-                    printTags(i - 1, links[i]), "tag $i"
+                printTags(i - 1, links[i]), "tag $i"
             ).isEqualTo("L${i}T: tag1, tag2, tag3, tag4, tag5")
         }
     }

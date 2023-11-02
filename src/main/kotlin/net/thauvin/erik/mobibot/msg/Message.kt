@@ -36,11 +36,11 @@ import net.thauvin.erik.semver.Constants
  * The `Message` class.
  */
 open class Message @JvmOverloads constructor(
-        var msg: String,
-        var color: String = DEFAULT_COLOR,
-        var isNotice: Boolean = false,
-        isError: Boolean = false,
-        var isPrivate: Boolean = false
+    var msg: String,
+    var color: String = DEFAULT_COLOR,
+    var isNotice: Boolean = false,
+    isError: Boolean = false,
+    var isPrivate: Boolean = false
 ) {
     companion object {
         var DEFAULT_COLOR = Constants.EMPTY
