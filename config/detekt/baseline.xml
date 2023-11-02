@@ -2,9 +2,9 @@
 <SmellBaseline>
   <ManuallySuppressedIssues></ManuallySuppressedIssues>
   <CurrentIssues>
-    <ID>CyclomaticComplexMethod:FeedsManager.kt$FeedsManager.Companion$@JvmStatic fun saveFeed(entries: Entries, currentFile: String = currentXml)</ID>
+    <ID>CyclomaticComplexMethod:FeedsManager.kt$FeedsManager.Companion$@JvmStatic fun saveFeed(entries: Entries, currentFile: String = CURRENT_XML)</ID>
     <ID>CyclomaticComplexMethod:Weather2.kt$Weather2.Companion$@JvmStatic @Throws(ModuleException::class) fun getWeather(query: String, apiKey: String?): List&lt;Message&gt;</ID>
-    <ID>LongMethod:FeedsManager.kt$FeedsManager.Companion$@JvmStatic fun saveFeed(entries: Entries, currentFile: String = currentXml)</ID>
+    <ID>LongMethod:FeedsManager.kt$FeedsManager.Companion$@JvmStatic fun saveFeed(entries: Entries, currentFile: String = CURRENT_XML)</ID>
     <ID>LongMethod:Mobibot.kt$Mobibot.Companion$@JvmStatic @Throws(Exception::class) fun main(args: Array&lt;String&gt;)</ID>
     <ID>LongMethod:StockQuote.kt$StockQuote.Companion$@JvmStatic @Throws(ModuleException::class) fun getQuote(symbol: String, apiKey: String?): List&lt;Message&gt;</ID>
     <ID>LongMethod:Weather2.kt$Weather2.Companion$@JvmStatic @Throws(ModuleException::class) fun getWeather(query: String, apiKey: String?): List&lt;Message&gt;</ID>
@@ -46,15 +46,6 @@
     <ID>MagicNumber:WorldTime.kt$WorldTime.Companion$3600</ID>
     <ID>MagicNumber:WorldTime.kt$WorldTime.Companion$60</ID>
     <ID>MagicNumber:WorldTime.kt$WorldTime.Companion$86.4</ID>
-    <ID>MaxLineLength:DiceTest.kt$DiceTest$.</ID>
-    <ID>MaxLineLength:Lookup.kt$Lookup$("(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)")</ID>
-    <ID>MaxLineLength:Mastodon.kt$Mastodon.Companion$mapOf("status" to "${handle?.prefixIfMissing('@')} $message", "visibility" to "direct")</ID>
-    <ID>MaxLineLength:Mobibot.kt$Mobibot$helpCmdSyntax("%c ${Constants.HELP_CMD} &lt;command&gt;", event.bot().nick, event is PrivateMessageEvent)</ID>
-    <ID>MaxLineLength:PinboardTest.kt$PinboardTest$URL("https://api.pinboard.in/v1/posts/get?auth_token=${apiToken}&amp;tag=test&amp;" + url.encodeUrl()).reader().body</ID>
-    <ID>MaxLineLength:StockQuote.kt$StockQuote.Companion$+</ID>
-    <ID>MaxLineLength:Utils.kt$Utils$list.subList(i, list.size.coerceAtMost(i + maxPerLine)).joinToString(separator, truncated = "")</ID>
-    <ID>MaxLineLength:View.kt$View$helpCmdSyntax("%c $name ${index + 1} $query", event.bot().nick, event is PrivateMessageEvent)</ID>
-    <ID>MaxLineLength:Weather2.kt$Weather2.Companion$country.name.replace('_', ' ').capitalizeWords()</ID>
     <ID>NestedBlockDepth:Addons.kt$Addons$fun add(command: AbstractCommand): Boolean</ID>
     <ID>NestedBlockDepth:Addons.kt$Addons$fun add(module: AbstractModule): Boolean</ID>
     <ID>NestedBlockDepth:ChatGpt.kt$ChatGpt.Companion$@JvmStatic @Throws(ModuleException::class) fun chat(query: String, apiKey: String?, maxTokens: Int): String</ID>
@@ -62,8 +53,8 @@
     <ID>NestedBlockDepth:CurrencyConverter.kt$CurrencyConverter.Companion$@JvmStatic @Throws(ModuleException::class) fun loadSymbols(apiKey: String?)</ID>
     <ID>NestedBlockDepth:CurrencyConverter.kt$CurrencyConverter.Companion$@JvmStatic fun convertCurrency(apiKey: String?, query: String): Message</ID>
     <ID>NestedBlockDepth:EntryLink.kt$EntryLink$private fun setTags(tags: List&lt;String?&gt;)</ID>
-    <ID>NestedBlockDepth:FeedsManager.kt$FeedsManager.Companion$@JvmStatic @Throws(IOException::class, FeedException::class) fun loadFeed(entries: Entries, currentFile: String = currentXml): String</ID>
-    <ID>NestedBlockDepth:FeedsManager.kt$FeedsManager.Companion$@JvmStatic fun saveFeed(entries: Entries, currentFile: String = currentXml)</ID>
+    <ID>NestedBlockDepth:FeedsManager.kt$FeedsManager.Companion$@JvmStatic @Throws(IOException::class, FeedException::class) fun loadFeed(entries: Entries, currentFile: String = CURRENT_XML): String</ID>
+    <ID>NestedBlockDepth:FeedsManager.kt$FeedsManager.Companion$@JvmStatic fun saveFeed(entries: Entries, currentFile: String = CURRENT_XML)</ID>
     <ID>NestedBlockDepth:GoogleSearch.kt$GoogleSearch$override fun commandResponse(channel: String, cmd: String, args: String, event: GenericMessageEvent)</ID>
     <ID>NestedBlockDepth:GoogleSearch.kt$GoogleSearch.Companion$@JvmStatic @Throws(ModuleException::class) fun searchGoogle( query: String, apiKey: String?, cseKey: String?, quotaUser: String = ReleaseInfo.PROJECT ): List&lt;Message&gt;</ID>
     <ID>NestedBlockDepth:LinksManager.kt$LinksManager$override fun commandResponse(channel: String, args: String, event: GenericMessageEvent)</ID>
