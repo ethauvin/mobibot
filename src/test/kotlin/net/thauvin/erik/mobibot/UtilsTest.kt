@@ -1,7 +1,7 @@
 /*
  * UtilsTest.kt
  *
- * Copyright 2004-2023 Erik C. Thauvin (erik@thauvin.net)
+ * Copyright 2021-2023 Erik C. Thauvin (erik@thauvin.net)
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -59,14 +59,14 @@ import net.thauvin.erik.mobibot.Utils.today
 import net.thauvin.erik.mobibot.Utils.underline
 import net.thauvin.erik.mobibot.Utils.unescapeXml
 import net.thauvin.erik.mobibot.msg.Message.Companion.DEFAULT_COLOR
+import org.junit.jupiter.api.BeforeEach
 import org.pircbotx.Colors
-import org.testng.annotations.BeforeClass
-import org.testng.annotations.Test
 import java.io.File
 import java.io.IOException
 import java.net.URL
 import java.time.LocalDateTime
 import java.util.*
+import kotlin.test.Test
 
 /**
  * The `Utils Test` class.
@@ -78,7 +78,7 @@ class UtilsTest {
     private val localDateTime = LocalDateTime.of(1952, 2, 17, 12, 30, 0)
     private val test = "This is a test."
 
-    @BeforeClass
+    @BeforeEach
     fun setUp() {
         cal[1952, Calendar.FEBRUARY, 17, 12, 30] = 0
     }

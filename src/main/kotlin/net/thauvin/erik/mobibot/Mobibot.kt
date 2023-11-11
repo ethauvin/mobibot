@@ -1,7 +1,7 @@
 /*
  * Mobibot.kt
  *
- * Copyright 2004-2023 Erik C. Thauvin (erik@thauvin.net)
+ * Copyright 2021-2023 Erik C. Thauvin (erik@thauvin.net)
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -51,7 +51,6 @@ import net.thauvin.erik.mobibot.commands.links.*
 import net.thauvin.erik.mobibot.commands.seen.Seen
 import net.thauvin.erik.mobibot.commands.tell.Tell
 import net.thauvin.erik.mobibot.modules.*
-import net.thauvin.erik.semver.Version
 import org.pircbotx.Configuration
 import org.pircbotx.PircBotX
 import org.pircbotx.hooks.ListenerAdapter
@@ -66,7 +65,6 @@ import java.util.*
 import java.util.regex.Pattern
 import kotlin.system.exitProcess
 
-@Version(properties = "version.properties", className = "ReleaseInfo", template = "version.mustache", type = "kt")
 class Mobibot(nickname: String, val channel: String, logsDirPath: String, p: Properties) : ListenerAdapter() {
     // The bot configuration.
     private val config: Configuration
@@ -257,7 +255,7 @@ class Mobibot(nickname: String, val channel: String, logsDirPath: String, p: Pro
                 // Output the version
                 println(
                     "${ReleaseInfo.PROJECT.capitalise()} ${ReleaseInfo.VERSION}" +
-                            " (${ReleaseInfo.BUILDDATE.toIsoLocalDate()})"
+                            " (${ReleaseInfo.BUILD_DATE.toIsoLocalDate()})"
                 )
                 println(ReleaseInfo.WEBSITE)
             } else {

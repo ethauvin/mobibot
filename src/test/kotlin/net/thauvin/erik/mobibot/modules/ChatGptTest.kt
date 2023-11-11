@@ -1,7 +1,7 @@
 /*
  * ChatGptTest.kt
  *
- * Copyright 2004-2023 Erik C. Thauvin (erik@thauvin.net)
+ * Copyright 2021-2023 Erik C. Thauvin (erik@thauvin.net)
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -35,18 +35,20 @@ import assertk.assertThat
 import assertk.assertions.contains
 import assertk.assertions.hasNoCause
 import assertk.assertions.isInstanceOf
+import net.thauvin.erik.mobibot.DisabledOnCi
 import net.thauvin.erik.mobibot.LocalProperties
-import org.testng.annotations.Test
+import kotlin.test.Test
 
 class ChatGptTest : LocalProperties() {
-    @Test(groups = ["modules"])
+    @Test
     fun testApiKey() {
         assertFailure { ChatGpt.chat("1 gallon to liter", "", 0) }
             .isInstanceOf(ModuleException::class.java)
             .hasNoCause()
     }
 
-    @Test(groups = ["modules", "no-ci"])
+    @Test
+    @DisabledOnCi
     fun testChat() {
         val apiKey = getProperty(ChatGpt.API_KEY_PROP)
         assertThat(

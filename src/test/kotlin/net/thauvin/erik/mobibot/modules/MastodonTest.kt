@@ -1,7 +1,7 @@
 /*
  * MastodonTest.kt
  *
- * Copyright 2004-2023 Erik C. Thauvin (erik@thauvin.net)
+ * Copyright 2021-2023 Erik C. Thauvin (erik@thauvin.net)
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -34,10 +34,10 @@ import assertk.assertThat
 import assertk.assertions.contains
 import net.thauvin.erik.mobibot.LocalProperties
 import net.thauvin.erik.mobibot.modules.Mastodon.Companion.toot
-import org.testng.annotations.Test
+import kotlin.test.Test
 
 class MastodonTest : LocalProperties() {
-    @Test(groups = ["modules"])
+    @Test
     @Throws(ModuleException::class)
     fun testToot() {
         val msg = "Testing Mastodon API from ${getHostName()}"

@@ -1,7 +1,7 @@
 /*
  * SeenTest.kt
  *
- * Copyright 2004-2023 Erik C. Thauvin (erik@thauvin.net)
+ * Copyright 2021-2023 Erik C. Thauvin (erik@thauvin.net)
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -34,29 +34,16 @@ package net.thauvin.erik.mobibot.commands.seen
 import assertk.all
 import assertk.assertThat
 import assertk.assertions.*
-import org.testng.annotations.AfterClass
-import org.testng.annotations.BeforeClass
-import org.testng.annotations.Test
+import org.junit.AfterClass
+import org.junit.BeforeClass
+import org.junit.jupiter.api.Order
 import kotlin.io.path.deleteIfExists
 import kotlin.io.path.fileSize
+import kotlin.test.Test
 
 class SeenTest {
-    private val tmpFile = kotlin.io.path.createTempFile(suffix = ".ser")
-    private val seen = Seen(tmpFile.toAbsolutePath().toString())
-    private val nick = "ErikT"
-
-    @BeforeClass
-    fun saveTest() {
-        seen.add("ErikT")
-        assertThat(tmpFile.fileSize(), "tmpFile.size").isGreaterThan(0)
-    }
-
-    @AfterClass(alwaysRun = true)
-    fun afterClass() {
-        tmpFile.deleteIfExists()
-    }
-
-    @Test(priority = 1, groups = ["commands"])
+    @Test
+    @Order(1)
     fun loadTest() {
         seen.clear()
         assertThat(seen::seenNicks).isEmpty()
@@ -64,7 +51,8 @@ class SeenTest {
         assertThat(seen::seenNicks).key(nick).isNotNull()
     }
 
-    @Test(groups = ["commands"])
+    @Test
+    @Order(2)
     fun addTest() {
         val last = seen.seenNicks[nick]?.lastSeen
         seen.add(nick.lowercase())
@@ -75,11 +63,31 @@ class SeenTest {
         }
     }
 
-    @Test(priority = 10, groups = ["commands"])
+    @Test
+    @Order(3)
     fun clearTest() {
         seen.clear()
         seen.save()
         seen.load()
         assertThat(seen::seenNicks).size().isEqualTo(0)
+    }
+
+    companion object {
+        private val tmpFile = kotlin.io.path.createTempFile(suffix = ".ser")
+        private val seen = Seen(tmpFile.toAbsolutePath().toString())
+        private const val nick = "ErikT"
+
+        @JvmStatic
+        @BeforeClass
+        fun beforeClass() {
+            seen.add(nick)
+            assertThat(tmpFile.fileSize(), "tmpFile.size").isGreaterThan(0)
+        }
+
+        @JvmStatic
+        @AfterClass
+        fun afterClass() {
+            tmpFile.deleteIfExists()
+        }
     }
 }

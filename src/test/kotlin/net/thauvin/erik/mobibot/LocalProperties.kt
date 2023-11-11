@@ -1,7 +1,7 @@
 /*
  * LocalProperties.kt
  *
- * Copyright 2004-2023 Erik C. Thauvin (erik@thauvin.net)
+ * Copyright 2021-2023 Erik C. Thauvin (erik@thauvin.net)
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -30,7 +30,6 @@
  */
 package net.thauvin.erik.mobibot
 
-import org.testng.annotations.BeforeSuite
 import java.io.IOException
 import java.net.InetAddress
 import java.net.UnknownHostException
@@ -42,8 +41,7 @@ import java.util.*
  * Access to `local.properties`.
  */
 open class LocalProperties {
-    @BeforeSuite(alwaysRun = true)
-    fun loadProperties() {
+    init {
         val localPath = Paths.get("local.properties")
         if (Files.exists(localPath)) {
             try {

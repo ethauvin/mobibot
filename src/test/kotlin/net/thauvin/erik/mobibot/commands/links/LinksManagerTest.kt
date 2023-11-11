@@ -1,7 +1,7 @@
 /*
  * LinksManagerTest.kt
  *
- * Copyright 2004-2023 Erik C. Thauvin (erik@thauvin.net)
+ * Copyright 2021-2023 Erik C. Thauvin (erik@thauvin.net)
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -38,12 +38,12 @@ import assertk.assertions.isEqualTo
 import assertk.assertions.isTrue
 import assertk.assertions.size
 import net.thauvin.erik.mobibot.Constants
-import org.testng.annotations.Test
+import kotlin.test.Test
 
 class LinksManagerTest {
     private val linksManager = LinksManager()
 
-    @Test(groups = ["commands", "links"])
+    @Test
     fun fetchTitle() {
         assertThat(linksManager.fetchTitle("https://erik.thauvin.net/"), "fetchTitle(Erik)").contains("Erik's Weblog")
         assertThat(
@@ -52,13 +52,13 @@ class LinksManagerTest {
         ).isEqualTo(Constants.NO_TITLE)
     }
 
-    @Test(groups = ["commands", "links"])
+    @Test
     fun testMatches() {
         assertThat(linksManager.matches("https://www.example.com/"), "matches(url)").isTrue()
         assertThat(linksManager.matches("HTTP://erik.thauvin.net/blog/ Erik's Weblog"), "matches(HTTP)").isTrue()
     }
 
-    @Test(groups = ["commands", "links"])
+    @Test
     fun matchTagKeywordsTest() {
         linksManager.setProperty(LinksManager.KEYWORDS_PROP, "key1 key2,key3")
         val tags = mutableListOf<String>()

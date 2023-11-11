@@ -1,7 +1,7 @@
 /*
  * TellMessagesMgrTest.kt
  *
- * Copyright 2004-2023 Erik C. Thauvin (erik@thauvin.net)
+ * Copyright 2021-2023 Erik C. Thauvin (erik@thauvin.net)
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -34,16 +34,14 @@ package net.thauvin.erik.mobibot.commands.tell
 import assertk.all
 import assertk.assertThat
 import assertk.assertions.*
-import org.testng.annotations.AfterClass
-import org.testng.annotations.BeforeClass
-import org.testng.annotations.Test
+import org.junit.AfterClass
 import java.time.LocalDateTime
 import kotlin.io.path.createTempFile
 import kotlin.io.path.deleteIfExists
 import kotlin.io.path.fileSize
+import kotlin.test.Test
 
 class TellMessagesMgrTest {
-    private val testFile = createTempFile(suffix = ".ser")
     private val maxDays = 10L
     private val testMessages = mutableListOf<TellMessage>().apply {
         for (i in 0..5) {
@@ -51,18 +49,12 @@ class TellMessagesMgrTest {
         }
     }
 
-    @BeforeClass
-    fun saveTest() {
+    init {
         TellManager.save(testFile.toAbsolutePath().toString(), testMessages)
         assertThat(testFile.fileSize()).isGreaterThan(0)
     }
 
-    @AfterClass
-    fun afterClass() {
-        testFile.deleteIfExists()
-    }
-
-    @Test(groups = ["commands", "tell"])
+    @Test
     fun cleanTest() {
         testMessages.add(TellMessage("sender", "recipient", "message").apply {
             queued = LocalDateTime.now().minusDays(maxDays)
@@ -73,7 +65,7 @@ class TellMessagesMgrTest {
         assertThat(testMessages, "testMessages").size().isEqualTo(size - 1)
     }
 
-    @Test(groups = ["commands", "tell"])
+    @Test
     fun loadTest() {
         val messages = TellManager.load(testFile.toAbsolutePath().toString())
         for (i in messages.indices) {
@@ -82,6 +74,16 @@ class TellMessagesMgrTest {
                 prop(TellMessage::recipient).isEqualTo(testMessages[i].recipient)
                 prop(TellMessage::message).isEqualTo(testMessages[i].message)
             }
+        }
+    }
+
+    companion object {
+        private val testFile = createTempFile(suffix = ".ser")
+
+        @JvmStatic
+        @AfterClass
+        fun afterClass() {
+            testFile.deleteIfExists()
         }
     }
 }

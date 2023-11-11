@@ -1,7 +1,7 @@
 /*
  * FeedMgrTest.kt
  *
- * Copyright 2004-2023 Erik C. Thauvin (erik@thauvin.net)
+ * Copyright 2021-2023 Erik C. Thauvin (erik@thauvin.net)
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -35,27 +35,25 @@ import assertk.all
 import assertk.assertThat
 import assertk.assertions.*
 import net.thauvin.erik.mobibot.Utils.today
-import org.testng.annotations.BeforeSuite
-import org.testng.annotations.Test
 import java.nio.file.Paths
 import java.util.*
 import kotlin.io.path.deleteIfExists
 import kotlin.io.path.fileSize
 import kotlin.io.path.name
+import kotlin.test.Test
 
 class FeedMgrTest {
     private val entries = Entries()
     private val channel = "mobibot"
 
-    @BeforeSuite(alwaysRun = true)
-    fun beforeSuite() {
+    init {
         entries.logsDir = "src/test/resources/"
         entries.ircServer = "irc.example.com"
         entries.channel = channel
         entries.backlogs = "https://www.mobitopia.org/mobibot/logs"
     }
 
-    @Test(groups = ["entries"])
+    @Test
     fun testFeedMgr() {
         // Load the feed
         assertThat(FeedsManager.loadFeed(entries), "loadFeed()").isEqualTo("2021-10-31")

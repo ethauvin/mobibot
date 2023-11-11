@@ -1,0 +1,15 @@
+{
+    "java.project.sourcePaths": [
+        "src/main/java",
+        "src/main/resources",
+        "src/test/java",
+        "src/bld/java"
+    ],
+    "java.configuration.updateBuildConfiguration": "automatic",
+    "java.project.referencedLibraries": [
+        "${HOME}/.bld/dist/bld-1.7.5.jar",
+        "lib/compile/*.jar",
+        "lib/runtime/*.jar",
+        "lib/test/*.jar"
+    ]
+}

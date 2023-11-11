@@ -1,7 +1,7 @@
 /*
  * CurrencyConverterTest.kt
  *
- * Copyright 2004-2023 Erik C. Thauvin (erik@thauvin.net)
+ * Copyright 2021-2023 Erik C. Thauvin (erik@thauvin.net)
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -42,23 +42,19 @@ import net.thauvin.erik.mobibot.modules.CurrencyConverter.Companion.loadSymbols
 import net.thauvin.erik.mobibot.msg.ErrorMessage
 import net.thauvin.erik.mobibot.msg.Message
 import net.thauvin.erik.mobibot.msg.PublicMessage
-import org.testng.annotations.BeforeClass
-import org.testng.annotations.Test
+import kotlin.test.Test
 
 
 /**
  * The `CurrencyConvertTest` class.
  */
 class CurrencyConverterTest : LocalProperties() {
-
-    @BeforeClass
-    @Throws(ModuleException::class)
-    fun before() {
+    init {
         val apiKey = getProperty(CurrencyConverter.API_KEY_PROP)
         loadSymbols(apiKey)
     }
 
-    @Test(groups = ["modules"])
+    @Test
     fun testConvertCurrency() {
         val apiKey = getProperty(CurrencyConverter.API_KEY_PROP)
         assertThat(

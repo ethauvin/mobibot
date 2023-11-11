@@ -1,7 +1,7 @@
 /*
  * DiceTest.kt
  *
- * Copyright 2004-2023 Erik C. Thauvin (erik@thauvin.net)
+ * Copyright 2021-2023 Erik C. Thauvin (erik@thauvin.net)
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -35,10 +35,10 @@ package net.thauvin.erik.mobibot.modules
 import assertk.assertThat
 import assertk.assertions.isEqualTo
 import assertk.assertions.matches
-import org.testng.annotations.Test
+import kotlin.test.Test
 
 class DiceTest {
-    @Test(groups = ["modules"])
+    @Test
     fun testRoll() {
         assertThat(Dice.roll(1, 1), "roll(1d1)").isEqualTo("\u00021\u0002")
         assertThat(Dice.roll(2, 1), "roll(2d1)")

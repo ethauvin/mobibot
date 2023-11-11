@@ -1,7 +1,7 @@
 /*
  * TellMessageTest.kt
  *
- * Copyright 2004-2023 Erik C. Thauvin (erik@thauvin.net)
+ * Copyright 2021-2023 Erik C. Thauvin (erik@thauvin.net)
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -36,10 +36,10 @@ import assertk.assertions.isEqualTo
 import assertk.assertions.isFalse
 import assertk.assertions.isTrue
 import assertk.assertions.prop
-import org.testng.annotations.Test
 import java.time.Duration
 import java.time.LocalDateTime
 import java.time.temporal.Temporal
+import kotlin.test.Test
 
 /**
  * The `TellMessageTest` class.
@@ -49,7 +49,7 @@ class TellMessageTest {
         return Duration.between(date, LocalDateTime.now()).toMinutes() < 1
     }
 
-    @Test(groups = ["commands", "tell"])
+    @Test
     fun testTellMessage() {
         val message = "Test message."
         val recipient = "recipient"

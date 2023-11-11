@@ -1,32 +1,11 @@
-image: gradle:8-jdk17
-
-variables:
-  GRADLE_OPTS: "-Dorg.gradle.daemon=false"
-  CI_NAME: "GitLab CI"
-
-before_script:
-  - export GRADLE_USER_HOME=`pwd`/.gradle
+image: openjdk:17
 
 stages:
-  - build
   - test
-
-build:
-  stage: build
-  script: gradle --build-cache assemble
-  cache:
-    key: "$CI_COMMIT_REF_NAME"
-    policy: push
-    paths:
-      - build
-      - .gradle
 
 test:
   stage: test
-  script: gradle check
-  cache:
-    key: "$CI_COMMIT_REF_NAME"
-    policy: pull
-    paths:
-      - build
-      - .gradle
+  script:
+      - ./bld download
+      - ./bld compile
+      - ./bld test

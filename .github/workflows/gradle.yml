@@ -1,21 +1,21 @@
-name: gradle-ci
+name: bld-ci
 
 on: [ push, pull_request, workflow_dispatch ]
 
 jobs:
-  build:
+  build-bld-project:
     runs-on: ubuntu-latest
 
     env:
-      GRADLE_OPTS: "-Dorg.gradle.jvmargs=-XX:MaxMetaspaceSize=512m"
-      SONAR_JDK: "17"
+      COVERAGE_SDK: "17"
 
     strategy:
       matrix:
         java-version: [ 17, 20 ]
 
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout source repository
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0
 
@@ -25,35 +25,21 @@ jobs:
           distribution: 'zulu'
           java-version: ${{ matrix.java-version }}
 
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
+      - name: Grant bld execute permission
+        run: chmod +x bld
 
-      - name: Cache SonarCloud packages
-        if: matrix.java-version == env.SONAR_JDK
-        uses: actions/cache@v3
-        with:
-          path: ~/.sonar/cache
-          key: ${{ runner.os }}-sonar
-          restore-keys: ${{ runner.os }}-sonar
+      - name: Download the bld dependencies
+        run: ./bld download
 
-      - name: Test with Gradle
-        uses: gradle/gradle-build-action@v2
-        env:
-          CI_NAME: "GitHub CI"
-          ALPHAVANTAGE_API_KEY: ${{ secrets.ALPHAVANTAGE_API_KEY }}
-          CHATGPT_API_KEY: ${{ secrets.CHATGPT_API_KEY }}
-          OWM_API_KEY: ${{ secrets.OWM_API_KEY }}
-          PINBOARD_API_TOKEN: ${{ secrets.PINBOARD_API_TOKEN }}
-          MASTODON_ACCESS_TOKEN: ${{ secrets.MASTODON_ACCESS_TOKEN }}
-          MASTODON_HANDLE: ${{ secrets.MASTODON_HANDLE }}
-          MASTODON_INSTANCE: ${{ secrets.MASTODON_INSTANCE }}
-          EXCHANGERATE_API_KEY: ${{ secrets.EXCHANGERATE_API_KEY }}
-        with:
-          arguments: build check --stacktrace
+      - name: Compile source with bld
+        run: ./bld compile
 
-      - name: SonarCloud
-        if: success() && matrix.java-version == env.SONAR_JDK
+      - name: Run tests with bld
+        run: ./bld jacoco
+
+      - name: SonarCloud Scan
+        uses: sonarsource/sonarcloud-github-action@master
+        if: success() && matrix.java-version == env.COVERAGE_SDK
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: ./gradlew sonar --info

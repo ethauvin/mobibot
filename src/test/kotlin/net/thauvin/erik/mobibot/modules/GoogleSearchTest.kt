@@ -1,7 +1,7 @@
 /*
  * GoogleSearchTest.kt
  *
- * Copyright 2004-2023 Erik C. Thauvin (erik@thauvin.net)
+ * Copyright 2021-2023 Erik C. Thauvin (erik@thauvin.net)
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -34,18 +34,19 @@ import assertk.all
 import assertk.assertFailure
 import assertk.assertThat
 import assertk.assertions.*
+import net.thauvin.erik.mobibot.DisabledOnCi
 import net.thauvin.erik.mobibot.ExceptionSanitizer.sanitize
 import net.thauvin.erik.mobibot.LocalProperties
 import net.thauvin.erik.mobibot.modules.GoogleSearch.Companion.searchGoogle
 import net.thauvin.erik.mobibot.msg.ErrorMessage
 import net.thauvin.erik.mobibot.msg.Message
-import org.testng.annotations.Test
+import kotlin.test.Test
 
 /**
  * The `GoogleSearchTest` class.
  */
 class GoogleSearchTest : LocalProperties() {
-    @Test(groups = ["modules"])
+    @Test
     fun testAPIKeys() {
         assertThat(
             searchGoogle("", "apikey", "cssKey").first(),
@@ -63,7 +64,8 @@ class GoogleSearchTest : LocalProperties() {
             .hasMessage("API key not valid. Please pass a valid API key.")
     }
 
-    @Test(groups = ["no-ci", "modules"])
+    @Test
+    @DisabledOnCi
     @Throws(ModuleException::class)
     fun testSearchGoogle() {
         val apiKey = getProperty(GoogleSearch.API_KEY_PROP)

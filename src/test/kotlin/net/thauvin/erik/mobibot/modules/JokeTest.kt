@@ -1,7 +1,7 @@
 /*
  * JokeTest.kt
  *
- * Copyright 2004-2023 Erik C. Thauvin (erik@thauvin.net)
+ * Copyright 2021-2023 Erik C. Thauvin (erik@thauvin.net)
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -36,13 +36,13 @@ import assertk.assertions.*
 import net.thauvin.erik.mobibot.modules.Joke.Companion.randomJoke
 import net.thauvin.erik.mobibot.msg.Message
 import net.thauvin.erik.mobibot.msg.PublicMessage
-import org.testng.annotations.Test
+import kotlin.test.Test
 
 /**
  * The `JokeTest` class.
  */
 class JokeTest {
-    @Test(groups = ["modules"])
+    @Test
     @Throws(ModuleException::class)
     fun testRandomJoke() {
         val joke = randomJoke()

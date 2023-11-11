@@ -1,7 +1,7 @@
 /*
  * EntriesUtilsTest.kt
  *
- * Copyright 2004-2023 Erik C. Thauvin (erik@thauvin.net)
+ * Copyright 2021-2023 Erik C. Thauvin (erik@thauvin.net)
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -39,7 +39,7 @@ import net.thauvin.erik.mobibot.entries.EntriesUtils.printComment
 import net.thauvin.erik.mobibot.entries.EntriesUtils.printLink
 import net.thauvin.erik.mobibot.entries.EntriesUtils.printTags
 import net.thauvin.erik.mobibot.entries.EntriesUtils.toLinkLabel
-import org.testng.annotations.Test
+import kotlin.test.Test
 
 class EntriesUtilsTest {
     private val comment = EntryComment("comment", "nick")
@@ -58,12 +58,12 @@ class EntriesUtilsTest {
         }
     }
 
-    @Test(groups = ["entries"])
+    @Test
     fun printCommentTest() {
         assertThat(printComment(0, 0, comment)).isEqualTo("${Constants.LINK_CMD}1.1: [nick] comment")
     }
 
-    @Test(groups = ["entries"])
+    @Test
     fun printLinkTest() {
         for (i in links.indices) {
             assertThat(
@@ -75,7 +75,7 @@ class EntriesUtilsTest {
         assertThat(printLink(0, links.first(), isView = true), "printLink(isView=true)").contains("[+1]")
     }
 
-    @Test(groups = ["entries"])
+    @Test
     fun printTagsTest() {
         for (i in links.indices) {
             assertThat(
@@ -84,7 +84,7 @@ class EntriesUtilsTest {
         }
     }
 
-    @Test(groups = ["entries"])
+    @Test
     fun toLinkLabelTest() {
         assertThat(1.toLinkLabel()).isEqualTo("${Constants.LINK_CMD}2")
     }

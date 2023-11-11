@@ -1,7 +1,7 @@
 /*
  * Versions.kt
  *
- * Copyright 2004-2023 Erik C. Thauvin (erik@thauvin.net)
+ * Copyright 2021-2023 Erik C. Thauvin (erik@thauvin.net)
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -40,7 +40,7 @@ import org.pircbotx.hooks.types.GenericMessageEvent
 
 class Versions : AbstractCommand() {
     private val allVersions = listOf(
-        "Version: ${ReleaseInfo.VERSION} (${ReleaseInfo.BUILDDATE.toIsoLocalDate()})",
+        "Version: ${ReleaseInfo.VERSION} (${ReleaseInfo.BUILD_DATE.toIsoLocalDate()})",
         "${System.getProperty("os.name")} ${System.getProperty("os.version")} (${System.getProperty("os.arch")})" +
                 ", JVM ${System.getProperty("java.runtime.version")}",
         "Kotlin ${KotlinVersion.CURRENT}, PircBotX ${PircBotX.VERSION}"

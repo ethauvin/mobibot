@@ -1,7 +1,7 @@
 /*
  * LookupTest.kt
  *
- * Copyright 2004-2023 Erik C. Thauvin (erik@thauvin.net)
+ * Copyright 2021-2023 Erik C. Thauvin (erik@thauvin.net)
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -35,13 +35,13 @@ import assertk.assertions.any
 import assertk.assertions.contains
 import net.thauvin.erik.mobibot.modules.Lookup.Companion.nslookup
 import net.thauvin.erik.mobibot.modules.Lookup.Companion.whois
-import org.testng.annotations.Test
+import kotlin.test.Test
 
 /**
  * The `Lookup Test` class.
  */
 class LookupTest {
-    @Test(groups = ["modules"])
+    @Test
     @Throws(Exception::class)
     fun testLookup() {
         var result = nslookup("apple.com")
@@ -51,7 +51,7 @@ class LookupTest {
         assertThat(result, "lookup(204.122.16.136)").contains("nix3.thauvin.us")
     }
 
-    @Test(groups = ["modules"])
+    @Test
     @Throws(Exception::class)
     fun testWhois() {
         val result = whois("17.178.96.59", Lookup.WHOIS_HOST)

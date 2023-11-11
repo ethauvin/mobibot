@@ -1,7 +1,7 @@
 /*
  * RockPaperScissorsTest.kt
  *
- * Copyright 2004-2023 Erik C. Thauvin (erik@thauvin.net)
+ * Copyright 2021-2023 Erik C. Thauvin (erik@thauvin.net)
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -34,10 +34,10 @@ package net.thauvin.erik.mobibot.modules
 import assertk.assertThat
 import assertk.assertions.isEqualTo
 import net.thauvin.erik.mobibot.modules.RockPaperScissors.Companion.winLoseOrDraw
-import org.testng.annotations.Test
+import kotlin.test.Test
 
 class RockPaperScissorsTest {
-    @Test(groups = ["modules"])
+    @Test
     fun testWinLoseOrDraw() {
         assertThat(winLoseOrDraw("scissors", "paper"), "scissors vs. paper").isEqualTo("win")
         assertThat(winLoseOrDraw("paper", "rock"), "paper vs. rock").isEqualTo("win")

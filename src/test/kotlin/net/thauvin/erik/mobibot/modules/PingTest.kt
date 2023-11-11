@@ -1,7 +1,7 @@
 /*
  * PingTest.kt
  *
- * Copyright 2004-2023 Erik C. Thauvin (erik@thauvin.net)
+ * Copyright 2021-2023 Erik C. Thauvin (erik@thauvin.net)
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -34,18 +34,18 @@ import assertk.assertThat
 import assertk.assertions.contains
 import assertk.assertions.isNotEmpty
 import net.thauvin.erik.mobibot.modules.Ping.Companion.randomPing
-import org.testng.annotations.Test
+import kotlin.test.Test
 
 /**
  * The `PingTest` class.
  */
 class PingTest {
-    @Test(groups = ["modules"])
+    @Test
     fun testPingsArray() {
         assertThat(Ping.PINGS, "Ping.PINGS").isNotEmpty()
     }
 
-    @Test(groups = ["modules"])
+    @Test
     fun testRandomPing() {
         for (i in 0..9) {
             assertThat(Ping.PINGS, "Ping.PINGS[$i]").contains(randomPing())

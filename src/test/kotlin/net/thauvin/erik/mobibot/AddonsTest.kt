@@ -1,7 +1,7 @@
 /*
  * AddonsTest.kt
  *
- * Copyright 2004-2023 Erik C. Thauvin (erik@thauvin.net)
+ * Copyright 2021-2023 Erik C. Thauvin (erik@thauvin.net)
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -42,8 +42,8 @@ import net.thauvin.erik.mobibot.commands.Ignore
 import net.thauvin.erik.mobibot.commands.links.Comment
 import net.thauvin.erik.mobibot.commands.links.View
 import net.thauvin.erik.mobibot.modules.*
-import org.testng.annotations.Test
 import java.util.*
+import kotlin.test.Test
 
 class AddonsTest {
     private val p = Properties().apply {

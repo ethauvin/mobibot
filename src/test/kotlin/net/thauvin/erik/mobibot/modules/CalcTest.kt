@@ -1,7 +1,7 @@
 /*
  * CalcTest.kt
  *
- * Copyright 2004-2023 Erik C. Thauvin (erik@thauvin.net)
+ * Copyright 2021-2023 Erik C. Thauvin (erik@thauvin.net)
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -37,13 +37,13 @@ import assertk.assertions.isInstanceOf
 import net.objecthunter.exp4j.tokenizer.UnknownFunctionOrVariableException
 import net.thauvin.erik.mobibot.Utils.bold
 import net.thauvin.erik.mobibot.modules.Calc.Companion.calculate
-import org.testng.annotations.Test
+import kotlin.test.Test
 
 /**
  * The `CalcTest` class.
  */
 class CalcTest {
-    @Test(groups = ["modules"])
+    @Test
     fun testCalculate() {
         assertThat(calculate("1 + 1"), "calculate(1+1)").isEqualTo("1+1 = ${2.bold()}")
         assertThat(calculate("1 -3"), "calculate(1-3)").isEqualTo("1-3 = ${(-2).bold()}")

@@ -1,7 +1,7 @@
 /*
  * FeedReaderTest.kt
  *
- * Copyright 2004-2023 Erik C. Thauvin (erik@thauvin.net)
+ * Copyright 2021-2023 Erik C. Thauvin (erik@thauvin.net)
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -37,10 +37,10 @@ import assertk.assertions.*
 import com.rometools.rome.io.FeedException
 import net.thauvin.erik.mobibot.FeedReader.Companion.readFeed
 import net.thauvin.erik.mobibot.msg.Message
-import org.testng.annotations.Test
 import java.io.IOException
 import java.net.MalformedURLException
 import java.net.UnknownHostException
+import kotlin.test.Test
 
 /**
  * The `FeedReader Test` class.

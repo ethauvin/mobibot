@@ -1,7 +1,7 @@
 /*
  * EntryLinkTest.kt
  *
- * Copyright 2004-2023 Erik C. Thauvin (erik@thauvin.net)
+ * Copyright 2021-2023 Erik C. Thauvin (erik@thauvin.net)
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -35,9 +35,9 @@ import assertk.assertThat
 import assertk.assertions.*
 import com.rometools.rome.feed.synd.SyndCategory
 import com.rometools.rome.feed.synd.SyndCategoryImpl
-import org.testng.annotations.Test
 import java.security.SecureRandom
 import java.util.*
+import kotlin.test.Test
 
 /**
  * The `EntryUtilsTest` class.
@@ -52,7 +52,7 @@ class EntryLinkTest {
         listOf("tag1", "tag2", "tag3", "TAG4", "Tag5")
     )
 
-    @Test(groups = ["entries"])
+    @Test
     fun testAddDeleteComment() {
         var i = 0
         while (i < 5) {
@@ -85,7 +85,7 @@ class EntryLinkTest {
         assertThat(entryLink.deleteComment(comment), "comment is already deleted").isFalse()
     }
 
-    @Test(groups = ["entries"])
+    @Test
     fun testConstructor() {
         val tags = listOf(SyndCategoryImpl().apply { name = "tag1" }, SyndCategoryImpl().apply { name = "tag2" })
         val link = EntryLink("link", "title", "nick", "channel", Date(), tags)
@@ -95,7 +95,7 @@ class EntryLinkTest {
         }
     }
 
-    @Test(groups = ["entries"])
+    @Test
     fun testMatches() {
         assertThat(entryLink.matches("mobitopia"), "matches(mobitopia)").isTrue()
         assertThat(entryLink.matches("skynx"), "match(nick)").isTrue()
@@ -106,7 +106,7 @@ class EntryLinkTest {
     }
 
 
-    @Test(groups = ["entries"])
+    @Test
     fun testTags() {
         val tags: List<SyndCategory> = entryLink.tags
         for ((i, tag) in tags.withIndex()) {

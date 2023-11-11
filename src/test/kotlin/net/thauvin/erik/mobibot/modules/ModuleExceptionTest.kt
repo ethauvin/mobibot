@@ -1,7 +1,7 @@
 /*
  * ModuleExceptionTest.kt
  *
- * Copyright 2004-2023 Erik C. Thauvin (erik@thauvin.net)
+ * Copyright 2021-2023 Erik C. Thauvin (erik@thauvin.net)
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -34,10 +34,10 @@ import assertk.all
 import assertk.assertThat
 import assertk.assertions.*
 import net.thauvin.erik.mobibot.ExceptionSanitizer.sanitize
-import org.testng.annotations.DataProvider
-import org.testng.annotations.Test
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.MethodSource
 import java.io.IOException
-import java.lang.reflect.Method
+import kotlin.test.Test
 
 /**
  * The `ModuleExceptionTest` class.
@@ -46,28 +46,30 @@ class ModuleExceptionTest {
     companion object {
         const val DEBUG_MESSAGE = "debugMessage"
         const val MESSAGE = "message"
+
+        @JvmStatic
+        fun dataProviders(): List<ModuleException> {
+            return listOf(
+                ModuleException(DEBUG_MESSAGE, MESSAGE, IOException("URL http://foobar.com")),
+                ModuleException(DEBUG_MESSAGE, MESSAGE, IOException("URL http://foobar.com?")),
+                ModuleException(DEBUG_MESSAGE, MESSAGE)
+            )
+        }
     }
 
-    @DataProvider(name = "dp")
-    fun createData(@Suppress("UNUSED_PARAMETER") m: Method?): Array<Array<Any>> {
-        return arrayOf(
-            arrayOf(ModuleException(DEBUG_MESSAGE, MESSAGE, IOException("URL http://foobar.com"))),
-            arrayOf(ModuleException(DEBUG_MESSAGE, MESSAGE, IOException("URL http://foobar.com?"))),
-            arrayOf(ModuleException(DEBUG_MESSAGE, MESSAGE))
-        )
-    }
-
-    @Test(dataProvider = "dp")
+    @ParameterizedTest
+    @MethodSource("dataProviders")
     fun testGetDebugMessage(e: ModuleException) {
         assertThat(e::debugMessage).isEqualTo(DEBUG_MESSAGE)
     }
 
-    @Test(dataProvider = "dp")
+    @ParameterizedTest
+    @MethodSource("dataProviders")
     fun testGetMessage(e: ModuleException) {
         assertThat(e).hasMessage(MESSAGE)
     }
 
-    @Test(groups = ["modules"])
+    @Test
     fun testSanitizeMessage() {
         val apiKey = "1234567890"
         var e = ModuleException(DEBUG_MESSAGE, MESSAGE, IOException("URL http://foo.com?apiKey=$apiKey&userID=me"))

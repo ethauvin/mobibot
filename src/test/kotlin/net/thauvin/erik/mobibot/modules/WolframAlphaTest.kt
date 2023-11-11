@@ -1,7 +1,7 @@
 /*
  * WolframAlphaTest.kt
  *
- * Copyright 2004-2023 Erik C. Thauvin (erik@thauvin.net)
+ * Copyright 2021-2023 Erik C. Thauvin (erik@thauvin.net)
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -36,13 +36,14 @@ import assertk.assertThat
 import assertk.assertions.contains
 import assertk.assertions.hasMessage
 import assertk.assertions.isInstanceOf
+import net.thauvin.erik.mobibot.DisabledOnCi
 import net.thauvin.erik.mobibot.ExceptionSanitizer.sanitize
 import net.thauvin.erik.mobibot.LocalProperties
 import net.thauvin.erik.mobibot.modules.WolframAlpha.Companion.queryWolfram
-import org.testng.annotations.Test
+import kotlin.test.Test
 
 class WolframAlphaTest : LocalProperties() {
-    @Test(groups = ["modules"])
+    @Test
     fun testAppId() {
         assertFailure { queryWolfram("1 gallon to liter", appId = "DEMO") }
             .isInstanceOf(ModuleException::class.java)
@@ -52,7 +53,8 @@ class WolframAlphaTest : LocalProperties() {
             .isInstanceOf(ModuleException::class.java)
     }
 
-    @Test(groups = ["modules", "no-ci"])
+    @Test
+    @DisabledOnCi
     @Throws(ModuleException::class)
     fun queryWolframTest() {
         val apiKey = getProperty(WolframAlpha.APPID_KEY_PROP)

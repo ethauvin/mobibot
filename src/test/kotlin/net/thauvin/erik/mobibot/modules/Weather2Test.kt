@@ -1,7 +1,7 @@
 /*
  * Weather2Test.kt
  *
- * Copyright 2004-2023 Erik C. Thauvin (erik@thauvin.net)
+ * Copyright 2021-2023 Erik C. Thauvin (erik@thauvin.net)
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -43,19 +43,19 @@ import net.thauvin.erik.mobibot.modules.Weather2.Companion.getCountry
 import net.thauvin.erik.mobibot.modules.Weather2.Companion.getWeather
 import net.thauvin.erik.mobibot.modules.Weather2.Companion.mphToKmh
 import net.thauvin.erik.mobibot.msg.Message
-import org.testng.annotations.Test
+import kotlin.test.Test
 
 /**
  * The `Weather2Test` class.
  */
 class Weather2Test : LocalProperties() {
-    @Test(groups = ["modules"])
+    @Test
     fun testFtoC() {
         val t = ftoC(32.0)
         assertThat(t.second, "32 °F is 0 °C").isEqualTo(0)
     }
 
-    @Test(groups = ["modules"])
+    @Test
     fun testGetCountry() {
         assertThat(getCountry("foo"), "foo is not a valid country").isEqualTo(OWM.Country.UNITED_STATES)
         assertThat(getCountry("fr"), "country should France").isEqualTo(OWM.Country.FRANCE)
@@ -67,13 +67,13 @@ class Weather2Test : LocalProperties() {
         }
     }
 
-    @Test(groups = ["modules"])
+    @Test
     fun testMphToKmh() {
         val w = mphToKmh(0.62)
         assertThat(w.second, "0.62 mph is 1 km/h").isEqualTo(1)
     }
 
-    @Test(groups = ["modules"])
+    @Test
     @Throws(ModuleException::class)
     fun testWeather() {
         var query = "98204"

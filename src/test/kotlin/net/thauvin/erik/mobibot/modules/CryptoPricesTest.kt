@@ -1,7 +1,7 @@
 /*
  * CryptoPricesTest.kt
  *
- * Copyright 2004-2023 Erik C. Thauvin (erik@thauvin.net)
+ * Copyright 2021-2023 Erik C. Thauvin (erik@thauvin.net)
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -39,20 +39,17 @@ import net.thauvin.erik.crypto.CryptoPrice
 import net.thauvin.erik.mobibot.modules.CryptoPrices.Companion.currentPrice
 import net.thauvin.erik.mobibot.modules.CryptoPrices.Companion.getCurrencyName
 import net.thauvin.erik.mobibot.modules.CryptoPrices.Companion.loadCurrencies
-import org.testng.annotations.BeforeClass
-import org.testng.annotations.Test
+import kotlin.test.Test
 
 /**
  * The `CryptoPricesTest` class.
  */
 class CryptoPricesTest {
-    @BeforeClass
-    @Throws(ModuleException::class)
-    fun before() {
+    init {
         loadCurrencies()
     }
 
-    @Test(groups = ["modules"])
+    @Test
     @Throws(ModuleException::class)
     fun testMarketPrice() {
         var price = currentPrice(listOf("BTC"))
@@ -70,7 +67,7 @@ class CryptoPricesTest {
         }
     }
 
-    @Test(groups = ["modules"])
+    @Test
     fun testGetCurrencyName() {
         assertThat(getCurrencyName("USD"), "USD").isEqualTo("United States Dollar")
         assertThat(getCurrencyName("EUR"), "EUR").isEqualTo("Euro")

@@ -1,7 +1,7 @@
 /*
  * WordTimeTest.kt
  *
- * Copyright 2004-2023 Erik C. Thauvin (erik@thauvin.net)
+ * Copyright 2021-2023 Erik C. Thauvin (erik@thauvin.net)
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -39,14 +39,14 @@ import net.thauvin.erik.mobibot.modules.WorldTime.Companion.BEATS_KEYWORD
 import net.thauvin.erik.mobibot.modules.WorldTime.Companion.COUNTRIES_MAP
 import net.thauvin.erik.mobibot.modules.WorldTime.Companion.time
 import org.pircbotx.Colors
-import org.testng.annotations.Test
 import java.time.ZoneId
+import kotlin.test.Test
 
 /**
  * The `WordTimeTest` class.
  */
 class WordTimeTest {
-    @Test(groups = ["modules"])
+    @Test
     fun testTime() {
         assertThat(time(), "time()").matches(
             ("The time is ${Colors.BOLD}\\d{1,2}:\\d{2}${Colors.BOLD} " +
@@ -61,7 +61,7 @@ class WordTimeTest {
         assertThat(time("BEAT"), "time($BEATS_KEYWORD)").matches("[\\w ]+ .?@\\d{3}+.? .beats".toRegex())
     }
 
-    @Test(groups = ["modules"])
+    @Test
     fun testZones() {
         COUNTRIES_MAP.filter { it.value != BEATS_KEYWORD }.forEach {
             assertThat(ZoneId.of(it.value))

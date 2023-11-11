@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="warn">
+    <Appenders>
+        <Console name="stderr" target="SYSTEM_ERR">
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+        </Console>
+        <Console name="input" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{UNIX_MILLIS} %msg%n"/>
+            <Filters>
+                <ThresholdFilter level="warn" onMatch="DENY" onMismatch="NEUTRAL"/>
+                <ThresholdFilter level="debug" onMatch="ACCEPT" onMismatch="DENY"/>
+            </Filters>
+        </Console>
+        <Console name="output" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{UNIX_MILLIS} >>>%msg%n"/>
+            <Filters>
+                <ThresholdFilter level="warn" onMatch="DENY" onMismatch="NEUTRAL"/>
+                <ThresholdFilter level="debug" onMatch="ACCEPT" onMismatch="DENY"/>
+            </Filters>
+        </Console>
+    </Appenders>
+    <Loggers>
+        <Root level="warn" additivity="false">
+            <AppenderRef ref="stderr"/>
+        </Root>
+        <logger level="debug" name="org.pircbotx.InputParser" additivity="false">
+            <appender-ref ref="input"/>
+            <appender-ref ref="stderr" level="warn"/>
+        </logger>
+        <logger level="debug" name="org.pircbotx.output.OutputRaw" additivity="false">
+            <appender-ref ref="output"/>
+            <appender-ref ref="stderr" level="warn"/>
+        </logger>
+        <logger level="trace" name="net.thauvin.erik.mobibot" additivity="false">
+            <appender-ref ref="stderr"/>
+        </logger>
+    </Loggers>
+</Configuration>
