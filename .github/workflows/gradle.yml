@@ -35,6 +35,16 @@ jobs:
         run: ./bld compile
 
       - name: Run tests with bld
+        env:
+          CI_NAME: "GitHub CI"
+          ALPHAVANTAGE_API_KEY: ${{ secrets.ALPHAVANTAGE_API_KEY }}
+          CHATGPT_API_KEY: ${{ secrets.CHATGPT_API_KEY }}
+          OWM_API_KEY: ${{ secrets.OWM_API_KEY }}
+          PINBOARD_API_TOKEN: ${{ secrets.PINBOARD_API_TOKEN }}
+          MASTODON_ACCESS_TOKEN: ${{ secrets.MASTODON_ACCESS_TOKEN }}
+          MASTODON_HANDLE: ${{ secrets.MASTODON_HANDLE }}
+          MASTODON_INSTANCE: ${{ secrets.MASTODON_INSTANCE }}
+          EXCHANGERATE_API_KEY: ${{ secrets.EXCHANGERATE_API_KEY }}
         run: ./bld jacoco
 
       - name: SonarCloud Scan
