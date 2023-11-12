@@ -1,7 +1,7 @@
 /*
  * MobibotBuild.java
  *
- * Copyright 2021-2023 Erik C. Thauvin (erik@thauvin.net)
+ * Copyright 2004-2023 Erik C. Thauvin (erik@thauvin.net)
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -89,6 +89,7 @@ public class MobibotBuild extends Project {
                 .include(dependency("org.apache.logging.log4j", "log4j-api", log4j))
                 .include(dependency("org.apache.logging.log4j", "log4j-core", log4j))
                 .include(dependency("org.apache.logging.log4j", "log4j-slf4j2-impl", log4j))
+                // Misc.
                 .include(dependency("com.rometools", "rome", "2.1.0"))
                 .include(dependency("com.squareup.okhttp3", "okhttp", "4.12.0"))
                 .include(dependency("net.aksingh", "owm-japis", "2.5.3.0"))
