@@ -39,13 +39,6 @@ import java.security.SecureRandom
 import java.util.*
 import kotlin.test.Test
 
-/**
- * The `EntryUtilsTest` class.
- *
- * @author [Erik C. Thauvin](https://erik.thauvin.net/)
- * @created 2019-04-19
- * @since 1.0
- */
 class EntryLinkTest {
     private val entryLink = EntryLink(
         "https://www.mobitopia.org/", "Mobitopia", "Skynx", "JimH", "#mobitopia",

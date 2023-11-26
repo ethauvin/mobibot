@@ -41,9 +41,6 @@ import net.thauvin.erik.mobibot.modules.CryptoPrices.Companion.getCurrencyName
 import net.thauvin.erik.mobibot.modules.CryptoPrices.Companion.loadCurrencies
 import kotlin.test.Test
 
-/**
- * The `CryptoPricesTest` class.
- */
 class CryptoPricesTest {
     init {
         loadCurrencies()

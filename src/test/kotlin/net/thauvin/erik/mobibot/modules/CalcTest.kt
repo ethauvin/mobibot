@@ -39,9 +39,6 @@ import net.thauvin.erik.mobibot.Utils.bold
 import net.thauvin.erik.mobibot.modules.Calc.Companion.calculate
 import kotlin.test.Test
 
-/**
- * The `CalcTest` class.
- */
 class CalcTest {
     @Test
     fun testCalculate() {

@@ -45,9 +45,6 @@ import net.thauvin.erik.mobibot.modules.Weather2.Companion.mphToKmh
 import net.thauvin.erik.mobibot.msg.Message
 import kotlin.test.Test
 
-/**
- * The `Weather2Test` class.
- */
 class Weather2Test : LocalProperties() {
     @Test
     fun testFtoC() {

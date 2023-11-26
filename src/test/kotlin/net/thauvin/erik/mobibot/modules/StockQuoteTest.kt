@@ -41,9 +41,6 @@ import net.thauvin.erik.mobibot.msg.ErrorMessage
 import net.thauvin.erik.mobibot.msg.Message
 import kotlin.test.Test
 
-/**
- * The `StockQuoteTest` class.
- */
 class StockQuoteTest : LocalProperties() {
     private fun buildMatch(label: String): String {
         return "${label}:[ ]+[0-9.]+".prependIndent()

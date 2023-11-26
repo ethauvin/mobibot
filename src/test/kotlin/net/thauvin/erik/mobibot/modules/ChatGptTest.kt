@@ -35,7 +35,7 @@ import assertk.assertThat
 import assertk.assertions.contains
 import assertk.assertions.hasNoCause
 import assertk.assertions.isInstanceOf
-import net.thauvin.erik.mobibot.DisabledOnCi
+import net.thauvin.erik.mobibot.DisableOnCi
 import net.thauvin.erik.mobibot.LocalProperties
 import kotlin.test.Test
 
@@ -48,7 +48,7 @@ class ChatGptTest : LocalProperties() {
     }
 
     @Test
-    @DisabledOnCi
+    @DisableOnCi
     fun testChat() {
         val apiKey = getProperty(ChatGpt.API_KEY_PROP)
         assertThat(

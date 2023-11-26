@@ -41,4 +41,4 @@ import org.junit.jupiter.api.extension.ExtendWith
 @Target(AnnotationTarget.TYPE, AnnotationTarget.FUNCTION)
 @Retention(AnnotationRetention.RUNTIME)
 @ExtendWith(DisableOnCiCondition::class)
-annotation class DisabledOnCi
+annotation class DisableOnCi

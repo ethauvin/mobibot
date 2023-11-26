@@ -42,9 +42,6 @@ import java.net.MalformedURLException
 import java.net.UnknownHostException
 import kotlin.test.Test
 
-/**
- * The `FeedReader Test` class.
- */
 class FeedReaderTest {
     @Test
     fun readFeedTest() {

@@ -42,9 +42,6 @@ import org.pircbotx.Colors
 import java.time.ZoneId
 import kotlin.test.Test
 
-/**
- * The `WordTimeTest` class.
- */
 class WordTimeTest {
     @Test
     fun testTime() {

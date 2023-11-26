@@ -39,9 +39,6 @@ import org.junit.jupiter.params.provider.MethodSource
 import java.io.IOException
 import kotlin.test.Test
 
-/**
- * The `ModuleExceptionTest` class.
- */
 class ModuleExceptionTest {
     companion object {
         const val DEBUG_MESSAGE = "debugMessage"

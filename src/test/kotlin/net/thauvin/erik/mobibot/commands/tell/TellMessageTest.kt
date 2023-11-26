@@ -41,9 +41,6 @@ import java.time.LocalDateTime
 import java.time.temporal.Temporal
 import kotlin.test.Test
 
-/**
- * The `TellMessageTest` class.
- */
 class TellMessageTest {
     private fun isValidDate(date: Temporal): Boolean {
         return Duration.between(date, LocalDateTime.now()).toMinutes() < 1

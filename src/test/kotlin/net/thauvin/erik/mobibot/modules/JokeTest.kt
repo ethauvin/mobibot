@@ -38,9 +38,6 @@ import net.thauvin.erik.mobibot.msg.Message
 import net.thauvin.erik.mobibot.msg.PublicMessage
 import kotlin.test.Test
 
-/**
- * The `JokeTest` class.
- */
 class JokeTest {
     @Test
     @Throws(ModuleException::class)

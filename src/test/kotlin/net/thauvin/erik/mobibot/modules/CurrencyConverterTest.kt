@@ -44,10 +44,6 @@ import net.thauvin.erik.mobibot.msg.Message
 import net.thauvin.erik.mobibot.msg.PublicMessage
 import kotlin.test.Test
 
-
-/**
- * The `CurrencyConvertTest` class.
- */
 class CurrencyConverterTest : LocalProperties() {
     init {
         val apiKey = getProperty(CurrencyConverter.API_KEY_PROP)

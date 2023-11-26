@@ -37,9 +37,6 @@ import net.thauvin.erik.mobibot.modules.Lookup.Companion.nslookup
 import net.thauvin.erik.mobibot.modules.Lookup.Companion.whois
 import kotlin.test.Test
 
-/**
- * The `Lookup Test` class.
- */
 class LookupTest {
     @Test
     @Throws(Exception::class)

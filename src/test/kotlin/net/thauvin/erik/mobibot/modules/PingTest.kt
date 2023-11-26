@@ -36,9 +36,6 @@ import assertk.assertions.isNotEmpty
 import net.thauvin.erik.mobibot.modules.Ping.Companion.randomPing
 import kotlin.test.Test
 
-/**
- * The `PingTest` class.
- */
 class PingTest {
     @Test
     fun testPingsArray() {

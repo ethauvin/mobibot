@@ -34,7 +34,7 @@ import assertk.all
 import assertk.assertFailure
 import assertk.assertThat
 import assertk.assertions.*
-import net.thauvin.erik.mobibot.DisabledOnCi
+import net.thauvin.erik.mobibot.DisableOnCi
 import net.thauvin.erik.mobibot.ExceptionSanitizer.sanitize
 import net.thauvin.erik.mobibot.LocalProperties
 import net.thauvin.erik.mobibot.modules.GoogleSearch.Companion.searchGoogle
@@ -42,9 +42,6 @@ import net.thauvin.erik.mobibot.msg.ErrorMessage
 import net.thauvin.erik.mobibot.msg.Message
 import kotlin.test.Test
 
-/**
- * The `GoogleSearchTest` class.
- */
 class GoogleSearchTest : LocalProperties() {
     @Test
     fun testAPIKeys() {
@@ -65,7 +62,7 @@ class GoogleSearchTest : LocalProperties() {
     }
 
     @Test
-    @DisabledOnCi
+    @DisableOnCi
     @Throws(ModuleException::class)
     fun testSearchGoogle() {
         val apiKey = getProperty(GoogleSearch.API_KEY_PROP)

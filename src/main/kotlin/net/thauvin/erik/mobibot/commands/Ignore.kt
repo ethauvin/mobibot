@@ -143,5 +143,4 @@ class Ignore : AbstractCommand() {
             ignored.addAll(value.split(LinksManager.TAG_MATCH))
         }
     }
-
 }

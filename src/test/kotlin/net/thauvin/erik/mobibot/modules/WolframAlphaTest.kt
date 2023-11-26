@@ -36,7 +36,7 @@ import assertk.assertThat
 import assertk.assertions.contains
 import assertk.assertions.hasMessage
 import assertk.assertions.isInstanceOf
-import net.thauvin.erik.mobibot.DisabledOnCi
+import net.thauvin.erik.mobibot.DisableOnCi
 import net.thauvin.erik.mobibot.ExceptionSanitizer.sanitize
 import net.thauvin.erik.mobibot.LocalProperties
 import net.thauvin.erik.mobibot.modules.WolframAlpha.Companion.queryWolfram
@@ -54,7 +54,7 @@ class WolframAlphaTest : LocalProperties() {
     }
 
     @Test
-    @DisabledOnCi
+    @DisableOnCi
     @Throws(ModuleException::class)
     fun queryWolframTest() {
         val apiKey = getProperty(WolframAlpha.APPID_KEY_PROP)

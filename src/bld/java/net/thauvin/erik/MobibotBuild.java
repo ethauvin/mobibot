@@ -35,9 +35,10 @@ import rife.bld.BuildCommand;
 import rife.bld.Project;
 import rife.bld.dependencies.Repository;
 import rife.bld.extension.CompileKotlinOperation;
-import rife.bld.extension.CompileKotlinOptions;
+import rife.bld.extension.DetektOperation;
 import rife.bld.extension.GeneratedVersionOperation;
 import rife.bld.extension.JacocoReportOperation;
+import rife.bld.operations.exceptions.ExitStatusException;
 import rife.tools.FileUtils;
 import rife.tools.exceptions.FileUtilsErrorException;
 
@@ -68,12 +69,13 @@ public class MobibotBuild extends Project {
         autoDownloadPurge = true;
         repositories = List.of(MAVEN_LOCAL, MAVEN_CENTRAL, new Repository("https://jitpack.io"));
 
-        var log4j = version(2, 21, 1);
+        var log4j = version(2, 22, 0);
+        var kotlin = version(1, 9, 21);
         scope(compile)
                 // PircBotX
                 .include(dependency("com.github.pircbotx", "pircbotx", "2.3.1"))
                 // Commons (mostly for PircBotX)
-                .include(dependency("org.apache.commons", "commons-lang3", "3.13.0"))
+                .include(dependency("org.apache.commons", "commons-lang3", "3.14.0"))
                 .include(dependency("org.apache.commons", "commons-text", "1.11.0"))
                 .include(dependency("commons-codec", "commons-codec", "1.16.0"))
                 .include(dependency("commons-net", "commons-net", "3.10.0"))
@@ -81,7 +83,10 @@ public class MobibotBuild extends Project {
                 .include(dependency("com.google.code.gson", "gson", "2.10.1"))
                 .include(dependency("com.google.guava", "guava", "32.1.3-jre"))
                 // Kotlin
-                .include(dependency("org.jetbrains.kotlin", "kotlin-stdlib", version(1, 9, 20)))
+                .include(dependency("org.jetbrains.kotlin", "kotlin-stdlib", kotlin))
+                .include(dependency("org.jetbrains.kotlin", "kotlin-stdlib-common", kotlin))
+                .include(dependency("org.jetbrains.kotlin", "kotlin-stdlib-jdk7", kotlin))
+                .include(dependency("org.jetbrains.kotlin", "kotlin-stdlib-jdk8", kotlin))
                 .include(dependency("org.jetbrains.kotlinx", "kotlinx-coroutines-core", "1.7.3"))
                 .include(dependency("org.jetbrains.kotlinx", "kotlinx-cli-jvm", "0.3.6"))
                 // Logging
@@ -97,13 +102,13 @@ public class MobibotBuild extends Project {
                 .include(dependency("org.json", "json", "20231013"))
                 .include(dependency("org.jsoup", "jsoup", "1.16.2"))
                 // Thauvin
-                .include(dependency("net.thauvin.erik", "cryptoprice", "1.0.1"))
-                .include(dependency("net.thauvin.erik", "jokeapi", "0.9.0"))
-                .include(dependency("net.thauvin.erik", "pinboard-poster", "1.1.0"))
+                .include(dependency("net.thauvin.erik", "cryptoprice", "1.0.2-SNAPSHOT"))
+                .include(dependency("net.thauvin.erik", "jokeapi", "0.9.1-SNAPSHOT"))
+                .include(dependency("net.thauvin.erik", "pinboard-poster", "1.1.1-SNAPSHOT"))
                 .include(dependency("net.thauvin.erik.urlencoder", "urlencoder-lib-jvm", "1.4.0"));
         scope(test)
                 .include(dependency("com.willowtreeapps.assertk", "assertk-jvm", version(0, 27, 0)))
-                .include(dependency("org.jetbrains.kotlin", "kotlin-test-junit5", version(1, 9, 20)))
+                .include(dependency("org.jetbrains.kotlin", "kotlin-test-junit5", version(1, 9, 21)))
                 .include(dependency("org.junit.jupiter", "junit-jupiter", version(5, 10, 1)))
                 .include(dependency("org.junit.platform", "junit-platform-console-standalone", version(1, 10, 1)));
 
@@ -132,11 +137,6 @@ public class MobibotBuild extends Project {
         releaseInfo();
         new CompileKotlinOperation()
                 .fromProject(this)
-                .compileOptions(
-                        new CompileKotlinOptions()
-                                .jdkRelease(javaRelease)
-                                .verbose(true)
-                )
                 .execute();
     }
 
@@ -148,6 +148,23 @@ public class MobibotBuild extends Project {
         FileUtils.copyDirectory(new File("properties"), deploy);
         FileUtils.copyDirectory(libCompileDirectory(), lib);
         FileUtils.copy(new File(buildDistDirectory(), jarFileName()), new File(deploy, "mobibot.jar"));
+    }
+
+    @BuildCommand(summary = "Checks source with Detekt")
+    public void detekt() throws ExitStatusException, IOException, InterruptedException {
+        new DetektOperation()
+                .fromProject(this)
+                .baseline("config/detekt/baseline.xml")
+                .execute();
+    }
+
+    @BuildCommand(value = "detekt-baseline", summary = "Creates the Detekt baseline")
+    public void detektBaseline() throws ExitStatusException, IOException, InterruptedException {
+        new DetektOperation()
+                .fromProject(this)
+                .baseline("config/detekt/baseline.xml")
+                .createBaseline(true)
+                .execute();
     }
 
     @BuildCommand(summary = "Generates JaCoCo Reports")

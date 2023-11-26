@@ -48,18 +48,18 @@ class SeenTest {
         seen.clear()
         assertThat(seen::seenNicks).isEmpty()
         seen.load()
-        assertThat(seen::seenNicks).key(nick).isNotNull()
+        assertThat(seen::seenNicks).key(NICK).isNotNull()
     }
 
     @Test
     @Order(2)
     fun addTest() {
-        val last = seen.seenNicks[nick]?.lastSeen
-        seen.add(nick.lowercase())
+        val last = seen.seenNicks[NICK]?.lastSeen
+        seen.add(NICK.lowercase())
         assertThat(seen).all {
             prop(Seen::seenNicks).size().isEqualTo(1)
-            prop(Seen::seenNicks).key(nick).isNotNull().prop(SeenNick::lastSeen).isNotEqualTo(last)
-            prop(Seen::seenNicks).key(nick).isNotNull().prop(SeenNick::nick).isNotNull().isEqualTo(nick.lowercase())
+            prop(Seen::seenNicks).key(NICK).isNotNull().prop(SeenNick::lastSeen).isNotEqualTo(last)
+            prop(Seen::seenNicks).key(NICK).isNotNull().prop(SeenNick::nick).isNotNull().isEqualTo(NICK.lowercase())
         }
     }
 
@@ -75,12 +75,12 @@ class SeenTest {
     companion object {
         private val tmpFile = kotlin.io.path.createTempFile(suffix = ".ser")
         private val seen = Seen(tmpFile.toAbsolutePath().toString())
-        private const val nick = "ErikT"
+        private const val NICK = "ErikT"
 
         @JvmStatic
         @BeforeClass
         fun beforeClass() {
-            seen.add(nick)
+            seen.add(NICK)
             assertThat(tmpFile.fileSize(), "tmpFile.size").isGreaterThan(0)
         }
 

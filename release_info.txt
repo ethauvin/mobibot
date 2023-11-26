@@ -17,6 +17,7 @@ object {{v className/}} {
     const val VERSION = "{{v version/}}"
 
     @JvmField
+    @Suppress("MagicNumber")
     val BUILD_DATE: LocalDateTime = LocalDateTime.ofInstant(
         Instant.ofEpochMilli({{v epoch/}}L), ZoneId.systemDefault()
     )

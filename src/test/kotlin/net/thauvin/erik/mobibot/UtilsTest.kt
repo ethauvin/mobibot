@@ -68,9 +68,6 @@ import java.time.LocalDateTime
 import java.util.*
 import kotlin.test.Test
 
-/**
- * The `Utils Test` class.
- */
 class UtilsTest {
     private val ascii =
         " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~"
