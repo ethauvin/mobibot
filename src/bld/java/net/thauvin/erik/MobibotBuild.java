@@ -50,8 +50,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.jar.Attributes;
 
-import static rife.bld.dependencies.Repository.MAVEN_CENTRAL;
-import static rife.bld.dependencies.Repository.MAVEN_LOCAL;
+import static rife.bld.dependencies.Repository.*;
 import static rife.bld.dependencies.Scope.compile;
 import static rife.bld.dependencies.Scope.test;
 
@@ -67,7 +66,12 @@ public class MobibotBuild extends Project {
         javaRelease = 17;
         downloadSources = true;
         autoDownloadPurge = true;
-        repositories = List.of(MAVEN_LOCAL, MAVEN_CENTRAL, new Repository("https://jitpack.io"));
+        repositories = List.of(
+                MAVEN_LOCAL,
+                SONATYPE_SNAPSHOTS_LEGACY,
+                MAVEN_CENTRAL,
+                new Repository("https://jitpack.io")
+        );
 
         var log4j = version(2, 22, 0);
         var kotlin = version(1, 9, 21);
