@@ -66,11 +66,7 @@ public class MobibotBuild extends Project {
         javaRelease = 17;
         downloadSources = true;
         autoDownloadPurge = true;
-        repositories = List.of(
-                MAVEN_LOCAL,
-                SONATYPE_SNAPSHOTS_LEGACY,
-                MAVEN_CENTRAL,
-                new Repository("https://jitpack.io")
+        repositories = List.of(MAVEN_LOCAL, MAVEN_CENTRAL, new Repository("https://jitpack.io")
         );
 
         var log4j = version(2, 22, 0);
@@ -106,9 +102,9 @@ public class MobibotBuild extends Project {
                 .include(dependency("org.json", "json", "20231013"))
                 .include(dependency("org.jsoup", "jsoup", "1.16.2"))
                 // Thauvin
-                .include(dependency("net.thauvin.erik", "cryptoprice", "1.0.2-SNAPSHOT"))
-                .include(dependency("net.thauvin.erik", "jokeapi", "0.9.1-SNAPSHOT"))
-                .include(dependency("net.thauvin.erik", "pinboard-poster", "1.1.1-SNAPSHOT"))
+                .include(dependency("net.thauvin.erik", "cryptoprice", "1.0.2"))
+                .include(dependency("net.thauvin.erik", "jokeapi", "0.9.1"))
+                .include(dependency("net.thauvin.erik", "pinboard-poster", "1.1.1"))
                 .include(dependency("net.thauvin.erik.urlencoder", "urlencoder-lib-jvm", "1.4.0"));
         scope(test)
                 .include(dependency("com.willowtreeapps.assertk", "assertk-jvm", version(0, 27, 0)))
@@ -150,7 +146,9 @@ public class MobibotBuild extends Project {
         var lib = new File(deploy, "lib");
         var ignore = lib.mkdirs();
         FileUtils.copyDirectory(new File("properties"), deploy);
-        FileUtils.copyDirectory(libCompileDirectory(), lib);
+        for (var jar : compileClasspathJars()) {
+            FileUtils.copy(jar, new File(lib, jar.getName()));
+        }
         FileUtils.copy(new File(buildDistDirectory(), jarFileName()), new File(deploy, "mobibot.jar"));
     }
 

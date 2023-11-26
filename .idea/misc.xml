@@ -4,6 +4,8 @@
     <pattern value="net.thauvin.erik.MobibotBuild" method="deploy" />
     <pattern value="net.thauvin.erik.MobibotBuild" method="jacoco" />
     <pattern value="net.thauvin.erik.MobibotBuild" />
+    <pattern value="net.thauvin.erik.MobibotBuild" method="detekt" />
+    <pattern value="net.thauvin.erik.MobibotBuild" method="detektBaseline" />
   </component>
   <component name="PDMPlugin">
     <option name="customRuleSets">
