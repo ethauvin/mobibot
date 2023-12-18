@@ -1,16 +1,12 @@
 package net.thauvin.erik.mobibot.modules
 
-import com.google.auth.Credentials
 import com.google.cloud.vertexai.VertexAI
-import com.google.cloud.vertexai.api.GenerateContentResponse
 import com.google.cloud.vertexai.api.GenerationConfig
 import com.google.cloud.vertexai.generativeai.preview.ChatSession
 import com.google.cloud.vertexai.generativeai.preview.GenerativeModel
 import com.google.cloud.vertexai.generativeai.preview.ResponseHandler
 import net.thauvin.erik.mobibot.Utils
 import net.thauvin.erik.mobibot.Utils.sendMessage
-import okio.IOException
-import org.apache.commons.text.WordUtils
 import org.pircbotx.hooks.types.GenericMessageEvent
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -86,7 +82,7 @@ class Gemini : AbstractModule() {
                         val session = ChatSession(model)
                         val response = session.sendMessage(query)
 
-                        return ResponseHandler.getText(response);
+                        return ResponseHandler.getText(response)
                     }
                 } catch (e: Exception) {
                     throw ModuleException(
@@ -96,7 +92,7 @@ class Gemini : AbstractModule() {
                     )
                 }
             } else {
-                throw ModuleException("${GEMINI_CMD}($query)", "No ${GEMINI_NAME} Project ID or Location specified.")
+                throw ModuleException("${GEMINI_CMD}($query)", "No $GEMINI_NAME Project ID or Location specified.")
             }
         }
     }
@@ -105,10 +101,10 @@ class Gemini : AbstractModule() {
         commands.add(GEMINI_CMD)
         with(help) {
             add("To get answers from $name:")
-            add(Utils.helpFormat("%c ${GEMINI_CMD} <query>"))
+            add(Utils.helpFormat("%c $GEMINI_CMD <query>"))
             add("For example:")
-            add(Utils.helpFormat("%c ${GEMINI_CMD} explain quantum computing in simple terms"))
-            add(Utils.helpFormat("%c ${GEMINI_CMD} how do I make an HTTP request in Javascript?"))
+            add(Utils.helpFormat("%c $GEMINI_CMD explain quantum computing in simple terms"))
+            add(Utils.helpFormat("%c $GEMINI_CMD how do I make an HTTP request in Javascript?"))
         }
         initProperties(PROJECT_ID_PROP, LOCATION_PROPR, MAX_TOKENS_PROP)
     }

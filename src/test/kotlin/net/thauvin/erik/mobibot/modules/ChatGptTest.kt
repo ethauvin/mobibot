@@ -54,11 +54,12 @@ class ChatGptTest : LocalProperties() {
         assertThat(
             ChatGpt.chat("how do I make an HTTP request in Javascript?", apiKey, 100)
         ).contains("XMLHttpRequest")
+
         assertThat(
             ChatGpt.chat("how do I encode a URL in java?", apiKey, 60)
         ).contains("URLEncoder")
 
-        assertFailure { ChatGpt.chat("1 liter to gallon", apiKey, 0) }
+        assertFailure { ChatGpt.chat("1 liter to gallon", apiKey, -1) }
             .isInstanceOf(ModuleException::class.java)
     }
 }

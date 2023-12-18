@@ -34,10 +34,8 @@ package net.thauvin.erik.mobibot.modules
 import net.thauvin.erik.mobibot.Constants
 import net.thauvin.erik.mobibot.Utils
 import net.thauvin.erik.mobibot.Utils.sendMessage
-import org.apache.commons.text.WordUtils
 import org.json.JSONException
 import org.json.JSONObject
-import org.json.JSONWriter
 import org.pircbotx.hooks.types.GenericMessageEvent
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -48,7 +46,7 @@ import java.net.http.HttpRequest
 import java.net.http.HttpResponse
 
 class ChatGpt : AbstractModule() {
-    private val logger: Logger = LoggerFactory.getLogger(ChatGpt::class.java)
+    val logger: Logger = LoggerFactory.getLogger(ChatGpt::class.java)
 
     override val name = CHATGPT_NAME
 
@@ -60,7 +58,7 @@ class ChatGpt : AbstractModule() {
                     properties.getOrDefault(MAX_TOKENS_PROP, "1024").toInt()
                 )
                 if (answer.isNotBlank()) {
-                    event.sendMessage(WordUtils.wrap(answer, 400))
+                    event.sendMessage(answer)
                 } else {
                     event.respond("$name is stumped.")
                 }
@@ -95,7 +93,7 @@ class ChatGpt : AbstractModule() {
         const val MAX_TOKENS_PROP = "chatgpt-max-tokens"
 
         // ChatGPT API URL
-        private const val API_URL = "https://api.openai.com/v1/completions"
+        private const val API_URL = "https://api.openai.com/v1/chat/completions"
 
         // ChatGPT command
         private const val CHATGPT_CMD = "chatgpt"
@@ -105,7 +103,7 @@ class ChatGpt : AbstractModule() {
         @Throws(ModuleException::class)
         fun chat(query: String, apiKey: String?, maxTokens: Int): String {
             if (!apiKey.isNullOrEmpty()) {
-                val prompt = JSONWriter.valueToString("Q:$query\nA:")
+                val content = query.replace("\"", "\\\"")
                 val request = HttpRequest.newBuilder()
                     .uri(URI.create(API_URL))
                     .header("Content-Type", "application/json")
@@ -114,14 +112,15 @@ class ChatGpt : AbstractModule() {
                     .POST(
                         HttpRequest.BodyPublishers.ofString(
                             """{
-                                "model": "text-davinci-003",
-                                "prompt": $prompt,
-                                "temperature": 0,
-                                "max_tokens": $maxTokens,
-                                "top_p": 1,
-                                "frequency_penalty": 0,
-                                "presence_penalty": 0
-                            }""".trimIndent()
+                                   "model": "gpt-3.5-turbo-1106",
+                                   "max_tokens": $maxTokens,
+                                   "messages": [
+                                       {
+                                           "role": "user",
+                                           "content": "$content"
+                                       }
+                                   ]
+                                }""".trimIndent()
                         )
                     )
                     .build()
@@ -131,7 +130,7 @@ class ChatGpt : AbstractModule() {
                         try {
                             val jsonResponse = JSONObject(response.body())
                             val choices = jsonResponse.getJSONArray("choices")
-                            return choices.getJSONObject(0).getString("text").trim()
+                            return choices.getJSONObject(0).getJSONObject("message").getString("content").trim()
                         } catch (e: JSONException) {
                             throw ModuleException(
                                 "$CHATGPT_CMD($query): JSON",
