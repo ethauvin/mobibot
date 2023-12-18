@@ -28,3 +28,5 @@ Some very basic instructions:
     # launch
     /usr/bin/nohup java -jar mobibot.jar &
 ```
+
+For a listing of features, see the [website](https://mobitopia.org/mobibot/).
