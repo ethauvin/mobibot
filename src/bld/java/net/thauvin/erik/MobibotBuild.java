@@ -50,7 +50,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.jar.Attributes;
 
-import static rife.bld.dependencies.Repository.*;
+import static rife.bld.dependencies.Repository.MAVEN_CENTRAL;
+import static rife.bld.dependencies.Repository.MAVEN_LOCAL;
 import static rife.bld.dependencies.Scope.compile;
 import static rife.bld.dependencies.Scope.test;
 
@@ -82,9 +83,9 @@ public class MobibotBuild extends Project {
                 // Google
                 .include(dependency("com.google.code.gson", "gson", "2.10.1"))
                 .include(dependency("com.google.guava", "guava", "32.1.3-jre"))
+                .include(dependency("com.google.cloud", "google-cloud-vertexai", version(0, 1, 0)))
                 // Kotlin
                 .include(dependency("org.jetbrains.kotlin", "kotlin-stdlib", kotlin))
-                .include(dependency("org.jetbrains.kotlin", "kotlin-stdlib-common", kotlin))
                 .include(dependency("org.jetbrains.kotlin", "kotlin-stdlib-jdk7", kotlin))
                 .include(dependency("org.jetbrains.kotlin", "kotlin-stdlib-jdk8", kotlin))
                 .include(dependency("org.jetbrains.kotlinx", "kotlinx-coroutines-core", "1.7.3"))
@@ -100,19 +101,20 @@ public class MobibotBuild extends Project {
                 .include(dependency("net.aksingh", "owm-japis", "2.5.3.0"))
                 .include(dependency("net.objecthunter", "exp4j", "0.4.8"))
                 .include(dependency("org.json", "json", "20231013"))
-                .include(dependency("org.jsoup", "jsoup", "1.16.2"))
+                .include(dependency("org.jsoup", "jsoup", "1.17.1"))
                 // Thauvin
                 .include(dependency("net.thauvin.erik", "cryptoprice", "1.0.2"))
                 .include(dependency("net.thauvin.erik", "jokeapi", "0.9.1"))
                 .include(dependency("net.thauvin.erik", "pinboard-poster", "1.1.1"))
                 .include(dependency("net.thauvin.erik.urlencoder", "urlencoder-lib-jvm", "1.4.0"));
         scope(test)
-                .include(dependency("com.willowtreeapps.assertk", "assertk-jvm", version(0, 27, 0)))
+                .include(dependency("com.willowtreeapps.assertk", "assertk-jvm", version(0, 28, 0)))
                 .include(dependency("org.jetbrains.kotlin", "kotlin-test-junit5", version(1, 9, 21)))
                 .include(dependency("org.junit.jupiter", "junit-jupiter", version(5, 10, 1)))
                 .include(dependency("org.junit.platform", "junit-platform-console-standalone", version(1, 10, 1)));
 
         List<String> jars = new ArrayList<>();
+        runtimeClasspathJars().forEach(f -> jars.add("./lib/" + f.getName()));
         compileClasspathJars().forEach(f -> jars.add("./lib/" + f.getName()));
         jarOperation()
                 .manifestAttribute(Attributes.Name.MAIN_CLASS, mainClass())
@@ -147,6 +149,9 @@ public class MobibotBuild extends Project {
         var ignore = lib.mkdirs();
         FileUtils.copyDirectory(new File("properties"), deploy);
         for (var jar : compileClasspathJars()) {
+            FileUtils.copy(jar, new File(lib, jar.getName()));
+        }
+        for (var jar : runtimeClasspathJars()) {
             FileUtils.copy(jar, new File(lib, jar.getName()));
         }
         FileUtils.copy(new File(buildDistDirectory(), jarFileName()), new File(deploy, "mobibot.jar"));

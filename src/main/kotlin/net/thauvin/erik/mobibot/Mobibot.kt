@@ -400,6 +400,7 @@ class Mobibot(nickname: String, val channel: String, logsDirPath: String, p: Pro
         addons.add(CryptoPrices())
         addons.add(CurrencyConverter())
         addons.add(Dice())
+        addons.add(Gemini())
         addons.add(GoogleSearch())
         addons.add(Info(tell, seen))
         addons.add(Joke())

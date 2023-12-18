@@ -1,15 +1,15 @@
-<?xml version='1.0' encoding='UTF-8'?>
+<?xml version="1.0" ?>
 <SmellBaseline>
-  <ManuallySuppressedIssues/>
+  <ManuallySuppressedIssues></ManuallySuppressedIssues>
   <CurrentIssues>
     <ID>CyclomaticComplexMethod:FeedsManager.kt$FeedsManager.Companion$@JvmStatic fun saveFeed(entries: Entries, currentFile: String = CURRENT_XML)</ID>
-    <ID>CyclomaticComplexMethod:Weather2.kt$Weather2.Companion$@JvmStatic @Throws(ModuleException::class) fun getWeather(query: String, apiKey: String?): List&lt;Message></ID>
+    <ID>CyclomaticComplexMethod:Weather2.kt$Weather2.Companion$@JvmStatic @Throws(ModuleException::class) fun getWeather(query: String, apiKey: String?): List&lt;Message&gt;</ID>
     <ID>LongMethod:FeedsManager.kt$FeedsManager.Companion$@JvmStatic fun saveFeed(entries: Entries, currentFile: String = CURRENT_XML)</ID>
-    <ID>LongMethod:Mobibot.kt$Mobibot.Companion$@JvmStatic @Throws(Exception::class) fun main(args: Array&lt;String>)</ID>
-    <ID>LongMethod:StockQuote.kt$StockQuote.Companion$@JvmStatic @Throws(ModuleException::class) fun getQuote(symbol: String, apiKey: String?): List&lt;Message></ID>
-    <ID>LongMethod:Weather2.kt$Weather2.Companion$@JvmStatic @Throws(ModuleException::class) fun getWeather(query: String, apiKey: String?): List&lt;Message></ID>
+    <ID>LongMethod:Mobibot.kt$Mobibot.Companion$@JvmStatic @Throws(Exception::class) fun main(args: Array&lt;String&gt;)</ID>
+    <ID>LongMethod:StockQuote.kt$StockQuote.Companion$@JvmStatic @Throws(ModuleException::class) fun getQuote(symbol: String, apiKey: String?): List&lt;Message&gt;</ID>
+    <ID>LongMethod:Weather2.kt$Weather2.Companion$@JvmStatic @Throws(ModuleException::class) fun getWeather(query: String, apiKey: String?): List&lt;Message&gt;</ID>
     <ID>LongParameterList:Comment.kt$Comment$( channel: String, cmd: String, entry: EntryLink, entryIndex: Int, commentIndex: Int, event: GenericMessageEvent )</ID>
-    <ID>LongParameterList:EntryLink.kt$EntryLink$( // Link's comments val comments: MutableList&lt;EntryComment> = mutableListOf(), // Tags/categories val tags: MutableList&lt;SyndCategory> = mutableListOf(), // Channel var channel: String, // Creation date var date: Date = Calendar.getInstance().time, // Link's URL var link: String, // Author's login var login: String = "", // Author's nickname var nick: String, // Link's title var title: String )</ID>
+    <ID>LongParameterList:EntryLink.kt$EntryLink$( // Link's comments val comments: MutableList&lt;EntryComment&gt; = mutableListOf(), // Tags/categories val tags: MutableList&lt;SyndCategory&gt; = mutableListOf(), // Channel var channel: String, // Creation date var date: Date = Calendar.getInstance().time, // Link's URL var link: String, // Author's login var login: String = "", // Author's nickname var nick: String, // Link's title var title: String )</ID>
     <ID>MagicNumber:ChatGpt.kt$ChatGpt$400</ID>
     <ID>MagicNumber:ChatGpt.kt$ChatGpt.Companion$200</ID>
     <ID>MagicNumber:ChatGpt.kt$ChatGpt.Companion$429</ID>
@@ -20,6 +20,7 @@
     <ID>MagicNumber:CurrencyConverter.kt$CurrencyConverter.Companion$4</ID>
     <ID>MagicNumber:Cycle.kt$Cycle$10</ID>
     <ID>MagicNumber:Cycle.kt$Cycle$1000L</ID>
+    <ID>MagicNumber:Gemini.kt$Gemini$400</ID>
     <ID>MagicNumber:Ignore.kt$Ignore$8</ID>
     <ID>MagicNumber:Info.kt$Info.Companion$30</ID>
     <ID>MagicNumber:Info.kt$Info.Companion$365</ID>
@@ -52,22 +53,22 @@
     <ID>NestedBlockDepth:Comment.kt$Comment$override fun commandResponse(channel: String, args: String, event: GenericMessageEvent)</ID>
     <ID>NestedBlockDepth:CurrencyConverter.kt$CurrencyConverter.Companion$@JvmStatic @Throws(ModuleException::class) fun loadSymbols(apiKey: String?)</ID>
     <ID>NestedBlockDepth:CurrencyConverter.kt$CurrencyConverter.Companion$@JvmStatic fun convertCurrency(apiKey: String?, query: String): Message</ID>
-    <ID>NestedBlockDepth:EntryLink.kt$EntryLink$private fun setTags(tags: List&lt;String?>)</ID>
+    <ID>NestedBlockDepth:EntryLink.kt$EntryLink$private fun setTags(tags: List&lt;String?&gt;)</ID>
     <ID>NestedBlockDepth:FeedsManager.kt$FeedsManager.Companion$@JvmStatic @Throws(IOException::class, FeedException::class) fun loadFeed(entries: Entries, currentFile: String = CURRENT_XML): String</ID>
     <ID>NestedBlockDepth:FeedsManager.kt$FeedsManager.Companion$@JvmStatic fun saveFeed(entries: Entries, currentFile: String = CURRENT_XML)</ID>
     <ID>NestedBlockDepth:GoogleSearch.kt$GoogleSearch$override fun commandResponse(channel: String, cmd: String, args: String, event: GenericMessageEvent)</ID>
-    <ID>NestedBlockDepth:GoogleSearch.kt$GoogleSearch.Companion$@JvmStatic @Throws(ModuleException::class) fun searchGoogle( query: String, apiKey: String?, cseKey: String?, quotaUser: String = ReleaseInfo.PROJECT ): List&lt;Message></ID>
+    <ID>NestedBlockDepth:GoogleSearch.kt$GoogleSearch.Companion$@JvmStatic @Throws(ModuleException::class) fun searchGoogle( query: String, apiKey: String?, cseKey: String?, quotaUser: String = ReleaseInfo.PROJECT ): List&lt;Message&gt;</ID>
     <ID>NestedBlockDepth:LinksManager.kt$LinksManager$override fun commandResponse(channel: String, args: String, event: GenericMessageEvent)</ID>
     <ID>NestedBlockDepth:Lookup.kt$Lookup$override fun commandResponse(channel: String, cmd: String, args: String, event: GenericMessageEvent)</ID>
     <ID>NestedBlockDepth:Mastodon.kt$Mastodon.Companion$@JvmStatic @Throws(ModuleException::class) fun toot(apiKey: String?, instance: String?, handle: String?, message: String, isDm: Boolean): String</ID>
     <ID>NestedBlockDepth:Posting.kt$Posting$override fun commandResponse(channel: String, args: String, event: GenericMessageEvent)</ID>
     <ID>NestedBlockDepth:Seen.kt$Seen$override fun commandResponse(channel: String, args: String, event: GenericMessageEvent)</ID>
-    <ID>NestedBlockDepth:StockQuote.kt$StockQuote.Companion$@JvmStatic @Throws(ModuleException::class) fun getQuote(symbol: String, apiKey: String?): List&lt;Message></ID>
+    <ID>NestedBlockDepth:StockQuote.kt$StockQuote.Companion$@JvmStatic @Throws(ModuleException::class) fun getQuote(symbol: String, apiKey: String?): List&lt;Message&gt;</ID>
     <ID>NestedBlockDepth:Tell.kt$Tell$fun send(event: GenericUserEvent)</ID>
     <ID>NestedBlockDepth:Utils.kt$Utils$@JvmStatic fun loadSerialData(file: String, default: Any, logger: Logger, description: String): Any</ID>
     <ID>NestedBlockDepth:Utils.kt$Utils$@JvmStatic fun saveSerialData(file: String, data: Any, logger: Logger, description: String)</ID>
     <ID>NestedBlockDepth:Weather2.kt$Weather2$override fun commandResponse(channel: String, cmd: String, args: String, event: GenericMessageEvent)</ID>
-    <ID>NestedBlockDepth:Weather2.kt$Weather2.Companion$@JvmStatic @Throws(ModuleException::class) fun getWeather(query: String, apiKey: String?): List&lt;Message></ID>
+    <ID>NestedBlockDepth:Weather2.kt$Weather2.Companion$@JvmStatic @Throws(ModuleException::class) fun getWeather(query: String, apiKey: String?): List&lt;Message&gt;</ID>
     <ID>ReturnCount:Addons.kt$Addons$fun exec(channel: String, cmd: String, args: String, event: GenericMessageEvent): Boolean</ID>
     <ID>ReturnCount:Addons.kt$Addons$fun help(channel: String, topic: String, event: GenericMessageEvent): Boolean</ID>
     <ID>ReturnCount:ExceptionSanitizer.kt$ExceptionSanitizer$fun ModuleException.sanitize(vararg sanitize: String): ModuleException</ID>
@@ -76,13 +77,14 @@
     <ID>SwallowedException:StockQuoteTest.kt$StockQuoteTest$e: ModuleException</ID>
     <ID>SwallowedException:WolframAlphaTest.kt$WolframAlphaTest$e: ModuleException</ID>
     <ID>ThrowsCount:ChatGpt.kt$ChatGpt.Companion$@JvmStatic @Throws(ModuleException::class) fun chat(query: String, apiKey: String?, maxTokens: Int): String</ID>
-    <ID>ThrowsCount:GoogleSearch.kt$GoogleSearch.Companion$@JvmStatic @Throws(ModuleException::class) fun searchGoogle( query: String, apiKey: String?, cseKey: String?, quotaUser: String = ReleaseInfo.PROJECT ): List&lt;Message></ID>
-    <ID>ThrowsCount:Joke.kt$Joke.Companion$@JvmStatic @Throws(ModuleException::class) fun randomJoke(): List&lt;Message></ID>
+    <ID>ThrowsCount:GoogleSearch.kt$GoogleSearch.Companion$@JvmStatic @Throws(ModuleException::class) fun searchGoogle( query: String, apiKey: String?, cseKey: String?, quotaUser: String = ReleaseInfo.PROJECT ): List&lt;Message&gt;</ID>
+    <ID>ThrowsCount:Joke.kt$Joke.Companion$@JvmStatic @Throws(ModuleException::class) fun randomJoke(): List&lt;Message&gt;</ID>
     <ID>ThrowsCount:Mastodon.kt$Mastodon.Companion$@JvmStatic @Throws(ModuleException::class) fun toot(apiKey: String?, instance: String?, handle: String?, message: String, isDm: Boolean): String</ID>
-    <ID>ThrowsCount:StockQuote.kt$StockQuote.Companion$@JvmStatic @Throws(ModuleException::class) fun getQuote(symbol: String, apiKey: String?): List&lt;Message></ID>
+    <ID>ThrowsCount:StockQuote.kt$StockQuote.Companion$@JvmStatic @Throws(ModuleException::class) fun getQuote(symbol: String, apiKey: String?): List&lt;Message&gt;</ID>
     <ID>ThrowsCount:StockQuote.kt$StockQuote.Companion$@Throws(ModuleException::class) private fun getJsonResponse(response: String, debugMessage: String): JSONObject</ID>
-    <ID>ThrowsCount:Weather2.kt$Weather2.Companion$@JvmStatic @Throws(ModuleException::class) fun getWeather(query: String, apiKey: String?): List&lt;Message></ID>
+    <ID>ThrowsCount:Weather2.kt$Weather2.Companion$@JvmStatic @Throws(ModuleException::class) fun getWeather(query: String, apiKey: String?): List&lt;Message&gt;</ID>
     <ID>ThrowsCount:WolframAlpha.kt$WolframAlpha.Companion$@JvmStatic @Throws(ModuleException::class) fun queryWolfram(query: String, units: String = IMPERIAL, appId: String?): String</ID>
+    <ID>TooGenericExceptionCaught:Gemini.kt$Gemini.Companion$e: Exception</ID>
     <ID>TooGenericExceptionCaught:StockQuote.kt$StockQuote.Companion$e: NullPointerException</ID>
     <ID>TooGenericExceptionCaught:Weather2.kt$Weather2.Companion$e: NullPointerException</ID>
     <ID>TooManyFunctions:EntryLink.kt$EntryLink : Serializable</ID>
@@ -94,6 +96,7 @@
     <ID>WildcardImport:FeedMgrTest.kt$import assertk.assertions.*</ID>
     <ID>WildcardImport:FeedReaderTest.kt$import assertk.assertions.*</ID>
     <ID>WildcardImport:FeedsManager.kt$import com.rometools.rome.feed.synd.*</ID>
+    <ID>WildcardImport:GeminiTest.kt$import assertk.assertions.*</ID>
     <ID>WildcardImport:GoogleSearchTest.kt$import assertk.assertions.*</ID>
     <ID>WildcardImport:JokeTest.kt$import assertk.assertions.*</ID>
     <ID>WildcardImport:Mobibot.kt$import java.io.*</ID>

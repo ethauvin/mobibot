@@ -1,5 +1,5 @@
 /*
- * Versions.kt
+ * ChatGptTest.kt
  *
  * Copyright 2004-2023 Erik C. Thauvin (erik@thauvin.net)
  *
@@ -28,32 +28,39 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.thauvin.erik.mobibot.commands
+package net.thauvin.erik.mobibot.modules
 
-import net.thauvin.erik.mobibot.ReleaseInfo
-import net.thauvin.erik.mobibot.Utils.helpFormat
-import net.thauvin.erik.mobibot.Utils.isChannelOp
-import net.thauvin.erik.mobibot.Utils.sendList
-import net.thauvin.erik.mobibot.Utils.toIsoLocalDate
-import org.pircbotx.PircBotX
-import org.pircbotx.hooks.types.GenericMessageEvent
+import assertk.assertFailure
+import assertk.assertThat
+import assertk.assertions.*
+import net.thauvin.erik.mobibot.DisableOnCi
+import net.thauvin.erik.mobibot.LocalProperties
+import kotlin.test.Test
 
-class Versions : AbstractCommand() {
-    private val allVersions = listOf(
-        "Version: ${ReleaseInfo.VERSION} (${ReleaseInfo.BUILD_DATE.toIsoLocalDate()})",
-        "${System.getProperty("os.name")} ${System.getProperty("os.version")} (${System.getProperty("os.arch")})" +
-                ", JVM ${System.getProperty("java.version")}",
-        "Kotlin ${KotlinVersion.CURRENT}, PircBotX ${PircBotX.VERSION}"
-    )
-    override val name = "versions"
-    override val help = listOf("To view the versions data (bot, platform, java, etc.):", helpFormat("%c $name"))
-    override val isOpOnly = true
-    override val isPublic = false
-    override val isVisible = true
+class GeminiTest : LocalProperties() {
+    @Test
+    fun testApiKey() {
+        assertFailure { Gemini.chat("1 gallon to liter", "", "", 1024) }
+            .isInstanceOf(ModuleException::class.java)
+            .hasNoCause()
+    }
 
-    override fun commandResponse(channel: String, args: String, event: GenericMessageEvent) {
-        if (event.isChannelOp(channel)) {
-            event.sendList(allVersions, 1)
-        }
+    @Test
+    @DisableOnCi
+    fun chatPrompt() {
+        val projectId = getProperty(Gemini.PROJECT_ID_PROP)
+        val location = getProperty(Gemini.LOCATION_PROPR)
+        val maxTokens = getProperty(Gemini.MAX_TOKENS_PROP).toInt()
+
+        assertThat(
+            Gemini.chat("how do I make an HTTP request in Javascript?", projectId, location, maxTokens)
+        ).isNotNull().contains("XMLHttpRequest")
+
+        assertThat(
+            Gemini.chat("how do I encode a URL in java?", projectId, location, 60)
+        ).isNotNull().contains("URLEncoder")
+
+        assertFailure { Gemini.chat("1 liter to gallon", projectId, "blah", 40) }
+            .isInstanceOf(ModuleException::class.java)
     }
 }
