@@ -22,7 +22,7 @@ object {{v className/}} {
         Instant.ofEpochMilli({{v epoch/}}L), ZoneId.systemDefault()
     )
 
-    const val WEBSITE = "https://www.mobitopia.org/mobibot/"
+    const val WEBSITE = "https://mobitopia.org/mobibot/"
     const val AUTHOR = "Erik C. Thauvin"
     const val AUTHOR_URL = "https://erik.thauvin.net/"
 }

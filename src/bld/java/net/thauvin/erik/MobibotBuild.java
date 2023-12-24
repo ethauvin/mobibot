@@ -71,7 +71,7 @@ public class MobibotBuild extends Project {
         );
 
         var log4j = version(2, 22, 0);
-        var kotlin = version(1, 9, 21);
+        var kotlin = version(1, 9, 22);
         scope(compile)
                 // PircBotX
                 .include(dependency("com.github.pircbotx", "pircbotx", "2.3.1"))
@@ -82,7 +82,7 @@ public class MobibotBuild extends Project {
                 .include(dependency("commons-net", "commons-net", "3.10.0"))
                 // Google
                 .include(dependency("com.google.code.gson", "gson", "2.10.1"))
-                .include(dependency("com.google.guava", "guava", "32.1.3-jre"))
+                .include(dependency("com.google.guava", "guava", "33.0.0-jre"))
                 .include(dependency("com.google.cloud", "google-cloud-vertexai", version(0, 1, 0)))
                 // Kotlin
                 .include(dependency("org.jetbrains.kotlin", "kotlin-stdlib", kotlin))
@@ -109,7 +109,7 @@ public class MobibotBuild extends Project {
                 .include(dependency("net.thauvin.erik.urlencoder", "urlencoder-lib-jvm", "1.4.0"));
         scope(test)
                 .include(dependency("com.willowtreeapps.assertk", "assertk-jvm", version(0, 28, 0)))
-                .include(dependency("org.jetbrains.kotlin", "kotlin-test-junit5", version(1, 9, 21)))
+                .include(dependency("org.jetbrains.kotlin", "kotlin-test-junit5", kotlin))
                 .include(dependency("org.junit.jupiter", "junit-jupiter", version(5, 10, 1)))
                 .include(dependency("org.junit.platform", "junit-platform-console-standalone", version(1, 10, 1)));
 
