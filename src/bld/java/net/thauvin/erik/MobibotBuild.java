@@ -1,7 +1,7 @@
 /*
  * MobibotBuild.java
  *
- * Copyright 2004-2023 Erik C. Thauvin (erik@thauvin.net)
+ * Copyright 2004-2024 Erik C. Thauvin (erik@thauvin.net)
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -70,7 +70,7 @@ public class MobibotBuild extends Project {
         repositories = List.of(MAVEN_LOCAL, MAVEN_CENTRAL, new Repository("https://jitpack.io")
         );
 
-        var log4j = version(2, 22, 0);
+        var log4j = version(2, 22, 1);
         var kotlin = version(1, 9, 22);
         scope(compile)
                 // PircBotX
@@ -83,7 +83,7 @@ public class MobibotBuild extends Project {
                 // Google
                 .include(dependency("com.google.code.gson", "gson", "2.10.1"))
                 .include(dependency("com.google.guava", "guava", "33.0.0-jre"))
-                .include(dependency("com.google.cloud", "google-cloud-vertexai", version(0, 1, 0)))
+                .include(dependency("com.google.cloud", "google-cloud-vertexai", version(0, 2, 0)))
                 // Kotlin
                 .include(dependency("org.jetbrains.kotlin", "kotlin-stdlib", kotlin))
                 .include(dependency("org.jetbrains.kotlin", "kotlin-stdlib-jdk7", kotlin))
@@ -91,7 +91,7 @@ public class MobibotBuild extends Project {
                 .include(dependency("org.jetbrains.kotlinx", "kotlinx-coroutines-core", "1.7.3"))
                 .include(dependency("org.jetbrains.kotlinx", "kotlinx-cli-jvm", "0.3.6"))
                 // Logging
-                .include(dependency("org.slf4j", "slf4j-api", "2.0.9"))
+                .include(dependency("org.slf4j", "slf4j-api", "2.0.11"))
                 .include(dependency("org.apache.logging.log4j", "log4j-api", log4j))
                 .include(dependency("org.apache.logging.log4j", "log4j-core", log4j))
                 .include(dependency("org.apache.logging.log4j", "log4j-slf4j2-impl", log4j))
@@ -101,7 +101,7 @@ public class MobibotBuild extends Project {
                 .include(dependency("net.aksingh", "owm-japis", "2.5.3.0"))
                 .include(dependency("net.objecthunter", "exp4j", "0.4.8"))
                 .include(dependency("org.json", "json", "20231013"))
-                .include(dependency("org.jsoup", "jsoup", "1.17.1"))
+                .include(dependency("org.jsoup", "jsoup", "1.17.2"))
                 // Thauvin
                 .include(dependency("net.thauvin.erik", "cryptoprice", "1.0.2"))
                 .include(dependency("net.thauvin.erik", "jokeapi", "0.9.1"))

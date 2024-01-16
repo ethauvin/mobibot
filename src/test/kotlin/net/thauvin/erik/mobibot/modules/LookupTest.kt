@@ -1,7 +1,7 @@
 /*
  * LookupTest.kt
  *
- * Copyright 2004-2023 Erik C. Thauvin (erik@thauvin.net)
+ * Copyright 2004-2024 Erik C. Thauvin (erik@thauvin.net)
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -44,8 +44,8 @@ class LookupTest {
         var result = nslookup("apple.com")
         assertThat(result, "lookup(apple.com)").contains("17.253.144.10")
 
-        result = nslookup("204.122.16.136")
-        assertThat(result, "lookup(204.122.16.136)").contains("nix3.thauvin.us")
+        result = nslookup("37.27.52.13")
+        assertThat(result, "lookup(37.27.52.13)").contains("nix4.thauvin.us")
     }
 
     @Test
