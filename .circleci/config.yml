@@ -6,7 +6,7 @@ defaults: &defaults
     TERM: dumb
     CI_NAME: "CircleCI"
 
-defaults_gradle: &defaults_bld
+defaults_bld: &defaults_bld
   steps:
     - checkout
     - run:

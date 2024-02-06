@@ -50,8 +50,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.jar.Attributes;
 
-import static rife.bld.dependencies.Repository.MAVEN_CENTRAL;
-import static rife.bld.dependencies.Repository.MAVEN_LOCAL;
+import static rife.bld.dependencies.Repository.*;
 import static rife.bld.dependencies.Scope.compile;
 import static rife.bld.dependencies.Scope.test;
 
@@ -67,8 +66,11 @@ public class MobibotBuild extends Project {
         javaRelease = 17;
         downloadSources = true;
         autoDownloadPurge = true;
-        repositories = List.of(MAVEN_LOCAL, MAVEN_CENTRAL, new Repository("https://jitpack.io")
-        );
+        repositories = List.of(
+                MAVEN_LOCAL,
+                MAVEN_CENTRAL,
+                new Repository("https://jitpack.io"),
+                SONATYPE_SNAPSHOTS_LEGACY);
 
         var log4j = version(2, 22, 1);
         var kotlin = version(1, 9, 22);
@@ -83,15 +85,13 @@ public class MobibotBuild extends Project {
                 // Google
                 .include(dependency("com.google.code.gson", "gson", "2.10.1"))
                 .include(dependency("com.google.guava", "guava", "33.0.0-jre"))
-                .include(dependency("com.google.cloud", "google-cloud-vertexai", version(0, 2, 0)))
+                .include(dependency("com.google.cloud", "google-cloud-vertexai", version(0, 3, 0)))
                 // Kotlin
                 .include(dependency("org.jetbrains.kotlin", "kotlin-stdlib", kotlin))
-                .include(dependency("org.jetbrains.kotlin", "kotlin-stdlib-jdk7", kotlin))
-                .include(dependency("org.jetbrains.kotlin", "kotlin-stdlib-jdk8", kotlin))
                 .include(dependency("org.jetbrains.kotlinx", "kotlinx-coroutines-core", "1.7.3"))
                 .include(dependency("org.jetbrains.kotlinx", "kotlinx-cli-jvm", "0.3.6"))
                 // Logging
-                .include(dependency("org.slf4j", "slf4j-api", "2.0.11"))
+                .include(dependency("org.slf4j", "slf4j-api", "2.0.12"))
                 .include(dependency("org.apache.logging.log4j", "log4j-api", log4j))
                 .include(dependency("org.apache.logging.log4j", "log4j-core", log4j))
                 .include(dependency("org.apache.logging.log4j", "log4j-slf4j2-impl", log4j))
@@ -103,15 +103,15 @@ public class MobibotBuild extends Project {
                 .include(dependency("org.json", "json", "20231013"))
                 .include(dependency("org.jsoup", "jsoup", "1.17.2"))
                 // Thauvin
-                .include(dependency("net.thauvin.erik", "cryptoprice", "1.0.2"))
+                .include(dependency("net.thauvin.erik", "cryptoprice", "1.0.3-SNAPSHOT"))
                 .include(dependency("net.thauvin.erik", "jokeapi", "0.9.1"))
-                .include(dependency("net.thauvin.erik", "pinboard-poster", "1.1.1"))
+                .include(dependency("net.thauvin.erik", "pinboard-poster", "1.1.2-SNAPSHOT"))
                 .include(dependency("net.thauvin.erik.urlencoder", "urlencoder-lib-jvm", "1.4.0"));
         scope(test)
                 .include(dependency("com.willowtreeapps.assertk", "assertk-jvm", version(0, 28, 0)))
                 .include(dependency("org.jetbrains.kotlin", "kotlin-test-junit5", kotlin))
-                .include(dependency("org.junit.jupiter", "junit-jupiter", version(5, 10, 1)))
-                .include(dependency("org.junit.platform", "junit-platform-console-standalone", version(1, 10, 1)));
+                .include(dependency("org.junit.jupiter", "junit-jupiter", version(5, 10, 2)))
+                .include(dependency("org.junit.platform", "junit-platform-console-standalone", version(1, 10, 2)));
 
         List<String> jars = new ArrayList<>();
         runtimeClasspathJars().forEach(f -> jars.add("./lib/" + f.getName()));

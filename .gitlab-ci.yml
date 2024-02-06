@@ -1,5 +1,8 @@
 image: openjdk:17
 
+variables:
+  CI_NAME: "GitLab CI"
+
 stages:
   - test
 
