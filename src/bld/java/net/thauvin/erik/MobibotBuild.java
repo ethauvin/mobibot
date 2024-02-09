@@ -80,14 +80,13 @@ public class MobibotBuild extends Project {
                 // Commons (mostly for PircBotX)
                 .include(dependency("org.apache.commons", "commons-lang3", "3.14.0"))
                 .include(dependency("org.apache.commons", "commons-text", "1.11.0"))
-                .include(dependency("commons-codec", "commons-codec", "1.16.0"))
+                .include(dependency("commons-codec", "commons-codec", "1.16.1"))
                 .include(dependency("commons-net", "commons-net", "3.10.0"))
                 // Google
                 .include(dependency("com.google.code.gson", "gson", "2.10.1"))
                 .include(dependency("com.google.guava", "guava", "33.0.0-jre"))
                 .include(dependency("com.google.cloud", "google-cloud-vertexai", version(0, 3, 0)))
                 // Kotlin
-                .include(dependency("org.jetbrains.kotlin", "kotlin-stdlib", kotlin))
                 .include(dependency("org.jetbrains.kotlinx", "kotlinx-coroutines-core", "1.7.3"))
                 .include(dependency("org.jetbrains.kotlinx", "kotlinx-cli-jvm", "0.3.6"))
                 // Logging
@@ -100,7 +99,7 @@ public class MobibotBuild extends Project {
                 .include(dependency("com.squareup.okhttp3", "okhttp", "4.12.0"))
                 .include(dependency("net.aksingh", "owm-japis", "2.5.3.0"))
                 .include(dependency("net.objecthunter", "exp4j", "0.4.8"))
-                .include(dependency("org.json", "json", "20231013"))
+                .include(dependency("org.json", "json", "20240205"))
                 .include(dependency("org.jsoup", "jsoup", "1.17.2"))
                 // Thauvin
                 .include(dependency("net.thauvin.erik", "cryptoprice", "1.0.3-SNAPSHOT"))
