@@ -33,9 +33,9 @@ package net.thauvin.erik.mobibot.modules
 
 import com.google.cloud.vertexai.VertexAI
 import com.google.cloud.vertexai.api.GenerationConfig
-import com.google.cloud.vertexai.generativeai.preview.ChatSession
-import com.google.cloud.vertexai.generativeai.preview.GenerativeModel
-import com.google.cloud.vertexai.generativeai.preview.ResponseHandler
+import com.google.cloud.vertexai.generativeai.ChatSession
+import com.google.cloud.vertexai.generativeai.GenerativeModel
+import com.google.cloud.vertexai.generativeai.ResponseHandler
 import net.thauvin.erik.mobibot.Utils
 import net.thauvin.erik.mobibot.Utils.sendMessage
 import org.pircbotx.hooks.types.GenericMessageEvent
