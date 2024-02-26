@@ -39,11 +39,13 @@ import rife.bld.extension.DetektOperation;
 import rife.bld.extension.GeneratedVersionOperation;
 import rife.bld.extension.JacocoReportOperation;
 import rife.bld.operations.exceptions.ExitStatusException;
+import rife.bld.publish.PomBuilder;
 import rife.tools.FileUtils;
 import rife.tools.exceptions.FileUtilsErrorException;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -72,7 +74,7 @@ public class MobibotBuild extends Project {
                 new Repository("https://jitpack.io"),
                 SONATYPE_SNAPSHOTS_LEGACY);
 
-        var log4j = version(2, 22, 1);
+        var log4j = version(2, 23, 0);
         var kotlin = version(1, 9, 22);
         scope(compile)
                 // PircBotX
@@ -85,9 +87,9 @@ public class MobibotBuild extends Project {
                 // Google
                 .include(dependency("com.google.code.gson", "gson", "2.10.1"))
                 .include(dependency("com.google.guava", "guava", "33.0.0-jre"))
-                .include(dependency("com.google.cloud", "google-cloud-vertexai", version(0, 4, 0)))
+                .include(dependency("com.google.cloud", "google-cloud-vertexai", version(0, 5, 0)))
                 // Kotlin
-                .include(dependency("org.jetbrains.kotlinx", "kotlinx-coroutines-core", "1.7.3"))
+                .include(dependency("org.jetbrains.kotlinx", "kotlinx-coroutines-core", "1.8.0"))
                 .include(dependency("org.jetbrains.kotlinx", "kotlinx-cli-jvm", "0.3.6"))
                 // Logging
                 .include(dependency("org.slf4j", "slf4j-api", "2.0.12"))
@@ -190,5 +192,11 @@ public class MobibotBuild extends Project {
                 .directory(new File(srcMainDirectory(), "kotlin"))
                 .extension(".kt")
                 .execute();
+    }
+
+    @BuildCommand(value = "snyk-pom", summary = "Generates the Snyk POM")
+    public void snykPom() throws FileUtilsErrorException {
+        PomBuilder.generateInto(publishOperation().info(), publishOperation().dependencies(),
+                Path.of(workDirectory.getPath(), "snyx.xml").toFile());
     }
 }
