@@ -194,9 +194,9 @@ public class MobibotBuild extends Project {
                 .execute();
     }
 
-    @BuildCommand(value = "snyk-pom", summary = "Generates the Snyk POM")
-    public void snykPom() throws FileUtilsErrorException {
+    @BuildCommand(value = "root-pom", summary = "Generates the POM file in the root directory")
+    public void rootPom() throws FileUtilsErrorException {
         PomBuilder.generateInto(publishOperation().info(), publishOperation().dependencies(),
-                Path.of(workDirectory.getPath(), "snyx.xml").toFile());
+                Path.of(workDirectory.getPath(), "pom.xml").toFile());
     }
 }
