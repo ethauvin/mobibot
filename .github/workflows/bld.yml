@@ -47,6 +47,10 @@ jobs:
           EXCHANGERATE_API_KEY: ${{ secrets.EXCHANGERATE_API_KEY }}
         run: ./bld jacoco
 
+      - name: Remove pom.xml
+        if: success() && matrix.java-version == env.COVERAGE_SDK
+        run: rm -rf pom.xml
+
       - name: SonarCloud Scan
         uses: sonarsource/sonarcloud-github-action@master
         if: success() && matrix.java-version == env.COVERAGE_SDK
