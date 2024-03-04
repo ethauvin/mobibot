@@ -101,11 +101,11 @@ public class MobibotBuild extends Project {
                 .include(dependency("com.squareup.okhttp3", "okhttp", "4.12.0"))
                 .include(dependency("net.aksingh", "owm-japis", "2.5.3.0"))
                 .include(dependency("net.objecthunter", "exp4j", "0.4.8"))
-                .include(dependency("org.json", "json", "20240205"))
+                .include(dependency("org.json", "json", "20240303"))
                 .include(dependency("org.jsoup", "jsoup", "1.17.2"))
                 // Thauvin
                 .include(dependency("net.thauvin.erik", "cryptoprice", "1.0.3-SNAPSHOT"))
-                .include(dependency("net.thauvin.erik", "jokeapi", "0.9.1"))
+                .include(dependency("net.thauvin.erik", "jokeapi", "0.9.2-SNAPSHOT"))
                 .include(dependency("net.thauvin.erik", "pinboard-poster", "1.1.2-SNAPSHOT"))
                 .include(dependency("net.thauvin.erik.urlencoder", "urlencoder-lib-jvm", "1.4.0"));
         scope(test)

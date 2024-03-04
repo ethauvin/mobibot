@@ -6,6 +6,7 @@
     <pattern value="net.thauvin.erik.MobibotBuild" />
     <pattern value="net.thauvin.erik.MobibotBuild" method="detekt" />
     <pattern value="net.thauvin.erik.MobibotBuild" method="detektBaseline" />
+    <pattern value="net.thauvin.erik.MobibotBuild" method="rootPom" />
   </component>
   <component name="PDMPlugin">
     <option name="customRuleSets">

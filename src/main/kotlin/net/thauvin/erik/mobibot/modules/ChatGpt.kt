@@ -34,6 +34,7 @@ package net.thauvin.erik.mobibot.modules
 import net.thauvin.erik.mobibot.Constants
 import net.thauvin.erik.mobibot.Utils
 import net.thauvin.erik.mobibot.Utils.sendMessage
+import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 import org.pircbotx.hooks.types.GenericMessageEvent
@@ -98,31 +99,26 @@ class ChatGpt : AbstractModule() {
         // ChatGPT command
         private const val CHATGPT_CMD = "chatgpt"
 
-
         @JvmStatic
         @Throws(ModuleException::class)
         fun chat(query: String, apiKey: String?, maxTokens: Int): String {
             if (!apiKey.isNullOrEmpty()) {
-                val content = query.replace("\"", "\\\"")
+                val jsonObject = JSONObject()
+                jsonObject.put("model", "gpt-3.5-turbo-1106")
+                jsonObject.put("max_tokens", maxTokens)
+                val message = JSONObject()
+                message.put("role", "user")
+                message.put("content", query)
+                val messages = JSONArray()
+                messages.put(message)
+                jsonObject.put("messages", messages)
+
                 val request = HttpRequest.newBuilder()
                     .uri(URI.create(API_URL))
                     .header("Content-Type", "application/json")
                     .header("Authorization", "Bearer $apiKey")
                     .header("User-Agent", Constants.USER_AGENT)
-                    .POST(
-                        HttpRequest.BodyPublishers.ofString(
-                            """{
-                                   "model": "gpt-3.5-turbo-1106",
-                                   "max_tokens": $maxTokens,
-                                   "messages": [
-                                       {
-                                           "role": "user",
-                                           "content": "$content"
-                                       }
-                                   ]
-                                }""".trimIndent()
-                        )
-                    )
+                    .POST(HttpRequest.BodyPublishers.ofString(jsonObject.toString()))
                     .build()
                 try {
                     val response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString())
