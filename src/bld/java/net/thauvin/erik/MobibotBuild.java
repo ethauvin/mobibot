@@ -87,7 +87,7 @@ public class MobibotBuild extends Project {
                 // Google
                 .include(dependency("com.google.code.gson", "gson", "2.10.1"))
                 .include(dependency("com.google.guava", "guava", "33.0.0-jre"))
-                .include(dependency("com.google.cloud", "google-cloud-vertexai", version(0, 5, 0)))
+                .include(dependency("com.google.cloud", "google-cloud-vertexai", version(0, 6, 0)))
                 // Kotlin
                 .include(dependency("org.jetbrains.kotlinx", "kotlinx-coroutines-core", "1.8.0"))
                 .include(dependency("org.jetbrains.kotlinx", "kotlinx-cli-jvm", "0.3.6"))
