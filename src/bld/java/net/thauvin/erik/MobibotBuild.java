@@ -75,7 +75,7 @@ public class MobibotBuild extends Project {
                 SONATYPE_SNAPSHOTS_LEGACY);
 
         var log4j = version(2, 23, 0);
-        var kotlin = version(1, 9, 22);
+        var kotlin = version(1, 9, 23);
         scope(compile)
                 // PircBotX
                 .include(dependency("com.github.pircbotx", "pircbotx", "2.3.1"))
