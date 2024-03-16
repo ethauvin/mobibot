@@ -74,7 +74,7 @@ public class MobibotBuild extends Project {
                 new Repository("https://jitpack.io"),
                 SONATYPE_SNAPSHOTS_LEGACY);
 
-        var log4j = version(2, 23, 0);
+        var log4j = version(2, 23, 1);
         var kotlin = version(1, 9, 23);
         scope(compile)
                 // PircBotX
@@ -86,7 +86,7 @@ public class MobibotBuild extends Project {
                 .include(dependency("commons-net", "commons-net", "3.10.0"))
                 // Google
                 .include(dependency("com.google.code.gson", "gson", "2.10.1"))
-                .include(dependency("com.google.guava", "guava", "33.0.0-jre"))
+                .include(dependency("com.google.guava", "guava", "33.1.0-jre"))
                 .include(dependency("com.google.cloud", "google-cloud-vertexai", version(0, 6, 0)))
                 // Kotlin
                 .include(dependency("org.jetbrains.kotlinx", "kotlinx-coroutines-core", "1.8.0"))
