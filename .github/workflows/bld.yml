@@ -1,6 +1,6 @@
 name: bld-ci
 
-on: [ push, pull_request, workflow_dispatch ]
+on: [push, pull_request, workflow_dispatch]
 
 jobs:
   build-bld-project:
@@ -11,7 +11,7 @@ jobs:
 
     strategy:
       matrix:
-        java-version: [ 17, 20 ]
+        java-version: [17, 21, 22]
 
     steps:
       - name: Checkout source repository
@@ -22,7 +22,7 @@ jobs:
       - name: Set up JDK ${{ matrix.java-version }}
         uses: actions/setup-java@v3
         with:
-          distribution: 'zulu'
+          distribution: "zulu"
           java-version: ${{ matrix.java-version }}
 
       - name: Grant bld execute permission
