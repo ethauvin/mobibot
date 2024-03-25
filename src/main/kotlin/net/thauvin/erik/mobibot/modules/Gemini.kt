@@ -109,7 +109,9 @@ class Gemini : AbstractModule() {
                 try {
                     VertexAI(projectId, location).use { vertexAI ->
                         val generationConfig = GenerationConfig.newBuilder().setMaxOutputTokens(maxToken).build()
-                        val model = GenerativeModel("gemini-pro-vision", generationConfig, vertexAI)
+                        val model = GenerativeModel.Builder().setModelName("gemini-pro-vision")
+                            .setGenerationConfig(generationConfig)
+                            .setVertexAi(vertexAI).build()
                         val session = ChatSession(model)
                         val response = session.sendMessage(query)
 
