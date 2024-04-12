@@ -87,12 +87,12 @@ public class MobibotBuild extends Project {
                 // Google
                 .include(dependency("com.google.code.gson", "gson", "2.10.1"))
                 .include(dependency("com.google.guava", "guava", "33.1.0-jre"))
-                .include(dependency("com.google.cloud", "google-cloud-vertexai", version(0, 7, 0)))
+                .include(dependency("com.google.cloud", "google-cloud-vertexai", "1.1.0"))
                 // Kotlin
                 .include(dependency("org.jetbrains.kotlinx", "kotlinx-coroutines-core", "1.8.0"))
                 .include(dependency("org.jetbrains.kotlinx", "kotlinx-cli-jvm", "0.3.6"))
                 // Logging
-                .include(dependency("org.slf4j", "slf4j-api", "2.0.12"))
+                .include(dependency("org.slf4j", "slf4j-api", "2.0.13"))
                 .include(dependency("org.apache.logging.log4j", "log4j-api", log4j))
                 .include(dependency("org.apache.logging.log4j", "log4j-core", log4j))
                 .include(dependency("org.apache.logging.log4j", "log4j-slf4j2-impl", log4j))
@@ -107,7 +107,7 @@ public class MobibotBuild extends Project {
                 .include(dependency("net.thauvin.erik", "cryptoprice", "1.0.3-SNAPSHOT"))
                 .include(dependency("net.thauvin.erik", "jokeapi", "0.9.2-SNAPSHOT"))
                 .include(dependency("net.thauvin.erik", "pinboard-poster", "1.1.2-SNAPSHOT"))
-                .include(dependency("net.thauvin.erik.urlencoder", "urlencoder-lib-jvm", "1.4.0"));
+                .include(dependency("net.thauvin.erik.urlencoder", "urlencoder-lib-jvm", "1.5.0"));
         scope(test)
                 .include(dependency("com.willowtreeapps.assertk", "assertk-jvm", version(0, 28, 0)))
                 .include(dependency("org.jetbrains.kotlin", "kotlin-test-junit5", kotlin))
