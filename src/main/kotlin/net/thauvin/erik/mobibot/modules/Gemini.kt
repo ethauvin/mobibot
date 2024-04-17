@@ -33,6 +33,8 @@ package net.thauvin.erik.mobibot.modules
 
 import com.google.cloud.vertexai.VertexAI
 import com.google.cloud.vertexai.api.GenerationConfig
+import com.google.cloud.vertexai.api.HarmCategory
+import com.google.cloud.vertexai.api.SafetySetting
 import com.google.cloud.vertexai.generativeai.ChatSession
 import com.google.cloud.vertexai.generativeai.GenerativeModel
 import com.google.cloud.vertexai.generativeai.ResponseHandler
@@ -41,6 +43,7 @@ import net.thauvin.erik.mobibot.Utils.sendMessage
 import org.pircbotx.hooks.types.GenericMessageEvent
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import java.util.*
 
 
 class Gemini : AbstractModule() {
@@ -109,9 +112,28 @@ class Gemini : AbstractModule() {
                 try {
                     VertexAI(projectId, location).use { vertexAI ->
                         val generationConfig = GenerationConfig.newBuilder().setMaxOutputTokens(maxToken).build()
+                        val safetySettings = Arrays.asList(
+                            SafetySetting.newBuilder()
+                                .setCategory(HarmCategory.HARM_CATEGORY_HATE_SPEECH)
+                                .setThreshold(SafetySetting.HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE)
+                                .build(),
+                            SafetySetting.newBuilder()
+                                .setCategory(HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT)
+                                .setThreshold(SafetySetting.HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE)
+                                .build(),
+                            SafetySetting.newBuilder()
+                                .setCategory(HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT)
+                                .setThreshold(SafetySetting.HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE)
+                                .build(),
+                            SafetySetting.newBuilder()
+                                .setCategory(HarmCategory.HARM_CATEGORY_HARASSMENT)
+                                .setThreshold(SafetySetting.HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE)
+                                .build()
+                        )
                         val model = GenerativeModel.Builder().setModelName("gemini-pro-vision")
                             .setGenerationConfig(generationConfig)
                             .setVertexAi(vertexAI).build()
+                            .withSafetySettings(safetySettings)
                         val session = ChatSession(model)
                         val response = session.sendMessage(query)
 
