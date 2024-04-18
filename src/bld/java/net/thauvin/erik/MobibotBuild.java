@@ -57,6 +57,8 @@ import static rife.bld.dependencies.Scope.compile;
 import static rife.bld.dependencies.Scope.test;
 
 public class MobibotBuild extends Project {
+    private static final String DETEKT_BASELINE = "config/detekt/baseline.xml";
+
     public MobibotBuild() {
         pkg = "net.thauvin.erik.mobibot";
         name = "mobibot";
@@ -162,7 +164,7 @@ public class MobibotBuild extends Project {
     public void detekt() throws ExitStatusException, IOException, InterruptedException {
         new DetektOperation()
                 .fromProject(this)
-                .baseline("config/detekt/baseline.xml")
+                .baseline(DETEKT_BASELINE)
                 .execute();
     }
 
@@ -170,7 +172,7 @@ public class MobibotBuild extends Project {
     public void detektBaseline() throws ExitStatusException, IOException, InterruptedException {
         new DetektOperation()
                 .fromProject(this)
-                .baseline("config/detekt/baseline.xml")
+                .baseline(DETEKT_BASELINE)
                 .createBaseline(true)
                 .execute();
     }

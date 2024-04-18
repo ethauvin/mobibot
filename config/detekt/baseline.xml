@@ -10,7 +10,6 @@
     <ID>LongMethod:Weather2.kt$Weather2.Companion$@JvmStatic @Throws(ModuleException::class) fun getWeather(query: String, apiKey: String?): List&lt;Message&gt;</ID>
     <ID>LongParameterList:Comment.kt$Comment$( channel: String, cmd: String, entry: EntryLink, entryIndex: Int, commentIndex: Int, event: GenericMessageEvent )</ID>
     <ID>LongParameterList:EntryLink.kt$EntryLink$( // Link's comments val comments: MutableList&lt;EntryComment&gt; = mutableListOf(), // Tags/categories val tags: MutableList&lt;SyndCategory&gt; = mutableListOf(), // Channel var channel: String, // Creation date var date: Date = Calendar.getInstance().time, // Link's URL var link: String, // Author's login var login: String = "", // Author's nickname var nick: String, // Link's title var title: String )</ID>
-    <ID>MagicNumber:ChatGpt.kt$ChatGpt$400</ID>
     <ID>MagicNumber:ChatGpt.kt$ChatGpt.Companion$200</ID>
     <ID>MagicNumber:ChatGpt.kt$ChatGpt.Companion$429</ID>
     <ID>MagicNumber:Comment.kt$Comment$3</ID>
@@ -20,7 +19,6 @@
     <ID>MagicNumber:CurrencyConverter.kt$CurrencyConverter.Companion$4</ID>
     <ID>MagicNumber:Cycle.kt$Cycle$10</ID>
     <ID>MagicNumber:Cycle.kt$Cycle$1000L</ID>
-    <ID>MagicNumber:Gemini.kt$Gemini$400</ID>
     <ID>MagicNumber:Ignore.kt$Ignore$8</ID>
     <ID>MagicNumber:Info.kt$Info.Companion$30</ID>
     <ID>MagicNumber:Info.kt$Info.Companion$365</ID>
