@@ -89,7 +89,7 @@ public class MobibotBuild extends Project {
                 // Google
                 .include(dependency("com.google.code.gson", "gson", "2.10.1"))
                 .include(dependency("com.google.guava", "guava", "33.1.0-jre"))
-                .include(dependency("com.google.cloud", "google-cloud-vertexai", "1.1.0"))
+                .include(dependency("com.google.cloud", "google-cloud-vertexai", "1.2.0"))
                 // Kotlin
                 .include(dependency("org.jetbrains.kotlinx", "kotlinx-coroutines-core", "1.8.0"))
                 .include(dependency("org.jetbrains.kotlinx", "kotlinx-cli-jvm", "0.3.6"))
@@ -111,7 +111,7 @@ public class MobibotBuild extends Project {
                 .include(dependency("net.thauvin.erik", "pinboard-poster", "1.1.2-SNAPSHOT"))
                 .include(dependency("net.thauvin.erik.urlencoder", "urlencoder-lib-jvm", "1.5.0"));
         scope(test)
-                .include(dependency("com.willowtreeapps.assertk", "assertk-jvm", version(0, 28, 0)))
+                .include(dependency("com.willowtreeapps.assertk", "assertk-jvm", version(0, 28, 1)))
                 .include(dependency("org.jetbrains.kotlin", "kotlin-test-junit5", kotlin))
                 .include(dependency("org.junit.jupiter", "junit-jupiter", version(5, 10, 2)))
                 .include(dependency("org.junit.platform", "junit-platform-console-standalone", version(1, 10, 2)));
@@ -198,7 +198,7 @@ public class MobibotBuild extends Project {
 
     @BuildCommand(value = "root-pom", summary = "Generates the POM file in the root directory")
     public void rootPom() throws FileUtilsErrorException {
-        PomBuilder.generateInto(publishOperation().info(), publishOperation().dependencies(),
+        PomBuilder.generateInto(publishOperation().info(), dependencies(),
                 Path.of(workDirectory.getPath(), "pom.xml").toFile());
     }
 }
