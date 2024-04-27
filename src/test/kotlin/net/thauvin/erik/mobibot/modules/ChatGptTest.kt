@@ -48,16 +48,21 @@ class ChatGptTest : LocalProperties() {
     }
 
     @Test
+    fun testChatOnCoverage() {
+        if (System.getenv("CI") == null || System.getenv("COVERAGE_SDK") != null) {
+            assertThat(
+                ChatGpt.chat("how do I encode a URL in java?", getProperty(ChatGpt.API_KEY_PROP), 60)
+            ).contains("URLEncoder")
+        }
+    }
+
+    @Test
     @DisableOnCi
     fun testChat() {
         val apiKey = getProperty(ChatGpt.API_KEY_PROP)
         assertThat(
             ChatGpt.chat("how do I make an HTTP request in Javascript?", apiKey, 100)
         ).contains("XMLHttpRequest")
-
-        assertThat(
-            ChatGpt.chat("how do I encode a URL in java?", apiKey, 60)
-        ).contains("URLEncoder")
 
         assertFailure { ChatGpt.chat("1 liter to gallon", apiKey, -1) }
             .isInstanceOf(ModuleException::class.java)
