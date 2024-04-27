@@ -42,7 +42,7 @@ import org.junit.jupiter.api.extension.ExtensionContext
  */
 class DisableOnCiCondition : ExecutionCondition {
     override fun evaluateExecutionCondition(context: ExtensionContext): ConditionEvaluationResult {
-        return if (System.getenv("CI") != null && System.getenv("COVERAGE_SDK") == null) {
+        return if (System.getenv("CI") != null) {
             ConditionEvaluationResult.disabled("Test disabled on CI")
         } else {
             ConditionEvaluationResult.enabled("Test enabled")
