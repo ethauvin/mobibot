@@ -150,6 +150,12 @@ public class MobibotBuild extends Project {
                 .execute();
     }
 
+    @Override
+    public void updates() throws Exception {
+        super.updates();
+        rootPom();
+    }
+
     @BuildCommand(summary = "Copies all needed files to the deploy directory")
     public void deploy() throws FileUtilsErrorException {
         var deploy = new File("deploy");
