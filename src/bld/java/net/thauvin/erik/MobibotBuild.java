@@ -58,6 +58,7 @@ import static rife.bld.dependencies.Scope.test;
 
 public class MobibotBuild extends Project {
     private static final String DETEKT_BASELINE = "config/detekt/baseline.xml";
+    final File srcMainKotlin = new File(srcMainDirectory(), "kotlin");
 
     public MobibotBuild() {
         pkg = "net.thauvin.erik.mobibot";
@@ -77,7 +78,7 @@ public class MobibotBuild extends Project {
                 SONATYPE_SNAPSHOTS_LEGACY);
 
         var log4j = version(2, 23, 1);
-        var kotlin = version(1, 9, 23);
+        var kotlin = version(1, 9, 24);
         scope(compile)
                 // PircBotX
                 .include(dependency("com.github.pircbotx", "pircbotx", "2.3.1"))
@@ -124,7 +125,7 @@ public class MobibotBuild extends Project {
                 .manifestAttribute(Attributes.Name.MAIN_CLASS, mainClass())
                 .manifestAttribute(Attributes.Name.CLASS_PATH, ". " + String.join(" ", jars));
 
-        jarSourcesOperation().sourceDirectories(new File(srcMainDirectory(), "kotlin"));
+        jarSourcesOperation().sourceDirectories(srcMainKotlin);
     }
 
     public static void main(String[] args) {
@@ -182,6 +183,7 @@ public class MobibotBuild extends Project {
     public void jacoco() throws IOException {
         new JacocoReportOperation()
                 .fromProject(this)
+                .sourceFiles(srcMainKotlin)
                 .execute();
     }
 
