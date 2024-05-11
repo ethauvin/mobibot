@@ -96,7 +96,7 @@ public class MobibotBuild extends Project {
                 .include(dependency("org.jetbrains.kotlin", "kotlin-stdlib-common", kotlin))
                 .include(dependency("org.jetbrains.kotlin", "kotlin-stdlib-jdk7", kotlin))
                 .include(dependency("org.jetbrains.kotlin", "kotlin-stdlib-jdk8", kotlin))
-                .include(dependency("org.jetbrains.kotlinx", "kotlinx-coroutines-core", "1.8.0"))
+                .include(dependency("org.jetbrains.kotlinx", "kotlinx-coroutines-core", "1.8.1"))
                 .include(dependency("org.jetbrains.kotlinx", "kotlinx-cli-jvm", "0.3.6"))
                 // Logging
                 .include(dependency("org.slf4j", "slf4j-api", "2.0.13"))
