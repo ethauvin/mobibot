@@ -78,7 +78,7 @@ public class MobibotBuild extends Project {
                 SONATYPE_SNAPSHOTS_LEGACY);
 
         var log4j = version(2, 23, 1);
-        var kotlin = version(1, 9, 24);
+        var kotlin = version(2, 0, 0);
         scope(compile)
                 // PircBotX
                 .include(dependency("com.github.pircbotx", "pircbotx", "2.3.1"))
@@ -88,9 +88,9 @@ public class MobibotBuild extends Project {
                 .include(dependency("commons-codec", "commons-codec", "1.17.0"))
                 .include(dependency("commons-net", "commons-net", "3.10.0"))
                 // Google
-                .include(dependency("com.google.code.gson", "gson", "2.10.1"))
+                .include(dependency("com.google.code.gson", "gson", "2.11.0"))
                 .include(dependency("com.google.guava", "guava", "33.2.0-jre"))
-                .include(dependency("com.google.cloud", "google-cloud-vertexai", "1.3.0"))
+                .include(dependency("com.google.cloud", "google-cloud-vertexai", "1.4.0"))
                 // Kotlin
                 .include(dependency("org.jetbrains.kotlin", "kotlin-stdlib", kotlin))
                 .include(dependency("org.jetbrains.kotlin", "kotlin-stdlib-common", kotlin))
@@ -153,7 +153,7 @@ public class MobibotBuild extends Project {
     @Override
     public void updates() throws Exception {
         super.updates();
-        rootPom();
+        pomRoot();
     }
 
     @BuildCommand(summary = "Copies all needed files to the deploy directory")
@@ -203,13 +203,13 @@ public class MobibotBuild extends Project {
                 .classTemplate(new File(workDirectory(), "release-info.txt"))
                 .className("ReleaseInfo")
                 .packageName(pkg)
-                .directory(new File(srcMainDirectory(), "kotlin"))
+                .directory(srcMainKotlin)
                 .extension(".kt")
                 .execute();
     }
 
-    @BuildCommand(value = "root-pom", summary = "Generates the POM file in the root directory")
-    public void rootPom() throws FileUtilsErrorException {
+    @BuildCommand(value = "pom-root", summary = "Generates the POM file in the root directory")
+    public void pomRoot() throws FileUtilsErrorException {
         PomBuilder.generateInto(publishOperation().info(), dependencies(),
                 Path.of(workDirectory.getPath(), "pom.xml").toFile());
     }
