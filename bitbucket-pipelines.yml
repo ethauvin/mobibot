@@ -1,10 +1,20 @@
-image: openjdk:17
+image: ubuntu:latest
 
 pipelines:
   default:
     - step:
         name: Test with bld
         script:
+          # Install Java & Kotlin via SDKMAN!
+          - apt-get update -qq && apt-get install -y curl zip
+          - curl -s "https://get.sdkman.io" | bash
+          - echo sdkman_auto_answer=true > $HOME/.sdkman/etc/config
+          - echo sdkman_auto_selfupdate=true >> $HOME/.sdkman/etc/config
+          - source "$HOME/.sdkman/bin/sdkman-init.sh"
+          - sdk install java 17.0.11-tem
+          - sdk install kotlin 2.0.0
+          - source "$HOME/.sdkman/bin/sdkman-init.sh"
+          # Download, compile and test with bld
           - ./bld download
           - ./bld compile
           - ./bld test

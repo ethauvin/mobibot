@@ -86,11 +86,11 @@ public class MobibotBuild extends Project {
                 .include(dependency("org.apache.commons", "commons-lang3", "3.14.0"))
                 .include(dependency("org.apache.commons", "commons-text", "1.12.0"))
                 .include(dependency("commons-codec", "commons-codec", "1.17.0"))
-                .include(dependency("commons-net", "commons-net", "3.10.0"))
+                .include(dependency("commons-net", "commons-net", "3.11.1"))
                 // Google
                 .include(dependency("com.google.code.gson", "gson", "2.11.0"))
-                .include(dependency("com.google.guava", "guava", "33.2.0-jre"))
-                .include(dependency("com.google.cloud", "google-cloud-vertexai", "1.4.0"))
+                .include(dependency("com.google.guava", "guava", "33.2.1-jre"))
+                .include(dependency("com.google.cloud", "google-cloud-vertexai", "1.6.0"))
                 // Kotlin
                 .include(dependency("org.jetbrains.kotlin", "kotlin-stdlib", kotlin))
                 .include(dependency("org.jetbrains.kotlin", "kotlin-stdlib-common", kotlin))
@@ -109,7 +109,7 @@ public class MobibotBuild extends Project {
                 .include(dependency("net.aksingh", "owm-japis", "2.5.3.0"))
                 .include(dependency("net.objecthunter", "exp4j", "0.4.8"))
                 .include(dependency("org.json", "json", "20240303"))
-                .include(dependency("org.jsoup", "jsoup", "1.17.2"))
+                .include(dependency("org.jsoup", "jsoup", "1.18.1"))
                 // Thauvin
                 .include(dependency("net.thauvin.erik", "cryptoprice", "1.0.3-SNAPSHOT"))
                 .include(dependency("net.thauvin.erik", "jokeapi", "0.9.2-SNAPSHOT"))
@@ -118,8 +118,8 @@ public class MobibotBuild extends Project {
         scope(test)
                 .include(dependency("com.willowtreeapps.assertk", "assertk-jvm", version(0, 28, 1)))
                 .include(dependency("org.jetbrains.kotlin", "kotlin-test-junit5", kotlin))
-                .include(dependency("org.junit.jupiter", "junit-jupiter", version(5, 10, 2)))
-                .include(dependency("org.junit.platform", "junit-platform-console-standalone", version(1, 10, 2)));
+                .include(dependency("org.junit.jupiter", "junit-jupiter", version(5, 10, 3)))
+                .include(dependency("org.junit.platform", "junit-platform-console-standalone", version(1, 10, 3)));
 
         List<String> jars = new ArrayList<>();
         runtimeClasspathJars().forEach(f -> jars.add("./lib/" + f.getName()));
@@ -189,7 +189,7 @@ public class MobibotBuild extends Project {
     }
 
     @BuildCommand(summary = "Generates JaCoCo Reports")
-    public void jacoco() throws IOException {
+    public void jacoco() throws Exception {
         new JacocoReportOperation()
                 .fromProject(this)
                 .sourceFiles(srcMainKotlin)
@@ -197,7 +197,7 @@ public class MobibotBuild extends Project {
     }
 
     @BuildCommand(value = "release-info", summary = "Generates the ReleaseInfo class")
-    public void releaseInfo() {
+    public void releaseInfo() throws Exception {
         new GeneratedVersionOperation()
                 .fromProject(this)
                 .classTemplate(new File(workDirectory(), "release-info.txt"))

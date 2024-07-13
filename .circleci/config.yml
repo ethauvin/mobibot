@@ -10,6 +10,14 @@ defaults_bld: &defaults_bld
   steps:
     - checkout
     - run:
+        name: Install Kotlin via SDKMAN!
+        command: |
+          curl -s "https://get.sdkman.io" | bash
+          echo sdkman_auto_answer=true > $HOME/.sdkman/etc/config
+          echo sdkman_auto_selfupdate=true >> $HOME/.sdkman/etc/config
+          source "$HOME/.sdkman/bin/sdkman-init.sh"
+          sdk install kotlin 2.0.0
+    - run:
         name: Download the bld dependencies
         command: ./bld download
     - run:

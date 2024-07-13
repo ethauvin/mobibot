@@ -8,10 +8,12 @@ jobs:
 
     env:
       COVERAGE_SDK: "17"
+      COVERAGE_KOTLIN: "2.0.0"
 
     strategy:
       matrix:
         java-version: [17, 21, 22]
+        kotlin-version: [1.9.24, 2.0.0]
 
     steps:
       - name: Checkout source repository
@@ -48,12 +50,11 @@ jobs:
         run: ./bld jacoco
 
       - name: Remove pom.xml
-        if: success() && matrix.java-version == env.COVERAGE_SDK
         run: rm -rf pom.xml
 
       - name: SonarCloud Scan
         uses: sonarsource/sonarcloud-github-action@master
-        if: success() && matrix.java-version == env.COVERAGE_SDK
+        if: success() && matrix.java-version == env.COVERAGE_SDK && matrix.kotlin-version == env.COVERAGE_KOTLIN
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
