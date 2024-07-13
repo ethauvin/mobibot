@@ -1,19 +1,29 @@
 name: bld-ci
 
-on: [push, pull_request, workflow_dispatch]
+on: [ push, pull_request, workflow_dispatch ]
+
+env:
+  ALPHAVANTAGE_API_KEY: ${{ secrets.ALPHAVANTAGE_API_KEY }}
+  CHATGPT_API_KEY: ${{ secrets.CHATGPT_API_KEY }}
+  CI_NAME: "GitHub CI"
+  COVERAGE_JDK: "21"
+  COVERAGE_KOTLIN: "2.0.0"
+  EXCHANGERATE_API_KEY: ${{ secrets.EXCHANGERATE_API_KEY }}
+  KOTLIN_HOME: /usr/share/kotlinc
+  MASTODON_ACCESS_TOKEN: ${{ secrets.MASTODON_ACCESS_TOKEN }}
+  MASTODON_HANDLE: ${{ secrets.MASTODON_HANDLE }}
+  MASTODON_INSTANCE: ${{ secrets.MASTODON_INSTANCE }}
+  OWM_API_KEY: ${{ secrets.OWM_API_KEY }}
+  PINBOARD_API_TOKEN: ${{ secrets.PINBOARD_API_TOKEN }}
 
 jobs:
   build-bld-project:
     runs-on: ubuntu-latest
 
-    env:
-      COVERAGE_SDK: "17"
-      COVERAGE_KOTLIN: "2.0.0"
-
     strategy:
       matrix:
-        java-version: [17, 21, 22]
-        kotlin-version: [1.9.24, 2.0.0]
+        java-version: [ 17, 21, 22 ]
+        kotlin-version: [ 1.9.24, 2.0.0 ]
 
     steps:
       - name: Checkout source repository
@@ -21,40 +31,28 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Set up JDK ${{ matrix.java-version }}
+      - name: Set up JDK ${{ matrix.java-version }} with Kotlin ${{ matrix.kotlin-version }}
         uses: actions/setup-java@v4
         with:
           distribution: "zulu"
           java-version: ${{ matrix.java-version }}
 
-      - name: Grant bld execute permission
-        run: chmod +x bld
-
-      - name: Download the bld dependencies
+      - name: Download dependencies
         run: ./bld download
 
-      - name: Compile source with bld
+      - name: Compile source
         run: ./bld compile
 
-      - name: Run tests with bld
-        env:
-          CI_NAME: "GitHub CI"
-          ALPHAVANTAGE_API_KEY: ${{ secrets.ALPHAVANTAGE_API_KEY }}
-          CHATGPT_API_KEY: ${{ secrets.CHATGPT_API_KEY }}
-          OWM_API_KEY: ${{ secrets.OWM_API_KEY }}
-          PINBOARD_API_TOKEN: ${{ secrets.PINBOARD_API_TOKEN }}
-          MASTODON_ACCESS_TOKEN: ${{ secrets.MASTODON_ACCESS_TOKEN }}
-          MASTODON_HANDLE: ${{ secrets.MASTODON_HANDLE }}
-          MASTODON_INSTANCE: ${{ secrets.MASTODON_INSTANCE }}
-          EXCHANGERATE_API_KEY: ${{ secrets.EXCHANGERATE_API_KEY }}
+      - name: Run tests
         run: ./bld jacoco
 
       - name: Remove pom.xml
+        if: success() && matrix.java-version == env.COVERAGE_JDK && matrix.kotlin-version == env.COVERAGE_KOTLIN
         run: rm -rf pom.xml
 
       - name: SonarCloud Scan
         uses: sonarsource/sonarcloud-github-action@master
-        if: success() && matrix.java-version == env.COVERAGE_SDK && matrix.kotlin-version == env.COVERAGE_KOTLIN
+        if: success() && matrix.java-version == env.COVERAGE_JDK && matrix.kotlin-version == env.COVERAGE_KOTLIN
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}

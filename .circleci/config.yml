@@ -1,4 +1,8 @@
-version: 2
+version: 2.1
+
+orbs:
+  sdkman: joshdholtz/sdkman@0.2.0
+
 defaults: &defaults
   working_directory: ~/repo
   environment:
@@ -6,26 +10,31 @@ defaults: &defaults
     TERM: dumb
     CI_NAME: "CircleCI"
 
-defaults_bld: &defaults_bld
-  steps:
-    - checkout
-    - run:
-        name: Install Kotlin via SDKMAN!
-        command: |
-          curl -s "https://get.sdkman.io" | bash
-          echo sdkman_auto_answer=true > $HOME/.sdkman/etc/config
-          echo sdkman_auto_selfupdate=true >> $HOME/.sdkman/etc/config
-          source "$HOME/.sdkman/bin/sdkman-init.sh"
-          sdk install kotlin 2.0.0
-    - run:
-        name: Download the bld dependencies
-        command: ./bld download
-    - run:
-        name: Compile source with bld
-        command: ./bld compile
-    - run:
-        name: Run tests with bld
-        command: ./bld test
+commands:
+  build_and_test:
+    parameters:
+      reports-dir:
+        type: string
+        default: "build/reports/test_results"
+    steps:
+      - checkout
+      - sdkman/setup-sdkman
+      - sdkman/sdkman-install:
+          candidate: kotlin
+          version: 2.0.0
+      - run:
+          name: Download dependencies
+          command: ./bld download
+      - run:
+          name: Compile source
+          command: ./bld compile
+      - run:
+          name: Run tests
+          command: ./bld jacoco -reports-dir=<< parameters.reports-dir >>
+      - store_test_results:
+          path: << parameters.reports-dir >>
+      - store_artifacts:
+          path: build/reports/jacoco/test/html
 
 jobs:
   bld_jdk17:
@@ -34,7 +43,8 @@ jobs:
     docker:
       - image: cimg/openjdk:17.0
 
-    <<: *defaults_bld
+    steps:
+      - build_and_test
 
   bld_jdk20:
     <<: *defaults
@@ -42,10 +52,10 @@ jobs:
     docker:
       - image: cimg/openjdk:20.0
 
-    <<: *defaults_bld
+    steps:
+      - build_and_test
 
 workflows:
-  version: 2
   bld:
     jobs:
       - bld_jdk17

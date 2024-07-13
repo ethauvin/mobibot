@@ -49,7 +49,7 @@ class ChatGptTest : LocalProperties() {
 
     @Test
     fun testChatOnCoverage() {
-        if (System.getenv("CI") == null || System.getenv("COVERAGE_SDK") != null) {
+        if (System.getenv("CI") == null || System.getenv("COVERAGE_JDK") != null) {
             assertThat(
                 ChatGpt.chat("how do I encode a URL in java?", getProperty(ChatGpt.API_KEY_PROP), 60)
             ).contains("URLEncoder")

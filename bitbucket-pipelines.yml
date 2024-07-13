@@ -5,14 +5,14 @@ pipelines:
     - step:
         name: Test with bld
         script:
-          # Install Java & Kotlin via SDKMAN!
+          # Install latest Java & Kotlin via SDKMAN!
           - apt-get update -qq && apt-get install -y curl zip
           - curl -s "https://get.sdkman.io" | bash
           - echo sdkman_auto_answer=true > $HOME/.sdkman/etc/config
           - echo sdkman_auto_selfupdate=true >> $HOME/.sdkman/etc/config
           - source "$HOME/.sdkman/bin/sdkman-init.sh"
-          - sdk install java 17.0.11-tem
-          - sdk install kotlin 2.0.0
+          - sdk install java
+          - sdk install kotlin
           - source "$HOME/.sdkman/bin/sdkman-init.sh"
           # Download, compile and test with bld
           - ./bld download
