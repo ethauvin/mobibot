@@ -2,10 +2,10 @@
 <project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
-  <groupId></groupId>
-  <artifactId></artifactId>
-  <version></version>
-  <name></name>
+  <groupId>net.thauvin.erik.mobibot</groupId>
+  <artifactId>mobibot</artifactId>
+  <version>0.8.0-rc+20240715201342</version>
+  <name>mobibot</name>
   <description></description>
   <url></url>
   <dependencies>

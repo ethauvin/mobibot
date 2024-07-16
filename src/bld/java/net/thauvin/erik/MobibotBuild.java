@@ -210,7 +210,7 @@ public class MobibotBuild extends Project {
 
     @BuildCommand(value = "pom-root", summary = "Generates the POM file in the root directory")
     public void pomRoot() throws FileUtilsErrorException {
-        PomBuilder.generateInto(publishOperation().info(), dependencies(),
-                Path.of(workDirectory.getPath(), "pom.xml").toFile());
+        PomBuilder.generateInto(publishOperation().fromProject(this).info(), dependencies(),
+                new File(workDirectory, "pom.xml"));
     }
 }
