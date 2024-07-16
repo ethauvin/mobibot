@@ -49,7 +49,7 @@ class GeminiTest : LocalProperties() {
     @DisableOnCi
     fun chatPrompt() {
         val projectId = getProperty(Gemini.PROJECT_ID_PROP)
-        val location = getProperty(Gemini.LOCATION_PROPR)
+        val location = getProperty(Gemini.LOCATION_PROP)
         val maxTokens = getProperty(Gemini.MAX_TOKENS_PROP).toInt()
 
         assertThat(
