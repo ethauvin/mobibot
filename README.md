@@ -1,8 +1,8 @@
 # mobibot
 
 [![License (3-Clause BSD)](https://img.shields.io/badge/license-BSD%203--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
-[![Kotlin](https://img.shields.io/badge/kotlin-2.0.0-7f52ff.svg)](https://kotlinlang.org)
-[![bld](https://img.shields.io/badge/1.9.1-FA9052?label=bld&labelColor=2392FF)](https://rife2.com/bld)
+[![Kotlin](https://img.shields.io/badge/kotlin-2.0.10-7f52ff.svg)](https://kotlinlang.org)
+[![bld](https://img.shields.io/badge/2.0.1-FA9052?label=bld&labelColor=2392FF)](https://rife2.com/bld)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=ethauvin_mobibot&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=ethauvin_mobibot)
 [![GitHub CI](https://github.com/ethauvin/mobibot/actions/workflows/bld.yml/badge.svg)](https://github.com/ethauvin/mobibot/actions/workflows/bld.yml)
 [![CircleCI](https://circleci.com/gh/ethauvin/mobibot/tree/master.svg?style=shield)](https://circleci.com/gh/ethauvin/mobibot/tree/master)

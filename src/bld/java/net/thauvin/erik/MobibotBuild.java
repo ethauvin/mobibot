@@ -78,19 +78,19 @@ public class MobibotBuild extends Project {
                 SONATYPE_SNAPSHOTS_LEGACY);
 
         var log4j = version(2, 23, 1);
-        var kotlin = version(2, 0, 0);
+        var kotlin = version(2, 0, 10);
         scope(compile)
                 // PircBotX
                 .include(dependency("com.github.pircbotx", "pircbotx", "2.3.1"))
                 // Commons (mostly for PircBotX)
-                .include(dependency("org.apache.commons", "commons-lang3", "3.14.0"))
+                .include(dependency("org.apache.commons", "commons-lang3", "3.16.0"))
                 .include(dependency("org.apache.commons", "commons-text", "1.12.0"))
-                .include(dependency("commons-codec", "commons-codec", "1.17.0"))
+                .include(dependency("commons-codec", "commons-codec", "1.17.1"))
                 .include(dependency("commons-net", "commons-net", "3.11.1"))
                 // Google
                 .include(dependency("com.google.code.gson", "gson", "2.11.0"))
                 .include(dependency("com.google.guava", "guava", "33.2.1-jre"))
-                .include(dependency("com.google.cloud", "google-cloud-vertexai", "1.6.0"))
+                .include(dependency("com.google.cloud", "google-cloud-vertexai", "1.7.0"))
                 // Kotlin
                 .include(dependency("org.jetbrains.kotlin", "kotlin-stdlib", kotlin))
                 .include(dependency("org.jetbrains.kotlin", "kotlin-stdlib-common", kotlin))
@@ -99,7 +99,7 @@ public class MobibotBuild extends Project {
                 .include(dependency("org.jetbrains.kotlinx", "kotlinx-coroutines-core", "1.8.1"))
                 .include(dependency("org.jetbrains.kotlinx", "kotlinx-cli-jvm", "0.3.6"))
                 // Logging
-                .include(dependency("org.slf4j", "slf4j-api", "2.0.13"))
+                .include(dependency("org.slf4j", "slf4j-api", "2.0.15"))
                 .include(dependency("org.apache.logging.log4j", "log4j-api", log4j))
                 .include(dependency("org.apache.logging.log4j", "log4j-core", log4j))
                 .include(dependency("org.apache.logging.log4j", "log4j-slf4j2-impl", log4j))
