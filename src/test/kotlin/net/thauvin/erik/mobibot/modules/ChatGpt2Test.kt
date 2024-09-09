@@ -1,5 +1,5 @@
 /*
- * GeminiTest.kt
+ * ChatGptTest.kt
  *
  * Copyright 2004-2024 Erik C. Thauvin (erik@thauvin.net)
  *
@@ -32,35 +32,39 @@ package net.thauvin.erik.mobibot.modules
 
 import assertk.assertFailure
 import assertk.assertThat
-import assertk.assertions.*
+import assertk.assertions.contains
+import assertk.assertions.hasNoCause
+import assertk.assertions.isInstanceOf
 import net.thauvin.erik.mobibot.DisableOnCi
 import net.thauvin.erik.mobibot.LocalProperties
 import kotlin.test.Test
 
-class GeminiTest : LocalProperties() {
+class ChatGpt2Test : LocalProperties() {
     @Test
     fun testApiKey() {
-        assertFailure { Gemini.chat("1 gallon to liter", "", "", 1024) }
+        assertFailure { ChatGpt2.chat("1 gallon to liter", "", 0) }
             .isInstanceOf(ModuleException::class.java)
             .hasNoCause()
     }
 
     @Test
+    fun testChatOnCoverage() {
+        if (System.getenv("CI") == null || System.getenv("COVERAGE_JDK") != null) {
+            assertThat(
+                ChatGpt2.chat("how do I encode a URL in java?", getProperty(ChatGpt2.API_KEY_PROP), 60)
+            ).contains("URLEncoder")
+        }
+    }
+
+    @Test
     @DisableOnCi
-    fun chatPrompt() {
-        val projectId = getProperty(Gemini.PROJECT_ID_PROP)
-        val location = getProperty(Gemini.LOCATION_PROP)
-        val maxTokens = getProperty(Gemini.MAX_TOKENS_PROP).toInt()
-
+    fun testChat() {
+        val apiKey = getProperty(ChatGpt2.API_KEY_PROP)
         assertThat(
-            Gemini.chat("how do I make an HTTP request in Javascript?", projectId, location, maxTokens)
-        ).isNotNull().contains("XMLHttpRequest")
+            ChatGpt2.chat("how do I make an HTTP request in Javascript?", apiKey, 200)
+        ).contains("XMLHttpRequest")
 
-        assertThat(
-            Gemini.chat("how do I encode a URL in java?", projectId, location, 60)
-        ).isNotNull().contains("URLEncoder")
-
-        assertFailure { Gemini.chat("1 liter to gallon", projectId, "blah", 40) }
+        assertFailure { ChatGpt2.chat("1 liter to gallon", apiKey, -1) }
             .isInstanceOf(ModuleException::class.java)
     }
 }

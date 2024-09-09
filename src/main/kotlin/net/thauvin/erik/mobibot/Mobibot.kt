@@ -396,11 +396,11 @@ class Mobibot(nickname: String, val channel: String, logsDirPath: String, p: Pro
 
         // Load the modules
         addons.add(Calc())
-        addons.add(ChatGpt())
+        addons.add(ChatGpt2())
         addons.add(CryptoPrices())
         addons.add(CurrencyConverter())
         addons.add(Dice())
-        addons.add(Gemini())
+        addons.add(Gemini2())
         addons.add(GoogleSearch())
         addons.add(Info(tell, seen))
         addons.add(Joke())

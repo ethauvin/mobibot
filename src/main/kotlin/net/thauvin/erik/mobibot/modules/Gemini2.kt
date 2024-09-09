@@ -31,12 +31,7 @@
 
 package net.thauvin.erik.mobibot.modules
 
-import com.google.cloud.vertexai.VertexAI
-import com.google.cloud.vertexai.api.GenerationConfig
-import com.google.cloud.vertexai.api.HarmCategory
-import com.google.cloud.vertexai.api.SafetySetting
-import com.google.cloud.vertexai.generativeai.GenerativeModel
-import com.google.cloud.vertexai.generativeai.ResponseHandler
+import dev.langchain4j.model.googleai.GoogleAiGeminiChatModel
 import net.thauvin.erik.mobibot.Utils
 import net.thauvin.erik.mobibot.Utils.sendMessage
 import org.pircbotx.hooks.types.GenericMessageEvent
@@ -45,8 +40,8 @@ import org.slf4j.LoggerFactory
 import java.util.*
 
 
-class Gemini : AbstractModule() {
-    private val logger: Logger = LoggerFactory.getLogger(Gemini::class.java)
+class Gemini2 : AbstractModule() {
+    private val logger: Logger = LoggerFactory.getLogger(Gemini2::class.java)
 
     override val name = GEMINI_NAME
 
@@ -55,8 +50,7 @@ class Gemini : AbstractModule() {
             try {
                 val answer = chat(
                     args.trim(),
-                    properties[PROJECT_ID_PROP],
-                    properties[LOCATION_PROP],
+                    properties[GEMINI_API_KEY],
                     properties.getOrDefault(MAX_TOKENS_PROP, "1024").toInt()
                 )
                 if (!answer.isNullOrEmpty()) {
@@ -82,17 +76,12 @@ class Gemini : AbstractModule() {
         const val GEMINI_NAME = "Gemini"
 
         /**
-         * The Google cloud project ID property.
+         * The API key
          */
-        const val PROJECT_ID_PROP = "gemini-project-id"
+        const val GEMINI_API_KEY = "gemini-api-key"
 
         /**
-         * The Vertex AI location property.
-         */
-        const val LOCATION_PROP = "gemini-location"
-
-        /**
-         * The max number of tokens property.
+         * The max number of output tokens property.
          */
         const val MAX_TOKENS_PROP = "gemini-max-tokens"
 
@@ -103,40 +92,18 @@ class Gemini : AbstractModule() {
         @Throws(ModuleException::class)
         fun chat(
             query: String,
-            projectId: String?,
-            location: String?,
-            maxToken: Int
+            apiKey: String?,
+            maxTokens: Int
         ): String? {
-            if (!projectId.isNullOrEmpty() && !location.isNullOrEmpty()) {
+            if (!apiKey.isNullOrEmpty()) {
                 try {
-                    VertexAI(projectId, location).use { vertexAI ->
-                        val generationConfig = GenerationConfig.newBuilder().setMaxOutputTokens(maxToken).build()
-                        val safetySettings = listOf(
-                            SafetySetting.newBuilder()
-                                .setCategory(HarmCategory.HARM_CATEGORY_HATE_SPEECH)
-                                .setThreshold(SafetySetting.HarmBlockThreshold.BLOCK_LOW_AND_ABOVE)
-                                .build(),
-                            SafetySetting.newBuilder()
-                                .setCategory(HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT)
-                                .setThreshold(SafetySetting.HarmBlockThreshold.BLOCK_LOW_AND_ABOVE)
-                                .build(),
-                            SafetySetting.newBuilder()
-                                .setCategory(HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT)
-                                .setThreshold(SafetySetting.HarmBlockThreshold.BLOCK_LOW_AND_ABOVE)
-                                .build(),
-                            SafetySetting.newBuilder()
-                                .setCategory(HarmCategory.HARM_CATEGORY_HARASSMENT)
-                                .setThreshold(SafetySetting.HarmBlockThreshold.BLOCK_LOW_AND_ABOVE)
-                                .build()
-                        )
-                        val model = GenerativeModel.Builder().setModelName("gemini-1.5-flash-001")
-                            .setGenerationConfig(generationConfig)
-                            .setVertexAi(vertexAI).build()
-                            .withSafetySettings(safetySettings)
+                    val gemini = GoogleAiGeminiChatModel.builder()
+                        .apiKey(apiKey)
+                        .modelName("gemini-1.5-flash")
+                        .maxOutputTokens(maxTokens)
+                        .build()
 
-                        val response = model.generateContent(query)
-                        return ResponseHandler.getText(response)
-                    }
+                    return gemini.generate(query)
                 } catch (e: Exception) {
                     throw ModuleException(
                         "$GEMINI_CMD($query): IO",
@@ -159,7 +126,6 @@ class Gemini : AbstractModule() {
             add(Utils.helpFormat("%c $GEMINI_CMD explain quantum computing in simple terms"))
             add(Utils.helpFormat("%c $GEMINI_CMD how do I make an HTTP request in Javascript?"))
         }
-        initProperties(PROJECT_ID_PROP, LOCATION_PROP, MAX_TOKENS_PROP)
+        initProperties(GEMINI_API_KEY, MAX_TOKENS_PROP)
     }
-
 }

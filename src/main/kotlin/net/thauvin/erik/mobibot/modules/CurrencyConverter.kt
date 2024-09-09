@@ -217,6 +217,6 @@ class CurrencyConverter : AbstractModule() {
     init {
         commands.add(CURRENCY_CMD)
         initProperties(API_KEY_PROP)
-        loadSymbols(properties[ChatGpt.API_KEY_PROP])
+        loadSymbols(properties[ChatGpt2.API_KEY_PROP])
     }
 }

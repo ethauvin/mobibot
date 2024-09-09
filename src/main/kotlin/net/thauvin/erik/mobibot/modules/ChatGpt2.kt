@@ -31,23 +31,16 @@
 
 package net.thauvin.erik.mobibot.modules
 
-import net.thauvin.erik.mobibot.Constants
+import dev.langchain4j.model.openai.OpenAiChatModel
+import dev.langchain4j.model.openai.OpenAiChatModelName
 import net.thauvin.erik.mobibot.Utils
 import net.thauvin.erik.mobibot.Utils.sendMessage
-import org.json.JSONArray
-import org.json.JSONException
-import org.json.JSONObject
 import org.pircbotx.hooks.types.GenericMessageEvent
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import java.io.IOException
-import java.net.URI
-import java.net.http.HttpClient
-import java.net.http.HttpRequest
-import java.net.http.HttpResponse
 
-class ChatGpt : AbstractModule() {
-    val logger: Logger = LoggerFactory.getLogger(ChatGpt::class.java)
+class ChatGpt2 : AbstractModule() {
+    val logger: Logger = LoggerFactory.getLogger(ChatGpt2::class.java)
 
     override val name = CHATGPT_NAME
 
@@ -93,9 +86,6 @@ class ChatGpt : AbstractModule() {
          */
         const val MAX_TOKENS_PROP = "chatgpt-max-tokens"
 
-        // ChatGPT API URL
-        private const val API_URL = "https://api.openai.com/v1/chat/completions"
-
         // ChatGPT command
         private const val CHATGPT_CMD = "chatgpt"
 
@@ -103,48 +93,15 @@ class ChatGpt : AbstractModule() {
         @Throws(ModuleException::class)
         fun chat(query: String, apiKey: String?, maxTokens: Int): String {
             if (!apiKey.isNullOrEmpty()) {
-                val jsonObject = JSONObject()
-                jsonObject.put("model", "gpt-3.5-turbo-1106")
-                jsonObject.put("max_tokens", maxTokens)
-                val message = JSONObject()
-                message.put("role", "user")
-                message.put("content", query)
-                val messages = JSONArray()
-                messages.put(message)
-                jsonObject.put("messages", messages)
-
-                val request = HttpRequest.newBuilder()
-                    .uri(URI.create(API_URL))
-                    .header("Content-Type", "application/json")
-                    .header("Authorization", "Bearer $apiKey")
-                    .header("User-Agent", Constants.USER_AGENT)
-                    .POST(HttpRequest.BodyPublishers.ofString(jsonObject.toString()))
-                    .build()
                 try {
-                    val response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString())
-                    if (response.statusCode() == 200) {
-                        try {
-                            val jsonResponse = JSONObject(response.body())
-                            val choices = jsonResponse.getJSONArray("choices")
-                            return choices.getJSONObject(0).getJSONObject("message").getString("content").trim()
-                        } catch (e: JSONException) {
-                            throw ModuleException(
-                                "$CHATGPT_CMD($query): JSON",
-                                "A JSON error has occurred while conversing with $CHATGPT_NAME.",
-                                e
-                            )
-                        }
-                    } else {
-                        if (response.statusCode() == 429) {
-                            throw ModuleException(
-                                "$CHATGPT_CMD($query): Rate limit reached",
-                                "Rate limit reached. Please try again later."
-                            )
-                        } else {
-                            throw IOException("HTTP Status Code: " + response.statusCode())
-                        }
-                    }
-                } catch (e: IOException) {
+                    val model = OpenAiChatModel.builder()
+                        .apiKey(apiKey)
+                        .modelName(OpenAiChatModelName.GPT_4_O)
+                        .maxTokens(maxTokens)
+                        .build()
+
+                    return model.generate(query)
+                } catch (e: Exception) {
                     throw ModuleException(
                         "$CHATGPT_CMD($query): IO",
                         "An IO error has occurred while conversing with $CHATGPT_NAME.",

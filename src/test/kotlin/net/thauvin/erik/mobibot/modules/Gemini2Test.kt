@@ -1,5 +1,5 @@
 /*
- * ChatGptTest.kt
+ * GeminiTest.kt
  *
  * Copyright 2004-2024 Erik C. Thauvin (erik@thauvin.net)
  *
@@ -32,39 +32,34 @@ package net.thauvin.erik.mobibot.modules
 
 import assertk.assertFailure
 import assertk.assertThat
-import assertk.assertions.contains
-import assertk.assertions.hasNoCause
-import assertk.assertions.isInstanceOf
+import assertk.assertions.*
 import net.thauvin.erik.mobibot.DisableOnCi
 import net.thauvin.erik.mobibot.LocalProperties
 import kotlin.test.Test
 
-class ChatGptTest : LocalProperties() {
+class Gemini2Test : LocalProperties() {
     @Test
     fun testApiKey() {
-        assertFailure { ChatGpt.chat("1 gallon to liter", "", 0) }
+        assertFailure { Gemini2.chat("1 gallon to liter", "", 0) }
             .isInstanceOf(ModuleException::class.java)
             .hasNoCause()
     }
 
     @Test
-    fun testChatOnCoverage() {
-        if (System.getenv("CI") == null || System.getenv("COVERAGE_JDK") != null) {
-            assertThat(
-                ChatGpt.chat("how do I encode a URL in java?", getProperty(ChatGpt.API_KEY_PROP), 60)
-            ).contains("URLEncoder")
-        }
-    }
-
-    @Test
     @DisableOnCi
-    fun testChat() {
-        val apiKey = getProperty(ChatGpt.API_KEY_PROP)
-        assertThat(
-            ChatGpt.chat("how do I make an HTTP request in Javascript?", apiKey, 100)
-        ).contains("XMLHttpRequest")
+    fun chatPrompt() {
+        val apiKey = getProperty(Gemini2.GEMINI_API_KEY)
+        val maxTokens = getProperty(Gemini2.MAX_TOKENS_PROP).toInt()
 
-        assertFailure { ChatGpt.chat("1 liter to gallon", apiKey, -1) }
+        assertThat(
+            Gemini2.chat("how do I make an HTTP request in Javascript?", apiKey, maxTokens)
+        ).isNotNull().contains("XMLHttpRequest")
+
+        assertThat(
+            Gemini2.chat("how do I encode a URL in java?", apiKey, 60)
+        ).isNotNull().contains("URLEncoder")
+
+        assertFailure { Gemini2.chat("1 liter to gallon", "foo", 40) }
             .isInstanceOf(ModuleException::class.java)
     }
 }

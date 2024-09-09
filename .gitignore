@@ -60,3 +60,4 @@ local.properties
 logs
 mobibot.properties
 out
+/target/
