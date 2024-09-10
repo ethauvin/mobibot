@@ -21,7 +21,7 @@ commands:
       - sdkman/setup-sdkman
       - sdkman/sdkman-install:
           candidate: kotlin
-          version: 2.0.0
+          version: 2.0.20
       - run:
           name: Download dependencies
           command: ./bld download
