@@ -200,6 +200,12 @@ public class MobibotBuild extends Project {
                 .execute();
     }
 
+    @BuildCommand(value = "pom-root", summary = "Generates the POM file in the root directory")
+    public void pomRoot() throws FileUtilsErrorException {
+        PomBuilder.generateInto(publishOperation().fromProject(this).info(), dependencies(),
+                new File(workDirectory, "pom.xml"));
+    }
+
     @BuildCommand(value = "release-info", summary = "Generates the ReleaseInfo class")
     public void releaseInfo() throws Exception {
         new GeneratedVersionOperation()
@@ -210,11 +216,5 @@ public class MobibotBuild extends Project {
                 .directory(srcMainKotlin)
                 .extension(".kt")
                 .execute();
-    }
-
-    @BuildCommand(value = "pom-root", summary = "Generates the POM file in the root directory")
-    public void pomRoot() throws FileUtilsErrorException {
-        PomBuilder.generateInto(publishOperation().fromProject(this).info(), dependencies(),
-                new File(workDirectory, "pom.xml"));
     }
 }
