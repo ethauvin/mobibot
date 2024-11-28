@@ -141,7 +141,10 @@ public class MobibotBuild extends Project {
 
     @Override
     public void clean() throws Exception {
-        FileUtils.deleteDirectory(new File("deploy"));
+        var deploy = new File("deploy");
+        if (deploy.exists()) {
+            FileUtils.deleteDirectory(deploy);
+        }
         super.clean();
     }
 
