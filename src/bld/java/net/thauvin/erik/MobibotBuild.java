@@ -76,9 +76,9 @@ public class MobibotBuild extends Project {
                 new Repository("https://jitpack.io"),
                 SONATYPE_SNAPSHOTS_LEGACY);
 
-        var log4j = version(2, 24, 0);
-        var kotlin = version(2, 0, 20);
-        var langchain = version(0, 34, 0);
+        var log4j = version(2, 24, 2);
+        var kotlin = version(2, 1, 0);
+        var langchain = version(0, 36, 2);
         scope(compile)
                 // PircBotX
                 .include(dependency("com.github.pircbotx", "pircbotx", "2.3.1"))
@@ -113,17 +113,17 @@ public class MobibotBuild extends Project {
                 .include(dependency("net.aksingh", "owm-japis", "2.5.3.0"))
                 .include(dependency("net.objecthunter", "exp4j", "0.4.8"))
                 .include(dependency("org.json", "json", "20240303"))
-                .include(dependency("org.jsoup", "jsoup", "1.18.1"))
+                .include(dependency("org.jsoup", "jsoup", "1.18.2"))
                 // Thauvin
                 .include(dependency("net.thauvin.erik", "cryptoprice", "1.0.3-SNAPSHOT"))
                 .include(dependency("net.thauvin.erik", "jokeapi", "0.9.2-SNAPSHOT"))
                 .include(dependency("net.thauvin.erik", "pinboard-poster", "1.1.2-SNAPSHOT"))
-                .include(dependency("net.thauvin.erik.urlencoder", "urlencoder-lib-jvm", "1.5.0"));
+                .include(dependency("net.thauvin.erik.urlencoder", "urlencoder-lib-jvm", "1.6.0"));
         scope(test)
                 .include(dependency("com.willowtreeapps.assertk", "assertk-jvm", version(0, 28, 1)))
                 .include(dependency("org.jetbrains.kotlin", "kotlin-test-junit5", kotlin))
-                .include(dependency("org.junit.jupiter", "junit-jupiter", version(5, 11, 0)))
-                .include(dependency("org.junit.platform", "junit-platform-console-standalone", version(1, 11, 0)));
+                .include(dependency("org.junit.jupiter", "junit-jupiter", version(5, 11, 3)))
+                .include(dependency("org.junit.platform", "junit-platform-console-standalone", version(1, 11, 3)));
 
         List<String> jars = new ArrayList<>();
         runtimeClasspathJars().forEach(f -> jars.add("./lib/" + f.getName()));
