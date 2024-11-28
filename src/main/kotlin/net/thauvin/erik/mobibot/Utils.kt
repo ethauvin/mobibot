@@ -421,14 +421,22 @@ object Utils {
     @Throws(IOException::class)
     fun URL.reader(): UrlReaderResponse {
         val connection = this.openConnection() as HttpURLConnection
-        connection.setRequestProperty(
-            "User-Agent",
-            "Mozilla/5.0 (X11; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/109.0"
-        )
-        return if (connection.responseCode.isHttpSuccess()) {
-            UrlReaderResponse(connection.responseCode, connection.inputStream.bufferedReader().use { it.readText() })
-        } else {
-            UrlReaderResponse(connection.responseCode, connection.errorStream.bufferedReader().use { it.readText() })
+        try {
+            connection.setRequestProperty(
+                "User-Agent",
+                "Mozilla/5.0 (X11; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/109.0"
+            )
+            return if (connection.responseCode.isHttpSuccess()) {
+                UrlReaderResponse(
+                    connection.responseCode,
+                    connection.inputStream.bufferedReader().use { it.readText() })
+            } else {
+                UrlReaderResponse(
+                    connection.responseCode,
+                    connection.errorStream.bufferedReader().use { it.readText() })
+            }
+        } finally {
+            connection.disconnect()
         }
     }
 
