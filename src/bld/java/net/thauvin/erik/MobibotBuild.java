@@ -76,7 +76,7 @@ public class MobibotBuild extends Project {
                 new Repository("https://jitpack.io"),
                 SONATYPE_SNAPSHOTS_LEGACY);
 
-        var log4j = version(2, 24, 2);
+        var log4j = version(2, 24, 3);
         var kotlin = version(2, 1, 0);
         var langchain = version(0, 36, 2);
         scope(compile)
@@ -84,7 +84,7 @@ public class MobibotBuild extends Project {
                 .include(dependency("com.github.pircbotx", "pircbotx", "2.3.1"))
                 // Commons (mostly for PircBotX)
                 .include(dependency("org.apache.commons", "commons-lang3", "3.17.0"))
-                .include(dependency("org.apache.commons", "commons-text", "1.12.0"))
+                .include(dependency("org.apache.commons", "commons-text", "1.13.0"))
                 .include(dependency("commons-codec", "commons-codec", "1.17.1"))
                 .include(dependency("commons-net", "commons-net", "3.11.1"))
                 // Google
@@ -95,7 +95,7 @@ public class MobibotBuild extends Project {
                 .include(dependency("org.jetbrains.kotlin", "kotlin-stdlib-common", kotlin))
                 .include(dependency("org.jetbrains.kotlin", "kotlin-stdlib-jdk7", kotlin))
                 .include(dependency("org.jetbrains.kotlin", "kotlin-stdlib-jdk8", kotlin))
-                .include(dependency("org.jetbrains.kotlinx", "kotlinx-coroutines-core", "1.9.0"))
+                .include(dependency("org.jetbrains.kotlinx", "kotlinx-coroutines-core", "1.10.1"))
                 .include(dependency("org.jetbrains.kotlinx", "kotlinx-cli-jvm", "0.3.6"))
                 // Logging
                 .include(dependency("org.slf4j", "slf4j-api", "2.0.16"))
@@ -113,7 +113,7 @@ public class MobibotBuild extends Project {
                 .include(dependency("net.aksingh", "owm-japis", "2.5.3.0"))
                 .include(dependency("net.objecthunter", "exp4j", "0.4.8"))
                 .include(dependency("org.json", "json", "20240303"))
-                .include(dependency("org.jsoup", "jsoup", "1.18.2"))
+                .include(dependency("org.jsoup", "jsoup", "1.18.3"))
                 // Thauvin
                 .include(dependency("net.thauvin.erik", "cryptoprice", "1.0.3-SNAPSHOT"))
                 .include(dependency("net.thauvin.erik", "jokeapi", "0.9.2-SNAPSHOT"))
@@ -122,8 +122,8 @@ public class MobibotBuild extends Project {
         scope(test)
                 .include(dependency("com.willowtreeapps.assertk", "assertk-jvm", version(0, 28, 1)))
                 .include(dependency("org.jetbrains.kotlin", "kotlin-test-junit5", kotlin))
-                .include(dependency("org.junit.jupiter", "junit-jupiter", version(5, 11, 3)))
-                .include(dependency("org.junit.platform", "junit-platform-console-standalone", version(1, 11, 3)));
+                .include(dependency("org.junit.jupiter", "junit-jupiter", version(5, 11, 4)))
+                .include(dependency("org.junit.platform", "junit-platform-console-standalone", version(1, 11, 4)));
 
         List<String> jars = new ArrayList<>();
         runtimeClasspathJars().forEach(f -> jars.add("./lib/" + f.getName()));
@@ -152,9 +152,11 @@ public class MobibotBuild extends Project {
     @Override
     public void compile() throws Exception {
         releaseInfo();
-        new CompileKotlinOperation()
-                .fromProject(this)
-                .execute();
+        var op = new CompileKotlinOperation()
+                .kotlinHome("/opt/kotlinc/")
+                .fromProject(this);
+        op.compileOptions().verbose(true);
+        op.execute();
     }
 
     @Override
