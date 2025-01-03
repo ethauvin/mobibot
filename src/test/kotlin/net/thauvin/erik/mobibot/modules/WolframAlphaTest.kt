@@ -1,7 +1,7 @@
 /*
  * WolframAlphaTest.kt
  *
- * Copyright 2004-2024 Erik C. Thauvin (erik@thauvin.net)
+ * Copyright 2004-2025 Erik C. Thauvin (erik@thauvin.net)
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
