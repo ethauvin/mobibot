@@ -46,11 +46,11 @@ jobs:
     steps:
       - build_and_test
 
-  bld_jdk20:
+  bld_jdk21:
     <<: *defaults
 
     docker:
-      - image: cimg/openjdk:20.0
+      - image: cimg/openjdk:21.0
 
     steps:
       - build_and_test
@@ -59,4 +59,4 @@ workflows:
   bld:
     jobs:
       - bld_jdk17
-      - bld_jdk20
+      - bld_jdk21
