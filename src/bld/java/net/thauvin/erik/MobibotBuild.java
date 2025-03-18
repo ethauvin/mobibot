@@ -85,10 +85,10 @@ public class MobibotBuild extends Project {
                 // Commons (mostly for PircBotX)
                 .include(dependency("org.apache.commons", "commons-lang3", "3.17.0"))
                 .include(dependency("org.apache.commons", "commons-text", "1.13.0"))
-                .include(dependency("commons-codec", "commons-codec", "1.17.1"))
+                .include(dependency("commons-codec", "commons-codec", "1.18.0"))
                 .include(dependency("commons-net", "commons-net", "3.11.1"))
                 // Google
-                .include(dependency("com.google.code.gson", "gson", "2.11.0"))
+                .include(dependency("com.google.code.gson", "gson", "2.12.1"))
                 .include(dependency("com.google.guava", "guava", "33.2.1-jre"))
                 // Kotlin
                 .include(dependency("org.jetbrains.kotlin", "kotlin-stdlib", kotlin))
@@ -98,7 +98,7 @@ public class MobibotBuild extends Project {
                 .include(dependency("org.jetbrains.kotlinx", "kotlinx-coroutines-core", "1.10.1"))
                 .include(dependency("org.jetbrains.kotlinx", "kotlinx-cli-jvm", "0.3.6"))
                 // Logging
-                .include(dependency("org.slf4j", "slf4j-api", "2.0.16"))
+                .include(dependency("org.slf4j", "slf4j-api", "2.0.17"))
                 .include(dependency("org.apache.logging.log4j", "log4j-api", log4j))
                 .include(dependency("org.apache.logging.log4j", "log4j-core", log4j))
                 .include(dependency("org.apache.logging.log4j", "log4j-slf4j2-impl", log4j))
@@ -112,18 +112,19 @@ public class MobibotBuild extends Project {
                 .include(dependency("com.squareup.okhttp3", "okhttp", "4.12.0"))
                 .include(dependency("net.aksingh", "owm-japis", "2.5.3.0"))
                 .include(dependency("net.objecthunter", "exp4j", "0.4.8"))
-                .include(dependency("org.json", "json", "20241224"))
-                .include(dependency("org.jsoup", "jsoup", "1.18.3"))
+                .include(dependency("org.json", "json", "20250107"))
+                .include(dependency("org.jsoup", "jsoup", "1.19.1"))
                 // Thauvin
                 .include(dependency("net.thauvin.erik", "cryptoprice", "1.0.3-SNAPSHOT"))
-                .include(dependency("net.thauvin.erik", "jokeapi", "1.0.0-SNAPSHOT"))
-                .include(dependency("net.thauvin.erik", "pinboard-poster", "1.1.2-SNAPSHOT"))
+                .include(dependency("net.thauvin.erik", "jokeapi", "1.0.0"))
+                .include(dependency("net.thauvin.erik", "pinboard-poster", "1.2.0"))
                 .include(dependency("net.thauvin.erik.urlencoder", "urlencoder-lib-jvm", "1.6.0"));
         scope(test)
                 .include(dependency("com.willowtreeapps.assertk", "assertk-jvm", version(0, 28, 1)))
                 .include(dependency("org.jetbrains.kotlin", "kotlin-test-junit5", kotlin))
-                .include(dependency("org.junit.jupiter", "junit-jupiter", version(5, 11, 4)))
-                .include(dependency("org.junit.platform", "junit-platform-console-standalone", version(1, 11, 4)));
+                .include(dependency("org.junit.jupiter", "junit-jupiter", version(5, 12, 1)))
+                .include(dependency("org.junit.platform", "junit-platform-console-standalone", version(1, 12, 1)))
+                .include(dependency("org.junit.platform", "junit-platform-launcher", version(1, 12, 1)));
 
         List<String> jars = new ArrayList<>();
         runtimeClasspathJars().forEach(f -> jars.add("./lib/" + f.getName()));
