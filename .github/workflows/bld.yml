@@ -22,7 +22,7 @@ jobs:
 
     strategy:
       matrix:
-        java-version: [17, 21, 23]
+        java-version: [17, 21, 24]
         kotlin-version: [1.9.25, 2.0.20, 2.1.10]
 
     steps:
