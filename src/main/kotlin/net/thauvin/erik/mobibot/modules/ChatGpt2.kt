@@ -96,7 +96,7 @@ class ChatGpt2 : AbstractModule() {
                 try {
                     val model = OpenAiChatModel.builder()
                         .apiKey(apiKey)
-                        .modelName(OpenAiChatModelName.GPT_4_O)
+                        .modelName(OpenAiChatModelName.GPT_4)
                         .maxTokens(maxTokens)
                         .build()
 
