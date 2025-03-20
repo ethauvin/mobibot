@@ -154,8 +154,7 @@ public class MobibotBuild extends Project {
     @Override
     public void compile() throws Exception {
         releaseInfo();
-        final var options = new CompileOptions();
-        options.verbose(true).jvmOptions().add("--enable-native-access=ALL-UNNAMED");
+        var options = new CompileOptions().verbose(true).jvmOptions("--enable-native-access=ALL-UNNAMED");
         var op = new CompileKotlinOperation()
                 .kotlinHome("/opt/kotlinc/")
                 .compileOptions(options)
