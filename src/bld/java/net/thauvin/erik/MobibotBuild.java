@@ -38,6 +38,7 @@ import rife.bld.extension.CompileKotlinOperation;
 import rife.bld.extension.DetektOperation;
 import rife.bld.extension.GeneratedVersionOperation;
 import rife.bld.extension.JacocoReportOperation;
+import rife.bld.extension.kotlin.CompileOptions;
 import rife.bld.operations.exceptions.ExitStatusException;
 import rife.bld.publish.PomBuilder;
 import rife.tools.FileUtils;
@@ -153,10 +154,12 @@ public class MobibotBuild extends Project {
     @Override
     public void compile() throws Exception {
         releaseInfo();
+        final var options = new CompileOptions();
+        options.verbose(true).jvmOptions().add("--enable-native-access=ALL-UNNAMED");
         var op = new CompileKotlinOperation()
                 .kotlinHome("/opt/kotlinc/")
+                .compileOptions(options)
                 .fromProject(this);
-        op.compileOptions().verbose(true);
         op.execute();
     }
 
