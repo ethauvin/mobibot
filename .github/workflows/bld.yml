@@ -1,6 +1,6 @@
 name: bld-ci
 
-on: [push, pull_request, workflow_dispatch]
+on: [ push, pull_request, workflow_dispatch ]
 
 env:
   ALPHAVANTAGE_API_KEY: ${{ secrets.ALPHAVANTAGE_API_KEY }}
@@ -22,8 +22,8 @@ jobs:
 
     strategy:
       matrix:
-        java-version: [17, 21, 24]
-        kotlin-version: [1.9.25, 2.0.20, 2.1.20]
+        java-version: [ 17, 21, 24 ]
+        kotlin-version: [ 1.9.25, 2.0.20, 2.1.20 ]
 
     steps:
       - name: Checkout source repository
@@ -72,13 +72,11 @@ jobs:
           distribution: "zulu"
           java-version: "17"
 
-      - run: dir
-
       - name: Download dependencies
-        run: bld download
+        script: bld.bat download
 
       - name: Compile source
-        run: bld compile
+        script: bld.bat compile
 
       - name: Run tests
-        run: bld jacoco
+        script: bld.bat jacoco
