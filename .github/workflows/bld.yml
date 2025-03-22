@@ -73,10 +73,13 @@ jobs:
           java-version: "17"
 
       - name: Download dependencies
-        run: call bld.bat download
+        run: bld.bat download
+        shell: cmd
 
       - name: Compile source
-        run: call bld.bat compile
+        run: bld.bat compile
+        shell: cmd
 
       - name: Run tests
-        run: call bld.bat jacoco
+        run: bld.bat jacoco
+        shell: cmd
