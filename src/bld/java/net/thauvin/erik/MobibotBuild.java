@@ -118,8 +118,8 @@ public class MobibotBuild extends Project {
                 .include(dependency("org.jsoup", "jsoup", "1.19.1"))
                 // Thauvin
                 .include(dependency("net.thauvin.erik", "cryptoprice", "1.0.3-SNAPSHOT"))
-                .include(dependency("net.thauvin.erik", "jokeapi", "1.0.0"))
-                .include(dependency("net.thauvin.erik", "pinboard-poster", "1.2.0"))
+                .include(dependency("net.thauvin.erik", "jokeapi", "1.0.1-SNAPSHOT"))
+                .include(dependency("net.thauvin.erik", "pinboard-poster", "1.2.1-SNAPSHOT"))
                 .include(dependency("net.thauvin.erik.urlencoder", "urlencoder-lib-jvm", "1.6.0"));
         scope(test)
                 .include(dependency("com.willowtreeapps.assertk", "assertk-jvm", version(0, 28, 1)))

@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>net.thauvin.erik.mobibot</groupId>
   <artifactId>mobibot</artifactId>
-  <version>0.8.0-rc+20250320103735</version>
+  <version>0.8.0-rc+20250321233454</version>
   <name>mobibot</name>
   <description></description>
   <url></url>
@@ -180,13 +180,13 @@
     <dependency>
       <groupId>net.thauvin.erik</groupId>
       <artifactId>jokeapi</artifactId>
-      <version>1.0.0</version>
+      <version>1.0.1-SNAPSHOT</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>net.thauvin.erik</groupId>
       <artifactId>pinboard-poster</artifactId>
-      <version>1.2.0</version>
+      <version>1.2.1-SNAPSHOT</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
