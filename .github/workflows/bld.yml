@@ -72,11 +72,13 @@ jobs:
           distribution: "zulu"
           java-version: "17"
 
+      - run: dir
+
       - name: Download dependencies
-        run: bld.bat download
+        run: bld download
 
       - name: Compile source
-        run: bld.bat compile
+        run: bld compile
 
       - name: Run tests
-        run: bld.bat jacoco
+        run: bld jacoco
