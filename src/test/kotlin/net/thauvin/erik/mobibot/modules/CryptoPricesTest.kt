@@ -39,6 +39,9 @@ import net.thauvin.erik.crypto.CryptoPrice
 import net.thauvin.erik.mobibot.modules.CryptoPrices.Companion.currentPrice
 import net.thauvin.erik.mobibot.modules.CryptoPrices.Companion.getCurrencyName
 import net.thauvin.erik.mobibot.modules.CryptoPrices.Companion.loadCurrencies
+import org.junit.jupiter.api.BeforeAll
+import java.util.logging.ConsoleHandler
+import java.util.logging.Level
 import kotlin.test.Test
 
 class CryptoPricesTest {
@@ -68,5 +71,17 @@ class CryptoPricesTest {
     fun testGetCurrencyName() {
         assertThat(getCurrencyName("USD"), "USD").isEqualTo("United States Dollar")
         assertThat(getCurrencyName("EUR"), "EUR").isEqualTo("Euro")
+    }
+
+    companion object {
+        @JvmStatic
+        @BeforeAll
+        fun beforeAll() {
+            with(CryptoPrice.logger) {
+                addHandler(ConsoleHandler().apply { level = Level.FINE })
+                level = Level.FINE
+                useParentHandlers = false
+            }
+        }
     }
 }

@@ -52,7 +52,7 @@ class CryptoPrices : AbstractModule() {
 
     /**
      * Returns the cryptocurrency market price from
-     * [Coinbase](https://docs.cloud.coinbase.com/sign-in-with-coinbase/docs/api-prices#get-spot-price).
+     * [Coinbase](https://docs.cdp.coinbase.com/coinbase-app/docs/api-prices#get-spot-price).
      */
     override fun commandResponse(channel: String, cmd: String, args: String, event: GenericMessageEvent) {
         if (CURRENCIES.isEmpty()) {
