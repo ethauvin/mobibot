@@ -41,7 +41,7 @@ jobs:
         run: ./bld download
 
       - name: Compile source
-        run: ./bld compile
+        run: ./bld -Djitpack.token=${{ secrets.JITPACK_TOKEN }} compile
 
       - name: Run tests
         run: ./bld jacoco

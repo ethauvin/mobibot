@@ -67,7 +67,7 @@ public class MobibotBuild extends Project {
         pkg = "net.thauvin.erik.mobibot";
         name = "mobibot";
         version = version(0, 8, 0, "rc+" +
-                DateTimeFormatter.ofPattern("yyyyMMddHHmmss").format(LocalDateTime.now()));
+                                   DateTimeFormatter.ofPattern("yyyyMMddHHmmss").format(LocalDateTime.now()));
 
         mainClass = pkg + ".Mobibot";
 
@@ -77,7 +77,7 @@ public class MobibotBuild extends Project {
         repositories = List.of(
                 MAVEN_LOCAL,
                 MAVEN_CENTRAL,
-                new Repository("https://jitpack.io"),
+                new Repository("https://jitpack.io").withCredentials(property("jitpack.token"), "."),
                 SONATYPE_SNAPSHOTS_LEGACY);
 
         var log4j = version(2, 24, 3);

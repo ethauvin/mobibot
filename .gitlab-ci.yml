@@ -19,6 +19,6 @@ before_script:
 test:
   stage: test
   script:
-    - ./bld download
+    - ./bld -Djitpack.token=$JITPACK_TOKEN download
     - ./bld compile
     - ./bld test
