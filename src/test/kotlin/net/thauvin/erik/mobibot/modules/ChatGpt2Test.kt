@@ -48,15 +48,6 @@ class ChatGpt2Test : LocalProperties() {
     }
 
     @Test
-    fun testChatOnCoverage() {
-        if (System.getenv("CI") == null || System.getenv("COVERAGE_JDK") != null) {
-            assertThat(
-                ChatGpt2.chat("how do I encode a URL in java?", getProperty(ChatGpt2.API_KEY_PROP), 60)
-            ).contains("URLEncoder")
-        }
-    }
-
-    @Test
     @DisableOnCi
     fun testChat() {
         val apiKey = getProperty(ChatGpt2.API_KEY_PROP)
