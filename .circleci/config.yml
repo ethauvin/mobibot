@@ -24,7 +24,7 @@ commands:
           version: 2.1.10
       - run:
           name: Download dependencies
-          command: ./bld -Djitpack.token=$JITPACK_TOKEN download
+          command: ./bld download
       - run:
           name: Compile source
           command: ./bld compile

@@ -15,6 +15,6 @@ pipelines:
           - sdk install kotlin
           - source "$HOME/.sdkman/bin/sdkman-init.sh"
           # Download, compile and test with bld
-          - ./bld -Djitpack.token=$JITPACK_TOKEN download
+          - ./bld download
           - ./bld compile
           - ./bld test
