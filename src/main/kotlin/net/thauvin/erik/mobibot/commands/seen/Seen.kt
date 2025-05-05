@@ -49,7 +49,9 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.util.*
 
-
+/**
+ * Displays when a user was last seen, or all seen nicks.
+ */
 class Seen(private val serialObject: String) : AbstractCommand() {
     private val logger: Logger = LoggerFactory.getLogger(Seen::class.java)
     private val allKeyword = "all"
@@ -64,6 +66,9 @@ class Seen(private val serialObject: String) : AbstractCommand() {
     override val isPublic = true
     override val isVisible = true
 
+    init {
+        load()
+    }
 
     override fun commandResponse(channel: String, args: String, event: GenericMessageEvent) {
         if (isEnabled()) {
@@ -142,9 +147,5 @@ class Seen(private val serialObject: String) : AbstractCommand() {
 
     fun save() {
         saveSerialData(serialObject, seenNicks, logger, "seen nicknames")
-    }
-
-    init {
-        load()
     }
 }

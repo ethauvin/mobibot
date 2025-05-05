@@ -38,7 +38,7 @@ import java.nio.file.Paths
 import java.util.*
 
 /**
- * Access to `local.properties`.
+ * Provides functions to access local properties and environment variables.
  */
 open class LocalProperties {
     init {
@@ -72,7 +72,7 @@ open class LocalProperties {
                 env?.let {
                     localProps.setProperty(key, env)
                 }
-                env
+                throw IOException("The $key property not found in local.properties or environment variables.")
             }
         }
 

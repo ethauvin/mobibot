@@ -38,6 +38,12 @@ import net.thauvin.erik.mobibot.Utils.sendMessage
 import org.pircbotx.hooks.events.PrivateMessageEvent
 import org.pircbotx.hooks.types.GenericMessageEvent
 
+/**
+ * Represents an abstract base class for implementing bot commands.
+ *
+ * A command is characterized by its name, visibility, access restrictions, and other properties. This class provides a
+ * framework for handling command-specific responses and help information.
+ */
 abstract class AbstractCommand {
     abstract val name: String
     abstract val help: List<String>

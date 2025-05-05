@@ -44,6 +44,9 @@ import java.net.http.HttpClient
 import java.net.http.HttpRequest
 import java.net.http.HttpResponse
 
+/**
+ * Allows users to post on Mastodon.
+ */
 class Mastodon : SocialModule() {
     override val name = "Mastodon"
 
@@ -55,32 +58,6 @@ class Mastodon : SocialModule() {
 
     override val isValidProperties: Boolean
         get() = !(properties[INSTANCE_PROP].isNullOrBlank() || properties[ACCESS_TOKEN_PROP].isNullOrBlank())
-
-    /**
-     * Formats the entry for posting.
-     */
-    override fun formatEntry(entry: EntryLink): String {
-        return "${entry.title} (via ${entry.nick} on ${entry.channel})${formatTags(entry)}\n\n${entry.link}"
-    }
-
-    private fun formatTags(entry: EntryLink): String {
-        return entry.tags.filter { !it.name.equals(entry.channel.removePrefix("#"), true) }
-            .joinToString(separator = " ", prefix = "\n\n") { "#${it.name}" }
-    }
-
-    /**
-     * Posts on Mastodon.
-     */
-    @Throws(ModuleException::class)
-    override fun post(message: String, isDm: Boolean): String {
-        return toot(
-            apiKey = properties[ACCESS_TOKEN_PROP],
-            instance = properties[INSTANCE_PROP],
-            handle = handle,
-            message = message,
-            isDm = isDm
-        )
-    }
 
     companion object {
         // Property keys
@@ -145,5 +122,31 @@ class Mastodon : SocialModule() {
         help.add(Utils.helpFormat("%c $TOOT_CMD <message>"))
         properties[AUTO_POST_PROP] = "false"
         initProperties(ACCESS_TOKEN_PROP, HANDLE_PROP, INSTANCE_PROP)
+    }
+
+    /**
+     * Formats the entry for posting.
+     */
+    override fun formatEntry(entry: EntryLink): String {
+        return "${entry.title} (via ${entry.nick} on ${entry.channel})${formatTags(entry)}\n\n${entry.link}"
+    }
+
+    private fun formatTags(entry: EntryLink): String {
+        return entry.tags.filter { !it.name.equals(entry.channel.removePrefix("#"), true) }
+            .joinToString(separator = " ", prefix = "\n\n") { "#${it.name}" }
+    }
+
+    /**
+     * Posts on Mastodon.
+     */
+    @Throws(ModuleException::class)
+    override fun post(message: String, isDm: Boolean): String {
+        return toot(
+            apiKey = properties[ACCESS_TOKEN_PROP],
+            instance = properties[INSTANCE_PROP],
+            handle = handle,
+            message = message,
+            isDm = isDm
+        )
     }
 }

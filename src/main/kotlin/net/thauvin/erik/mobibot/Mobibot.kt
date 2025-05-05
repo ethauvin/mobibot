@@ -36,7 +36,7 @@ import kotlinx.cli.ArgType
 import kotlinx.cli.default
 import net.thauvin.erik.mobibot.Utils.appendIfMissing
 import net.thauvin.erik.mobibot.Utils.bot
-import net.thauvin.erik.mobibot.Utils.capitalise
+import net.thauvin.erik.mobibot.Utils.capitalize
 import net.thauvin.erik.mobibot.Utils.getIntProperty
 import net.thauvin.erik.mobibot.Utils.helpCmdSyntax
 import net.thauvin.erik.mobibot.Utils.helpFormat
@@ -81,148 +81,6 @@ class Mobibot(nickname: String, val channel: String, logsDirPath: String, p: Pro
     /** Logger. */
     val logger: Logger = LoggerFactory.getLogger(Mobibot::class.java)
 
-    /**
-     * Connects to the server and joins the channel.
-     */
-    fun connect() {
-        PircBotX(config).startBot()
-    }
-
-    /**
-     * Responds with the default help.
-     */
-    private fun helpDefault(event: GenericMessageEvent) {
-        event.sendMessage("Type a URL on $channel to post it.")
-        event.sendMessage("For more information on a specific command, type:")
-        event.sendMessage(
-            helpFormat(
-                helpCmdSyntax("%c ${Constants.HELP_CMD} <command>", event.bot().nick, event is PrivateMessageEvent)
-            )
-        )
-        event.sendMessage("The commands are:")
-        event.sendList(addons.names.commands, 8, isBold = true, isIndent = true)
-        if (event.isChannelOp(channel)) {
-            if (addons.names.disabledCommands.isNotEmpty()) {
-                event.sendMessage("The disabled commands are:")
-                event.sendList(addons.names.disabledCommands, 8, isBold = false, isIndent = true)
-            }
-            event.sendMessage("The op commands are:")
-            event.sendList(addons.names.ops, 8, isBold = true, isIndent = true)
-        }
-    }
-
-    /**
-     * Responds with the default, commands or modules help.
-     */
-    private fun helpResponse(event: GenericMessageEvent, topic: String) {
-        if (topic.isBlank() || !addons.help(channel, topic.lowercase().trim(), event)) {
-            helpDefault(event)
-        }
-    }
-
-    override fun onAction(event: ActionEvent?) {
-        event?.channel?.let {
-            if (channel == it.name) {
-                event.user?.let { user ->
-                    storeRecap(user.nick, event.action, true)
-                }
-            }
-        }
-    }
-
-    override fun onDisconnect(event: DisconnectEvent?) {
-        event?.let {
-            with(event.getBot<PircBotX>()) {
-                LinksManager.socialManager.notification("$nick disconnected from $serverHostname")
-                seen.add(userChannelDao.getChannel(channel).users)
-            }
-        }
-        LinksManager.socialManager.shutdown()
-    }
-
-    override fun onPrivateMessage(event: PrivateMessageEvent?) {
-        event?.user?.let { user ->
-            if (logger.isTraceEnabled) logger.trace("<<< ${user.nick}: ${event.message}")
-            val cmds = event.message.trim().split(" ".toRegex(), 2)
-            val cmd = cmds[0].lowercase()
-            val args = cmds.lastOrEmpty().trim()
-            if (cmd.startsWith(Constants.HELP_CMD)) { // help
-                helpResponse(event, args)
-            } else if (!addons.exec(channel, cmd, args, event)) { // Execute command or module
-                helpDefault(event)
-            }
-        }
-    }
-
-    override fun onJoin(event: JoinEvent?) {
-        event?.user?.let { user ->
-            with(event.getBot<PircBotX>()) {
-                if (user.nick == nick) {
-                    LinksManager.socialManager.notification(
-                        "$nick has joined ${event.channel.name} on $serverHostname"
-                    )
-                    seen.add(userChannelDao.getChannel(channel).users)
-                } else {
-                    tell.send(event)
-                    seen.add(user.nick)
-                }
-            }
-        }
-    }
-
-    override fun onMessage(event: MessageEvent?) {
-        event?.user?.let { user ->
-            tell.send(event)
-            if (event.message.matches("(?i)${Pattern.quote(event.bot().nick)}:.*".toRegex())) { // mobibot: <command>
-                if (logger.isTraceEnabled) logger.trace(">>> ${user.nick}: ${event.message}")
-                val cmds = event.message.substring(event.bot().nick.length + 1).trim().split(" ".toRegex(), 2)
-                val cmd = cmds[0].lowercase()
-                val args = cmds.lastOrEmpty().trim()
-                if (cmd.startsWith(Constants.HELP_CMD)) { // mobibot: help
-                    helpResponse(event, args)
-                } else {
-                    // Execute module or command
-                    addons.exec(channel, cmd, args, event)
-                }
-            } else if (addons.match(channel, event)) { // Links, e.g.: https://www.example.com/ or L1: , etc.
-                if (logger.isTraceEnabled) logger.trace(">>> ${user.nick}: ${event.message}")
-            }
-            storeRecap(user.nick, event.message, false)
-            seen.add(user.nick)
-        }
-    }
-
-    override fun onNickChange(event: NickChangeEvent?) {
-        event?.let {
-            tell.send(event)
-            if (!it.oldNick.equals(it.newNick, true)) {
-                seen.add(it.oldNick)
-            }
-            seen.add(it.newNick)
-        }
-    }
-
-    override fun onPart(event: PartEvent?) {
-        event?.user?.let { user ->
-            with(event.getBot<PircBotX>()) {
-                if (user.nick == nick) {
-                    LinksManager.socialManager.notification(
-                        "$nick has left ${event.channel.name} on $serverHostname"
-                    )
-                    seen.add(userChannelDao.getChannel(channel).users)
-                } else {
-                    seen.add(user.nick)
-                }
-            }
-        }
-    }
-
-    override fun onQuit(event: QuitEvent?) {
-        event?.user?.let { user ->
-            seen.add(user.nick)
-        }
-    }
-
     companion object {
         @JvmStatic
         @Throws(Exception::class)
@@ -254,7 +112,7 @@ class Mobibot(nickname: String, val channel: String, logsDirPath: String, p: Pro
             if (version) {
                 // Output the version
                 println(
-                    "${ReleaseInfo.PROJECT.capitalise()} ${ReleaseInfo.VERSION}" +
+                    "${ReleaseInfo.PROJECT.capitalize()} ${ReleaseInfo.VERSION}" +
                             " (${ReleaseInfo.BUILD_DATE.toIsoLocalDate()})"
                 )
                 println(ReleaseInfo.WEBSITE)
@@ -415,6 +273,146 @@ class Mobibot(nickname: String, val channel: String, logsDirPath: String, p: Pro
 
         // Sort the addons
         addons.names.sort()
+    }
+
+    /**
+     * Connects to the server and joins the channel.
+     */
+    fun connect() {
+        PircBotX(config).startBot()
+    }
+
+    /**
+     * Responds with the default help.
+     */
+    private fun helpDefault(event: GenericMessageEvent) {
+        event.sendMessage("Type a URL on $channel to post it.")
+        event.sendMessage("For more information on a specific command, type:")
+        event.sendMessage(
+            helpFormat(
+                helpCmdSyntax("%c ${Constants.HELP_CMD} <command>", event.bot().nick, event is PrivateMessageEvent)
+            )
+        )
+        event.sendMessage("The commands are:")
+        event.sendList(addons.names.commands, 8, isBold = true, isIndent = true)
+        if (event.isChannelOp(channel)) {
+            if (addons.names.disabledCommands.isNotEmpty()) {
+                event.sendMessage("The disabled commands are:")
+                event.sendList(addons.names.disabledCommands, 8, isBold = false, isIndent = true)
+            }
+            event.sendMessage("The op commands are:")
+            event.sendList(addons.names.ops, 8, isBold = true, isIndent = true)
+        }
+    }
+
+    /**
+     * Responds with the default, commands or modules help.
+     */
+    private fun helpResponse(event: GenericMessageEvent, topic: String) {
+        if (topic.isBlank() || !addons.help(channel, topic.lowercase().trim(), event)) {
+            helpDefault(event)
+        }
+    }
+
+    override fun onAction(event: ActionEvent?) {
+        event?.channel?.let {
+            if (channel == it.name) {
+                event.user?.let { user ->
+                    storeRecap(user.nick, event.action, true)
+                }
+            }
+        }
+    }
+
+    override fun onDisconnect(event: DisconnectEvent?) {
+        event?.let {
+            with(event.getBot<PircBotX>()) {
+                LinksManager.socialManager.notification("$nick disconnected from $serverHostname")
+                seen.add(userChannelDao.getChannel(channel).users)
+            }
+        }
+        LinksManager.socialManager.shutdown()
+    }
+
+    override fun onPrivateMessage(event: PrivateMessageEvent?) {
+        event?.user?.let { user ->
+            if (logger.isTraceEnabled) logger.trace("<<< ${user.nick}: ${event.message}")
+            val cmds = event.message.trim().split(" ".toRegex(), 2)
+            val cmd = cmds[0].lowercase()
+            val args = cmds.lastOrEmpty().trim()
+            if (cmd.startsWith(Constants.HELP_CMD)) { // help
+                helpResponse(event, args)
+            } else if (!addons.exec(channel, cmd, args, event)) { // Execute command or module
+                helpDefault(event)
+            }
+        }
+    }
+
+    override fun onJoin(event: JoinEvent?) {
+        event?.user?.let { user ->
+            with(event.getBot<PircBotX>()) {
+                if (user.nick == nick) {
+                    LinksManager.socialManager.notification(
+                        "$nick has joined ${event.channel.name} on $serverHostname"
+                    )
+                    seen.add(userChannelDao.getChannel(channel).users)
+                } else {
+                    tell.send(event)
+                    seen.add(user.nick)
+                }
+            }
+        }
+    }
+
+    override fun onMessage(event: MessageEvent?) {
+        event?.user?.let { user ->
+            if (logger.isTraceEnabled) logger.trace(">>> ${user.nick}: ${event.message}")
+            tell.send(event)
+            if (event.message.matches("(?i)${Pattern.quote(event.bot().nick)}:.*".toRegex())) { // mobibot: <command>
+                val cmds = event.message.substring(event.bot().nick.length + 1).trim().split(" ".toRegex(), 2)
+                val cmd = cmds[0].lowercase()
+                val args = cmds.lastOrEmpty().trim()
+                if (cmd.startsWith(Constants.HELP_CMD)) { // mobibot: help
+                    helpResponse(event, args)
+                } else {
+                    // Execute module or command
+                    addons.exec(channel, cmd, args, event)
+                }
+            }
+            storeRecap(user.nick, event.message, false)
+            seen.add(user.nick)
+        }
+    }
+
+    override fun onNickChange(event: NickChangeEvent?) {
+        event?.let {
+            tell.send(event)
+            if (!it.oldNick.equals(it.newNick, true)) {
+                seen.add(it.oldNick)
+            }
+            seen.add(it.newNick)
+        }
+    }
+
+    override fun onPart(event: PartEvent?) {
+        event?.user?.let { user ->
+            with(event.getBot<PircBotX>()) {
+                if (user.nick == nick) {
+                    LinksManager.socialManager.notification(
+                        "$nick has left ${event.channel.name} on $serverHostname"
+                    )
+                    seen.add(userChannelDao.getChannel(channel).users)
+                } else {
+                    seen.add(user.nick)
+                }
+            }
+        }
+    }
+
+    override fun onQuit(event: QuitEvent?) {
+        event?.user?.let { user ->
+            seen.add(user.nick)
+        }
     }
 }
 

@@ -38,7 +38,6 @@ import rife.bld.extension.CompileKotlinOperation;
 import rife.bld.extension.DetektOperation;
 import rife.bld.extension.GeneratedVersionOperation;
 import rife.bld.extension.JacocoReportOperation;
-import rife.bld.extension.kotlin.CompileOptions;
 import rife.bld.operations.exceptions.ExitStatusException;
 import rife.bld.publish.PomBuilder;
 import rife.tools.FileUtils;
@@ -72,8 +71,10 @@ public class MobibotBuild extends Project {
         mainClass = pkg + ".Mobibot";
 
         javaRelease = 17;
+
         downloadSources = true;
         autoDownloadPurge = true;
+
         repositories = List.of(
                 MAVEN_LOCAL,
                 MAVEN_CENTRAL,
@@ -166,10 +167,9 @@ public class MobibotBuild extends Project {
     @Override
     public void compile() throws Exception {
         releaseInfo();
-        new CompileKotlinOperation()
-                .compileOptions(new CompileOptions().progressive(true).verbose(true))
-                .fromProject(this)
-                .execute();
+        var op = new CompileKotlinOperation().fromProject(this);
+        op.compileOptions().progressive(true).verbose(true);
+        op.execute();
     }
 
     @Override

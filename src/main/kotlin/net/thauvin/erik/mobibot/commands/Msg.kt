@@ -36,6 +36,9 @@ import net.thauvin.erik.mobibot.Utils.helpFormat
 import net.thauvin.erik.mobibot.Utils.isChannelOp
 import org.pircbotx.hooks.types.GenericMessageEvent
 
+/**
+ * Allows an operator to send a private message to the specified user.
+ */
 class Msg : AbstractCommand() {
     override val name = "msg"
     override val help = listOf(

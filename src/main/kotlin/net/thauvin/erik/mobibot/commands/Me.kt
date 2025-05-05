@@ -36,6 +36,9 @@ import net.thauvin.erik.mobibot.Utils.helpFormat
 import net.thauvin.erik.mobibot.Utils.isChannelOp
 import org.pircbotx.hooks.types.GenericMessageEvent
 
+/**
+ * Allows an operator to have the bot perform an action in the specified channel.
+ */
 class Me : AbstractCommand() {
     override val name = "me"
     override val help = listOf("To have the bot perform an action:", helpFormat("%c $name <action>"))

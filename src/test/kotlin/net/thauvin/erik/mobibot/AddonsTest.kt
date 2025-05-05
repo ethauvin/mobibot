@@ -53,7 +53,7 @@ class AddonsTest {
     private val addons = Addons(p)
 
     @Test
-    fun addTest() {
+    fun `Add modules and commands`() {
         // Modules
         addons.add(Joke())
         addons.add(RockPaperScissors())

@@ -35,31 +35,53 @@ import assertk.assertThat
 import assertk.assertions.*
 import net.thauvin.erik.mobibot.DisableOnCi
 import net.thauvin.erik.mobibot.LocalProperties
+import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Nested
 import kotlin.test.Test
 
 class Gemini2Test : LocalProperties() {
-    @Test
-    fun testApiKey() {
-        assertFailure { Gemini2.chat("1 gallon to liter", "", 0) }
-            .isInstanceOf(ModuleException::class.java)
-            .hasNoCause()
+    @Nested
+    @DisplayName("Chat Tests")
+    inner class ChatTests {
+        private val apiKey = getProperty(Gemini2.GEMINI_API_KEY)
+        private val maxTokens = getProperty(Gemini2.MAX_TOKENS_PROP).toInt()
+
+        @Test
+        @DisableOnCi
+        fun chatHttpRequestInJavascript() {
+            assertThat(
+                Gemini2.chat(
+                    "return only the code for a javascript function to make a request with XMLHttpRequest",
+                    apiKey,
+                    maxTokens
+                )
+            ).isNotNull().contains("```javascript")
+        }
+
+        @Test
+        @DisableOnCi
+        fun chatEncodeUrlInJava() {
+            assertThat(
+                Gemini2.chat("how do I encode a URL in java?", apiKey, 60)
+            ).isNotNull().contains("URLEncoder")
+        }
     }
 
-    @Test
-    @DisableOnCi
-    fun chatPrompt() {
-        val apiKey = getProperty(Gemini2.GEMINI_API_KEY)
-        val maxTokens = getProperty(Gemini2.MAX_TOKENS_PROP).toInt()
+    @Nested
+    @DisplayName("API Keys Test")
+    inner class ApiKeysTest {
+        @Test
+        fun invalidApiKey() {
+            assertFailure { Gemini2.chat("1 liter to gallon", "foo", 40) }
+                .isInstanceOf(ModuleException::class.java)
+                .hasMessage(Gemini2.IO_ERROR)
+        }
 
-        assertThat(
-            Gemini2.chat("how do I make an HTTP request in Javascript?", apiKey, maxTokens)
-        ).isNotNull().contains("XMLHttpRequest")
-
-        assertThat(
-            Gemini2.chat("how do I encode a URL in java?", apiKey, 60)
-        ).isNotNull().contains("URLEncoder")
-
-        assertFailure { Gemini2.chat("1 liter to gallon", "foo", 40) }
-            .isInstanceOf(ModuleException::class.java)
+        @Test
+        fun emptyApiKey() {
+            assertFailure { Gemini2.chat("1 liter to gallon", "", 40) }
+                .isInstanceOf(ModuleException::class.java)
+                .hasMessage(Gemini2.API_KEY_ERROR)
+        }
     }
 }

@@ -35,7 +35,7 @@ import net.thauvin.erik.mobibot.Utils.bold
 import net.thauvin.erik.mobibot.Utils.green
 
 /**
- * Entries utilities.
+ * Provides functions used to manage [Entries].
  */
 object EntriesUtils {
     /**

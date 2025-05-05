@@ -40,6 +40,8 @@ import net.thauvin.erik.mobibot.modules.CryptoPrices.Companion.currentPrice
 import net.thauvin.erik.mobibot.modules.CryptoPrices.Companion.getCurrencyName
 import net.thauvin.erik.mobibot.modules.CryptoPrices.Companion.loadCurrencies
 import org.junit.jupiter.api.BeforeAll
+import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Nested
 import java.util.logging.ConsoleHandler
 import java.util.logging.Level
 import kotlin.test.Test
@@ -47,30 +49,6 @@ import kotlin.test.Test
 class CryptoPricesTest {
     init {
         loadCurrencies()
-    }
-
-    @Test
-    @Throws(ModuleException::class)
-    fun testMarketPrice() {
-        var price = currentPrice(listOf("BTC"))
-        assertThat(price, "currentPrice(BTC)").all {
-            prop(CryptoPrice::base).isEqualTo("BTC")
-            prop(CryptoPrice::currency).isEqualTo("USD")
-            prop(CryptoPrice::amount).transform { it.signum() }.isGreaterThan(0)
-        }
-
-        price = currentPrice(listOf("ETH", "EUR"))
-        assertThat(price, "currentPrice(ETH, EUR)").all {
-            prop(CryptoPrice::base).isEqualTo("ETH")
-            prop(CryptoPrice::currency).isEqualTo("EUR")
-            prop(CryptoPrice::amount).transform { it.signum() }.isGreaterThan(0)
-        }
-    }
-
-    @Test
-    fun testGetCurrencyName() {
-        assertThat(getCurrencyName("USD"), "USD").isEqualTo("United States Dollar")
-        assertThat(getCurrencyName("EUR"), "EUR").isEqualTo("Euro")
     }
 
     companion object {
@@ -82,6 +60,46 @@ class CryptoPricesTest {
                 level = Level.FINE
                 useParentHandlers = false
             }
+        }
+    }
+
+    @Nested
+    @DisplayName("Current Price Tests")
+    inner class CurrentPriceTests {
+        @Test
+        @Throws(ModuleException::class)
+        fun currentPriceBitcoin() {
+            val price = currentPrice(listOf("BTC"))
+            assertThat(price, "currentPrice(BTC)").all {
+                prop(CryptoPrice::base).isEqualTo("BTC")
+                prop(CryptoPrice::currency).isEqualTo("USD")
+                prop(CryptoPrice::amount).transform { it.signum() }.isGreaterThan(0)
+            }
+        }
+
+        @Test
+        @Throws(ModuleException::class)
+        fun currentPriceEthereum() {
+            val price = currentPrice(listOf("ETH", "EUR"))
+            assertThat(price, "currentPrice(ETH, EUR)").all {
+                prop(CryptoPrice::base).isEqualTo("ETH")
+                prop(CryptoPrice::currency).isEqualTo("EUR")
+                prop(CryptoPrice::amount).transform { it.signum() }.isGreaterThan(0)
+            }
+        }
+    }
+
+    @Nested
+    @DisplayName("Currency Name Tests")
+    inner class CurrencyNameTests {
+        @Test
+        fun getCurrencyNameUsd() {
+            assertThat(getCurrencyName("USD"), "USD").isEqualTo("United States Dollar")
+        }
+
+        @Test
+        fun getCurrencyNameEur() {
+            assertThat(getCurrencyName("EUR"), "EUR").isEqualTo("Euro")
         }
     }
 }

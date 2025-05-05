@@ -41,10 +41,33 @@ import kotlin.test.Test
 
 class CalcTest {
     @Test
-    fun testCalculate() {
+    fun `Calculate basic addition`() {
         assertThat(calculate("1 + 1"), "calculate(1+1)").isEqualTo("1+1 = ${2.bold()}")
+    }
+
+    @Test
+    fun `Calculate basic subtraction`() {
         assertThat(calculate("1 -3"), "calculate(1-3)").isEqualTo("1-3 = ${(-2).bold()}")
+    }
+
+    @Test
+    fun `Calculate mathematical constants`() {
         assertThat(calculate("pi+π+e+φ"), "calculate(pi+π+e+φ)").isEqualTo("pi+π+e+φ = ${"10.62".bold()}")
+    }
+
+    @Test
+    fun `Calculate scientific notations`() {
+        assertThat(calculate("3e2 - 3e1"), "calculate(3e2-3e1 )").isEqualTo("3e2-3e1 = ${"270".bold()}")
+    }
+
+    @Test
+    fun `Calculate trigonometric functions`() {
+        assertThat(calculate("3*sin(10)-cos(2)"), "calculate(3*sin(10)-cos(2)")
+            .isEqualTo("3*sin(10)-cos(2) = ${"-1.22".bold()}")
+    }
+
+    @Test
+    fun `Invalid calculation show throw exception`() {
         assertFailure { calculate("one + one") }.isInstanceOf(UnknownFunctionOrVariableException::class.java)
     }
 }

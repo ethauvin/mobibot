@@ -40,6 +40,10 @@ import org.pircbotx.hooks.types.GenericMessageEvent
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
+/**
+ * Provides the ability to handle notifications, post entries and manage interaction with a specific social media
+ * service.
+ */
 abstract class SocialModule : AbstractModule() {
     private val logger: Logger = LoggerFactory.getLogger(SocialManager::class.java)
 

@@ -31,6 +31,6 @@
 package net.thauvin.erik.mobibot.msg
 
 /**
- * The `PublicMessage` class.
+ * Holds a public message.
  */
 class PublicMessage @JvmOverloads constructor(msg: String, color: String = DEFAULT_COLOR) : Message(msg, color)

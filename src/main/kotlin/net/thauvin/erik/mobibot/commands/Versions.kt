@@ -38,6 +38,9 @@ import net.thauvin.erik.mobibot.Utils.toIsoLocalDate
 import org.pircbotx.PircBotX
 import org.pircbotx.hooks.types.GenericMessageEvent
 
+/**
+ * Lists the bot version, OS version, JVM version, Kotlin version and PircBotX version.
+ */
 class Versions : AbstractCommand() {
     private val allVersions = listOf(
         "Version: ${ReleaseInfo.VERSION} (${ReleaseInfo.BUILD_DATE.toIsoLocalDate()})",

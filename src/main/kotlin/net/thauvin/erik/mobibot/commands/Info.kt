@@ -31,7 +31,7 @@
 package net.thauvin.erik.mobibot.commands
 
 import net.thauvin.erik.mobibot.ReleaseInfo
-import net.thauvin.erik.mobibot.Utils.capitalise
+import net.thauvin.erik.mobibot.Utils.capitalize
 import net.thauvin.erik.mobibot.Utils.green
 import net.thauvin.erik.mobibot.Utils.helpFormat
 import net.thauvin.erik.mobibot.Utils.isChannelOp
@@ -46,9 +46,12 @@ import java.lang.management.ManagementFactory
 import kotlin.time.DurationUnit
 import kotlin.time.toDuration
 
+/**
+ * Provides detailed bot and channel statistics.
+ */
 class Info(private val tell: Tell, private val seen: Seen) : AbstractCommand() {
     private val allVersions = listOf(
-        "${ReleaseInfo.PROJECT.capitalise()} ${ReleaseInfo.VERSION} (${ReleaseInfo.WEBSITE.green()})",
+        "${ReleaseInfo.PROJECT.capitalize()} ${ReleaseInfo.VERSION} (${ReleaseInfo.WEBSITE.green()})",
         "Written by ${ReleaseInfo.AUTHOR} (${ReleaseInfo.AUTHOR_URL.green()})"
     )
     override val name = "info"
@@ -71,30 +74,32 @@ class Info(private val tell: Tell, private val seen: Seen) : AbstractCommand() {
                 val weeks = days / 7
                 days %= 7
 
-                with(StringBuffer()) {
+                with(mutableListOf<String>()) {
                     if (years > 0) {
-                        append(years).append(" year".plural(years)).append(' ')
+                        add("$years".plus(" year".plural(years)))
                     }
                     if (months > 0) {
-                        append(months).append(" month".plural(months)).append(' ')
+                        add("$months".plus(" month".plural(months)))
                     }
                     if (weeks > 0) {
-                        append(weeks).append(" week".plural(weeks)).append(' ')
+                        add("$weeks".plus(" week".plural(weeks)))
                     }
                     if (days > 0) {
-                        append(days).append(" day".plural(days)).append(' ')
+                        add("$days".plus(" day".plural(days)))
                     }
                     if (hours > 0) {
-                        append(hours).append(" hour".plural(hours.toLong())).append(' ')
+                        add("$hours".plus(" hour".plural(hours.toLong())))
                     }
 
                     if (minutes > 0) {
-                        append(minutes).append(" minute".plural(minutes.toLong()))
-                    } else {
-                        append(seconds).append(" second".plural(seconds.toLong()))
+                        add("$minutes".plus(" minute".plural(minutes.toLong())))
+                    } else if (seconds > 0) {
+                        add("$seconds seconds")
+                    } else if (isEmpty()) {
+                        return "0 second"
                     }
 
-                    return toString()
+                    return this.joinToString(" ")
                 }
             }
         }

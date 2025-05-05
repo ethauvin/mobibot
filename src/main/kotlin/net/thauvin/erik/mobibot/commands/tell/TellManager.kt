@@ -38,7 +38,7 @@ import java.time.Clock
 import java.time.LocalDateTime
 
 /**
- * The Tell Messages Manager.
+ * Manages the [Tell] messages queue.
  */
 object TellManager {
     private val logger: Logger = LoggerFactory.getLogger(TellManager::class.java)

@@ -38,30 +38,60 @@ import net.thauvin.erik.mobibot.Utils.bold
 import net.thauvin.erik.mobibot.modules.WorldTime.Companion.BEATS_KEYWORD
 import net.thauvin.erik.mobibot.modules.WorldTime.Companion.COUNTRIES_MAP
 import net.thauvin.erik.mobibot.modules.WorldTime.Companion.time
+import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Nested
 import org.pircbotx.Colors
 import java.time.ZoneId
 import kotlin.test.Test
 
 class WordTimeTest {
-    @Test
-    fun testTime() {
-        assertThat(time(), "time()").matches(
-            ("The time is ${Colors.BOLD}\\d{1,2}:\\d{2}${Colors.BOLD} " +
-                    "on ${Colors.BOLD}\\w+, \\d{1,2} \\w+ \\d{4}${Colors.BOLD} " +
-                    "in ${Colors.BOLD}Los Angeles${Colors.BOLD}").toRegex()
-        )
-        assertThat(time(""), "time()").endsWith("Los Angeles".bold())
-        assertThat(time("PST"), "time(PST)").endsWith("Los Angeles".bold())
-        assertThat(time("GB"), "time(GB)").endsWith("London".bold())
-        assertThat(time("FR"), "time(FR)").endsWith("Paris".bold())
-        assertThat(time("BLAH"), "time(BLAH)").startsWith("Unsupported")
-        assertThat(time("BEAT"), "time($BEATS_KEYWORD)").matches("[\\w ]+ .?@\\d{3}+.? .beats".toRegex())
+    @Nested
+    @DisplayName("Time Tests")
+    inner class TimeTests {
+        @Test
+        fun `Check default time formatting`() {
+            assertThat(time(), "time()").matches(
+                ("The time is ${Colors.BOLD}\\d{1,2}:\\d{2}${Colors.BOLD} " +
+                        "on ${Colors.BOLD}\\w+, \\d{1,2} \\w+ \\d{4}${Colors.BOLD} " +
+                        "in ${Colors.BOLD}Los Angeles${Colors.BOLD}").toRegex()
+            )
+        }
+
+        @Test
+        fun `Time in Los Angeles`() {
+            assertThat(time(""), "time()").endsWith("Los Angeles".bold())
+        }
+
+        @Test
+        fun `Pacific Standard Time`() {
+            assertThat(time("PST"), "time(PST)").endsWith("Los Angeles".bold())
+        }
+
+        @Test
+        fun `Time in Great Britain`() {
+            assertThat(time("GB"), "time(GB)").endsWith("London".bold())
+        }
+
+        @Test
+        fun `Time in France`() {
+            assertThat(time("FR"), "time(FR)").endsWith("Paris".bold())
+        }
+
+        @Test
+        fun `Time in Unknown Country`() {
+            assertThat(time("BLAH"), "time(BLAH)").startsWith("Unsupported")
+        }
+
+        @Test
+        fun `Swatch Internet Time`() {
+            assertThat(time("BEAT"), "time($BEATS_KEYWORD)").matches("[\\w ]+ .?@\\d{3}+.? .beats".toRegex())
+        }
     }
 
     @Test
-    fun testZones() {
+    fun `Check that all countries have a valid ZoneId`() {
         COUNTRIES_MAP.filter { it.value != BEATS_KEYWORD }.forEach {
-            assertThat(ZoneId.of(it.value))
+            assertThat(ZoneId.of(it.value), "ZoneId(${it.value})")
         }
     }
 }

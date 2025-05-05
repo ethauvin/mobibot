@@ -49,6 +49,12 @@ import org.jsoup.Jsoup
 import org.pircbotx.hooks.types.GenericMessageEvent
 import java.io.IOException
 
+/**
+ * Processes a URL, fetch its metadata, and register it with associated details.
+ *
+ * It checks for duplicate entries, retrieves or assigns a title, associates tags, and adds the URL to a collection of
+ * entries for further processing.
+ */
 class LinksManager : AbstractCommand() {
     private val defaultTags: MutableList<String> = mutableListOf()
     private val keywords: MutableList<String> = mutableListOf()
@@ -58,10 +64,6 @@ class LinksManager : AbstractCommand() {
     override val isOpOnly = false
     override val isPublic = false
     override val isVisible = false
-
-    init {
-        initProperties(TAGS_PROP, KEYWORDS_PROP)
-    }
 
     companion object {
         val LINK_MATCH = "^[hH][tT][tT][pP](|[sS])://.*".toRegex()
@@ -100,6 +102,10 @@ class LinksManager : AbstractCommand() {
         }
     }
 
+    init {
+        initProperties(TAGS_PROP, KEYWORDS_PROP)
+    }
+
     override fun commandResponse(channel: String, args: String, event: GenericMessageEvent) {
         val cmds = args.split(" ".toRegex(), 2)
         val sender = event.user.nick
@@ -120,10 +126,11 @@ class LinksManager : AbstractCommand() {
                 }
 
                 if (title.isBlank()) {
-                    title = fetchTitle(link)
+                    title = fetchPageTitle(link)
                 }
 
                 if (title != Constants.NO_TITLE) {
+                    // Add keywords as tags if found in the title
                     matchTagKeywords(title, tags)
                 }
 
@@ -158,7 +165,12 @@ class LinksManager : AbstractCommand() {
         return message.matches(LINK_MATCH)
     }
 
-    internal fun fetchTitle(link: String): String {
+    /**
+     * Fetches and returns the page title of the given URL.
+     *
+     * If the title cannot be fetched or is blank, [Constants.NO_TITLE] is returned.
+     */
+    internal fun fetchPageTitle(link: String): String {
         try {
             val html = Jsoup.connect(link)
                 .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:74.0) Gecko/20100101 Firefox/74.0")
@@ -187,6 +199,10 @@ class LinksManager : AbstractCommand() {
         }
     }
 
+
+    /**
+     * Matches [keywords] in the given title and adds them to the provided tag list.
+     */
     internal fun matchTagKeywords(title: String, tags: MutableList<String>) {
         for (match in keywords) {
             val m = Regex.escape(match)

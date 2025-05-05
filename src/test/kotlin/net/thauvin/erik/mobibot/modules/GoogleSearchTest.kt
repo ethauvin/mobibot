@@ -40,54 +40,80 @@ import net.thauvin.erik.mobibot.LocalProperties
 import net.thauvin.erik.mobibot.modules.GoogleSearch.Companion.searchGoogle
 import net.thauvin.erik.mobibot.msg.ErrorMessage
 import net.thauvin.erik.mobibot.msg.Message
+import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Nested
 import kotlin.test.Test
 
 class GoogleSearchTest : LocalProperties() {
-    @Test
-    fun testAPIKeys() {
-        assertThat(
-            searchGoogle("", "apikey", "cssKey").first(),
-            "searchGoogle(empty)"
-        ).isInstanceOf(ErrorMessage::class.java)
-
-        assertFailure { searchGoogle("test", "", "apiKey") }
-            .isInstanceOf(ModuleException::class.java).hasNoCause()
-
-        assertFailure { searchGoogle("test", "apiKey", "") }
-            .isInstanceOf(ModuleException::class.java).hasNoCause()
-
-        assertFailure { searchGoogle("test", "apiKey", "cssKey") }
-            .isInstanceOf(ModuleException::class.java)
-            .hasMessage("API key not valid. Please pass a valid API key.")
-    }
-
-    @Test
-    @DisableOnCi
     @Throws(ModuleException::class)
-    fun testSearchGoogle() {
-        val apiKey = getProperty(GoogleSearch.API_KEY_PROP)
-        val cseKey = getProperty(GoogleSearch.CSE_KEY_PROP)
-
+    fun sanitizedSearch(query: String, apiKey: String, cseKey: String): List<Message> {
         try {
-            var query = "mobibot"
-            var messages = searchGoogle(query, apiKey, cseKey)
-            assertThat(messages, "searchGoogle($query)").all {
-                isNotEmpty()
-                index(0).prop(Message::msg).contains(query, true)
-            }
-
-            query = "adadflkjl"
-            messages = searchGoogle(query, apiKey, cseKey)
-            assertThat(messages, "searchGoogle($query)").index(0).all {
-                isInstanceOf(ErrorMessage::class.java)
-                prop(Message::msg).isEqualTo("No results found.")
-            }
+            return searchGoogle(query, apiKey, cseKey)
         } catch (e: ModuleException) {
             // Avoid displaying api keys in CI logs
             if ("true" == System.getenv("CI")) {
                 throw e.sanitize(apiKey, cseKey)
             } else {
                 throw e
+            }
+        }
+    }
+
+    @Nested
+    @DisplayName("API Keys Test")
+    inner class ApiKeysTest {
+        @Test
+        fun `API key should not be empty`() {
+            assertFailure { sanitizedSearch("test", "", "apiKey") }
+                .isInstanceOf(ModuleException::class.java).hasNoCause()
+        }
+
+        @Test
+        fun `CSE key should not empty`() {
+            assertFailure { sanitizedSearch("test", "apiKey", "") }
+                .isInstanceOf(ModuleException::class.java).hasNoCause()
+        }
+
+        @Test
+        fun `Invalid API key should throw exception`() {
+            assertFailure { sanitizedSearch("test", "apiKey", "cssKey") }
+                .isInstanceOf(ModuleException::class.java)
+                .hasMessage("API key not valid. Please pass a valid API key.")
+        }
+    }
+
+    @Nested
+    @DisplayName("Search Tests")
+    inner class SearchTests {
+        private val apiKey = getProperty(GoogleSearch.API_KEY_PROP)
+        private val cseKey = getProperty(GoogleSearch.CSE_KEY_PROP)
+
+        @Test
+        fun `Query should not be empty`() {
+            assertThat(sanitizedSearch("", apiKey, cseKey).first()).isInstanceOf(ErrorMessage::class.java)
+        }
+
+        @Test
+        @DisableOnCi
+        @Throws(ModuleException::class)
+        fun `No results found`() {
+            val query = "adadflkjl"
+            val messages = sanitizedSearch(query, apiKey, cseKey)
+            assertThat(messages, "searchGoogle($query)").index(0).all {
+                isInstanceOf(ErrorMessage::class.java)
+                prop(Message::msg).isEqualTo("No results found.")
+            }
+        }
+
+        @Test
+        @DisableOnCi
+        @Throws(ModuleException::class)
+        fun `Search Google`() {
+            val query = "mobibot"
+            val messages = sanitizedSearch(query, apiKey, cseKey)
+            assertThat(messages, "searchGoogle($query)").all {
+                isNotEmpty()
+                index(0).prop(Message::msg).contains(query, true)
             }
         }
     }

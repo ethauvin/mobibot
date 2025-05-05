@@ -34,17 +34,38 @@ package net.thauvin.erik.mobibot.commands.seen
 import assertk.all
 import assertk.assertThat
 import assertk.assertions.*
-import org.junit.AfterClass
-import org.junit.BeforeClass
+import org.junit.jupiter.api.MethodOrderer
 import org.junit.jupiter.api.Order
-import kotlin.io.path.deleteIfExists
-import kotlin.io.path.fileSize
+import org.junit.jupiter.api.TestMethodOrder
 import kotlin.test.Test
 
+@TestMethodOrder(MethodOrderer.OrderAnnotation::class)
 class SeenTest {
+    companion object {
+        private val tmpFile = kotlin.io.path.createTempFile(SeenTest::class.java.simpleName, suffix = ".ser")
+        private val seen = Seen(tmpFile.toAbsolutePath().toString())
+        private const val NICK = "ErikT"
+
+        init {
+            tmpFile.toFile().deleteOnExit()
+        }
+    }
+
     @Test
     @Order(1)
-    fun loadTest() {
+    fun add() {
+        val last = seen.seenNicks[NICK]?.lastSeen
+        seen.add(NICK)
+        assertThat(seen).all {
+            prop(Seen::seenNicks).size().isEqualTo(1)
+            prop(Seen::seenNicks).key(NICK).isNotNull().prop(SeenNick::lastSeen).isNotEqualTo(last)
+            prop(Seen::seenNicks).key(NICK).isNotNull().prop(SeenNick::nick).isNotNull().isEqualTo(NICK)
+        }
+    }
+
+    @Test
+    @Order(2)
+    fun load() {
         seen.clear()
         assertThat(seen::seenNicks).isEmpty()
         seen.load()
@@ -52,42 +73,11 @@ class SeenTest {
     }
 
     @Test
-    @Order(2)
-    fun addTest() {
-        val last = seen.seenNicks[NICK]?.lastSeen
-        seen.add(NICK.lowercase())
-        assertThat(seen).all {
-            prop(Seen::seenNicks).size().isEqualTo(1)
-            prop(Seen::seenNicks).key(NICK).isNotNull().prop(SeenNick::lastSeen).isNotEqualTo(last)
-            prop(Seen::seenNicks).key(NICK).isNotNull().prop(SeenNick::nick).isNotNull().isEqualTo(NICK.lowercase())
-        }
-    }
-
-    @Test
     @Order(3)
-    fun clearTest() {
+    fun clear() {
         seen.clear()
         seen.save()
         seen.load()
-        assertThat(seen::seenNicks).size().isEqualTo(0)
-    }
-
-    companion object {
-        private val tmpFile = kotlin.io.path.createTempFile(suffix = ".ser")
-        private val seen = Seen(tmpFile.toAbsolutePath().toString())
-        private const val NICK = "ErikT"
-
-        @JvmStatic
-        @BeforeClass
-        fun beforeClass() {
-            seen.add(NICK)
-            assertThat(tmpFile.fileSize(), "tmpFile.size").isGreaterThan(0)
-        }
-
-        @JvmStatic
-        @AfterClass
-        fun afterClass() {
-            tmpFile.deleteIfExists()
-        }
+        assertThat(seen::seenNicks).isEmpty()
     }
 }

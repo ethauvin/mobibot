@@ -36,6 +36,9 @@ import net.thauvin.erik.mobibot.Utils.helpFormat
 import net.thauvin.erik.mobibot.Utils.isChannelOp
 import org.pircbotx.hooks.types.GenericMessageEvent
 
+/**
+ * Allows an operator to change the bot's nickname.
+ */
 class Nick : AbstractCommand() {
     override val name = "nick"
     override val help = listOf("To change the bot's nickname:", helpFormat("%c $name <new_nick>"))

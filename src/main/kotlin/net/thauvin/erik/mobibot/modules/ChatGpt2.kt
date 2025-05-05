@@ -39,36 +39,13 @@ import org.pircbotx.hooks.types.GenericMessageEvent
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
+/**
+ * Allows user to interact with ChatGPT.
+ */
 class ChatGpt2 : AbstractModule() {
     val logger: Logger = LoggerFactory.getLogger(ChatGpt2::class.java)
 
     override val name = CHATGPT_NAME
-
-    override fun commandResponse(channel: String, cmd: String, args: String, event: GenericMessageEvent) {
-        if (args.isNotBlank()) {
-            try {
-                val answer = chat(
-                    args.trim(), properties[API_KEY_PROP],
-                    properties.getOrDefault(MAX_TOKENS_PROP, "1024").toInt()
-                )
-                if (answer.isNotBlank()) {
-                    event.sendMessage(answer)
-                } else {
-                    event.respond("$name is stumped.")
-                }
-            } catch (e: ModuleException) {
-                if (logger.isWarnEnabled) logger.warn(e.debugMessage, e)
-                e.message?.let {
-                    event.respond(it)
-                }
-            } catch (e: NumberFormatException) {
-                if (logger.isErrorEnabled) logger.error("Invalid $MAX_TOKENS_PROP property.", e)
-                event.respond("The $name module is misconfigured.")
-            }
-        } else {
-            helpResponse(event)
-        }
-    }
 
     companion object {
         /**
@@ -124,5 +101,34 @@ class ChatGpt2 : AbstractModule() {
             add(Utils.helpFormat("%c $CHATGPT_CMD how do I make an HTTP request in Javascript?"))
         }
         initProperties(API_KEY_PROP, MAX_TOKENS_PROP)
+    }
+
+    /**
+     * Gets answers by chatting with ChatGPT.
+     */
+    override fun commandResponse(channel: String, cmd: String, args: String, event: GenericMessageEvent) {
+        if (args.isNotBlank()) {
+            try {
+                val answer = chat(
+                    args.trim(), properties[API_KEY_PROP],
+                    properties.getOrDefault(MAX_TOKENS_PROP, "1024").toInt()
+                )
+                if (answer.isNotBlank()) {
+                    event.sendMessage(answer)
+                } else {
+                    event.respond("$name is stumped.")
+                }
+            } catch (e: ModuleException) {
+                if (logger.isWarnEnabled) logger.warn(e.debugMessage, e)
+                e.message?.let {
+                    event.respond(it)
+                }
+            } catch (e: NumberFormatException) {
+                if (logger.isErrorEnabled) logger.error("Invalid $MAX_TOKENS_PROP property.", e)
+                event.respond("The $name module is misconfigured.")
+            }
+        } else {
+            helpResponse(event)
+        }
     }
 }

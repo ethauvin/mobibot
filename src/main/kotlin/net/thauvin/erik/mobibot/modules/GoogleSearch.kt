@@ -31,7 +31,7 @@
 package net.thauvin.erik.mobibot.modules
 
 import net.thauvin.erik.mobibot.ReleaseInfo
-import net.thauvin.erik.mobibot.Utils.capitalise
+import net.thauvin.erik.mobibot.Utils.capitalize
 import net.thauvin.erik.mobibot.Utils.colorize
 import net.thauvin.erik.mobibot.Utils.encodeUrl
 import net.thauvin.erik.mobibot.Utils.helpFormat
@@ -51,42 +51,12 @@ import java.io.IOException
 import java.net.URL
 
 /**
- * The GoogleSearch module.
+ * Allows user to search Google.
  */
 class GoogleSearch : AbstractModule() {
     private val logger: Logger = LoggerFactory.getLogger(GoogleSearch::class.java)
 
     override val name = "GoogleSearch"
-
-    /**
-     * Searches Google.
-     */
-    override fun commandResponse(channel: String, cmd: String, args: String, event: GenericMessageEvent) {
-        if (args.isNotBlank()) {
-            try {
-                val results = searchGoogle(
-                    args,
-                    properties[API_KEY_PROP],
-                    properties[CSE_KEY_PROP],
-                    event.user.nick
-                )
-                for (msg in results) {
-                    if (msg.isError) {
-                        event.respond(msg.msg.colorize(msg.color))
-                    } else {
-                        event.sendMessage(channel, msg)
-                    }
-                }
-            } catch (e: ModuleException) {
-                if (logger.isWarnEnabled) logger.warn(e.debugMessage, e)
-                e.message?.let {
-                    event.respond(it)
-                }
-            }
-        } else {
-            helpResponse(event)
-        }
-    }
 
     companion object {
         // Google API Key property
@@ -112,7 +82,7 @@ class GoogleSearch : AbstractModule() {
             if (apiKey.isNullOrBlank() || cseKey.isNullOrBlank()) {
                 throw ModuleException(
                     "${GoogleSearch::class.java.name} is disabled.",
-                    "${GOOGLE_CMD.capitalise()} is disabled. The API keys are missing."
+                    "${GOOGLE_CMD.capitalize()} is disabled. The API keys are missing."
                 )
             }
             val results = mutableListOf<Message>()
@@ -158,5 +128,35 @@ class GoogleSearch : AbstractModule() {
         help.add("To search Google:")
         help.add(helpFormat("%c $GOOGLE_CMD <query>"))
         initProperties(API_KEY_PROP, CSE_KEY_PROP)
+    }
+
+    /**
+     * Searches Google.
+     */
+    override fun commandResponse(channel: String, cmd: String, args: String, event: GenericMessageEvent) {
+        if (args.isNotBlank()) {
+            try {
+                val results = searchGoogle(
+                    args,
+                    properties[API_KEY_PROP],
+                    properties[CSE_KEY_PROP],
+                    event.user.nick
+                )
+                for (msg in results) {
+                    if (msg.isError) {
+                        event.respond(msg.msg.colorize(msg.color))
+                    } else {
+                        event.sendMessage(channel, msg)
+                    }
+                }
+            } catch (e: ModuleException) {
+                if (logger.isWarnEnabled) logger.warn(e.debugMessage, e)
+                e.message?.let {
+                    event.respond(it)
+                }
+            }
+        } else {
+            helpResponse(event)
+        }
     }
 }

@@ -34,10 +34,8 @@ package net.thauvin.erik.mobibot.commands.tell
 import assertk.all
 import assertk.assertThat
 import assertk.assertions.*
-import org.junit.AfterClass
 import java.time.LocalDateTime
 import kotlin.io.path.createTempFile
-import kotlin.io.path.deleteIfExists
 import kotlin.io.path.fileSize
 import kotlin.test.Test
 
@@ -49,13 +47,21 @@ class TellMessagesMgrTest {
         }
     }
 
+    companion object {
+        private val testFile = createTempFile(TellMessagesMgrTest::class.java.simpleName, suffix = ".ser")
+
+        init {
+            testFile.toFile().deleteOnExit()
+        }
+    }
+
     init {
         TellManager.save(testFile.toAbsolutePath().toString(), testMessages)
         assertThat(testFile.fileSize()).isGreaterThan(0)
     }
 
     @Test
-    fun cleanTest() {
+    fun clean() {
         testMessages.add(TellMessage("sender", "recipient", "message").apply {
             queued = LocalDateTime.now().minusDays(maxDays)
         })
@@ -66,7 +72,7 @@ class TellMessagesMgrTest {
     }
 
     @Test
-    fun loadTest() {
+    fun load() {
         val messages = TellManager.load(testFile.toAbsolutePath().toString())
         for (i in messages.indices) {
             assertThat(messages).index(i).all {
@@ -74,16 +80,6 @@ class TellMessagesMgrTest {
                 prop(TellMessage::recipient).isEqualTo(testMessages[i].recipient)
                 prop(TellMessage::message).isEqualTo(testMessages[i].message)
             }
-        }
-    }
-
-    companion object {
-        private val testFile = createTempFile(suffix = ".ser")
-
-        @JvmStatic
-        @AfterClass
-        fun afterClass() {
-            testFile.deleteIfExists()
         }
     }
 }

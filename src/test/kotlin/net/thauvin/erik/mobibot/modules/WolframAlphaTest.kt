@@ -40,33 +40,57 @@ import net.thauvin.erik.mobibot.DisableOnCi
 import net.thauvin.erik.mobibot.ExceptionSanitizer.sanitize
 import net.thauvin.erik.mobibot.LocalProperties
 import net.thauvin.erik.mobibot.modules.WolframAlpha.Companion.queryWolfram
+import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Nested
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.Arguments
+import org.junit.jupiter.params.provider.MethodSource
+import java.util.stream.Stream
 import kotlin.test.Test
 
-class WolframAlphaTest : LocalProperties() {
-    @Test
-    fun testAppId() {
-        assertFailure { queryWolfram("1 gallon to liter", appId = "DEMO") }
-            .isInstanceOf(ModuleException::class.java)
-            .hasMessage("Error 1: Invalid appid")
 
-        assertFailure { queryWolfram("1 gallon to liter", appId = "") }
-            .isInstanceOf(ModuleException::class.java)
+class WolframAlphaTest : LocalProperties() {
+    companion object {
+        @JvmStatic
+        fun queries(): Stream<Arguments> {
+            return Stream.of(
+                Arguments.of("SFO to SEA", "", "miles"),
+                Arguments.of("SFO to LAS", WolframAlpha.IMPERIAL, "miles"),
+                Arguments.of("SFO to LAX", WolframAlpha.METRIC, "kilometers")
+            )
+        }
     }
 
-    @Test
+    @Nested
+    @DisplayName("App ID Tests")
+    inner class AppIdTests {
+        @Test
+        fun emptyAppId() {
+            assertFailure { queryWolfram("1 gallon to liter", appId = "") }
+                .isInstanceOf(ModuleException::class.java)
+        }
+
+        @Test
+        fun invalidAppId() {
+            assertFailure { queryWolfram("1 gallon to liter", appId = "DEMO") }
+                .isInstanceOf(ModuleException::class.java)
+                .hasMessage("Error 1: Invalid appid")
+        }
+    }
+
+    @ParameterizedTest
+    @MethodSource("queries")
     @DisableOnCi
     @Throws(ModuleException::class)
-    fun queryWolframTest() {
+    fun queryWolfram(query: String, units: String, expected: String) {
         val apiKey = getProperty(WolframAlpha.APPID_KEY_PROP)
         try {
-            var query = "SFO to SEA"
-            assertThat(queryWolfram(query, appId = apiKey), "queryWolfram($query)").contains("miles")
-
-            query = "SFO to LAX"
-            assertThat(
-                queryWolfram(query, WolframAlpha.METRIC, apiKey),
-                "queryWolfram($query)"
-            ).contains("kilometers")
+            if (units.isBlank()) {
+                assertThat(queryWolfram(query, appId = apiKey), "queryWolfram($query)").contains(expected)
+            } else {
+                assertThat(queryWolfram(query, units, appId = apiKey), "queryWolfram($query, $units)")
+                    .contains(expected)
+            }
         } catch (e: ModuleException) {
             // Avoid displaying api key in CI logs
             if ("true" == System.getenv("CI")) {

@@ -40,28 +40,12 @@ import org.slf4j.LoggerFactory
 import java.text.DecimalFormat
 
 /**
- * The Calc module.
+ * Performs a calculation.
  */
 class Calc : AbstractModule() {
     private val logger: Logger = LoggerFactory.getLogger(Calc::class.java)
 
     override val name = "Calc"
-
-    override fun commandResponse(channel: String, cmd: String, args: String, event: GenericMessageEvent) {
-        if (args.isNotBlank()) {
-            try {
-                event.respond(calculate(args))
-            } catch (e: IllegalArgumentException) {
-                if (logger.isWarnEnabled) logger.warn("Failed to calculate: $args", e)
-                event.respond("No idea. This is the kind of math I don't get.")
-            } catch (e: UnknownFunctionOrVariableException) {
-                if (logger.isWarnEnabled) logger.warn("Unable to calculate: $args", e)
-                event.respond("No idea. I must've some form of Dyscalculia.")
-            }
-        } else {
-            helpResponse(event)
-        }
-    }
 
     companion object {
         // Calc command
@@ -83,5 +67,21 @@ class Calc : AbstractModule() {
         commands.add(CALC_CMD)
         help.add("To solve a mathematical calculation:")
         help.add(helpFormat("%c $CALC_CMD <calculation>"))
+    }
+
+    override fun commandResponse(channel: String, cmd: String, args: String, event: GenericMessageEvent) {
+        if (args.isNotBlank()) {
+            try {
+                event.respond(calculate(args))
+            } catch (e: IllegalArgumentException) {
+                if (logger.isWarnEnabled) logger.warn("Failed to calculate: $args", e)
+                event.respond("No idea. This is the kind of math I don't get.")
+            } catch (e: UnknownFunctionOrVariableException) {
+                if (logger.isWarnEnabled) logger.warn("Unable to calculate: $args", e)
+                event.respond("No idea. I must've some form of Dyscalculia.")
+            }
+        } else {
+            helpResponse(event)
+        }
     }
 }

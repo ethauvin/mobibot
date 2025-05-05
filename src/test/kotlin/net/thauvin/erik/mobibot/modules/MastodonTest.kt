@@ -39,7 +39,7 @@ import kotlin.test.Test
 class MastodonTest : LocalProperties() {
     @Test
     @Throws(ModuleException::class)
-    fun testToot() {
+    fun `Toot on Mastodon`() {
         val msg = "Testing Mastodon API from ${getHostName()}"
         assertThat(
             toot(

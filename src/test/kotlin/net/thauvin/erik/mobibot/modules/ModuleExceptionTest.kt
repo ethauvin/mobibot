@@ -34,6 +34,8 @@ import assertk.all
 import assertk.assertThat
 import assertk.assertions.*
 import net.thauvin.erik.mobibot.ExceptionSanitizer.sanitize
+import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Nested
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.MethodSource
 import java.io.IOException
@@ -45,60 +47,64 @@ class ModuleExceptionTest {
         const val MESSAGE = "message"
 
         @JvmStatic
-        fun dataProviders(): List<ModuleException> {
+        fun moduleExceptions(): List<ModuleException> {
             return listOf(
-                ModuleException(DEBUG_MESSAGE, MESSAGE, IOException("URL http://foobar.com")),
-                ModuleException(DEBUG_MESSAGE, MESSAGE, IOException("URL http://foobar.com?")),
+                ModuleException(DEBUG_MESSAGE, MESSAGE, IOException("foo")),
+                ModuleException(DEBUG_MESSAGE, MESSAGE, IllegalArgumentException("bar")),
                 ModuleException(DEBUG_MESSAGE, MESSAGE)
             )
         }
     }
 
-    @ParameterizedTest
-    @MethodSource("dataProviders")
-    fun testGetDebugMessage(e: ModuleException) {
-        assertThat(e::debugMessage).isEqualTo(DEBUG_MESSAGE)
-    }
-
-    @ParameterizedTest
-    @MethodSource("dataProviders")
-    fun testGetMessage(e: ModuleException) {
-        assertThat(e).hasMessage(MESSAGE)
-    }
-
-    @Test
-    fun testSanitizeMessage() {
-        val apiKey = "1234567890"
-        var e = ModuleException(DEBUG_MESSAGE, MESSAGE, IOException("URL http://foo.com?apiKey=$apiKey&userID=me"))
-        assertThat(
-            e.sanitize(apiKey, "", "me").message, "ModuleException(debugMessage, message, IOException(url))"
-        ).isNotNull().all {
-            contains("xxxxxxxxxx", "userID=xx", "java.io.IOException")
-            doesNotContain(apiKey, "me")
+    @Nested
+    @DisplayName("Message Tests")
+    inner class MessageTests {
+        @ParameterizedTest
+        @MethodSource("net.thauvin.erik.mobibot.modules.ModuleExceptionTest#moduleExceptions")
+        fun getDebugMessage(e: ModuleException) {
+            assertThat(e::debugMessage).isEqualTo(DEBUG_MESSAGE)
         }
 
-        e = ModuleException(DEBUG_MESSAGE, MESSAGE, null)
-        assertThat(e.sanitize(apiKey), "ModuleException(debugMessage, message, null)").hasMessage(MESSAGE)
-
-        e = ModuleException(DEBUG_MESSAGE, MESSAGE, IOException())
-        assertThat(e.sanitize(apiKey), "ModuleException(debugMessage, message, IOException())").hasMessage(MESSAGE)
-
-        e = ModuleException(DEBUG_MESSAGE, apiKey)
-        assertThat(e.sanitize(apiKey).message, "ModuleException(debugMessage, apiKey)").isNotNull()
-            .doesNotContain(apiKey)
-
-        val msg: String? = null
-        e = ModuleException(DEBUG_MESSAGE, msg, IOException(msg))
-        assertThat(e.sanitize(apiKey).message, "ModuleException(debugMessage, msg, IOException(msg))").isNull()
-
-        e = ModuleException(DEBUG_MESSAGE, msg, IOException("foo is $apiKey"))
-        assertThat(
-            e.sanitize("   ", apiKey, "foo").message,
-            "ModuleException(debugMessage, msg, IOException(foo is $apiKey))"
-        ).isNotNull().all {
-            doesNotContain(apiKey)
-            endsWith("xxx is xxxxxxxxxx")
+        @ParameterizedTest
+        @MethodSource("net.thauvin.erik.mobibot.modules.ModuleExceptionTest#moduleExceptions")
+        fun getMessage(e: ModuleException) {
+            assertThat(e).hasMessage(MESSAGE)
         }
-        assertThat(e.sanitize(), "exception should be unchanged").isEqualTo(e)
+
+        @Test
+        fun sanitizeMessage() {
+            val apiKey = "1234567890"
+            var e = ModuleException(DEBUG_MESSAGE, MESSAGE, IOException("URL http://foo.com?apiKey=$apiKey&userID=me"))
+            assertThat(
+                e.sanitize(apiKey, "", "me").message, "ModuleException(debugMessage, message, IOException(url))"
+            ).isNotNull().all {
+                contains("xxxxxxxxxx", "userID=xx", "java.io.IOException")
+                doesNotContain(apiKey, "me")
+            }
+
+            e = ModuleException(DEBUG_MESSAGE, MESSAGE, null)
+            assertThat(e.sanitize(apiKey), "ModuleException(debugMessage, message, null)").hasMessage(MESSAGE)
+
+            e = ModuleException(DEBUG_MESSAGE, MESSAGE, IOException())
+            assertThat(e.sanitize(apiKey), "ModuleException(debugMessage, message, IOException())").hasMessage(MESSAGE)
+
+            e = ModuleException(DEBUG_MESSAGE, apiKey)
+            assertThat(e.sanitize(apiKey).message, "ModuleException(debugMessage, apiKey)").isNotNull()
+                .doesNotContain(apiKey)
+
+            val msg: String? = null
+            e = ModuleException(DEBUG_MESSAGE, msg, IOException(msg))
+            assertThat(e.sanitize(apiKey).message, "ModuleException(debugMessage, msg, IOException(msg))").isNull()
+
+            e = ModuleException(DEBUG_MESSAGE, msg, IOException("foo is $apiKey"))
+            assertThat(
+                e.sanitize("   ", apiKey, "foo").message,
+                "ModuleException(debugMessage, msg, IOException(foo is $apiKey))"
+            ).isNotNull().all {
+                doesNotContain(apiKey)
+                endsWith("xxx is xxxxxxxxxx")
+            }
+            assertThat(e.sanitize(), "exception should be unchanged").isEqualTo(e)
+        }
     }
 }

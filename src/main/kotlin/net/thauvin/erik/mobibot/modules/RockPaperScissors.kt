@@ -37,10 +37,24 @@ import org.pircbotx.hooks.types.GenericMessageEvent
 
 
 /**
- * Simple module example in Kotlin.
+ * Allows users to play Rock Paper Scissors.
  */
 class RockPaperScissors : AbstractModule() {
     override val name = "RockPaperScissors"
+
+    companion object {
+        // For testing.
+        fun winLoseOrDraw(player: String, bot: String): String {
+            val hand = Hands.valueOf(player.uppercase())
+            val botHand = Hands.valueOf(bot.uppercase())
+
+            return when {
+                hand == botHand -> "draw"
+                hand.beats(botHand) -> "win"
+                else -> "lose"
+            }
+        }
+    }
 
     init {
         with(commands) {
@@ -78,20 +92,6 @@ class RockPaperScissors : AbstractModule() {
         };
 
         abstract fun beats(hand: Hands): Boolean
-    }
-
-    companion object {
-        // For testing.
-        fun winLoseOrDraw(player: String, bot: String): String {
-            val hand = Hands.valueOf(player.uppercase())
-            val botHand = Hands.valueOf(bot.uppercase())
-
-            return when {
-                hand == botHand -> "draw"
-                hand.beats(botHand) -> "win"
-                else -> "lose"
-            }
-        }
     }
 
     override fun commandResponse(channel: String, cmd: String, args: String, event: GenericMessageEvent) {

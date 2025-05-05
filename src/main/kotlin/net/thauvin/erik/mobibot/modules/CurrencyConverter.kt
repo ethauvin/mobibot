@@ -50,77 +50,12 @@ import java.util.*
 
 
 /**
- * The CurrencyConverter module.
+ * Converts between currencies.
  */
 class CurrencyConverter : AbstractModule() {
     private val logger: Logger = LoggerFactory.getLogger(CurrencyConverter::class.java)
 
     override val name = "CurrencyConverter"
-
-    // Reload currency codes
-    private fun reload(apiKey: String?) {
-        if (!apiKey.isNullOrEmpty() && SYMBOLS.isEmpty()) {
-            try {
-                loadSymbols(apiKey)
-            } catch (e: ModuleException) {
-                if (logger.isWarnEnabled) logger.warn(e.debugMessage, e)
-            }
-        }
-    }
-
-    /**
-     * Converts the specified currencies.
-     */
-    override fun commandResponse(channel: String, cmd: String, args: String, event: GenericMessageEvent) {
-        reload(properties[API_KEY_PROP])
-
-        when {
-            SYMBOLS.isEmpty() -> {
-                event.respond(EMPTY_SYMBOLS_TABLE)
-            }
-
-            args.matches("\\d+([,\\d]+)?(\\.\\d+)? [a-zA-Z]{3}+ (to|in) [a-zA-Z]{3}+".toRegex()) -> {
-                val msg = convertCurrency(properties[API_KEY_PROP], args)
-                event.respond(msg.msg)
-                if (msg.isError) {
-                    helpResponse(event)
-                }
-            }
-
-            args.contains(CODES_KEYWORD) -> {
-                event.sendMessage("The supported currency codes are:")
-                event.sendList(SYMBOLS.keys.toList(), 11, isIndent = true)
-            }
-
-            else -> {
-                helpResponse(event)
-            }
-        }
-    }
-
-    override fun helpResponse(event: GenericMessageEvent): Boolean {
-        reload(properties[API_KEY_PROP])
-
-        if (SYMBOLS.isEmpty()) {
-            event.sendMessage(EMPTY_SYMBOLS_TABLE)
-        } else {
-            val nick = event.bot().nick
-            event.sendMessage("To convert from one currency to another:")
-            event.sendMessage(helpFormat(helpCmdSyntax("%c $CURRENCY_CMD 100 USD to EUR", nick, isPrivateMsgEnabled)))
-            event.sendMessage(
-                helpFormat(
-                    helpCmdSyntax("%c $CURRENCY_CMD 50,000 GBP to USD", nick, isPrivateMsgEnabled)
-                )
-            )
-            event.sendMessage("To list the supported currency codes:")
-            event.sendMessage(
-                helpFormat(
-                    helpCmdSyntax("%c $CURRENCY_CMD $CODES_KEYWORD", nick, isPrivateMsgEnabled)
-                )
-            )
-        }
-        return true
-    }
 
     companion object {
         /**
@@ -218,5 +153,70 @@ class CurrencyConverter : AbstractModule() {
         commands.add(CURRENCY_CMD)
         initProperties(API_KEY_PROP)
         loadSymbols(properties[ChatGpt2.API_KEY_PROP])
+    }
+
+    // Reload currency codes
+    private fun reload(apiKey: String?) {
+        if (!apiKey.isNullOrEmpty() && SYMBOLS.isEmpty()) {
+            try {
+                loadSymbols(apiKey)
+            } catch (e: ModuleException) {
+                if (logger.isWarnEnabled) logger.warn(e.debugMessage, e)
+            }
+        }
+    }
+
+    /**
+     * Converts the specified currencies.
+     */
+    override fun commandResponse(channel: String, cmd: String, args: String, event: GenericMessageEvent) {
+        reload(properties[API_KEY_PROP])
+
+        when {
+            SYMBOLS.isEmpty() -> {
+                event.respond(EMPTY_SYMBOLS_TABLE)
+            }
+
+            args.matches("\\d+([,\\d]+)?(\\.\\d+)? [a-zA-Z]{3}+ (to|in) [a-zA-Z]{3}+".toRegex()) -> {
+                val msg = convertCurrency(properties[API_KEY_PROP], args)
+                event.respond(msg.msg)
+                if (msg.isError) {
+                    helpResponse(event)
+                }
+            }
+
+            args.contains(CODES_KEYWORD) -> {
+                event.sendMessage("The supported currency codes are:")
+                event.sendList(SYMBOLS.keys.toList(), 11, isIndent = true)
+            }
+
+            else -> {
+                helpResponse(event)
+            }
+        }
+    }
+
+    override fun helpResponse(event: GenericMessageEvent): Boolean {
+        reload(properties[API_KEY_PROP])
+
+        if (SYMBOLS.isEmpty()) {
+            event.sendMessage(EMPTY_SYMBOLS_TABLE)
+        } else {
+            val nick = event.bot().nick
+            event.sendMessage("To convert from one currency to another:")
+            event.sendMessage(helpFormat(helpCmdSyntax("%c $CURRENCY_CMD 100 USD to EUR", nick, isPrivateMsgEnabled)))
+            event.sendMessage(
+                helpFormat(
+                    helpCmdSyntax("%c $CURRENCY_CMD 50,000 GBP to USD", nick, isPrivateMsgEnabled)
+                )
+            )
+            event.sendMessage("To list the supported currency codes:")
+            event.sendMessage(
+                helpFormat(
+                    helpCmdSyntax("%c $CURRENCY_CMD $CODES_KEYWORD", nick, isPrivateMsgEnabled)
+                )
+            )
+        }
+        return true
     }
 }

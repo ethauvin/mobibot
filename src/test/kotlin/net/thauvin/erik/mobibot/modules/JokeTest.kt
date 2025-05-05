@@ -41,7 +41,7 @@ import kotlin.test.Test
 class JokeTest {
     @Test
     @Throws(ModuleException::class)
-    fun testRandomJoke() {
+    fun `Get a random joke`() {
         val joke = randomJoke()
         assertThat(joke, "randomJoke()").all {
             size().isGreaterThan(0)

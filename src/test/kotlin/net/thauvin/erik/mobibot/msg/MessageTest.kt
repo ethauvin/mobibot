@@ -36,74 +36,88 @@ import assertk.assertThat
 import assertk.assertions.isFalse
 import assertk.assertions.isTrue
 import assertk.assertions.prop
+import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Nested
 import kotlin.test.Test
 
 class MessageTest {
-    @Test
-    fun testConstructor() {
-        var msg = Message("foo")
+    @Nested
+    @DisplayName("Constructor Tests")
+    inner class ConstructorTests {
+        @Test
+        fun `Message with error property should be a notice`() {
+            val msg = Message("foo").apply {
+                isError = true
+            }
+            assertThat(msg.isNotice).isTrue()
+        }
 
-        msg.isError = true
-        assertThat(msg.isNotice, "message is notice").isTrue()
-
-        msg = Message("foo", isError = true)
-        assertThat(msg.isNotice, "message is notice too").isTrue()
-    }
-
-    @Test
-    fun testErrorMessage() {
-        val msg = ErrorMessage("foo")
-        assertThat(msg).all {
-            prop(Message::isError).isTrue()
-            prop(Message::isNotice).isTrue()
-            prop(Message::isPrivate).isFalse()
+        @Test
+        fun `Message with error should be a notice`() {
+            val msg = Message("foo", isError = true)
+            assertThat(msg.isNotice).isTrue()
         }
     }
 
-    @Test
-    fun testIsError() {
-        val msg = Message("foo")
-        msg.isError = true
-        assertThat(msg).all {
-            prop(Message::isError).isTrue()
-            prop(Message::isNotice).isTrue()
-            prop(Message::isPrivate).isFalse()
+    @Nested
+    @DisplayName("Error Tests")
+    inner class ErrorTests {
+        @Test
+        fun `Validate message with error`() {
+            assertThat(Message("foo").apply { isError = true }).all {
+                prop(Message::isError).isTrue()
+                prop(Message::isNotice).isTrue()
+                prop(Message::isPrivate).isFalse()
+            }
         }
-        msg.isError = false
-        assertThat(msg).all {
-            prop(Message::isError).isFalse()
-            prop(Message::isNotice).isTrue()
-            prop(Message::isPrivate).isFalse()
+
+        @Test
+        fun `Validate message without error`() {
+            assertThat(Message("foo").apply { isError = false }).all {
+                prop(Message::isError).isFalse()
+                prop(Message::isNotice).isFalse()
+                prop(Message::isPrivate).isFalse()
+            }
         }
     }
 
-    @Test
-    fun testNoticeMessage() {
-        val msg = NoticeMessage("food")
-        assertThat(msg).all {
-            prop(Message::isError).isFalse()
-            prop(Message::isNotice).isTrue()
-            prop(Message::isPrivate).isFalse()
+    @Nested
+    @DisplayName("Validate Tests")
+    inner class ValidateTests {
+        @Test
+        fun `Validate error message`() {
+            assertThat(ErrorMessage("foo")).all {
+                prop(Message::isError).isTrue()
+                prop(Message::isNotice).isTrue()
+                prop(Message::isPrivate).isFalse()
+            }
         }
-    }
 
-    @Test
-    fun testPrivateMessage() {
-        val msg = PrivateMessage("foo")
-        assertThat(msg).all {
-            prop(Message::isPrivate).isTrue()
-            prop(Message::isError).isFalse()
-            prop(Message::isNotice).isFalse()
+        @Test
+        fun `Validate notice message`() {
+            assertThat(NoticeMessage("foo")).all {
+                prop(Message::isError).isFalse()
+                prop(Message::isNotice).isTrue()
+                prop(Message::isPrivate).isFalse()
+            }
         }
-    }
 
-    @Test
-    fun testPublicMessage() {
-        val msg = PublicMessage("foo")
-        assertThat(msg).all {
-            prop(Message::isError).isFalse()
-            prop(Message::isNotice).isFalse()
-            prop(Message::isPrivate).isFalse()
+        @Test
+        fun `Validate private message`() {
+            assertThat(PrivateMessage("foo")).all {
+                prop(Message::isPrivate).isTrue()
+                prop(Message::isError).isFalse()
+                prop(Message::isNotice).isFalse()
+            }
+        }
+
+        @Test
+        fun `Validate public message`() {
+            assertThat(PublicMessage("foo")).all {
+                prop(Message::isError).isFalse()
+                prop(Message::isNotice).isFalse()
+                prop(Message::isPrivate).isFalse()
+            }
         }
     }
 }

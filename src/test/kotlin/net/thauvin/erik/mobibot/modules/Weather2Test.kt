@@ -43,72 +43,122 @@ import net.thauvin.erik.mobibot.modules.Weather2.Companion.getCountry
 import net.thauvin.erik.mobibot.modules.Weather2.Companion.getWeather
 import net.thauvin.erik.mobibot.modules.Weather2.Companion.mphToKmh
 import net.thauvin.erik.mobibot.msg.Message
+import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Nested
 import kotlin.test.Test
 
 class Weather2Test : LocalProperties() {
-    @Test
-    fun testFtoC() {
-        val t = ftoC(32.0)
-        assertThat(t.second, "32 °F is 0 °C").isEqualTo(0)
-    }
+    @Nested
+    @DisplayName("API Key Tests")
+    inner class ApiKeyTests {
+        @Test
+        @Throws(ModuleException::class)
+        fun `API Key should not be empty`() {
+            assertFailure { getWeather("test", "") }.isInstanceOf(ModuleException::class.java).hasNoCause()
+        }
 
-    @Test
-    fun testGetCountry() {
-        assertThat(getCountry("foo"), "foo is not a valid country").isEqualTo(OWM.Country.UNITED_STATES)
-        assertThat(getCountry("fr"), "country should France").isEqualTo(OWM.Country.FRANCE)
-
-        val country = OWM.Country.entries.toTypedArray()
-        repeat(3) {
-            val rand = country[(country.indices).random()]
-            assertThat(getCountry(rand.value), rand.name).isEqualTo(rand)
+        @Test
+        @Throws(ModuleException::class)
+        fun `API Key should not be null`() {
+            assertFailure { getWeather("test", null) }.isInstanceOf(ModuleException::class.java).hasNoCause()
         }
     }
 
-    @Test
-    fun testMphToKmh() {
-        val w = mphToKmh(0.62)
-        assertThat(w.second, "0.62 mph is 1 km/h").isEqualTo(1)
+    @Nested
+    @DisplayName("Conversion Tests")
+    inner class ConversionTests {
+        @Test
+        fun `Fahrenheit to Centigrade`() {
+            val t = ftoC(32.0)
+            assertThat(t.second, "32 °F is 0 °C").isEqualTo(0)
+        }
+
+        @Test
+        fun `Miles per hour to Kilometers per hour`() {
+            val w = mphToKmh(0.62)
+            assertThat(w.second, "0.62 mph is 1 km/h").isEqualTo(1)
+        }
     }
 
-    @Test
-    @Throws(ModuleException::class)
-    fun testWeather() {
-        var query = "98204"
-        var messages = getWeather(query, getProperty(API_KEY_PROP))
-        assertThat(messages, "getWeather($query)").index(0).prop(Message::msg).all {
-            contains("Everett, United States")
-            contains("US")
-        }
-        assertThat(messages, "getWeather($query)").index(messages.size - 1).prop(Message::msg).endsWith("98204%2CUS")
-
-        query = "San Francisco"
-        messages = getWeather(query, getProperty(API_KEY_PROP))
-        assertThat(messages, "getWeather($query)").index(0).prop(Message::msg).all {
-            contains("San Francisco")
-            contains("US")
-        }
-        assertThat(messages, "getWeather($query)").index(messages.size - 1).prop(Message::msg).endsWith("5391959")
-
-        query = "London, GB"
-        messages = getWeather(query, getProperty(API_KEY_PROP))
-        assertThat(messages, "getWeather($query)").index(0).prop(Message::msg).all {
-            contains("London, United Kingdom")
-            contains("GB")
-        }
-        assertThat(messages, "getWeather($query)").index(messages.size - 1).prop(Message::msg).endsWith("2643743")
-
-        try {
-            query = "Foo, US"
-            getWeather(query, getProperty(API_KEY_PROP))
-        } catch (e: ModuleException) {
-            assertThat(e.cause, "getWeather($query)").isNotNull().isInstanceOf(APIException::class.java)
+    @Nested
+    @DisplayName("Country Tests")
+    inner class CountryTests {
+        @Test
+        fun `Foo is not a valid country`() {
+            assertThat(getCountry("foo")).isEqualTo(OWM.Country.UNITED_STATES)
         }
 
-        query = "test"
-        assertFailure { getWeather(query, "") }.isInstanceOf(ModuleException::class.java).hasNoCause()
-        assertFailure { getWeather(query, null) }.isInstanceOf(ModuleException::class.java).hasNoCause()
+        @Test
+        fun `FR is France`() {
+            assertThat(getCountry("fr")).isEqualTo(OWM.Country.FRANCE)
+        }
 
-        messages = getWeather("", "apikey")
-        assertThat(messages, "getWeather(empty)").index(0).prop(Message::isError).isTrue()
+        @Test
+        fun `Get random country`() {
+            val country = OWM.Country.entries.toTypedArray()
+            repeat(3) {
+                val rand = country[(country.indices).random()]
+                assertThat(getCountry(rand.value), rand.name).isEqualTo(rand)
+            }
+        }
+    }
+
+    @Nested
+    @DisplayName("Weather Tests")
+    inner class WeatherTests {
+        @Test
+        @Throws(ModuleException::class)
+        fun `Empty query`() {
+            val messages = getWeather("", "apikey")
+            assertThat(messages, "getWeather(empty)").index(0).prop(Message::isError).isTrue()
+        }
+
+        @Test
+        @Throws(ModuleException::class)
+        fun `Everett, Zip Code 98204`() {
+            val query = "98204"
+            val messages = getWeather(query, getProperty(API_KEY_PROP))
+            assertThat(messages, "getWeather($query)").index(0).prop(Message::msg).all {
+                contains("Everett, United States")
+                contains("US")
+            }
+            assertThat(messages, "getWeather($query)").index(messages.size - 1).prop(Message::msg)
+                .endsWith("98204%2CUS")
+        }
+
+        @Test
+        @Throws(ModuleException::class)
+        fun `Foo, US`() {
+            val query = "Foo, US"
+            try {
+                getWeather(query, getProperty(API_KEY_PROP))
+            } catch (e: ModuleException) {
+                assertThat(e.cause, "getWeather($query)").isNotNull().isInstanceOf(APIException::class.java)
+            }
+        }
+
+        @Test
+        @Throws(ModuleException::class)
+        fun `London, GB`() {
+            val query = "London, GB"
+            val messages = getWeather(query, getProperty(API_KEY_PROP))
+            assertThat(messages, "getWeather($query)").index(0).prop(Message::msg).all {
+                contains("London, United Kingdom")
+                contains("GB")
+            }
+            assertThat(messages, "getWeather($query)").index(messages.size - 1).prop(Message::msg).endsWith("2643743")
+        }
+
+        @Test
+        @Throws(ModuleException::class)
+        fun `San Francisco`() {
+            val query = "San Francisco"
+            val messages = getWeather(query, getProperty(API_KEY_PROP))
+            assertThat(messages, "getWeather($query)").index(0).prop(Message::msg).all {
+                contains("San Francisco")
+                contains("US")
+            }
+            assertThat(messages, "getWeather($query)").index(messages.size - 1).prop(Message::msg).endsWith("5391959")
+        }
     }
 }

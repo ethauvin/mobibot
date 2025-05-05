@@ -47,30 +47,12 @@ import org.slf4j.LoggerFactory
 import java.io.IOException
 
 /**
- * The Joke module.
+ * Displays jokes from [JokeAPI](https://v2.jokeapi.dev/).
  */
 class Joke : AbstractModule() {
     private val logger: Logger = LoggerFactory.getLogger(Joke::class.java)
 
     override val name = "Joke"
-
-    /**
-     * Returns a random joke from [JokeAPI](https://v2.jokeapi.dev/).
-     */
-    override fun commandResponse(channel: String, cmd: String, args: String, event: GenericMessageEvent) {
-        with(event.bot()) {
-            try {
-                randomJoke().forEach {
-                    sendIRC().notice(channel, it.msg.colorize(it.color))
-                }
-            } catch (e: ModuleException) {
-                if (logger.isWarnEnabled) logger.warn(e.debugMessage, e)
-                e.message?.let {
-                    event.respond(it)
-                }
-            }
-        }
-    }
 
     companion object {
         // Joke command
@@ -101,5 +83,23 @@ class Joke : AbstractModule() {
         commands.add(JOKE_CMD)
         help.add("To display a random joke:")
         help.add(helpFormat("%c $JOKE_CMD"))
+    }
+
+    /**
+     * Returns a random joke from [JokeAPI](https://v2.jokeapi.dev/).
+     */
+    override fun commandResponse(channel: String, cmd: String, args: String, event: GenericMessageEvent) {
+        with(event.bot()) {
+            try {
+                randomJoke().forEach {
+                    sendIRC().notice(channel, it.msg.colorize(it.color))
+                }
+            } catch (e: ModuleException) {
+                if (logger.isWarnEnabled) logger.warn(e.debugMessage, e)
+                e.message?.let {
+                    event.respond(it)
+                }
+            }
+        }
     }
 }

@@ -47,40 +47,6 @@ class WolframAlpha : AbstractModule() {
 
     override val name = "WolframAlpha"
 
-    private fun getUnits(unit: String?): String {
-        return if (unit?.lowercase() == METRIC) {
-            METRIC
-        } else {
-            IMPERIAL
-        }
-    }
-
-    override fun commandResponse(channel: String, cmd: String, args: String, event: GenericMessageEvent) {
-        if (args.isNotBlank()) {
-            try {
-                val query = args.trim().split("units=", limit = 2, ignoreCase = true)
-                event.sendMessage(
-                    queryWolfram(
-                        query[0].trim(),
-                        units = if (query.size == 2) {
-                            getUnits(query[1].trim())
-                        } else {
-                            getUnits(properties[UNITS_PROP])
-                        },
-                        appId = properties[APPID_KEY_PROP]
-                    )
-                )
-            } catch (e: ModuleException) {
-                if (logger.isWarnEnabled) logger.warn(e.debugMessage, e)
-                e.message?.let {
-                    event.respond(it)
-                }
-            }
-        } else {
-            helpResponse(event)
-        }
-    }
-
     companion object {
         /**
          * The Wolfram Alpha API Key property.
@@ -138,5 +104,42 @@ class WolframAlpha : AbstractModule() {
             add(Utils.helpFormat("%c $WOLFRAM_CMD distance earth moon units=metric"))
         }
         initProperties(APPID_KEY_PROP, UNITS_PROP)
+    }
+
+    private fun getUnits(unit: String?): String {
+        return if (unit?.lowercase() == METRIC) {
+            METRIC
+        } else {
+            IMPERIAL
+        }
+    }
+
+    /**
+     * Queries Wolfram Alpha.
+     */
+    override fun commandResponse(channel: String, cmd: String, args: String, event: GenericMessageEvent) {
+        if (args.isNotBlank()) {
+            try {
+                val query = args.trim().split("units=", limit = 2, ignoreCase = true)
+                event.sendMessage(
+                    queryWolfram(
+                        query[0].trim(),
+                        units = if (query.size == 2) {
+                            getUnits(query[1].trim())
+                        } else {
+                            getUnits(properties[UNITS_PROP])
+                        },
+                        appId = properties[APPID_KEY_PROP]
+                    )
+                )
+            } catch (e: ModuleException) {
+                if (logger.isWarnEnabled) logger.warn(e.debugMessage, e)
+                e.message?.let {
+                    event.respond(it)
+                }
+            }
+        } else {
+            helpResponse(event)
+        }
     }
 }

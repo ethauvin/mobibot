@@ -35,14 +35,10 @@ import net.thauvin.erik.mobibot.Utils.helpFormat
 import org.pircbotx.hooks.types.GenericMessageEvent
 
 /**
- * The Ping module.
+ * Responds with a random quirky response.
  */
 class Ping : AbstractModule() {
     override val name = "Ping"
-
-    override fun commandResponse(channel: String, cmd: String, args: String, event: GenericMessageEvent) {
-        event.bot().sendIRC().action(channel, randomPing())
-    }
 
     companion object {
         /**
@@ -79,5 +75,9 @@ class Ping : AbstractModule() {
         commands.add(PING_CMD)
         help.add("To ping the bot:")
         help.add(helpFormat("%c $PING_CMD"))
+    }
+
+    override fun commandResponse(channel: String, cmd: String, args: String, event: GenericMessageEvent) {
+        event.bot().sendIRC().action(channel, randomPing())
     }
 }

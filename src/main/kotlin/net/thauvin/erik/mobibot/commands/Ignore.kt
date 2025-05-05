@@ -41,8 +41,22 @@ import net.thauvin.erik.mobibot.Utils.sendMessage
 import net.thauvin.erik.mobibot.commands.links.LinksManager
 import org.pircbotx.hooks.types.GenericMessageEvent
 
+/**
+ * Adds or removed nicks from the ignored list.
+ */
 class Ignore : AbstractCommand() {
     private val me = "me"
+
+    companion object {
+        const val IGNORE_CMD = "ignore"
+        const val IGNORE_PROP = IGNORE_CMD
+        private val ignored = mutableSetOf<String>()
+
+        @JvmStatic
+        fun isNotIgnored(nick: String): Boolean {
+            return !ignored.contains(nick.lowercase())
+        }
+    }
 
     init {
         initProperties(IGNORE_PROP)
@@ -64,17 +78,6 @@ class Ignore : AbstractCommand() {
     override val isOpOnly = false
     override val isPublic = true
     override val isVisible = true
-
-    companion object {
-        const val IGNORE_CMD = "ignore"
-        const val IGNORE_PROP = IGNORE_CMD
-        private val ignored = mutableSetOf<String>()
-
-        @JvmStatic
-        fun isNotIgnored(nick: String): Boolean {
-            return !ignored.contains(nick.lowercase())
-        }
-    }
 
     override fun commandResponse(channel: String, args: String, event: GenericMessageEvent) {
         val isMe = args.trim().equals(me, true)

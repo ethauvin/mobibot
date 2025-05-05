@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <SmellBaseline>
-  <ManuallySuppressedIssues></ManuallySuppressedIssues>
+  <ManuallySuppressedIssues/>
   <CurrentIssues>
     <ID>CyclomaticComplexMethod:FeedsManager.kt$FeedsManager.Companion$@JvmStatic fun saveFeed(entries: Entries, currentFile: String = CURRENT_XML)</ID>
     <ID>CyclomaticComplexMethod:Weather2.kt$Weather2.Companion$@JvmStatic @Throws(ModuleException::class) fun getWeather(query: String, apiKey: String?): List&lt;Message&gt;</ID>
@@ -10,8 +10,6 @@
     <ID>LongMethod:Weather2.kt$Weather2.Companion$@JvmStatic @Throws(ModuleException::class) fun getWeather(query: String, apiKey: String?): List&lt;Message&gt;</ID>
     <ID>LongParameterList:Comment.kt$Comment$( channel: String, cmd: String, entry: EntryLink, entryIndex: Int, commentIndex: Int, event: GenericMessageEvent )</ID>
     <ID>LongParameterList:EntryLink.kt$EntryLink$( // Link's comments val comments: MutableList&lt;EntryComment&gt; = mutableListOf(), // Tags/categories val tags: MutableList&lt;SyndCategory&gt; = mutableListOf(), // Channel var channel: String, // Creation date var date: Date = Calendar.getInstance().time, // Link's URL var link: String, // Author's login var login: String = "", // Author's nickname var nick: String, // Link's title var title: String )</ID>
-    <ID>MagicNumber:ChatGpt.kt$ChatGpt.Companion$200</ID>
-    <ID>MagicNumber:ChatGpt.kt$ChatGpt.Companion$429</ID>
     <ID>MagicNumber:Comment.kt$Comment$3</ID>
     <ID>MagicNumber:CryptoPrices.kt$CryptoPrices$10</ID>
     <ID>MagicNumber:CurrencyConverter.kt$CurrencyConverter$11</ID>
@@ -47,7 +45,6 @@
     <ID>MagicNumber:WorldTime.kt$WorldTime.Companion$86.4</ID>
     <ID>NestedBlockDepth:Addons.kt$Addons$fun add(command: AbstractCommand): Boolean</ID>
     <ID>NestedBlockDepth:Addons.kt$Addons$fun add(module: AbstractModule): Boolean</ID>
-    <ID>NestedBlockDepth:ChatGpt.kt$ChatGpt.Companion$@JvmStatic @Throws(ModuleException::class) fun chat(query: String, apiKey: String?, maxTokens: Int): String</ID>
     <ID>NestedBlockDepth:Comment.kt$Comment$override fun commandResponse(channel: String, args: String, event: GenericMessageEvent)</ID>
     <ID>NestedBlockDepth:CurrencyConverter.kt$CurrencyConverter.Companion$@JvmStatic @Throws(ModuleException::class) fun loadSymbols(apiKey: String?)</ID>
     <ID>NestedBlockDepth:CurrencyConverter.kt$CurrencyConverter.Companion$@JvmStatic fun convertCurrency(apiKey: String?, query: String): Message</ID>
@@ -71,7 +68,6 @@
     <ID>ReturnCount:Addons.kt$Addons$fun help(channel: String, topic: String, event: GenericMessageEvent): Boolean</ID>
     <ID>ReturnCount:ExceptionSanitizer.kt$ExceptionSanitizer$fun ModuleException.sanitize(vararg sanitize: String): ModuleException</ID>
     <ID>ReturnCount:Seen.kt$Seen$override fun commandResponse(channel: String, args: String, event: GenericMessageEvent)</ID>
-    <ID>ThrowsCount:ChatGpt.kt$ChatGpt.Companion$@JvmStatic @Throws(ModuleException::class) fun chat(query: String, apiKey: String?, maxTokens: Int): String</ID>
     <ID>ThrowsCount:GoogleSearch.kt$GoogleSearch.Companion$@JvmStatic @Throws(ModuleException::class) fun searchGoogle( query: String, apiKey: String?, cseKey: String?, quotaUser: String = ReleaseInfo.PROJECT ): List&lt;Message&gt;</ID>
     <ID>ThrowsCount:Joke.kt$Joke.Companion$@JvmStatic @Throws(ModuleException::class) fun randomJoke(): List&lt;Message&gt;</ID>
     <ID>ThrowsCount:Mastodon.kt$Mastodon.Companion$@JvmStatic @Throws(ModuleException::class) fun toot(apiKey: String?, instance: String?, handle: String?, message: String, isDm: Boolean): String</ID>
@@ -80,7 +76,6 @@
     <ID>ThrowsCount:Weather2.kt$Weather2.Companion$@JvmStatic @Throws(ModuleException::class) fun getWeather(query: String, apiKey: String?): List&lt;Message&gt;</ID>
     <ID>ThrowsCount:WolframAlpha.kt$WolframAlpha.Companion$@JvmStatic @Throws(ModuleException::class) fun queryWolfram(query: String, units: String = IMPERIAL, appId: String?): String</ID>
     <ID>TooGenericExceptionCaught:ChatGpt2.kt$ChatGpt2.Companion$e: Exception</ID>
-    <ID>TooGenericExceptionCaught:Gemini.kt$Gemini.Companion$e: Exception</ID>
     <ID>TooGenericExceptionCaught:Gemini2.kt$Gemini2.Companion$e: Exception</ID>
     <ID>TooGenericExceptionCaught:StockQuote.kt$StockQuote.Companion$e: NullPointerException</ID>
     <ID>TooGenericExceptionCaught:Weather2.kt$Weather2.Companion$e: NullPointerException</ID>
@@ -94,9 +89,9 @@
     <ID>WildcardImport:FeedReaderTest.kt$import assertk.assertions.*</ID>
     <ID>WildcardImport:FeedsManager.kt$import com.rometools.rome.feed.synd.*</ID>
     <ID>WildcardImport:Gemini2Test.kt$import assertk.assertions.*</ID>
-    <ID>WildcardImport:GeminiTest.kt$import assertk.assertions.*</ID>
     <ID>WildcardImport:GoogleSearchTest.kt$import assertk.assertions.*</ID>
     <ID>WildcardImport:JokeTest.kt$import assertk.assertions.*</ID>
+    <ID>WildcardImport:LinksManagerTest.kt$import assertk.assertions.*</ID>
     <ID>WildcardImport:Mobibot.kt$import java.io.*</ID>
     <ID>WildcardImport:Mobibot.kt$import net.thauvin.erik.mobibot.commands.*</ID>
     <ID>WildcardImport:Mobibot.kt$import net.thauvin.erik.mobibot.commands.links.*</ID>

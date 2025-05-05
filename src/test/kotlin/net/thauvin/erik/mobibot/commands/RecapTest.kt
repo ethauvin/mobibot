@@ -41,7 +41,7 @@ import kotlin.test.Test
 
 class RecapTest {
     @Test
-    fun storeRecapTest() {
+    fun storeRecap() {
         for (i in 1..20) {
             Recap.storeRecap("sender$i", "test $i", false)
         }
@@ -54,7 +54,7 @@ class RecapTest {
         }
 
         Recap.storeRecap("sender", "test action", true)
-        assertThat(Recap.recaps.last())
+        assertThat(Recap.recaps.last(), "Recap.recaps.last()")
             .matches("[1-2]\\d{3}-[01]\\d-[0-3]\\d [0-2]\\d:[0-6]\\d - sender test action".toRegex())
     }
 }

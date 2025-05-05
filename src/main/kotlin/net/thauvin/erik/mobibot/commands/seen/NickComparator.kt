@@ -33,13 +33,15 @@ package net.thauvin.erik.mobibot.commands.seen
 
 import java.io.Serializable
 
+/**
+ * A comparator implementation for comparing nicknames in a case-insensitive manner.
+ */
 class NickComparator : Comparator<String>, Serializable {
     override fun compare(a: String, b: String): Int {
         return a.lowercase().compareTo(b.lowercase())
     }
 
     companion object {
-        @Suppress("ConstPropertyName")
         private const val serialVersionUID = 1L
     }
 }

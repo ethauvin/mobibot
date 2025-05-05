@@ -32,30 +32,45 @@ package net.thauvin.erik.mobibot.modules
 
 import assertk.assertFailure
 import assertk.assertThat
-import assertk.assertions.contains
 import assertk.assertions.hasNoCause
 import assertk.assertions.isInstanceOf
+import assertk.assertions.contains
 import net.thauvin.erik.mobibot.DisableOnCi
 import net.thauvin.erik.mobibot.LocalProperties
+import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Nested
 import kotlin.test.Test
 
 class ChatGpt2Test : LocalProperties() {
     @Test
-    fun testApiKey() {
+    fun apiKey() {
         assertFailure { ChatGpt2.chat("1 gallon to liter", "", 0) }
             .isInstanceOf(ModuleException::class.java)
             .hasNoCause()
     }
 
-    @Test
-    @DisableOnCi
-    fun testChat() {
-        val apiKey = getProperty(ChatGpt2.API_KEY_PROP)
-        assertThat(
-            ChatGpt2.chat("how do I make an HTTP request in Javascript?", apiKey, 200)
-        ).contains("XMLHttpRequest")
+    @Nested
+    @DisplayName("Chat Tests")
+    inner class ChatTests {
+        private val apiKey = getProperty(ChatGpt2.API_KEY_PROP)
 
-        assertFailure { ChatGpt2.chat("1 liter to gallon", apiKey, -1) }
-            .isInstanceOf(ModuleException::class.java)
+        @Test
+        @DisableOnCi
+        fun chat() {
+            assertThat(
+                ChatGpt2.chat(
+                    "return only the code for javascript function to make a request with XMLHttpRequest",
+                    apiKey,
+                    50
+                )
+            ).contains("```javascript")
+        }
+
+        @Test
+        @DisableOnCi
+        fun chatFailure() {
+            assertFailure { ChatGpt2.chat("1 liter to gallon", apiKey, -1) }
+                .isInstanceOf(ModuleException::class.java)
+        }
     }
 }

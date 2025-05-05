@@ -36,76 +36,103 @@ import assertk.assertThat
 import assertk.assertions.isEqualTo
 import assertk.assertions.prop
 import net.thauvin.erik.mobibot.entries.EntryLink
+import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Nested
 import kotlin.test.Test
 
 class ViewTest {
-    @Test
-    fun testParseArgs() {
-        val view = View()
-
-        for (i in 1..10) {
-            LinksManager.entries.links.add(
-                EntryLink(
-                    "https://www.example.com/$i",
-                    "Example $i",
-                    "nick$i",
-                    "login$i",
-                    "#channel",
-                    emptyList()
+    companion object {
+        init {
+            for (i in 1..10) {
+                LinksManager.entries.links.add(
+                    EntryLink(
+                        "https://www.example.com/$i",
+                        "Example $i",
+                        "nick$i",
+                        "login$i",
+                        "#channel",
+                        emptyList()
+                    )
                 )
-            )
+            }
+        }
+    }
+
+    @Nested
+    @DisplayName("Parse Args Tests")
+    inner class ParseArgsTests {
+        private val view = View()
+
+        @Test
+        fun `Parse alphanumeric query`() {
+            assertThat(view.parseArgs("1a"), "parseArgs(1a)").all {
+                prop(Pair<Int, String>::first).isEqualTo(0)
+                prop(Pair<Int, String>::second).isEqualTo("1a")
+            }
         }
 
-        assertThat(view.parseArgs("1"), "parseArgs(1)").all {
-            prop(Pair<Int, String>::first).isEqualTo(0)
-            prop(Pair<Int, String>::second).isEqualTo("")
+        @Test
+        fun `Parse empty arguments`() {
+            assertThat(view.parseArgs(""), "parseArgs()").all {
+                prop(Pair<Int, String>::first).isEqualTo(LinksManager.entries.links.size - View.MAX_ENTRIES)
+                prop(Pair<Int, String>::second).isEqualTo("")
+            }
         }
 
-        assertThat(view.parseArgs("2 foo"), "parseArgs(2, foo)").all {
-            prop(Pair<Int, String>::first).isEqualTo(1)
-            prop(Pair<Int, String>::second).isEqualTo("foo")
+        @Test
+        fun `Parse first item`() {
+            assertThat(view.parseArgs("1"), "parseArgs(1)").all {
+                prop(Pair<Int, String>::first).isEqualTo(0)
+                prop(Pair<Int, String>::second).isEqualTo("")
+            }
         }
 
-        assertThat(view.parseArgs("3 FOO"), "parseArgs(3, FOO)").all {
-            prop(Pair<Int, String>::first).isEqualTo(2)
-            prop(Pair<Int, String>::second).isEqualTo("foo")
+        @Test
+        fun `Parse fourth item with query needing trimming`() {
+            assertThat(view.parseArgs(" 4 foo bar "), "parseArgs( 4 foo bar )").all {
+                prop(Pair<Int, String>::first).isEqualTo(3)
+                prop(Pair<Int, String>::second).isEqualTo("foo bar")
+            }
         }
 
-        assertThat(view.parseArgs(" 4 foo bar "), "parseArgs( 4 foo bar )").all {
-            prop(Pair<Int, String>::first).isEqualTo(3)
-            prop(Pair<Int, String>::second).isEqualTo("foo bar")
+        @Test
+        fun `Parse overflowed item as query`() {
+            assertThat(view.parseArgs("${Int.MAX_VALUE}1"), "parseArgs(overflow)").all {
+                prop(Pair<Int, String>::first).isEqualTo(0)
+                prop(Pair<Int, String>::second).isEqualTo("${Int.MAX_VALUE}1")
+            }
         }
 
-        assertThat(view.parseArgs("foo bar"), "parseArgs(foo bar)").all {
-            prop(Pair<Int, String>::first).isEqualTo(0)
-            prop(Pair<Int, String>::second).isEqualTo("foo bar")
+        @Test
+        fun `Parse out of bounds item`() {
+            assertThat(view.parseArgs("20"), "parseArgs(20)").all {
+                prop(Pair<Int, String>::first).isEqualTo(0)
+                prop(Pair<Int, String>::second).isEqualTo("")
+            }
         }
 
-        assertThat(view.parseArgs("${Int.MAX_VALUE}1"), "parseArgs(overflow)").all {
-            prop(Pair<Int, String>::first).isEqualTo(0)
-            prop(Pair<Int, String>::second).isEqualTo("${Int.MAX_VALUE}1")
+        @Test
+        fun `Parse query only`() {
+            assertThat(view.parseArgs("foo bar"), "parseArgs(foo bar)").all {
+                prop(Pair<Int, String>::first).isEqualTo(0)
+                prop(Pair<Int, String>::second).isEqualTo("foo bar")
+            }
         }
 
-        assertThat(view.parseArgs("1a"), "parseArgs(1a)").all {
-            prop(Pair<Int, String>::first).isEqualTo(0)
-            prop(Pair<Int, String>::second).isEqualTo("1a")
+        @Test
+        fun `Parse second item with query`() {
+            assertThat(view.parseArgs("2 foo"), "parseArgs(2, foo)").all {
+                prop(Pair<Int, String>::first).isEqualTo(1)
+                prop(Pair<Int, String>::second).isEqualTo("foo")
+            }
         }
 
-        assertThat(view.parseArgs("20"), "parseArgs(20)").all {
-            prop(Pair<Int, String>::first).isEqualTo(0)
-            prop(Pair<Int, String>::second).isEqualTo("")
-        }
-
-        assertThat(view.parseArgs(""), "parseArgs()").all {
-            prop(Pair<Int, String>::first).isEqualTo(LinksManager.entries.links.size - View.MAX_ENTRIES)
-            prop(Pair<Int, String>::second).isEqualTo("")
-        }
-
-        LinksManager.entries.links.clear()
-
-        assertThat(view.parseArgs("4"), "parseArgs(4)").all {
-            prop(Pair<Int, String>::first).isEqualTo(0)
-            prop(Pair<Int, String>::second).isEqualTo("")
+        @Test
+        fun `Parse third item with query ignoring capitalization`() {
+            assertThat(view.parseArgs("3 FOO"), "parseArgs(3, FOO)").all {
+                prop(Pair<Int, String>::first).isEqualTo(2)
+                prop(Pair<Int, String>::second).isEqualTo("foo")
+            }
         }
     }
 }

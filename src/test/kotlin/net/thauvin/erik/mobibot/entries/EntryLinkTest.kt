@@ -35,6 +35,8 @@ import assertk.assertThat
 import assertk.assertions.*
 import com.rometools.rome.feed.synd.SyndCategory
 import com.rometools.rome.feed.synd.SyndCategoryImpl
+import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Nested
 import java.security.SecureRandom
 import java.util.*
 import kotlin.test.Test
@@ -46,7 +48,7 @@ class EntryLinkTest {
     )
 
     @Test
-    fun testAddDeleteComment() {
+    fun `Add then delete comment`() {
         var i = 0
         while (i < 5) {
             entryLink.addComment("c$i", "u$i")
@@ -63,7 +65,7 @@ class EntryLinkTest {
         }
 
         val r = SecureRandom()
-        while (entryLink.comments.size > 0) {
+        while (entryLink.comments.isNotEmpty()) {
             entryLink.deleteComment(r.nextInt(entryLink.comments.size))
         }
         assertThat(entryLink.comments, "hasComments()").isEmpty()
@@ -79,7 +81,7 @@ class EntryLinkTest {
     }
 
     @Test
-    fun testConstructor() {
+    fun `Validate EntryLink constructor`() {
         val tags = listOf(SyndCategoryImpl().apply { name = "tag1" }, SyndCategoryImpl().apply { name = "tag2" })
         val link = EntryLink("link", "title", "nick", "channel", Date(), tags)
         assertThat(link, "link").all {
@@ -89,7 +91,7 @@ class EntryLinkTest {
     }
 
     @Test
-    fun testMatches() {
+    fun `Validate EntryLink matches`() {
         assertThat(entryLink.matches("mobitopia"), "matches(mobitopia)").isTrue()
         assertThat(entryLink.matches("skynx"), "match(nick)").isTrue()
         assertThat(entryLink.matches("www.mobitopia.org"), "matches(url)").isTrue()
@@ -98,29 +100,52 @@ class EntryLinkTest {
         assertThat(entryLink.matches(null), "matches(null)").isFalse()
     }
 
-
-    @Test
-    fun testTags() {
-        val tags: List<SyndCategory> = entryLink.tags
-        for ((i, tag) in tags.withIndex()) {
-            assertThat(tag.name, "tag.name($i)").isEqualTo("tag${i + 1}")
+    @Nested
+    @DisplayName("Validate Tags Test")
+    inner class ValidateTagsTest {
+        @Test
+        fun `Validate tags parsing in constructor`() {
+            val tags: List<SyndCategory> = entryLink.tags
+            for ((i, tag) in tags.withIndex()) {
+                assertThat(tag.name, "tag.name($i)").isEqualTo("tag${i + 1}")
+            }
+            assertThat(entryLink::tags).size().isEqualTo(5)
         }
-        assertThat(entryLink::tags).size().isEqualTo(5)
-        entryLink.setTags("-tag5, tag4")
-        entryLink.setTags("+mobitopia")
-        entryLink.setTags("-mobitopia")
-        assertThat(
-            entryLink.formatTags(","),
-            "formatTags(',')"
-        ).isEqualTo("tag1,tag2,tag3,tag4,mobitopia")
-        entryLink.setTags("-tag4 tag5")
-        assertThat(
-            entryLink.formatTags(" ", ","), "formatTag(' ',',')"
-        ).isEqualTo(",tag1 tag2 tag3 mobitopia tag5")
-        val size = entryLink.tags.size
-        entryLink.setTags("")
-        assertThat(entryLink.tags, "setTags('')").size().isEqualTo(size)
-        entryLink.setTags("    ")
-        assertThat(entryLink.tags, "setTags('    ')").size().isEqualTo(size)
+
+        @Test
+        fun `Validate attempting to remove channel tag`() {
+            val link = entryLink
+            link.setTags("+mobitopia")
+            link.setTags("-mobitopia") // can't remove the channel tag
+            assertThat(
+                link.formatTags(",")
+            ).isEqualTo("tag1,tag2,tag3,tag4,tag5,mobitopia")
+        }
+
+        @Test
+        fun `Validate formatting tags with spaces`() {
+            val link = entryLink
+            link.setTags("-tag4")
+            assertThat(
+                link.formatTags(" ", ",")
+            ).isEqualTo(",tag1 tag2 tag3 tag5")
+        }
+
+        @Test
+        fun `Validate setting blank tags`() {
+            val link = entryLink
+            val size = link.tags.size
+            link.setTags("    ")
+            assertThat(link.tags, "setTags('    ')").size().isEqualTo(size)
+        }
+
+        @Test
+        fun `Validate setting empty tags`() {
+            val link = entryLink
+            val size = link.tags.size
+            link.setTags("")
+            assertThat(link.tags, "setTags(\"\")").size().isEqualTo(size)
+
+        }
     }
 }

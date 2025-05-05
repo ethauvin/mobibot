@@ -37,7 +37,9 @@ import org.pircbotx.hooks.events.PrivateMessageEvent
 import org.pircbotx.hooks.types.GenericMessageEvent
 
 /**
- * The `Module` abstract class.
+ * Represents an abstract module, which can be extended to implement specific functionality.
+ *
+ * This class provides a foundation for creating modules with configurable properties, commands, and help features.
  */
 abstract class AbstractModule {
     /**
@@ -76,6 +78,7 @@ abstract class AbstractModule {
     /**
      * Responds with the module's help.
      */
+    @Suppress("SameReturnValue")
     open fun helpResponse(event: GenericMessageEvent): Boolean {
         for (h in help) {
             event.sendMessage(helpCmdSyntax(h, event.bot().nick, isPrivateMsgEnabled && event is PrivateMessageEvent))

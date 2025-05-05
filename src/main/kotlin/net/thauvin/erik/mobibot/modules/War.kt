@@ -36,13 +36,30 @@ import org.pircbotx.hooks.types.GenericMessageEvent
 import java.security.SecureRandom
 
 /**
- * The War module.
- *
- * @author [Erik C. Thauvin](https://erik.thauvin.net/)
- * @since 1.0
+ * Plays the `war` card game.
  */
 class War : AbstractModule() {
     override val name = "War"
+
+    companion object {
+        private val CLUBS = arrayOf("🃑", "🃞", "🃝", "🃛", "🃚", "🃙", "🃘", "🃗", "🃖", "🃕", "🃔", "🃓", "🃒")
+        private val DIAMONDS = arrayOf("🃁", "🃎", "🃍", "🃋", "🃊", "🃉", "🃈", "🃇", "🃆", "🃅", "🃄", "🃃", "🃂")
+        private val HEARTS = arrayOf("🂱", "🂾", "🂽", "🂻", "🂺", "🂹", "🂸", "🂷", "🂶", "🂵", "🂴", "🂳", "🂲")
+
+        // Random
+        private val RANDOM = SecureRandom()
+        private val SPADES = arrayOf("🂡", "🂮", "🂭", "🂫", "🂪", "🂩", "🂨", "🂧", "🂦", "🂥", "🂤", "🂣", "🂢")
+        private val DECK = arrayOf(HEARTS, SPADES, DIAMONDS, CLUBS)
+
+        // War command
+        private const val WAR_CMD = "war"
+    }
+
+    init {
+        commands.add(WAR_CMD)
+        help.add("To play war:")
+        help.add(helpFormat("%c $WAR_CMD"))
+    }
 
     override fun commandResponse(
         channel: String, cmd: String, args: String,
@@ -65,25 +82,5 @@ class War : AbstractModule() {
                         "  » You " + result + '!'
             )
         } while (i == y)
-    }
-
-    companion object {
-        private val CLUBS = arrayOf("🃑", "🃞", "🃝", "🃛", "🃚", "🃙", "🃘", "🃗", "🃖", "🃕", "🃔", "🃓", "🃒")
-        private val DIAMONDS = arrayOf("🃁", "🃎", "🃍", "🃋", "🃊", "🃉", "🃈", "🃇", "🃆", "🃅", "🃄", "🃃", "🃂")
-        private val HEARTS = arrayOf("🂱", "🂾", "🂽", "🂻", "🂺", "🂹", "🂸", "🂷", "🂶", "🂵", "🂴", "🂳", "🂲")
-
-        // Random
-        private val RANDOM = SecureRandom()
-        private val SPADES = arrayOf("🂡", "🂮", "🂭", "🂫", "🂪", "🂩", "🂨", "🂧", "🂦", "🂥", "🂤", "🂣", "🂢")
-        private val DECK = arrayOf(HEARTS, SPADES, DIAMONDS, CLUBS)
-
-        // War command
-        private const val WAR_CMD = "war"
-    }
-
-    init {
-        commands.add(WAR_CMD)
-        help.add("To play war:")
-        help.add(helpFormat("%c $WAR_CMD"))
     }
 }

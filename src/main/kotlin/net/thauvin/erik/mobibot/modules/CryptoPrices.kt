@@ -43,7 +43,7 @@ import org.slf4j.LoggerFactory
 import java.io.IOException
 
 /**
- * The Cryptocurrency Prices  module.
+ * Retrieves cryptocurrency market prices.
  */
 class CryptoPrices : AbstractModule() {
     private val logger: Logger = LoggerFactory.getLogger(CryptoPrices::class.java)
@@ -102,7 +102,7 @@ class CryptoPrices : AbstractModule() {
         private const val CODES_KEYWORD = "codes"
 
         /**
-         * Get current market price.
+         * Get the current market price.
          */
         @JvmStatic
         fun currentPrice(args: List<String>): CryptoPrice {

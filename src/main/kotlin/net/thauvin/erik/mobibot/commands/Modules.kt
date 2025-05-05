@@ -36,6 +36,9 @@ import net.thauvin.erik.mobibot.Utils.isChannelOp
 import net.thauvin.erik.mobibot.Utils.sendList
 import org.pircbotx.hooks.types.GenericMessageEvent
 
+/**
+ * List the enabled/disabled modules.
+ */
 class Modules(private val modules: List<String>, private val disabledModules: List<String>) : AbstractCommand() {
     override val name = "modules"
     override val help = listOf("To view a list of enabled/disabled modules:", helpFormat("%c $name"))

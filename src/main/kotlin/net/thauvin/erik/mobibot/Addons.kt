@@ -41,7 +41,7 @@ import org.slf4j.LoggerFactory
 import java.util.*
 
 /**
- * Modules and Commands addons.
+ * Registers and manages commands and modules.
  */
 class Addons(private val props: Properties) {
     private val logger: Logger = LoggerFactory.getLogger(Addons::class.java)

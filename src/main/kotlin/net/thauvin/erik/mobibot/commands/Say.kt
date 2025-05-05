@@ -36,6 +36,9 @@ import net.thauvin.erik.mobibot.Utils.helpFormat
 import net.thauvin.erik.mobibot.Utils.isChannelOp
 import org.pircbotx.hooks.types.GenericMessageEvent
 
+/**
+ * Allows an operator to have the bot say something in the specified channel.
+ */
 class Say : AbstractCommand() {
     override val name = "say"
     override val help = listOf("To have the bot say something on the channel:", helpFormat("%c $name <text>"))

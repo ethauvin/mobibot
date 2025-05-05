@@ -35,21 +35,10 @@ import net.thauvin.erik.mobibot.Utils.helpFormat
 import org.pircbotx.hooks.types.GenericMessageEvent
 
 /**
- * The Dice module.
+ * Rolls dice.
  */
 class Dice : AbstractModule() {
     override val name = "Dice"
-
-    override fun commandResponse(channel: String, cmd: String, args: String, event: GenericMessageEvent) {
-        val arg = if (args.isBlank()) "2d6" else args.trim()
-        val match = Regex("^([1-9]|[12]\\d|3[0-2])[dD]([1-9]|[12]\\d|3[0-2])$").find(arg)
-        if (match != null) {
-            val (dice, sides) = match.destructured
-            event.respond("you rolled " + roll(dice.toInt(), sides.toInt()))
-        } else {
-            helpResponse(event)
-        }
-    }
 
     companion object {
         // Dice command
@@ -83,5 +72,16 @@ class Dice : AbstractModule() {
         commands.add(DICE_CMD)
         help.add("To roll 2 dice with 6 sides:")
         help.add(helpFormat("%c $DICE_CMD [2d6]"))
+    }
+
+    override fun commandResponse(channel: String, cmd: String, args: String, event: GenericMessageEvent) {
+        val arg = if (args.isBlank()) "2d6" else args.trim()
+        val match = Regex("^([1-9]|[12]\\d|3[0-2])[dD]([1-9]|[12]\\d|3[0-2])$").find(arg)
+        if (match != null) {
+            val (dice, sides) = match.destructured
+            event.respond("you rolled " + roll(dice.toInt(), sides.toInt()))
+        } else {
+            helpResponse(event)
+        }
     }
 }

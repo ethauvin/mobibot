@@ -42,6 +42,10 @@ import net.thauvin.erik.mobibot.entries.EntriesUtils.toLinkLabel
 import net.thauvin.erik.mobibot.entries.EntryLink
 import org.pircbotx.hooks.types.GenericMessageEvent
 
+/**
+ * Processes commands such as viewing, deleting, editing, or changing the author of a comment
+ * based on the input arguments and the state of the entries.
+ */
 class Comment : AbstractCommand() {
     override val name = COMMAND
     override val help = listOf(

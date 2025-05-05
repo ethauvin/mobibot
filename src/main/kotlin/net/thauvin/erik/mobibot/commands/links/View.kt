@@ -43,6 +43,9 @@ import net.thauvin.erik.mobibot.entries.EntryLink
 import org.pircbotx.hooks.events.PrivateMessageEvent
 import org.pircbotx.hooks.types.GenericMessageEvent
 
+/**
+ * Displays a list of entries or an appropriate message if no entries exist.
+ */
 class View : AbstractCommand() {
     override val name = VIEW_CMD
     override val help = listOf(
@@ -61,12 +64,17 @@ class View : AbstractCommand() {
     override fun commandResponse(channel: String, args: String, event: GenericMessageEvent) {
         if (entries.links.isNotEmpty()) {
             val p = parseArgs(args)
-            showPosts(p.first, p.second, event)
+            viewEntries(p.first, p.second, event)
         } else {
             event.sendMessage("There is currently nothing to view. Why don't you post something?")
         }
     }
 
+    /**
+     * Parses the view command input arguments and determines a starting index and query string.
+     *
+     *`view [<start>] [<query>]`
+     */
     internal fun parseArgs(args: String): Pair<Int, String> {
         var query = args.lowercase().trim()
         var start = 0
@@ -88,7 +96,7 @@ class View : AbstractCommand() {
         return Pair(start, query)
     }
 
-    private fun showPosts(start: Int, query: String, event: GenericMessageEvent) {
+    private fun viewEntries(start: Int, query: String, event: GenericMessageEvent) {
         var index = start
         var entry: EntryLink
         var sent = 0

@@ -44,6 +44,11 @@ import net.thauvin.erik.mobibot.entries.EntriesUtils.toLinkLabel
 import net.thauvin.erik.mobibot.entries.EntryLink
 import org.pircbotx.hooks.types.GenericMessageEvent
 
+/**
+ * Modifies or displays the content of an entry.
+ *
+ * It handles actions such as adding comments, changing author, title, or URL, and removing or printing entries.
+ */
 class Posting : AbstractCommand() {
     override val name = "posting"
     override val help = listOf(
@@ -97,6 +102,20 @@ class Posting : AbstractCommand() {
         entries.save()
     }
 
+    private fun changeAuthor(channel: String, cmd: String, index: Int, event: GenericMessageEvent) {
+        if (event.isChannelOp(channel)) {
+            if (cmd.length > 1) {
+                val entry: EntryLink = entries.links[index]
+                entry.nick = cmd.substring(1)
+                LinksManager.pinboard.updatePin(event.bot().serverHostname, entry.link, entry)
+                event.sendMessage(EntriesUtils.printLink(index, entry))
+                entries.save()
+            }
+        } else {
+            event.sendMessage("Please ask a channel op to change the author of this link for you.")
+        }
+    }
+
     private fun changeTitle(cmd: String, entryIndex: Int, event: GenericMessageEvent) {
         if (cmd.length > 1) {
             val entry: EntryLink = entries.links[entryIndex]
@@ -118,20 +137,6 @@ class Posting : AbstractCommand() {
                 event.sendMessage(EntriesUtils.printLink(entryIndex, entry))
                 entries.save()
             }
-        }
-    }
-
-    private fun changeAuthor(channel: String, cmd: String, index: Int, event: GenericMessageEvent) {
-        if (event.isChannelOp(channel)) {
-            if (cmd.length > 1) {
-                val entry: EntryLink = entries.links[index]
-                entry.nick = cmd.substring(1)
-                LinksManager.pinboard.updatePin(event.bot().serverHostname, entry.link, entry)
-                event.sendMessage(EntriesUtils.printLink(index, entry))
-                entries.save()
-            }
-        } else {
-            event.sendMessage("Please ask a channel op to change the author of this link for you.")
         }
     }
 

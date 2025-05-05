@@ -35,22 +35,32 @@ import assertk.assertions.any
 import assertk.assertions.contains
 import net.thauvin.erik.mobibot.modules.Lookup.Companion.nslookup
 import net.thauvin.erik.mobibot.modules.Lookup.Companion.whois
+import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Nested
 import kotlin.test.Test
 
 class LookupTest {
-    @Test
-    @Throws(Exception::class)
-    fun testLookup() {
-        var result = nslookup("apple.com")
-        assertThat(result, "lookup(apple.com)").contains("17.253.144.10")
+    @Nested
+    @DisplayName("Lookup Tests")
+    inner class LookupTests {
+        @Test
+        @Throws(Exception::class)
+        fun lookupByHostname() {
+            val result = nslookup("apple.com")
+            assertThat(result, "lookup(apple.com)").contains("17.253.144.10")
+        }
 
-        result = nslookup("37.27.52.13")
-        assertThat(result, "lookup(37.27.52.13)").contains("nix4.thauvin.us")
+        @Test
+        @Throws(Exception::class)
+        fun lookupByIpAddress() {
+            val result = nslookup("37.27.52.13")
+            assertThat(result, "lookup(37.27.52.13)").contains("nix4.thauvin.us")
+        }
     }
 
     @Test
     @Throws(Exception::class)
-    fun testWhois() {
+    fun whois() {
         val result = whois("17.178.96.59", Lookup.WHOIS_HOST)
         assertThat(result, "whois(17.178.96.59").any { it.contains("Apple Inc.") }
     }

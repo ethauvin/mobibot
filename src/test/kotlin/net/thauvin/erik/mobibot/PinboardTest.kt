@@ -40,30 +40,17 @@ import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
 class PinboardTest : LocalProperties() {
-    private val pinboard = Pinboard()
+    private val apiToken = getProperty("pinboard-api-token")
 
-    @Test
-    fun testPinboard() {
-        val apiToken = getProperty("pinboard-api-token")
-        val url = "https://www.example.com/${(1000..5000).random()}"
-        val ircServer = "irc.test.com"
-        val entry = EntryLink(url, "Test Example", "ErikT", "", "#mobitopia", listOf("test"))
+    private val ircServer = "irc.test.com"
+    private val pinboard = Pinboard().apply { setApiToken(apiToken) }
 
-        pinboard.setApiToken(apiToken)
+    private fun newEntry(): EntryLink {
+        return EntryLink(randomUrl(), "Test Example", "ErikT", "", "#mobitopia", listOf("test"))
+    }
 
-        pinboard.addPin(ircServer, entry)
-        assertTrue(validatePin(apiToken, url = entry.link, entry.title, entry.nick, entry.channel), "addPin")
-
-        entry.link = "https://www.example.com/${(5001..9999).random()}"
-        pinboard.updatePin(ircServer, url, entry)
-        assertTrue(validatePin(apiToken, url = entry.link, ircServer), "updatePin")
-
-        entry.title = "Foo Title"
-        pinboard.updatePin(ircServer, entry.link, entry)
-        assertTrue(validatePin(apiToken, url = entry.link, entry.title), "updatePin(${entry.title}")
-
-        pinboard.deletePin(entry)
-        assertFalse(validatePin(apiToken, url = entry.link), "deletePin")
+    private fun randomUrl(): String {
+        return "https://www.example.com/${(5001..9999).random()}"
     }
 
     private fun validatePin(apiToken: String, url: String, vararg matches: String): Boolean {
@@ -77,5 +64,44 @@ class PinboardTest : LocalProperties() {
         }
 
         return response.contains(url)
+    }
+
+    @Test
+    fun addPin() {
+        val entry = newEntry()
+        pinboard.addPin(ircServer, entry)
+        assertTrue(validatePin(apiToken, url = entry.link, entry.title, entry.nick, entry.channel), "addPin")
+
+        pinboard.deletePin(entry)
+        assertFalse(validatePin(apiToken, url = entry.link, entry.title, entry.nick, entry.channel), "deletePin")
+
+    }
+
+    @Test
+    fun updatePin() {
+        val entry = newEntry()
+        pinboard.addPin(ircServer, entry)
+        assertTrue(validatePin(apiToken, url = entry.link, entry.title, entry.nick, entry.channel), "addPin")
+
+        val url = entry.link
+        entry.link = randomUrl()
+        pinboard.updatePin(ircServer, url, entry)
+        assertTrue(validatePin(apiToken, url = entry.link, ircServer), "updatePin")
+
+        pinboard.deletePin(entry)
+        assertFalse(validatePin(apiToken, url = entry.link, entry.title, entry.nick, entry.channel), "deletePin")
+    }
+
+    @Test
+    fun updatePinTitle() {
+        val entry = newEntry()
+        pinboard.addPin(ircServer, entry)
+        assertTrue(validatePin(apiToken, url = entry.link, entry.title, entry.nick, entry.channel), "addPin")
+
+        pinboard.updatePin(ircServer, entry.link, entry)
+        assertTrue(validatePin(apiToken, url = entry.link, entry.title), "updatePin")
+
+        pinboard.deletePin(entry)
+        assertFalse(validatePin(apiToken, url = entry.link, entry.title, entry.nick, entry.channel), "deletePin")
     }
 }

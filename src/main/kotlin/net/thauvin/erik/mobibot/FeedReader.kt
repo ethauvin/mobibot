@@ -51,23 +51,6 @@ import java.net.URL
 class FeedReader(private val url: String, val event: GenericMessageEvent) : Runnable {
     private val logger: Logger = LoggerFactory.getLogger(FeedsManager::class.java)
 
-    /**
-     * Fetches the Feed's items.
-     */
-    override fun run() {
-        try {
-            readFeed(url).forEach {
-                event.sendMessage("", it)
-            }
-        } catch (e: FeedException) {
-            if (logger.isWarnEnabled) logger.warn("Unable to parse the feed at $url", e)
-            event.sendMessage("An error has occurred while parsing the feed: ${e.message}")
-        } catch (e: IOException) {
-            if (logger.isWarnEnabled) logger.warn("Unable to fetch the feed at $url", e)
-            event.sendMessage("An IO error has occurred while fetching the feed: ${e.message}")
-        }
-    }
-
     companion object {
         @JvmStatic
         @Throws(FeedException::class, IOException::class)
@@ -87,6 +70,23 @@ class FeedReader(private val url: String, val event: GenericMessageEvent) : Runn
                 }
             }
             return messages
+        }
+    }
+
+    /**
+     * Fetches the Feed's items.
+     */
+    override fun run() {
+        try {
+            readFeed(url).forEach {
+                event.sendMessage("", it)
+            }
+        } catch (e: FeedException) {
+            if (logger.isWarnEnabled) logger.warn("Unable to parse the feed at $url", e)
+            event.sendMessage("An error has occurred while parsing the feed: ${e.message}")
+        } catch (e: IOException) {
+            if (logger.isWarnEnabled) logger.warn("Unable to fetch the feed at $url", e)
+            event.sendMessage("An IO error has occurred while fetching the feed: ${e.message}")
         }
     }
 }

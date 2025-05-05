@@ -30,7 +30,7 @@
  */
 package net.thauvin.erik.mobibot.modules
 
-import net.thauvin.erik.mobibot.Utils.capitalise
+import net.thauvin.erik.mobibot.Utils.capitalize
 import net.thauvin.erik.mobibot.Utils.encodeUrl
 import net.thauvin.erik.mobibot.Utils.helpFormat
 import net.thauvin.erik.mobibot.Utils.reader
@@ -49,33 +49,12 @@ import java.io.IOException
 import java.net.URL
 
 /**
- * The StockQuote module.
+ * Retrieves stock quotes from Alpha Vantage.
  */
 class StockQuote : AbstractModule() {
     private val logger: Logger = LoggerFactory.getLogger(StockQuote::class.java)
 
     override val name = "StockQuote"
-
-    /**
-     * Returns the specified stock quote from Alpha Vantage.
-     */
-    override fun commandResponse(channel: String, cmd: String, args: String, event: GenericMessageEvent) {
-        if (args.isNotBlank()) {
-            try {
-                val messages = getQuote(args, properties[API_KEY_PROP])
-                for (msg in messages) {
-                    event.sendMessage(channel, msg)
-                }
-            } catch (e: ModuleException) {
-                if (logger.isWarnEnabled) logger.warn(e.debugMessage, e)
-                e.message?.let {
-                    event.respond(it)
-                }
-            }
-        } else {
-            helpResponse(event)
-        }
-    }
 
     companion object {
         /**
@@ -133,7 +112,7 @@ class StockQuote : AbstractModule() {
             if (apiKey.isNullOrBlank()) {
                 throw ModuleException(
                     "${StockQuote::class.java.name} is disabled.",
-                    "${STOCK_CMD.capitalise()} is disabled. The API key is missing."
+                    "${STOCK_CMD.capitalize()} is disabled. The API key is missing."
                 )
             }
             val messages = mutableListOf<Message>()
@@ -232,5 +211,26 @@ class StockQuote : AbstractModule() {
         help.add("To retrieve a stock quote:")
         help.add(helpFormat("%c $STOCK_CMD <symbol|keywords>"))
         initProperties(API_KEY_PROP)
+    }
+
+    /**
+     * Returns the specified stock quote from Alpha Vantage.
+     */
+    override fun commandResponse(channel: String, cmd: String, args: String, event: GenericMessageEvent) {
+        if (args.isNotBlank()) {
+            try {
+                val messages = getQuote(args, properties[API_KEY_PROP])
+                for (msg in messages) {
+                    event.sendMessage(channel, msg)
+                }
+            } catch (e: ModuleException) {
+                if (logger.isWarnEnabled) logger.warn(e.debugMessage, e)
+                e.message?.let {
+                    event.respond(it)
+                }
+            }
+        } else {
+            helpResponse(event)
+        }
     }
 }

@@ -33,45 +33,122 @@ package net.thauvin.erik.mobibot.commands.links
 
 import assertk.all
 import assertk.assertThat
-import assertk.assertions.contains
-import assertk.assertions.isEqualTo
-import assertk.assertions.isTrue
-import assertk.assertions.size
+import assertk.assertions.*
 import net.thauvin.erik.mobibot.Constants
+import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Nested
 import kotlin.test.Test
 
 class LinksManagerTest {
     private val linksManager = LinksManager()
 
-    @Test
-    fun fetchTitle() {
-        assertThat(linksManager.fetchTitle("https://erik.thauvin.net/"), "fetchTitle(Erik)").contains("Erik's Weblog")
-        assertThat(
-            linksManager.fetchTitle("https://www.google.com/foo"),
-            "fetchTitle(Foo)"
-        ).isEqualTo(Constants.NO_TITLE)
+    @Nested
+    @DisplayName("Fetch Page Title Tests")
+    inner class FetchPageTitleTests {
+        @Test
+        fun fetchPageTitle() {
+            assertThat(linksManager.fetchPageTitle("https://erik.thauvin.net/")).contains("Erik's Weblog")
+        }
+
+        @Test
+        fun fetchPageNoTitle() {
+            assertThat(linksManager.fetchPageTitle("https://www.google.com/foo")).isEqualTo(Constants.NO_TITLE)
+        }
     }
 
-    @Test
-    fun testMatches() {
-        assertThat(linksManager.matches("https://www.example.com/"), "matches(url)").isTrue()
-        assertThat(linksManager.matches("HTTP://erik.thauvin.net/blog/ Erik's Weblog"), "matches(HTTP)").isTrue()
-    }
+    @Nested
+    @DisplayName("Match Tests")
+    inner class MatchTests {
+        @Nested
+        @DisplayName("Link Tests")
+        inner class LinkTests {
+            @Test
+            @Suppress("HttpUrlsUsage")
+            fun matchInsecureLink() {
+                assertThat(linksManager.matches("http://erik.thauvin.net/blog/ Erik's Weblog")).isTrue()
+            }
 
-    @Test
-    fun matchTagKeywordsTest() {
-        linksManager.setProperty(LinksManager.KEYWORDS_PROP, "key1 key2,key3")
-        val tags = mutableListOf<String>()
+            @Test
+            fun matchInvalidProtocol() {
+                assertThat(linksManager.matches("ftp://erik.thauvin.net/blog/")).isFalse()
+            }
 
-        linksManager.matchTagKeywords("Test title with key2", tags)
-        assertThat(tags, "tags").contains("key2")
-        tags.clear()
+            @Test
+            fun matchLink() {
+                assertThat(linksManager.matches("https://erik.thauvin.net/blog/")).isTrue()
+            }
 
-        linksManager.matchTagKeywords("Test key3 title with key1", tags)
-        assertThat(tags, "tags(key1, key3)").all {
-            contains("key1")
-            contains("key3")
-            size().isEqualTo(2)
+            @Test
+            fun matchLinkWithAnchor() {
+                assertThat(linksManager.matches("https://erik.thauvin.net/blog/search?tag=java#foo")).isTrue()
+            }
+
+            @Test
+            fun matchLinkWithParams() {
+                assertThat(linksManager.matches("https://erik.thauvin.net/blog/search?tag=bld&cat=java")).isTrue()
+            }
+
+            @Test
+            fun matchLinkWithSingleParam() {
+                assertThat(linksManager.matches("https://erik.thauvin.net/blog/search?tag=java")).isTrue()
+            }
+
+            @Test
+            fun matchLinkWithTitle() {
+                assertThat(linksManager.matches("https://erik.thauvin.net/blog/ Erik's Weblog")).isTrue()
+            }
+
+            @Test
+            fun matchLinkWithWhitespace() {
+                assertThat(linksManager.matches("https://erik.thauvin.net/blog/   ")).isTrue()
+            }
+
+            @Test
+            fun matchMixedCaseLink() {
+                assertThat(linksManager.matches("https://Erik.Thauvin.Net/blog/")).isTrue()
+            }
+
+            @Test
+            fun matchNonURLText() {
+                assertThat(linksManager.matches("This is just a text string")).isFalse()
+            }
+
+            @Test
+            fun matchNumericURL() {
+                assertThat(linksManager.matches("https://123.456.789.0/")).isTrue()
+            }
+
+            @Test
+            fun matchSpecialCharacterLink() {
+                assertThat(linksManager.matches("https://erik.thauvin.net/blog/search?tag=java&name=%20foo")).isTrue()
+            }
+
+            @Test
+            fun matchUpperCaseLink() {
+                assertThat(linksManager.matches("HTTPS://ERIK.THAUVIN.NET/BLOG/")).isTrue()
+            }
+        }
+
+        @Nested
+        @DisplayName("Tags Parsing Tests")
+        inner class TagsParsingTests {
+            @Test
+            fun matchTagSingleKeyword() {
+                linksManager.setProperty(LinksManager.KEYWORDS_PROP, "key1 key2,key3")
+                val tags = mutableListOf<String>()
+                linksManager.matchTagKeywords("Test title with key2", tags)
+                assertThat(tags, "tags").containsExactly("key2")
+            }
+
+            @Test
+            fun matchTagKeywords() {
+                val tags = mutableListOf("key1", "key3")
+                linksManager.matchTagKeywords("Test key3 title with key1", tags)
+                assertThat(tags, "tags(key1, key3)").all {
+                    containsExactlyInAnyOrder("key1", "key3")
+                    size().isEqualTo(2)
+                }
+            }
         }
     }
 }

@@ -37,7 +37,7 @@ import java.io.Serializable
 import java.util.*
 
 /**
- * The class used to store link entries.
+ * Holds [Entries] link.
  */
 class EntryLink(
     // Link's comments
@@ -90,6 +90,11 @@ class EntryLink(
         tags: List<SyndCategory>
     ) : this(link = link, title = title, nick = nick, channel = channel, date = Date(date.time)) {
         this.tags.addAll(tags)
+    }
+
+    companion object {
+        // Serial version UID
+        private const val serialVersionUID: Long = 1L
     }
 
     /**
@@ -203,11 +208,5 @@ class EntryLink(
     override fun toString(): String {
         return ("EntryLink{channel='$channel', comments=$comments, date=$date, link='$link', login='$login'," +
                 "nick='$nick', tags=$tags, title='$title'}")
-    }
-
-    companion object {
-        // Serial version UID
-        @Suppress("ConstPropertyName")
-        private const val serialVersionUID: Long = 1L
     }
 }

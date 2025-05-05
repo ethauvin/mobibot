@@ -1,12 +1,122 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="EntryPointsManager">
+    <entry_points version="2.0">
+      <entry_point TYPE="field" FQNAME="net.thauvin.erik.mobibot.modules.Calc name" />
+      <entry_point TYPE="field" FQNAME="net.thauvin.erik.mobibot.commands.ChannelFeed help" />
+      <entry_point TYPE="field" FQNAME="net.thauvin.erik.mobibot.commands.links.Comment help" />
+      <entry_point TYPE="field" FQNAME="net.thauvin.erik.mobibot.commands.Cycle help" />
+      <entry_point TYPE="field" FQNAME="net.thauvin.erik.mobibot.commands.Die help" />
+      <entry_point TYPE="field" FQNAME="net.thauvin.erik.mobibot.commands.Info help" />
+      <entry_point TYPE="field" FQNAME="net.thauvin.erik.mobibot.commands.links.LinksManager help" />
+      <entry_point TYPE="field" FQNAME="net.thauvin.erik.mobibot.commands.Me help" />
+      <entry_point TYPE="field" FQNAME="net.thauvin.erik.mobibot.commands.Modules help" />
+      <entry_point TYPE="field" FQNAME="net.thauvin.erik.mobibot.commands.Msg help" />
+      <entry_point TYPE="field" FQNAME="net.thauvin.erik.mobibot.commands.Nick help" />
+      <entry_point TYPE="field" FQNAME="net.thauvin.erik.mobibot.commands.links.Posting help" />
+      <entry_point TYPE="field" FQNAME="net.thauvin.erik.mobibot.commands.Recap help" />
+      <entry_point TYPE="field" FQNAME="net.thauvin.erik.mobibot.commands.Say help" />
+      <entry_point TYPE="field" FQNAME="net.thauvin.erik.mobibot.commands.links.Tags help" />
+      <entry_point TYPE="field" FQNAME="net.thauvin.erik.mobibot.commands.Users help" />
+      <entry_point TYPE="field" FQNAME="net.thauvin.erik.mobibot.commands.Versions help" />
+      <entry_point TYPE="field" FQNAME="net.thauvin.erik.mobibot.commands.links.View help" />
+      <entry_point TYPE="field" FQNAME="net.thauvin.erik.mobibot.commands.ChannelFeed isOpOnly" />
+      <entry_point TYPE="field" FQNAME="net.thauvin.erik.mobibot.commands.links.Comment isOpOnly" />
+      <entry_point TYPE="field" FQNAME="net.thauvin.erik.mobibot.commands.Cycle isOpOnly" />
+      <entry_point TYPE="field" FQNAME="net.thauvin.erik.mobibot.commands.Die isOpOnly" />
+      <entry_point TYPE="field" FQNAME="net.thauvin.erik.mobibot.commands.Ignore isOpOnly" />
+      <entry_point TYPE="field" FQNAME="net.thauvin.erik.mobibot.commands.Info isOpOnly" />
+      <entry_point TYPE="field" FQNAME="net.thauvin.erik.mobibot.commands.links.LinksManager isOpOnly" />
+      <entry_point TYPE="field" FQNAME="net.thauvin.erik.mobibot.commands.Me isOpOnly" />
+      <entry_point TYPE="field" FQNAME="net.thauvin.erik.mobibot.commands.Modules isOpOnly" />
+      <entry_point TYPE="field" FQNAME="net.thauvin.erik.mobibot.commands.Msg isOpOnly" />
+      <entry_point TYPE="field" FQNAME="net.thauvin.erik.mobibot.commands.Nick isOpOnly" />
+      <entry_point TYPE="field" FQNAME="net.thauvin.erik.mobibot.commands.links.Posting isOpOnly" />
+      <entry_point TYPE="field" FQNAME="net.thauvin.erik.mobibot.commands.Recap isOpOnly" />
+      <entry_point TYPE="field" FQNAME="net.thauvin.erik.mobibot.commands.Say isOpOnly" />
+      <entry_point TYPE="field" FQNAME="net.thauvin.erik.mobibot.commands.seen.Seen isOpOnly" />
+      <entry_point TYPE="field" FQNAME="net.thauvin.erik.mobibot.commands.links.Tags isOpOnly" />
+      <entry_point TYPE="field" FQNAME="net.thauvin.erik.mobibot.commands.tell.Tell isOpOnly" />
+      <entry_point TYPE="field" FQNAME="net.thauvin.erik.mobibot.commands.Users isOpOnly" />
+      <entry_point TYPE="field" FQNAME="net.thauvin.erik.mobibot.commands.Versions isOpOnly" />
+      <entry_point TYPE="field" FQNAME="net.thauvin.erik.mobibot.commands.links.View isOpOnly" />
+      <entry_point TYPE="field" FQNAME="net.thauvin.erik.mobibot.modules.WorldTime isPrivateMsgEnabled" />
+      <entry_point TYPE="field" FQNAME="net.thauvin.erik.mobibot.commands.ChannelFeed isPublic" />
+      <entry_point TYPE="field" FQNAME="net.thauvin.erik.mobibot.commands.links.Comment isPublic" />
+      <entry_point TYPE="field" FQNAME="net.thauvin.erik.mobibot.commands.Cycle isPublic" />
+      <entry_point TYPE="field" FQNAME="net.thauvin.erik.mobibot.commands.Die isPublic" />
+      <entry_point TYPE="field" FQNAME="net.thauvin.erik.mobibot.commands.Ignore isPublic" />
+      <entry_point TYPE="field" FQNAME="net.thauvin.erik.mobibot.commands.Info isPublic" />
+      <entry_point TYPE="field" FQNAME="net.thauvin.erik.mobibot.commands.links.LinksManager isPublic" />
+      <entry_point TYPE="field" FQNAME="net.thauvin.erik.mobibot.commands.Me isPublic" />
+      <entry_point TYPE="field" FQNAME="net.thauvin.erik.mobibot.commands.Modules isPublic" />
+      <entry_point TYPE="field" FQNAME="net.thauvin.erik.mobibot.commands.Msg isPublic" />
+      <entry_point TYPE="field" FQNAME="net.thauvin.erik.mobibot.commands.Nick isPublic" />
+      <entry_point TYPE="field" FQNAME="net.thauvin.erik.mobibot.commands.links.Posting isPublic" />
+      <entry_point TYPE="field" FQNAME="net.thauvin.erik.mobibot.commands.Recap isPublic" />
+      <entry_point TYPE="field" FQNAME="net.thauvin.erik.mobibot.commands.Say isPublic" />
+      <entry_point TYPE="field" FQNAME="net.thauvin.erik.mobibot.commands.seen.Seen isPublic" />
+      <entry_point TYPE="field" FQNAME="net.thauvin.erik.mobibot.commands.links.Tags isPublic" />
+      <entry_point TYPE="field" FQNAME="net.thauvin.erik.mobibot.commands.tell.Tell isPublic" />
+      <entry_point TYPE="field" FQNAME="net.thauvin.erik.mobibot.commands.Users isPublic" />
+      <entry_point TYPE="field" FQNAME="net.thauvin.erik.mobibot.commands.Versions isPublic" />
+      <entry_point TYPE="field" FQNAME="net.thauvin.erik.mobibot.commands.links.View isPublic" />
+      <entry_point TYPE="field" FQNAME="net.thauvin.erik.mobibot.commands.ChannelFeed isVisible" />
+      <entry_point TYPE="field" FQNAME="net.thauvin.erik.mobibot.commands.links.Comment isVisible" />
+      <entry_point TYPE="field" FQNAME="net.thauvin.erik.mobibot.commands.Cycle isVisible" />
+      <entry_point TYPE="field" FQNAME="net.thauvin.erik.mobibot.commands.Die isVisible" />
+      <entry_point TYPE="field" FQNAME="net.thauvin.erik.mobibot.commands.Ignore isVisible" />
+      <entry_point TYPE="field" FQNAME="net.thauvin.erik.mobibot.commands.Info isVisible" />
+      <entry_point TYPE="field" FQNAME="net.thauvin.erik.mobibot.commands.links.LinksManager isVisible" />
+      <entry_point TYPE="field" FQNAME="net.thauvin.erik.mobibot.commands.Me isVisible" />
+      <entry_point TYPE="field" FQNAME="net.thauvin.erik.mobibot.commands.Modules isVisible" />
+      <entry_point TYPE="field" FQNAME="net.thauvin.erik.mobibot.commands.Msg isVisible" />
+      <entry_point TYPE="field" FQNAME="net.thauvin.erik.mobibot.commands.Nick isVisible" />
+      <entry_point TYPE="field" FQNAME="net.thauvin.erik.mobibot.commands.links.Posting isVisible" />
+      <entry_point TYPE="field" FQNAME="net.thauvin.erik.mobibot.commands.Recap isVisible" />
+      <entry_point TYPE="field" FQNAME="net.thauvin.erik.mobibot.commands.Say isVisible" />
+      <entry_point TYPE="field" FQNAME="net.thauvin.erik.mobibot.commands.seen.Seen isVisible" />
+      <entry_point TYPE="field" FQNAME="net.thauvin.erik.mobibot.commands.links.Tags isVisible" />
+      <entry_point TYPE="field" FQNAME="net.thauvin.erik.mobibot.commands.tell.Tell isVisible" />
+      <entry_point TYPE="field" FQNAME="net.thauvin.erik.mobibot.commands.Users isVisible" />
+      <entry_point TYPE="field" FQNAME="net.thauvin.erik.mobibot.commands.Versions isVisible" />
+      <entry_point TYPE="field" FQNAME="net.thauvin.erik.mobibot.commands.links.View isVisible" />
+      <entry_point TYPE="field" FQNAME="net.thauvin.erik.mobibot.commands.ChannelFeed name" />
+      <entry_point TYPE="field" FQNAME="net.thauvin.erik.mobibot.commands.links.Comment name" />
+      <entry_point TYPE="field" FQNAME="net.thauvin.erik.mobibot.modules.CryptoPrices name" />
+      <entry_point TYPE="field" FQNAME="net.thauvin.erik.mobibot.modules.CurrencyConverter name" />
+      <entry_point TYPE="field" FQNAME="net.thauvin.erik.mobibot.modules.Dice name" />
+      <entry_point TYPE="field" FQNAME="net.thauvin.erik.mobibot.commands.Die name" />
+      <entry_point TYPE="field" FQNAME="net.thauvin.erik.mobibot.modules.GoogleSearch name" />
+      <entry_point TYPE="field" FQNAME="net.thauvin.erik.mobibot.modules.Joke name" />
+      <entry_point TYPE="field" FQNAME="net.thauvin.erik.mobibot.commands.links.LinksManager name" />
+      <entry_point TYPE="field" FQNAME="net.thauvin.erik.mobibot.modules.Lookup name" />
+      <entry_point TYPE="field" FQNAME="net.thauvin.erik.mobibot.modules.Mastodon name" />
+      <entry_point TYPE="field" FQNAME="net.thauvin.erik.mobibot.modules.Ping name" />
+      <entry_point TYPE="field" FQNAME="net.thauvin.erik.mobibot.commands.links.Posting name" />
+      <entry_point TYPE="field" FQNAME="net.thauvin.erik.mobibot.modules.RockPaperScissors name" />
+      <entry_point TYPE="field" FQNAME="net.thauvin.erik.mobibot.modules.StockQuote name" />
+      <entry_point TYPE="field" FQNAME="net.thauvin.erik.mobibot.commands.links.Tags name" />
+      <entry_point TYPE="field" FQNAME="net.thauvin.erik.mobibot.modules.War name" />
+      <entry_point TYPE="field" FQNAME="net.thauvin.erik.mobibot.modules.Weather2 name" />
+      <entry_point TYPE="field" FQNAME="net.thauvin.erik.mobibot.modules.WolframAlpha name" />
+      <entry_point TYPE="field" FQNAME="net.thauvin.erik.mobibot.modules.WorldTime name" />
+    </entry_points>
     <pattern value="net.thauvin.erik.MobibotBuild" method="deploy" />
     <pattern value="net.thauvin.erik.MobibotBuild" method="jacoco" />
     <pattern value="net.thauvin.erik.MobibotBuild" />
     <pattern value="net.thauvin.erik.MobibotBuild" method="detekt" />
     <pattern value="net.thauvin.erik.MobibotBuild" method="detektBaseline" />
     <pattern value="net.thauvin.erik.MobibotBuild" method="rootPom" />
+    <pattern value="net.thauvin.erik.mobibot.Addons" />
+    <pattern value="net.thauvin.erik.mobibot.Addons" method="match" />
+    <pattern value="net.thauvin.erik.mobibot.modules.Calc" />
+    <pattern value="net.thauvin.erik.mobibot.modules.Calc.Companion" />
+    <pattern value="net.thauvin.erik.mobibot.modules.Mastodon" method="formatEntry" />
+    <pattern value="net.thauvin.erik.mobibot.Mobibot.Companion" method="main" />
+    <pattern value="net.thauvin.erik.mobibot.DisableOnCi" />
+    <pattern value="net.thauvin.erik.mobibot.modules.ModuleExceptionTest.Companion" method="moduleExceptions" />
+    <pattern value="net.thauvin.erik.mobibot.modules.WolframAlphaTest.Companion" method="queries" />
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_17" project-jdk-name="17" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build" />

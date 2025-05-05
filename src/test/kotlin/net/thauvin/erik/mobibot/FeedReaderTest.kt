@@ -37,39 +37,68 @@ import assertk.assertions.*
 import com.rometools.rome.io.FeedException
 import net.thauvin.erik.mobibot.FeedReader.Companion.readFeed
 import net.thauvin.erik.mobibot.msg.Message
+import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Nested
 import java.io.IOException
 import java.net.MalformedURLException
 import java.net.UnknownHostException
 import kotlin.test.Test
 
 class FeedReaderTest {
-    @Test
-    fun readFeedTest() {
-        var messages = readFeed("https://feeds.thauvin.net/ethauvin")
-        assertThat(messages, "messages").all {
-            size().isEqualTo(10)
-            index(1).prop(Message::msg).contains("erik.thauvin.net")
+    @Nested
+    @DisplayName("Failure Tests")
+    inner class FailureTests {
+        @Test
+        fun invalidFeed() {
+            assertFailure { readFeed("https://www.example.com") }.isInstanceOf(FeedException::class.java)
         }
 
-        messages = readFeed("https://lorem-rss.herokuapp.com/feed?length=0")
-        assertThat(messages, "messages").index(0).prop(Message::msg).contains("nothing")
+        @Test
+        fun invalidHost() {
+            assertFailure { readFeed("https://www.examplesfoo.com/") }.isInstanceOf(UnknownHostException::class.java)
+        }
 
-        messages = readFeed("https://lorem-rss.herokuapp.com/feed?length=84", 42)
-        assertThat(messages, "messages").size().isEqualTo(84)
-        messages.forEachIndexed { i, m ->
-            if (i % 2 == 0) {
-                assertThat(m, "messages($i)").prop(Message::msg).startsWith("Lorem ipsum")
-            } else {
-                assertThat(m, "messages($i)").prop(Message::msg).contains("http://example.com/test/")
+        @Test
+        fun invalidLocation() {
+            assertFailure { readFeed("https://www.thauvin.net/foo") }.isInstanceOf(IOException::class.java)
+        }
+
+        @Test
+        fun invalidUrl() {
+            assertFailure { readFeed("blah") }.isInstanceOf(MalformedURLException::class.java)
+        }
+    }
+
+    @Nested
+    @DisplayName("Read Feed Tests")
+    inner class ReadFeedTests {
+        @Test
+        fun readEmptyFeed() {
+            val messages = readFeed("https://lorem-rss.herokuapp.com/feed?length=0")
+            assertThat(messages, "messages").index(0).prop(Message::msg).contains("nothing")
+        }
+
+        @Test
+        fun readFeed() {
+            val messages = readFeed("https://feeds.thauvin.net/ethauvin")
+            assertThat(messages, "messages").all {
+                size().isEqualTo(10)
+                index(1).prop(Message::msg).contains("erik.thauvin.net")
             }
         }
 
-        assertFailure { readFeed("blah") }.isInstanceOf(MalformedURLException::class.java)
-
-        assertFailure { readFeed("https://www.example.com") }.isInstanceOf(FeedException::class.java)
-
-        assertFailure { readFeed("https://www.thauvin.net/foo") }.isInstanceOf(IOException::class.java)
-
-        assertFailure { readFeed("https://www.examplesfoo.com/") }.isInstanceOf(UnknownHostException::class.java)
+        @Test
+        fun readThenValidateFeedContent() {
+            val messages = readFeed("https://lorem-rss.herokuapp.com/feed?length=84", 42)
+            assertThat(messages, "messages").size().isEqualTo(84)
+            messages.forEachIndexed { i, m ->
+                if (i % 2 == 0) {
+                    assertThat(m, "messages($i)").prop(Message::msg).startsWith("Lorem ipsum")
+                } else {
+                    @Suppress("HttpUrlsUsage")
+                    assertThat(m, "messages($i)").prop(Message::msg).contains("http://example.com/test/")
+                }
+            }
+        }
     }
 }

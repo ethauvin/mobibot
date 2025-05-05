@@ -367,6 +367,16 @@ class WorldTime : AbstractModule() {
         }
     }
 
+    init {
+        with(help) {
+            add("To display a country's current date/time:")
+            add(helpFormat("%c $TIME_CMD [<country code or zone>]"))
+            add("For a listing of the supported countries/zones:")
+            add(helpFormat("%c $TIME_CMD $ZONES_ARGS"))
+        }
+        commands.add(TIME_CMD)
+    }
+
     override fun commandResponse(channel: String, cmd: String, args: String, event: GenericMessageEvent) {
         if (args.equals(ZONES_ARGS, true)) {
             event.sendMessage("The supported countries/zones are: ")
@@ -377,14 +387,4 @@ class WorldTime : AbstractModule() {
     }
 
     override val isPrivateMsgEnabled = true
-
-    init {
-        with(help) {
-            add("To display a country's current date/time:")
-            add(helpFormat("%c $TIME_CMD [<country code or zone>]"))
-            add("For a listing of the supported countries/zones:")
-            add(helpFormat("%c $TIME_CMD $ZONES_ARGS"))
-        }
-        commands.add(TIME_CMD)
-    }
 }

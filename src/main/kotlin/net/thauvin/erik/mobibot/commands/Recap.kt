@@ -38,6 +38,9 @@ import org.pircbotx.hooks.types.GenericMessageEvent
 import java.time.Clock
 import java.time.LocalDateTime
 
+/**
+ * Lists the last 10 public channel messages.
+ */
 class Recap : AbstractCommand() {
     override val name = "recap"
     override val help = listOf(

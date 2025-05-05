@@ -39,6 +39,8 @@ import net.thauvin.erik.mobibot.entries.EntriesUtils.printComment
 import net.thauvin.erik.mobibot.entries.EntriesUtils.printLink
 import net.thauvin.erik.mobibot.entries.EntriesUtils.printTags
 import net.thauvin.erik.mobibot.entries.EntriesUtils.toLinkLabel
+import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Nested
 import kotlin.test.Test
 
 class EntriesUtilsTest {
@@ -58,34 +60,38 @@ class EntriesUtilsTest {
         }
     }
 
-    @Test
-    fun printCommentTest() {
-        assertThat(printComment(0, 0, comment)).isEqualTo("${Constants.LINK_CMD}1.1: [nick] comment")
-    }
-
-    @Test
-    fun printLinkTest() {
-        for (i in links.indices) {
-            assertThat(
-                printLink(i - 1, links[i]), "link $i"
-            ).isEqualTo("L$i: [Skynx$i] \u0002Mobitopia$i\u0002 ( \u000303https://www.mobitopia.org/$i\u000F )")
+    @Nested
+    @DisplayName("Print Tests")
+    inner class PrintTests {
+        @Test
+        fun printComment() {
+            assertThat(printComment(0, 0, comment)).isEqualTo("${Constants.LINK_CMD}1.1: [nick] comment")
         }
 
-        assertThat(links.first().addComment(comment), "addComment()").isEqualTo(0)
-        assertThat(printLink(0, links.first(), isView = true), "printLink(isView=true)").contains("[+1]")
-    }
+        @Test
+        fun printLink() {
+            for (i in links.indices) {
+                assertThat(
+                    printLink(i - 1, links[i]), "link $i"
+                ).isEqualTo("L$i: [Skynx$i] \u0002Mobitopia$i\u0002 ( \u000303https://www.mobitopia.org/$i\u000F )")
+            }
 
-    @Test
-    fun printTagsTest() {
-        for (i in links.indices) {
-            assertThat(
-                printTags(i - 1, links[i]), "tag $i"
-            ).isEqualTo("L${i}T: tag1, tag2, tag3, tag4, tag5")
+            assertThat(links.first().addComment(comment), "addComment()").isEqualTo(0)
+            assertThat(printLink(0, links.first(), isView = true), "printLink(isView=true)").contains("[+1]")
+        }
+
+        @Test
+        fun printTags() {
+            for (i in links.indices) {
+                assertThat(
+                    printTags(i - 1, links[i]), "tag $i"
+                ).isEqualTo("L${i}T: tag1, tag2, tag3, tag4, tag5")
+            }
         }
     }
 
     @Test
-    fun toLinkLabelTest() {
+    fun toLinkLabel() {
         assertThat(1.toLinkLabel()).isEqualTo("${Constants.LINK_CMD}2")
     }
 }

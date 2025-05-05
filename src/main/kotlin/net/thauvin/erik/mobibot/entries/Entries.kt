@@ -33,6 +33,9 @@ package net.thauvin.erik.mobibot.entries
 
 import net.thauvin.erik.mobibot.Utils.today
 
+/**
+ * Holds [EntryLink] entries.
+ */
 class Entries(
     var channel: String = "",
     var ircServer: String = "",

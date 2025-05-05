@@ -38,14 +38,14 @@ import kotlin.test.Test
 
 class PingTest {
     @Test
-    fun testPingsArray() {
-        assertThat(Ping.PINGS, "Ping.PINGS").isNotEmpty()
-    }
-
-    @Test
-    fun testRandomPing() {
+    fun `Get a radon ping`() {
         for (i in 0..9) {
             assertThat(Ping.PINGS, "Ping.PINGS[$i]").contains(randomPing())
         }
+    }
+
+    @Test
+    fun `Pings array should not be empty`() {
+        assertThat(Ping.PINGS, "Ping.PINGS").isNotEmpty()
     }
 }

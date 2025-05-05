@@ -33,9 +33,11 @@ package net.thauvin.erik.mobibot.commands.seen
 
 import java.io.Serializable
 
+/**
+ * Holds a [Seen] nickname.
+ */
 data class SeenNick(val nick: String, val lastSeen: Long) : Serializable {
     companion object {
-        @Suppress("ConstPropertyName")
         private const val serialVersionUID = 1L
     }
 }

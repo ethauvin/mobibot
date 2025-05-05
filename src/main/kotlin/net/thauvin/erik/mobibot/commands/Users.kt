@@ -36,6 +36,9 @@ import net.thauvin.erik.mobibot.Utils.helpFormat
 import net.thauvin.erik.mobibot.Utils.sendList
 import org.pircbotx.hooks.types.GenericMessageEvent
 
+/**
+ * Lists the users present on the channel.
+ */
 class Users : AbstractCommand() {
     override val name = "users"
     override val help = listOf("To list the users present on the channel:", helpFormat("%c $name"))

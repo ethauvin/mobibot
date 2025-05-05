@@ -37,47 +37,35 @@ import net.thauvin.erik.mobibot.Utils.sendMessage
 import org.pircbotx.hooks.types.GenericMessageEvent
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import java.util.*
 
+/**
+ * Allows user to interact with Gemini.
+ */
 class Gemini2 : AbstractModule() {
     private val logger: Logger = LoggerFactory.getLogger(Gemini2::class.java)
 
     override val name = GEMINI_NAME
 
-    override fun commandResponse(channel: String, cmd: String, args: String, event: GenericMessageEvent) {
-        if (args.isNotBlank()) {
-            try {
-                val answer = chat(
-                    args.trim(),
-                    properties[GEMINI_API_KEY],
-                    properties.getOrDefault(MAX_TOKENS_PROP, "1024").toInt()
-                )
-                if (!answer.isNullOrEmpty()) {
-                    event.sendMessage(answer)
-                } else {
-                    event.respond("$name is stumped.")
-                }
-            } catch (e: ModuleException) {
-                if (logger.isWarnEnabled) logger.warn(e.debugMessage, e)
-                e.message?.let {
-                    event.respond(it)
-                }
-            }
-        } else {
-            helpResponse(event)
-        }
-    }
-
     companion object {
+        /**
+         * API Key error message
+         */
+        const val API_KEY_ERROR = "Please specify an API key."
+
+        /**
+         * The API key
+         */
+        const val GEMINI_API_KEY = "gemini-api-key"
+
         /**
          * The service name.
          */
         const val GEMINI_NAME = "Gemini"
 
         /**
-         * The API key
+         * IO error message
          */
-        const val GEMINI_API_KEY = "gemini-api-key"
+        const val IO_ERROR = "An IO error has occurred while conversing with $GEMINI_NAME."
 
         /**
          * The max number of output tokens property.
@@ -104,14 +92,10 @@ class Gemini2 : AbstractModule() {
 
                     return gemini.generate(query)
                 } catch (e: Exception) {
-                    throw ModuleException(
-                        "$GEMINI_CMD($query): IO",
-                        "An IO error has occurred while conversing with ${GEMINI_NAME}.",
-                        e
-                    )
+                    throw ModuleException("$GEMINI_CMD($query): IO", IO_ERROR, e)
                 }
             } else {
-                throw ModuleException("${GEMINI_CMD}($query)", "No $GEMINI_NAME Project ID or Location specified.")
+                throw ModuleException("${GEMINI_CMD}($query)", API_KEY_ERROR)
             }
         }
     }
@@ -126,5 +110,29 @@ class Gemini2 : AbstractModule() {
             add(Utils.helpFormat("%c $GEMINI_CMD how do I make an HTTP request in Javascript?"))
         }
         initProperties(GEMINI_API_KEY, MAX_TOKENS_PROP)
+    }
+
+    override fun commandResponse(channel: String, cmd: String, args: String, event: GenericMessageEvent) {
+        if (args.isNotBlank()) {
+            try {
+                val answer = chat(
+                    args.trim(),
+                    properties[GEMINI_API_KEY],
+                    properties.getOrDefault(MAX_TOKENS_PROP, "1024").toInt()
+                )
+                if (!answer.isNullOrEmpty()) {
+                    event.sendMessage(answer)
+                } else {
+                    event.respond("$name is stumped.")
+                }
+            } catch (e: ModuleException) {
+                if (logger.isWarnEnabled) logger.warn(e.debugMessage, e)
+                e.message?.let {
+                    event.respond(it)
+                }
+            }
+        } else {
+            helpResponse(event)
+        }
     }
 }

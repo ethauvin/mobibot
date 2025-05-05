@@ -48,7 +48,7 @@ import org.pircbotx.hooks.types.GenericMessageEvent
 import org.pircbotx.hooks.types.GenericUserEvent
 
 /**
- * The `Tell` command.
+ * Queues a message to be sent to someone when they join or are active on the channel.
  */
 class Tell(private val serialObject: String) : AbstractCommand() {
     // Messages queue

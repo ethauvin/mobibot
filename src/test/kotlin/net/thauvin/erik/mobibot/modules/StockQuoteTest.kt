@@ -42,34 +42,15 @@ import net.thauvin.erik.mobibot.msg.Message
 import kotlin.test.Test
 
 class StockQuoteTest : LocalProperties() {
+    private val apiKey = getProperty(StockQuote.API_KEY_PROP)
+
     private fun buildMatch(label: String): String {
         return "${label}:[ ]+[0-9.]+".prependIndent()
     }
 
-    @Test
-    @Throws(ModuleException::class)
-    fun testGetQuote() {
-        val apiKey = getProperty(StockQuote.API_KEY_PROP)
+    private fun getSanitizedQuote(symbol: String, apiKey: String): List<Message> {
         try {
-            var symbol = "apple inc"
-            val messages = getQuote(symbol, apiKey)
-            assertThat(messages, "response not empty").isNotEmpty()
-            assertThat(messages, "getQuote($symbol)").index(0).prop(Message::msg).matches("Symbol: AAPL .*".toRegex())
-            assertThat(messages, "getQuote($symbol)").index(1).prop(Message::msg).matches(buildMatch("Price").toRegex())
-            assertThat(messages, "getQuote($symbol)").index(2).prop(Message::msg)
-                .matches(buildMatch("Previous").toRegex())
-            assertThat(messages, "getQuote($symbol)").index(3).prop(Message::msg).matches(buildMatch("Open").toRegex())
-
-            symbol = "blahfoo"
-            assertThat(getQuote(symbol, apiKey).first(), "getQuote($symbol)").all {
-                isInstanceOf(ErrorMessage::class.java)
-                prop(Message::msg).isEqualTo(StockQuote.INVALID_SYMBOL)
-            }
-            assertThat(getQuote("", "apikey").first(), "getQuote(empty)").all {
-                isInstanceOf(ErrorMessage::class.java)
-                prop(Message::msg).isEqualTo(StockQuote.INVALID_SYMBOL)
-            }
-            assertFailure { getQuote("test", "") }.isInstanceOf(ModuleException::class.java).hasNoCause()
+            return getQuote(symbol, apiKey)
         } catch (e: ModuleException) {
             // Avoid displaying api keys in CI logs
             if ("true" == System.getenv("CI")) {
@@ -77,6 +58,58 @@ class StockQuoteTest : LocalProperties() {
             } else {
                 throw e
             }
+        }
+    }
+
+    @Test
+    @Throws(ModuleException::class)
+    fun `API key should not be empty`() {
+        assertFailure { getSanitizedQuote("test", "") }.isInstanceOf(ModuleException::class.java)
+            .messageContains("disabled")
+    }
+
+    @Test
+    @Throws(ModuleException::class)
+    fun `Symbol should not be empty`() {
+        assertThat(getSanitizedQuote("", "apikey").first(), "getQuote(empty)").all {
+            isInstanceOf(ErrorMessage::class.java)
+            prop(Message::msg).isEqualTo(StockQuote.INVALID_SYMBOL)
+        }
+    }
+
+    @Test
+    @Throws(ModuleException::class)
+    fun `Get stock quote for Apple`() {
+        val symbol = "apple inc"
+        val messages = getSanitizedQuote(symbol, apiKey)
+        assertThat(messages, "response not empty").isNotEmpty()
+        assertThat(messages, "getQuote($symbol)").index(0).prop(Message::msg)
+            .matches("Symbol: AAPL .*".toRegex())
+        assertThat(messages, "getQuote($symbol)").index(1).prop(Message::msg)
+            .matches(buildMatch("Price").toRegex())
+        assertThat(messages, "getQuote($symbol)").index(2).prop(Message::msg)
+            .matches(buildMatch("Previous").toRegex())
+        assertThat(messages, "getQuote($symbol)").index(3).prop(Message::msg)
+            .matches(buildMatch("Open").toRegex())
+    }
+
+    @Test
+    @Throws(ModuleException::class)
+    fun `Get stock quote for Google`() {
+        val symbol = "goog"
+        val messages = getSanitizedQuote(symbol, apiKey)
+        assertThat(messages, "response not empty").isNotEmpty()
+        assertThat(messages, "getQuote($symbol)").index(0).prop(Message::msg)
+            .matches("Symbol: GOOG .*".toRegex())
+    }
+
+    @Test
+    @Throws(ModuleException::class)
+    fun `Invalid symbol should throw exception`() {
+        val symbol = "foobar"
+        assertThat(getSanitizedQuote(symbol, apiKey).first(), "getQuote($symbol)").all {
+            isInstanceOf(ErrorMessage::class.java)
+            prop(Message::msg).isEqualTo(StockQuote.INVALID_SYMBOL)
         }
     }
 }

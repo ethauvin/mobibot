@@ -34,17 +34,57 @@ package net.thauvin.erik.mobibot.modules
 import assertk.assertThat
 import assertk.assertions.isEqualTo
 import net.thauvin.erik.mobibot.modules.RockPaperScissors.Companion.winLoseOrDraw
+import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Nested
 import kotlin.test.Test
 
 class RockPaperScissorsTest {
-    @Test
-    fun testWinLoseOrDraw() {
-        assertThat(winLoseOrDraw("scissors", "paper"), "scissors vs. paper").isEqualTo("win")
-        assertThat(winLoseOrDraw("paper", "rock"), "paper vs. rock").isEqualTo("win")
-        assertThat(winLoseOrDraw("rock", "scissors"), "rock vs. scissors").isEqualTo("win")
-        assertThat(winLoseOrDraw("paper", "scissors"), "paper vs. scissors").isEqualTo("lose")
-        assertThat(winLoseOrDraw("rock", "paper"), "rock vs. paper").isEqualTo("lose")
-        assertThat(winLoseOrDraw("scissors", "rock"), "scissors vs. rock").isEqualTo("lose")
-        assertThat(winLoseOrDraw("scissors", "scissors"), "scissors vs. scissors").isEqualTo("draw")
+    @Nested
+    @DisplayName("Win, Lose or Draw Tests")
+    inner class WinLoseOrDrawTests {
+        @Test
+        fun `Paper versus Paper draws`() {
+            assertThat(winLoseOrDraw("paper", "paper")).isEqualTo("draw")
+        }
+
+        @Test
+        fun `Paper versus Rock wins`() {
+            assertThat(winLoseOrDraw("paper", "rock")).isEqualTo("win")
+        }
+
+        @Test
+        fun `Paper versus Scissors loses`() {
+            assertThat(winLoseOrDraw("paper", "scissors")).isEqualTo("lose")
+        }
+
+        @Test
+        fun `Rock versus Paper loses`() {
+            assertThat(winLoseOrDraw("rock", "paper")).isEqualTo("lose")
+        }
+
+        @Test
+        fun `Rock versus Rock draws`() {
+            assertThat(winLoseOrDraw("rock", "rock")).isEqualTo("draw")
+        }
+
+        @Test
+        fun `Rock versus Scissors wins`() {
+            assertThat(winLoseOrDraw("rock", "scissors")).isEqualTo("win")
+        }
+
+        @Test
+        fun `Scissors versus Paper wins`() {
+            assertThat(winLoseOrDraw("scissors", "paper")).isEqualTo("win")
+        }
+
+        @Test
+        fun `Scissors versus Rock loses`() {
+            assertThat(winLoseOrDraw("scissors", "rock")).isEqualTo("lose")
+        }
+
+        @Test
+        fun `Scissors versus Scissors draws`() {
+            assertThat(winLoseOrDraw("scissors", "scissors")).isEqualTo("draw")
+        }
     }
 }

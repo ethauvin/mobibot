@@ -41,6 +41,12 @@ import net.thauvin.erik.mobibot.entries.EntriesUtils
 import net.thauvin.erik.mobibot.entries.EntryLink
 import org.pircbotx.hooks.types.GenericMessageEvent
 
+/**
+ * Manages tags associated with a specific link entry.
+ *
+ * Allows users to modify or view tags associated with a link. Users can only change tags for their own links unless
+ * they are channel operators.
+ */
 class Tags : AbstractCommand() {
     override val name = COMMAND
     override val help = listOf(
@@ -54,6 +60,7 @@ class Tags : AbstractCommand() {
     companion object {
         const val COMMAND = "tags"
     }
+
 
     override fun commandResponse(channel: String, args: String, event: GenericMessageEvent) {
         val cmds = args.substring(1).split("${Constants.TAG_CMD}:", limit = 2)

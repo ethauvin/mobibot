@@ -47,7 +47,7 @@ class TellMessageTest {
     }
 
     @Test
-    fun testTellMessage() {
+    fun validateTellMessage() {
         val message = "Test message."
         val recipient = "recipient"
         val sender = "sender"

@@ -34,9 +34,6 @@ import org.junit.jupiter.api.extension.ExtendWith
 
 /**
  * Disables tests on CI annotation.
- *
- * @author [Erik C. Thauvin](https://erik.thauvin.net/)
- * @since 1.0
  */
 @Target(AnnotationTarget.TYPE, AnnotationTarget.FUNCTION)
 @Retention(AnnotationRetention.RUNTIME)

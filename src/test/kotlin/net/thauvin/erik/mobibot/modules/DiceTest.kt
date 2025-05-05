@@ -35,19 +35,64 @@ package net.thauvin.erik.mobibot.modules
 import assertk.assertThat
 import assertk.assertions.isEqualTo
 import assertk.assertions.matches
+import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Nested
+import org.junit.jupiter.api.RepeatedTest
+import kotlin.random.Random
 import kotlin.test.Test
 
 class DiceTest {
-    @Test
-    fun testRoll() {
-        assertThat(Dice.roll(1, 1), "roll(1d1)").isEqualTo("\u00021\u0002")
-        assertThat(Dice.roll(2, 1), "roll(2d1)")
-            .isEqualTo("\u00021\u0002 + \u00021\u0002 = \u00022\u0002")
-        assertThat(Dice.roll(5, 1), "roll(5d1)")
-            .isEqualTo("\u00021\u0002 + \u00021\u0002 + \u00021\u0002 + \u00021\u0002 + \u00021\u0002 = \u00025\u0002")
-        assertThat(Dice.roll(2, 6), "roll(2d6)")
-            .matches("\u0002[1-6]\u0002 \\+ \u0002[1-6]\u0002 = \u0002[1-9][0-2]?\u0002".toRegex())
-        assertThat(Dice.roll(3, 7), "roll(3d7)")
-            .matches("\u0002[1-7]\u0002 \\+ \u0002[1-7]\u0002 \\+ \u0002[1-7]\u0002 = \u0002\\d{1,2}\u0002".toRegex())
+    @Nested
+    @DisplayName("Roll Tests")
+    inner class RollTests {
+        @Test
+        fun `Roll 1 die with 1 side`() {
+            assertThat(Dice.roll(1, 1)).isEqualTo("\u00021\u0002")
+        }
+
+        @Test
+        fun `Roll 1 die with 6 sides`() {
+            assertThat(Dice.roll(1, 6)).matches("\u0002[1-6]\u0002".toRegex())
+        }
+
+        @RepeatedTest(5)
+        fun `Roll 1 die with random sides`() {
+            assertThat(Dice.roll(1, Random.nextInt(1, 11))).matches("\u0002([1-9]|10)\u0002".toRegex())
+        }
+
+        @Test
+        fun `Roll 2 dice with 1 side`() {
+            assertThat(Dice.roll(2, 1)).isEqualTo("\u00021\u0002 + \u00021\u0002 = \u00022\u0002")
+        }
+
+        @Test
+        fun `Roll 2 dice with 6 sides`() {
+            assertThat(Dice.roll(2, 6))
+                .matches("\u0002[1-6]\u0002 \\+ \u0002[1-6]\u0002 = \u0002[1-9][0-2]?\u0002".toRegex())
+        }
+
+        @Test
+        fun `Roll 3 dice with 1 side`() {
+            assertThat(Dice.roll(4, 1))
+                .isEqualTo("\u00021\u0002 + \u00021\u0002 + \u00021\u0002 + \u00021\u0002 = \u00024\u0002")
+        }
+
+        @Test
+        fun `Roll 3 dice with 7 sides`() {
+            assertThat(Dice.roll(3, 7))
+                .matches(
+                    "\u0002[1-7]\u0002 \\+ \u0002[1-7]\u0002 \\+ \u0002[1-7]\u0002 = \u0002\\d{1,2}\u0002"
+                        .toRegex()
+                )
+        }
+
+        @RepeatedTest(3)
+        fun `Roll 3 dice with random sides`() {
+            assertThat(Dice.roll(3, Random.nextInt(1, 6)))
+                .matches(
+                    "\u0002[1-5]\u0002 \\+ \u0002[1-5]\u0002 \\+ \u0002[1-5]\u0002 = \u0002\\d{1,2}\u0002"
+                        .toRegex()
+                )
+        }
     }
 }

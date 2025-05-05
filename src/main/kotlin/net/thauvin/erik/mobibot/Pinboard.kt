@@ -40,7 +40,7 @@ import java.time.temporal.ChronoUnit
 import java.util.*
 
 /**
- * Handles posts to pinboard.in.
+ * Handles posts to `pinboard.in`.
  */
 class Pinboard {
     private val poster = PinboardPoster()
@@ -57,13 +57,6 @@ class Pinboard {
     }
 
     /**
-     * Sets the pinboard API token.
-     */
-    fun setApiToken(apiToken: String) {
-        poster.apiToken = apiToken
-    }
-
-    /**
      * Deletes a pin.
      */
     fun deletePin(entry: EntryLink) {
@@ -71,6 +64,13 @@ class Pinboard {
             poster.deletePin(entry.link)
         }
 
+    }
+
+    /**
+     * Sets the pinboard API token.
+     */
+    fun setApiToken(apiToken: String) {
+        poster.apiToken = apiToken
     }
 
     /**
@@ -88,15 +88,6 @@ class Pinboard {
     }
 
     /**
-     * Formats a date to a UTC timestamp.
-     */
-    private fun Date.toTimestamp(): String {
-        return ZonedDateTime.ofInstant(
-            toInstant().truncatedTo(ChronoUnit.SECONDS), ZoneId.systemDefault()
-        ).format(DateTimeFormatter.ISO_INSTANT)
-    }
-
-    /**
      * Formats the tags for pinboard.
      */
     private fun EntryLink.formatTags(): String {
@@ -108,6 +99,15 @@ class Pinboard {
      */
     private fun EntryLink.postedBy(ircServer: String): String {
         return "Posted by $nick on $channel ( $ircServer )"
+    }
+
+    /**
+     * Formats a date to a UTC timestamp.
+     */
+    private fun Date.toTimestamp(): String {
+        return ZonedDateTime.ofInstant(
+            toInstant().truncatedTo(ChronoUnit.SECONDS), ZoneId.systemDefault()
+        ).format(DateTimeFormatter.ISO_INSTANT)
     }
 }
 

@@ -35,12 +35,23 @@ import net.thauvin.erik.mobibot.Utils.bot
 import net.thauvin.erik.mobibot.Utils.isChannelOp
 import org.pircbotx.hooks.types.GenericMessageEvent
 
+/**
+ * Allows an operator to terminate the bot's operations on the server.
+ */
 class Die : AbstractCommand() {
     override val name = "die"
     override val help = emptyList<String>()
     override val isOpOnly = true
     override val isPublic = false
     override val isVisible = false
+
+    companion object {
+        const val DIE_PROP = "die"
+    }
+
+    init {
+        initProperties(DIE_PROP)
+    }
 
     override fun commandResponse(channel: String, args: String, event: GenericMessageEvent) {
         with(event.bot()) {
@@ -50,13 +61,5 @@ class Die : AbstractCommand() {
                 sendIRC().quitServer("The Bot is Out There!")
             }
         }
-    }
-
-    companion object {
-        const val DIE_PROP = "die"
-    }
-
-    init {
-        initProperties(DIE_PROP)
     }
 }

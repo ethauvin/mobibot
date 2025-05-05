@@ -42,56 +42,12 @@ import java.net.InetAddress
 import java.net.UnknownHostException
 
 /**
- * The Lookup module.
+ * Performs a DNS lookup or Whois IP query.
  */
 class Lookup : AbstractModule() {
     private val logger: Logger = LoggerFactory.getLogger(Lookup::class.java)
 
     override val name = "Lookup"
-
-    override fun commandResponse(channel: String, cmd: String, args: String, event: GenericMessageEvent) {
-        if (args.matches("(\\S.)+(\\S)+".toRegex())) {
-            try {
-                event.respondWith(nslookup(args).prependIndent())
-            } catch (ignore: UnknownHostException) {
-                if (args.matches(
-                        ("(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)")
-                            .toRegex()
-                    )
-                ) {
-                    try {
-                        val lines = whois(args)
-                        if (lines.isNotEmpty()) {
-                            var line: String
-                            var hasData = false
-                            for (rawLine in lines) {
-                                line = rawLine.trim()
-                                if (line.matches("^\\b(?!\\b[Cc]omment\\b)\\w+\\b: .*$".toRegex())) {
-                                    if (!hasData) {
-                                        event.respondWith(line)
-                                        hasData = true
-                                    } else {
-                                        event.bot().sendIRC().notice(event.user.nick, line)
-                                    }
-                                }
-                            }
-                        } else {
-                            event.respond("Unknown host.")
-                        }
-                    } catch (ioe: IOException) {
-                        if (logger.isWarnEnabled) {
-                            logger.warn("Unable to perform whois IP lookup: $args", ioe)
-                        }
-                        event.respond("Unable to perform whois IP lookup: ${ioe.message}")
-                    }
-                } else {
-                    event.respond("Unknown host.")
-                }
-            }
-        } else {
-            helpResponse(event)
-        }
-    }
 
     companion object {
         /**
@@ -167,5 +123,49 @@ class Lookup : AbstractModule() {
         commands.add(LOOKUP_CMD)
         help.add("To perform a DNS lookup query:")
         help.add(helpFormat("%c $LOOKUP_CMD <ip address or hostname>"))
+    }
+
+    override fun commandResponse(channel: String, cmd: String, args: String, event: GenericMessageEvent) {
+        if (args.matches("(\\S.)+(\\S)+".toRegex())) {
+            try {
+                event.respondWith(nslookup(args).prependIndent())
+            } catch (_: UnknownHostException) {
+                if (args.matches(
+                        ("(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)")
+                            .toRegex()
+                    )
+                ) {
+                    try {
+                        val lines = whois(args)
+                        if (lines.isNotEmpty()) {
+                            var line: String
+                            var hasData = false
+                            for (rawLine in lines) {
+                                line = rawLine.trim()
+                                if (line.matches("^\\b(?!\\b[Cc]omment\\b)\\w+\\b: .*$".toRegex())) {
+                                    if (!hasData) {
+                                        event.respondWith(line)
+                                        hasData = true
+                                    } else {
+                                        event.bot().sendIRC().notice(event.user.nick, line)
+                                    }
+                                }
+                            }
+                        } else {
+                            event.respond("Unknown host.")
+                        }
+                    } catch (ioe: IOException) {
+                        if (logger.isWarnEnabled) {
+                            logger.warn("Unable to perform whois IP lookup: $args", ioe)
+                        }
+                        event.respond("Unable to perform whois IP lookup: ${ioe.message}")
+                    }
+                } else {
+                    event.respond("Unknown host.")
+                }
+            }
+        } else {
+            helpResponse(event)
+        }
     }
 }

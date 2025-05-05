@@ -39,7 +39,7 @@ import org.slf4j.LoggerFactory
 import java.util.*
 
 /**
- * Social Manager.
+ * Manages social media modules and handles operations such as notifications, posting, and queuing entries.
  */
 class SocialManager {
     private val entries: MutableSet<Int> = HashSet()

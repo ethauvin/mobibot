@@ -36,7 +36,7 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 /**
- * Tell Message.
+ * Holds a [Tell] message.
  */
 class TellMessage(
     /**
@@ -98,7 +98,6 @@ class TellMessage(
     }
 
     companion object {
-        @Suppress("ConstPropertyName")
         private const val serialVersionUID = 2L
     }
 }

@@ -30,8 +30,9 @@
  */
 package net.thauvin.erik.mobibot.msg
 
+
 /**
- * The `Message` class.
+ * Holds a message.
  */
 open class Message @JvmOverloads constructor(
     var msg: String,

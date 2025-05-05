@@ -35,6 +35,9 @@ import net.thauvin.erik.mobibot.FeedReader
 import net.thauvin.erik.mobibot.Utils.helpFormat
 import org.pircbotx.hooks.types.GenericMessageEvent
 
+/**
+ * Lists the last 5 posts from the channel's weblog feed.
+ */
 class ChannelFeed(channel: String) : AbstractCommand() {
     override val name = channel
     override val help = listOf("To list the last 5 posts from the channel's weblog feed:", helpFormat("%c $channel"))

@@ -33,6 +33,9 @@ package net.thauvin.erik.mobibot.social
 
 import java.util.*
 
+/**
+ * Timer used to post social entries.
+ */
 class SocialTimer(private var socialManager: SocialManager, private var index: Int) : TimerTask() {
     override fun run() {
         socialManager.postEntry(index)

@@ -52,7 +52,7 @@ import kotlin.io.path.exists
 import kotlin.io.path.fileSize
 
 /**
- * Miscellaneous utilities.
+ * Miscellaneous utility functions.
  */
 @Suppress("TooManyFunctions")
 object Utils {
@@ -111,13 +111,13 @@ object Utils {
      * Capitalize a string.
      */
     @JvmStatic
-    fun String.capitalise(): String = lowercase().replaceFirstChar { it.uppercase() }
+    fun String.capitalize(): String = lowercase().replaceFirstChar { it.uppercase() }
 
     /**
      * Capitalize words
      */
     @JvmStatic
-    fun String.capitalizeWords(): String = split(" ").joinToString(" ") { it.capitalise() }
+    fun String.capitalizeWords(): String = split(" ").joinToString(" ") { it.capitalize() }
 
     /**
      * Colorize a string.
@@ -204,7 +204,7 @@ object Utils {
     fun Int.isHttpSuccess() = this in 200..399
 
     /**
-     * Returns the last item of a list of strings or empty if none.
+     * Returns the last item of a list or empty if the list only has one item.
      */
     @JvmStatic
     fun List<String>.lastOrEmpty(): String {
@@ -259,6 +259,32 @@ object Utils {
     @JvmStatic
     fun String.plural(count: Long): String {
         return if (count > 1) "${this}s" else this
+    }
+
+    /**
+     * Reads contents of a URL.
+     */
+    @JvmStatic
+    @Throws(IOException::class)
+    fun URL.reader(): UrlReaderResponse {
+        val connection = this.openConnection() as HttpURLConnection
+        try {
+            connection.setRequestProperty(
+                "User-Agent",
+                Constants.USER_AGENT
+            )
+            return if (connection.responseCode.isHttpSuccess()) {
+                UrlReaderResponse(
+                    connection.responseCode,
+                    connection.inputStream.bufferedReader().use { it.readText() })
+            } else {
+                UrlReaderResponse(
+                    connection.responseCode,
+                    connection.errorStream.bufferedReader().use { it.readText() })
+            }
+        } finally {
+            connection.disconnect()
+        }
     }
 
     /**
@@ -401,44 +427,18 @@ object Utils {
     @JvmStatic
     fun LocalDateTime.toUtcDateTime(): String = format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))
 
+
     /**
      * Makes the given string bold.
      */
     @JvmStatic
     fun String?.underline(): String = colorize(Colors.UNDERLINE)
 
-
     /**
      * Converts XML/XHTML entities to plain text.
      */
     @JvmStatic
     fun String.unescapeXml(): String = Jsoup.parse(this).text()
-
-    /**
-     * Reads contents of a URL.
-     */
-    @JvmStatic
-    @Throws(IOException::class)
-    fun URL.reader(): UrlReaderResponse {
-        val connection = this.openConnection() as HttpURLConnection
-        try {
-            connection.setRequestProperty(
-                "User-Agent",
-                Constants.USER_AGENT
-            )
-            return if (connection.responseCode.isHttpSuccess()) {
-                UrlReaderResponse(
-                    connection.responseCode,
-                    connection.inputStream.bufferedReader().use { it.readText() })
-            } else {
-                UrlReaderResponse(
-                    connection.responseCode,
-                    connection.errorStream.bufferedReader().use { it.readText() })
-            }
-        } finally {
-            connection.disconnect()
-        }
-    }
 
     /**
      * Holds the [URL.reader] response code and body text.

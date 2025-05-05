@@ -30,10 +30,16 @@
  */
 package net.thauvin.erik.mobibot
 
+
 /**
- * The `Constants`.
+ * The global constants.
  */
 object Constants {
+    /**
+     * CLI command for usage.
+     */
+    const val CLI_CMD = "java -jar ${ReleaseInfo.PROJECT}.jar"
+
     /**
      * The connect/read timeout in ms.
      */
@@ -53,16 +59,6 @@ object Constants {
      * Default IRC Server.
      */
     const val DEFAULT_SERVER = "irc.libera.chat"
-
-    /**
-     * CLI command for usage.
-     */
-    const val CLI_CMD = "java -jar ${ReleaseInfo.PROJECT}.jar"
-
-    /**
-     * User-Agent
-     */
-    const val USER_AGENT = "Mozilla/5.0 (X11; Linux x86_64; rv:136.0) Gecko/20100101 Firefox/136.0"
 
     /**
      * The help command.
@@ -93,6 +89,11 @@ object Constants {
      * The timer delay in minutes.
      */
     const val TIMER_DELAY = 10L
+
+    /**
+     * User-Agent
+     */
+    const val USER_AGENT = "Mozilla/5.0 (X11; Linux x86_64; rv:136.0) Gecko/20100101 Firefox/136.0"
 
     /**
      * Properties version line argument.

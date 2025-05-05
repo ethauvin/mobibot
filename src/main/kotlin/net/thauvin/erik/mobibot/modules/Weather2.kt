@@ -35,7 +35,7 @@ import net.aksingh.owmjapis.core.OWM
 import net.aksingh.owmjapis.core.OWM.Country
 import net.aksingh.owmjapis.model.CurrentWeather
 import net.thauvin.erik.mobibot.Utils.bold
-import net.thauvin.erik.mobibot.Utils.capitalise
+import net.thauvin.erik.mobibot.Utils.capitalize
 import net.thauvin.erik.mobibot.Utils.capitalizeWords
 import net.thauvin.erik.mobibot.Utils.encodeUrl
 import net.thauvin.erik.mobibot.Utils.helpFormat
@@ -51,37 +51,12 @@ import org.slf4j.LoggerFactory
 import kotlin.math.roundToInt
 
 /**
- * The `Weather2` module.
+ * Retrieve weather information from OpenWeatherMap.
  */
 class Weather2 : AbstractModule() {
     private val logger: Logger = LoggerFactory.getLogger(Weather2::class.java)
 
     override val name = "Weather"
-
-    /**
-     * Fetches the weather data from a specific city.
-     */
-    override fun commandResponse(channel: String, cmd: String, args: String, event: GenericMessageEvent) {
-        if (args.isNotBlank()) {
-            try {
-                val messages = getWeather(args, properties[API_KEY_PROP])
-                if (messages[0].isError) {
-                    helpResponse(event)
-                } else {
-                    for (msg in messages) {
-                        event.sendMessage(channel, msg)
-                    }
-                }
-            } catch (e: ModuleException) {
-                if (logger.isWarnEnabled) logger.warn(e.debugMessage, e)
-                e.message?.let {
-                    event.respond(it)
-                }
-            }
-        } else {
-            helpResponse(event)
-        }
-    }
 
     companion object {
         /**
@@ -121,7 +96,7 @@ class Weather2 : AbstractModule() {
             if (apiKey.isNullOrBlank()) {
                 throw ModuleException(
                     "${Weather2::class.java.name} is disabled.",
-                    "${WEATHER_CMD.capitalise()} is disabled. The API key is missing."
+                    "${WEATHER_CMD.capitalize()} is disabled. The API key is missing."
                 )
             }
             val owm = OWM(apiKey)
@@ -181,7 +156,7 @@ class Weather2 : AbstractModule() {
                                     for (w in it) {
                                         w?.let {
                                             condition.append(' ')
-                                                .append(w.getDescription().capitalise())
+                                                .append(w.getDescription().capitalize())
                                                 .append('.')
                                         }
                                     }
@@ -246,5 +221,30 @@ class Weather2 : AbstractModule() {
             add("The default ISO 3166 country code is ${"US".bold()}. Zip codes supported in most countries.")
         }
         initProperties(API_KEY_PROP)
+    }
+
+    /**
+     * Fetches the weather data from a specific location.
+     */
+    override fun commandResponse(channel: String, cmd: String, args: String, event: GenericMessageEvent) {
+        if (args.isNotBlank()) {
+            try {
+                val messages = getWeather(args, properties[API_KEY_PROP])
+                if (messages[0].isError) {
+                    helpResponse(event)
+                } else {
+                    for (msg in messages) {
+                        event.sendMessage(channel, msg)
+                    }
+                }
+            } catch (e: ModuleException) {
+                if (logger.isWarnEnabled) logger.warn(e.debugMessage, e)
+                e.message?.let {
+                    event.respond(it)
+                }
+            }
+        } else {
+            helpResponse(event)
+        }
     }
 }

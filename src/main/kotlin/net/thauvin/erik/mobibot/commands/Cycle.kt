@@ -39,6 +39,9 @@ import net.thauvin.erik.mobibot.Utils.helpFormat
 import net.thauvin.erik.mobibot.Utils.isChannelOp
 import org.pircbotx.hooks.types.GenericMessageEvent
 
+/**
+ * Allows an operator to have the bot leave the channel and come back.
+ */
 class Cycle : AbstractCommand() {
     private val wait = 10
     override val name = "cycle"

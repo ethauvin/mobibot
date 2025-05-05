@@ -35,6 +35,10 @@ import assertk.all
 import assertk.assertThat
 import assertk.assertions.*
 import net.thauvin.erik.mobibot.Utils.today
+import org.junit.jupiter.api.MethodOrderer
+import org.junit.jupiter.api.Order
+import org.junit.jupiter.api.TestMethodOrder
+import java.nio.file.Path
 import java.nio.file.Paths
 import java.util.*
 import kotlin.io.path.deleteIfExists
@@ -42,19 +46,26 @@ import kotlin.io.path.fileSize
 import kotlin.io.path.name
 import kotlin.test.Test
 
+@TestMethodOrder(MethodOrderer.OrderAnnotation::class)
 class FeedMgrTest {
     private val entries = Entries()
     private val channel = "mobibot"
+    private var currentFile: Path
+    private var backlogFile: Path
 
     init {
         entries.logsDir = "src/test/resources/"
         entries.ircServer = "irc.example.com"
         entries.channel = channel
         entries.backlogs = "https://www.mobitopia.org/mobibot/logs"
+
+        currentFile = Paths.get("${entries.logsDir}test.xml")
+        backlogFile = Paths.get("${entries.logsDir}${today()}.xml")
     }
 
     @Test
-    fun testFeedMgr() {
+    @Order(1)
+    fun loadFeed() {
         // Load the feed
         assertThat(FeedsManager.loadFeed(entries), "loadFeed()").isEqualTo("2021-10-31")
 
@@ -87,26 +98,33 @@ class FeedMgrTest {
             prop(EntryLink::nick).isEqualTo("Skynx")
             prop(EntryLink::date).isEqualTo(Date(1635638460000L))
         }
+    }
 
-        val currentFile = Paths.get("${entries.logsDir}test.xml")
-        val backlogFile = Paths.get("${entries.logsDir}${today()}.xml")
-
-        // Save the feed
+    @Test
+    @Order(2)
+    fun saveFeed() {
         FeedsManager.saveFeed(entries, currentFile.name)
 
         assertThat(currentFile, "currentFile").exists()
         assertThat(backlogFile, "backlogFile").exists()
 
         assertThat(currentFile.fileSize(), "currentFile == backlogFile").isEqualTo(backlogFile.fileSize())
+    }
 
-        // Load the test feed
+    @Test
+    @Order(3)
+    fun loadTestFeed() {
         entries.links.clear()
         FeedsManager.loadFeed(entries, currentFile.name)
 
         entries.links.forEachIndexed { i, entryLink ->
             assertThat(entryLink.title, "entryLink.title[${i + 1}]").isEqualTo("Example ${i + 1}")
         }
+    }
 
+    @Test
+    @Order(4)
+    fun deleteFeeds() {
         assertThat(currentFile.deleteIfExists(), "currentFile.deleteIfExists()").isTrue()
         assertThat(backlogFile.deleteIfExists(), "backlogFile.deleteIfExists()").isTrue()
     }
