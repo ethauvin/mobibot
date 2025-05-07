@@ -82,7 +82,7 @@ class StockQuote : AbstractModule() {
                     if (info.isNotEmpty()) {
                         throw ModuleException(debugMessage, info.unescapeXml())
                     }
-                } catch (ignore: JSONException) {
+                } catch (_: JSONException) {
                     // Do nothing
                 }
                 try {
@@ -94,7 +94,7 @@ class StockQuote : AbstractModule() {
                     if (error.isNotEmpty()) {
                         throw ModuleException(debugMessage, error.unescapeXml())
                     }
-                } catch (ignore: JSONException) {
+                } catch (_: JSONException) {
                     // Do nothing
                 }
                 json

@@ -59,7 +59,7 @@ class ChatGpt2Test : LocalProperties() {
         fun chat() {
             assertThat(
                 ChatGpt2.chat(
-                    "return only the code for javascript function to make a request with XMLHttpRequest",
+                    "javascript function to make a request with XMLHttpRequest, just code",
                     apiKey,
                     50
                 )

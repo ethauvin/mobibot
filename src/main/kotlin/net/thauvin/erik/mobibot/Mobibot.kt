@@ -125,10 +125,10 @@ class Mobibot(nickname: String, val channel: String, logsDirPath: String, p: Pro
                     ).use { fis ->
                         p.load(fis)
                     }
-                } catch (ignore: FileNotFoundException) {
+                } catch (_: FileNotFoundException) {
                     System.err.println("Unable to find properties file.")
                     exitProcess(1)
-                } catch (ignore: IOException) {
+                } catch (_: IOException) {
                     System.err.println("Unable to open properties file.")
                     exitProcess(1)
                 }
@@ -147,7 +147,7 @@ class Mobibot(nickname: String, val channel: String, logsDirPath: String, p: Pro
                             ), true
                         )
                         System.setOut(stdout)
-                    } catch (ignore: IOException) {
+                    } catch (_: IOException) {
                         System.err.println("Unable to open output (stdout) log file.")
                         exitProcess(1)
                     }
@@ -158,7 +158,7 @@ class Mobibot(nickname: String, val channel: String, logsDirPath: String, p: Pro
                             ), true
                         )
                         System.setErr(stderr)
-                    } catch (ignore: IOException) {
+                    } catch (_: IOException) {
                         System.err.println("Unable to open error (stderr) log file.")
                         exitProcess(1)
                     }

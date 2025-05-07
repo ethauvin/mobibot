@@ -72,8 +72,8 @@ public class MobibotBuild extends Project {
 
         javaRelease = 17;
 
-        downloadSources = true;
         autoDownloadPurge = true;
+        downloadSources = true;
 
         repositories = List.of(
                 MAVEN_LOCAL,
@@ -168,7 +168,7 @@ public class MobibotBuild extends Project {
     public void compile() throws Exception {
         releaseInfo();
         var op = new CompileKotlinOperation().fromProject(this);
-        op.compileOptions().progressive(true).verbose(true);
+        op.compileOptions().languageVersion("2.1").progressive(true).verbose(true);
         op.execute();
     }
 

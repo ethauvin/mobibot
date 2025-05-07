@@ -72,7 +72,7 @@ class CryptoPrices : AbstractModule() {
                 val price = currentPrice(args.split(' '))
                 val amount = try {
                     price.toCurrency()
-                } catch (ignore: IllegalArgumentException) {
+                } catch (_: IllegalArgumentException) {
                     price.amount
                 }
                 event.respond("${price.base} current price is $amount [${CURRENCIES[price.currency]}]")

@@ -146,7 +146,7 @@ class LinksManager : AbstractCommand() {
 
                 pinboard.addPin(event.bot().serverHostname, entry)
 
-                // Queue link for posting to social media.
+                // Queue the entry for posting to social media.
                 socialManager.queueEntry(index)
 
                 entries.save()
@@ -179,7 +179,7 @@ class LinksManager : AbstractCommand() {
             if (title.isNotBlank()) {
                 return title
             }
-        } catch (ignore: IOException) {
+        } catch (_: IOException) {
             // Do nothing
         }
         return Constants.NO_TITLE
@@ -193,7 +193,7 @@ class LinksManager : AbstractCommand() {
                     "Duplicate".bold() + " >> " + printLink(entries.links.indexOf(match), match)
                 )
                 true
-            } catch (ignore: NoSuchElementException) {
+            } catch (_: NoSuchElementException) {
                 false
             }
         }

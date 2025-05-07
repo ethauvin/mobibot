@@ -331,7 +331,7 @@ object Utils {
     }
 
     /**
-     * Send a formatted commands/modules, etc. list.
+     * Send a formatted list to the channel.
      */
     @JvmStatic
     @JvmOverloads
@@ -394,7 +394,7 @@ object Utils {
     fun String.toIntOrDefault(defaultValue: Int): Int {
         return try {
             toInt()
-        } catch (e: NumberFormatException) {
+        } catch (_: NumberFormatException) {
             defaultValue
         }
     }

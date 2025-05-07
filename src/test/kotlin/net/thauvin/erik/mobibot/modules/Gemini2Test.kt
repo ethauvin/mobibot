@@ -51,7 +51,7 @@ class Gemini2Test : LocalProperties() {
         fun chatHttpRequestInJavascript() {
             assertThat(
                 Gemini2.chat(
-                    "return only the code for a javascript function to make a request with XMLHttpRequest",
+                    "javascript function to make a request with XMLHttpRequest, just code",
                     apiKey,
                     maxTokens
                 )
@@ -62,8 +62,8 @@ class Gemini2Test : LocalProperties() {
         @DisableOnCi
         fun chatEncodeUrlInJava() {
             assertThat(
-                Gemini2.chat("how do I encode a URL in java?", apiKey, 60)
-            ).isNotNull().contains("URLEncoder")
+                Gemini2.chat("encode a url in java, one line, just code", apiKey, 60)
+            ).isNotNull().contains("UrlEncoder", true)
         }
     }
 

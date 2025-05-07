@@ -89,7 +89,7 @@ class View : AbstractCommand() {
                 if (start > entries.links.size) {
                     start = 0
                 }
-            } catch (ignore: NumberFormatException) {
+            } catch (_: NumberFormatException) {
                 // Do nothing
             }
         }
