@@ -65,7 +65,7 @@ class WolframAlpha : AbstractModule() {
         private const val WOLFRAM_CMD = "wolfram"
 
         // Wolfram Alpha API URL
-        private const val API_URL = "http://api.wolframalpha.com/v1/spoken?appid="
+        private const val API_URL = "https://api.wolframalpha.com/v1/spoken?appid="
 
         @JvmStatic
         @Throws(ModuleException::class)

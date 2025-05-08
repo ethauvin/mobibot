@@ -52,7 +52,7 @@ class Calc : AbstractModule() {
         private const val CALC_CMD = "calc"
 
         /**
-         * Performs a calculation. e.g.: 1 + 1 * 2
+         * Performs a calculation (e.g.: 1 + 1 * 2)
          */
         @JvmStatic
         @Throws(IllegalArgumentException::class)

@@ -59,7 +59,7 @@ class ChatGpt2 : AbstractModule() {
         const val API_KEY_PROP = "chatgpt-api-key"
 
         /**
-         * The max tokens property.
+         * The max-tokens property.
          */
         const val MAX_TOKENS_PROP = "chatgpt-max-tokens"
 

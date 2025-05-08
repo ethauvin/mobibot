@@ -53,8 +53,6 @@ import java.util.*
  * Converts between currencies.
  */
 class CurrencyConverter : AbstractModule() {
-    private val logger: Logger = LoggerFactory.getLogger(CurrencyConverter::class.java)
-
     override val name = "CurrencyConverter"
 
     companion object {
@@ -69,14 +67,17 @@ class CurrencyConverter : AbstractModule() {
         // Currency codes keyword
         private const val CODES_KEYWORD = "codes"
 
+        // Decimal format
+        private val DECIMAL_FORMAT = DecimalFormat("0.00#")
+
         // Empty symbols table.
         private const val EMPTY_SYMBOLS_TABLE = "Sorry, but the currency table is empty."
 
+        // Logger
+        private val LOGGER: Logger = LoggerFactory.getLogger(CurrencyConverter::class.java)
+
         // Currency symbols
         private val SYMBOLS: TreeMap<String, String> = TreeMap()
-
-        // Decimal format
-        private val DECIMAL_FORMAT = DecimalFormat("0.00#")
 
         /**
          * Converts from a currency to another.
@@ -109,7 +110,10 @@ class CurrencyConverter : AbstractModule() {
                             } else {
                                 ErrorMessage("Sorry, an error occurred while converting the currencies.")
                             }
-                        } catch (ignore: IOException) {
+                        } catch (ioe: IOException) {
+                            if (LOGGER.isWarnEnabled) {
+                                LOGGER.warn("IO error while converting currencies: ${ioe.message}", ioe)
+                            }
                             ErrorMessage("Sorry, an IO error occurred while converting the currencies.")
                         }
                     } else {
@@ -161,7 +165,7 @@ class CurrencyConverter : AbstractModule() {
             try {
                 loadSymbols(apiKey)
             } catch (e: ModuleException) {
-                if (logger.isWarnEnabled) logger.warn(e.debugMessage, e)
+                if (LOGGER.isWarnEnabled) LOGGER.warn(e.debugMessage, e)
             }
         }
     }

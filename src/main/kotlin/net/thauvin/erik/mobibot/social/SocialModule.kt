@@ -41,8 +41,7 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
 /**
- * Provides the ability to handle notifications, post entries and manage interaction with a specific social media
- * service.
+ * Provides the ability to handle notifications, entries and manage interaction with a specific social media service.
  */
 abstract class SocialModule : AbstractModule() {
     private val logger: Logger = LoggerFactory.getLogger(SocialManager::class.java)
@@ -69,7 +68,7 @@ abstract class SocialModule : AbstractModule() {
     abstract fun post(message: String, isDm: Boolean): String
 
     /**
-     * Post entry to social media.
+     * Post an entry to social media.
      */
     fun postEntry(index: Int) {
         if (isAutoPost && LinksManager.entries.links.size >= index) {

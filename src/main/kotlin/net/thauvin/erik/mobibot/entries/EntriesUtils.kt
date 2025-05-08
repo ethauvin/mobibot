@@ -69,14 +69,14 @@ object EntriesUtils {
     }
 
     /**
-     * Prints an entry's tags/categories for display on the channel. e.g. L1T: tag1, tag2
+     * Prints an entry's tags/categories for display on the channel. (e.g., L1T: tag1, tag2)
      */
     @JvmStatic
     fun printTags(entryIndex: Int, entry: EntryLink): String =
         entryIndex.toLinkLabel() + "${Constants.TAG_CMD}: " + entry.formatTags(", ")
 
     /**
-     * Builds link label based on its index. e.g: L1
+     * Builds link label based on its index. (e.g., L1)
      */
     @JvmStatic
     fun Int.toLinkLabel(): String = Constants.LINK_CMD + (this + 1)

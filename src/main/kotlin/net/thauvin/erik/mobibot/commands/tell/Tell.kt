@@ -284,7 +284,7 @@ class Tell(private val serialObject: String) : AbstractCommand() {
         // Arrow
         private const val ARROW = " --> "
 
-        // All keyword
+        // The `all` keyword
         private const val TELL_ALL_KEYWORD = "all"
 
         // The delete command.

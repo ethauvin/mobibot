@@ -328,7 +328,7 @@ class WorldTime : AbstractModule() {
         // The Time command
         private const val TIME_CMD = "time"
 
-        // The zones arguments
+        // The `zones` arguments
         private const val ZONES_ARGS = "zones"
 
         // The default zone

@@ -93,8 +93,8 @@ class EntryLink(
     }
 
     companion object {
-        // Serial version UID
-        private const val serialVersionUID: Long = 1L
+        @Suppress("unused")
+        private const val serialVersionUID = 1L
     }
 
     /**

@@ -98,6 +98,7 @@ class TellMessage(
     }
 
     companion object {
+        @Suppress("unused")
         private const val serialVersionUID = 2L
     }
 }

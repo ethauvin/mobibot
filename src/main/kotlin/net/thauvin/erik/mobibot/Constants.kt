@@ -76,7 +76,7 @@ object Constants {
     const val NO_TITLE = "No Title"
 
     /**
-     * Properties command line argument.
+     * `Properties` command line argument.
      */
     const val PROPS_ARG = "properties"
 
