@@ -72,7 +72,7 @@ open class LocalProperties {
                 env?.let {
                     localProps.setProperty(key, env)
                 }
-                env
+                env ?: ""
             }
         }
 
