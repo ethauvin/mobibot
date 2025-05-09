@@ -113,20 +113,29 @@ class GoogleSearchTest : LocalProperties() {
         @Test
         fun `API key should not be empty`() {
             assertFailure { sanitizedSearch("test", "", "apiKey") }
-                .isInstanceOf(ModuleException::class.java).hasNoCause()
+                .isInstanceOf(ModuleException::class.java)
+                .hasMessage("${GoogleSearch.SERVICE_NAME} is disabled. The API keys are missing.")
         }
 
         @Test
-        fun `CSE key should not empty`() {
+        fun `CSE key should not be empty`() {
             assertFailure { sanitizedSearch("test", "apiKey", "") }
-                .isInstanceOf(ModuleException::class.java).hasNoCause()
+                .isInstanceOf(ModuleException::class.java)
+                .hasMessage("${GoogleSearch.SERVICE_NAME} is disabled. The API keys are missing.")
         }
 
         @Test
         fun `Invalid API key should throw exception`() {
-            assertFailure { sanitizedSearch("test", "apiKey", "cssKey") }
+            assertFailure { sanitizedSearch("test", "apiKey", "cseKey") }
                 .isInstanceOf(ModuleException::class.java)
                 .hasMessage("API key not valid. Please pass a valid API key.")
+        }
+
+        @Test
+        fun `Invalid CSE key should throw exception`() {
+            assertFailure { sanitizedSearch("test", apiKey, "cseKey") }
+                .isInstanceOf(ModuleException::class.java)
+                .hasMessage("Request contains an invalid argument.")
         }
     }
 
