@@ -46,7 +46,7 @@ open class LocalProperties {
         if (Files.exists(localPath)) {
             try {
                 Files.newInputStream(localPath).use { stream -> localProps.load(stream) }
-            } catch (ignore: IOException) {
+            } catch (_: IOException) {
                 // Do nothing
             }
         }
@@ -59,7 +59,7 @@ open class LocalProperties {
             val ciName = System.getenv("CI_NAME")
             return ciName ?: try {
                 InetAddress.getLocalHost().hostName
-            } catch (ignore: UnknownHostException) {
+            } catch (_: UnknownHostException) {
                 "Unknown Host"
             }
         }
@@ -72,7 +72,7 @@ open class LocalProperties {
                 env?.let {
                     localProps.setProperty(key, env)
                 }
-                throw IOException("The $key property not found in local.properties or environment variables.")
+                env
             }
         }
 
