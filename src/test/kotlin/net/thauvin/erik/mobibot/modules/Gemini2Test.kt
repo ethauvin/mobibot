@@ -47,11 +47,16 @@ class Gemini2Test : LocalProperties() {
     @DisplayName("Chat Tests")
     inner class ChatTests {
         private val apiKey = getProperty(Gemini2.GEMINI_API_KEY)
-        private val maxTokens = getProperty(Gemini2.MAX_TOKENS_PROP).toInt()
 
         @Test
         @DisableOnCi
         fun chatHttpRequestInJavascript() {
+            val maxTokens = try {
+                getProperty(Gemini2.MAX_TOKENS_PROP).toInt()
+            } catch (_: NumberFormatException) {
+                1024
+            }
+
             assertThat(
                 Gemini2.chat(
                     "javascript function to make a request with XMLHttpRequest, just code",
