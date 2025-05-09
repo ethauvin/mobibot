@@ -162,6 +162,7 @@ class UtilsTest {
             assertThat(p.getIntProperty("one", 9), "getIntProperty(one)").isEqualTo(1)
             assertThat(p.getIntProperty("two", 2), "getIntProperty(two)").isEqualTo(2)
         }
+
         @Test
         fun `Convert property to int using default value`() {
             assertThat(p.getIntProperty("foo", 3), "getIntProperty(foo)").isEqualTo(3)
@@ -177,6 +178,7 @@ class UtilsTest {
             val two = listOf("1", "2")
             assertThat(two.lastOrEmpty(), "lastOrEmpty(1,2)").isEqualTo("2")
         }
+
         @Test
         fun `Return empty if list only has one item`() {
             val one = listOf("1")
@@ -258,6 +260,7 @@ class UtilsTest {
             fun `Convert string to int`() {
                 assertThat("10".toIntOrDefault(1), "toIntOrDefault(10, 1)").isEqualTo(10)
             }
+
             @Test
             fun `Convert string to int using default value`() {
                 assertThat("a".toIntOrDefault(2), "toIntOrDefault(a, 2)").isEqualTo(2)
@@ -314,11 +317,13 @@ class UtilsTest {
             fun `Replace occurrences not found in string`() {
                 assertThat(test.replaceEach(search, replace), "replaceEach(nothing)").isEqualTo(test)
             }
+
             @Test
             fun `Replace and remove occurrences in string`() {
                 assertThat(test.replaceEach(arrayOf("t", "e"), arrayOf("", "E")), "replaceEach($test)")
                     .isEqualTo(test.replace("t", "").replace("e", "E"))
             }
+
             @Test
             fun `Replace empty occurrences in string`() {
                 assertThat(test.replaceEach(search, emptyArray()), "replaceEach(search, empty)")

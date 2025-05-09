@@ -56,13 +56,18 @@ import kotlin.math.roundToInt
 class Weather2 : AbstractModule() {
     private val logger: Logger = LoggerFactory.getLogger(Weather2::class.java)
 
-    override val name = "Weather"
+    override val name = WEATHER_NAME
 
     companion object {
         /**
          * The OpenWeatherMap API Key property.
          */
         const val API_KEY_PROP = "owm-api-key"
+
+        /**
+         * The service name.
+         */
+        const val WEATHER_NAME = "Weather"
 
         // Weather command
         private const val WEATHER_CMD = "weather"

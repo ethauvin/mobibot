@@ -42,9 +42,16 @@ import net.thauvin.erik.mobibot.msg.ErrorMessage
 import net.thauvin.erik.mobibot.msg.Message
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
+import org.mockito.ArgumentCaptor
+import org.mockito.Mockito
+import org.mockito.kotlin.whenever
+import org.pircbotx.hooks.types.GenericMessageEvent
 import kotlin.test.Test
 
 class GoogleSearchTest : LocalProperties() {
+    private val apiKey = getProperty(GoogleSearch.API_KEY_PROP)
+    private val cseKey = getProperty(GoogleSearch.CSE_KEY_PROP)
+
     @Throws(ModuleException::class)
     fun sanitizedSearch(query: String, apiKey: String, cseKey: String): List<Message> {
         try {
@@ -56,6 +63,47 @@ class GoogleSearchTest : LocalProperties() {
             } else {
                 throw e
             }
+        }
+    }
+
+    @Nested
+    @DisplayName("Command Response Tests")
+    inner class CommandResponseTests {
+        @Test
+        fun `API Keys are missing`() {
+            val googleSearch = GoogleSearch()
+            val event = Mockito.mock(GenericMessageEvent::class.java)
+            val captor = ArgumentCaptor.forClass(String::class.java)
+            val user = Mockito.mock(org.pircbotx.User::class.java)
+
+            whenever(event.user).thenReturn(user)
+            whenever(user.nick).thenReturn("mock")
+
+            googleSearch.commandResponse("channel", "google", "seattle seahawks", event)
+
+            Mockito.verify(event, Mockito.atLeastOnce()).respond(captor.capture())
+            assertThat(captor.value)
+                .isEqualTo("${GoogleSearch.SERVICE_NAME} is disabled. The API keys are missing.")
+        }
+
+        @Test
+        fun `No results found`() {
+            val googleSearch = GoogleSearch()
+            val event = Mockito.mock(GenericMessageEvent::class.java)
+            val captor = ArgumentCaptor.forClass(String::class.java)
+            val user = Mockito.mock(org.pircbotx.User::class.java)
+
+            whenever(event.user).thenReturn(user)
+            whenever(user.nick).thenReturn("mock")
+
+            googleSearch.properties.put(GoogleSearch.API_KEY_PROP, apiKey)
+            googleSearch.properties.put(GoogleSearch.CSE_KEY_PROP, cseKey)
+
+            googleSearch.commandResponse("channel", "google", "\"foobarbarfoofoobarblahblah\"", event)
+
+            Mockito.verify(event, Mockito.atLeastOnce()).respond(captor.capture())
+            assertThat(captor.value)
+                .isEqualTo("\u000304No results found.\u000F")
         }
     }
 
@@ -85,9 +133,6 @@ class GoogleSearchTest : LocalProperties() {
     @Nested
     @DisplayName("Search Tests")
     inner class SearchTests {
-        private val apiKey = getProperty(GoogleSearch.API_KEY_PROP)
-        private val cseKey = getProperty(GoogleSearch.CSE_KEY_PROP)
-
         @Test
         fun `Query should not be empty`() {
             assertThat(sanitizedSearch("", apiKey, cseKey).first()).isInstanceOf(ErrorMessage::class.java)

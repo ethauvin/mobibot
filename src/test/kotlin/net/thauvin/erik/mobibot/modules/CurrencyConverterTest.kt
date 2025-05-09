@@ -32,10 +32,7 @@ package net.thauvin.erik.mobibot.modules
 
 import assertk.all
 import assertk.assertThat
-import assertk.assertions.contains
-import assertk.assertions.isInstanceOf
-import assertk.assertions.matches
-import assertk.assertions.prop
+import assertk.assertions.*
 import net.thauvin.erik.mobibot.LocalProperties
 import net.thauvin.erik.mobibot.modules.CurrencyConverter.Companion.convertCurrency
 import net.thauvin.erik.mobibot.modules.CurrencyConverter.Companion.loadSymbols
@@ -44,12 +41,46 @@ import net.thauvin.erik.mobibot.msg.Message
 import net.thauvin.erik.mobibot.msg.PublicMessage
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
+import org.mockito.ArgumentCaptor
+import org.mockito.Mockito
+import org.pircbotx.hooks.types.GenericMessageEvent
 import kotlin.test.Test
 
 class CurrencyConverterTest : LocalProperties() {
     init {
         val apiKey = getProperty(CurrencyConverter.API_KEY_PROP)
         loadSymbols(apiKey)
+    }
+
+    @Nested
+    @DisplayName("Command Response Tests")
+    inner class CommandResponseTests {
+        @Test
+        fun `USD to CAD`() {
+            val currencyConverter = CurrencyConverter()
+            val event = Mockito.mock(GenericMessageEvent::class.java)
+            val captor = ArgumentCaptor.forClass(String::class.java)
+
+            currencyConverter.properties.put(
+                CurrencyConverter.API_KEY_PROP, getProperty(CurrencyConverter.API_KEY_PROP)
+            )
+            currencyConverter.commandResponse("channel", "currency", "1 USD to CAD", event)
+
+            Mockito.verify(event, Mockito.atLeastOnce()).respond(captor.capture())
+            assertThat(captor.value).matches("1 United States Dollar = \\d+\\.\\d{2,3} Canadian Dollar".toRegex())
+        }
+
+        @Test
+        fun `API Key is not specified`() {
+            val currencyConverter = CurrencyConverter()
+            val event = Mockito.mock(GenericMessageEvent::class.java)
+            val captor = ArgumentCaptor.forClass(String::class.java)
+
+            currencyConverter.commandResponse("channel", "currency", "1 USD to CAD", event)
+
+            Mockito.verify(event, Mockito.atLeastOnce()).respond(captor.capture())
+            assertThat(captor.value).isEqualTo(CurrencyConverter.ERROR_MESSAGE_NO_API_KEY)
+        }
     }
 
     @Nested

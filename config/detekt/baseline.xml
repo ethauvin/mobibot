@@ -84,6 +84,8 @@
     <ID>TooManyFunctions:Tell.kt$Tell : AbstractCommand</ID>
     <ID>UtilityClassWithPublicConstructor:LocalProperties.kt$LocalProperties</ID>
     <ID>WildcardImport:AddonsTest.kt$import net.thauvin.erik.mobibot.modules.*</ID>
+    <ID>WildcardImport:CryptoPricesTest.kt$import assertk.assertions.*</ID>
+    <ID>WildcardImport:CurrencyConverterTest.kt$import assertk.assertions.*</ID>
     <ID>WildcardImport:EntryLinkTest.kt$import assertk.assertions.*</ID>
     <ID>WildcardImport:FeedMgrTest.kt$import assertk.assertions.*</ID>
     <ID>WildcardImport:FeedReaderTest.kt$import assertk.assertions.*</ID>

@@ -89,16 +89,14 @@ class Joke : AbstractModule() {
      * Returns a random joke from [JokeAPI](https://v2.jokeapi.dev/).
      */
     override fun commandResponse(channel: String, cmd: String, args: String, event: GenericMessageEvent) {
-        with(event.bot()) {
-            try {
-                randomJoke().forEach {
-                    sendIRC().notice(channel, it.msg.colorize(it.color))
-                }
-            } catch (e: ModuleException) {
-                if (logger.isWarnEnabled) logger.warn(e.debugMessage, e)
-                e.message?.let {
-                    event.respond(it)
-                }
+        try {
+            randomJoke().forEach {
+                event.bot().sendIRC().notice(channel, it.msg.colorize(it.color))
+            }
+        } catch (e: ModuleException) {
+            if (logger.isWarnEnabled) logger.warn(e.debugMessage, e)
+            e.message?.let {
+                event.respond(it)
             }
         }
     }

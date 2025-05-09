@@ -33,13 +33,59 @@ package net.thauvin.erik.mobibot.modules
 import assertk.assertThat
 import assertk.assertions.any
 import assertk.assertions.contains
+import assertk.assertions.isEqualTo
 import net.thauvin.erik.mobibot.modules.Lookup.Companion.nslookup
 import net.thauvin.erik.mobibot.modules.Lookup.Companion.whois
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
+import org.mockito.ArgumentCaptor
+import org.mockito.Mockito
+import org.pircbotx.hooks.types.GenericMessageEvent
 import kotlin.test.Test
 
 class LookupTest {
+    @Nested
+    @DisplayName("Command Response Tests")
+    inner class CommandResponseTests {
+        @Test
+        fun lookupByHostname() {
+            val lookup = Lookup()
+            val event = Mockito.mock(GenericMessageEvent::class.java)
+            val captor = ArgumentCaptor.forClass(String::class.java)
+
+            lookup.commandResponse("channel", "lookup", "ec2-54-234-237-183.compute-1.amazonaws.com", event)
+
+            Mockito.verify(event, Mockito.times(1)).respondWith(captor.capture())
+            assertThat(captor.value).contains("54.234.237.183")
+        }
+
+        @Test
+        fun lookupByAddress() {
+            val lookup = Lookup()
+            val event = Mockito.mock(GenericMessageEvent::class.java)
+            val captor = ArgumentCaptor.forClass(String::class.java)
+
+            lookup.commandResponse("channel", "lookup", "54.234.237.183", event)
+
+            Mockito.verify(event, Mockito.times(1)).respondWith(captor.capture())
+            assertThat(captor.value).contains("ec2-54-234-237-183.compute-1.amazonaws.com")
+        }
+
+        @Test
+        fun lookupUnknownHostname() {
+            val lookup = Lookup()
+            val event = Mockito.mock(GenericMessageEvent::class.java)
+            val captor = ArgumentCaptor.forClass(String::class.java)
+
+            lookup.commandResponse("channel", "lookup", "foobar", event)
+
+            Mockito.verify(event, Mockito.times(1)).respond(captor.capture())
+            assertThat(captor.value).isEqualTo("Unknown host.")
+        }
+
+
+    }
+
     @Nested
     @DisplayName("Lookup Tests")
     inner class LookupTests {

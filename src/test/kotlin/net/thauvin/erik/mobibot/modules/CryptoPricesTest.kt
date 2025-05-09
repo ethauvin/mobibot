@@ -32,9 +32,7 @@ package net.thauvin.erik.mobibot.modules
 
 import assertk.all
 import assertk.assertThat
-import assertk.assertions.isEqualTo
-import assertk.assertions.isGreaterThan
-import assertk.assertions.prop
+import assertk.assertions.*
 import net.thauvin.erik.crypto.CryptoPrice
 import net.thauvin.erik.mobibot.modules.CryptoPrices.Companion.currentPrice
 import net.thauvin.erik.mobibot.modules.CryptoPrices.Companion.getCurrencyName
@@ -42,15 +40,14 @@ import net.thauvin.erik.mobibot.modules.CryptoPrices.Companion.loadCurrencies
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
+import org.mockito.ArgumentCaptor
+import org.mockito.Mockito
+import org.pircbotx.hooks.types.GenericMessageEvent
 import java.util.logging.ConsoleHandler
 import java.util.logging.Level
 import kotlin.test.Test
 
 class CryptoPricesTest {
-    init {
-        loadCurrencies()
-    }
-
     companion object {
         @JvmStatic
         @BeforeAll
@@ -63,12 +60,71 @@ class CryptoPricesTest {
         }
     }
 
+    init {
+        loadCurrencies()
+    }
+
+    @Nested
+    @DisplayName("Command Response Tests")
+    inner class CommandResponseTests {
+        @Test
+        fun `Current price for BTC`() {
+            val cryptoPrices = CryptoPrices()
+            val event = Mockito.mock(GenericMessageEvent::class.java)
+            val captor = ArgumentCaptor.forClass(String::class.java)
+
+            cryptoPrices.commandResponse("channel", "crypto", "btc", event)
+
+            Mockito.verify(event, Mockito.times(1)).respond(captor.capture())
+            assertThat(captor.value).startsWith("BTC current price is $")
+        }
+
+        @Test
+        fun `Current price for BTC in EUR`() {
+            val cryptoPrices = CryptoPrices()
+            val event = Mockito.mock(GenericMessageEvent::class.java)
+            val captor = ArgumentCaptor.forClass(String::class.java)
+
+            cryptoPrices.commandResponse("channel", "crypto", "eth eur", event)
+
+            Mockito.verify(event, Mockito.times(1)).respond(captor.capture())
+            assertThat(captor.value).matches(Regex("ETH current price is €.* \\[Euro]"))
+        }
+
+        @Test
+        fun `Invalid crypto symbol`() {
+            val cryptoPrices = CryptoPrices()
+            val event = Mockito.mock(GenericMessageEvent::class.java)
+            val captor = ArgumentCaptor.forClass(String::class.java)
+
+            cryptoPrices.commandResponse("channel", "crypto", "foo", event)
+
+            Mockito.verify(event, Mockito.times(1)).respond(captor.capture())
+            assertThat(captor.value)
+                .isEqualTo("${CryptoPrices.DEFAULT_ERROR_MESSAGE}: not found")
+        }
+    }
+
+    @Nested
+    @DisplayName("Currency Name Tests")
+    inner class CurrencyNameTests {
+        @Test
+        fun `Currency name for USD`() {
+            assertThat(getCurrencyName("USD"), "USD").isEqualTo("United States Dollar")
+        }
+
+        @Test
+        fun `Currency name for EUR`() {
+            assertThat(getCurrencyName("EUR"), "EUR").isEqualTo("Euro")
+        }
+    }
+
     @Nested
     @DisplayName("Current Price Tests")
     inner class CurrentPriceTests {
         @Test
         @Throws(ModuleException::class)
-        fun currentPriceBitcoin() {
+        fun `Current price for Bitcoin`() {
             val price = currentPrice(listOf("BTC"))
             assertThat(price, "currentPrice(BTC)").all {
                 prop(CryptoPrice::base).isEqualTo("BTC")
@@ -79,27 +135,13 @@ class CryptoPricesTest {
 
         @Test
         @Throws(ModuleException::class)
-        fun currentPriceEthereum() {
+        fun `Current price for Ethereum in Euro`() {
             val price = currentPrice(listOf("ETH", "EUR"))
             assertThat(price, "currentPrice(ETH, EUR)").all {
                 prop(CryptoPrice::base).isEqualTo("ETH")
                 prop(CryptoPrice::currency).isEqualTo("EUR")
                 prop(CryptoPrice::amount).transform { it.signum() }.isGreaterThan(0)
             }
-        }
-    }
-
-    @Nested
-    @DisplayName("Currency Name Tests")
-    inner class CurrencyNameTests {
-        @Test
-        fun getCurrencyNameUsd() {
-            assertThat(getCurrencyName("USD"), "USD").isEqualTo("United States Dollar")
-        }
-
-        @Test
-        fun getCurrencyNameEur() {
-            assertThat(getCurrencyName("EUR"), "EUR").isEqualTo("Euro")
         }
     }
 }

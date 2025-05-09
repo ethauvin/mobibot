@@ -31,7 +31,6 @@
 package net.thauvin.erik.mobibot.modules
 
 import net.thauvin.erik.mobibot.ReleaseInfo
-import net.thauvin.erik.mobibot.Utils.capitalize
 import net.thauvin.erik.mobibot.Utils.colorize
 import net.thauvin.erik.mobibot.Utils.encodeUrl
 import net.thauvin.erik.mobibot.Utils.helpFormat
@@ -56,14 +55,23 @@ import java.net.URL
 class GoogleSearch : AbstractModule() {
     private val logger: Logger = LoggerFactory.getLogger(GoogleSearch::class.java)
 
-    override val name = "GoogleSearch"
+    override val name = SERVICE_NAME
 
     companion object {
-        // Google API Key property
+        /**
+         *  API Key property
+         */
         const val API_KEY_PROP = "google-api-key"
 
-        // Google Custom Search Engine ID property
+        /**
+         * Google Custom Search Engine ID property
+         */
         const val CSE_KEY_PROP = "google-cse-cx"
+
+        /**
+         * The service name
+         */
+        const val SERVICE_NAME = "GoogleSearch"
 
         // Google command
         private const val GOOGLE_CMD = "google"
@@ -82,7 +90,7 @@ class GoogleSearch : AbstractModule() {
             if (apiKey.isNullOrBlank() || cseKey.isNullOrBlank()) {
                 throw ModuleException(
                     "${GoogleSearch::class.java.name} is disabled.",
-                    "${GOOGLE_CMD.capitalize()} is disabled. The API keys are missing."
+                    "$SERVICE_NAME is disabled. The API keys are missing."
                 )
             }
             val results = mutableListOf<Message>()

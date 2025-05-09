@@ -74,11 +74,18 @@ class Mastodon : SocialModule() {
          */
         @JvmStatic
         @Throws(ModuleException::class)
-        fun toot(apiKey: String?, instance: String?, handle: String?, message: String, isDm: Boolean): String {
+        fun toot(accessToken: String?, instance: String?, handle: String?, message: String, isDm: Boolean): String {
+            if (accessToken.isNullOrBlank()) {
+                throw ModuleException("Missing access token", "The access token is missing.")
+            } else if (instance.isNullOrBlank()) {
+                throw ModuleException("Missing instance", "The Mastodon instance is missing.")
+            } else if (isDm && handle.isNullOrBlank()) {
+                throw ModuleException("Missing handle", "The Mastodon handle is missing.")
+            }
             val request = HttpRequest.newBuilder()
                 .uri(URI.create("https://$instance/api/v1/statuses"))
                 .header("Content-Type", "application/json")
-                .header("Authorization", "Bearer $apiKey")
+                .header("Authorization", "Bearer $accessToken")
                 .POST(
                     HttpRequest.BodyPublishers.ofString(
                         JSONWriter.valueToString(
@@ -89,8 +96,7 @@ class Mastodon : SocialModule() {
                             }
                         )
                     )
-                )
-                .build()
+                ).build()
             try {
                 val response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString())
                 if (response.statusCode() == 200) {
@@ -105,7 +111,7 @@ class Mastodon : SocialModule() {
                         throw ModuleException("mastodonPost($message)", "A JSON error has occurred: ${e.message}", e)
                     }
                 } else {
-                    throw IOException("Status Code: " + response.statusCode())
+                    throw IOException("HTTP Status Code: " + response.statusCode())
                 }
             } catch (e: IOException) {
                 throw ModuleException("mastodonPost($message)", "An IO error has occurred: ${e.message}", e)
@@ -142,7 +148,7 @@ class Mastodon : SocialModule() {
     @Throws(ModuleException::class)
     override fun post(message: String, isDm: Boolean): String {
         return toot(
-            apiKey = properties[ACCESS_TOKEN_PROP],
+            accessToken = properties[ACCESS_TOKEN_PROP],
             instance = properties[INSTANCE_PROP],
             handle = handle,
             message = message,

@@ -35,40 +35,85 @@ package net.thauvin.erik.mobibot.modules
 import assertk.assertThat
 import assertk.assertions.isEqualTo
 import assertk.assertions.matches
+import assertk.assertions.startsWith
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.RepeatedTest
+import org.mockito.ArgumentCaptor
+import org.mockito.Mockito
+import org.pircbotx.hooks.types.GenericMessageEvent
 import kotlin.random.Random
 import kotlin.test.Test
 
 class DiceTest {
     @Nested
+    @DisplayName("Command Response Tests")
+    inner class CommandResponseTests {
+        @Test
+        fun `Roll die`() {
+            val dice = Dice()
+            val event = Mockito.mock(GenericMessageEvent::class.java)
+            val captor = ArgumentCaptor.forClass(String::class.java)
+
+            dice.commandResponse("channel", "dice", "", event)
+
+            Mockito.verify(event, Mockito.times(1)).respond(captor.capture())
+            assertThat(captor.value).startsWith("you rolled")
+        }
+
+        @RepeatedTest(3)
+        fun `Roll die with 9 sides`() {
+            val dice = Dice()
+            val event = Mockito.mock(GenericMessageEvent::class.java)
+            val captor = ArgumentCaptor.forClass(String::class.java)
+
+            dice.commandResponse("channel", "dice", "1d9", event)
+
+            Mockito.verify(event, Mockito.times(1)).respond(captor.capture())
+            assertThat(captor.value).matches("you rolled \u0002[1-9]\u0002".toRegex())
+        }
+
+        @RepeatedTest(3)
+        fun `Roll dice`() {
+            val dice = Dice()
+            val event = Mockito.mock(GenericMessageEvent::class.java)
+            val captor = ArgumentCaptor.forClass(String::class.java)
+
+            dice.commandResponse("channel", "dice", "2d6", event)
+
+            Mockito.verify(event, Mockito.times(1)).respond(captor.capture())
+            assertThat(captor.value)
+                .matches("you rolled \u0002[1-6]\u0002 \\+ \u0002[1-6]\u0002 = \u0002\\d{1,2}\\u0002".toRegex())
+        }
+    }
+
+    @Nested
     @DisplayName("Roll Tests")
     inner class RollTests {
         @Test
-        fun `Roll 1 die with 1 side`() {
-            assertThat(Dice.roll(1, 1)).isEqualTo("\u00021\u0002")
-        }
-
-        @Test
-        fun `Roll 1 die with 6 sides`() {
+        fun `Roll die`() {
             assertThat(Dice.roll(1, 6)).matches("\u0002[1-6]\u0002".toRegex())
         }
 
+        @Test
+        fun `Roll die with 1 side`() {
+            assertThat(Dice.roll(1, 1)).isEqualTo("\u00021\u0002")
+        }
+
         @RepeatedTest(5)
-        fun `Roll 1 die with random sides`() {
+        fun `Roll die with random sides`() {
             assertThat(Dice.roll(1, Random.nextInt(1, 11))).matches("\u0002([1-9]|10)\u0002".toRegex())
+        }
+
+        @Test
+        fun `Roll 2 dice`() {
+            assertThat(Dice.roll(2, 6))
+                .matches("\u0002[1-6]\u0002 \\+ \u0002[1-6]\u0002 = \u0002[1-9][0-2]?\u0002".toRegex())
         }
 
         @Test
         fun `Roll 2 dice with 1 side`() {
             assertThat(Dice.roll(2, 1)).isEqualTo("\u00021\u0002 + \u00021\u0002 = \u00022\u0002")
-        }
-
-        @Test
-        fun `Roll 2 dice with 6 sides`() {
-            assertThat(Dice.roll(2, 6))
-                .matches("\u0002[1-6]\u0002 \\+ \u0002[1-6]\u0002 = \u0002[1-9][0-2]?\u0002".toRegex())
         }
 
         @Test

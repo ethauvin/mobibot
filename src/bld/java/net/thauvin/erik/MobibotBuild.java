@@ -125,7 +125,12 @@ public class MobibotBuild extends Project {
                 .include(dependency("net.thauvin.erik", "pinboard-poster", "1.2.1-SNAPSHOT"))
                 .include(dependency("net.thauvin.erik.urlencoder", "urlencoder-lib-jvm", "1.6.0"));
         scope(test)
+                // Mockito
+                .include(dependency("net.bytebuddy", "byte-buddy", version(1, 17, 5)))
+                .include(dependency("org.mockito.kotlin", "mockito-kotlin", version(5, 4, 0)))
+                // AssertK
                 .include(dependency("com.willowtreeapps.assertk", "assertk-jvm", version(0, 28, 1)))
+                // JUnit
                 .include(dependency("org.jetbrains.kotlin", "kotlin-test-junit5", kotlin))
                 .include(dependency("org.junit.jupiter", "junit-jupiter", version(5, 12, 2)))
                 .include(dependency("org.junit.platform", "junit-platform-console-standalone", version(1, 12, 2)))

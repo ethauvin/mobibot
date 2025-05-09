@@ -73,11 +73,11 @@ class Calc : AbstractModule() {
         if (args.isNotBlank()) {
             try {
                 event.respond(calculate(args))
-            } catch (e: IllegalArgumentException) {
-                if (logger.isWarnEnabled) logger.warn("Failed to calculate: $args", e)
-                event.respond("No idea. This is the kind of math I don't get.")
             } catch (e: UnknownFunctionOrVariableException) {
                 if (logger.isWarnEnabled) logger.warn("Unable to calculate: $args", e)
+                event.respond("No idea. This is the kind of math I don't get.")
+            } catch (e: IllegalArgumentException) {
+                if (logger.isWarnEnabled) logger.warn("Failed to calculate: $args", e)
                 event.respond("No idea. I must've some form of Dyscalculia.")
             }
         } else {

@@ -37,37 +37,70 @@ import assertk.assertions.isInstanceOf
 import net.objecthunter.exp4j.tokenizer.UnknownFunctionOrVariableException
 import net.thauvin.erik.mobibot.Utils.bold
 import net.thauvin.erik.mobibot.modules.Calc.Companion.calculate
+import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Nested
+import org.mockito.Mockito
+import org.pircbotx.hooks.types.GenericMessageEvent
 import kotlin.test.Test
 
 class CalcTest {
-    @Test
-    fun `Calculate basic addition`() {
-        assertThat(calculate("1 + 1"), "calculate(1+1)").isEqualTo("1+1 = ${2.bold()}")
+    @Nested
+    @DisplayName("Calculate Tests")
+    inner class CalculateTests {
+        @Test
+        fun `Calculate basic addition`() {
+            assertThat(calculate("1 + 1"), "calculate(1+1)").isEqualTo("1+1 = ${2.bold()}")
+        }
+
+        @Test
+        fun `Calculate basic subtraction`() {
+            assertThat(calculate("1 -3"), "calculate(1-3)").isEqualTo("1-3 = ${(-2).bold()}")
+        }
+
+        @Test
+        fun `Calculate mathematical constants`() {
+            assertThat(calculate("pi+π+e+φ"), "calculate(pi+π+e+φ)").isEqualTo("pi+π+e+φ = ${"10.62".bold()}")
+        }
+
+        @Test
+        fun `Calculate scientific notations`() {
+            assertThat(calculate("3e2 - 3e1"), "calculate(3e2-3e1 )").isEqualTo("3e2-3e1 = ${"270".bold()}")
+        }
+
+        @Test
+        fun `Calculate trigonometric functions`() {
+            assertThat(calculate("3*sin(10)-cos(2)"), "calculate(3*sin(10)-cos(2)")
+                .isEqualTo("3*sin(10)-cos(2) = ${"-1.22".bold()}")
+        }
+
+        @Test
+        fun `Empty calculation should throw exception`() {
+            assertFailure { calculate(" ") }.isInstanceOf(IllegalArgumentException::class.java)
+        }
+
+        @Test
+        fun `Invalid calculation should throw exception`() {
+            assertFailure { calculate("a + b = c") }.isInstanceOf(UnknownFunctionOrVariableException::class.java)
+        }
     }
 
-    @Test
-    fun `Calculate basic subtraction`() {
-        assertThat(calculate("1 -3"), "calculate(1-3)").isEqualTo("1-3 = ${(-2).bold()}")
-    }
+    @Nested
+    @DisplayName("Command Response Tests")
+    inner class CommandResponseTests {
+        @Test
+        fun `Basic calculation`() {
+            val calc = Calc()
+            val event = Mockito.mock(GenericMessageEvent::class.java)
+            calc.commandResponse("channel", "calc", "1 + 1 * 2", event)
+            Mockito.verify(event, Mockito.times(1)).respond("1+1*2 = ${"3".bold()}")
+        }
 
-    @Test
-    fun `Calculate mathematical constants`() {
-        assertThat(calculate("pi+π+e+φ"), "calculate(pi+π+e+φ)").isEqualTo("pi+π+e+φ = ${"10.62".bold()}")
-    }
-
-    @Test
-    fun `Calculate scientific notations`() {
-        assertThat(calculate("3e2 - 3e1"), "calculate(3e2-3e1 )").isEqualTo("3e2-3e1 = ${"270".bold()}")
-    }
-
-    @Test
-    fun `Calculate trigonometric functions`() {
-        assertThat(calculate("3*sin(10)-cos(2)"), "calculate(3*sin(10)-cos(2)")
-            .isEqualTo("3*sin(10)-cos(2) = ${"-1.22".bold()}")
-    }
-
-    @Test
-    fun `Invalid calculation show throw exception`() {
-        assertFailure { calculate("one + one") }.isInstanceOf(UnknownFunctionOrVariableException::class.java)
+        @Test
+        fun `Invalid calculation`() {
+            val calc = Calc()
+            val event = Mockito.mock(GenericMessageEvent::class.java)
+            calc.commandResponse("channel", "calc", "two + two", event)
+            Mockito.verify(event, Mockito.times(1)).respond("No idea. This is the kind of math I don't get.")
+        }
     }
 }

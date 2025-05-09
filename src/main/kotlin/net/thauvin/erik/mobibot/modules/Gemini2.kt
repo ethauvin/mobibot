@@ -130,6 +130,9 @@ class Gemini2 : AbstractModule() {
                 e.message?.let {
                     event.respond(it)
                 }
+            } catch (e: NumberFormatException) {
+                if (logger.isErrorEnabled) logger.error("Invalid $MAX_TOKENS_PROP property.", e)
+                event.respond("The $name module is misconfigured.")
             }
         } else {
             helpResponse(event)

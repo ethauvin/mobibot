@@ -74,7 +74,7 @@ class ModuleExceptionTest {
         @Test
         fun sanitizeMessage() {
             val apiKey = "1234567890"
-            var e = ModuleException(DEBUG_MESSAGE, MESSAGE, IOException("URL http://foo.com?apiKey=$apiKey&userID=me"))
+            var e = ModuleException(DEBUG_MESSAGE, MESSAGE, IOException("URL https://foo.com?apiKey=$apiKey&userID=me"))
             assertThat(
                 e.sanitize(apiKey, "", "me").message, "ModuleException(debugMessage, message, IOException(url))"
             ).isNotNull().all {

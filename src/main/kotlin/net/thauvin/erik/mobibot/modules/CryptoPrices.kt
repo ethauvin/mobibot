@@ -50,47 +50,6 @@ class CryptoPrices : AbstractModule() {
 
     override val name = "CryptoPrices"
 
-    /**
-     * Returns the cryptocurrency market price from
-     * [Coinbase](https://docs.cdp.coinbase.com/coinbase-app/docs/api-prices#get-spot-price).
-     */
-    override fun commandResponse(channel: String, cmd: String, args: String, event: GenericMessageEvent) {
-        if (CURRENCIES.isEmpty()) {
-            try {
-                loadCurrencies()
-            } catch (e: ModuleException) {
-                if (logger.isWarnEnabled) logger.warn(e.debugMessage, e)
-            }
-        }
-
-        val debugMessage = "crypto($cmd $args)"
-        if (args == CODES_KEYWORD) {
-            event.sendMessage("The supported currencies are:")
-            event.sendList(ArrayList(CURRENCIES.keys), 10, isIndent = true)
-        } else if (args.matches("\\w+( [a-zA-Z]{3}+)?".toRegex())) {
-            try {
-                val price = currentPrice(args.split(' '))
-                val amount = try {
-                    price.toCurrency()
-                } catch (_: IllegalArgumentException) {
-                    price.amount
-                }
-                event.respond("${price.base} current price is $amount [${CURRENCIES[price.currency]}]")
-            } catch (e: CryptoException) {
-                if (logger.isWarnEnabled) logger.warn("$debugMessage => ${e.statusCode}", e)
-                e.message?.let {
-                    event.respond(it)
-                }
-            } catch (e: IOException) {
-                if (logger.isErrorEnabled) logger.error(debugMessage, e)
-                event.respond("An IO error has occurred while retrieving the cryptocurrency market price.")
-            }
-        } else {
-            helpResponse(event)
-        }
-
-    }
-
     companion object {
         // Crypto command
         private const val CRYPTO_CMD = "crypto"
@@ -100,6 +59,9 @@ class CryptoPrices : AbstractModule() {
 
         // Currency codes keyword
         private const val CODES_KEYWORD = "codes"
+
+        // Default error message
+        const val DEFAULT_ERROR_MESSAGE = "An error has occurred while retrieving the cryptocurrency market price"
 
         /**
          * Get the current market price.
@@ -155,5 +117,48 @@ class CryptoPrices : AbstractModule() {
             add(helpFormat("%c $CRYPTO_CMD $CODES_KEYWORD"))
         }
         loadCurrencies()
+    }
+
+    /**
+     * Returns the cryptocurrency market price from
+     * [Coinbase](https://docs.cdp.coinbase.com/coinbase-app/docs/api-prices#get-spot-price).
+     */
+    override fun commandResponse(channel: String, cmd: String, args: String, event: GenericMessageEvent) {
+        if (CURRENCIES.isEmpty()) {
+            try {
+                loadCurrencies()
+            } catch (e: ModuleException) {
+                if (logger.isWarnEnabled) logger.warn(e.debugMessage, e)
+            }
+        }
+
+        val debugMessage = "crypto($cmd $args)"
+        if (args == CODES_KEYWORD) {
+            event.sendMessage("The supported currencies are:")
+            event.sendList(ArrayList(CURRENCIES.keys), 10, isIndent = true)
+        } else if (args.matches("\\w+( [a-zA-Z]{3}+)?".toRegex())) {
+            try {
+                val price = currentPrice(args.split(' '))
+                val amount = try {
+                    price.toCurrency()
+                } catch (_: IllegalArgumentException) {
+                    price.amount
+                }
+                event.respond("${price.base} current price is $amount [${CURRENCIES[price.currency]}]")
+            } catch (e: CryptoException) {
+                if (logger.isWarnEnabled) logger.warn("$debugMessage => ${e.statusCode}", e)
+                if (e.message != null) {
+                    event.respond("$DEFAULT_ERROR_MESSAGE: ${e.message}")
+                } else {
+                    event.respond("$DEFAULT_ERROR_MESSAGE.")
+                }
+            } catch (e: IOException) {
+                if (logger.isErrorEnabled) logger.error(debugMessage, e)
+                event.respond("$DEFAULT_ERROR_MESSAGE: ${e.message}")
+            }
+        } else {
+            helpResponse(event)
+        }
+
     }
 }

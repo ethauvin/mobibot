@@ -39,6 +39,11 @@ import net.thauvin.erik.mobibot.LocalProperties
 import net.thauvin.erik.mobibot.modules.StockQuote.Companion.getQuote
 import net.thauvin.erik.mobibot.msg.ErrorMessage
 import net.thauvin.erik.mobibot.msg.Message
+import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Nested
+import org.mockito.ArgumentCaptor
+import org.mockito.Mockito
+import org.pircbotx.hooks.types.GenericMessageEvent
 import kotlin.test.Test
 
 class StockQuoteTest : LocalProperties() {
@@ -61,55 +66,75 @@ class StockQuoteTest : LocalProperties() {
         }
     }
 
-    @Test
-    @Throws(ModuleException::class)
-    fun `API key should not be empty`() {
-        assertFailure { getSanitizedQuote("test", "") }.isInstanceOf(ModuleException::class.java)
-            .messageContains("disabled")
-    }
+    @Nested
+    @DisplayName("Command Response Tests")
+    inner class CommandResponseTests {
+        @Test
+        fun `API Key is missing`() {
+            val stockQuote = StockQuote()
+            val event = Mockito.mock(GenericMessageEvent::class.java)
+            val captor = ArgumentCaptor.forClass(String::class.java)
 
-    @Test
-    @Throws(ModuleException::class)
-    fun `Symbol should not be empty`() {
-        assertThat(getSanitizedQuote("", "apikey").first(), "getQuote(empty)").all {
-            isInstanceOf(ErrorMessage::class.java)
-            prop(Message::msg).isEqualTo(StockQuote.INVALID_SYMBOL)
+            stockQuote.commandResponse("channel", "stock", "goog", event)
+
+            Mockito.verify(event, Mockito.atLeastOnce()).respond(captor.capture())
+            assertThat(captor.value).isEqualTo("${StockQuote.SERVICE_NAME} is disabled. The API key is missing.")
         }
     }
 
-    @Test
-    @Throws(ModuleException::class)
-    fun `Get stock quote for Apple`() {
-        val symbol = "apple inc"
-        val messages = getSanitizedQuote(symbol, apiKey)
-        assertThat(messages, "response not empty").isNotEmpty()
-        assertThat(messages, "getQuote($symbol)").index(0).prop(Message::msg)
-            .matches("Symbol: AAPL .*".toRegex())
-        assertThat(messages, "getQuote($symbol)").index(1).prop(Message::msg)
-            .matches(buildMatch("Price").toRegex())
-        assertThat(messages, "getQuote($symbol)").index(2).prop(Message::msg)
-            .matches(buildMatch("Previous").toRegex())
-        assertThat(messages, "getQuote($symbol)").index(3).prop(Message::msg)
-            .matches(buildMatch("Open").toRegex())
-    }
+    @Nested
+    @DisplayName("Get Quote Tests")
+    inner class GetQuoteTests {
+        @Test
+        @Throws(ModuleException::class)
+        fun `API key should not be empty`() {
+            assertFailure { getSanitizedQuote("test", "") }.isInstanceOf(ModuleException::class.java)
+                .messageContains("disabled")
+        }
 
-    @Test
-    @Throws(ModuleException::class)
-    fun `Get stock quote for Google`() {
-        val symbol = "goog"
-        val messages = getSanitizedQuote(symbol, apiKey)
-        assertThat(messages, "response not empty").isNotEmpty()
-        assertThat(messages, "getQuote($symbol)").index(0).prop(Message::msg)
-            .matches("Symbol: GOOG .*".toRegex())
-    }
+        @Test
+        @Throws(ModuleException::class)
+        fun `Symbol should not be empty`() {
+            assertThat(getSanitizedQuote("", "apikey").first(), "getQuote(empty)").all {
+                isInstanceOf(ErrorMessage::class.java)
+                prop(Message::msg).isEqualTo(StockQuote.INVALID_SYMBOL)
+            }
+        }
 
-    @Test
-    @Throws(ModuleException::class)
-    fun `Invalid symbol should throw exception`() {
-        val symbol = "foobar"
-        assertThat(getSanitizedQuote(symbol, apiKey).first(), "getQuote($symbol)").all {
-            isInstanceOf(ErrorMessage::class.java)
-            prop(Message::msg).isEqualTo(StockQuote.INVALID_SYMBOL)
+        @Test
+        @Throws(ModuleException::class)
+        fun `Get stock quote for Apple`() {
+            val symbol = "apple inc"
+            val messages = getSanitizedQuote(symbol, apiKey)
+            assertThat(messages, "response not empty").isNotEmpty()
+            assertThat(messages, "getQuote($symbol)").index(0).prop(Message::msg)
+                .matches("Symbol: AAPL .*".toRegex())
+            assertThat(messages, "getQuote($symbol)").index(1).prop(Message::msg)
+                .matches(buildMatch("Price").toRegex())
+            assertThat(messages, "getQuote($symbol)").index(2).prop(Message::msg)
+                .matches(buildMatch("Previous").toRegex())
+            assertThat(messages, "getQuote($symbol)").index(3).prop(Message::msg)
+                .matches(buildMatch("Open").toRegex())
+        }
+
+        @Test
+        @Throws(ModuleException::class)
+        fun `Get stock quote for Google`() {
+            val symbol = "goog"
+            val messages = getSanitizedQuote(symbol, apiKey)
+            assertThat(messages, "response not empty").isNotEmpty()
+            assertThat(messages, "getQuote($symbol)").index(0).prop(Message::msg)
+                .matches("Symbol: GOOG .*".toRegex())
+        }
+
+        @Test
+        @Throws(ModuleException::class)
+        fun `Invalid symbol should throw exception`() {
+            val symbol = "foobar"
+            assertThat(getSanitizedQuote(symbol, apiKey).first(), "getQuote($symbol)").all {
+                isInstanceOf(ErrorMessage::class.java)
+                prop(Message::msg).isEqualTo(StockQuote.INVALID_SYMBOL)
+            }
         }
     }
 }

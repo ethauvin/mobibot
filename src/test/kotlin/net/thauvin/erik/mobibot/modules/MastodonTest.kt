@@ -30,25 +30,104 @@
  */
 package net.thauvin.erik.mobibot.modules
 
+import assertk.assertFailure
 import assertk.assertThat
 import assertk.assertions.contains
+import assertk.assertions.hasMessage
+import assertk.assertions.isEqualTo
+import assertk.assertions.isInstanceOf
 import net.thauvin.erik.mobibot.LocalProperties
 import net.thauvin.erik.mobibot.modules.Mastodon.Companion.toot
+import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Nested
+import org.mockito.ArgumentCaptor
+import org.mockito.Mockito
+import org.mockito.kotlin.whenever
+import org.pircbotx.hooks.types.GenericMessageEvent
 import kotlin.test.Test
 
 class MastodonTest : LocalProperties() {
-    @Test
-    @Throws(ModuleException::class)
-    fun `Toot on Mastodon`() {
-        val msg = "Testing Mastodon API from ${getHostName()}"
-        assertThat(
-            toot(
-                getProperty(Mastodon.ACCESS_TOKEN_PROP),
-                getProperty(Mastodon.INSTANCE_PROP),
-                getProperty(Mastodon.HANDLE_PROP),
-                msg,
-                true
-            )
-        ).contains(msg)
+    @Nested
+    @DisplayName("Command Response Tests")
+    inner class CommandResponseTests {
+        @Test
+        fun `API Key is not specified`() {
+            val mastodon = Mastodon()
+            val event = Mockito.mock(GenericMessageEvent::class.java)
+            val captor = ArgumentCaptor.forClass(String::class.java)
+            val user = Mockito.mock(org.pircbotx.User::class.java)
+
+            whenever(event.user).thenReturn(user)
+            whenever(user.nick).thenReturn("mock")
+
+            mastodon.commandResponse("channel", "toot", "This is a test.", event)
+
+            Mockito.verify(event, Mockito.atLeastOnce()).respond(captor.capture())
+            assertThat(captor.value).isEqualTo("The access token is missing.")
+        }
+    }
+
+    @Nested
+    @DisplayName("Toot Tests")
+    inner class TootTests {
+        @Test
+        @Throws(ModuleException::class)
+        fun `Empty Access Token should throw exception`() {
+            val msg = "Testing Mastodon API from ${getHostName()}"
+            assertFailure {
+                toot(
+                    "",
+                    getProperty(Mastodon.INSTANCE_PROP),
+                    getProperty(Mastodon.HANDLE_PROP),
+                    msg,
+                    true
+                )
+            }.isInstanceOf(ModuleException::class.java).hasMessage("The access token is missing.")
+        }
+
+        @Test
+        @Throws(ModuleException::class)
+        fun `Empty Handle should throw exception`() {
+            val msg = "Testing Mastodon API from ${getHostName()}"
+            assertFailure {
+                toot(
+                    getProperty(Mastodon.ACCESS_TOKEN_PROP),
+                    getProperty(Mastodon.INSTANCE_PROP),
+                    "",
+                    msg,
+                    true
+                )
+            }.isInstanceOf(ModuleException::class.java).hasMessage("The Mastodon handle is missing.")
+        }
+
+        @Test
+        @Throws(ModuleException::class)
+        fun `Empty Instance should throw exception`() {
+            val msg = "Testing Mastodon API from ${getHostName()}"
+            assertFailure {
+                toot(
+                    getProperty(Mastodon.ACCESS_TOKEN_PROP),
+                    "",
+                    getProperty(Mastodon.HANDLE_PROP),
+                    msg,
+                    true
+                )
+            }.isInstanceOf(ModuleException::class.java).hasMessage("The Mastodon instance is missing.")
+        }
+
+        @Test
+        @Throws(ModuleException::class)
+        fun `Toot on Mastodon`() {
+            val msg = "Testing Mastodon API from ${getHostName()}"
+            assertThat(
+                toot(
+                    getProperty(Mastodon.ACCESS_TOKEN_PROP),
+                    getProperty(Mastodon.INSTANCE_PROP),
+                    getProperty(Mastodon.HANDLE_PROP),
+                    msg,
+                    true
+                )
+            ).contains(msg)
+        }
     }
 }

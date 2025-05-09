@@ -96,7 +96,7 @@ class RockPaperScissors : AbstractModule() {
 
     override fun commandResponse(channel: String, cmd: String, args: String, event: GenericMessageEvent) {
         val hand = Hands.valueOf(cmd.uppercase())
-        val botHand = Hands.entries[(0..Hands.entries.size).random()]
+        val botHand = Hands.entries[(0..Hands.entries.size - 1).random()]
         when {
             hand == botHand -> {
                 event.respond("${hand.name} vs. ${botHand.name} » You ${"tie".bold()}.")

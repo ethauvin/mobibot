@@ -1,5 +1,5 @@
 /*
- * PingTest.kt
+ * WarTest.kt
  *
  * Copyright 2004-2025 Erik C. Thauvin (erik@thauvin.net)
  *
@@ -28,24 +28,27 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
 package net.thauvin.erik.mobibot.modules
 
 import assertk.assertThat
-import assertk.assertions.contains
-import assertk.assertions.isNotEmpty
-import net.thauvin.erik.mobibot.modules.Ping.Companion.randomPing
-import kotlin.test.Test
+import assertk.assertions.matches
+import org.junit.jupiter.api.RepeatedTest
+import org.mockito.ArgumentCaptor
+import org.mockito.Mockito
+import org.pircbotx.hooks.types.GenericMessageEvent
 
-class PingTest {
-    @Test
-    fun `Get a random ping`() {
-        for (i in 0..9) {
-            assertThat(Ping.PINGS, "Ping.PINGS[$i]").contains(randomPing())
-        }
-    }
+class WarTest {
+    @RepeatedTest(3)
+    fun `Play war`() {
+        val war = War()
+        val event = Mockito.mock(GenericMessageEvent::class.java)
+        val captor = ArgumentCaptor.forClass(String::class.java)
 
-    @Test
-    fun `Pings array should not be empty`() {
-        assertThat(Ping.PINGS, "Ping.PINGS").isNotEmpty()
+        war.commandResponse("channel", "war", "", event)
+
+        Mockito.verify(event, Mockito.atLeastOnce()).respond(captor.capture())
+        assertThat(captor.value)
+            .matches("[\uD83C\uDCA0-\uD83C\uDCDF] {2}[\uD83C\uDCA0-\uD83C\uDCDF] {2}» .+(win|lose|tie).+!".toRegex())
     }
 }

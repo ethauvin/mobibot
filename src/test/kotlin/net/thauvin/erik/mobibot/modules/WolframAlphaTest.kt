@@ -35,6 +35,7 @@ import assertk.assertFailure
 import assertk.assertThat
 import assertk.assertions.contains
 import assertk.assertions.hasMessage
+import assertk.assertions.isEqualTo
 import assertk.assertions.isInstanceOf
 import net.thauvin.erik.mobibot.DisableOnCi
 import net.thauvin.erik.mobibot.ExceptionSanitizer.sanitize
@@ -45,9 +46,11 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
+import org.mockito.ArgumentCaptor
+import org.mockito.Mockito
+import org.pircbotx.hooks.types.GenericMessageEvent
 import java.util.stream.Stream
 import kotlin.test.Test
-
 
 class WolframAlphaTest : LocalProperties() {
     companion object {
@@ -58,6 +61,22 @@ class WolframAlphaTest : LocalProperties() {
                 Arguments.of("SFO to LAS", WolframAlpha.IMPERIAL, "miles"),
                 Arguments.of("SFO to LAX", WolframAlpha.METRIC, "kilometers")
             )
+        }
+    }
+
+    @Nested
+    @DisplayName("Command Response Tests")
+    inner class CommandResponseTests {
+        @Test
+        fun appIdNotSpecified() {
+            val wolframAlpha = WolframAlpha()
+            val event = Mockito.mock(GenericMessageEvent::class.java)
+            val captor = ArgumentCaptor.forClass(String::class.java)
+
+            wolframAlpha.commandResponse("channel", "wolfram", "1 liter to gallon", event)
+
+            Mockito.verify(event, Mockito.atLeastOnce()).respond(captor.capture())
+            assertThat(captor.value).isEqualTo("No ${WolframAlpha.SERVICE_NAME} AppID specified.")
         }
     }
 

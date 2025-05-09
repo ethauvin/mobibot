@@ -30,7 +30,6 @@
  */
 package net.thauvin.erik.mobibot.modules
 
-import net.thauvin.erik.mobibot.Utils.capitalize
 import net.thauvin.erik.mobibot.Utils.encodeUrl
 import net.thauvin.erik.mobibot.Utils.helpFormat
 import net.thauvin.erik.mobibot.Utils.reader
@@ -54,7 +53,7 @@ import java.net.URL
 class StockQuote : AbstractModule() {
     private val logger: Logger = LoggerFactory.getLogger(StockQuote::class.java)
 
-    override val name = "StockQuote"
+    override val name = SERVICE_NAME
 
     companion object {
         /**
@@ -66,6 +65,11 @@ class StockQuote : AbstractModule() {
          * The Invalid Symbol error string.
          */
         const val INVALID_SYMBOL = "Invalid symbol."
+
+        /**
+         * The service name.
+         */
+        const val SERVICE_NAME = "StockQuote"
 
         // API URL
         private const val API_URL = "https://www.alphavantage.co/query?function="
@@ -111,8 +115,8 @@ class StockQuote : AbstractModule() {
         fun getQuote(symbol: String, apiKey: String?): List<Message> {
             if (apiKey.isNullOrBlank()) {
                 throw ModuleException(
-                    "${StockQuote::class.java.name} is disabled.",
-                    "${STOCK_CMD.capitalize()} is disabled. The API key is missing."
+                    "$SERVICE_NAME is disabled.",
+                    "$SERVICE_NAME is disabled. The API key is missing."
                 )
             }
             val messages = mutableListOf<Message>()

@@ -33,12 +33,36 @@ package net.thauvin.erik.mobibot.modules
 
 import assertk.assertThat
 import assertk.assertions.isEqualTo
+import assertk.assertions.matches
 import net.thauvin.erik.mobibot.modules.RockPaperScissors.Companion.winLoseOrDraw
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
+import org.junit.jupiter.api.RepeatedTest
+import org.mockito.ArgumentCaptor
+import org.mockito.Mockito
+import org.pircbotx.hooks.types.GenericMessageEvent
 import kotlin.test.Test
 
 class RockPaperScissorsTest {
+    @Nested
+    @DisplayName("Command Response Tests")
+    inner class CommandResponseTests {
+        @RepeatedTest(3)
+        fun `Play Rock Paper Scissors`() {
+            val rockPaperScissors = RockPaperScissors()
+            val event = Mockito.mock(GenericMessageEvent::class.java)
+            val captor = ArgumentCaptor.forClass(String::class.java)
+
+            rockPaperScissors.commandResponse("channel", "rock", "", event)
+
+            Mockito.verify(event, Mockito.atLeastOnce()).respond(captor.capture())
+            assertThat(captor.value)
+                .matches(
+                    ".* (vs\\.|crushes|covers|cuts) (ROCK|PAPER|SCISSORS) » You \u0002(tie|win|lose)\u0002.".toRegex()
+                )
+        }
+    }
+
     @Nested
     @DisplayName("Win, Lose or Draw Tests")
     inner class WinLoseOrDrawTests {

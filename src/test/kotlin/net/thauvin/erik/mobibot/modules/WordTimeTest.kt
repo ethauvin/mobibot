@@ -40,11 +40,31 @@ import net.thauvin.erik.mobibot.modules.WorldTime.Companion.COUNTRIES_MAP
 import net.thauvin.erik.mobibot.modules.WorldTime.Companion.time
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
+import org.mockito.ArgumentCaptor
+import org.mockito.Mockito
 import org.pircbotx.Colors
+import org.pircbotx.hooks.types.GenericMessageEvent
 import java.time.ZoneId
 import kotlin.test.Test
 
 class WordTimeTest {
+    @Nested
+    @DisplayName("Command Response Tests")
+    inner class CommandResponseTests {
+        @Test
+        fun `Time in Tokyo`() {
+            val worldTime = WorldTime()
+            val event = Mockito.mock(GenericMessageEvent::class.java)
+            val captor = ArgumentCaptor.forClass(String::class.java)
+
+            worldTime.commandResponse("channel", "time", "jp", event)
+
+            Mockito.verify(event, Mockito.atLeastOnce()).respond(captor.capture())
+            assertThat(captor.value)
+                .matches("The time is \u0002([01]\\d|2[0-3]):([0-5]\\d)\u0002 on .+ in \u0002Tokyo\u0002".toRegex())
+        }
+    }
+
     @Nested
     @DisplayName("Time Tests")
     inner class TimeTests {

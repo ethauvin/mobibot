@@ -42,24 +42,39 @@ import org.slf4j.LoggerFactory
 import java.io.IOException
 import java.net.URL
 
+/**
+ * Allows user to query Wolfram Alpha.
+ */
 class WolframAlpha : AbstractModule() {
     private val logger: Logger = LoggerFactory.getLogger(WolframAlpha::class.java)
 
-    override val name = "WolframAlpha"
+    override val name = SERVICE_NAME
 
     companion object {
         /**
-         * The Wolfram Alpha API Key property.
+         * The Wolfram Alpha AppID property.
          */
         const val APPID_KEY_PROP = "wolfram-appid"
+
+        /**
+         * Metric unit
+         */
+        const val METRIC = "metric"
+
+        /**
+         * Imperial unit
+         */
+        const val IMPERIAL = "imperial"
+
+        /**
+         * The service name.
+         */
+        const val SERVICE_NAME = "WolframAlpha"
 
         /**
          * The Wolfram units properties
          */
         const val UNITS_PROP = "wolfram-units"
-
-        const val METRIC = "metric"
-        const val IMPERIAL = "imperial"
 
         // Wolfram command
         private const val WOLFRAM_CMD = "wolfram"
@@ -79,17 +94,17 @@ class WolframAlpha : AbstractModule() {
                         throw ModuleException(
                             "wolfram($query): ${urlReader.responseCode} : ${urlReader.body} ",
                             urlReader.body.ifEmpty {
-                                "Looks like Wolfram Alpha isn't able to answer that. (${urlReader.responseCode})"
+                                "Looks like $SERVICE_NAME isn't able to answer that. (${urlReader.responseCode})"
                             }
                         )
                     }
                 } catch (ioe: IOException) {
                     throw ModuleException(
-                        "wolfram($query): IOE", "An IO Error occurred while querying Wolfram Alpha.", ioe
+                        "wolfram($query): IOE", "An IO Error occurred while querying $SERVICE_NAME.", ioe
                     )
                 }
             } else {
-                throw ModuleException("wolfram($query): No API Key", "No Wolfram Alpha API key specified.")
+                throw ModuleException("wolfram($query): No API Key", "No $SERVICE_NAME AppID specified.")
             }
         }
     }

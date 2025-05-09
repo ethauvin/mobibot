@@ -48,7 +48,6 @@ import java.net.URL
 import java.text.DecimalFormat
 import java.util.*
 
-
 /**
  * Converts between currencies.
  */
@@ -80,12 +79,18 @@ class CurrencyConverter : AbstractModule() {
         private val SYMBOLS: TreeMap<String, String> = TreeMap()
 
         /**
+         * No API key error message.
+         */
+        const val ERROR_MESSAGE_NO_API_KEY = "No Exchange Rate API key specified."
+
+
+        /**
          * Converts from a currency to another.
          */
         @JvmStatic
         fun convertCurrency(apiKey: String?, query: String): Message {
             if (apiKey.isNullOrEmpty()) {
-                throw ModuleException("${CURRENCY_CMD}($query)", "No Exchange Rate API key specified.")
+                throw ModuleException("${CURRENCY_CMD}($query)", ERROR_MESSAGE_NO_API_KEY)
             }
 
             val cmds = query.split(" ")
@@ -175,17 +180,22 @@ class CurrencyConverter : AbstractModule() {
      */
     override fun commandResponse(channel: String, cmd: String, args: String, event: GenericMessageEvent) {
         reload(properties[API_KEY_PROP])
-
         when {
             SYMBOLS.isEmpty() -> {
                 event.respond(EMPTY_SYMBOLS_TABLE)
             }
 
             args.matches("\\d+([,\\d]+)?(\\.\\d+)? [a-zA-Z]{3}+ (to|in) [a-zA-Z]{3}+".toRegex()) -> {
-                val msg = convertCurrency(properties[API_KEY_PROP], args)
-                event.respond(msg.msg)
-                if (msg.isError) {
-                    helpResponse(event)
+                try {
+                    val msg = convertCurrency(properties[API_KEY_PROP], args)
+                    if (msg.isError) {
+                        helpResponse(event)
+                    } else {
+                        event.respond(msg.msg)
+                    }
+                } catch (e: ModuleException) {
+                    if (LOGGER.isWarnEnabled) LOGGER.warn(e.debugMessage, e)
+                    event.respond(e.message)
                 }
             }
 

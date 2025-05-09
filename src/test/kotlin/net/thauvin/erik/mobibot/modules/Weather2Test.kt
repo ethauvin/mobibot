@@ -45,9 +45,28 @@ import net.thauvin.erik.mobibot.modules.Weather2.Companion.mphToKmh
 import net.thauvin.erik.mobibot.msg.Message
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
+import org.mockito.ArgumentCaptor
+import org.mockito.Mockito
+import org.pircbotx.hooks.types.GenericMessageEvent
 import kotlin.test.Test
 
 class Weather2Test : LocalProperties() {
+    @Nested
+    @DisplayName("Command Response Tests")
+    inner class CommandResponseTests {
+        @Test
+        fun `API Key is missing`() {
+            val weather2 = Weather2()
+            val event = Mockito.mock(GenericMessageEvent::class.java)
+            val captor = ArgumentCaptor.forClass(String::class.java)
+
+            weather2.commandResponse("channel", "weather", "seattle, us", event)
+
+            Mockito.verify(event, Mockito.atLeastOnce()).respond(captor.capture())
+            assertThat(captor.value).isEqualTo("${Weather2.WEATHER_NAME} is disabled. The API key is missing.")
+        }
+    }
+
     @Nested
     @DisplayName("API Key Tests")
     inner class ApiKeyTests {

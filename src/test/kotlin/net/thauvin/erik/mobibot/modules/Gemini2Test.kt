@@ -37,6 +37,9 @@ import net.thauvin.erik.mobibot.DisableOnCi
 import net.thauvin.erik.mobibot.LocalProperties
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
+import org.mockito.ArgumentCaptor
+import org.mockito.Mockito
+import org.pircbotx.hooks.types.GenericMessageEvent
 import kotlin.test.Test
 
 class Gemini2Test : LocalProperties() {
@@ -64,6 +67,22 @@ class Gemini2Test : LocalProperties() {
             assertThat(
                 Gemini2.chat("encode a url in java, one line, just code", apiKey, 60)
             ).isNotNull().contains("UrlEncoder", true)
+        }
+    }
+
+    @Nested
+    @DisplayName("Command Response Tests")
+    inner class CommandResponseTests {
+        @Test
+        fun moduleMisconfigured() {
+            val gemini2 = Gemini2()
+            val event = Mockito.mock(GenericMessageEvent::class.java)
+            val captor = ArgumentCaptor.forClass(String::class.java)
+
+            gemini2.commandResponse("channel", "gemini", "1 liter to gallon", event)
+
+            Mockito.verify(event, Mockito.atLeastOnce()).respond(captor.capture())
+            assertThat(captor.value).isEqualTo("The ${Gemini2.GEMINI_NAME} module is misconfigured.")
         }
     }
 

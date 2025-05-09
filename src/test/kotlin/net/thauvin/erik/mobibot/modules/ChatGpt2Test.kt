@@ -32,26 +32,45 @@ package net.thauvin.erik.mobibot.modules
 
 import assertk.assertFailure
 import assertk.assertThat
-import assertk.assertions.hasNoCause
-import assertk.assertions.isInstanceOf
 import assertk.assertions.contains
+import assertk.assertions.hasNoCause
+import assertk.assertions.isEqualTo
+import assertk.assertions.isInstanceOf
 import net.thauvin.erik.mobibot.DisableOnCi
 import net.thauvin.erik.mobibot.LocalProperties
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
+import org.mockito.ArgumentCaptor
+import org.mockito.Mockito
+import org.pircbotx.hooks.types.GenericMessageEvent
 import kotlin.test.Test
 
 class ChatGpt2Test : LocalProperties() {
-    @Test
-    fun apiKey() {
-        assertFailure { ChatGpt2.chat("1 gallon to liter", "", 0) }
-            .isInstanceOf(ModuleException::class.java)
-            .hasNoCause()
+    @Nested
+    @DisplayName("Command Response Tests")
+    inner class CommandResponseTests {
+        @Test
+        fun moduleMisconfigured() {
+            val chatGpt2 = ChatGpt2()
+            val event = Mockito.mock(GenericMessageEvent::class.java)
+            val captor = ArgumentCaptor.forClass(String::class.java)
+
+            chatGpt2.commandResponse("channel", "chatgpt", "1 liter to gallon", event)
+
+            Mockito.verify(event, Mockito.atLeastOnce()).respond(captor.capture())
+            assertThat(captor.value).isEqualTo("The ${ChatGpt2.CHATGPT_NAME} module is misconfigured.")
+        }
     }
 
     @Nested
     @DisplayName("Chat Tests")
     inner class ChatTests {
+        @Test
+        fun apiKey() {
+            assertFailure { ChatGpt2.chat("1 gallon to liter", "", 0) }
+                .isInstanceOf(ModuleException::class.java)
+                .hasNoCause()
+        }
         private val apiKey = getProperty(ChatGpt2.API_KEY_PROP)
 
         @Test
