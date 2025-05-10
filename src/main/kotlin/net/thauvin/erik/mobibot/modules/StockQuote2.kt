@@ -157,7 +157,7 @@ class StockQuote2 : AbstractModule() {
 
                         add(
                             PublicMessage(
-                                "Symbol: $tickerSymbol"
+                                "Symbol: ${tickerSymbol.bold()}"
                             )
                         )
 
@@ -166,6 +166,16 @@ class StockQuote2 : AbstractModule() {
                         add(
                             PublicMessage(
                                 "Price: ".padEnd(pad).prependIndent() + c
+                            )
+                        )
+                        add(
+                            PublicMessage(
+                                "Previous: ".padEnd(pad).prependIndent() + previous
+                            )
+                        )
+                        add(
+                            NoticeMessage(
+                                "Symbol: ${tickerSymbol.bold()}"
                             )
                         )
                         add(
@@ -186,11 +196,6 @@ class StockQuote2 : AbstractModule() {
                         add(
                             NoticeMessage(
                                 "Open: ".padEnd(pad).prependIndent() + open
-                            )
-                        )
-                        add(
-                            PublicMessage(
-                                "Previous: ".padEnd(pad).prependIndent() + previous
                             )
                         )
                         add(
@@ -242,10 +247,15 @@ class StockQuote2 : AbstractModule() {
                         val json = getJsonResponse(response, debugMessage)
                         val count = json.getInt("count")
                         if (count == 0) {
-                            add(ErrorMessage("Nothing found."))
+                            add(ErrorMessage("Nothing found for: ${keywords.bold()}"))
                             return messages
                         }
 
+                        add(
+                            NoticeMessage(
+                                "Search results for: ${keywords.bold()}"
+                            )
+                        )
                         val results = json.getJSONArray("result")
 
                         for (i in 0 until count) {
@@ -254,7 +264,7 @@ class StockQuote2 : AbstractModule() {
                             val name = result.getString("description")
 
                             add(
-                                NoticeMessage("${symbol.bold()}: $name")
+                                NoticeMessage("${symbol.bold()}: $name".prependIndent())
                             )
 
                             if (i >= 4) {
