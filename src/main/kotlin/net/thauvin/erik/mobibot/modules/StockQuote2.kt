@@ -46,6 +46,7 @@ import org.pircbotx.hooks.types.GenericMessageEvent
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.io.IOException
+import java.math.RoundingMode
 import java.net.URL
 import java.time.Instant
 import java.time.ZoneId
@@ -180,7 +181,8 @@ class StockQuote2 : AbstractModule() {
                         )
                         add(
                             NoticeMessage(
-                                "Change: ".padEnd(pad).prependIndent() + change + " [$changePercent%]"
+                                "Change: ".padEnd(pad).prependIndent() + change
+                                        + " [${changePercent.setScale(2, RoundingMode.DOWN)}%]"
                             )
                         )
                         add(
@@ -264,7 +266,7 @@ class StockQuote2 : AbstractModule() {
                             val name = result.getString("description")
 
                             add(
-                                NoticeMessage("${symbol.bold()}: $name".prependIndent())
+                                NoticeMessage("${symbol.bold().padEnd(10)} $name".prependIndent())
                             )
 
                             if (i >= 4) {

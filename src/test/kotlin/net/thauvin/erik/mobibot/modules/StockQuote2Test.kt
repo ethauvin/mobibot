@@ -161,7 +161,7 @@ class StockQuote2Test : LocalProperties() {
 
             var hasGoog = false
             for (msg in messages) {
-                if (msg.msg.matches("\\s+\u0002GOOG\u0002: .*".toRegex())) {
+                if (msg.msg.matches("\\s+\u0002GOOG\u0002\\s+.*".toRegex())) {
                     hasGoog = true
                     break
                 }
