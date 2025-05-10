@@ -119,10 +119,10 @@ class StockQuote2Test : LocalProperties() {
             val messages = getSanitizedQuote(symbol, apiKey)
             assertThat(messages, "response not empty").isNotEmpty()
             assertThat(messages, "getQuote($symbol)").index(0).prop(Message::msg)
-                .isEqualTo("Symbol: AAPL")
+                .isEqualTo("Symbol: \u0002AAPL\u0002")
             assertThat(messages, "getQuote($symbol)").index(1).prop(Message::msg)
                 .matches("\\s+Price:\\s+\\d+\\.\\d+.*".toRegex())
-            assertThat(messages, "getQuote($symbol)").index(7).prop(Message::msg)
+            assertThat(messages, "getQuote($symbol)").index(8).prop(Message::msg)
                 .matches("\\s+Latest:\\s+\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2} UTC".toRegex())
         }
 
@@ -156,12 +156,12 @@ class StockQuote2Test : LocalProperties() {
             val keywords = "alphabet inc"
             val messages = getSanitizedLookup(keywords, apiKey)
             assertThat(messages, "messages should not be empty").isNotEmpty()
-            assertThat(messages, "lookup($keywords)").index(1).prop(Message::msg)
-                .matches("\u0002\\w+\u0002: .*".toRegex())
+            assertThat(messages, "lookup($keywords)").index(0).prop(Message::msg)
+                .isEqualTo("Search results for: \u0002alphabet inc\u0002")
 
             var hasGoog = false
             for (msg in messages) {
-                if (msg.msg.matches("\u0002GOOG\u0002: .*".toRegex())) {
+                if (msg.msg.matches("\\s+\u0002GOOG\u0002: .*".toRegex())) {
                     hasGoog = true
                     break
                 }
@@ -179,5 +179,14 @@ class StockQuote2Test : LocalProperties() {
                 .isEqualTo("Please specify at least one search term.")
         }
 
+        @Test
+        @Throws(ModuleException::class)
+        fun `Lookup not found`() {
+            val keywords = "foo motors"
+            val messages = getSanitizedLookup(keywords, apiKey)
+            assertThat(messages, "response not empty").isNotEmpty()
+            assertThat(messages, "lookup($keywords)").index(0).prop(Message::msg)
+                .isEqualTo("Nothing found for: \u0002foo motors\u0002")
+        }
     }
 }

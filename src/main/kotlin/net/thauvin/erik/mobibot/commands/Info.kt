@@ -98,8 +98,7 @@ class Info(private val tell: Tell, private val seen: Seen) : AbstractCommand() {
                     } else if (isEmpty()) {
                         return "0 second"
                     }
-
-                    return this.joinToString(" ")
+                    return joinToString(" ")
                 }
             }
         }
