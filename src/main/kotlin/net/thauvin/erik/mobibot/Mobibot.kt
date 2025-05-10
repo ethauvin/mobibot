@@ -265,7 +265,7 @@ class Mobibot(nickname: String, val channel: String, logsDirPath: String, p: Pro
         addons.add(Lookup())
         addons.add(Ping())
         addons.add(RockPaperScissors())
-        addons.add(StockQuote())
+        addons.add(StockQuote2())
         addons.add(War())
         addons.add(Weather2())
         addons.add(WolframAlpha())

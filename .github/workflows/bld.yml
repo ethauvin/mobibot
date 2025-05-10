@@ -3,12 +3,12 @@ name: bld-ci
 on: [push, pull_request, workflow_dispatch]
 
 env:
-  ALPHAVANTAGE_API_KEY: ${{ secrets.ALPHAVANTAGE_API_KEY }}
   CHATGPT_API_KEY: ${{ secrets.CHATGPT_API_KEY }}
   CI_NAME: "GitHub CI"
   COVERAGE_JDK: "21"
   COVERAGE_KOTLIN: "2.1.20"
   EXCHANGERATE_API_KEY: ${{ secrets.EXCHANGERATE_API_KEY }}
+  FINNHUB_API_KEY: ${{ secrets.FINNHUB_API_KEY }}
   GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
   GOOGLE_CSE_CX: ${{ secrets.GOOGLE_CSE_CX }}
   KOTLIN_HOME: /usr/share/kotlinc

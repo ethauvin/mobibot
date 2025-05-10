@@ -36,7 +36,8 @@ import assertk.assertThat
 import assertk.assertions.*
 import net.thauvin.erik.mobibot.ExceptionSanitizer.sanitize
 import net.thauvin.erik.mobibot.LocalProperties
-import net.thauvin.erik.mobibot.modules.StockQuote.Companion.getQuote
+import net.thauvin.erik.mobibot.modules.StockQuote2.Companion.getQuote
+import net.thauvin.erik.mobibot.modules.StockQuote2.Companion.lookup
 import net.thauvin.erik.mobibot.msg.ErrorMessage
 import net.thauvin.erik.mobibot.msg.Message
 import org.junit.jupiter.api.DisplayName
@@ -46,16 +47,25 @@ import org.mockito.Mockito
 import org.pircbotx.hooks.types.GenericMessageEvent
 import kotlin.test.Test
 
-class StockQuoteTest : LocalProperties() {
-    private val apiKey = getProperty(StockQuote.API_KEY_PROP)
-
-    private fun buildMatch(label: String): String {
-        return "${label}:[ ]+[0-9.]+".prependIndent()
-    }
+class StockQuote2Test : LocalProperties() {
+    private val apiKey = getProperty(StockQuote2.API_KEY_PROP)
 
     private fun getSanitizedQuote(symbol: String, apiKey: String): List<Message> {
         try {
             return getQuote(symbol, apiKey)
+        } catch (e: ModuleException) {
+            // Avoid displaying api keys in CI logs
+            if ("true" == System.getenv("CI")) {
+                throw e.sanitize(apiKey)
+            } else {
+                throw e
+            }
+        }
+    }
+
+    private fun getSanitizedLookup(keywords: String, apiKey: String): List<Message> {
+        try {
+            return lookup(keywords, apiKey)
         } catch (e: ModuleException) {
             // Avoid displaying api keys in CI logs
             if ("true" == System.getenv("CI")) {
@@ -71,14 +81,15 @@ class StockQuoteTest : LocalProperties() {
     inner class CommandResponseTests {
         @Test
         fun `API Key is missing`() {
-            val stockQuote = StockQuote()
+            val stockQuote = StockQuote2()
             val event = Mockito.mock(GenericMessageEvent::class.java)
             val captor = ArgumentCaptor.forClass(String::class.java)
 
             stockQuote.commandResponse("channel", "stock", "goog", event)
 
             Mockito.verify(event, Mockito.atLeastOnce()).respond(captor.capture())
-            assertThat(captor.value).isEqualTo("${StockQuote.SERVICE_NAME} is disabled. The API key is missing.")
+            assertThat(captor.value)
+                .isEqualTo("${StockQuote2.SERVICE_NAME} is disabled. The API key is missing.")
         }
     }
 
@@ -97,24 +108,22 @@ class StockQuoteTest : LocalProperties() {
         fun `Symbol should not be empty`() {
             assertThat(getSanitizedQuote("", "apikey").first(), "getQuote(empty)").all {
                 isInstanceOf(ErrorMessage::class.java)
-                prop(Message::msg).isEqualTo(StockQuote.INVALID_SYMBOL)
+                prop(Message::msg).isEqualTo(StockQuote2.INVALID_SYMBOL)
             }
         }
 
         @Test
         @Throws(ModuleException::class)
         fun `Get stock quote for Apple`() {
-            val symbol = "apple inc"
+            val symbol = "aapl"
             val messages = getSanitizedQuote(symbol, apiKey)
             assertThat(messages, "response not empty").isNotEmpty()
             assertThat(messages, "getQuote($symbol)").index(0).prop(Message::msg)
-                .matches("Symbol: AAPL .*".toRegex())
+                .isEqualTo("Symbol: AAPL")
             assertThat(messages, "getQuote($symbol)").index(1).prop(Message::msg)
-                .matches(buildMatch("Price").toRegex())
-            assertThat(messages, "getQuote($symbol)").index(2).prop(Message::msg)
-                .matches(buildMatch("Previous").toRegex())
-            assertThat(messages, "getQuote($symbol)").index(3).prop(Message::msg)
-                .matches(buildMatch("Open").toRegex())
+                .matches("\\s+Price:\\s+\\d+\\.\\d+.*".toRegex())
+            assertThat(messages, "getQuote($symbol)").index(7).prop(Message::msg)
+                .matches("\\s+Latest:\\s+\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2} UTC".toRegex())
         }
 
         @Test
@@ -124,7 +133,7 @@ class StockQuoteTest : LocalProperties() {
             val messages = getSanitizedQuote(symbol, apiKey)
             assertThat(messages, "response not empty").isNotEmpty()
             assertThat(messages, "getQuote($symbol)").index(0).prop(Message::msg)
-                .matches("Symbol: GOOG .*".toRegex())
+                .equals("Symbol: GOOG")
         }
 
         @Test
@@ -133,8 +142,42 @@ class StockQuoteTest : LocalProperties() {
             val symbol = "foobar"
             assertThat(getSanitizedQuote(symbol, apiKey).first(), "getQuote($symbol)").all {
                 isInstanceOf(ErrorMessage::class.java)
-                prop(Message::msg).isEqualTo(StockQuote.INVALID_SYMBOL)
+                prop(Message::msg).isEqualTo(StockQuote2.INVALID_SYMBOL)
             }
         }
+    }
+
+    @Nested
+    @DisplayName("Lookup Tests")
+    inner class LookupTests {
+        @Test
+        @Throws(ModuleException::class)
+        fun `Lookup alphabet`() {
+            val keywords = "alphabet inc"
+            val messages = getSanitizedLookup(keywords, apiKey)
+            assertThat(messages, "messages should not be empty").isNotEmpty()
+            assertThat(messages, "lookup($keywords)").index(1).prop(Message::msg)
+                .matches("\u0002\\w+\u0002: .*".toRegex())
+
+            var hasGoog = false
+            for (msg in messages) {
+                if (msg.msg.matches("\u0002GOOG\u0002: .*".toRegex())) {
+                    hasGoog = true
+                    break
+                }
+            }
+            assertThat(hasGoog, "GOOG not found").isTrue()
+        }
+
+        @Test
+        @Throws(ModuleException::class)
+        fun `Lookup empty keywords`() {
+            val keywords = ""
+            val messages = getSanitizedLookup(keywords, apiKey)
+            assertThat(messages, "response not empty").isNotEmpty()
+            assertThat(messages, "lookup($keywords)").index(0).prop(Message::msg)
+                .isEqualTo("Please specify at least one search term.")
+        }
+
     }
 }
