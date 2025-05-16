@@ -90,7 +90,7 @@ class Gemini2 : AbstractModule() {
                         .maxOutputTokens(maxTokens)
                         .build()
 
-                    return gemini.generate(query)
+                    return gemini.chat(query)
                 } catch (e: Exception) {
                     throw ModuleException("$GEMINI_CMD($query): IO", IO_ERROR, e)
                 }

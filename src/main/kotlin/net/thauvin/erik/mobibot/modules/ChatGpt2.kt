@@ -77,7 +77,7 @@ class ChatGpt2 : AbstractModule() {
                         .maxTokens(maxTokens)
                         .build()
 
-                    return model.generate(query)
+                    return model.chat(query)
                 } catch (e: Exception) {
                     throw ModuleException(
                         "$CHATGPT_CMD($query): IO",

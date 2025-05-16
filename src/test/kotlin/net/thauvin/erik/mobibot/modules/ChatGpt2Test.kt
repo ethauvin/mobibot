@@ -71,6 +71,7 @@ class ChatGpt2Test : LocalProperties() {
                 .isInstanceOf(ModuleException::class.java)
                 .hasNoCause()
         }
+
         private val apiKey = getProperty(ChatGpt2.API_KEY_PROP)
 
         @Test
