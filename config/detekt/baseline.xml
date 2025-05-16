@@ -12,9 +12,9 @@
     <ID>LongParameterList:EntryLink.kt$EntryLink$( // Link's comments val comments: MutableList&lt;EntryComment&gt; = mutableListOf(), // Tags/categories val tags: MutableList&lt;SyndCategory&gt; = mutableListOf(), // Channel var channel: String, // Creation date var date: Date = Calendar.getInstance().time, // Link's URL var link: String, // Author's login var login: String = "", // Author's nickname var nick: String, // Link's title var title: String )</ID>
     <ID>MagicNumber:Comment.kt$Comment$3</ID>
     <ID>MagicNumber:CryptoPrices.kt$CryptoPrices$10</ID>
-    <ID>MagicNumber:CurrencyConverter.kt$CurrencyConverter$11</ID>
-    <ID>MagicNumber:CurrencyConverter.kt$CurrencyConverter.Companion$3</ID>
-    <ID>MagicNumber:CurrencyConverter.kt$CurrencyConverter.Companion$4</ID>
+    <ID>MagicNumber:CurrencyConverter2.kt$CurrencyConverter2$11</ID>
+    <ID>MagicNumber:CurrencyConverter2.kt$CurrencyConverter2.Companion$3</ID>
+    <ID>MagicNumber:CurrencyConverter2.kt$CurrencyConverter2.Companion$4</ID>
     <ID>MagicNumber:Cycle.kt$Cycle$10</ID>
     <ID>MagicNumber:Cycle.kt$Cycle$1000L</ID>
     <ID>MagicNumber:Ignore.kt$Ignore$8</ID>
@@ -47,8 +47,7 @@
     <ID>NestedBlockDepth:Addons.kt$Addons$fun add(command: AbstractCommand): Boolean</ID>
     <ID>NestedBlockDepth:Addons.kt$Addons$fun add(module: AbstractModule): Boolean</ID>
     <ID>NestedBlockDepth:Comment.kt$Comment$override fun commandResponse(channel: String, args: String, event: GenericMessageEvent)</ID>
-    <ID>NestedBlockDepth:CurrencyConverter.kt$CurrencyConverter.Companion$@JvmStatic @Throws(ModuleException::class) fun loadSymbols(apiKey: String?)</ID>
-    <ID>NestedBlockDepth:CurrencyConverter.kt$CurrencyConverter.Companion$@JvmStatic fun convertCurrency(apiKey: String?, query: String): Message</ID>
+    <ID>NestedBlockDepth:CurrencyConverter2.kt$CurrencyConverter2.Companion$@JvmStatic fun convertCurrency(query: String): Message</ID>
     <ID>NestedBlockDepth:EntryLink.kt$EntryLink$private fun setTags(tags: List&lt;String?&gt;)</ID>
     <ID>NestedBlockDepth:FeedsManager.kt$FeedsManager.Companion$@JvmStatic @Throws(IOException::class, FeedException::class) fun loadFeed(entries: Entries, currentFile: String = CURRENT_XML): String</ID>
     <ID>NestedBlockDepth:FeedsManager.kt$FeedsManager.Companion$@JvmStatic fun saveFeed(entries: Entries, currentFile: String = CURRENT_XML)</ID>
@@ -87,7 +86,6 @@
     <ID>UtilityClassWithPublicConstructor:LocalProperties.kt$LocalProperties</ID>
     <ID>WildcardImport:AddonsTest.kt$import net.thauvin.erik.mobibot.modules.*</ID>
     <ID>WildcardImport:CryptoPricesTest.kt$import assertk.assertions.*</ID>
-    <ID>WildcardImport:CurrencyConverterTest.kt$import assertk.assertions.*</ID>
     <ID>WildcardImport:EntryLinkTest.kt$import assertk.assertions.*</ID>
     <ID>WildcardImport:FeedMgrTest.kt$import assertk.assertions.*</ID>
     <ID>WildcardImport:FeedReaderTest.kt$import assertk.assertions.*</ID>

@@ -51,17 +51,15 @@ import java.util.*
 /**
  * Converts between currencies.
  */
-class CurrencyConverter : AbstractModule() {
+class CurrencyConverter2 : AbstractModule() {
     override val name = "CurrencyConverter"
 
     companion object {
-        /**
-         * The API Key property.
-         */
-        const val API_KEY_PROP = "exchangerate-api-key"
-
         // Currency command
         private const val CURRENCY_CMD = "currency"
+
+        // Currency codes
+        private val CURRENCY_CODES: TreeMap<String, String> = TreeMap()
 
         // Currency codes keyword
         private const val CODES_KEYWORD = "codes"
@@ -69,52 +67,46 @@ class CurrencyConverter : AbstractModule() {
         // Decimal format
         private val DECIMAL_FORMAT = DecimalFormat("0.00#")
 
-        // Empty symbols table.
-        private const val EMPTY_SYMBOLS_TABLE = "Sorry, but the currency table is empty."
+        // Empty codes table.
+        private const val EMPTY_CODES_TABLE = "Sorry, but the currencies codes table is empty."
 
         // Logger
-        private val LOGGER: Logger = LoggerFactory.getLogger(CurrencyConverter::class.java)
-
-        // Currency symbols
-        private val SYMBOLS: TreeMap<String, String> = TreeMap()
-
-        /**
-         * No API key error message.
-         */
-        const val ERROR_MESSAGE_NO_API_KEY = "No Exchange Rate API key specified."
-
+        private val LOGGER: Logger = LoggerFactory.getLogger(CurrencyConverter2::class.java)
 
         /**
          * Converts from a currency to another.
          */
         @JvmStatic
-        fun convertCurrency(apiKey: String?, query: String): Message {
-            if (apiKey.isNullOrEmpty()) {
-                throw ModuleException("${CURRENCY_CMD}($query)", ERROR_MESSAGE_NO_API_KEY)
-            }
-
+        fun convertCurrency(query: String): Message {
             val cmds = query.split(" ")
             return if (cmds.size == 4) {
                 if (cmds[3] == cmds[1] || "0" == cmds[0]) {
                     PublicMessage("You're kidding, right?")
                 } else {
-                    val to = cmds[1].uppercase()
-                    val from = cmds[3].uppercase()
-                    if (SYMBOLS.contains(to) && SYMBOLS.contains(from)) {
+                    val from = cmds[1].uppercase()
+                    val to = cmds[3].uppercase()
+                    if (CURRENCY_CODES.contains(to) && CURRENCY_CODES.contains(from)) {
                         try {
                             val amt = cmds[0].replace(",", "")
-                            val url = URL("https://v6.exchangerate-api.com/v6/$apiKey/pair/$to/$from/$amt")
+                            val url = URL("https://api.frankfurter.dev/v1/latest?base=$from&symbols=$to")
                             val body = url.reader().body
-                            val json = JSONObject(body)
-
-                            if (json.getString("result") == "success") {
-                                val result = DECIMAL_FORMAT.format(json.getDouble("conversion_result"))
-                                PublicMessage(
-                                    "${cmds[0]} ${SYMBOLS[to]} = $result ${SYMBOLS[from]}"
-                                )
-                            } else {
-                                ErrorMessage("Sorry, an error occurred while converting the currencies.")
+                            if (LOGGER.isTraceEnabled) {
+                                LOGGER.trace(body)
                             }
+                            val json = JSONObject(body)
+                            val rates = json.getJSONObject("rates")
+                            val rate = rates.getDouble(to)
+                            val result = DECIMAL_FORMAT.format(amt.toDouble() * rate)
+
+
+                            PublicMessage(
+                                "${cmds[0]} ${CURRENCY_CODES[from]} = $result ${CURRENCY_CODES[to]}"
+                            )
+                        } catch (nfe: NumberFormatException) {
+                            if (LOGGER.isWarnEnabled) {
+                                LOGGER.warn("IO error while converting currencies: ${nfe.message}", nfe)
+                            }
+                            ErrorMessage("Sorry, an error occurred while converting the currencies.")
                         } catch (ioe: IOException) {
                             if (LOGGER.isWarnEnabled) {
                                 LOGGER.warn("IO error while converting currencies: ${ioe.message}", ioe)
@@ -122,7 +114,9 @@ class CurrencyConverter : AbstractModule() {
                             ErrorMessage("Sorry, an IO error occurred while converting the currencies.")
                         }
                     } else {
-                        ErrorMessage("Sounds like monopoly money to me!")
+                        ErrorMessage(
+                            "Sounds like monopoly money to me! Try looking up the supported currency codes."
+                        )
                     }
                 }
             } else {
@@ -131,44 +125,40 @@ class CurrencyConverter : AbstractModule() {
         }
 
         /**
-         * Loads the currency ISO symbols.
+         * Loads the currency ISO codes.
          */
         @JvmStatic
         @Throws(ModuleException::class)
-        fun loadSymbols(apiKey: String?) {
-            if (!apiKey.isNullOrEmpty()) {
-                try {
-                    val url = URL("https://v6.exchangerate-api.com/v6/$apiKey/codes")
-                    val json = JSONObject(url.reader().body)
-                    if (json.getString("result") == "success") {
-                        val codes = json.getJSONArray("supported_codes")
-                        for (i in 0 until codes.length()) {
-                            val code = codes.getJSONArray(i)
-                            SYMBOLS[code.getString(0)] = code.getString(1)
-                        }
-                    }
-                } catch (e: IOException) {
-                    throw ModuleException(
-                        "loadCodes(): IOE",
-                        "An IO error has occurred while retrieving the currencies.",
-                        e
-                    )
+        fun loadCurrencyCodes() {
+            try {
+                val url = URL("https://api.frankfurter.dev/v1/currencies")
+                val body = url.reader().body
+                val json = JSONObject(body)
+                if (LOGGER.isTraceEnabled) {
+                    LOGGER.trace(body)
                 }
+                json.keySet().forEach { key ->
+                    CURRENCY_CODES[key] = json.getString(key)
+                }
+            } catch (e: IOException) {
+                throw ModuleException(
+                    "loadCurrencyCodes(): IOE",
+                    "An IO error has occurred while retrieving the currency codes.",
+                    e
+                )
             }
         }
     }
 
     init {
         commands.add(CURRENCY_CMD)
-        initProperties(API_KEY_PROP)
-        loadSymbols(properties[ChatGpt2.API_KEY_PROP])
     }
 
     // Reload currency codes
-    private fun reload(apiKey: String?) {
-        if (!apiKey.isNullOrEmpty() && SYMBOLS.isEmpty()) {
+    private fun reload() {
+        if (CURRENCY_CODES.isEmpty()) {
             try {
-                loadSymbols(apiKey)
+                loadCurrencyCodes()
             } catch (e: ModuleException) {
                 if (LOGGER.isWarnEnabled) LOGGER.warn(e.debugMessage, e)
             }
@@ -179,15 +169,15 @@ class CurrencyConverter : AbstractModule() {
      * Converts the specified currencies.
      */
     override fun commandResponse(channel: String, cmd: String, args: String, event: GenericMessageEvent) {
-        reload(properties[API_KEY_PROP])
+        reload()
         when {
-            SYMBOLS.isEmpty() -> {
-                event.respond(EMPTY_SYMBOLS_TABLE)
+            CURRENCY_CODES.isEmpty() -> {
+                event.respond(EMPTY_CODES_TABLE)
             }
 
             args.matches("\\d+([,\\d]+)?(\\.\\d+)? [a-zA-Z]{3}+ (to|in) [a-zA-Z]{3}+".toRegex()) -> {
                 try {
-                    val msg = convertCurrency(properties[API_KEY_PROP], args)
+                    val msg = convertCurrency(args)
                     if (msg.isError) {
                         helpResponse(event)
                     } else {
@@ -201,7 +191,7 @@ class CurrencyConverter : AbstractModule() {
 
             args.contains(CODES_KEYWORD) -> {
                 event.sendMessage("The supported currency codes are:")
-                event.sendList(SYMBOLS.keys.toList(), 11, isIndent = true)
+                event.sendList(CURRENCY_CODES.keys.toList(), 11, isIndent = true)
             }
 
             else -> {
@@ -211,10 +201,10 @@ class CurrencyConverter : AbstractModule() {
     }
 
     override fun helpResponse(event: GenericMessageEvent): Boolean {
-        reload(properties[API_KEY_PROP])
+        reload()
 
-        if (SYMBOLS.isEmpty()) {
-            event.sendMessage(EMPTY_SYMBOLS_TABLE)
+        if (CURRENCY_CODES.isEmpty()) {
+            event.sendMessage(EMPTY_CODES_TABLE)
         } else {
             val nick = event.bot().nick
             event.sendMessage("To convert from one currency to another:")
