@@ -34,10 +34,7 @@ package net.thauvin.erik;
 import rife.bld.BuildCommand;
 import rife.bld.Project;
 import rife.bld.dependencies.Repository;
-import rife.bld.extension.CompileKotlinOperation;
-import rife.bld.extension.DetektOperation;
-import rife.bld.extension.GeneratedVersionOperation;
-import rife.bld.extension.JacocoReportOperation;
+import rife.bld.extension.*;
 import rife.bld.operations.exceptions.ExitStatusException;
 import rife.bld.publish.PomBuilder;
 import rife.tools.FileUtils;
@@ -45,6 +42,8 @@ import rife.tools.exceptions.FileUtilsErrorException;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -239,5 +238,26 @@ public class MobibotBuild extends Project {
                 .directory(srcMainKotlin)
                 .extension(".kt")
                 .execute();
+    }
+
+    @Override
+    public void test() throws Exception {
+        var testResultsDir = "build/test-results/test/";
+
+        var op = testOperation().fromProject(this);
+        op.testToolOptions().reportsDir(new File(testResultsDir));
+        op.execute();
+
+        var xunitViewer = new File("/usr/bin/xunit-viewer");
+        if (xunitViewer.exists() && xunitViewer.canExecute()) {
+            var reportsDir = "build/reports/tests/test/";
+
+            Files.createDirectories(Path.of(reportsDir));
+
+            new ExecOperation()
+                    .fromProject(this)
+                    .command(xunitViewer.getPath(), "-r", testResultsDir, "-o", reportsDir + "index.html")
+                    .execute();
+        }
     }
 }
