@@ -256,7 +256,7 @@ class Mobibot(nickname: String, val channel: String, logsDirPath: String, p: Pro
         addons.add(Calc())
         addons.add(ChatGpt2())
         addons.add(CryptoPrices())
-        addons.add(CurrencyConverter())
+        addons.add(CurrencyConverter2())
         addons.add(Dice())
         addons.add(Gemini2())
         addons.add(GoogleSearch())

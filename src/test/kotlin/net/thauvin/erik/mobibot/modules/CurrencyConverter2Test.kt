@@ -32,10 +32,12 @@ package net.thauvin.erik.mobibot.modules
 
 import assertk.all
 import assertk.assertThat
-import assertk.assertions.*
-import net.thauvin.erik.mobibot.LocalProperties
-import net.thauvin.erik.mobibot.modules.CurrencyConverter.Companion.convertCurrency
-import net.thauvin.erik.mobibot.modules.CurrencyConverter.Companion.loadSymbols
+import assertk.assertions.contains
+import assertk.assertions.isInstanceOf
+import assertk.assertions.matches
+import assertk.assertions.prop
+import net.thauvin.erik.mobibot.modules.CurrencyConverter2.Companion.convertCurrency
+import net.thauvin.erik.mobibot.modules.CurrencyConverter2.Companion.loadCurrencyCodes
 import net.thauvin.erik.mobibot.msg.ErrorMessage
 import net.thauvin.erik.mobibot.msg.Message
 import net.thauvin.erik.mobibot.msg.PublicMessage
@@ -46,10 +48,9 @@ import org.mockito.Mockito
 import org.pircbotx.hooks.types.GenericMessageEvent
 import kotlin.test.Test
 
-class CurrencyConverterTest : LocalProperties() {
+class CurrencyConverter2Test {
     init {
-        val apiKey = getProperty(CurrencyConverter.API_KEY_PROP)
-        loadSymbols(apiKey)
+        loadCurrencyCodes()
     }
 
     @Nested
@@ -57,41 +58,37 @@ class CurrencyConverterTest : LocalProperties() {
     inner class CommandResponseTests {
         @Test
         fun `USD to CAD`() {
-            val currencyConverter = CurrencyConverter()
+            val currencyConverter = CurrencyConverter2()
             val event = Mockito.mock(GenericMessageEvent::class.java)
             val captor = ArgumentCaptor.forClass(String::class.java)
 
-            currencyConverter.properties.put(
-                CurrencyConverter.API_KEY_PROP, getProperty(CurrencyConverter.API_KEY_PROP)
-            )
             currencyConverter.commandResponse("channel", "currency", "1 USD to CAD", event)
 
             Mockito.verify(event, Mockito.atLeastOnce()).respond(captor.capture())
-            assertThat(captor.value).matches("1 United States Dollar = \\d+\\.\\d{2,3} Canadian Dollar".toRegex())
+            assertThat(captor.value)
+                .matches("1 United States Dollar = \\d+\\.\\d{2,3} Canadian Dollar".toRegex())
         }
 
         @Test
-        fun `API Key is not specified`() {
-            val currencyConverter = CurrencyConverter()
+        fun `USD to GBP`() {
+            val currencyConverter = CurrencyConverter2()
             val event = Mockito.mock(GenericMessageEvent::class.java)
             val captor = ArgumentCaptor.forClass(String::class.java)
 
-            currencyConverter.commandResponse("channel", "currency", "1 USD to CAD", event)
+            currencyConverter.commandResponse("channel", "currency", "1 usd to gbp", event)
 
             Mockito.verify(event, Mockito.atLeastOnce()).respond(captor.capture())
-            assertThat(captor.value).isEqualTo(CurrencyConverter.ERROR_MESSAGE_NO_API_KEY)
+            assertThat(captor.value).matches("1 United States Dollar = \\d+\\.\\d{2,3} British Pound".toRegex())
         }
     }
 
     @Nested
     @DisplayName("Currency Converter Tests")
     inner class CurrencyConverterTests {
-        private val apiKey = getProperty(CurrencyConverter.API_KEY_PROP)
-
         @Test
         fun `Convert CAD to USD`() {
             assertThat(
-                convertCurrency(apiKey, "100,000.00 CAD to USD").msg,
+                convertCurrency("100,000.00 CAD to USD").msg,
                 "convertCurrency(100,000.00 GBP to USD)"
             ).matches("100,000.00 Canadian Dollar = \\d+\\.\\d{2,3} United States Dollar".toRegex())
         }
@@ -99,7 +96,7 @@ class CurrencyConverterTest : LocalProperties() {
         @Test
         fun `Convert USD to EUR`() {
             assertThat(
-                convertCurrency(apiKey, "100 USD to EUR").msg,
+                convertCurrency("100 USD to EUR").msg,
                 "convertCurrency(100 USD to EUR)"
             ).matches("100 United States Dollar = \\d{2,3}\\.\\d{2,3} Euro".toRegex())
         }
@@ -107,14 +104,23 @@ class CurrencyConverterTest : LocalProperties() {
         @Test
         fun `Convert USD to GBP`() {
             assertThat(
-                convertCurrency(apiKey, "1 USD to GBP").msg,
+                convertCurrency("1 USD to GBP").msg,
                 "convertCurrency(1 USD to BGP)"
-            ).matches("1 United States Dollar = 0\\.\\d{2,3} Pound Sterling".toRegex())
+            ).matches("1 United States Dollar = 0\\.\\d{2,3} British Pound".toRegex())
+        }
+
+        @Test
+        fun `Convert USD to Invalid Currency`() {
+            assertThat(convertCurrency("100 USD to FOO"), "convertCurrency(100 USD to FOO)").all {
+                prop(Message::msg)
+                    .contains("Sounds like monopoly money to me! Try looking up the supported currency codes.")
+                isInstanceOf(ErrorMessage::class.java)
+            }
         }
 
         @Test
         fun `Convert USD to USD`() {
-            assertThat(convertCurrency(apiKey, "100 USD to USD"), "convertCurrency(100 USD to USD)").all {
+            assertThat(convertCurrency("100 USD to USD"), "convertCurrency(100 USD to USD)").all {
                 prop(Message::msg).contains("You're kidding, right?")
                 isInstanceOf(PublicMessage::class.java)
             }
@@ -122,7 +128,7 @@ class CurrencyConverterTest : LocalProperties() {
 
         @Test
         fun `Invalid Query should throw exception`() {
-            assertThat(convertCurrency(apiKey, "100 USD"), "convertCurrency(100 USD)").all {
+            assertThat(convertCurrency("100 USD"), "convertCurrency(100 USD)").all {
                 prop(Message::msg).contains("Invalid query.")
                 isInstanceOf(ErrorMessage::class.java)
             }
