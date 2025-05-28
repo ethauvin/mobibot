@@ -58,6 +58,7 @@ import static rife.bld.dependencies.Scope.compile;
 import static rife.bld.dependencies.Scope.test;
 
 public class MobibotBuild extends Project {
+    static final String TEST_RESULTS_DIR = "build/test-results/test/";
     private static final String DETEKT_BASELINE = "config/detekt/baseline.xml";
     final File srcMainKotlin = new File(srcMainDirectory(), "kotlin");
 
@@ -216,10 +217,21 @@ public class MobibotBuild extends Project {
 
     @BuildCommand(summary = "Generates JaCoCo Reports")
     public void jacoco() throws Exception {
-        new JacocoReportOperation()
-                .fromProject(this)
-                .sourceFiles(srcMainKotlin)
-                .execute();
+        var op = new JacocoReportOperation().fromProject(this);
+        op.testToolOptions("--reports-dir=" + TEST_RESULTS_DIR);
+
+        Exception ex = null;
+        try {
+            op.execute();
+        } catch (Exception e) {
+            ex = e;
+        }
+
+        renderWithXunitViewer();
+
+        if (ex != null) {
+            throw ex;
+        }
     }
 
     @BuildCommand(value = "pom-root", summary = "Generates the POM file in the root directory")
@@ -240,14 +252,7 @@ public class MobibotBuild extends Project {
                 .execute();
     }
 
-    @Override
-    public void test() throws Exception {
-        var testResultsDir = "build/test-results/test/";
-
-        var op = testOperation().fromProject(this);
-        op.testToolOptions().reportsDir(new File(testResultsDir));
-        op.execute();
-
+    private void renderWithXunitViewer() throws Exception {
         var xunitViewer = new File("/usr/bin/xunit-viewer");
         if (xunitViewer.exists() && xunitViewer.canExecute()) {
             var reportsDir = "build/reports/tests/test/";
@@ -256,8 +261,27 @@ public class MobibotBuild extends Project {
 
             new ExecOperation()
                     .fromProject(this)
-                    .command(xunitViewer.getPath(), "-r", testResultsDir, "-o", reportsDir + "index.html")
+                    .command(xunitViewer.getPath(), "-r", TEST_RESULTS_DIR, "-o", reportsDir + "index.html")
                     .execute();
+        }
+    }
+
+    @Override
+    public void test() throws Exception {
+        var op = testOperation().fromProject(this);
+        op.testToolOptions().reportsDir(new File(TEST_RESULTS_DIR));
+
+        Exception ex = null;
+        try {
+            op.execute();
+        } catch (Exception e) {
+            ex = e;
+        }
+
+        renderWithXunitViewer();
+
+        if (ex != null) {
+            throw ex;
         }
     }
 }
