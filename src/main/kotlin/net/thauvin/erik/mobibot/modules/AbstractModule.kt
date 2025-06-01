@@ -81,7 +81,11 @@ abstract class AbstractModule {
     @Suppress("SameReturnValue")
     open fun helpResponse(event: GenericMessageEvent): Boolean {
         for (h in help) {
-            event.sendMessage(helpCmdSyntax(h, event.bot().nick, isPrivateMsgEnabled && event is PrivateMessageEvent))
+            event.sendMessage(
+                helpCmdSyntax(
+                    h, event.bot().nick, isPrivateMsgEnabled && event is PrivateMessageEvent
+                )
+            )
         }
         return true
     }

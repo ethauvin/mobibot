@@ -36,11 +36,13 @@ import net.thauvin.erik.crypto.CryptoPrice.Companion.spotPrice
 import net.thauvin.erik.mobibot.Utils.helpFormat
 import net.thauvin.erik.mobibot.Utils.sendList
 import net.thauvin.erik.mobibot.Utils.sendMessage
+import net.thauvin.erik.mobibot.modules.CurrencyConverter2.Companion.loadCurrencyCodes
 import org.json.JSONObject
 import org.pircbotx.hooks.types.GenericMessageEvent
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.io.IOException
+import java.time.LocalDate
 
 /**
  * Retrieves cryptocurrency market prices.
@@ -62,6 +64,9 @@ class CryptoPrices : AbstractModule() {
 
         // Default error message
         const val DEFAULT_ERROR_MESSAGE = "An error has occurred while retrieving the cryptocurrency market price"
+
+        // Last checked date
+        private var LAST_CHECKED = LocalDate.now()
 
         /**
          * Get the current market price.
@@ -94,6 +99,7 @@ class CryptoPrices : AbstractModule() {
                     val d = data.getJSONObject(i)
                     CURRENCIES[d.getString("id")] = d.getString("name")
                 }
+                LAST_CHECKED = LocalDate.now()
             } catch (e: CryptoException) {
                 throw ModuleException(
                     "loadCurrencies(): CE",
@@ -119,17 +125,28 @@ class CryptoPrices : AbstractModule() {
         loadCurrencies()
     }
 
+    // Reload currencies
+    private fun reload() {
+        if (CURRENCIES.isEmpty() || LocalDate.now().isAfter(LAST_CHECKED.plusDays(1))) {
+            try {
+                loadCurrencyCodes()
+                LAST_CHECKED = LocalDate.now()
+            } catch (e: ModuleException) {
+                if (logger.isWarnEnabled) logger.warn(e.debugMessage, e)
+            }
+        }
+    }
+
     /**
      * Returns the cryptocurrency market price from
      * [Coinbase](https://docs.cdp.coinbase.com/coinbase-app/docs/api-prices#get-spot-price).
      */
     override fun commandResponse(channel: String, cmd: String, args: String, event: GenericMessageEvent) {
+        reload()
+
         if (CURRENCIES.isEmpty()) {
-            try {
-                loadCurrencies()
-            } catch (e: ModuleException) {
-                if (logger.isWarnEnabled) logger.warn(e.debugMessage, e)
-            }
+            event.respond("Sorry, but the currencies table is empty.")
+            return
         }
 
         val debugMessage = "crypto($cmd $args)"
@@ -159,6 +176,5 @@ class CryptoPrices : AbstractModule() {
         } else {
             helpResponse(event)
         }
-
     }
 }
