@@ -1,5 +1,5 @@
 /*
- * AddonsTest.kt
+ * AddonTests.kt
  *
  * Copyright 2004-2025 Erik C. Thauvin (erik@thauvin.net)
  *
@@ -45,7 +45,7 @@ import net.thauvin.erik.mobibot.modules.*
 import java.util.*
 import kotlin.test.Test
 
-class AddonsTest {
+class AddonTests {
     private val p = Properties().apply {
         put("disabled-modules", "war,dice Lookup")
         put("disabled-commands", "View | comment")

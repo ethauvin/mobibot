@@ -30,22 +30,23 @@
  */
 package net.thauvin.erik.mobibot.modules
 
+import com.google.gson.JsonSyntaxException
+import net.thauvin.erik.frankfurter.AvailableCurrencies
+import net.thauvin.erik.frankfurter.FrankfurterUtils
+import net.thauvin.erik.frankfurter.LatestRates
 import net.thauvin.erik.mobibot.Utils.bot
 import net.thauvin.erik.mobibot.Utils.helpCmdSyntax
 import net.thauvin.erik.mobibot.Utils.helpFormat
-import net.thauvin.erik.mobibot.Utils.reader
 import net.thauvin.erik.mobibot.Utils.sendList
 import net.thauvin.erik.mobibot.Utils.sendMessage
 import net.thauvin.erik.mobibot.msg.ErrorMessage
 import net.thauvin.erik.mobibot.msg.Message
 import net.thauvin.erik.mobibot.msg.PublicMessage
-import org.json.JSONObject
 import org.pircbotx.hooks.types.GenericMessageEvent
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.io.IOException
-import java.net.URL
-import java.text.DecimalFormat
+import java.time.LocalDate
 import java.util.*
 
 /**
@@ -64,14 +65,14 @@ class CurrencyConverter2 : AbstractModule() {
         // Currency codes keyword
         private const val CODES_KEYWORD = "codes"
 
-        // Decimal format
-        private val DECIMAL_FORMAT = DecimalFormat("0.00#")
-
         // Empty codes table.
-        private const val EMPTY_CODES_TABLE = "Sorry, but the currencies codes table is empty."
+        private const val EMPTY_CODES_TABLE_ERROR = "Sorry, but the currencies codes table is empty."
 
-        // Logger
+        // LoggerEMPTY_CODES_TABLE
         private val LOGGER: Logger = LoggerFactory.getLogger(CurrencyConverter2::class.java)
+
+        // Last checked date
+        private var LAST_CHECKED = LocalDate.now()
 
         /**
          * Converts from a currency to another.
@@ -87,24 +88,24 @@ class CurrencyConverter2 : AbstractModule() {
                     val to = cmds[3].uppercase()
                     if (CURRENCY_CODES.contains(to) && CURRENCY_CODES.contains(from)) {
                         try {
-                            val amt = cmds[0].replace(",", "")
-                            val url = URL("https://api.frankfurter.dev/v1/latest?base=$from&symbols=$to")
-                            val body = url.reader().body
-                            if (LOGGER.isTraceEnabled) {
-                                LOGGER.trace(body)
-                            }
-                            val json = JSONObject(body)
-                            val rates = json.getJSONObject("rates")
-                            val rate = rates.getDouble(to)
-                            val result = DECIMAL_FORMAT.format(amt.toDouble() * rate)
-
+                            val latestRates = LatestRates.Builder()
+                                .amount(cmds[0].replace(",", "").toDouble())
+                                .base(from)
+                                .symbols(to)
+                                .build()
+                            val exchangeRates = latestRates.getExchangeRates()
+                            val result = exchangeRates.getRateFor(to)
 
                             PublicMessage(
-                                "${cmds[0]} ${CURRENCY_CODES[from]} = $result ${CURRENCY_CODES[to]}"
+                                FrankfurterUtils.formatCurrency(exchangeRates.base, exchangeRates.amount)
+                                        + " (" + CURRENCY_CODES[from] + ')'
+                                        + " = "
+                                        + FrankfurterUtils.formatCurrency(to, result)
+                                        + " (" + CURRENCY_CODES[to] + ')'
                             )
                         } catch (nfe: NumberFormatException) {
                             if (LOGGER.isWarnEnabled) {
-                                LOGGER.warn("IO error while converting currencies: ${nfe.message}", nfe)
+                                LOGGER.warn("Number format error while converting currencies: ${nfe.message}", nfe)
                             }
                             ErrorMessage("Sorry, an error occurred while converting the currencies.")
                         } catch (ioe: IOException) {
@@ -131,19 +132,17 @@ class CurrencyConverter2 : AbstractModule() {
         @Throws(ModuleException::class)
         fun loadCurrencyCodes() {
             try {
-                val url = URL("https://api.frankfurter.dev/v1/currencies")
-                val body = url.reader().body
-                val json = JSONObject(body)
-                if (LOGGER.isTraceEnabled) {
-                    LOGGER.trace(body)
-                }
-                json.keySet().forEach { key ->
-                    CURRENCY_CODES[key] = json.getString(key)
-                }
+                CURRENCY_CODES.putAll(AvailableCurrencies.getCurrencies())
             } catch (e: IOException) {
                 throw ModuleException(
                     "loadCurrencyCodes(): IOE",
                     "An IO error has occurred while retrieving the currency codes.",
+                    e
+                )
+            } catch (e: JsonSyntaxException) {
+                throw ModuleException(
+                    "loadCurrencyCodes()",
+                    "An error has occurred while retrieving the currency codes.",
                     e
                 )
             }
@@ -156,9 +155,10 @@ class CurrencyConverter2 : AbstractModule() {
 
     // Reload currency codes
     private fun reload() {
-        if (CURRENCY_CODES.isEmpty()) {
+        if (CURRENCY_CODES.isEmpty() || LocalDate.now().isAfter(LAST_CHECKED.plusDays(1))) {
             try {
                 loadCurrencyCodes()
+                LAST_CHECKED = LocalDate.now()
             } catch (e: ModuleException) {
                 if (LOGGER.isWarnEnabled) LOGGER.warn(e.debugMessage, e)
             }
@@ -172,7 +172,7 @@ class CurrencyConverter2 : AbstractModule() {
         reload()
         when {
             CURRENCY_CODES.isEmpty() -> {
-                event.respond(EMPTY_CODES_TABLE)
+                event.respond(EMPTY_CODES_TABLE_ERROR)
             }
 
             args.matches("\\d+([,\\d]+)?(\\.\\d+)? [a-zA-Z]{3}+ (to|in) [a-zA-Z]{3}+".toRegex()) -> {
@@ -204,11 +204,15 @@ class CurrencyConverter2 : AbstractModule() {
         reload()
 
         if (CURRENCY_CODES.isEmpty()) {
-            event.sendMessage(EMPTY_CODES_TABLE)
+            event.sendMessage(EMPTY_CODES_TABLE_ERROR)
         } else {
             val nick = event.bot().nick
             event.sendMessage("To convert from one currency to another:")
-            event.sendMessage(helpFormat(helpCmdSyntax("%c $CURRENCY_CMD 100 USD to EUR", nick, isPrivateMsgEnabled)))
+            event.sendMessage(
+                helpFormat(
+                    helpCmdSyntax("%c $CURRENCY_CMD 100 USD to EUR", nick, isPrivateMsgEnabled)
+                )
+            )
             event.sendMessage(
                 helpFormat(
                     helpCmdSyntax("%c $CURRENCY_CMD 50,000 GBP to USD", nick, isPrivateMsgEnabled)

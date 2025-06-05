@@ -36,19 +36,35 @@ import assertk.assertions.contains
 import assertk.assertions.isInstanceOf
 import assertk.assertions.matches
 import assertk.assertions.prop
+import net.thauvin.erik.frankfurter.FrankfurterUtils
 import net.thauvin.erik.mobibot.modules.CurrencyConverter2.Companion.convertCurrency
 import net.thauvin.erik.mobibot.modules.CurrencyConverter2.Companion.loadCurrencyCodes
 import net.thauvin.erik.mobibot.msg.ErrorMessage
 import net.thauvin.erik.mobibot.msg.Message
 import net.thauvin.erik.mobibot.msg.PublicMessage
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.mockito.ArgumentCaptor
 import org.mockito.Mockito
 import org.pircbotx.hooks.types.GenericMessageEvent
+import java.util.logging.ConsoleHandler
+import java.util.logging.Level
 import kotlin.test.Test
 
 class CurrencyConverter2Tests {
+    companion object {
+        @BeforeAll
+        @JvmStatic
+        fun beforeAll() {
+            with(FrankfurterUtils.LOGGER) {
+                addHandler(ConsoleHandler().apply { level = Level.ALL })
+                level = Level.ALL
+                useParentHandlers = false
+            }
+        }
+    }
+
     init {
         loadCurrencyCodes()
     }
@@ -66,7 +82,7 @@ class CurrencyConverter2Tests {
 
             Mockito.verify(event, Mockito.atLeastOnce()).respond(captor.capture())
             assertThat(captor.value)
-                .matches("1 United States Dollar = \\d+\\.\\d{2,3} Canadian Dollar".toRegex())
+                .matches("\\$1.00 \\(United States Dollar\\) = \\$\\d+\\.\\d+ \\(Canadian Dollar\\)".toRegex())
         }
 
         @Test
@@ -78,7 +94,8 @@ class CurrencyConverter2Tests {
             currencyConverter.commandResponse("channel", "currency", "1 usd to gbp", event)
 
             Mockito.verify(event, Mockito.atLeastOnce()).respond(captor.capture())
-            assertThat(captor.value).matches("1 United States Dollar = \\d+\\.\\d{2,3} British Pound".toRegex())
+            assertThat(captor.value)
+                .matches("\\$1.00 \\(United States Dollar\\) = £0\\.\\d+ \\(British Pound\\)".toRegex())
         }
     }
 
@@ -88,9 +105,9 @@ class CurrencyConverter2Tests {
         @Test
         fun `Convert CAD to USD`() {
             assertThat(
-                convertCurrency("100,000.00 CAD to USD").msg,
-                "convertCurrency(100,000.00 GBP to USD)"
-            ).matches("100,000.00 Canadian Dollar = \\d+\\.\\d{2,3} United States Dollar".toRegex())
+                convertCurrency("123,456.7890 CAD to USD").msg,
+                "convertCurrency(123,456.7890 CAD to USD)"
+            ).matches("\\$123,456.789 \\(Canadian Dollar\\) = \\$\\d+,\\d+\\.\\d+ \\(United States Dollar\\)".toRegex())
         }
 
         @Test
@@ -98,15 +115,15 @@ class CurrencyConverter2Tests {
             assertThat(
                 convertCurrency("100 USD to EUR").msg,
                 "convertCurrency(100 USD to EUR)"
-            ).matches("100 United States Dollar = \\d{2,3}\\.\\d{2,3} Euro".toRegex())
+            ).matches("\\$100.00 \\(United States Dollar\\) = \\d+,\\d+ € \\(Euro\\)".toRegex())
         }
 
         @Test
-        fun `Convert USD to GBP`() {
+        fun `Convert USD to CNY`() {
             assertThat(
-                convertCurrency("1 USD to GBP").msg,
-                "convertCurrency(1 USD to BGP)"
-            ).matches("1 United States Dollar = 0\\.\\d{2,3} British Pound".toRegex())
+                convertCurrency("1 USD to CNY").msg,
+                "convertCurrency(1 USD to CNY)"
+            ).matches("\\$1.00 \\(United States Dollar\\) = ¥\\d+\\.\\d+ \\(Chinese Renminbi Yuan\\)".toRegex())
         }
 
         @Test

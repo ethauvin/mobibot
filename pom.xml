@@ -179,6 +179,12 @@
     </dependency>
     <dependency>
       <groupId>net.thauvin.erik</groupId>
+      <artifactId>frankfurter4j</artifactId>
+      <version>0.9.0-SNAPSHOT</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>net.thauvin.erik</groupId>
       <artifactId>jokeapi</artifactId>
       <version>1.0.1-SNAPSHOT</version>
       <scope>compile</scope>

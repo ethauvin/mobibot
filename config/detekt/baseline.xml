@@ -84,26 +84,26 @@
     <ID>TooManyFunctions:Mobibot.kt$Mobibot : ListenerAdapter</ID>
     <ID>TooManyFunctions:Tell.kt$Tell : AbstractCommand</ID>
     <ID>UtilityClassWithPublicConstructor:LocalProperties.kt$LocalProperties</ID>
-    <ID>WildcardImport:AddonsTest.kt$import net.thauvin.erik.mobibot.modules.*</ID>
-    <ID>WildcardImport:CryptoPricesTest.kt$import assertk.assertions.*</ID>
-    <ID>WildcardImport:EntryLinkTest.kt$import assertk.assertions.*</ID>
-    <ID>WildcardImport:FeedMgrTest.kt$import assertk.assertions.*</ID>
-    <ID>WildcardImport:FeedReaderTest.kt$import assertk.assertions.*</ID>
+    <ID>WildcardImport:AddonTests.kt$import net.thauvin.erik.mobibot.modules.*</ID>
+    <ID>WildcardImport:CryptoPricesTests.kt$import assertk.assertions.*</ID>
+    <ID>WildcardImport:EntryLinkTests.kt$import assertk.assertions.*</ID>
+    <ID>WildcardImport:FeedMgrTests.kt$import assertk.assertions.*</ID>
+    <ID>WildcardImport:FeedReaderTests.kt$import assertk.assertions.*</ID>
     <ID>WildcardImport:FeedsManager.kt$import com.rometools.rome.feed.synd.*</ID>
-    <ID>WildcardImport:Gemini2Test.kt$import assertk.assertions.*</ID>
-    <ID>WildcardImport:GoogleSearchTest.kt$import assertk.assertions.*</ID>
-    <ID>WildcardImport:JokeTest.kt$import assertk.assertions.*</ID>
-    <ID>WildcardImport:LinksManagerTest.kt$import assertk.assertions.*</ID>
+    <ID>WildcardImport:Gemini2Tests.kt$import assertk.assertions.*</ID>
+    <ID>WildcardImport:GoogleSearchTests.kt$import assertk.assertions.*</ID>
+    <ID>WildcardImport:JokeTests.kt$import assertk.assertions.*</ID>
+    <ID>WildcardImport:LinksManagerTests.kt$import assertk.assertions.*</ID>
     <ID>WildcardImport:Mobibot.kt$import java.io.*</ID>
     <ID>WildcardImport:Mobibot.kt$import net.thauvin.erik.mobibot.commands.*</ID>
     <ID>WildcardImport:Mobibot.kt$import net.thauvin.erik.mobibot.commands.links.*</ID>
     <ID>WildcardImport:Mobibot.kt$import net.thauvin.erik.mobibot.modules.*</ID>
     <ID>WildcardImport:Mobibot.kt$import org.pircbotx.hooks.events.*</ID>
-    <ID>WildcardImport:ModuleExceptionTest.kt$import assertk.assertions.*</ID>
-    <ID>WildcardImport:SeenTest.kt$import assertk.assertions.*</ID>
-    <ID>WildcardImport:StockQuote2Test.kt$import assertk.assertions.*</ID>
-    <ID>WildcardImport:TellMessagesMgrTest.kt$import assertk.assertions.*</ID>
+    <ID>WildcardImport:ModuleExceptionTests.kt$import assertk.assertions.*</ID>
+    <ID>WildcardImport:SeenTests.kt$import assertk.assertions.*</ID>
+    <ID>WildcardImport:StockQuote2Tests.kt$import assertk.assertions.*</ID>
+    <ID>WildcardImport:TellMessagesMgrTests.kt$import assertk.assertions.*</ID>
     <ID>WildcardImport:Utils.kt$import java.io.*</ID>
-    <ID>WildcardImport:Weather2Test.kt$import assertk.assertions.*</ID>
+    <ID>WildcardImport:Weather2Tests.kt$import assertk.assertions.*</ID>
   </CurrentIssues>
 </SmellBaseline>
