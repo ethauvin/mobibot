@@ -6,12 +6,11 @@ env:
   CHATGPT_API_KEY: ${{ secrets.CHATGPT_API_KEY }}
   CI_NAME: "GitHub CI"
   COVERAGE_JDK: "21"
-  COVERAGE_KOTLIN: "2.1.20"
   EXCHANGERATE_API_KEY: ${{ secrets.EXCHANGERATE_API_KEY }}
   FINNHUB_API_KEY: ${{ secrets.FINNHUB_API_KEY }}
   GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
   GOOGLE_CSE_CX: ${{ secrets.GOOGLE_CSE_CX }}
-  KOTLIN_HOME: /usr/share/kotlinc
+  KOTLIN_VERSION: 2.2.0
   MASTODON_ACCESS_TOKEN: ${{ secrets.MASTODON_ACCESS_TOKEN }}
   MASTODON_HANDLE: ${{ secrets.MASTODON_HANDLE }}
   MASTODON_INSTANCE: ${{ secrets.MASTODON_INSTANCE }}
@@ -20,12 +19,12 @@ env:
 
 jobs:
   build-bld-project:
-    runs-on: ubuntu-latest
-
     strategy:
       matrix:
         java-version: [17, 21, 24]
-        kotlin-version: [1.9.25, 2.0.20, 2.1.21]
+        os: [ ubuntu-latest, windows-latest, macos-latest ]
+
+    runs-on: ${{ matrix.os }}
 
     steps:
       - name: Checkout source repository
@@ -39,6 +38,11 @@ jobs:
           distribution: "zulu"
           java-version: ${{ matrix.java-version }}
 
+      - name: Setup Kotlin ${{ env.KOTLIN_VERSION }}
+        uses: fwilhe2/setup-kotlin@main
+        with:
+          version: ${{ env.KOTLIN_VERSION }}
+
       - name: Download dependencies
         run: ./bld download
 
@@ -49,12 +53,12 @@ jobs:
         run: ./bld jacoco
 
       - name: Remove pom.xml
-        if: success() && matrix.java-version == env.COVERAGE_JDK && matrix.kotlin-version == env.COVERAGE_KOTLIN
+        if: success() && matrix.java-version == env.COVERAGE_JDK
         run: rm -rf pom.xml
 
       - name: SonarCloud Scan
         uses: sonarsource/sonarcloud-github-action@master
-        if: success() && matrix.java-version == env.COVERAGE_JDK && matrix.kotlin-version == env.COVERAGE_KOTLIN
+        if: success() && matrix.java-version == env.COVERAGE_JDK
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
