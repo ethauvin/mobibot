@@ -5,7 +5,7 @@ on: [push, pull_request, workflow_dispatch]
 env:
   CHATGPT_API_KEY: ${{ secrets.CHATGPT_API_KEY }}
   CI_NAME: "GitHub CI"
-  COVERAGE_JDK: "21"
+  COVERAGE_JDK: "24"
   EXCHANGERATE_API_KEY: ${{ secrets.EXCHANGERATE_API_KEY }}
   FINNHUB_API_KEY: ${{ secrets.FINNHUB_API_KEY }}
   GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
@@ -53,12 +53,12 @@ jobs:
         run: ./bld jacoco
 
       - name: Remove pom.xml
-        if: success() && matrix.java-version == env.COVERAGE_JDK
+        if: success() && matrix.java-version == env.COVERAGE_JDK && matrix.os == 'ubuntu-latest'
         run: rm -rf pom.xml
 
       - name: SonarCloud Scan
-        uses: sonarsource/sonarcloud-github-action@master
-        if: success() && matrix.java-version == env.COVERAGE_JDK
+        uses: SonarSource/sonarqube-scan-action@v5.2.0
+        if: success() && matrix.java-version == env.COVERAGE_JDK && matrix.os == 'ubuntu-latest'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
