@@ -93,7 +93,7 @@ class WolframAlphaTests : LocalProperties() {
         fun invalidAppId() {
             assertFailure { queryWolfram("1 gallon to liter", appId = "DEMO") }
                 .isInstanceOf(ModuleException::class.java)
-                .hasMessage("Error 1: Invalid appid")
+                .hasMessage("Invalid appid")
         }
     }
 
