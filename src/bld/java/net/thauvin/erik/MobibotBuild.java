@@ -127,7 +127,7 @@ public class MobibotBuild extends Project {
                 .include(dependency("net.thauvin.erik.urlencoder", "urlencoder-lib-jvm", "1.6.0"));
         scope(test)
                 // Mockito
-                .include(dependency("net.bytebuddy", "byte-buddy", version(1, 17, 5)))
+                .include(dependency("net.bytebuddy", "byte-buddy", version(1, 17, 6)))
                 .include(dependency("org.mockito.kotlin", "mockito-kotlin", version(5, 4, 0)))
                 // AssertK
                 .include(dependency("com.willowtreeapps.assertk", "assertk-jvm", version(0, 28, 1)))
