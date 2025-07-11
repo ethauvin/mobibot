@@ -51,21 +51,26 @@ class FeedReaderTests {
         @Test
         fun invalidFeed() {
             assertFailure { readFeed("https://www.example.com") }.isInstanceOf(FeedException::class.java)
+                .messageContains("Invalid XML")
         }
 
         @Test
         fun invalidHost() {
-            assertFailure { readFeed("https://www.examplesfoo.com/") }.isInstanceOf(UnknownHostException::class.java)
+            assertFailure { readFeed("https://www.examplesfoo.com/") }
+                .isInstanceOf(UnknownHostException::class.java)
+                .message().isEqualTo("www.examplesfoo.com")
         }
 
         @Test
         fun invalidLocation() {
             assertFailure { readFeed("https://www.google.com/404") }.isInstanceOf(IOException::class.java)
+                .message().isEqualTo("https://www.google.com/404")
         }
 
         @Test
         fun invalidUrl() {
-            assertFailure { readFeed("blah") }.isInstanceOf(MalformedURLException::class.java)
+            assertFailure { readFeed("blah") }.isInstanceOf(IllegalArgumentException::class.java)
+                .message().isEqualTo("URI is not absolute")
         }
     }
 
