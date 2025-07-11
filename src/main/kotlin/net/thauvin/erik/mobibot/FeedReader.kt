@@ -43,7 +43,7 @@ import org.pircbotx.hooks.types.GenericMessageEvent
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.io.IOException
-import java.net.URL
+import java.net.URI
 
 /**
  * Reads an RSS feed.
@@ -57,7 +57,7 @@ class FeedReader(private val url: String, val event: GenericMessageEvent) : Runn
         fun readFeed(url: String, maxItems: Int = 5): List<Message> {
             val messages = mutableListOf<Message>()
             val input = SyndFeedInput()
-            XmlReader(URL(url).openStream()).use { reader ->
+            XmlReader(URI(url).toURL().openStream()).use { reader ->
                 val feed = input.build(reader)
                 val items = feed.entries
                 if (items.isEmpty()) {

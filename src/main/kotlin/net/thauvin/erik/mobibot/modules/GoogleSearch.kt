@@ -47,7 +47,7 @@ import org.pircbotx.hooks.types.GenericMessageEvent
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.io.IOException
-import java.net.URL
+import java.net.URI
 
 /**
  * Allows user to search Google.
@@ -96,10 +96,10 @@ class GoogleSearch : AbstractModule() {
             val results = mutableListOf<Message>()
             if (query.isNotBlank()) {
                 try {
-                    val url = URL(
+                    val url = URI(
                         "https://www.googleapis.com/customsearch/v1?key=$apiKey&cx=$cseKey" +
                                 "&quotaUser=${quotaUser}&q=${query.encodeUrl()}&filter=1&num=5&alt=json"
-                    )
+                    ).toURL()
                     val json = JSONObject(url.reader().body)
                     if (json.has("items")) {
                         val ja = json.getJSONArray("items")

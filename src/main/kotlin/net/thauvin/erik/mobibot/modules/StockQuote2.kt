@@ -47,7 +47,7 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.io.IOException
 import java.math.RoundingMode
-import java.net.URL
+import java.net.URI
 import java.time.Instant
 import java.time.ZoneId
 import java.time.ZonedDateTime
@@ -131,10 +131,10 @@ class StockQuote2 : AbstractModule() {
                 try {
                     with(messages) {
                         // Get stock quote for symbol
-                        response = URL(
+                        response = URI(
                             "${API_URL}quote?symbol=" + tickerSymbol.encodeUrl() + "&token="
                                     + apiKey.encodeUrl()
-                        ).reader().body
+                        ).toURL().reader().body
                         val json = getJsonResponse(response, debugMessage)
                         val c = json.getBigDecimal("c")
                         if (c == 0.toBigDecimal()) {
@@ -242,10 +242,10 @@ class StockQuote2 : AbstractModule() {
                 try {
                     with(messages) {
                         // Search for symbol/keywords
-                        response = URL(
+                        response = URI(
                             "${API_URL}search?q=" + keywords.encodeUrl() + "&exchange=US&token="
                                     + apiKey.encodeUrl()
-                        ).reader().body
+                        ).toURL().reader().body
                         val json = getJsonResponse(response, debugMessage)
                         val count = json.getInt("count")
                         if (count == 0) {

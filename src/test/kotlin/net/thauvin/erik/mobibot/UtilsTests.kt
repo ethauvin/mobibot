@@ -65,7 +65,7 @@ import org.junit.jupiter.api.Nested
 import org.pircbotx.Colors
 import java.io.File
 import java.io.IOException
-import java.net.URL
+import java.net.URI
 import java.time.LocalDateTime
 import java.util.*
 import kotlin.test.Test
@@ -342,7 +342,7 @@ class UtilsTests {
     @Test
     @Throws(IOException::class)
     fun `URL reader`() {
-        val reader = URL("https://postman-echo.com/status/200").reader()
+        val reader = URI("https://postman-echo.com/status/200").toURL().reader()
         assertThat(reader.body).isEqualTo("{\"status\":200}")
         assertThat(reader.responseCode).isEqualTo(200)
     }

@@ -70,7 +70,7 @@ public class MobibotBuild extends Project {
 
         mainClass = pkg + ".Mobibot";
 
-        javaRelease = 17;
+        javaRelease = 21;
 
         autoDownloadPurge = true;
         downloadSources = true;
@@ -175,7 +175,7 @@ public class MobibotBuild extends Project {
     public void compile() throws Exception {
         releaseInfo();
         var op = new CompileKotlinOperation().fromProject(this);
-        op.compileOptions().languageVersion("2.1").progressive(true).verbose(true);
+        op.compileOptions().languageVersion("2.2").progressive(true).verbose(true);
         op.execute();
     }
 

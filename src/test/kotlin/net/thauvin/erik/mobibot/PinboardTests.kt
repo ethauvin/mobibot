@@ -34,7 +34,7 @@ package net.thauvin.erik.mobibot
 import net.thauvin.erik.mobibot.Utils.encodeUrl
 import net.thauvin.erik.mobibot.Utils.reader
 import net.thauvin.erik.mobibot.entries.EntryLink
-import java.net.URL
+import java.net.URI
 import kotlin.test.Test
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
@@ -57,9 +57,9 @@ class PinboardTests : LocalProperties() {
 
     private fun validatePin(apiToken: String, url: String, vararg matches: String): Boolean {
         val response =
-            URL(
+            URI(
                 "https://api.pinboard.in/v1/posts/get?auth_token=${apiToken}&tag=test&" + url.encodeUrl()
-            ).reader().body
+            ).toURL().reader().body
 
         matches.forEach {
             if (!response.contains(it)) {
