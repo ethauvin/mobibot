@@ -81,7 +81,7 @@ public class MobibotBuild extends Project {
                 new Repository("https://jitpack.io"),
                 CENTRAL_SNAPSHOTS);
 
-        var log4j = version(2, 25, 0);
+        var log4j = version(2, 25, 1);
         var kotlin = version(2, 2, 0);
         var langchain = version(1, 1, 0);
         scope(compile)
