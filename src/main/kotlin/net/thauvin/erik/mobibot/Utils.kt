@@ -30,6 +30,7 @@
  */
 package net.thauvin.erik.mobibot
 
+import net.thauvin.erik.mobibot.Utils.reader
 import net.thauvin.erik.mobibot.msg.Message
 import net.thauvin.erik.mobibot.msg.Message.Companion.DEFAULT_COLOR
 import net.thauvin.erik.urlencoder.UrlEncoderUtil
@@ -40,10 +41,13 @@ import org.pircbotx.hooks.events.PrivateMessageEvent
 import org.pircbotx.hooks.types.GenericMessageEvent
 import org.slf4j.Logger
 import java.io.*
-import java.net.HttpURLConnection
-import java.net.URL
+import java.net.URI
+import java.net.http.HttpClient
+import java.net.http.HttpRequest
+import java.net.http.HttpResponse
 import java.nio.file.Files
 import java.nio.file.Paths
+import java.time.Duration
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -57,6 +61,13 @@ import kotlin.io.path.fileSize
 @Suppress("TooManyFunctions")
 object Utils {
     private val searchFlags = arrayOf("%c", "%n")
+
+    object HttpClientManager {
+        val client: HttpClient = HttpClient.newBuilder()
+            .connectTimeout(Duration.ofSeconds(10))
+            .followRedirects(HttpClient.Redirect.NORMAL)
+            .build()
+    }
 
     /**
      * Prepends a prefix if not present.
@@ -262,28 +273,23 @@ object Utils {
     }
 
     /**
-     * Reads contents of a URL.
+     * Reads contents of a URI.
      */
     @JvmStatic
     @Throws(IOException::class)
-    fun URL.reader(): UrlReaderResponse {
-        val connection = this.openConnection() as HttpURLConnection
-        try {
-            connection.setRequestProperty(
-                "User-Agent",
-                Constants.USER_AGENT
-            )
-            return if (connection.responseCode.isHttpSuccess()) {
-                UrlReaderResponse(
-                    connection.responseCode,
-                    connection.inputStream.bufferedReader().use { it.readText() })
-            } else {
-                UrlReaderResponse(
-                    connection.responseCode,
-                    connection.errorStream.bufferedReader().use { it.readText() })
-            }
-        } finally {
-            connection.disconnect()
+    fun URI.reader(): UrlReaderResponse {
+        val request = HttpRequest.newBuilder()
+            .uri(this)
+            .timeout(Duration.ofSeconds(30))
+            .header("User-Agent", Constants.USER_AGENT)
+            .GET()
+            .build()
+
+        return try {
+            val response = HttpClientManager.client.send(request, HttpResponse.BodyHandlers.ofString())
+            UrlReaderResponse(response.statusCode(), response.body())
+        } catch (e: Exception) {
+            throw IOException("Failed to read URL: $this", e)
         }
     }
 
@@ -441,7 +447,7 @@ object Utils {
     fun String.unescapeXml(): String = Jsoup.parse(this).text()
 
     /**
-     * Holds the [URL.reader] response code and body text.
+     * Holds the [URI.reader] response code and body text.
      */
     data class UrlReaderResponse(val responseCode: Int, val body: String)
 }

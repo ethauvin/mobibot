@@ -99,7 +99,7 @@ class GoogleSearch : AbstractModule() {
                     val url = URI(
                         "https://www.googleapis.com/customsearch/v1?key=$apiKey&cx=$cseKey" +
                                 "&quotaUser=${quotaUser}&q=${query.encodeUrl()}&filter=1&num=5&alt=json"
-                    ).toURL()
+                    )
                     val json = JSONObject(url.reader().body)
                     if (json.has("items")) {
                         val ja = json.getJSONArray("items")
@@ -116,7 +116,9 @@ class GoogleSearch : AbstractModule() {
                         results.add(ErrorMessage("No results found.", Colors.RED))
                     }
                 } catch (e: IOException) {
-                    throw ModuleException("searchGoogle($query): IOE", "An IO error has occurred searching Google.", e)
+                    throw ModuleException("searchGoogle($query): IOE",
+                        "An IO error has occurred searching Google.",
+                        e)
                 } catch (e: JSONException) {
                     throw ModuleException(
                         "searchGoogle($query): JSON",

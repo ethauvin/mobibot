@@ -40,7 +40,7 @@ import org.pircbotx.hooks.types.GenericMessageEvent
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.io.IOException
-import java.net.URL
+import java.net.URI
 
 /**
  * Allows user to query Wolfram Alpha.
@@ -87,7 +87,7 @@ class WolframAlpha : AbstractModule() {
         fun queryWolfram(query: String, units: String = IMPERIAL, appId: String?): String {
             if (!appId.isNullOrEmpty()) {
                 try {
-                    val urlReader = URL("${API_URL}${appId}&units=${units}&i=" + query.encodeUrl()).reader()
+                    val urlReader = URI("${API_URL}${appId}&units=${units}&i=" + query.encodeUrl()).reader()
                     if (urlReader.responseCode.isHttpSuccess()) {
                         return urlReader.body
                     } else {

@@ -134,7 +134,7 @@ class StockQuote2 : AbstractModule() {
                         response = URI(
                             "${API_URL}quote?symbol=" + tickerSymbol.encodeUrl() + "&token="
                                     + apiKey.encodeUrl()
-                        ).toURL().reader().body
+                        ).reader().body
                         val json = getJsonResponse(response, debugMessage)
                         val c = json.getBigDecimal("c")
                         if (c == 0.toBigDecimal()) {
@@ -245,7 +245,7 @@ class StockQuote2 : AbstractModule() {
                         response = URI(
                             "${API_URL}search?q=" + keywords.encodeUrl() + "&exchange=US&token="
                                     + apiKey.encodeUrl()
-                        ).toURL().reader().body
+                        ).reader().body
                         val json = getJsonResponse(response, debugMessage)
                         val count = json.getInt("count")
                         if (count == 0) {

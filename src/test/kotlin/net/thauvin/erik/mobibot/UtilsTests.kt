@@ -339,14 +339,6 @@ class UtilsTests {
         }
     }
 
-    @Test
-    @Throws(IOException::class)
-    fun `URL reader`() {
-        val reader = URI("https://postman-echo.com/status/200").toURL().reader()
-        assertThat(reader.body).isEqualTo("{\"status\":200}")
-        assertThat(reader.responseCode).isEqualTo(200)
-    }
-
     @Nested
     @DisplayName("Text Styling Tests")
     inner class TextStylingTests {
@@ -428,6 +420,34 @@ class UtilsTests {
         @Test
         fun `Underline text`() {
             assertThat(ascii.underline()).isEqualTo(ascii.colorize(Colors.UNDERLINE))
+        }
+    }
+
+    @Nested
+    @DisplayName("URI Reader Tests")
+    inner class URIReaderTests {
+        @Test
+        @Throws(IOException::class)
+        fun `URI reader`() {
+            val reader = URI.create("https://postman-echo.com/status/200").reader()
+            assertThat(reader.body).isEqualTo("{\n  \"status\": 200\n}")
+            assertThat(reader.responseCode).isEqualTo(200)
+        }
+
+        @Test
+        @Throws(IOException::class)
+        fun `URI reader page not found`() {
+            val reader = URI.create("https://www.google.com/404").reader()
+            assertThat(reader.body.isEmpty()).isEqualTo(false)
+            assertThat(reader.responseCode).isEqualTo(404)
+        }
+
+        @Test
+        @Throws(IOException::class)
+        fun `URI reader with empty body`() {
+            val reader = URI.create("https://httpbin.org/status/200").reader()
+            assertThat(reader.body.isEmpty()).isEqualTo(true)
+            assertThat(reader.responseCode).isEqualTo(200)
         }
     }
 }

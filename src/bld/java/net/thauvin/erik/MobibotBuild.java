@@ -149,7 +149,7 @@ public class MobibotBuild extends Project {
     }
 
     public static void main(String[] args) {
-        var level = Level.ALL;
+        var level = Level.WARNING;
         var logger = Logger.getLogger("rife.bld.extension");
         var consoleHandler = new ConsoleHandler();
 
@@ -175,7 +175,7 @@ public class MobibotBuild extends Project {
     public void compile() throws Exception {
         releaseInfo();
         var op = new CompileKotlinOperation().fromProject(this);
-        op.compileOptions().languageVersion("2.2").progressive(true).verbose(true);
+        op.compileOptions().languageVersion("2.2").progressive(true).verbose(false);
         op.execute();
     }
 

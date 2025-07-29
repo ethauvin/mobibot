@@ -33,7 +33,9 @@
     <ID>MagicNumber:Tell.kt$Tell$7</ID>
     <ID>MagicNumber:Users.kt$Users$8</ID>
     <ID>MagicNumber:Utils.kt$Utils$200</ID>
+    <ID>MagicNumber:Utils.kt$Utils$30</ID>
     <ID>MagicNumber:Utils.kt$Utils$399</ID>
+    <ID>MagicNumber:Utils.kt$Utils.HttpClientManager$10</ID>
     <ID>MagicNumber:Weather2.kt$Weather2.Companion$1.60934</ID>
     <ID>MagicNumber:Weather2.kt$Weather2.Companion$32</ID>
     <ID>MagicNumber:Weather2.kt$Weather2.Companion$404</ID>
@@ -79,6 +81,7 @@
     <ID>TooGenericExceptionCaught:ChatGpt2.kt$ChatGpt2.Companion$e: Exception</ID>
     <ID>TooGenericExceptionCaught:Gemini2.kt$Gemini2.Companion$e: Exception</ID>
     <ID>TooGenericExceptionCaught:StockQuote2.kt$StockQuote2.Companion$e: NullPointerException</ID>
+    <ID>TooGenericExceptionCaught:Utils.kt$Utils$e: Exception</ID>
     <ID>TooGenericExceptionCaught:Weather2.kt$Weather2.Companion$e: NullPointerException</ID>
     <ID>TooManyFunctions:EntryLink.kt$EntryLink : Serializable</ID>
     <ID>TooManyFunctions:Mobibot.kt$Mobibot : ListenerAdapter</ID>

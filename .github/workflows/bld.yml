@@ -1,6 +1,6 @@
 name: bld-ci
 
-on: [push, pull_request, workflow_dispatch]
+on: [ push, pull_request, workflow_dispatch ]
 
 env:
   CHATGPT_API_KEY: ${{ secrets.CHATGPT_API_KEY }}
@@ -21,7 +21,7 @@ jobs:
   build-bld-project:
     strategy:
       matrix:
-        java-version: [21, 24]
+        java-version: [ 21, 24 ]
         os: [ ubuntu-latest, windows-latest, macos-latest ]
 
     runs-on: ${{ matrix.os }}
@@ -57,7 +57,7 @@ jobs:
         run: rm -rf pom.xml
 
       - name: SonarCloud Scan
-        uses: SonarSource/sonarqube-scan-action@v5.2.0
+        uses: SonarSource/sonarqube-scan-action@v5.3.0
         if: success() && matrix.java-version == env.COVERAGE_JDK && matrix.os == 'ubuntu-latest'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

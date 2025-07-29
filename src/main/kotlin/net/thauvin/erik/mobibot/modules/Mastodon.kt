@@ -83,7 +83,7 @@ class Mastodon : SocialModule() {
                 throw ModuleException("Missing handle", "The Mastodon handle is missing.")
             }
             val request = HttpRequest.newBuilder()
-                .uri(URI.create("https://$instance/api/v1/statuses"))
+                .uri(URI("https://$instance/api/v1/statuses"))
                 .header("Content-Type", "application/json")
                 .header("Authorization", "Bearer $accessToken")
                 .POST(

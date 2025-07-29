@@ -59,7 +59,7 @@ class PinboardTests : LocalProperties() {
         val response =
             URI(
                 "https://api.pinboard.in/v1/posts/get?auth_token=${apiToken}&tag=test&" + url.encodeUrl()
-            ).toURL().reader().body
+            ).reader().body
 
         matches.forEach {
             if (!response.contains(it)) {
