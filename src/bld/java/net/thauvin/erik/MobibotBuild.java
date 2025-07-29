@@ -83,7 +83,7 @@ public class MobibotBuild extends Project {
 
         var log4j = version(2, 25, 1);
         var kotlin = version(2, 2, 0);
-        var langchain = version(1, 1, 0);
+        var langchain = version(1, 2, 0);
         scope(compile)
                 // PircBotX
                 .include(dependency("com.github.pircbotx", "pircbotx", "2.3.1"))
