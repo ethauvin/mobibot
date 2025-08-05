@@ -63,6 +63,16 @@ class LinksManagerTests {
         @DisplayName("Link Tests")
         inner class LinkTests {
             @Test
+            fun matchBlankString() {
+                assertThat(linksManager.matches("   ")).isFalse()
+            }
+
+            @Test
+            fun matchEmptyString() {
+                assertThat(linksManager.matches("")).isFalse()
+            }
+
+            @Test
             @Suppress("HttpUrlsUsage")
             fun matchInsecureLink() {
                 assertThat(linksManager.matches("http://erik.thauvin.net/blog/ Erik's Weblog")).isTrue()
@@ -104,6 +114,11 @@ class LinksManagerTests {
             }
 
             @Test
+            fun matchMalformedURL() {
+                assertThat(linksManager.matches("https:/example.com")).isFalse()
+            }
+
+            @Test
             fun matchMixedCaseLink() {
                 assertThat(linksManager.matches("https://Erik.Thauvin.Net/blog/")).isTrue()
             }
@@ -124,8 +139,18 @@ class LinksManagerTests {
             }
 
             @Test
+            fun matchUnsupportedProtocol() {
+                assertThat(linksManager.matches("mailto:example@example.com")).isFalse()
+            }
+
+            @Test
             fun matchUpperCaseLink() {
                 assertThat(linksManager.matches("HTTPS://ERIK.THAUVIN.NET/BLOG/")).isTrue()
+            }
+
+            @Test
+            fun matchURLWithLeadingSpaces() {
+                assertThat(linksManager.matches("   https://example.com")).isFalse()
             }
         }
 
@@ -133,11 +158,11 @@ class LinksManagerTests {
         @DisplayName("Tags Parsing Tests")
         inner class TagsParsingTests {
             @Test
-            fun matchTagSingleKeyword() {
-                linksManager.setProperty(LinksManager.KEYWORDS_PROP, "key1 key2,key3")
+            fun matchTagCaseInsensitive() {
+                linksManager.setProperty(LinksManager.KEYWORDS_PROP, "Java kotlin")
                 val tags = mutableListOf<String>()
-                linksManager.matchTagKeywords("Test title with key2", tags)
-                assertThat(tags, "tags").containsExactly("key2")
+                linksManager.matchTagKeywords("This is a JAVA and kotlin tutorial", tags)
+                assertThat(tags, "tags").containsExactlyInAnyOrder("Java", "kotlin")
             }
 
             @Test
@@ -148,6 +173,30 @@ class LinksManagerTests {
                     containsExactlyInAnyOrder("key1", "key3")
                     size().isEqualTo(2)
                 }
+            }
+
+            @Test
+            fun matchTagMultipleInTitle() {
+                linksManager.setProperty(LinksManager.KEYWORDS_PROP, "java, spring, kotlin")
+                val tags = mutableListOf<String>()
+                linksManager.matchTagKeywords("Learning kotlin and spring for Java developers", tags)
+                assertThat(tags, "tags").containsExactlyInAnyOrder("java", "spring", "kotlin")
+            }
+
+            @Test
+            fun matchTagNoKeywords() {
+                linksManager.setProperty(LinksManager.KEYWORDS_PROP, "python, ruby")
+                val tags = mutableListOf<String>()
+                linksManager.matchTagKeywords("This title has no matching keywords", tags)
+                assertThat(tags, "tags").isEmpty()
+            }
+
+            @Test
+            fun matchTagSingleKeyword() {
+                linksManager.setProperty(LinksManager.KEYWORDS_PROP, "key1 key2,key3")
+                val tags = mutableListOf<String>()
+                linksManager.matchTagKeywords("Test title with key2", tags)
+                assertThat(tags, "tags").containsExactly("key2")
             }
         }
     }

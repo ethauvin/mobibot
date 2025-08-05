@@ -66,10 +66,14 @@ class LinksManager : AbstractCommand() {
     override val isVisible = false
 
     companion object {
-        val LINK_MATCH = "^[hH][tT][tT][pP](|[sS])://.*".toRegex()
         const val KEYWORDS_PROP = "tags-keywords"
         const val TAGS_PROP = "tags"
-        val TAG_MATCH = ", *| +".toRegex()
+
+        @JvmStatic
+        val LINK_MATCH by lazy { "^[hH][tT][tT][pP](|[sS])://.*".toRegex() }
+
+        @JvmStatic
+        val TAG_MATCH by lazy { ", *| +".toRegex() }
 
         /**
          * Entries array
