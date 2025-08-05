@@ -129,7 +129,7 @@ class FeedsManager private constructor() {
                             publishedDate = Calendar.getInstance().time
                             language = "en"
                         }
-                        val buff: StringBuilder = StringBuilder()
+                        val buff = StringBuilder()
                         for (i in entries.links.indices.reversed()) {
                             with(entries.links[i]) {
                                 buff.setLength(0)

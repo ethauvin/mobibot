@@ -1,5 +1,5 @@
 /*
- * WarTests.kt
+ * PostingTest.kt
  *
  * Copyright 2004-2025 Erik C. Thauvin (erik@thauvin.net)
  *
@@ -29,26 +29,37 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package net.thauvin.erik.mobibot.modules
+package net.thauvin.erik.mobibot.commands.links
 
-import assertk.assertThat
-import assertk.assertions.matches
-import org.junit.jupiter.api.RepeatedTest
-import org.mockito.ArgumentCaptor
-import org.mockito.Mockito
-import org.pircbotx.hooks.types.GenericMessageEvent
+import net.thauvin.erik.mobibot.Constants
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.ValueSource
 
-class WarTests {
-    @RepeatedTest(3, name = "{displayName} {currentRepetition}/{totalRepetitions}")
-    fun `Play war`() {
-        val war = War()
-        val event = Mockito.mock(GenericMessageEvent::class.java)
-        val captor = ArgumentCaptor.forClass(String::class.java)
+class PostingTest {
+    @ParameterizedTest
+    @ValueSource(
+        strings = [
+            "${Constants.LINK_CMD}1:Some comment",
+            "${Constants.LINK_CMD}12:Another comment"
+        ]
+    )
+    fun matches(input: String) {
+        val posting = Posting()
+        assertTrue(posting.matches(input))
+    }
 
-        war.commandResponse("channel", "war", "", event)
-
-        Mockito.verify(event, Mockito.atLeastOnce()).respond(captor.capture())
-        assertThat(captor.value)
-            .matches("[\uD83C\uDCA0-\uD83C\uDCDF] {2}[\uD83C\uDCA0-\uD83C\uDCDF] {2}» .+(win|lose|tie).+!".toRegex())
+    @ParameterizedTest
+    @ValueSource(
+        strings = [
+            "${Constants.LINK_CMD}:Comment with no number",
+            "Completely unrelated message",
+            "${Constants.LINK_CMD}1|Invalid separator"
+        ]
+    )
+    fun noMatch(input: String) {
+        val posting = Posting()
+        assertFalse(posting.matches(input))
     }
 }

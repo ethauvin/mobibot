@@ -45,6 +45,7 @@ import net.thauvin.erik.mobibot.modules.Weather2.Companion.mphToKmh
 import net.thauvin.erik.mobibot.msg.Message
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
+import org.junit.jupiter.api.RepeatedTest
 import org.mockito.ArgumentCaptor
 import org.mockito.Mockito
 import org.pircbotx.hooks.types.GenericMessageEvent
@@ -112,13 +113,11 @@ class Weather2Tests : LocalProperties() {
             assertThat(getCountry("fr")).isEqualTo(OWM.Country.FRANCE)
         }
 
-        @Test
+        @RepeatedTest(3, name = "{displayName} {currentRepetition}/{totalRepetitions}")
         fun `Get random country`() {
             val country = OWM.Country.entries.toTypedArray()
-            repeat(3) {
-                val rand = country[(country.indices).random()]
-                assertThat(getCountry(rand.value), rand.name).isEqualTo(rand)
-            }
+            val rand = country[(country.indices).random()]
+            assertThat(getCountry(rand.value), rand.name).isEqualTo(rand)
         }
     }
 

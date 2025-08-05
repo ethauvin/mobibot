@@ -37,18 +37,17 @@ import assertk.assertions.*
 import org.junit.jupiter.api.MethodOrderer
 import org.junit.jupiter.api.Order
 import org.junit.jupiter.api.TestMethodOrder
+import kotlin.io.path.createTempFile
 import kotlin.test.Test
+
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation::class)
 class SeenTests {
     companion object {
-        private val tmpFile = kotlin.io.path.createTempFile(SeenTests::class.java.simpleName, suffix = ".ser")
+        private val tmpFile = createTempFile(SeenTests::class.java.simpleName, suffix = ".ser")
+            .apply { toFile().deleteOnExit(); }
         private val seen = Seen(tmpFile.toAbsolutePath().toString())
         private const val NICK = "ErikT"
-
-        init {
-            tmpFile.toFile().deleteOnExit()
-        }
     }
 
     @Test

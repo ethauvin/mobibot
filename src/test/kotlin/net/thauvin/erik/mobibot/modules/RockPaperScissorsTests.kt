@@ -47,7 +47,7 @@ class RockPaperScissorsTests {
     @Nested
     @DisplayName("Command Response Tests")
     inner class CommandResponseTests {
-        @RepeatedTest(3)
+        @RepeatedTest(3, name = "{displayName} {currentRepetition}/{totalRepetitions}")
         fun `Play Rock Paper Scissors`() {
             val rockPaperScissors = RockPaperScissors()
             val event = Mockito.mock(GenericMessageEvent::class.java)

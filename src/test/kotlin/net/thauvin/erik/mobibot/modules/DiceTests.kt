@@ -61,7 +61,7 @@ class DiceTests {
             assertThat(captor.value).startsWith("you rolled")
         }
 
-        @RepeatedTest(3)
+        @RepeatedTest(3, name = "{displayName} {currentRepetition}/{totalRepetitions}")
         fun `Roll die with 9 sides`() {
             val dice = Dice()
             val event = Mockito.mock(GenericMessageEvent::class.java)
@@ -73,7 +73,7 @@ class DiceTests {
             assertThat(captor.value).matches("you rolled \u0002[1-9]\u0002".toRegex())
         }
 
-        @RepeatedTest(3)
+        @RepeatedTest(3, name = "{displayName} {currentRepetition}/{totalRepetitions}")
         fun `Roll dice`() {
             val dice = Dice()
             val event = Mockito.mock(GenericMessageEvent::class.java)
@@ -100,7 +100,7 @@ class DiceTests {
             assertThat(Dice.roll(1, 1)).isEqualTo("\u00021\u0002")
         }
 
-        @RepeatedTest(5)
+        @RepeatedTest(5, name = "{displayName} {currentRepetition}/{totalRepetitions}")
         fun `Roll die with random sides`() {
             assertThat(Dice.roll(1, Random.nextInt(1, 11))).matches("\u0002([1-9]|10)\u0002".toRegex())
         }
@@ -131,7 +131,7 @@ class DiceTests {
                 )
         }
 
-        @RepeatedTest(3)
+        @RepeatedTest(3, name = "{displayName} {currentRepetition}/{totalRepetitions}")
         fun `Roll 3 dice with random sides`() {
             assertThat(Dice.roll(3, Random.nextInt(1, 6)))
                 .matches(

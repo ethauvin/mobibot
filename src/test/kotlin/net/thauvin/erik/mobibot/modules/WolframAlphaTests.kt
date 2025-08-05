@@ -46,6 +46,7 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
+import org.junit.jupiter.params.provider.NullAndEmptySource
 import org.mockito.ArgumentCaptor
 import org.mockito.Mockito
 import org.pircbotx.hooks.types.GenericMessageEvent
@@ -83,9 +84,10 @@ class WolframAlphaTests : LocalProperties() {
     @Nested
     @DisplayName("App ID Tests")
     inner class AppIdTests {
-        @Test
-        fun emptyAppId() {
-            assertFailure { queryWolfram("1 gallon to liter", appId = "") }
+        @ParameterizedTest
+        @NullAndEmptySource
+        fun emptyOrNullAppId(appId: String?) {
+            assertFailure { queryWolfram("1 gallon to liter", appId = appId) }
                 .isInstanceOf(ModuleException::class.java)
         }
 

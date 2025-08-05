@@ -182,6 +182,14 @@ class StockQuote2Tests : LocalProperties() {
 
         @Test
         @Throws(ModuleException::class)
+        fun `Lookup empty API key`() {
+            assertFailure { getSanitizedLookup("foo bar", "") }
+                .isInstanceOf(ModuleException::class.java)
+                .messageContains("disabled")
+        }
+
+        @Test
+        @Throws(ModuleException::class)
         fun `Lookup not found`() {
             val keywords = "foo motors"
             val messages = getSanitizedLookup(keywords, apiKey)

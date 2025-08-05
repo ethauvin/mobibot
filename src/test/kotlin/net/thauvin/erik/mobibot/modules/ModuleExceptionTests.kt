@@ -50,8 +50,10 @@ class ModuleExceptionTests {
         fun moduleExceptions(): List<ModuleException> {
             return listOf(
                 ModuleException(DEBUG_MESSAGE, MESSAGE, IOException("foo")),
-                ModuleException(DEBUG_MESSAGE, MESSAGE,
-                    IllegalArgumentException("bar")),
+                ModuleException(
+                    DEBUG_MESSAGE, MESSAGE,
+                    IllegalArgumentException("bar")
+                ),
                 ModuleException(DEBUG_MESSAGE, MESSAGE)
             )
         }
@@ -71,49 +73,104 @@ class ModuleExceptionTests {
         fun getMessage(e: ModuleException) {
             assertThat(e).hasMessage(MESSAGE)
         }
+    }
 
+    @Nested
+    @DisplayName("Sanitized Message Tests")
+    inner class SanitizedMessageTests {
         @Test
-        fun sanitizeMessage() {
+        fun sanitizeMessageWithIOExceptionAndApiKey() {
             val apiKey = "1234567890"
-            var e = ModuleException(DEBUG_MESSAGE, MESSAGE,
-                IOException("URL https://foo.com?apiKey=$apiKey&userID=me"))
+            val e = ModuleException(
+                DEBUG_MESSAGE, MESSAGE,
+                IOException("URL https://foo.com?apiKey=$apiKey&userID=me")
+            )
+
             assertThat(
                 e.sanitize(apiKey, "", "me").message,
-                "ModuleException(debugMessage, message, IOException(url))"
+                "ModuleException with IOException containing apiKey and userID"
             ).isNotNull().all {
                 contains("xxxxxxxxxx", "userID=xx", "java.io.IOException")
                 doesNotContain(apiKey, "me")
             }
+        }
 
-            e = ModuleException(DEBUG_MESSAGE, MESSAGE, null)
-            assertThat(e.sanitize(apiKey),
-                "ModuleException(debugMessage, message, null)").hasMessage(MESSAGE)
+        @Test
+        fun sanitizeMessageWithNullCause() {
+            val apiKey = "1234567890"
+            val e = ModuleException(DEBUG_MESSAGE, MESSAGE, null)
 
-            e = ModuleException(DEBUG_MESSAGE, MESSAGE, IOException())
-            assertThat(e.sanitize(apiKey),
-                "ModuleException(debugMessage, message, IOException())").hasMessage(MESSAGE)
+            assertThat(
+                e.sanitize(apiKey),
+                "ModuleException with null cause"
+            ).hasMessage(MESSAGE)
+        }
 
-            e = ModuleException(DEBUG_MESSAGE, apiKey)
-            assertThat(e.sanitize(apiKey).message,
-                "ModuleException(debugMessage, apiKey)")
+        @Test
+        fun sanitizeMessageWithEmptyIOException() {
+            val apiKey = "1234567890"
+            val e = ModuleException(DEBUG_MESSAGE, MESSAGE, IOException())
+
+            assertThat(
+                e.sanitize(apiKey),
+                "ModuleException with empty IOException"
+            ).hasMessage(MESSAGE)
+        }
+
+        @Test
+        fun sanitizeMessageContainingApiKey() {
+            val apiKey = "1234567890"
+            val e = ModuleException(DEBUG_MESSAGE, apiKey)
+
+            assertThat(
+                e.sanitize(apiKey).message,
+                "ModuleException with apiKey in message"
+            )
                 .isNotNull()
                 .doesNotContain(apiKey)
+        }
 
+        @Test
+        fun sanitizeMessageWithNullMessage() {
+            val apiKey = "1234567890"
             val msg: String? = null
-            e = ModuleException(DEBUG_MESSAGE, msg, IOException(msg))
-            assertThat(e.sanitize(apiKey).message,
-                "ModuleException(debugMessage, msg, IOException(msg))").isNull()
+            val e = ModuleException(DEBUG_MESSAGE, msg, IOException(msg))
 
-            e = ModuleException(DEBUG_MESSAGE, msg,
-                IOException("foo is $apiKey"))
+            assertThat(
+                e.sanitize(apiKey).message,
+                "ModuleException with null message"
+            ).isNull()
+        }
+
+        @Test
+        fun sanitizeMessageWithMultipleSecrets() {
+            val apiKey = "1234567890"
+            val msg: String? = null
+            val e = ModuleException(
+                DEBUG_MESSAGE, msg,
+                IOException("foo is $apiKey")
+            )
+
             assertThat(
                 e.sanitize("   ", apiKey, "foo").message,
-                "ModuleException(debugMessage, msg, IOException(foo is $apiKey))"
+                "ModuleException with multiple secrets to sanitize"
             ).isNotNull().all {
                 doesNotContain(apiKey)
                 endsWith("xxx is xxxxxxxxxx")
             }
-            assertThat(e.sanitize(), "exception should be unchanged").isEqualTo(e)
+        }
+
+        @Test
+        fun sanitizeMessageWithNoSecrets() {
+            val apiKey = "1234567890"
+            val msg: String? = null
+            val e = ModuleException(
+                DEBUG_MESSAGE, msg,
+                IOException("foo is $apiKey")
+            )
+
+            assertThat(e.sanitize(), "exception with no secrets provided should be unchanged")
+                .isEqualTo(e)
         }
     }
 }

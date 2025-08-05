@@ -49,10 +49,7 @@ class TellMessagesMgrTests {
 
     companion object {
         private val testFile = createTempFile(TellMessagesMgrTests::class.java.simpleName, suffix = ".ser")
-
-        init {
-            testFile.toFile().deleteOnExit()
-        }
+            .apply { toFile().deleteOnExit(); }
     }
 
     init {
@@ -66,8 +63,14 @@ class TellMessagesMgrTests {
             queued = LocalDateTime.now().minusDays(maxDays)
         })
         val size = testMessages.size
-        assertThat(TellManager.clean(testMessages, maxDays + 2), "clean(maxDays=${maxDays + 2})").isFalse()
-        assertThat(TellManager.clean(testMessages, maxDays), "clean(maxDays=$maxDays)").isTrue()
+        assertThat(
+            TellManager.clean(testMessages, maxDays + 2),
+            "clean(maxDays=${maxDays + 2})"
+        ).isFalse()
+        assertThat(
+            TellManager.clean(testMessages, maxDays),
+            "clean(maxDays=$maxDays)"
+        ).isTrue()
         assertThat(testMessages, "testMessages").size().isEqualTo(size - 1)
     }
 

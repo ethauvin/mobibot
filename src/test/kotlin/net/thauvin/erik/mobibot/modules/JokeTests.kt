@@ -36,10 +36,10 @@ import assertk.assertions.*
 import net.thauvin.erik.mobibot.modules.Joke.Companion.randomJoke
 import net.thauvin.erik.mobibot.msg.Message
 import net.thauvin.erik.mobibot.msg.PublicMessage
-import kotlin.test.Test
+import org.junit.jupiter.api.RepeatedTest
 
 class JokeTests {
-    @Test
+    @RepeatedTest(2, name = "{displayName}: {currentRepetition}/{totalRepetitions}")
     @Throws(ModuleException::class)
     fun `Get a random joke`() {
         val joke = randomJoke()

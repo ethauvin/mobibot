@@ -49,22 +49,26 @@ class CalcTests {
     inner class CalculateTests {
         @Test
         fun `Calculate basic addition`() {
-            assertThat(calculate("1 + 1"), "calculate(1+1)").isEqualTo("1+1 = ${2.bold()}")
+            assertThat(calculate("1 + 1"), "calculate(1+1)")
+                .isEqualTo("1+1 = ${2.bold()}")
         }
 
         @Test
         fun `Calculate basic subtraction`() {
-            assertThat(calculate("1 -3"), "calculate(1-3)").isEqualTo("1-3 = ${(-2).bold()}")
+            assertThat(calculate("1 -3"), "calculate(1-3)")
+                .isEqualTo("1-3 = ${(-2).bold()}")
         }
 
         @Test
         fun `Calculate mathematical constants`() {
-            assertThat(calculate("pi+π+e+φ"), "calculate(pi+π+e+φ)").isEqualTo("pi+π+e+φ = ${"10.62".bold()}")
+            assertThat(calculate("pi+π+e+φ"), "calculate(pi+π+e+φ)")
+                .isEqualTo("pi+π+e+φ = ${"10.62".bold()}")
         }
 
         @Test
         fun `Calculate scientific notations`() {
-            assertThat(calculate("3e2 - 3e1"), "calculate(3e2-3e1 )").isEqualTo("3e2-3e1 = ${"270".bold()}")
+            assertThat(calculate("3e2 - 3e1"), "calculate(3e2-3e1 )")
+                .isEqualTo("3e2-3e1 = ${"270".bold()}")
         }
 
         @Test
@@ -80,7 +84,8 @@ class CalcTests {
 
         @Test
         fun `Invalid calculation should throw exception`() {
-            assertFailure { calculate("a + b = c") }.isInstanceOf(UnknownFunctionOrVariableException::class.java)
+            assertFailure { calculate("a + b = c") }
+                .isInstanceOf(UnknownFunctionOrVariableException::class.java)
         }
     }
 
@@ -92,7 +97,8 @@ class CalcTests {
             val calc = Calc()
             val event = Mockito.mock(GenericMessageEvent::class.java)
             calc.commandResponse("channel", "calc", "1 + 1 * 2", event)
-            Mockito.verify(event, Mockito.times(1)).respond("1+1*2 = ${"3".bold()}")
+            Mockito.verify(event, Mockito.times(1))
+                .respond("1+1*2 = ${"3".bold()}")
         }
 
         @Test
@@ -100,7 +106,8 @@ class CalcTests {
             val calc = Calc()
             val event = Mockito.mock(GenericMessageEvent::class.java)
             calc.commandResponse("channel", "calc", "two + two", event)
-            Mockito.verify(event, Mockito.times(1)).respond("No idea. This is the kind of math I don't get.")
+            Mockito.verify(event, Mockito.times(1))
+                .respond("No idea. This is the kind of math I don't get.")
         }
     }
 }

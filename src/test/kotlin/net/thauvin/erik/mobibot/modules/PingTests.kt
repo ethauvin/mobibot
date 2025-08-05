@@ -34,18 +34,17 @@ import assertk.assertThat
 import assertk.assertions.contains
 import assertk.assertions.isNotEmpty
 import net.thauvin.erik.mobibot.modules.Ping.Companion.randomPing
+import org.junit.jupiter.api.RepeatedTest
 import kotlin.test.Test
 
 class PingTests {
-    @Test
+    @RepeatedTest(9, name = "{displayName}: {currentRepetition}/{totalRepetitions}")
     fun `Get a random ping`() {
-        for (i in 0..9) {
-            assertThat(Ping.PINGS, "Ping.PINGS[$i]").contains(randomPing())
-        }
+        assertThat(Ping.PINGS).contains(randomPing())
     }
 
     @Test
     fun `Pings array should not be empty`() {
-        assertThat(Ping.PINGS, "Ping.PINGS").isNotEmpty()
+        assertThat(Ping.PINGS).isNotEmpty()
     }
 }

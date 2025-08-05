@@ -116,9 +116,11 @@ class GoogleSearch : AbstractModule() {
                         results.add(ErrorMessage("No results found.", Colors.RED))
                     }
                 } catch (e: IOException) {
-                    throw ModuleException("searchGoogle($query): IOE",
+                    throw ModuleException(
+                        "searchGoogle($query): IOE",
                         "An IO error has occurred searching Google.",
-                        e)
+                        e
+                    )
                 } catch (e: JSONException) {
                     throw ModuleException(
                         "searchGoogle($query): JSON",

@@ -103,6 +103,7 @@
     <ID>WildcardImport:Mobibot.kt$import net.thauvin.erik.mobibot.modules.*</ID>
     <ID>WildcardImport:Mobibot.kt$import org.pircbotx.hooks.events.*</ID>
     <ID>WildcardImport:ModuleExceptionTests.kt$import assertk.assertions.*</ID>
+    <ID>WildcardImport:RecapTests.kt$import assertk.assertions.*</ID>
     <ID>WildcardImport:SeenTests.kt$import assertk.assertions.*</ID>
     <ID>WildcardImport:StockQuote2Tests.kt$import assertk.assertions.*</ID>
     <ID>WildcardImport:TellMessagesMgrTests.kt$import assertk.assertions.*</ID>

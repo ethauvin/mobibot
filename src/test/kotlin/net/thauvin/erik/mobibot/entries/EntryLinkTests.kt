@@ -35,8 +35,12 @@ import assertk.assertThat
 import assertk.assertions.*
 import com.rometools.rome.feed.synd.SyndCategory
 import com.rometools.rome.feed.synd.SyndCategoryImpl
+import net.thauvin.erik.mobibot.Constants
+import net.thauvin.erik.mobibot.commands.links.Tags
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.ValueSource
 import java.security.SecureRandom
 import java.util.*
 import kotlin.test.Test
@@ -146,6 +150,45 @@ class EntryLinkTests {
             link.setTags("")
             assertThat(link.tags, "setTags(\"\")").size().isEqualTo(size)
 
+        }
+    }
+
+    @Nested
+    @DisplayName("Tags Matches Tests")
+    inner class TagsMatchesTests {
+        @ParameterizedTest
+        @ValueSource(
+            strings = [
+                Constants.LINK_CMD + "123" + Constants.TAG_CMD + ":validtag",
+                Constants.LINK_CMD + "567" + Constants.TAG_CMD + ":AnotherTag",
+                Constants.LINK_CMD + "42" + Constants.TAG_CMD + ":sometag",
+                Constants.LINK_CMD + "123" + Constants.TAG_CMD + ":"
+            ]
+        )
+        fun `Matches valid link command patterns`(input: String) {
+            val tags = Tags()
+            assertThat(tags.matches(input)).isTrue()
+
+        }
+
+        @ParameterizedTest
+        @ValueSource(
+            strings = [
+                Constants.LINK_CMD + "",
+                Constants.LINK_CMD + "123",
+                Constants.LINK_CMD + "123" + Constants.TAG_CMD + ""
+            ]
+        )
+        fun `Does not match invalid link command patterns`(input: String) {
+            val tags = Tags()
+            assertThat(tags.matches(input)).isFalse()
+        }
+
+        @ParameterizedTest
+        @ValueSource(strings = ["", " "])
+        fun `Handles empty or blank input`(input: String) {
+            val tags = Tags()
+            assertThat(tags.matches(input)).isFalse()
         }
     }
 }

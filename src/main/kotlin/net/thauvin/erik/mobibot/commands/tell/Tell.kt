@@ -272,7 +272,7 @@ class Tell(private val serialObject: String) : AbstractCommand() {
 
     companion object {
         /**
-         * Max days property.
+         * Max number of days property.
          */
         const val MAX_DAYS_PROP = "tell-max-days"
 

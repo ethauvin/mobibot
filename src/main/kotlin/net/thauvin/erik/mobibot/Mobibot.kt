@@ -90,19 +90,19 @@ class Mobibot(nickname: String, val channel: String, logsDirPath: String, p: Pro
             val debug by parser.option(
                 ArgType.Boolean,
                 Constants.DEBUG_ARG,
-                Constants.DEBUG_ARG.substring(0, 1),
+                Constants.DEBUG_ARG[0].toString(),
                 "Print debug & logging data directly to the console"
             ).default(false)
             val property by parser.option(
                 ArgType.String,
                 Constants.PROPS_ARG,
-                Constants.PROPS_ARG.substring(0, 1),
+                Constants.PROPS_ARG[0].toString(),
                 "Use alternate properties file"
             ).default("./${ReleaseInfo.PROJECT}.properties")
             val version by parser.option(
                 ArgType.Boolean,
                 Constants.VERSION_ARG,
-                Constants.VERSION_ARG.substring(0, 1),
+                Constants.VERSION_ARG[0].toString(),
                 "Print version info"
             ).default(false)
 

@@ -40,7 +40,6 @@ import net.thauvin.erik.mobibot.msg.Message
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import java.io.IOException
-import java.net.MalformedURLException
 import java.net.UnknownHostException
 import kotlin.test.Test
 
