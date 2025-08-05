@@ -83,7 +83,7 @@ public class MobibotBuild extends Project {
 
         var log4j = version(2, 25, 1);
         var kotlin = version(2, 2, 0);
-        var langchain = version(1, 2, 0);
+        var langChain = version(1, 2, 0);
         scope(compile)
                 // PircBotX
                 .include(dependency("com.github.pircbotx", "pircbotx", "2.3.1"))
@@ -108,10 +108,10 @@ public class MobibotBuild extends Project {
                 .include(dependency("org.apache.logging.log4j", "log4j-core", log4j))
                 .include(dependency("org.apache.logging.log4j", "log4j-slf4j2-impl", log4j))
                 // LangChain4J
-                .include(dependency("dev.langchain4j", "langchain4j-open-ai", langchain))
-                .include(dependency("dev.langchain4j", "langchain4j-google-ai-gemini", "1.0.0-beta5"))
-                .include(dependency("dev.langchain4j", "langchain4j-core", langchain))
-                .include(dependency("dev.langchain4j", "langchain4j", langchain))
+                .include(dependency("dev.langchain4j", "langchain4j-open-ai", langChain))
+                .include(dependency("dev.langchain4j", "langchain4j-google-ai-gemini", langChain))
+                .include(dependency("dev.langchain4j", "langchain4j-core", langChain))
+                .include(dependency("dev.langchain4j", "langchain4j", langChain))
                 // Misc.
                 .include(dependency("com.rometools", "rome", "2.1.0"))
                 .include(dependency("com.squareup.okhttp3", "okhttp-jvm", "5.1.0"))
