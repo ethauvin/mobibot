@@ -67,6 +67,10 @@ class Posting : AbstractCommand() {
     override val isPublic = true
     override val isVisible = true
 
+    companion object {
+        private val MATCH_PATTERN by lazy { "${Constants.LINK_CMD}\\d+:.*".toRegex() }
+    }
+
     override fun commandResponse(channel: String, args: String, event: GenericMessageEvent) {
         val cmds = args.substring(1).split(":", limit = 2)
         val entryIndex = cmds[0].toInt() - 1
@@ -91,7 +95,7 @@ class Posting : AbstractCommand() {
     }
 
     override fun matches(message: String): Boolean {
-        return message.matches("${Constants.LINK_CMD}\\d+:.*".toRegex())
+        return message.matches(MATCH_PATTERN)
     }
 
     private fun addComment(cmd: String, entryIndex: Int, event: GenericMessageEvent) {

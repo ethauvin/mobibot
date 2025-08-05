@@ -63,6 +63,8 @@ class Comment : AbstractCommand() {
 
     companion object {
         const val COMMAND = "comment"
+
+        private val MATCH_PATTERN by lazy { "^${Constants.LINK_CMD}(\\d+)\\.(\\d+):(.*)$".toRegex() }
     }
 
     override fun commandResponse(channel: String, args: String, event: GenericMessageEvent) {
@@ -100,7 +102,7 @@ class Comment : AbstractCommand() {
     }
 
     override fun matches(message: String): Boolean {
-        return message.matches("^${Constants.LINK_CMD}\\d+\\.\\d+:.*".toRegex())
+        return message.matches(MATCH_PATTERN)
     }
 
     private fun changeAuthor(

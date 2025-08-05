@@ -59,8 +59,9 @@ class Tags : AbstractCommand() {
 
     companion object {
         const val COMMAND = "tags"
-    }
 
+        private val MATCH_PATTERN by lazy { "^${Constants.LINK_CMD}\\d+${Constants.TAG_CMD}:.*".toRegex() }
+    }
 
     override fun commandResponse(channel: String, args: String, event: GenericMessageEvent) {
         val cmds = args.substring(1).split("${Constants.TAG_CMD}:", limit = 2)
@@ -89,6 +90,6 @@ class Tags : AbstractCommand() {
     }
 
     override fun matches(message: String): Boolean {
-        return message.matches("^${Constants.LINK_CMD}\\d+${Constants.TAG_CMD}:.*".toRegex())
+        return message.matches(MATCH_PATTERN)
     }
 }
