@@ -51,21 +51,22 @@ object EntriesUtils {
     @JvmStatic
     @JvmOverloads
     fun printLink(entryIndex: Int, entry: EntryLink, isView: Boolean = false): String {
-        val buff = StringBuilder().append(entryIndex.toLinkLabel()).append(": ")
-            .append('[').append(entry.nick).append(']')
-        if (isView && entry.comments.isNotEmpty()) {
-            buff.append("[+").append(entry.comments.size).append(']')
-        }
-        buff.append(' ')
-        with(entry) {
-            if (Constants.NO_TITLE == title) {
-                buff.append(title)
-            } else {
-                buff.append(title.bold())
+        val buff = buildString {
+            append(entryIndex.toLinkLabel()).append(": ").append('[').append(entry.nick).append(']')
+            if (isView && entry.comments.isNotEmpty()) {
+                append("[+").append(entry.comments.size).append(']')
             }
-            buff.append(" ( ").append(link.green()).append(" )")
+            append(' ')
+            with(entry) {
+                if (Constants.NO_TITLE == title) {
+                    append(title)
+                } else {
+                    append(title.bold())
+                }
+                append(" ( ").append(link.green()).append(" )")
+            }
         }
-        return buff.toString()
+        return buff
     }
 
     /**

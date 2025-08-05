@@ -106,23 +106,25 @@ class Info(private val tell: Tell, private val seen: Seen) : AbstractCommand() {
 
     override fun commandResponse(channel: String, args: String, event: GenericMessageEvent) {
         event.sendList(allVersions, 1)
-        val info = StringBuilder()
-        info.append("Uptime: ")
-            .append(ManagementFactory.getRuntimeMXBean().uptime.toUptime())
-            .append(" [Entries: ")
-            .append(LinksManager.entries.links.size)
-        if (seen.isEnabled()) {
-            info.append(", Seen: ").append(seen.count())
-        }
-        if (event.isChannelOp(channel)) {
-            if (tell.isEnabled()) {
-                info.append(", Messages: ").append(tell.size())
+        val info = buildString {
+            append("Uptime: ")
+                .append(ManagementFactory.getRuntimeMXBean().uptime.toUptime())
+                .append(" [Entries: ")
+                .append(LinksManager.entries.links.size)
+            if (seen.isEnabled()) {
+                append(", Seen: ").append(seen.count())
             }
-            if (LinksManager.socialManager.entriesCount() > 0) {
-                info.append(", Social: ").append(LinksManager.socialManager.entriesCount())
+            if (event.isChannelOp(channel)) {
+                if (tell.isEnabled()) {
+                    append(", Messages: ").append(tell.size())
+                }
+                if (LinksManager.socialManager.entriesCount() > 0) {
+                    append(", Social: ").append(LinksManager.socialManager.entriesCount())
+                }
             }
+            append(", Recap: ").append(Recap.recaps.size).append(']')
         }
-        info.append(", Recap: ").append(Recap.recaps.size).append(']')
-        event.sendMessage(info.toString())
+
+        event.sendMessage(info)
     }
 }

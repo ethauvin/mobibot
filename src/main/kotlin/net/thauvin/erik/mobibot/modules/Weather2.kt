@@ -156,17 +156,18 @@ class Weather2 : AbstractModule() {
                                 }
                             }
                             if (cwd.hasWeatherList()) {
-                                val condition = StringBuilder("Condition:")
-                                cwd.weatherList?.let {
-                                    for (w in it) {
-                                        w?.let {
-                                            condition.append(' ')
-                                                .append(w.getDescription().capitalize())
-                                                .append('.')
+                                val condition = buildString {
+                                    cwd.weatherList?.let {
+                                        for (w in it) {
+                                            w?.let {
+                                                append(' ')
+                                                    .append(w.getDescription().capitalize())
+                                                    .append('.')
+                                            }
                                         }
                                     }
-                                    messages.add(NoticeMessage(condition.toString()))
                                 }
+                                messages.add(NoticeMessage("Condition: $condition"))
                             }
                             if (cwd.hasCityId()) {
                                 cwd.cityId?.let {

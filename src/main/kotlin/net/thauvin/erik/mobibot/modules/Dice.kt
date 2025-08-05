@@ -46,25 +46,25 @@ class Dice : AbstractModule() {
 
         @JvmStatic
         fun roll(dice: Int, sides: Int): String {
-            val result = StringBuilder()
-            var total = 0
+            val result = buildString {
+                var total = 0
 
-            repeat(dice) {
-                val roll = (1..sides).random()
-                total += roll
+                repeat(dice) {
+                    val roll = (1..sides).random()
+                    total += roll
 
-                if (result.isNotEmpty()) {
-                    result.append(" + ")
+                    if (isNotEmpty()) {
+                        append(" + ")
+                    }
+                    append(roll.bold())
                 }
 
-                result.append(roll.bold())
+                if (dice != 1) {
+                    append(" = ${total.bold()}")
+                }
             }
 
-            if (dice != 1) {
-                result.append(" = ${total.bold()}")
-            }
-
-            return result.toString()
+            return result
         }
     }
 

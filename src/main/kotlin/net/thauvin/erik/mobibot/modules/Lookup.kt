@@ -64,24 +64,25 @@ class Lookup : AbstractModule() {
         @JvmStatic
         @Throws(UnknownHostException::class)
         fun nslookup(query: String): String {
-            val buffer = StringBuilder()
-            val results = InetAddress.getAllByName(query)
-            var hostInfo: String
-            for (result in results) {
-                if (result.hostAddress == query) {
-                    hostInfo = result.hostName
-                    if (hostInfo == query) {
-                        throw UnknownHostException()
+            val buffer = buildString {
+                val results = InetAddress.getAllByName(query)
+                var hostInfo: String
+                for (result in results) {
+                    if (result.hostAddress == query) {
+                        hostInfo = result.hostName
+                        if (hostInfo == query) {
+                            throw UnknownHostException()
+                        }
+                    } else {
+                        hostInfo = result.hostAddress
                     }
-                } else {
-                    hostInfo = result.hostAddress
+                    if (isNotEmpty()) {
+                        append(", ")
+                    }
+                    append(hostInfo)
                 }
-                if (buffer.isNotEmpty()) {
-                    buffer.append(", ")
-                }
-                buffer.append(hostInfo)
             }
-            return buffer.toString()
+            return buffer
         }
 
         /**
