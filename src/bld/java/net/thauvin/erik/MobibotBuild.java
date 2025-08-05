@@ -91,7 +91,7 @@ public class MobibotBuild extends Project {
                 .include(dependency("org.apache.commons", "commons-lang3", "3.18.0"))
                 .include(dependency("org.apache.commons", "commons-text", "1.14.0"))
                 .include(dependency("commons-codec", "commons-codec", "1.19.0"))
-                .include(dependency("commons-net", "commons-net", "3.11.1"))
+                .include(dependency("commons-net", "commons-net", "3.12.0"))
                 // Google
                 .include(dependency("com.google.code.gson", "gson", "2.13.1"))
                 .include(dependency("com.google.guava", "guava", "33.2.1-jre"))
