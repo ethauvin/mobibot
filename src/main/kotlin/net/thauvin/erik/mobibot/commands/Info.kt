@@ -66,41 +66,29 @@ class Info(private val tell: Tell, private val seen: Seen) : AbstractCommand() {
          */
         @JvmStatic
         fun Long.toUptime(): String {
-            this.toDuration(DurationUnit.MILLISECONDS).toComponents { wholeDays, hours, minutes, seconds, _ ->
-                val years = wholeDays / 365
-                var days = wholeDays % 365
-                val months = days / 30
-                days %= 30
-                val weeks = days / 7
-                days %= 7
+            return this.toDuration(DurationUnit.MILLISECONDS)
+                .toComponents { wholeDays, hours, minutes, seconds, _ ->
+                    val years = wholeDays / 365
+                    var days = wholeDays % 365
+                    val months = days / 30
+                    days %= 30
+                    val weeks = days / 7
+                    days %= 7
 
-                with(mutableListOf<String>()) {
-                    if (years > 0) {
-                        add("$years".plus(" year".plural(years)))
-                    }
-                    if (months > 0) {
-                        add("$months".plus(" month".plural(months)))
-                    }
-                    if (weeks > 0) {
-                        add("$weeks".plus(" week".plural(weeks)))
-                    }
-                    if (days > 0) {
-                        add("$days".plus(" day".plural(days)))
-                    }
-                    if (hours > 0) {
-                        add("$hours".plus(" hour".plural(hours.toLong())))
-                    }
+                    buildString {
+                        if (years > 0) append("$years year".plural(years)).append(' ')
+                        if (months > 0) append("$months month".plural(months)).append(' ')
+                        if (weeks > 0) append("$weeks week".plural(weeks)).append(' ')
+                        if (days > 0) append("$days day".plural(days)).append(' ')
+                        if (hours > 0) append("$hours hour".plural(hours.toLong())).append(' ')
 
-                    if (minutes > 0) {
-                        add("$minutes".plus(" minute".plural(minutes.toLong())))
-                    } else if (seconds > 0) {
-                        add("$seconds seconds")
-                    } else if (isEmpty()) {
-                        return "0 second"
-                    }
-                    return joinToString(" ")
+                        when {
+                            minutes > 0 -> append("$minutes minute".plural(minutes.toLong()))
+                            seconds > 0 -> append("$seconds second".plural(seconds.toLong()))
+                            isEmpty() -> return "0 seconds"
+                        }
+                    }.trim()
                 }
-            }
         }
     }
 

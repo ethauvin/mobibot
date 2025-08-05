@@ -36,15 +36,37 @@ import assertk.assertions.isEqualTo
 import net.thauvin.erik.mobibot.commands.Info.Companion.toUptime
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.CsvSource
 import kotlin.test.Test
 
 class InfoTests {
     @Nested
     @DisplayName("Uptime Tests")
     inner class UptimeTests {
-        @Test
-        fun `Years, Months, Weeks, Days, Hours and Minutes`() {
-            assertThat(547800300076L.toUptime()).isEqualTo("17 years 4 months 2 weeks 1 day 6 hours 45 minutes")
+        @ParameterizedTest(name = "{index}: {0}L = {1}")
+        @CsvSource(
+            value = [
+                "1000,1 second",
+                "60000,1 minute",
+                "3600000,1 hour",
+                "86400000,1 day"
+            ]
+        )
+        fun `1 day, 1 hour, 1 minutes, 1 second`(ms: Long, expected: String) {
+            assertThat(ms.toUptime()).isEqualTo(expected)
+        }
+
+        @ParameterizedTest(name = "{index}: {0}L = {1}")
+        @CsvSource(
+            value = [
+                "31536000000,1 year",
+                "2592000000,1 month",
+                "604800000,1 week"
+            ]
+        )
+        fun `1 year, 1 month, 1 week`(ms: Long, expecting: String) {
+            assertThat(ms.toUptime()).isEqualTo(expecting)
         }
 
         @Test
@@ -54,7 +76,8 @@ class InfoTests {
 
         @Test
         fun `Days, Hours and Minutes`() {
-            assertThat(110700000L.toUptime(), "upTime(days hours minutes)").isEqualTo("1 day 6 hours 45 minutes")
+            assertThat(110700000L.toUptime(), "upTime(days hours minutes)")
+                .isEqualTo("1 day 6 hours 45 minutes")
         }
 
         @Test
@@ -62,19 +85,10 @@ class InfoTests {
             assertThat(1320300000L.toUptime()).isEqualTo("2 weeks 1 day 6 hours 45 minutes")
         }
 
-        @Test
-        fun `1 Month`() {
-            assertThat(2592000000L.toUptime(), "upTime(1 month)").isEqualTo("1 month")
-        }
 
         @Test
         fun `3 Days`() {
             assertThat(259200000L.toUptime(), "upTime(3 days)").isEqualTo("3 days")
-        }
-
-        @Test
-        fun `1 Week`() {
-            assertThat(604800000L.toUptime(), "upTime(1 week)").isEqualTo("1 week")
         }
 
         @Test
@@ -87,10 +101,6 @@ class InfoTests {
             assertThat(2700000L.toUptime(), "upTime(45 minutes)").isEqualTo("45 minutes")
         }
 
-        @Test
-        fun `1 Minute`() {
-            assertThat(60000L.toUptime(), "upTime(1 minute)").isEqualTo("1 minute")
-        }
 
         @Test
         fun `59 Seconds`() {
@@ -98,8 +108,8 @@ class InfoTests {
         }
 
         @Test
-        fun `0 Second`() {
-            assertThat(0L.toUptime(), "upTime(0 second)").isEqualTo("0 second")
+        fun `0 Seconds`() {
+            assertThat(0L.toUptime(), "upTime(0 second)").isEqualTo("0 seconds")
         }
     }
 }
