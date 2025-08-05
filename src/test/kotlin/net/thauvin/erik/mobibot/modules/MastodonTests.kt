@@ -36,10 +36,15 @@ import assertk.assertions.contains
 import assertk.assertions.hasMessage
 import assertk.assertions.isEqualTo
 import assertk.assertions.isInstanceOf
+import com.rometools.rome.feed.synd.SyndCategory
+import com.rometools.rome.feed.synd.SyndCategoryImpl
 import net.thauvin.erik.mobibot.LocalProperties
+import net.thauvin.erik.mobibot.entries.EntryLink
 import net.thauvin.erik.mobibot.modules.Mastodon.Companion.toot
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.NullAndEmptySource
 import org.mockito.ArgumentCaptor
 import org.mockito.Mockito
 import org.mockito.kotlin.whenever
@@ -70,13 +75,14 @@ class MastodonTests : LocalProperties() {
     @Nested
     @DisplayName("Toot Tests")
     inner class TootTests {
-        @Test
+        @ParameterizedTest
+        @NullAndEmptySource
         @Throws(ModuleException::class)
-        fun `Empty Access Token should throw exception`() {
+        fun `Empty Access Token should throw exception`(input: String?) {
             val msg = "Testing Mastodon API from ${getHostName()}"
             assertFailure {
                 toot(
-                    "",
+                    input,
                     getProperty(Mastodon.INSTANCE_PROP),
                     getProperty(Mastodon.HANDLE_PROP),
                     msg,
@@ -85,29 +91,31 @@ class MastodonTests : LocalProperties() {
             }.isInstanceOf(ModuleException::class.java).hasMessage("The access token is missing.")
         }
 
-        @Test
+        @ParameterizedTest
+        @NullAndEmptySource
         @Throws(ModuleException::class)
-        fun `Empty Handle should throw exception`() {
+        fun `Empty Handle should throw exception`(input: String?) {
             val msg = "Testing Mastodon API from ${getHostName()}"
             assertFailure {
                 toot(
                     getProperty(Mastodon.ACCESS_TOKEN_PROP),
                     getProperty(Mastodon.INSTANCE_PROP),
-                    "",
+                    input,
                     msg,
                     true
                 )
             }.isInstanceOf(ModuleException::class.java).hasMessage("The Mastodon handle is missing.")
         }
 
-        @Test
+        @ParameterizedTest
+        @NullAndEmptySource
         @Throws(ModuleException::class)
-        fun `Empty Instance should throw exception`() {
+        fun `Empty Instance should throw exception`(input: String?) {
             val msg = "Testing Mastodon API from ${getHostName()}"
             assertFailure {
                 toot(
                     getProperty(Mastodon.ACCESS_TOKEN_PROP),
-                    "",
+                    input,
                     getProperty(Mastodon.HANDLE_PROP),
                     msg,
                     true
@@ -128,6 +136,48 @@ class MastodonTests : LocalProperties() {
                     true
                 )
             ).contains(msg)
+        }
+    }
+
+    @Nested
+    @DisplayName("Format Entry Tests")
+    inner class FormatEntryTests {
+        @Test
+        fun `formatEntry with tags should format correctly`() {
+            val mastodon = Mastodon()
+            val tags = mutableListOf<SyndCategory>(
+                SyndCategoryImpl().apply { name = "testchannel" },
+                SyndCategoryImpl().apply { name = "foo" },
+                SyndCategoryImpl().apply { name = "bar" }
+            )
+
+            val entry = EntryLink(
+                link = "https://example.com",
+                title = "Test Title",
+                nick = "testUser",
+                channel = "#testChannel",
+                tags = tags
+            )
+            val formattedEntry = mastodon.formatEntry(entry)
+            assertThat(formattedEntry).isEqualTo(
+                "Test Title (via testUser on #testChannel)\n\n#foo #bar\n\nhttps://example.com"
+            )
+        }
+
+        @Test
+        fun `formatEntry without tags should format correctly`() {
+            val mastodon = Mastodon()
+            val entry = EntryLink(
+                link = "https://example.com",
+                title = "Test Title",
+                nick = "testUser",
+                channel = "#testChannel",
+                tags = mutableListOf()
+            )
+            val formattedEntry = mastodon.formatEntry(entry)
+            assertThat(formattedEntry).isEqualTo(
+                "Test Title (via testUser on #testChannel)\n\nhttps://example.com"
+            )
         }
     }
 }

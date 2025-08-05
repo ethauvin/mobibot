@@ -138,8 +138,14 @@ class Mastodon : SocialModule() {
     }
 
     private fun formatTags(entry: EntryLink): String {
-        return entry.tags.filter { !it.name.equals(entry.channel.removePrefix("#"), true) }
-            .joinToString(separator = " ", prefix = "\n\n") { "#${it.name}" }
+        val filteredTags = entry.tags.filter {
+            !it.name.equals(entry.channel.removePrefix("#"), true)
+        }
+        return if (filteredTags.isNotEmpty()) {
+            filteredTags.joinToString(separator = " ", prefix = "\n\n") { "#${it.name}" }
+        } else {
+            ""
+        }
     }
 
     /**
