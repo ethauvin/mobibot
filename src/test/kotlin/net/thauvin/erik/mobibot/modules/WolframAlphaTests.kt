@@ -37,7 +37,6 @@ import assertk.assertions.contains
 import assertk.assertions.hasMessage
 import assertk.assertions.isEqualTo
 import assertk.assertions.isInstanceOf
-import net.thauvin.erik.mobibot.DisableOnCi
 import net.thauvin.erik.mobibot.ExceptionSanitizer.sanitize
 import net.thauvin.erik.mobibot.LocalProperties
 import net.thauvin.erik.mobibot.modules.WolframAlpha.Companion.queryWolfram
@@ -50,6 +49,7 @@ import org.junit.jupiter.params.provider.NullAndEmptySource
 import org.mockito.ArgumentCaptor
 import org.mockito.Mockito
 import org.pircbotx.hooks.types.GenericMessageEvent
+import rife.bld.extension.testing.DisabledOnCi
 import java.util.stream.Stream
 import kotlin.test.Test
 
@@ -84,7 +84,7 @@ class WolframAlphaTests : LocalProperties() {
     @Nested
     @DisplayName("App ID Tests")
     inner class AppIdTests {
-        @ParameterizedTest
+        @ParameterizedTest(name = "[{index}] ''{0}''")
         @NullAndEmptySource
         fun emptyOrNullAppId(appId: String?) {
             assertFailure { queryWolfram("1 gallon to liter", appId = appId) }
@@ -101,7 +101,7 @@ class WolframAlphaTests : LocalProperties() {
 
     @ParameterizedTest
     @MethodSource("queries")
-    @DisableOnCi
+    @DisabledOnCi
     @Throws(ModuleException::class)
     fun queryWolfram(query: String, units: String, expected: String) {
         val apiKey = getProperty(WolframAlpha.APPID_KEY_PROP)

@@ -127,16 +127,25 @@ public class MobibotBuild extends Project {
                 .include(dependency("net.thauvin.erik", "pinboard-poster", "1.2.1-SNAPSHOT"))
                 .include(dependency("net.thauvin.erik.urlencoder", "urlencoder-lib-jvm", "1.6.0"));
         scope(test)
+                // bld
+                .include(dependency("com.uwyn.rife2", "bld-extensions-testing-helpers",
+                        version(0, 9, 0, "SNAPSHOT")))
                 // Mockito
-                .include(dependency("net.bytebuddy", "byte-buddy", version(1, 17, 6)))
-                .include(dependency("org.mockito.kotlin", "mockito-kotlin", version(6, 0, 0)))
+                .include(dependency("net.bytebuddy", "byte-buddy",
+                        version(1, 17, 6)))
+                .include(dependency("org.mockito.kotlin", "mockito-kotlin",
+                        version(6, 0, 0)))
                 // AssertK
-                .include(dependency("com.willowtreeapps.assertk", "assertk-jvm", version(0, 28, 1)))
+                .include(dependency("com.willowtreeapps.assertk", "assertk-jvm",
+                        version(0, 28, 1)))
                 // JUnit
                 .include(dependency("org.jetbrains.kotlin", "kotlin-test-junit5", kotlin))
-                .include(dependency("org.junit.jupiter", "junit-jupiter", version(5, 13, 4)))
-                .include(dependency("org.junit.platform", "junit-platform-console-standalone", version(1, 13, 4)))
-                .include(dependency("org.junit.platform", "junit-platform-launcher", version(1, 13, 4)));
+                .include(dependency("org.junit.jupiter", "junit-jupiter",
+                        version(5, 13, 4)))
+                .include(dependency("org.junit.platform", "junit-platform-console-standalone",
+                        version(1, 13, 4)))
+                .include(dependency("org.junit.platform", "junit-platform-launcher",
+                        version(1, 13, 4)));
 
         List<String> jars = new ArrayList<>();
         runtimeClasspathJars().forEach(f -> jars.add("./lib/" + f.getName()));
@@ -255,16 +264,19 @@ public class MobibotBuild extends Project {
     }
 
     private void renderWithXunitViewer() throws Exception {
-        var xunitViewer = new File("/usr/bin/xunit-viewer");
-        if (xunitViewer.exists() && xunitViewer.canExecute()) {
-            var reportsDir = "build/reports/tests/test/";
+        var npmPackagesEnv = System.getenv("NPM_PACKAGES");
+        if (npmPackagesEnv != null && !npmPackagesEnv.isEmpty()) {
+            var xunitViewer = Path.of(npmPackagesEnv, "bin", "xunit-viewer").toFile();
+            if (xunitViewer.exists() && xunitViewer.canExecute()) {
+                var reportsDir = "build/reports/tests/test/";
 
-            Files.createDirectories(Path.of(reportsDir));
+                Files.createDirectories(Path.of(reportsDir));
 
-            new ExecOperation()
-                    .fromProject(this)
-                    .command(xunitViewer.getPath(), "-r", TEST_RESULTS_DIR, "-o", reportsDir + "index.html")
-                    .execute();
+                new ExecOperation()
+                        .fromProject(this)
+                        .command(xunitViewer.getPath(), "-r", TEST_RESULTS_DIR, "-o", reportsDir + "index.html")
+                        .execute();
+            }
         }
     }
 

@@ -34,7 +34,6 @@ import assertk.all
 import assertk.assertFailure
 import assertk.assertThat
 import assertk.assertions.*
-import net.thauvin.erik.mobibot.DisableOnCi
 import net.thauvin.erik.mobibot.ExceptionSanitizer.sanitize
 import net.thauvin.erik.mobibot.LocalProperties
 import net.thauvin.erik.mobibot.modules.GoogleSearch.Companion.searchGoogle
@@ -46,6 +45,7 @@ import org.mockito.ArgumentCaptor
 import org.mockito.Mockito
 import org.mockito.kotlin.whenever
 import org.pircbotx.hooks.types.GenericMessageEvent
+import rife.bld.extension.testing.DisabledOnCi
 import kotlin.test.Test
 
 class GoogleSearchTests : LocalProperties() {
@@ -148,7 +148,7 @@ class GoogleSearchTests : LocalProperties() {
         }
 
         @Test
-        @DisableOnCi
+        @DisabledOnCi
         @Throws(ModuleException::class)
         fun `No results found`() {
             val query = "adadflkjl"
@@ -160,7 +160,7 @@ class GoogleSearchTests : LocalProperties() {
         }
 
         @Test
-        @DisableOnCi
+        @DisabledOnCi
         @Throws(ModuleException::class)
         fun `Search Google`() {
             val query = "mobibot"

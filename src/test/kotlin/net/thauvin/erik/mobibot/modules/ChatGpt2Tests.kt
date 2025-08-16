@@ -36,13 +36,13 @@ import assertk.assertions.contains
 import assertk.assertions.hasNoCause
 import assertk.assertions.isEqualTo
 import assertk.assertions.isInstanceOf
-import net.thauvin.erik.mobibot.DisableOnCi
 import net.thauvin.erik.mobibot.LocalProperties
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.mockito.ArgumentCaptor
 import org.mockito.Mockito
 import org.pircbotx.hooks.types.GenericMessageEvent
+import rife.bld.extension.testing.DisabledOnCi
 import kotlin.test.Test
 
 class ChatGpt2Tests : LocalProperties() {
@@ -75,7 +75,7 @@ class ChatGpt2Tests : LocalProperties() {
         private val apiKey = getProperty(ChatGpt2.API_KEY_PROP)
 
         @Test
-        @DisableOnCi
+        @DisabledOnCi
         fun chat() {
             assertThat(
                 ChatGpt2.chat(
@@ -87,7 +87,7 @@ class ChatGpt2Tests : LocalProperties() {
         }
 
         @Test
-        @DisableOnCi
+        @DisabledOnCi
         fun chatFailure() {
             assertFailure { ChatGpt2.chat("1 liter to gallon", apiKey, -1) }
                 .isInstanceOf(ModuleException::class.java)

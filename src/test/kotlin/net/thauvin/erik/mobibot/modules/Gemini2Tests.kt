@@ -33,13 +33,13 @@ package net.thauvin.erik.mobibot.modules
 import assertk.assertFailure
 import assertk.assertThat
 import assertk.assertions.*
-import net.thauvin.erik.mobibot.DisableOnCi
 import net.thauvin.erik.mobibot.LocalProperties
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.mockito.ArgumentCaptor
 import org.mockito.Mockito
 import org.pircbotx.hooks.types.GenericMessageEvent
+import rife.bld.extension.testing.DisabledOnCi
 import kotlin.test.Test
 
 class Gemini2Tests : LocalProperties() {
@@ -49,7 +49,7 @@ class Gemini2Tests : LocalProperties() {
         private val apiKey = getProperty(Gemini2.GEMINI_API_KEY)
 
         @Test
-        @DisableOnCi
+        @DisabledOnCi
         fun chatHttpRequestInJavascript() {
             val maxTokens = try {
                 getProperty(Gemini2.MAX_TOKENS_PROP).toInt()
@@ -67,7 +67,7 @@ class Gemini2Tests : LocalProperties() {
         }
 
         @Test
-        @DisableOnCi
+        @DisabledOnCi
         fun chatEncodeUrlInJava() {
             assertThat(
                 Gemini2.chat("encode a url in java, one line, just code", apiKey, 60)
