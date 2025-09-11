@@ -21,9 +21,4 @@ test:
   script:
     - ./bld download
     - ./bld compile
-    - ./bld test
-  after_script:
-    - >
-      if [ $CI_JOB_STATUS == 'failed' ]; then
-        ./bld reporter --all
-      fi
+    - ./bld test || ./bld reporter --all
