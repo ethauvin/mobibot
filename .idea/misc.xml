@@ -117,6 +117,7 @@
     <pattern value="net.thauvin.erik.mobibot.DisableOnCi" />
     <pattern value="net.thauvin.erik.mobibot.modules.ModuleExceptionTest.Companion" method="moduleExceptions" />
     <pattern value="net.thauvin.erik.mobibot.modules.WolframAlphaTest.Companion" method="queries" />
+    <pattern value="net.thauvin.erik.MobibotBuild" method="reporter" />
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_21" project-jdk-name="21" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build" />

@@ -280,6 +280,14 @@ public class MobibotBuild extends Project {
         }
     }
 
+    @BuildCommand(summary = "Runs the JUnit reporter")
+    public void reporter() throws Exception {
+        new JUnitReporterOperation()
+                .fromProject(this)
+                .failOnSummary(true)
+                .execute();
+    }
+
     @Override
     public void test() throws Exception {
         var op = testOperation().fromProject(this);

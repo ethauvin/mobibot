@@ -50,7 +50,12 @@ jobs:
         run: ./bld compile
 
       - name: Run tests
+        continue-on-error: true
         run: ./bld jacoco
+
+      - name: Run reporter
+        if: ${{ failure() }}
+        run: ./bld reporter -all
 
       - name: Remove pom.xml
         if: success() && matrix.java-version == env.COVERAGE_JDK && matrix.os == 'ubuntu-latest'
