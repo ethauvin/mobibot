@@ -22,7 +22,6 @@ commands:
                    echo sdkman_auto_answer=true > $HOME/.sdkman/etc/config
                    echo sdkman_auto_selfupdate=true >> $HOME/.sdkman/etc/config
                    source "$HOME/.sdkman/bin/sdkman-init.sh"
-                   sdk install java
                    sdk install kotlin
                    source "$HOME/.sdkman/bin/sdkman-init.sh"
       - run:
@@ -57,7 +56,7 @@ jobs:
     <<: *defaults
 
     docker:
-      - image: cimg/openjdk:23.0
+      - image: cimg/openjdk:24.0
 
     steps:
       - build_and_test
