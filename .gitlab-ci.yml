@@ -4,8 +4,6 @@ variables:
   CI_NAME: "GitLab CI"
 
 stages:
-  - download
-  - compile
   - test
 
 before_script:
@@ -18,24 +16,14 @@ before_script:
   - sdk install kotlin
   - source "$HOME/.sdkman/bin/sdkman-init.sh"
 
-download:
-  stage: download
-  script:
-    - ./bld download
-
-compile:
-  stage: compile
-  script:
-    - ./bld compile
-
 test:
   stage: test
-  allow_failure: true
   script:
+    - ./bld download
+    - ./bld compile
     - ./bld test
-
-reporter:
-  stage: test
-  when: on_failure
-  script:
-    - ./bld reporter --all
+  after_script:
+    - >
+      if [ $CI_JOB_STATUS == 'failed' ]; then
+        ./bld reporter --all
+      fi
