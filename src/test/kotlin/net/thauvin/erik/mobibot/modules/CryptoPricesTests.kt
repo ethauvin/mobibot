@@ -37,27 +37,23 @@ import net.thauvin.erik.crypto.CryptoPrice
 import net.thauvin.erik.mobibot.modules.CryptoPrices.Companion.currentPrice
 import net.thauvin.erik.mobibot.modules.CryptoPrices.Companion.getCurrencyName
 import net.thauvin.erik.mobibot.modules.CryptoPrices.Companion.loadCurrencies
-import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
+import org.junit.jupiter.api.extension.ExtendWith
+import org.junit.jupiter.api.extension.RegisterExtension
 import org.mockito.ArgumentCaptor
 import org.mockito.Mockito
 import org.pircbotx.hooks.types.GenericMessageEvent
-import java.util.logging.ConsoleHandler
-import java.util.logging.Level
+import rife.bld.extension.testing.LoggingExtension
 import kotlin.test.Test
 
+@ExtendWith(LoggingExtension::class)
 class CryptoPricesTests {
     companion object {
-        @JvmStatic
-        @BeforeAll
-        fun beforeAll() {
-            with(CryptoPrice.logger) {
-                addHandler(ConsoleHandler().apply { level = Level.FINE })
-                level = Level.FINE
-                useParentHandlers = false
-            }
-        }
+        @RegisterExtension
+        @JvmField
+        @Suppress("unused")
+        val loggingExtension = LoggingExtension(CryptoPrice.logger)
     }
 
     init {

@@ -94,7 +94,7 @@ class CurrencyConverter2 : AbstractModule() {
                                 .symbols(to)
                                 .build()
                             val exchangeRates = latestRates.getExchangeRates()
-                            val result = exchangeRates.getRateFor(to)
+                            val result = exchangeRates.rateFor(to)
 
                             PublicMessage(
                                 FrankfurterUtils.formatCurrency(exchangeRates.base, exchangeRates.amount)

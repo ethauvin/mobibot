@@ -42,27 +42,23 @@ import net.thauvin.erik.mobibot.modules.CurrencyConverter2.Companion.loadCurrenc
 import net.thauvin.erik.mobibot.msg.ErrorMessage
 import net.thauvin.erik.mobibot.msg.Message
 import net.thauvin.erik.mobibot.msg.PublicMessage
-import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
+import org.junit.jupiter.api.extension.ExtendWith
+import org.junit.jupiter.api.extension.RegisterExtension
 import org.mockito.ArgumentCaptor
 import org.mockito.Mockito
 import org.pircbotx.hooks.types.GenericMessageEvent
-import java.util.logging.ConsoleHandler
-import java.util.logging.Level
+import rife.bld.extension.testing.LoggingExtension
 import kotlin.test.Test
 
+@ExtendWith(LoggingExtension::class)
 class CurrencyConverter2Tests {
     companion object {
-        @BeforeAll
-        @JvmStatic
-        fun beforeAll() {
-            with(FrankfurterUtils.LOGGER) {
-                addHandler(ConsoleHandler().apply { level = Level.ALL })
-                level = Level.ALL
-                useParentHandlers = false
-            }
-        }
+        @RegisterExtension
+        @JvmField
+        @Suppress("unused")
+        val loggingExtension = LoggingExtension(FrankfurterUtils.LOGGER)
     }
 
     init {
