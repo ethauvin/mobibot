@@ -132,7 +132,7 @@ public class MobibotBuild extends Project {
                         version(0, 9, 0, "SNAPSHOT")))
                 // Mockito
                 .include(dependency("net.bytebuddy", "byte-buddy",
-                        version(1, 17, 6)))
+                        version(1, 17, 7)))
                 .include(dependency("org.mockito.kotlin", "mockito-kotlin",
                         version(6, 0, 0)))
                 // AssertK
