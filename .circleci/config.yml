@@ -34,6 +34,10 @@ commands:
       - run:
           name: Run tests
           command: ./bld jacoco -reports-dir=<< parameters.reports-dir >>
+      - run:
+          name: Run reporter
+          when: on_fail
+          command: ./bld reporter -all
       - store_test_results:
           path: << parameters.reports-dir >>
       - store_artifacts:
