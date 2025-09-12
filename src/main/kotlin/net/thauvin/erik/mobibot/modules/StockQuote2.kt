@@ -123,108 +123,79 @@ class StockQuote2 : AbstractModule() {
                     "$SERVICE_NAME is disabled. The API key is missing."
                 )
             }
+
             val messages = mutableListOf<Message>()
-            if (symbol.isNotBlank()) {
-                val tickerSymbol = symbol.uppercase()
-                val debugMessage = "getQuote($symbol)"
-                val response: String
-                try {
-                    with(messages) {
-                        // Get stock quote for symbol
-                        response = URI(
-                            "${API_URL}quote?symbol=" + tickerSymbol.encodeUrl() + "&token="
-                                    + apiKey.encodeUrl()
-                        ).reader().body
-                        val json = getJsonResponse(response, debugMessage)
-                        val c = json.getBigDecimal("c")
-                        if (c == 0.toBigDecimal()) {
-                            add(ErrorMessage(INVALID_SYMBOL))
-                            return messages
-                        }
-                        val change = json.getBigDecimal("d")
-                        val changePercent = json.getBigDecimal("dp")
-                        val high = json.getBigDecimal("h")
-                        val low = json.getBigDecimal("l")
-                        val open = json.getBigDecimal("o")
-                        val previous = json.getBigDecimal("pc")
-                        val t = json.getInt("t")
 
-                        val latest = formatter.format(
-                            ZonedDateTime.ofInstant(
-                                Instant.ofEpochSecond(t.toLong()),
-                                ZoneId.of("UTC")
-                            )
-                        )
-
-                        add(
-                            PublicMessage(
-                                "Symbol: ${tickerSymbol.bold()}"
-                            )
-                        )
-
-                        val pad = 10
-
-                        add(
-                            PublicMessage(
-                                "Price: ".padEnd(pad).prependIndent() + c
-                            )
-                        )
-                        add(
-                            PublicMessage(
-                                "Previous: ".padEnd(pad).prependIndent() + previous
-                            )
-                        )
-                        add(
-                            NoticeMessage(
-                                "Symbol: ${tickerSymbol.bold()}"
-                            )
-                        )
-                        add(
-                            NoticeMessage(
-                                "Change: ".padEnd(pad).prependIndent() + change
-                                        + " [${changePercent.setScale(2, RoundingMode.DOWN)}%]"
-                            )
-                        )
-                        add(
-                            NoticeMessage(
-                                "High: ".padEnd(pad).prependIndent() + high
-                            )
-                        )
-                        add(
-                            NoticeMessage(
-                                "Low: ".padEnd(pad).prependIndent() + low
-                            )
-                        )
-                        add(
-                            NoticeMessage(
-                                "Open: ".padEnd(pad).prependIndent() + open
-                            )
-                        )
-                        add(
-                            NoticeMessage(
-                                "Latest: ".padEnd(pad).prependIndent() + latest
-                            )
-                        )
-                    }
-                } catch (e: IOException) {
-                    throw ModuleException(
-                        "$debugMessage: IOE",
-                        "An IO error has occurred retrieving a stock quote.", e
-                    )
-                } catch (e: NullPointerException) {
-                    throw ModuleException(
-                        "$debugMessage: NPE",
-                        "An error has occurred retrieving a stock quote.", e
-                    )
-                }
-            } else {
+            if (symbol.isBlank()) {
                 messages.add(ErrorMessage(INVALID_SYMBOL))
+                return messages
             }
+
+            val tickerSymbol = symbol.uppercase()
+            val debugMessage = "getQuote($symbol)"
+
+            try {
+                val response = URI(
+                    "${API_URL}quote?symbol=" + tickerSymbol.encodeUrl() + "&token=" + apiKey.encodeUrl()
+                ).reader().body
+
+                val json = getJsonResponse(response, debugMessage)
+                val c = json.getBigDecimal("c")
+
+                if (c == 0.toBigDecimal()) {
+                    messages.add(ErrorMessage(INVALID_SYMBOL))
+                    return messages
+                }
+
+                val change = json.getBigDecimal("d")
+                val changePercent = json.getBigDecimal("dp")
+                val high = json.getBigDecimal("h")
+                val low = json.getBigDecimal("l")
+                val open = json.getBigDecimal("o")
+                val previous = json.getBigDecimal("pc")
+                val t = json.getInt("t")
+
+                val latest = formatter.format(
+                    ZonedDateTime.ofInstant(
+                        Instant.ofEpochSecond(t.toLong()),
+                        ZoneId.of("UTC")
+                    )
+                )
+
+                val pad = 10
+
+                messages.add(PublicMessage("Symbol: ${tickerSymbol.bold()}"))
+                messages.add(PublicMessage("Price: ".padEnd(pad).prependIndent() + c))
+                messages.add(PublicMessage("Previous: ".padEnd(pad).prependIndent() + previous))
+                messages.add(NoticeMessage("Symbol: ${tickerSymbol.bold()}"))
+                messages.add(
+                    NoticeMessage(
+                        "Change: ".padEnd(pad).prependIndent() + change
+                                + " [${changePercent.setScale(2, RoundingMode.DOWN)}%]"
+                    )
+                )
+                messages.add(NoticeMessage("High: ".padEnd(pad).prependIndent() + high))
+                messages.add(NoticeMessage("Low: ".padEnd(pad).prependIndent() + low))
+                messages.add(NoticeMessage("Open: ".padEnd(pad).prependIndent() + open))
+                messages.add(NoticeMessage("Latest: ".padEnd(pad).prependIndent() + latest))
+
+            } catch (e: IOException) {
+                throw ModuleException(
+                    "$debugMessage: IOE",
+                    "An IO error has occurred retrieving a stock quote.", e
+                )
+            } catch (e: NullPointerException) {
+                throw ModuleException(
+                    "$debugMessage: NPE",
+                    "An error has occurred retrieving a stock quote.", e
+                )
+            }
+
             return messages
         }
 
         /**
-         * Retrieves a stock quote.
+         * Lookup a stock symbol.
          */
         @JvmStatic
         @Throws(ModuleException::class)
@@ -235,60 +206,54 @@ class StockQuote2 : AbstractModule() {
                     "$SERVICE_NAME is disabled. The API key is missing."
                 )
             }
+
             val messages = mutableListOf<Message>()
-            if (keywords.isNotBlank()) {
-                val debugMessage = "getQuote($keywords)"
-                val response: String
-                try {
-                    with(messages) {
-                        // Search for symbol/keywords
-                        response = URI(
-                            "${API_URL}search?q=" + keywords.encodeUrl() + "&exchange=US&token="
-                                    + apiKey.encodeUrl()
-                        ).reader().body
-                        val json = getJsonResponse(response, debugMessage)
-                        val count = json.getInt("count")
-                        if (count == 0) {
-                            add(ErrorMessage("Nothing found for: ${keywords.bold()}"))
-                            return messages
-                        }
 
-                        add(
-                            NoticeMessage(
-                                "Search results for: ${keywords.bold()}"
-                            )
-                        )
-                        val results = json.getJSONArray("result")
-
-                        for (i in 0 until count) {
-                            val result = results.getJSONObject(i)
-                            val symbol = result.getString("symbol")
-                            val name = result.getString("description")
-
-                            add(
-                                NoticeMessage("${symbol.bold().padEnd(10)} $name".prependIndent())
-                            )
-
-                            if (i >= 4) {
-                                break
-                            }
-                        }
-
-                    }
-                } catch (e: IOException) {
-                    throw ModuleException(
-                        "$debugMessage: IOE",
-                        "An IO error has occurred looking up.", e
-                    )
-                } catch (e: NullPointerException) {
-                    throw ModuleException(
-                        "$debugMessage: NPE",
-                        "An error has occurred looking up.", e
-                    )
-                }
-            } else {
+            if (keywords.isBlank()) {
                 messages.add(ErrorMessage("Please specify at least one search term."))
+                return messages
             }
+
+            val debugMessage = "lookup($keywords)"
+
+            try {
+                val response = URI(
+                    "${API_URL}search?q=" + keywords.encodeUrl() + "&exchange=US&token=" + apiKey.encodeUrl()
+                ).reader().body
+
+                val json = getJsonResponse(response, debugMessage)
+                val count = json.getInt("count")
+
+                if (count == 0) {
+                    messages.add(ErrorMessage("Nothing found for: ${keywords.bold()}"))
+                    return messages
+                }
+
+                messages.add(NoticeMessage("Search results for: ${keywords.bold()}"))
+
+                val results = json.getJSONArray("result")
+                val maxResults = minOf(count, 5)
+
+                for (i in 0 until maxResults) {
+                    val result = results.getJSONObject(i)
+                    val symbol = result.getString("symbol")
+                    val name = result.getString("description")
+
+                    messages.add(NoticeMessage("${symbol.bold().padEnd(10)} $name".prependIndent()))
+                }
+
+            } catch (e: IOException) {
+                throw ModuleException(
+                    "$debugMessage: IOE",
+                    "An IO error has occurred looking a symbol up.", e
+                )
+            } catch (e: NullPointerException) {
+                throw ModuleException(
+                    "$debugMessage: NPE",
+                    "An error has occurred looking a symbol up.", e
+                )
+            }
+
             return messages
         }
     }

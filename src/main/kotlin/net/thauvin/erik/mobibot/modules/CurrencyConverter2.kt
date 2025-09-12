@@ -79,49 +79,54 @@ class CurrencyConverter2 : AbstractModule() {
          */
         @JvmStatic
         fun convertCurrency(query: String): Message {
-            val cmds = query.split(" ")
-            return if (cmds.size == 4) {
-                if (cmds[3] == cmds[1] || "0" == cmds[0]) {
-                    PublicMessage("You're kidding, right?")
-                } else {
-                    val from = cmds[1].uppercase()
-                    val to = cmds[3].uppercase()
-                    if (CURRENCY_CODES.contains(to) && CURRENCY_CODES.contains(from)) {
-                        try {
-                            val latestRates = LatestRates.Builder()
-                                .amount(cmds[0].replace(",", "").toDouble())
-                                .base(from)
-                                .symbols(to)
-                                .build()
-                            val exchangeRates = latestRates.getExchangeRates()
-                            val result = exchangeRates.rateFor(to)
+            val parts = query.split(" ")
 
-                            PublicMessage(
-                                FrankfurterUtils.formatCurrency(exchangeRates.base, exchangeRates.amount)
-                                        + " (" + CURRENCY_CODES[from] + ')'
-                                        + " = "
-                                        + FrankfurterUtils.formatCurrency(to, result)
-                                        + " (" + CURRENCY_CODES[to] + ')'
-                            )
-                        } catch (nfe: NumberFormatException) {
-                            if (LOGGER.isWarnEnabled) {
-                                LOGGER.warn("Number format error while converting currencies: ${nfe.message}", nfe)
-                            }
-                            ErrorMessage("Sorry, an error occurred while converting the currencies.")
-                        } catch (ioe: IOException) {
-                            if (LOGGER.isWarnEnabled) {
-                                LOGGER.warn("IO error while converting currencies: ${ioe.message}", ioe)
-                            }
-                            ErrorMessage("Sorry, an IO error occurred while converting the currencies.")
-                        }
-                    } else {
-                        ErrorMessage(
-                            "Sounds like monopoly money to me! Try looking up the supported currency codes."
-                        )
-                    }
+            // Validate input format
+            if (parts.size != 4) {
+                return ErrorMessage("Invalid query. Let's try again.")
+            }
+
+            val (amountStr, fromCurrency, _, toCurrency) = parts
+            val from = fromCurrency.uppercase()
+            val to = toCurrency.uppercase()
+
+            // Check for silly cases
+            if (from == to || amountStr == "0") {
+                return PublicMessage("You're kidding, right?")
+            }
+
+            // Validate currencies
+            if (!CURRENCY_CODES.contains(from) || !CURRENCY_CODES.contains(to)) {
+                return ErrorMessage(
+                    "Sounds like monopoly money to me! Try looking up the supported currency codes."
+                )
+            }
+
+            return try {
+                val amount = amountStr.replace(",", "").toDouble()
+                val rates = LatestRates.Builder()
+                    .amount(amount)
+                    .base(from)
+                    .symbols(to)
+                    .build()
+                    .getExchangeRates()
+
+                val convertedAmount = rates.rateFor(to)
+                val fromFormatted = FrankfurterUtils.formatCurrency(from, amount)
+                val toFormatted = FrankfurterUtils.formatCurrency(to, convertedAmount)
+
+                PublicMessage("$fromFormatted (${CURRENCY_CODES[from]}) = $toFormatted (${CURRENCY_CODES[to]})")
+
+            } catch (e: NumberFormatException) {
+                if (LOGGER.isWarnEnabled) {
+                    LOGGER.warn("Number format error while converting currencies: ${e.message}", e)
                 }
-            } else {
-                ErrorMessage("Invalid query. Let's try again.")
+                ErrorMessage("Sorry, an error occurred while converting the currencies.")
+            } catch (e: IOException) {
+                if (LOGGER.isWarnEnabled) {
+                    LOGGER.warn("IO error while converting currencies: ${e.message}", e)
+                }
+                ErrorMessage("Sorry, an IO error occurred while converting the currencies.")
             }
         }
 
