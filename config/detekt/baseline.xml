@@ -4,6 +4,7 @@
   <CurrentIssues>
     <ID>CyclomaticComplexMethod:FeedsManager.kt$FeedsManager.Companion$@JvmStatic fun saveFeed(entries: Entries, currentFile: String = CURRENT_XML)</ID>
     <ID>CyclomaticComplexMethod:Weather2.kt$Weather2.Companion$@JvmStatic @Throws(ModuleException::class) fun getWeather(query: String, apiKey: String?): List&lt;Message&gt;</ID>
+    <ID>DestructuringDeclarationWithTooManyEntries:CurrencyConverter2.kt$CurrencyConverter2.Companion$val (amountStr, fromCurrency, _, toCurrency) = parts</ID>
     <ID>LongMethod:FeedsManager.kt$FeedsManager.Companion$@JvmStatic fun saveFeed(entries: Entries, currentFile: String = CURRENT_XML)</ID>
     <ID>LongMethod:Mobibot.kt$Mobibot.Companion$@JvmStatic @Throws(Exception::class) fun main(args: Array&lt;String&gt;)</ID>
     <ID>LongMethod:StockQuote2.kt$StockQuote2.Companion$@JvmStatic @Throws(ModuleException::class) fun getQuote(symbol: String, apiKey: String?): List&lt;Message&gt;</ID>
@@ -13,7 +14,6 @@
     <ID>MagicNumber:Comment.kt$Comment$3</ID>
     <ID>MagicNumber:CryptoPrices.kt$CryptoPrices$10</ID>
     <ID>MagicNumber:CurrencyConverter2.kt$CurrencyConverter2$11</ID>
-    <ID>MagicNumber:CurrencyConverter2.kt$CurrencyConverter2.Companion$3</ID>
     <ID>MagicNumber:CurrencyConverter2.kt$CurrencyConverter2.Companion$4</ID>
     <ID>MagicNumber:Cycle.kt$Cycle$10</ID>
     <ID>MagicNumber:Cycle.kt$Cycle$1000L</ID>
@@ -28,7 +28,7 @@
     <ID>MagicNumber:SocialManager.kt$SocialManager$1000L</ID>
     <ID>MagicNumber:SocialManager.kt$SocialManager$60L</ID>
     <ID>MagicNumber:StockQuote2.kt$StockQuote2.Companion$10</ID>
-    <ID>MagicNumber:StockQuote2.kt$StockQuote2.Companion$4</ID>
+    <ID>MagicNumber:StockQuote2.kt$StockQuote2.Companion$5</ID>
     <ID>MagicNumber:Tell.kt$Tell$50</ID>
     <ID>MagicNumber:Tell.kt$Tell$7</ID>
     <ID>MagicNumber:Users.kt$Users$8</ID>
@@ -49,7 +49,6 @@
     <ID>NestedBlockDepth:Addons.kt$Addons$fun add(command: AbstractCommand): Boolean</ID>
     <ID>NestedBlockDepth:Addons.kt$Addons$fun add(module: AbstractModule): Boolean</ID>
     <ID>NestedBlockDepth:Comment.kt$Comment$override fun commandResponse(channel: String, args: String, event: GenericMessageEvent)</ID>
-    <ID>NestedBlockDepth:CurrencyConverter2.kt$CurrencyConverter2.Companion$@JvmStatic fun convertCurrency(query: String): Message</ID>
     <ID>NestedBlockDepth:EntryLink.kt$EntryLink$private fun setTags(tags: List&lt;String?&gt;)</ID>
     <ID>NestedBlockDepth:FeedsManager.kt$FeedsManager.Companion$@JvmStatic @Throws(IOException::class, FeedException::class) fun loadFeed(entries: Entries, currentFile: String = CURRENT_XML): String</ID>
     <ID>NestedBlockDepth:FeedsManager.kt$FeedsManager.Companion$@JvmStatic fun saveFeed(entries: Entries, currentFile: String = CURRENT_XML)</ID>
@@ -60,8 +59,6 @@
     <ID>NestedBlockDepth:Mastodon.kt$Mastodon.Companion$@JvmStatic @Throws(ModuleException::class) fun toot(accessToken: String?, instance: String?, handle: String?, message: String, isDm: Boolean): String</ID>
     <ID>NestedBlockDepth:Posting.kt$Posting$override fun commandResponse(channel: String, args: String, event: GenericMessageEvent)</ID>
     <ID>NestedBlockDepth:Seen.kt$Seen$override fun commandResponse(channel: String, args: String, event: GenericMessageEvent)</ID>
-    <ID>NestedBlockDepth:StockQuote2.kt$StockQuote2.Companion$@JvmStatic @Throws(ModuleException::class) fun getQuote(symbol: String, apiKey: String?): List&lt;Message&gt;</ID>
-    <ID>NestedBlockDepth:StockQuote2.kt$StockQuote2.Companion$@JvmStatic @Throws(ModuleException::class) fun lookup(keywords: String, apiKey: String?): List&lt;Message&gt;</ID>
     <ID>NestedBlockDepth:Tell.kt$Tell$fun send(event: GenericUserEvent)</ID>
     <ID>NestedBlockDepth:Utils.kt$Utils$@JvmStatic fun loadSerialData(file: String, default: Any, logger: Logger, description: String): Any</ID>
     <ID>NestedBlockDepth:Utils.kt$Utils$@JvmStatic fun saveSerialData(file: String, data: Any, logger: Logger, description: String)</ID>
@@ -69,8 +66,11 @@
     <ID>NestedBlockDepth:Weather2.kt$Weather2.Companion$@JvmStatic @Throws(ModuleException::class) fun getWeather(query: String, apiKey: String?): List&lt;Message&gt;</ID>
     <ID>ReturnCount:Addons.kt$Addons$fun exec(channel: String, cmd: String, args: String, event: GenericMessageEvent): Boolean</ID>
     <ID>ReturnCount:Addons.kt$Addons$fun help(channel: String, topic: String, event: GenericMessageEvent): Boolean</ID>
+    <ID>ReturnCount:CurrencyConverter2.kt$CurrencyConverter2.Companion$@JvmStatic fun convertCurrency(query: String): Message</ID>
     <ID>ReturnCount:ExceptionSanitizer.kt$ExceptionSanitizer$fun ModuleException.sanitize(vararg sanitize: String): ModuleException</ID>
     <ID>ReturnCount:Seen.kt$Seen$override fun commandResponse(channel: String, args: String, event: GenericMessageEvent)</ID>
+    <ID>ReturnCount:StockQuote2.kt$StockQuote2.Companion$@JvmStatic @Throws(ModuleException::class) fun getQuote(symbol: String, apiKey: String?): List&lt;Message&gt;</ID>
+    <ID>ReturnCount:StockQuote2.kt$StockQuote2.Companion$@JvmStatic @Throws(ModuleException::class) fun lookup(keywords: String, apiKey: String?): List&lt;Message&gt;</ID>
     <ID>ThrowsCount:GoogleSearch.kt$GoogleSearch.Companion$@JvmStatic @Throws(ModuleException::class) fun searchGoogle( query: String, apiKey: String?, cseKey: String?, quotaUser: String = ReleaseInfo.PROJECT ): List&lt;Message&gt;</ID>
     <ID>ThrowsCount:Joke.kt$Joke.Companion$@JvmStatic @Throws(ModuleException::class) fun randomJoke(): List&lt;Message&gt;</ID>
     <ID>ThrowsCount:Mastodon.kt$Mastodon.Companion$@JvmStatic @Throws(ModuleException::class) fun toot(accessToken: String?, instance: String?, handle: String?, message: String, isDm: Boolean): String</ID>

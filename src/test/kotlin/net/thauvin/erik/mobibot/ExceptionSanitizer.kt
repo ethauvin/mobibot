@@ -35,6 +35,7 @@ import net.thauvin.erik.mobibot.Utils.obfuscate
 import net.thauvin.erik.mobibot.Utils.replaceEach
 import net.thauvin.erik.mobibot.modules.ModuleException
 
+@Suppress("unused")
 object ExceptionSanitizer {
     /**
      * Returns a sanitized exception to avoid displaying api keys, etc. in CI logs.

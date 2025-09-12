@@ -45,7 +45,6 @@ data class EntryComment(var comment: String, var nick: String) : Serializable {
     override fun toString(): String = "EntryComment{comment='$comment', date=$date, nick='$nick'}"
 
     companion object {
-        @Suppress("unused")
         private const val serialVersionUID = 1L
     }
 }

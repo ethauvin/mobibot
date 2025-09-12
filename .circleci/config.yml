@@ -36,7 +36,7 @@ commands:
       - run:
           name: Run reporter
           when: on_fail
-          command: ./bld reporter -all
+          command: ./bld reporter --all
       - store_test_results:
           path: << parameters.reports-dir >>
       - store_artifacts:
@@ -52,7 +52,7 @@ jobs:
     steps:
       - build_and_test
 
-  bld_jdk23:
+  bld_jdk24:
     <<: *defaults
 
     docker:
@@ -65,4 +65,4 @@ workflows:
   bld:
     jobs:
       - bld_jdk21
-      - bld_jdk23
+      - bld_jdk24
