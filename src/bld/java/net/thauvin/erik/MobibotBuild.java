@@ -160,7 +160,7 @@ public class MobibotBuild extends Project {
     }
 
     public static void main(String[] args) {
-        var level = Level.WARNING;
+        var level = Level.INFO;
         var logger = Logger.getLogger("rife.bld.extension");
         var consoleHandler = new ConsoleHandler();
 

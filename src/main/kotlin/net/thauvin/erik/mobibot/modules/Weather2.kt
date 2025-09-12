@@ -49,6 +49,8 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import kotlin.math.roundToInt
 
+private const val INVALID_SYNTAX = "Invalid syntax."
+
 /**
  * Retrieve weather information from OpenWeatherMap.
  */
@@ -109,13 +111,13 @@ class Weather2 : AbstractModule() {
             owm.unit = OWM.Unit.IMPERIAL
 
             if (query.isBlank()) {
-                messages.add(ErrorMessage("Invalid syntax."))
+                messages.add(ErrorMessage(INVALID_SYNTAX))
                 return messages
             }
 
             val argv = query.split(",")
             if (argv.size !in 1..2) {
-                messages.add(ErrorMessage("Invalid syntax."))
+                messages.add(ErrorMessage(INVALID_SYNTAX))
                 return messages
             }
 
@@ -131,7 +133,7 @@ class Weather2 : AbstractModule() {
                 }
 
                 if (!cwd.hasCityName()) {
-                    messages.add(ErrorMessage("Invalid syntax."))
+                    messages.add(ErrorMessage(INVALID_SYNTAX))
                     return messages
                 }
 
