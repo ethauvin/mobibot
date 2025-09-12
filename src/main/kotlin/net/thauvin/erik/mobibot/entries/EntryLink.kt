@@ -148,7 +148,8 @@ class EntryLink(
         return if (match.isNullOrEmpty()) {
             false
         } else {
-            link.contains(match, true) || title.contains(match, true) || nick.contains(match, true)
+            link.contains(match, true) || title.contains(match, true)
+                    || nick.contains(match, true)
         }
     }
 
@@ -172,29 +173,29 @@ class EntryLink(
      * Sets the tags.
      */
     private fun setTags(tags: List<String?>) {
-        if (tags.isNotEmpty()) {
-            var category: SyndCategoryImpl
-            for (tag in tags) {
-                if (!tag.isNullOrBlank()) {
-                    val t = tag.lowercase()
-                    val mod = t[0]
-                    if (mod == '-') {
-                        // Don't remove the channel tag
-                        if (channel.substring(1) != t.substring(1)) {
-                            category = SyndCategoryImpl()
-                            category.name = t.substring(1)
-                            this.tags.remove(category)
-                        }
-                    } else {
-                        category = SyndCategoryImpl()
-                        if (mod == '+') {
-                            category.name = t.substring(1)
-                        } else {
-                            category.name = t
-                        }
-                        if (!this.tags.contains(category)) {
-                            this.tags.add(category)
-                        }
+        tags.forEach { tag ->
+            if (tag.isNullOrBlank()) return@forEach
+
+            val t = tag.lowercase()
+            val tagName = when {
+                t.startsWith('-') -> t.substring(1)
+                t.startsWith('+') -> t.substring(1)
+                else -> t
+            }
+
+            val category = SyndCategoryImpl().apply { name = tagName }
+
+            when {
+                t.startsWith('-') -> {
+                    // Don't remove the channel tag
+                    if (channel.substring(1) != tagName) {
+                        this.tags.remove(category)
+                    }
+                }
+
+                else -> {
+                    if (!this.tags.contains(category)) {
+                        this.tags.add(category)
                     }
                 }
             }

@@ -30,7 +30,9 @@
  */
 package net.thauvin.erik.mobibot.entries
 
-import com.rometools.rome.feed.synd.*
+import com.rometools.rome.feed.synd.SyndContentImpl
+import com.rometools.rome.feed.synd.SyndEntryImpl
+import com.rometools.rome.feed.synd.SyndFeedImpl
 import com.rometools.rome.io.FeedException
 import com.rometools.rome.io.SyndFeedInput
 import com.rometools.rome.io.SyndFeedOutput
@@ -68,42 +70,35 @@ class FeedsManager private constructor() {
         fun loadFeed(entries: Entries, currentFile: String = CURRENT_XML): String {
             entries.links.clear()
             val xml = Paths.get("${entries.logsDir}${currentFile}")
-            var pubDate = today()
-            if (xml.exists()) {
-                val input = SyndFeedInput()
-                InputStreamReader(
-                    Files.newInputStream(xml), StandardCharsets.UTF_8
-                ).use { reader ->
-                    val feed = input.build(reader)
-                    pubDate = feed.publishedDate.toIsoLocalDate()
-                    val items = feed.entries
-                    var entry: EntryLink
-                    for (i in items.indices.reversed()) {
-                        with(items[i]) {
-                            entry = EntryLink(
-                                link,
-                                title,
-                                author.substring(author.lastIndexOf('(') + 1, author.length - 1),
-                                entries.channel,
-                                publishedDate,
-                                categories
-                            )
-                            var split: List<String>
-                            for (comment in description.value.split("<br/>")) {
-                                split = comment.split(": ".toRegex(), 2)
-                                if (split.size == 2) {
-                                    entry.addComment(comment = split[1].trim(), nick = split[0].trim())
-                                }
-                            }
-                        }
-                        entries.links.add(entry)
-                    }
-                }
-            } else {
+
+            if (!xml.exists()) {
                 // Create an empty feed.
                 saveFeed(entries)
+                return today()
             }
-            return pubDate
+
+            InputStreamReader(Files.newInputStream(xml), StandardCharsets.UTF_8).use { reader ->
+                val feed = SyndFeedInput().build(reader)
+                val pubDate = feed.publishedDate.toIsoLocalDate()
+
+                feed.entries.asReversed().forEach { item ->
+                    val author = item.author.substring(item.author.lastIndexOf('(') + 1, item.author.length - 1)
+                    val entry = EntryLink(
+                        item.link, item.title, author, entries.channel, item.publishedDate, item.categories
+                    )
+
+                    item.description.value.split("<br/>").forEach { comment ->
+                        val split = comment.split(": ".toRegex(), 2)
+                        if (split.size == 2) {
+                            entry.addComment(comment = split[1].trim(), nick = split[0].trim())
+                        }
+                    }
+
+                    entries.links.add(entry)
+                }
+
+                return pubDate
+            }
         }
 
         /**
@@ -112,74 +107,82 @@ class FeedsManager private constructor() {
         @JvmStatic
         fun saveFeed(entries: Entries, currentFile: String = CURRENT_XML) {
             if (logger.isDebugEnabled) logger.debug("Saving the feeds...")
-            if (entries.logsDir.isNotBlank()) {
-                try {
-                    val output = SyndFeedOutput()
-                    val rss: SyndFeed = SyndFeedImpl()
-                    val items: MutableList<SyndEntry> = mutableListOf()
-                    var item: SyndEntry
-                    OutputStreamWriter(
-                        Files.newOutputStream(Paths.get("${entries.logsDir}${currentFile}")), StandardCharsets.UTF_8
-                    ).use { fw ->
-                        with(rss) {
-                            feedType = "rss_2.0"
-                            title = "${entries.channel} IRC Links"
-                            description = "Links from ${entries.ircServer} on ${entries.channel}"
-                            if (entries.backlogs.isNotBlank()) link = entries.backlogs
-                            publishedDate = Calendar.getInstance().time
-                            language = "en"
-                        }
-                        val buff = StringBuilder()
-                        for (i in entries.links.indices.reversed()) {
-                            with(entries.links[i]) {
-                                buff.setLength(0)
-                                buff.append("Posted by <b>")
-                                    .append(nick)
-                                    .append("</b> on <a href=\"irc://")
-                                    .append(entries.ircServer).append('/')
-                                    .append(channel)
-                                    .append("\"><b>")
-                                    .append(channel)
-                                    .append("</b></a>")
-                                if (comments.isNotEmpty()) {
-                                    buff.append(" <br/><br/>")
-                                    for (j in comments.indices) {
-                                        if (j > 0) {
-                                            buff.append(" <br/>")
-                                        }
-                                        buff.append(comments[j].nick).append(": ").append(comments[j].comment)
-                                    }
-                                }
-                                item = SyndEntryImpl()
-                                item.link = link
-                                item.description = SyndContentImpl().apply { value = buff.toString() }
-                                item.title = title
-                                item.publishedDate = date
-                                item.author = "${channel.removePrefix("#")}@${entries.ircServer} ($nick)"
-                                item.categories = tags
-                                items.add(item)
-                            }
-                        }
-                        rss.entries = items
-                        if (logger.isDebugEnabled) logger.debug("Writing the entries feed.")
-                        output.output(rss, fw)
-                    }
-                    OutputStreamWriter(
-                        Files.newOutputStream(
-                            Paths.get(
-                                entries.logsDir + today() + DOT_XML
-                            )
-                        ), StandardCharsets.UTF_8
-                    ).use { fw -> output.output(rss, fw) }
-                } catch (e: FeedException) {
-                    if (logger.isWarnEnabled) logger.warn("Unable to generate the entries feed.", e)
-                } catch (e: IOException) {
-                    if (logger.isWarnEnabled)
-                        logger.warn("An IO error occurred while generating the entries feed.", e)
-                }
-            } else {
+
+            if (entries.logsDir.isBlank()) {
                 if (logger.isWarnEnabled) {
                     logger.warn("Unable to generate the entries feed. A required property is missing.")
+                }
+                return
+            }
+
+            try {
+                val output = SyndFeedOutput()
+                val rss = SyndFeedImpl().apply {
+                    feedType = "rss_2.0"
+                    title = "${entries.channel} IRC Links"
+                    description = "Links from ${entries.ircServer} on ${entries.channel}"
+                    if (entries.backlogs.isNotBlank()) link = entries.backlogs
+                    publishedDate = Calendar.getInstance().time
+                    language = "en"
+                }
+
+                val items = entries.links.asReversed().map { entryLink ->
+                    SyndEntryImpl().apply {
+                        link = entryLink.link
+                        title = entryLink.title
+                        publishedDate = entryLink.date
+                        author = "${entryLink.channel.removePrefix("#")}@${entries.ircServer} (${entryLink.nick})"
+                        categories = entryLink.tags
+
+                        description = SyndContentImpl().apply {
+                            value = buildString {
+                                append("Posted by <b>")
+                                append(entryLink.nick)
+                                append("</b> on <a href=\"irc://")
+                                append(entries.ircServer).append('/')
+                                append(entryLink.channel)
+                                append("\"><b>")
+                                append(entryLink.channel)
+                                append("</b></a>")
+
+                                if (entryLink.comments.isNotEmpty()) {
+                                    append(" <br/><br/>")
+                                    entryLink.comments.forEachIndexed { index, comment ->
+                                        if (index > 0) append(" <br/>")
+                                        append("${comment.nick}: ${comment.comment}")
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                rss.entries = items
+
+                // Write the current file
+                OutputStreamWriter(
+                    Files.newOutputStream(Paths.get("${entries.logsDir}${currentFile}")),
+                    StandardCharsets.UTF_8
+                ).use { fw ->
+                    if (logger.isDebugEnabled) logger.debug("Writing the entries feed.")
+                    output.output(rss, fw)
+                }
+
+                // Write the dated file
+                OutputStreamWriter(
+                    Files.newOutputStream(Paths.get(entries.logsDir + today() + DOT_XML)),
+                    StandardCharsets.UTF_8
+                ).use { fw ->
+                    output.output(rss, fw)
+                }
+
+            } catch (e: FeedException) {
+                if (logger.isWarnEnabled) {
+                    logger.warn("Unable to generate the entries feed.", e)
+                }
+            } catch (e: IOException) {
+                if (logger.isWarnEnabled) {
+                    logger.warn("An IO error occurred while generating the entries feed.", e)
                 }
             }
         }

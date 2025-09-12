@@ -75,48 +75,74 @@ class Mastodon : SocialModule() {
         @JvmStatic
         @Throws(ModuleException::class)
         fun toot(accessToken: String?, instance: String?, handle: String?, message: String, isDm: Boolean): String {
-            if (accessToken.isNullOrBlank()) {
-                throw ModuleException("Missing access token", "The access token is missing.")
-            } else if (instance.isNullOrBlank()) {
-                throw ModuleException("Missing instance", "The Mastodon instance is missing.")
-            } else if (isDm && handle.isNullOrBlank()) {
-                throw ModuleException("Missing handle", "The Mastodon handle is missing.")
+            when {
+                accessToken.isNullOrBlank() -> throw ModuleException(
+                    "Missing access token",
+                    "The access token is missing."
+                )
+
+                instance.isNullOrBlank() -> throw ModuleException(
+                    "Missing instance",
+                    "The Mastodon instance is missing."
+                )
+
+                isDm && handle.isNullOrBlank() -> throw ModuleException(
+                    "Missing handle",
+                    "The Mastodon handle is missing."
+                )
             }
+
+            val requestBody = if (isDm) {
+                mapOf("status" to "${handle?.prefixIfMissing('@')} $message", "visibility" to "direct")
+            } else {
+                mapOf("status" to message)
+            }
+
             val request = HttpRequest.newBuilder()
                 .uri(URI("https://$instance/api/v1/statuses"))
                 .header("Content-Type", "application/json")
                 .header("Authorization", "Bearer $accessToken")
                 .POST(
                     HttpRequest.BodyPublishers.ofString(
-                        JSONWriter.valueToString(
-                            if (isDm) {
-                                mapOf("status" to "${handle?.prefixIfMissing('@')} $message", "visibility" to "direct")
-                            } else {
-                                mapOf("status" to message)
-                            }
-                        )
+                        JSONWriter.valueToString(requestBody)
                     )
-                ).build()
+                )
+                .build()
+
             try {
-                val response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString())
-                if (response.statusCode() == 200) {
-                    return try {
-                        val jsonResponse = JSONObject(response.body())
-                        if (isDm) {
-                            jsonResponse.getString("content")
-                        } else {
-                            "Your message was posted to ${jsonResponse.getString("url")}"
-                        }
-                    } catch (e: JSONException) {
-                        throw ModuleException("mastodonPost($message)", "A JSON error has occurred: ${e.message}", e)
-                    }
-                } else {
-                    throw IOException("HTTP Status Code: " + response.statusCode())
+                val response = HttpClient.newHttpClient().send(
+                    request,
+                    HttpResponse.BodyHandlers.ofString()
+                )
+
+                if (response.statusCode() != 200) {
+                    throw IOException("HTTP Status Code: ${response.statusCode()}")
                 }
+
+                return try {
+                    val jsonResponse = JSONObject(response.body())
+                    if (isDm) {
+                        jsonResponse.getString("content")
+                    } else {
+                        "Your message was posted to ${jsonResponse.getString("url")}"
+                    }
+                } catch (e: JSONException) {
+                    throw ModuleException(
+                        "mastodonPost($message)",
+                        "A JSON error has occurred: ${e.message}",
+                        e
+                    )
+                }
+
             } catch (e: IOException) {
-                throw ModuleException("mastodonPost($message)", "An IO error has occurred: ${e.message}", e)
+                throw ModuleException(
+                    "mastodonPost($message)",
+                    "An IO error has occurred: ${e.message}", e
+                )
             } catch (e: InterruptedException) {
-                throw ModuleException("mastodonPost($message)", "An error has occurred: ${e.message}", e)
+                throw ModuleException(
+                    "mastodonPost($message)", "An error has occurred: ${e.message}", e
+                )
             }
         }
     }

@@ -150,31 +150,33 @@ class CryptoPrices : AbstractModule() {
         }
 
         val debugMessage = "crypto($cmd $args)"
-        if (args == CODES_KEYWORD) {
-            event.sendMessage("The supported currencies are:")
-            event.sendList(ArrayList(CURRENCIES.keys), 10, isIndent = true)
-        } else if (args.matches("\\w+( [a-zA-Z]{3}+)?".toRegex())) {
-            try {
-                val price = currentPrice(args.split(' '))
-                val amount = try {
-                    price.toCurrency()
-                } catch (_: IllegalArgumentException) {
-                    price.amount
-                }
-                event.respond("${price.base} current price is $amount [${CURRENCIES[price.currency]}]")
-            } catch (e: CryptoException) {
-                if (logger.isWarnEnabled) logger.warn("$debugMessage => ${e.statusCode}", e)
-                if (e.message != null) {
-                    event.respond("$DEFAULT_ERROR_MESSAGE: ${e.message}")
-                } else {
-                    event.respond("$DEFAULT_ERROR_MESSAGE.")
-                }
-            } catch (e: IOException) {
-                if (logger.isErrorEnabled) logger.error(debugMessage, e)
-                event.respond("$DEFAULT_ERROR_MESSAGE: ${e.message}")
+
+        when {
+            args == CODES_KEYWORD -> {
+                event.sendMessage("The supported currencies are:")
+                event.sendList(ArrayList(CURRENCIES.keys), 10, isIndent = true)
             }
-        } else {
-            helpResponse(event)
+
+            args.matches("\\w+( [a-zA-Z]{3}+)?".toRegex()) -> {
+                try {
+                    val price = currentPrice(args.split(' '))
+                    val amount = try {
+                        price.toCurrency()
+                    } catch (_: IllegalArgumentException) {
+                        price.amount
+                    }
+                    event.respond("${price.base} current price is $amount [${CURRENCIES[price.currency]}]")
+                } catch (e: CryptoException) {
+                    if (logger.isWarnEnabled) logger.warn("$debugMessage => ${e.statusCode}", e)
+                    val errorMsg = e.message?.let { "$DEFAULT_ERROR_MESSAGE: $it" } ?: "$DEFAULT_ERROR_MESSAGE."
+                    event.respond(errorMsg)
+                } catch (e: IOException) {
+                    if (logger.isErrorEnabled) logger.error(debugMessage, e)
+                    event.respond("$DEFAULT_ERROR_MESSAGE: ${e.message}")
+                }
+            }
+
+            else -> helpResponse(event)
         }
     }
 }

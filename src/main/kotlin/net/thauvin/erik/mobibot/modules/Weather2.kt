@@ -33,7 +33,6 @@ package net.thauvin.erik.mobibot.modules
 import net.aksingh.owmjapis.api.APIException
 import net.aksingh.owmjapis.core.OWM
 import net.aksingh.owmjapis.core.OWM.Country
-import net.aksingh.owmjapis.model.CurrentWeather
 import net.thauvin.erik.mobibot.Utils.bold
 import net.thauvin.erik.mobibot.Utils.capitalize
 import net.thauvin.erik.mobibot.Utils.capitalizeWords
@@ -104,107 +103,93 @@ class Weather2 : AbstractModule() {
                     "${WEATHER_CMD.capitalize()} is disabled. The API key is missing."
                 )
             }
+
             val owm = OWM(apiKey)
             val messages = mutableListOf<Message>()
             owm.unit = OWM.Unit.IMPERIAL
-            if (query.isNotBlank()) {
-                val argv = query.split(",")
-                if (argv.size in 1..2) {
-                    val city = argv[0].trim()
-                    val code: String = if (argv.size > 1 && argv[1].isNotBlank()) {
-                        argv[1].trim()
-                    } else {
-                        "US"
-                    }
-                    try {
-                        val country = getCountry(code)
-                        val cwd: CurrentWeather = if (city.matches("\\d+".toRegex())) {
-                            owm.currentWeatherByZipCode(city.toInt(), country)
-                        } else {
-                            owm.currentWeatherByCityName(city, country)
-                        }
-                        if (cwd.hasCityName()) {
-                            messages.add(
-                                PublicMessage(
-                                    "City: ${cwd.cityName}, " +
-                                            country.name.replace('_', ' ').capitalizeWords() + " [${country.value}]"
-                                )
-                            )
-                            cwd.mainData?.let {
-                                with(it) {
-                                    if (hasTemp()) {
-                                        temp?.let { t ->
-                                            val (f, c) = ftoC(t)
-                                            messages.add(PublicMessage("Temperature: ${f}°F, ${c}°C"))
-                                        }
-                                    }
-                                    if (hasHumidity()) {
-                                        humidity?.let { h ->
-                                            messages.add(NoticeMessage("Humidity: ${h.roundToInt()}%"))
-                                        }
-                                    }
-                                }
-                            }
-                            if (cwd.hasWindData()) {
-                                cwd.windData?.let {
-                                    if (it.hasSpeed()) {
-                                        it.speed?.let { s ->
-                                            val w = mphToKmh(s)
-                                            messages.add(NoticeMessage("Wind: ${w.first} mph, ${w.second} km/h"))
-                                        }
-                                    }
-                                }
-                            }
-                            if (cwd.hasWeatherList()) {
-                                val condition = buildString {
-                                    cwd.weatherList?.let {
-                                        for (w in it) {
-                                            w?.let {
-                                                append(' ')
-                                                    .append(w.getDescription().capitalize())
-                                                    .append('.')
-                                            }
-                                        }
-                                    }
-                                }
-                                messages.add(NoticeMessage("Condition: $condition"))
-                            }
-                            if (cwd.hasCityId()) {
-                                cwd.cityId?.let {
-                                    if (it > 0) {
-                                        messages.add(
-                                            NoticeMessage("https://openweathermap.org/city/$it", Colors.GREEN)
-                                        )
-                                    } else {
-                                        messages.add(
-                                            NoticeMessage(
-                                                "https://openweathermap.org/find?q="
-                                                        + "$city,${code.uppercase()}".encodeUrl(),
-                                                Colors.GREEN
-                                            )
-                                        )
-                                    }
-                                }
-                            }
-                        }
-                    } catch (e: APIException) {
-                        if (e.code == 404) {
-                            throw ModuleException(
-                                "getWeather($query): API ${e.code}",
-                                "The requested city was not found.",
-                                e
-                            )
-                        } else {
-                            throw ModuleException("getWeather($query): API ${e.code}", e.message, e)
-                        }
-                    } catch (e: NullPointerException) {
-                        throw ModuleException("getWeather($query): NPE", "Unable to perform weather lookup.", e)
+
+            if (query.isBlank()) {
+                messages.add(ErrorMessage("Invalid syntax."))
+                return messages
+            }
+
+            val argv = query.split(",")
+            if (argv.size !in 1..2) {
+                messages.add(ErrorMessage("Invalid syntax."))
+                return messages
+            }
+
+            val city = argv[0].trim()
+            val code = if (argv.size > 1 && argv[1].isNotBlank()) argv[1].trim() else "US"
+
+            try {
+                val country = getCountry(code)
+                val cwd = if (city.matches("\\d+".toRegex())) {
+                    owm.currentWeatherByZipCode(city.toInt(), country)
+                } else {
+                    owm.currentWeatherByCityName(city, country)
+                }
+
+                if (!cwd.hasCityName()) {
+                    messages.add(ErrorMessage("Invalid syntax."))
+                    return messages
+                }
+
+                // City info
+                messages.add(
+                    PublicMessage(
+                        "City: ${cwd.cityName}, " +
+                                "${country.name.replace('_', ' ').capitalizeWords()} " +
+                                "[${country.value}]"
+                    )
+                )
+
+                // Temperature
+                cwd.mainData?.temp?.let { t ->
+                    val (f, c) = ftoC(t)
+                    messages.add(PublicMessage("Temperature: ${f}°F, ${c}°C"))
+                }
+
+                // Humidity
+                cwd.mainData?.humidity?.let { h ->
+                    messages.add(NoticeMessage("Humidity: ${h.roundToInt()}%"))
+                }
+
+                // Wind
+                cwd.windData?.speed?.let { s ->
+                    val (mph, kmh) = mphToKmh(s)
+                    messages.add(NoticeMessage("Wind: $mph mph, $kmh km/h"))
+                }
+
+                // Weather condition
+                cwd.weatherList?.let { weatherList ->
+                    val condition = weatherList.mapNotNull { it?.getDescription()?.capitalize() }
+                        .joinToString(". ", " ", ".")
+                    if (condition.isNotBlank()) {
+                        messages.add(NoticeMessage("Condition: $condition"))
                     }
                 }
+
+                // OpenWeatherMap link
+                val cityId = cwd.cityId
+                val url = if (cityId != null && cityId > 0) {
+                    "https://openweathermap.org/city/$cityId"
+                } else {
+                    "https://openweathermap.org/find?q=${city},${code.uppercase()}".encodeUrl()
+                }
+                messages.add(NoticeMessage(url, Colors.GREEN))
+
+            } catch (e: APIException) {
+                val errorMsg = if (e.code == 404) {
+                    "The requested city was not found."
+                } else {
+                    e.message ?: "API error occurred."
+                }
+                throw ModuleException("getWeather($query): API ${e.code}", errorMsg, e)
+            } catch (e: NullPointerException) {
+                throw ModuleException("getWeather($query): NPE", "Unable to perform weather lookup.", e)
             }
-            if (messages.isEmpty()) {
-                messages.add(ErrorMessage("Invalid syntax."))
-            }
+
             return messages
         }
 

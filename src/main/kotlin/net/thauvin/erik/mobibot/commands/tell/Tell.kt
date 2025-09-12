@@ -126,8 +126,8 @@ class Tell(private val serialObject: String) : AbstractCommand() {
                 }
             } else {
                 if (messages.removeIf {
-                        it.id == id &&
-                                (it.sender.equals(event.user.nick, true) || event.isChannelOp(channel))
+                        it.id == id && (it.sender.equals(event.user.nick, true)
+                                || event.isChannelOp(channel))
                     }) {
                     save()
                     event.sendMessage("The message was deleted from the queue.")
@@ -182,31 +182,33 @@ class Tell(private val serialObject: String) : AbstractCommand() {
      */
     fun send(event: GenericUserEvent) {
         val nickname = event.user.nick
-        if (isEnabled() && nickname != event.getBot<PircBotX>().nick) {
-            messages.filter { it.isMatch(nickname) }.forEach { message ->
-                if (message.recipient.equals(nickname, ignoreCase = true) && !message.isReceived) {
-                    if (message.sender == nickname) {
-                        if (event !is MessageEvent) {
-                            event.user.send().message(
-                                "${"You".bold()} wanted me to remind you: ${message.message.reverseColor()}"
-                            )
-                            message.isReceived = true
-                            message.isNotified = true
-                            save()
-                        }
+        if (!isEnabled() || nickname == event.getBot<PircBotX>().nick) return
+
+        messages.filter { it.isMatch(nickname) }.forEach { message ->
+            when {
+                // Deliver a message to the recipient
+                message.recipient.equals(nickname, ignoreCase = true) && !message.isReceived -> {
+                    val messageText = if (message.sender == nickname) {
+                        // Self-reminder (but not from MessageEvent to avoid loops)
+                        if (event is MessageEvent) return@forEach
+                        "${"You".bold()} wanted me to remind you: ${message.message.reverseColor()}"
                     } else {
-                        event.user.send().message(
-                            "${message.sender} wanted me to tell you: ${message.message.reverseColor()}"
-                        )
-                        message.isReceived = true
-                        save()
+                        // Message from someone else
+                        "${message.sender} wanted me to tell you: ${message.message.reverseColor()}"
                     }
-                } else if (message.sender.equals(nickname, ignoreCase = true) && message.isReceived
-                    && !message.isNotified
-                ) {
+
+                    event.user.send().message(messageText)
+                    message.isReceived = true
+                    if (message.sender == nickname) message.isNotified = true
+                    save()
+                }
+
+                // Notify sender that message was delivered
+                message.sender.equals(nickname, ignoreCase = true) && message.isReceived
+                        && !message.isNotified -> {
                     event.user.send().message(
-                        "Your message ${"[ID ${message.id}]".reverseColor()} was sent to "
-                                + "${message.recipient.bold()} on ${message.receptionDate}"
+                        "Your message ${"[ID ${message.id}]".reverseColor()} was sent to " +
+                                "${message.recipient.bold()} on ${message.receptionDate}"
                     )
                     message.isNotified = true
                     save()
@@ -263,7 +265,10 @@ class Tell(private val serialObject: String) : AbstractCommand() {
             event.sendMessage("To delete one or all delivered messages:")
             event.sendMessage(
                 helpFormat(
-                    helpCmdSyntax("%c $name $TELL_DEL_KEYWORD <id|$TELL_ALL_KEYWORD>", event.bot().nick, true)
+                    helpCmdSyntax(
+                        "%c $name $TELL_DEL_KEYWORD <id|$TELL_ALL_KEYWORD>",
+                        event.bot().nick, true
+                    )
                 )
             )
             event.sendMessage(help.last())
