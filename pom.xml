@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>net.thauvin.erik.mobibot</groupId>
   <artifactId>mobibot</artifactId>
-  <version>0.8.0-rc+20250911104840</version>
+  <version>0.8.0-rc+20250917182020</version>
   <name>mobibot</name>
   <description></description>
   <url></url>
@@ -114,25 +114,25 @@
     <dependency>
       <groupId>dev.langchain4j</groupId>
       <artifactId>langchain4j-open-ai</artifactId>
-      <version>1.4.0</version>
+      <version>1.5.0</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>dev.langchain4j</groupId>
       <artifactId>langchain4j-google-ai-gemini</artifactId>
-      <version>1.4.0</version>
+      <version>1.5.0</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>dev.langchain4j</groupId>
       <artifactId>langchain4j-core</artifactId>
-      <version>1.4.0</version>
+      <version>1.5.0</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>dev.langchain4j</groupId>
       <artifactId>langchain4j</artifactId>
-      <version>1.4.0</version>
+      <version>1.5.0</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
