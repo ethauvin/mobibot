@@ -5,7 +5,7 @@ on: [ push, pull_request, workflow_dispatch ]
 env:
   CHATGPT_API_KEY: ${{ secrets.CHATGPT_API_KEY }}
   CI_NAME: "GitHub CI"
-  COVERAGE_JDK: "24"
+  COVERAGE_JDK: "25"
   EXCHANGERATE_API_KEY: ${{ secrets.EXCHANGERATE_API_KEY }}
   FINNHUB_API_KEY: ${{ secrets.FINNHUB_API_KEY }}
   GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
@@ -21,7 +21,7 @@ jobs:
   build-bld-project:
     strategy:
       matrix:
-        java-version: [ 21, 24 ]
+        java-version: [ 21, 25 ]
         os: [ ubuntu-latest, windows-latest, macos-latest ]
 
     runs-on: ${{ matrix.os }}
@@ -55,7 +55,7 @@ jobs:
 
       - name: Run reporter
         if: ${{ failure() }}
-        run: ./bld reporter -all
+        run: ./bld reporter --all
 
       - name: Remove pom.xml
         if: success() && matrix.java-version == env.COVERAGE_JDK && matrix.os == 'ubuntu-latest'
