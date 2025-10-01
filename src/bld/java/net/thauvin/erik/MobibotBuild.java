@@ -86,6 +86,7 @@ public class MobibotBuild extends Project {
         var log4j = version(2, 25, 1);
         var kotlin = version(2, 2, 20);
         var langChain = version(1, 6, 0);
+        var junit = version(6, 0, 0);
         scope(compile)
                 // PircBotX
                 .include(dependency("com.github.pircbotx", "pircbotx", "2.3.1"))
@@ -142,12 +143,9 @@ public class MobibotBuild extends Project {
                         version(0, 28, 1)))
                 // JUnit
                 .include(dependency("org.jetbrains.kotlin", "kotlin-test-junit5", kotlin))
-                .include(dependency("org.junit.jupiter", "junit-jupiter",
-                        version(5, 13, 4)))
-                .include(dependency("org.junit.platform", "junit-platform-console-standalone",
-                        version(1, 13, 4)))
-                .include(dependency("org.junit.platform", "junit-platform-launcher",
-                        version(1, 13, 4)));
+                .include(dependency("org.junit.jupiter", "junit-jupiter", junit))
+                .include(dependency("org.junit.platform", "junit-platform-console-standalone", junit))
+                .include(dependency("org.junit.platform", "junit-platform-launcher", junit));
 
         List<String> jars = new ArrayList<>();
         runtimeClasspathJars().forEach(f -> jars.add("./lib/" + f.getName()));
