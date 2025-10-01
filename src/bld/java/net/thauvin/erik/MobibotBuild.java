@@ -83,7 +83,7 @@ public class MobibotBuild extends Project {
                 CENTRAL_SNAPSHOTS,
                 RIFE2_SNAPSHOTS);
 
-        var log4j = version(2, 25, 1);
+        var log4j = version(2, 25, 2);
         var kotlin = version(2, 2, 20);
         var langChain = version(1, 6, 0);
         var junit = version(6, 0, 0);
