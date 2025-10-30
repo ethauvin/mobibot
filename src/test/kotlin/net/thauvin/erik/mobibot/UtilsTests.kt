@@ -34,6 +34,8 @@ import assertk.all
 import assertk.assertThat
 import assertk.assertions.isEqualTo
 import assertk.assertions.length
+import mockwebserver3.MockResponse
+import mockwebserver3.MockWebServer
 import net.thauvin.erik.mobibot.Utils.appendIfMissing
 import net.thauvin.erik.mobibot.Utils.bold
 import net.thauvin.erik.mobibot.Utils.capitalize
@@ -65,7 +67,6 @@ import org.junit.jupiter.api.Nested
 import org.pircbotx.Colors
 import java.io.File
 import java.io.IOException
-import java.net.URI
 import java.time.LocalDateTime
 import java.util.*
 import kotlin.test.Test
@@ -426,26 +427,53 @@ class UtilsTests {
     @Nested
     @DisplayName("URI Reader Tests")
     inner class URIReaderTests {
+        private lateinit var mockWebServer: MockWebServer
+
+        @BeforeEach
+        fun beforeEach() {
+            mockWebServer = MockWebServer()
+            mockWebServer.start()
+        }
+
         @Test
         @Throws(IOException::class)
         fun `URI reader`() {
-            val reader = URI.create("https://postman-echo.com/status/200").reader()
-            assertThat(reader.body).isEqualTo("{\n  \"status\": 200\n}")
+            val json = "{\"status\":200}"
+            mockWebServer.enqueue(
+                MockResponse()
+                    .newBuilder()
+                    .code(200)
+                    .body(json)
+                    .build()
+            )
+            val reader = mockWebServer.url("/").toUri().reader()
+            assertThat(reader.body).isEqualTo(json)
             assertThat(reader.responseCode).isEqualTo(200)
         }
 
         @Test
         @Throws(IOException::class)
         fun `URI reader page not found`() {
-            val reader = URI.create("https://www.google.com/404").reader()
-            assertThat(reader.body.isEmpty()).isEqualTo(false)
+            val notFound = "Page Not Found"
+            mockWebServer.enqueue(
+                MockResponse()
+                    .newBuilder()
+                    .code(404)
+                    .body(notFound)
+                    .build()
+            )
+
+            val reader = mockWebServer.url("/").toUri().reader()
+            assertThat(reader.body).isEqualTo(notFound)
             assertThat(reader.responseCode).isEqualTo(404)
         }
 
         @Test
         @Throws(IOException::class)
         fun `URI reader with empty body`() {
-            val reader = URI.create("https://httpbin.org/status/200").reader()
+            mockWebServer.enqueue(MockResponse().newBuilder().code(200).build())
+
+            val reader = mockWebServer.url("/").toUri().reader()
             assertThat(reader.body.isEmpty()).isEqualTo(true)
             assertThat(reader.responseCode).isEqualTo(200)
         }

@@ -136,6 +136,8 @@ public class MobibotBuild extends Project {
                         version(1, 17, 8)))
                 .include(dependency("org.mockito.kotlin", "mockito-kotlin",
                         version(6, 1, 0)))
+                // MockWebserver
+                .include(dependency("com.squareup.okhttp3", "mockwebserver", "5.2.1"))
                 // AssertK
                 .include(dependency("com.willowtreeapps.assertk", "assertk-jvm",
                         version(0, 28, 1)))
