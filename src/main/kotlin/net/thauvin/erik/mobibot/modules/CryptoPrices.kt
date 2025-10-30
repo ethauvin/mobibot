@@ -36,7 +36,6 @@ import net.thauvin.erik.crypto.CryptoPrice.Companion.spotPrice
 import net.thauvin.erik.mobibot.Utils.helpFormat
 import net.thauvin.erik.mobibot.Utils.sendList
 import net.thauvin.erik.mobibot.Utils.sendMessage
-import net.thauvin.erik.mobibot.modules.CurrencyConverter2.Companion.loadCurrencyCodes
 import org.json.JSONObject
 import org.pircbotx.hooks.types.GenericMessageEvent
 import org.slf4j.Logger
@@ -129,7 +128,7 @@ class CryptoPrices : AbstractModule() {
     private fun reload() {
         if (CURRENCIES.isEmpty() || LocalDate.now().isAfter(LAST_CHECKED.plusDays(1))) {
             try {
-                loadCurrencyCodes()
+                loadCurrencies()
                 LAST_CHECKED = LocalDate.now()
             } catch (e: ModuleException) {
                 if (logger.isWarnEnabled) logger.warn(e.debugMessage, e)

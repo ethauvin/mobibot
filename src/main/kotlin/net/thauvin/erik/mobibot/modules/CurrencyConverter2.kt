@@ -30,8 +30,7 @@
  */
 package net.thauvin.erik.mobibot.modules
 
-import com.google.gson.JsonSyntaxException
-import net.thauvin.erik.frankfurter.AvailableCurrencies
+import net.thauvin.erik.frankfurter.CurrencyRegistry
 import net.thauvin.erik.frankfurter.FrankfurterUtils
 import net.thauvin.erik.frankfurter.LatestRates
 import net.thauvin.erik.mobibot.Utils.bot
@@ -46,8 +45,6 @@ import org.pircbotx.hooks.types.GenericMessageEvent
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.io.IOException
-import java.time.LocalDate
-import java.util.*
 
 /**
  * Converts between currencies.
@@ -59,97 +56,73 @@ class CurrencyConverter2 : AbstractModule() {
         // Currency command
         private const val CURRENCY_CMD = "currency"
 
-        // Currency codes
-        private val CURRENCY_CODES: TreeMap<String, String> = TreeMap()
-
         // Currency codes keyword
         private const val CODES_KEYWORD = "codes"
 
-        // Empty codes table.
-        private const val EMPTY_CODES_TABLE_ERROR = "Sorry, but the currencies codes table is empty."
+        // Currency repository
+        private val CURRENCY_REPOSITORY = CurrencyRegistry.getInstance()
 
-        // LoggerEMPTY_CODES_TABLE
+        // Logger
         private val LOGGER: Logger = LoggerFactory.getLogger(CurrencyConverter2::class.java)
 
-        // Last checked date
-        private var LAST_CHECKED = LocalDate.now()
+        // Regex pattern to match command arguments
+        private val MATCH_CMD_ARGS = "\\d+([,\\d]+)?(\\.\\d+)? [a-zA-Z]{3}+ (to|in) [a-zA-Z]{3}+".toRegex()
 
-        /**
-         * Converts from a currency to another.
-         */
         @JvmStatic
         fun convertCurrency(query: String): Message {
-            val parts = query.split(" ")
+            val queryParts = query.trim().split("\\s+".toRegex())
 
             // Validate input format
-            if (parts.size != 4) {
+            if (queryParts.size != 4) {
                 return ErrorMessage("Invalid query. Let's try again.")
             }
 
-            val (amountStr, fromCurrency, _, toCurrency) = parts
-            val from = fromCurrency.uppercase()
-            val to = toCurrency.uppercase()
+            val (amountString, fromCurrencyCode, _, toCurrencyCode) = queryParts
+            val fromCurrencySymbol = fromCurrencyCode.uppercase()
+            val toCurrencySymbol = toCurrencyCode.uppercase()
 
-            // Check for silly cases
-            if (from == to || amountStr == "0") {
+            // Try to parse the amount early
+            val amount = try {
+                amountString.replace(",", "").toDouble()
+            } catch (_: NumberFormatException) {
+                return ErrorMessage("Invalid amount. Please enter a valid number.")
+            }
+
+            // Early return for same currencies or zero amounts
+            if (fromCurrencySymbol == toCurrencySymbol || amount == 0.0) {
                 return PublicMessage("You're kidding, right?")
             }
 
             // Validate currencies
-            if (!CURRENCY_CODES.contains(from) || !CURRENCY_CODES.contains(to)) {
+            val fromCurrency = CURRENCY_REPOSITORY.findBySymbol(fromCurrencySymbol)
+            val toCurrency = CURRENCY_REPOSITORY.findBySymbol(toCurrencySymbol)
+
+            if (fromCurrency.isEmpty || toCurrency.isEmpty) {
                 return ErrorMessage(
                     "Sounds like monopoly money to me! Try looking up the supported currency codes."
                 )
             }
 
             return try {
-                val amount = amountStr.replace(",", "").toDouble()
-                val rates = LatestRates.Builder()
+                val exchangeRates = LatestRates.Builder()
                     .amount(amount)
-                    .base(from)
-                    .symbols(to)
+                    .base(fromCurrencySymbol)
+                    .symbols(toCurrencySymbol)
                     .build()
-                    .getExchangeRates()
+                    .exchangeRates()
 
-                val convertedAmount = rates.rateFor(to)
-                val fromFormatted = FrankfurterUtils.formatCurrency(from, amount)
-                val toFormatted = FrankfurterUtils.formatCurrency(to, convertedAmount)
+                val toExchangeRate = exchangeRates.rateFor(toCurrencySymbol)
+                val fromAmountFormatted = FrankfurterUtils.formatCurrency(fromCurrencySymbol, amount)
+                val toAmountFormatted = FrankfurterUtils.formatCurrency(toCurrencySymbol, toExchangeRate)
 
-                PublicMessage("$fromFormatted (${CURRENCY_CODES[from]}) = $toFormatted (${CURRENCY_CODES[to]})")
-
-            } catch (e: NumberFormatException) {
-                if (LOGGER.isWarnEnabled) {
-                    LOGGER.warn("Number format error while converting currencies: ${e.message}", e)
-                }
-                ErrorMessage("Sorry, an error occurred while converting the currencies.")
+                PublicMessage(
+                    "$fromAmountFormatted (${fromCurrency.get().name}) = $toAmountFormatted (${toCurrency.get().name})"
+                )
             } catch (e: IOException) {
                 if (LOGGER.isWarnEnabled) {
                     LOGGER.warn("IO error while converting currencies: ${e.message}", e)
                 }
                 ErrorMessage("Sorry, an IO error occurred while converting the currencies.")
-            }
-        }
-
-        /**
-         * Loads the currency ISO codes.
-         */
-        @JvmStatic
-        @Throws(ModuleException::class)
-        fun loadCurrencyCodes() {
-            try {
-                CURRENCY_CODES.putAll(AvailableCurrencies.getCurrencies())
-            } catch (e: IOException) {
-                throw ModuleException(
-                    "loadCurrencyCodes(): IOE",
-                    "An IO error has occurred while retrieving the currency codes.",
-                    e
-                )
-            } catch (e: JsonSyntaxException) {
-                throw ModuleException(
-                    "loadCurrencyCodes()",
-                    "An error has occurred while retrieving the currency codes.",
-                    e
-                )
             }
         }
     }
@@ -158,29 +131,12 @@ class CurrencyConverter2 : AbstractModule() {
         commands.add(CURRENCY_CMD)
     }
 
-    // Reload currency codes
-    private fun reload() {
-        if (CURRENCY_CODES.isEmpty() || LocalDate.now().isAfter(LAST_CHECKED.plusDays(1))) {
-            try {
-                loadCurrencyCodes()
-                LAST_CHECKED = LocalDate.now()
-            } catch (e: ModuleException) {
-                if (LOGGER.isWarnEnabled) LOGGER.warn(e.debugMessage, e)
-            }
-        }
-    }
-
     /**
      * Converts the specified currencies.
      */
     override fun commandResponse(channel: String, cmd: String, args: String, event: GenericMessageEvent) {
-        reload()
         when {
-            CURRENCY_CODES.isEmpty() -> {
-                event.respond(EMPTY_CODES_TABLE_ERROR)
-            }
-
-            args.matches("\\d+([,\\d]+)?(\\.\\d+)? [a-zA-Z]{3}+ (to|in) [a-zA-Z]{3}+".toRegex()) -> {
+            args.matches(MATCH_CMD_ARGS) -> {
                 try {
                     val msg = convertCurrency(args)
                     if (msg.isError) {
@@ -196,7 +152,7 @@ class CurrencyConverter2 : AbstractModule() {
 
             args.contains(CODES_KEYWORD) -> {
                 event.sendMessage("The supported currency codes are:")
-                event.sendList(CURRENCY_CODES.keys.toList(), 11, isIndent = true)
+                event.sendList(CURRENCY_REPOSITORY.allSymbols, 11, isIndent = true)
             }
 
             else -> {
@@ -206,30 +162,24 @@ class CurrencyConverter2 : AbstractModule() {
     }
 
     override fun helpResponse(event: GenericMessageEvent): Boolean {
-        reload()
-
-        if (CURRENCY_CODES.isEmpty()) {
-            event.sendMessage(EMPTY_CODES_TABLE_ERROR)
-        } else {
-            val nick = event.bot().nick
-            event.sendMessage("To convert from one currency to another:")
-            event.sendMessage(
-                helpFormat(
-                    helpCmdSyntax("%c $CURRENCY_CMD 100 USD to EUR", nick, isPrivateMsgEnabled)
-                )
+        val nick = event.bot().nick
+        event.sendMessage("To convert from one currency to another:")
+        event.sendMessage(
+            helpFormat(
+                helpCmdSyntax("%c $CURRENCY_CMD 100 USD to EUR", nick, isPrivateMsgEnabled)
             )
-            event.sendMessage(
-                helpFormat(
-                    helpCmdSyntax("%c $CURRENCY_CMD 50,000 GBP to USD", nick, isPrivateMsgEnabled)
-                )
+        )
+        event.sendMessage(
+            helpFormat(
+                helpCmdSyntax("%c $CURRENCY_CMD 50,000 GBP to USD", nick, isPrivateMsgEnabled)
             )
-            event.sendMessage("To list the supported currency codes:")
-            event.sendMessage(
-                helpFormat(
-                    helpCmdSyntax("%c $CURRENCY_CMD $CODES_KEYWORD", nick, isPrivateMsgEnabled)
-                )
+        )
+        event.sendMessage("To list the supported currency codes:")
+        event.sendMessage(
+            helpFormat(
+                helpCmdSyntax("%c $CURRENCY_CMD $CODES_KEYWORD", nick, isPrivateMsgEnabled)
             )
-        }
+        )
         return true
     }
 }

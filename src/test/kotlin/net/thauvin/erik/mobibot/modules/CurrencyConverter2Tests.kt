@@ -38,7 +38,6 @@ import assertk.assertions.matches
 import assertk.assertions.prop
 import net.thauvin.erik.frankfurter.FrankfurterUtils
 import net.thauvin.erik.mobibot.modules.CurrencyConverter2.Companion.convertCurrency
-import net.thauvin.erik.mobibot.modules.CurrencyConverter2.Companion.loadCurrencyCodes
 import net.thauvin.erik.mobibot.msg.ErrorMessage
 import net.thauvin.erik.mobibot.msg.Message
 import net.thauvin.erik.mobibot.msg.PublicMessage
@@ -59,10 +58,6 @@ class CurrencyConverter2Tests {
         @JvmField
         @Suppress("unused")
         val loggingExtension = LoggingExtension(FrankfurterUtils.LOGGER)
-    }
-
-    init {
-        loadCurrencyCodes()
     }
 
     @Nested

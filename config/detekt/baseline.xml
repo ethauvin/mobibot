@@ -4,7 +4,7 @@
   <CurrentIssues>
     <ID>CyclomaticComplexMethod:FeedsManager.kt$FeedsManager.Companion$@JvmStatic fun saveFeed(entries: Entries, currentFile: String = CURRENT_XML)</ID>
     <ID>CyclomaticComplexMethod:Weather2.kt$Weather2.Companion$@JvmStatic @Throws(ModuleException::class) fun getWeather(query: String, apiKey: String?): List&lt;Message&gt;</ID>
-    <ID>DestructuringDeclarationWithTooManyEntries:CurrencyConverter2.kt$CurrencyConverter2.Companion$val (amountStr, fromCurrency, _, toCurrency) = parts</ID>
+    <ID>DestructuringDeclarationWithTooManyEntries:CurrencyConverter2.kt$CurrencyConverter2.Companion$val (amountString, fromCurrencyCode, _, toCurrencyCode) = queryParts</ID>
     <ID>LongMethod:FeedsManager.kt$FeedsManager.Companion$@JvmStatic fun saveFeed(entries: Entries, currentFile: String = CURRENT_XML)</ID>
     <ID>LongMethod:Mastodon.kt$Mastodon.Companion$@JvmStatic @Throws(ModuleException::class) fun toot(accessToken: String?, instance: String?, handle: String?, message: String, isDm: Boolean): String</ID>
     <ID>LongMethod:Mobibot.kt$Mobibot.Companion$@JvmStatic @Throws(Exception::class) fun main(args: Array&lt;String&gt;)</ID>
