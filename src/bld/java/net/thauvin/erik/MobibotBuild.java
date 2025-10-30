@@ -84,8 +84,8 @@ public class MobibotBuild extends Project {
                 RIFE2_SNAPSHOTS);
 
         var log4j = version(2, 25, 2);
-        var kotlin = version(2, 2, 20);
         var langChain = version(1, 6, 0);
+        var kotlin = version(2, 2, 21);
         var junit = version(6, 0, 0);
         scope(compile)
                 // PircBotX

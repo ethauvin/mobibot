@@ -5,12 +5,12 @@ on: [ push, pull_request, workflow_dispatch ]
 env:
   CHATGPT_API_KEY: ${{ secrets.CHATGPT_API_KEY }}
   CI_NAME: "GitHub CI"
-  COVERAGE_JDK: "25"
+  COVERAGE_JDK: "21"
   EXCHANGERATE_API_KEY: ${{ secrets.EXCHANGERATE_API_KEY }}
   FINNHUB_API_KEY: ${{ secrets.FINNHUB_API_KEY }}
   GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
   GOOGLE_CSE_CX: ${{ secrets.GOOGLE_CSE_CX }}
-  KOTLIN_VERSION: 2.2.0
+  KOTLIN_VERSION: 2.2.21
   MASTODON_ACCESS_TOKEN: ${{ secrets.MASTODON_ACCESS_TOKEN }}
   MASTODON_HANDLE: ${{ secrets.MASTODON_HANDLE }}
   MASTODON_INSTANCE: ${{ secrets.MASTODON_INSTANCE }}
@@ -21,7 +21,7 @@ jobs:
   build-bld-project:
     strategy:
       matrix:
-        java-version: [ 21, 25 ]
+        java-version: [ 21 ]
         os: [ ubuntu-latest, windows-latest, macos-latest ]
 
     runs-on: ${{ matrix.os }}
