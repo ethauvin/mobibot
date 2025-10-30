@@ -117,7 +117,7 @@ public class MobibotBuild extends Project {
                 .include(dependency("dev.langchain4j", "langchain4j", langChain))
                 // Misc.
                 .include(dependency("com.rometools", "rome", "2.1.0"))
-                .include(dependency("com.squareup.okhttp3", "okhttp-jvm", "5.1.0"))
+                .include(dependency("com.squareup.okhttp3", "okhttp-jvm", "5.2.1"))
                 .include(dependency("net.aksingh", "owm-japis", "2.5.3.0")
                         .exclude("com.squareup.okhttp3", "okhttp"))
                 .include(dependency("net.objecthunter", "exp4j", "0.4.8"))
