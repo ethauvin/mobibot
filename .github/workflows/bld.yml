@@ -50,10 +50,11 @@ jobs:
         run: ./bld compile
 
       - name: Run tests
+        id: tests
         run: ./bld jacoco
 
       - name: Run reporter
-        if: ${{ failure() }}
+        if: ${{ failure() && steps.tests.outcome == 'failure' }}
         run: ./bld reporter --all
 
       - name: Remove pom.xml

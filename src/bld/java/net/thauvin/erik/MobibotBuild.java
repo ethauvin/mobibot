@@ -42,8 +42,6 @@ import rife.tools.exceptions.FileUtilsErrorException;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -230,19 +228,7 @@ public class MobibotBuild extends Project {
     public void jacoco() throws Exception {
         var op = new JacocoReportOperation().fromProject(this);
         op.testToolOptions("--reports-dir=" + TEST_RESULTS_DIR);
-
-        Exception ex = null;
-        try {
-            op.execute();
-        } catch (Exception e) {
-            ex = e;
-        }
-
-        renderWithXunitViewer();
-
-        if (ex != null) {
-            throw ex;
-        }
+        op.execute();
     }
 
     @BuildCommand(value = "pom-root", summary = "Generates the POM file in the root directory")
@@ -263,23 +249,6 @@ public class MobibotBuild extends Project {
                 .execute();
     }
 
-    private void renderWithXunitViewer() throws Exception {
-        var npmPackagesEnv = System.getenv("NPM_PACKAGES");
-        if (npmPackagesEnv != null && !npmPackagesEnv.isEmpty()) {
-            var xunitViewer = Path.of(npmPackagesEnv, "bin", "xunit-viewer").toFile();
-            if (xunitViewer.exists() && xunitViewer.canExecute()) {
-                var reportsDir = "build/reports/tests/test/";
-
-                Files.createDirectories(Path.of(reportsDir));
-
-                new ExecOperation()
-                        .fromProject(this)
-                        .command(xunitViewer.getPath(), "-r", TEST_RESULTS_DIR, "-o", reportsDir + "index.html")
-                        .execute();
-            }
-        }
-    }
-
     @BuildCommand(summary = "Runs the JUnit reporter")
     public void reporter() throws Exception {
         new JUnitReporterOperation()
@@ -292,18 +261,6 @@ public class MobibotBuild extends Project {
     public void test() throws Exception {
         var op = testOperation().fromProject(this);
         op.testToolOptions().reportsDir(new File(TEST_RESULTS_DIR));
-
-        Exception ex = null;
-        try {
-            op.execute();
-        } catch (Exception e) {
-            ex = e;
-        }
-
-        renderWithXunitViewer();
-
-        if (ex != null) {
-            throw ex;
-        }
+        op.execute();
     }
 }
