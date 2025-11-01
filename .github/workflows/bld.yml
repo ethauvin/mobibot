@@ -10,7 +10,7 @@ env:
   FINNHUB_API_KEY: ${{ secrets.FINNHUB_API_KEY }}
   GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
   GOOGLE_CSE_CX: ${{ secrets.GOOGLE_CSE_CX }}
-  KOTLIN_VERSION: 2.2.21
+  KOTLIN_VERSION: "2.2.21"
   MASTODON_ACCESS_TOKEN: ${{ secrets.MASTODON_ACCESS_TOKEN }}
   MASTODON_HANDLE: ${{ secrets.MASTODON_HANDLE }}
   MASTODON_INSTANCE: ${{ secrets.MASTODON_INSTANCE }}
@@ -54,7 +54,7 @@ jobs:
         run: ./bld jacoco
 
       - name: Run reporter
-        if: ${{ failure() && steps.tests.outcome == 'failure' }}
+        if: always() && steps.tests.outcome == 'failure'
         run: ./bld reporter --all
 
       - name: Remove pom.xml
