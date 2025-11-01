@@ -130,7 +130,7 @@ public class MobibotBuild extends Project {
         scope(test)
                 // bld
                 .include(dependency("com.uwyn.rife2", "bld-extensions-testing-helpers",
-                        version(0, 9, 4)))
+                        version(0, 9, 5, "SNAPSHOT")))
                 // Mockito
                 .include(dependency("net.bytebuddy", "byte-buddy",
                         version(1, 17, 8)))
