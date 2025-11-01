@@ -81,10 +81,11 @@ public class MobibotBuild extends Project {
                 CENTRAL_SNAPSHOTS,
                 RIFE2_SNAPSHOTS);
 
-        var log4j = version(2, 25, 2);
+        var junit = version(6, 0, 1);
         var kotlin = version(2, 2, 21);
         var langChain = version(1, 8, 0);
-        var junit = version(6, 0, 0);
+        var log4j = version(2, 25, 2);
+        var okhttp = version(5, 3, 0);
         scope(compile)
                 // PircBotX
                 .include(dependency("com.github.pircbotx", "pircbotx", "2.3.1"))
@@ -115,7 +116,7 @@ public class MobibotBuild extends Project {
                 .include(dependency("dev.langchain4j", "langchain4j", langChain))
                 // Misc.
                 .include(dependency("com.rometools", "rome", "2.1.0"))
-                .include(dependency("com.squareup.okhttp3", "okhttp-jvm", "5.2.1"))
+                .include(dependency("com.squareup.okhttp3", "okhttp-jvm", okhttp))
                 .include(dependency("net.aksingh", "owm-japis", "2.5.3.0")
                         .exclude("com.squareup.okhttp3", "okhttp"))
                 .include(dependency("net.objecthunter", "exp4j", "0.4.8"))
@@ -137,7 +138,7 @@ public class MobibotBuild extends Project {
                 .include(dependency("org.mockito.kotlin", "mockito-kotlin",
                         version(6, 1, 0)))
                 // MockWebserver
-                .include(dependency("com.squareup.okhttp3", "mockwebserver", "5.2.1"))
+                .include(dependency("com.squareup.okhttp3", "mockwebserver", okhttp))
                 // AssertK
                 .include(dependency("com.willowtreeapps.assertk", "assertk-jvm",
                         version(0, 28, 1)))
