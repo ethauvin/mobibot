@@ -30,6 +30,7 @@
  */
 package net.thauvin.erik.mobibot
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings
 import net.thauvin.erik.mobibot.Utils.notContains
 import net.thauvin.erik.mobibot.commands.AbstractCommand
 import net.thauvin.erik.mobibot.commands.links.LinksManager
@@ -43,14 +44,54 @@ import java.util.*
 /**
  * Registers and manages commands and modules.
  */
-class Addons(private val props: Properties) {
-    private val logger: Logger = LoggerFactory.getLogger(Addons::class.java)
-    private val disabledModules = props.getProperty("disabled-modules", "").split(LinksManager.TAG_MATCH)
-    private val disableCommands = props.getProperty("disabled-commands", "").split(LinksManager.TAG_MATCH)
+@SuppressFBWarnings("BC_BAD_CAST_TO_ABSTRACT_COLLECTION")
+class Addons(props: Properties) {
+    private val props: Properties = Properties().apply { putAll(props) }
 
-    val commands: MutableList<AbstractCommand> = mutableListOf()
-    val modules: MutableList<AbstractModule> = mutableListOf()
-    val names = Names
+    private val commands: MutableList<AbstractCommand> = mutableListOf()
+    private val disableCommands = props.getProperty("disabled-commands", "")
+        .split(LinksManager.TAG_MATCH)
+    private val disabledModules = props.getProperty("disabled-modules", "")
+        .split(LinksManager.TAG_MATCH)
+    private val logger: Logger = LoggerFactory.getLogger(Addons::class.java)
+    private val modules: MutableList<AbstractModule> = mutableListOf()
+    private val names = Names
+
+    /**
+     * Add a command with properties.
+     */
+    fun add(command: AbstractCommand): Boolean {
+        var enabled = false
+        with(command) {
+            if (disableCommands.notContains(name, true)) {
+                val properties = getProperties()
+                if (properties.isNotEmpty()) {
+                    properties.keys.forEach {
+                        setProperty(it, props.getProperty(it, ""))
+                    }
+                }
+                if (isEnabled()) {
+                    commands.add(this)
+                    if (isVisible) {
+                        if (isOpOnly) {
+                            names.ops.add(name)
+                        } else {
+                            names.commands.add(name)
+                        }
+                    }
+                    enabled = true
+                } else {
+                    if (logger.isDebugEnabled) {
+                        logger.debug("Command $name is disabled.")
+                    }
+                    names.disabledCommands.add(name)
+                }
+            } else {
+                names.disabledCommands.add(name)
+            }
+        }
+        return enabled
+    }
 
     /**
      * Add a module with properties.
@@ -84,39 +125,19 @@ class Addons(private val props: Properties) {
     }
 
     /**
-     * Add a command with properties.
+     * Retrieves the list of commands names.
      */
-    fun add(command: AbstractCommand): Boolean {
-        var enabled = false
-        with(command) {
-            if (disableCommands.notContains(name, true)) {
-                if (properties.isNotEmpty()) {
-                    properties.keys.forEach {
-                        setProperty(it, props.getProperty(it, ""))
-                    }
-                }
-                if (isEnabled()) {
-                    commands.add(this)
-                    if (isVisible) {
-                        if (isOpOnly) {
-                            names.ops.add(name)
-                        } else {
-                            names.commands.add(name)
-                        }
-                    }
-                    enabled = true
-                } else {
-                    if (logger.isDebugEnabled) {
-                        logger.debug("Command $name is disabled.")
-                    }
-                    names.disabledCommands.add(name)
-                }
-            } else {
-                names.disabledCommands.add(name)
-            }
-        }
-        return enabled
-    }
+    fun commands() = names.commands.toList()
+
+    /**
+     * Retrieves the list of command names that are currently disabled.
+     **/
+    fun disabledCommands() = names.disabledCommands.toList()
+
+    /**
+     * Retrieves a list of currently disabled module names.
+     */
+    fun disabledModules() = names.disabledModules.toList()
 
     /**
      * Execute a command or module.
@@ -133,19 +154,6 @@ class Addons(private val props: Properties) {
         for (module in mods) {
             if (module.commands.contains(cmd)) {
                 module.commandResponse(channel, cmd, args, event)
-                return true
-            }
-        }
-        return false
-    }
-
-    /**
-     * Match a command.
-     */
-    fun match(channel: String, event: GenericMessageEvent): Boolean {
-        for (command in commands) {
-            if (command.matches(event.message)) {
-                command.commandResponse(channel, event.message, event)
                 return true
             }
         }
@@ -170,9 +178,35 @@ class Addons(private val props: Properties) {
     }
 
     /**
-     * Holds commands and modules names.
+     * Match a command.
      */
-    object Names {
+    fun match(channel: String, event: GenericMessageEvent): Boolean {
+        for (command in commands) {
+            if (command.matches(event.message)) {
+                command.commandResponse(channel, event.message, event)
+                return true
+            }
+        }
+        return false
+    }
+
+    /**
+     * Retrieves the list of module names.
+     */
+    fun modules() = names.modules.toList()
+
+    /**
+     * Retrieves the list of operator names.
+     */
+    fun ops() = names.ops.toList()
+
+    /**
+     * Sorts the commands and modules names.
+     */
+    fun sort() = names.sort()
+
+    // Holds commands and modules names.
+    private object Names {
         val modules: MutableList<String> = mutableListOf()
         val disabledModules: MutableList<String> = mutableListOf()
         val commands: MutableList<String> = mutableListOf()

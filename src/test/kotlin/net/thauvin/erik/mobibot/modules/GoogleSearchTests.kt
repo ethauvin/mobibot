@@ -96,8 +96,8 @@ class GoogleSearchTests : LocalProperties() {
             whenever(event.user).thenReturn(user)
             whenever(user.nick).thenReturn("mock")
 
-            googleSearch.properties[GoogleSearch.API_KEY_PROP] = apiKey
-            googleSearch.properties[GoogleSearch.CSE_KEY_PROP] = cseKey
+            googleSearch.setProperty(GoogleSearch.API_KEY_PROP, apiKey)
+            googleSearch.setProperty(GoogleSearch.CSE_KEY_PROP, cseKey)
 
             googleSearch.commandResponse("channel", "google", "\"foobarbarfoofoobarblahblah\"", event)
 

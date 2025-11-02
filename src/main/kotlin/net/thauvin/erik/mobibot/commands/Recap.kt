@@ -43,13 +43,17 @@ import java.time.LocalDateTime
  */
 class Recap : AbstractCommand() {
     override val name = "recap"
-    override val help = listOf(
-        "To list the last 10 public channel messages:",
-        helpFormat("%c $name")
-    )
+
     override val isOpOnly = false
     override val isPublic = true
     override val isVisible = true
+
+    init {
+        addHelp(
+            "To list the last 10 public channel messages:",
+            helpFormat("%c $name")
+        )
+    }
 
     companion object {
         const val MAX_RECAPS = 10

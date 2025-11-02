@@ -48,18 +48,21 @@ import org.pircbotx.hooks.types.GenericMessageEvent
  */
 class Comment : AbstractCommand() {
     override val name = COMMAND
-    override val help = listOf(
-        "To add a comment:",
-        helpFormat("${Constants.LINK_CMD}1:This is a comment"),
-        "I will reply with a label, for example: ${Constants.LINK_CMD.bold()}1.1",
-        "To edit a comment, use its label: ",
-        helpFormat("${Constants.LINK_CMD}1.1:This is an edited comment"),
-        "To delete a comment, use its label and a minus sign: ",
-        helpFormat("${Constants.LINK_CMD}1.1:-")
-    )
     override val isOpOnly = false
     override val isPublic = true
     override val isVisible = true
+
+    init {
+        addHelp(
+            "To add a comment:",
+            helpFormat("${Constants.LINK_CMD}1:This is a comment"),
+            "I will reply with a label, for example: ${Constants.LINK_CMD.bold()}1.1",
+            "To edit a comment, use its label: ",
+            helpFormat("${Constants.LINK_CMD}1.1:This is an edited comment"),
+            "To delete a comment, use its label and a minus sign: ",
+            helpFormat("${Constants.LINK_CMD}1.1:-")
+        )
+    }
 
     companion object {
         const val COMMAND = "comment"

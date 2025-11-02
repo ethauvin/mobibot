@@ -121,9 +121,11 @@ class Lookup : AbstractModule() {
     }
 
     init {
-        commands.add(LOOKUP_CMD)
-        help.add("To perform a DNS lookup query:")
-        help.add(helpFormat("%c $LOOKUP_CMD <ip address or hostname>"))
+        addCommand(LOOKUP_CMD)
+        addHelp(
+            "To perform a DNS lookup query:",
+            helpFormat("%c $LOOKUP_CMD <ip address or hostname>")
+        )
     }
 
     override fun commandResponse(channel: String, cmd: String, args: String, event: GenericMessageEvent) {

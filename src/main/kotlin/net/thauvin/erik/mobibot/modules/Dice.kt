@@ -69,9 +69,11 @@ class Dice : AbstractModule() {
     }
 
     init {
-        commands.add(DICE_CMD)
-        help.add("To roll 2 dice with 6 sides:")
-        help.add(helpFormat("%c $DICE_CMD [2d6]"))
+        addCommand(DICE_CMD)
+        addHelp(
+            "To roll 2 dice with 6 sides:",
+            helpFormat("%c $DICE_CMD [2d6]")
+        )
     }
 
     override fun commandResponse(channel: String, cmd: String, args: String, event: GenericMessageEvent) {

@@ -55,10 +55,9 @@ import java.util.*
 class Seen(private val serialObject: String) : AbstractCommand() {
     private val logger: Logger = LoggerFactory.getLogger(Seen::class.java)
     private val allKeyword = "all"
-    val seenNicks = TreeMap<String, SeenNick>(NickComparator())
+    private val seenNicks = TreeMap<String, SeenNick>(NickComparator())
 
     override val name = "seen"
-    override val help = listOf("To view when a nickname was last seen:", helpFormat("%c $name <nick>"))
     private val helpOp = help.plus(
         arrayOf("To view all ${"seen".bold()} nicks:", helpFormat("%c $name $allKeyword"))
     )
@@ -67,6 +66,7 @@ class Seen(private val serialObject: String) : AbstractCommand() {
     override val isVisible = true
 
     init {
+        addHelp("To view when a nickname was last seen:", helpFormat("%c $name <nick>"))
         load()
     }
 
@@ -129,6 +129,15 @@ class Seen(private val serialObject: String) : AbstractCommand() {
         } else {
             super.helpResponse(channel, topic, event)
         }
+    }
+
+    // Provide read-only access via a getter that returns a copy
+    fun getSeenNicks(): Map<String, SeenNick> {
+        return seenNicks.toMap() // Immutable snapshot
+    }
+
+    fun getSeenNick(nick: String): SeenNick? {
+        return seenNicks[nick]
     }
 
     fun load() {

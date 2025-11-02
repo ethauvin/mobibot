@@ -30,6 +30,7 @@
  */
 package net.thauvin.erik.mobibot.modules
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings
 import net.aksingh.owmjapis.api.APIException
 import net.aksingh.owmjapis.core.OWM
 import net.aksingh.owmjapis.core.OWM.Country
@@ -54,6 +55,7 @@ private const val INVALID_SYNTAX = "Invalid syntax."
 /**
  * Retrieve weather information from OpenWeatherMap.
  */
+@SuppressFBWarnings("BC_BAD_CAST_TO_ABSTRACT_COLLECTION")
 class Weather2 : AbstractModule() {
     private val logger: Logger = LoggerFactory.getLogger(Weather2::class.java)
 
@@ -98,6 +100,7 @@ class Weather2 : AbstractModule() {
          */
         @JvmStatic
         @Throws(ModuleException::class)
+        @SuppressFBWarnings("DCN_NULLPOINTER_EXCEPTION")
         fun getWeather(query: String, apiKey: String?): List<Message> {
             if (apiKey.isNullOrBlank()) {
                 throw ModuleException(
@@ -205,14 +208,12 @@ class Weather2 : AbstractModule() {
     }
 
     init {
-        commands.add(WEATHER_CMD)
-        with(help) {
-            add("To display weather information:")
-            add(helpFormat("%c $WEATHER_CMD <city> [, <country code>]"))
-            add("For example:")
-            add(helpFormat("%c $WEATHER_CMD paris, fr"))
-            add("The default ISO 3166 country code is ${"US".bold()}. Zip codes supported in most countries.")
-        }
+        addCommand(WEATHER_CMD)
+        addHelp("To display weather information:")
+        addHelp(helpFormat("%c $WEATHER_CMD <city> [, <country code>]"))
+        addHelp("For example:")
+        addHelp(helpFormat("%c $WEATHER_CMD paris, fr"))
+        addHelp("The default ISO 3166 country code is ${"US".bold()}. Zip codes supported in most countries.")
         initProperties(API_KEY_PROP)
     }
 
@@ -222,7 +223,7 @@ class Weather2 : AbstractModule() {
     override fun commandResponse(channel: String, cmd: String, args: String, event: GenericMessageEvent) {
         if (args.isNotBlank()) {
             try {
-                val messages = getWeather(args, properties[API_KEY_PROP])
+                val messages = getWeather(args, getProperty(API_KEY_PROP))
                 if (messages[0].isError) {
                     helpResponse(event)
                 } else {

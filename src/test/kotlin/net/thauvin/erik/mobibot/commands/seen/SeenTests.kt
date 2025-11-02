@@ -53,12 +53,12 @@ class SeenTests {
     @Test
     @Order(1)
     fun add() {
-        val last = seen.seenNicks[NICK]?.lastSeen
+        val last = seen.getSeenNick(NICK)?.lastSeen
         seen.add(NICK)
-        assertThat(seen).all {
-            prop(Seen::seenNicks).size().isEqualTo(1)
-            prop(Seen::seenNicks).key(NICK).isNotNull().prop(SeenNick::lastSeen).isNotEqualTo(last)
-            prop(Seen::seenNicks).key(NICK).isNotNull().prop(SeenNick::nick).isNotNull().isEqualTo(NICK)
+        assertThat(seen.getSeenNicks()).size().equals(1)
+        assertThat(seen.getSeenNick(NICK)).all {
+            isNotNull().prop(SeenNick::lastSeen).isNotEqualTo(last)
+            isNotNull().prop(SeenNick::nick).isNotNull().isEqualTo(NICK)
         }
     }
 
@@ -66,9 +66,9 @@ class SeenTests {
     @Order(2)
     fun load() {
         seen.clear()
-        assertThat(seen::seenNicks).isEmpty()
+        assertThat(seen.getSeenNicks()).isEmpty()
         seen.load()
-        assertThat(seen::seenNicks).key(NICK).isNotNull()
+        assertThat(seen.getSeenNick(NICK)).isNotNull()
     }
 
     @Test
@@ -77,6 +77,6 @@ class SeenTests {
         seen.clear()
         seen.save()
         seen.load()
-        assertThat(seen::seenNicks).isEmpty()
+        assertThat(seen.getSeenNicks()).isEmpty()
     }
 }

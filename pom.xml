@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>net.thauvin.erik.mobibot</groupId>
   <artifactId>mobibot</artifactId>
-  <version>0.8.0-rc+20250917182020</version>
+  <version>0.8.0-rc+20251101080741</version>
   <name>mobibot</name>
   <description></description>
   <url></url>
@@ -206,6 +206,12 @@
       <artifactId>urlencoder-lib-jvm</artifactId>
       <version>1.6.0</version>
       <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.github.spotbugs</groupId>
+      <artifactId>spotbugs-annotations</artifactId>
+      <version>4.9.8</version>
+      <scope>provided</scope>
     </dependency>
   </dependencies>
 </project>

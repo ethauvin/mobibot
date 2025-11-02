@@ -30,6 +30,7 @@
  */
 package net.thauvin.erik.mobibot.modules
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings
 import net.thauvin.erik.mobibot.Utils.bold
 import net.thauvin.erik.mobibot.Utils.encodeUrl
 import net.thauvin.erik.mobibot.Utils.helpFormat
@@ -116,6 +117,7 @@ class StockQuote2 : AbstractModule() {
          */
         @JvmStatic
         @Throws(ModuleException::class)
+        @SuppressFBWarnings("DCN_NULLPOINTER_EXCEPTION")
         fun getQuote(symbol: String, apiKey: String?): List<Message> {
             if (apiKey.isNullOrBlank()) {
                 throw ModuleException(
@@ -199,6 +201,7 @@ class StockQuote2 : AbstractModule() {
          */
         @JvmStatic
         @Throws(ModuleException::class)
+        @SuppressFBWarnings("DCN_NULLPOINTER_EXCEPTION")
         fun lookup(keywords: String, apiKey: String?): List<Message> {
             if (apiKey.isNullOrBlank()) {
                 throw ModuleException(
@@ -259,11 +262,11 @@ class StockQuote2 : AbstractModule() {
     }
 
     init {
-        commands.add(STOCK_CMD)
-        help.add("To retrieve a stock quote:")
-        help.add(helpFormat("%c $STOCK_CMD symbol"))
-        help.add("To lookup a symbol:")
-        help.add(helpFormat("%c $STOCK_CMD $LOOKUP_KEYWORD <keywords>"))
+        addCommand(STOCK_CMD)
+        addHelp("To retrieve a stock quote:")
+        addHelp(helpFormat("%c $STOCK_CMD symbol"))
+        addHelp("To lookup a symbol:")
+        addHelp(helpFormat("%c $STOCK_CMD $LOOKUP_KEYWORD <keywords>"))
         initProperties(API_KEY_PROP)
     }
 
@@ -276,10 +279,10 @@ class StockQuote2 : AbstractModule() {
                 val messages = if (args.startsWith(LOOKUP_KEYWORD)) {
                     lookup(
                         args.substring(LOOKUP_KEYWORD.length).trim(),
-                        properties[API_KEY_PROP]
+                        getProperty(API_KEY_PROP)
                     )
                 } else {
-                    getQuote(args, properties[API_KEY_PROP])
+                    getQuote(args, getProperty(API_KEY_PROP))
                 }
                 for (msg in messages) {
                     event.sendMessage(channel, msg)

@@ -41,10 +41,13 @@ import org.pircbotx.hooks.types.GenericMessageEvent
  */
 class Me : AbstractCommand() {
     override val name = "me"
-    override val help = listOf("To have the bot perform an action:", helpFormat("%c $name <action>"))
     override val isOpOnly = true
     override val isPublic = false
     override val isVisible = true
+
+    init {
+        addHelp("To have the bot perform an action:", helpFormat("%c $name <action>"))
+    }
 
     override fun commandResponse(channel: String, args: String, event: GenericMessageEvent) {
         if (event.isChannelOp(channel)) {

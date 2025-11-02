@@ -92,14 +92,12 @@ class ChatGpt2 : AbstractModule() {
     }
 
     init {
-        commands.add(CHATGPT_CMD)
-        with(help) {
-            add("To get answers from $name:")
-            add(Utils.helpFormat("%c $CHATGPT_CMD <query>"))
-            add("For example:")
-            add(Utils.helpFormat("%c $CHATGPT_CMD explain quantum computing in simple terms"))
-            add(Utils.helpFormat("%c $CHATGPT_CMD how do I make an HTTP request in Javascript?"))
-        }
+        addCommand(CHATGPT_CMD)
+        addHelp("To get answers from $name:")
+        addHelp(Utils.helpFormat("%c $CHATGPT_CMD <query>"))
+        addHelp("For example:")
+        addHelp(Utils.helpFormat("%c $CHATGPT_CMD explain quantum computing in simple terms"))
+        addHelp(Utils.helpFormat("%c $CHATGPT_CMD how do I make an HTTP request in Javascript?"))
         initProperties(API_KEY_PROP, MAX_TOKENS_PROP)
     }
 
@@ -110,8 +108,8 @@ class ChatGpt2 : AbstractModule() {
         if (args.isNotBlank()) {
             try {
                 val answer = chat(
-                    args.trim(), properties[API_KEY_PROP],
-                    properties.getOrDefault(MAX_TOKENS_PROP, "1024").toInt()
+                    args.trim(), getProperty(API_KEY_PROP),
+                    getPropertyOrDefault(MAX_TOKENS_PROP, "1024").toInt()
                 )
                 if (answer.isNotBlank()) {
                     event.sendMessage(answer)

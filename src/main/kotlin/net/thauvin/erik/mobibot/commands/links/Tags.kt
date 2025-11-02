@@ -49,13 +49,16 @@ import org.pircbotx.hooks.types.GenericMessageEvent
  */
 class Tags : AbstractCommand() {
     override val name = COMMAND
-    override val help = listOf(
-        "To categorize or tag a URL, use its label and a ${Constants.TAG_CMD}:",
-        helpFormat("${Constants.LINK_CMD}1${Constants.TAG_CMD}:<+tag|-tag> [...]")
-    )
     override val isOpOnly = false
     override val isPublic = true
     override val isVisible = true
+
+    init {
+        addHelp(
+            "To categorize or tag a URL, use its label and a ${Constants.TAG_CMD}:",
+            helpFormat("${Constants.LINK_CMD}1${Constants.TAG_CMD}:<+tag|-tag> [...]")
+        )
+    }
 
     companion object {
         const val COMMAND = "tags"

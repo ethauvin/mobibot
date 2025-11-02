@@ -30,6 +30,7 @@
  */
 package net.thauvin.erik.mobibot.modules
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings
 import net.thauvin.erik.mobibot.Utils.bot
 import net.thauvin.erik.mobibot.Utils.helpCmdSyntax
 import net.thauvin.erik.mobibot.Utils.sendMessage
@@ -50,12 +51,17 @@ abstract class AbstractModule {
     /**
      * The module's commands, if any.
      */
-    @JvmField
-    val commands: MutableList<String> = mutableListOf()
+    private val _commands: MutableList<String> = mutableListOf()
+    val commands: List<String>
+        @SuppressFBWarnings("EI_EXPOSE_REP")
+        get() = _commands
 
-    @JvmField
-    val help: MutableList<String> = mutableListOf()
-    val properties: MutableMap<String, String> = mutableMapOf()
+    private val _help: MutableList<String> = mutableListOf()
+    val help: List<String>
+        @SuppressFBWarnings("EI_EXPOSE_REP")
+        get() = _help
+
+    private val properties: MutableMap<String, String> = mutableMapOf()
 
     /**
      * Responds to a command.
@@ -66,7 +72,22 @@ abstract class AbstractModule {
      * Returns the module's property keys.
      */
     val propertyKeys: Set<String>
-        get() = properties.keys
+        get() = properties.keys.toSet()
+
+    /**
+     * Retrieves the value associated with the specified key from the properties.
+     */
+    fun getProperty(key: String): String? {
+        return properties[key]
+    }
+
+    /**
+     * Retrieves the value associated with the specified key from the properties.
+     * If the key does not exist, the default value is returned.
+     */
+    fun getPropertyOrDefault(key: String, defaultValue: String): String {
+        return properties.getOrDefault(key, defaultValue)
+    }
 
     /**
      * Returns `true` if the module has properties.
@@ -76,11 +97,25 @@ abstract class AbstractModule {
     }
 
     /**
+     * Adds a command to the module.
+     */
+    protected fun addCommand(vararg command: String) {
+        _commands.addAll(command)
+    }
+
+    /**
+     * Adds a help entry to the module.
+     */
+    protected fun addHelp(vararg help: String) {
+        _help.addAll(help)
+    }
+
+    /**
      * Responds with the module's help.
      */
     @Suppress("SameReturnValue")
     open fun helpResponse(event: GenericMessageEvent): Boolean {
-        for (h in help) {
+        for (h in _help) {
             event.sendMessage(
                 helpCmdSyntax(
                     h, event.bot().nick, isPrivateMsgEnabled && event is PrivateMessageEvent
@@ -119,12 +154,7 @@ abstract class AbstractModule {
      */
     open val isValidProperties: Boolean
         get() {
-            for (s in properties.keys) {
-                if (properties[s].isNullOrBlank()) {
-                    return false
-                }
-            }
-            return true
+            return properties.values.all { it.isNotBlank() }
         }
 
     /**

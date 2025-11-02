@@ -45,10 +45,13 @@ import org.pircbotx.hooks.types.GenericMessageEvent
 class Cycle : AbstractCommand() {
     private val wait = 10
     override val name = "cycle"
-    override val help = listOf("To have the bot leave the channel and come back:", helpFormat("%c $name"))
     override val isOpOnly = true
     override val isPublic = false
     override val isVisible = true
+
+    init {
+        addHelp("To have the bot leave the channel and come back:", helpFormat("%c $name"))
+    }
 
     override fun commandResponse(channel: String, args: String, event: GenericMessageEvent) {
         with(event.bot()) {

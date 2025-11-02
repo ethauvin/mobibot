@@ -136,9 +136,11 @@ class GoogleSearch : AbstractModule() {
     }
 
     init {
-        commands.add(GOOGLE_CMD)
-        help.add("To search Google:")
-        help.add(helpFormat("%c $GOOGLE_CMD <query>"))
+        addCommand(GOOGLE_CMD)
+        addHelp(
+            "To search Google:",
+            helpFormat("%c $GOOGLE_CMD <query>")
+        )
         initProperties(API_KEY_PROP, CSE_KEY_PROP)
     }
 
@@ -150,8 +152,8 @@ class GoogleSearch : AbstractModule() {
             try {
                 val results = searchGoogle(
                     args,
-                    properties[API_KEY_PROP],
-                    properties[CSE_KEY_PROP],
+                    getProperty(API_KEY_PROP),
+                    getProperty(CSE_KEY_PROP),
                     event.user.nick
                 )
                 for (msg in results) {

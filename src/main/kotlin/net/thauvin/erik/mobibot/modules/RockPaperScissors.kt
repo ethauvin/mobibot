@@ -57,21 +57,19 @@ class RockPaperScissors : AbstractModule() {
     }
 
     init {
-        with(commands) {
-            add(Hands.ROCK.name.lowercase())
-            add(Hands.PAPER.name.lowercase())
-            add(Hands.SCISSORS.name.lowercase())
-        }
+        addCommand(
+            Hands.ROCK.name.lowercase(),
+            Hands.PAPER.name.lowercase(),
+            Hands.SCISSORS.name.lowercase()
+        )
 
-        with(help) {
-            add("To play Rock Paper Scissors:")
-            add(
-                helpFormat(
-                    "%c ${Hands.ROCK.name.lowercase()} | ${Hands.PAPER.name.lowercase()}"
-                            + " | ${Hands.SCISSORS.name.lowercase()}"
-                )
+        addHelp(
+            "To play Rock Paper Scissors:",
+            helpFormat(
+                "%c ${Hands.ROCK.name.lowercase()} | ${Hands.PAPER.name.lowercase()}"
+                        + " | ${Hands.SCISSORS.name.lowercase()}"
             )
-        }
+        )
     }
 
     enum class Hands(val action: String) {

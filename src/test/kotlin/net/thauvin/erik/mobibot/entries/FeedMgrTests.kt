@@ -114,7 +114,7 @@ class FeedMgrTests {
     @Test
     @Order(3)
     fun loadTestFeed() {
-        entries.links.clear()
+        entries.clear()
         FeedsManager.loadFeed(entries, currentFile.name)
 
         entries.links.forEachIndexed { i, entryLink ->

@@ -110,14 +110,12 @@ class WolframAlpha : AbstractModule() {
     }
 
     init {
-        commands.add(WOLFRAM_CMD)
-        with(help) {
-            add("To get answers from Wolfram Alpha:")
-            add(Utils.helpFormat("%c $WOLFRAM_CMD <query> [units=(${METRIC}|${IMPERIAL})]"))
-            add("For example:")
-            add(Utils.helpFormat("%c $WOLFRAM_CMD days until christmas"))
-            add(Utils.helpFormat("%c $WOLFRAM_CMD distance earth moon units=metric"))
-        }
+        addCommand(WOLFRAM_CMD)
+        addHelp("To get answers from Wolfram Alpha:")
+        addHelp(Utils.helpFormat("%c $WOLFRAM_CMD <query> [units=(${METRIC}|${IMPERIAL})]"))
+        addHelp("For example:")
+        addHelp(Utils.helpFormat("%c $WOLFRAM_CMD days until christmas"))
+        addHelp(Utils.helpFormat("%c $WOLFRAM_CMD distance earth moon units=metric"))
         initProperties(APPID_KEY_PROP, UNITS_PROP)
     }
 
@@ -142,9 +140,9 @@ class WolframAlpha : AbstractModule() {
                         units = if (query.size == 2) {
                             getUnits(query[1].trim())
                         } else {
-                            getUnits(properties[UNITS_PROP])
+                            getUnits(getProperty(UNITS_PROP))
                         },
-                        appId = properties[APPID_KEY_PROP]
+                        appId = getProperty(APPID_KEY_PROP)
                     )
                 )
             } catch (e: ModuleException) {

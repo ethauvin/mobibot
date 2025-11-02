@@ -30,6 +30,7 @@
  */
 package net.thauvin.erik.mobibot.modules
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings
 import net.thauvin.erik.mobibot.Utils.bold
 import net.thauvin.erik.mobibot.Utils.helpFormat
 import net.thauvin.erik.mobibot.Utils.sendList
@@ -43,6 +44,7 @@ import java.time.temporal.ChronoField
 /**
  * The WorldTime module.
  */
+@SuppressFBWarnings("BC_BAD_CAST_TO_ABSTRACT_COLLECTION")
 class WorldTime : AbstractModule() {
     override val name = "WorldTime"
 
@@ -368,13 +370,11 @@ class WorldTime : AbstractModule() {
     }
 
     init {
-        with(help) {
-            add("To display a country's current date/time:")
-            add(helpFormat("%c $TIME_CMD [<country code or zone>]"))
-            add("For a listing of the supported countries/zones:")
-            add(helpFormat("%c $TIME_CMD $ZONES_ARGS"))
-        }
-        commands.add(TIME_CMD)
+        addHelp("To display a country's current date/time:")
+        addHelp(helpFormat("%c $TIME_CMD [<country code or zone>]"))
+        addHelp("For a listing of the supported countries/zones:")
+        addHelp(helpFormat("%c $TIME_CMD $ZONES_ARGS"))
+        addCommand(TIME_CMD)
     }
 
     override fun commandResponse(channel: String, cmd: String, args: String, event: GenericMessageEvent) {

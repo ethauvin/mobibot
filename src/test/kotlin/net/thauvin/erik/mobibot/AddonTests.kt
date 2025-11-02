@@ -60,8 +60,8 @@ class AddonTests {
         addons.add(War())
         addons.add(Dice())
         addons.add(Lookup())
-        assertThat(addons::modules).size().isEqualTo(2)
-        assertThat(addons.names.modules, "names.modules").containsExactly("Joke", "RockPaperScissors")
+        assertThat(addons.commands()).size().isEqualTo(4)
+        assertThat(addons.modules(), "names.modules").containsExactly("Joke", "RockPaperScissors")
 
         // Commands
         addons.add(View())
@@ -71,11 +71,11 @@ class AddonTests {
         addons.add(ChannelFeed("channel")) // no properties, disabled
         p[Ignore.IGNORE_PROP] = "nick"
         addons.add(Ignore())
-        assertThat(addons::commands).size().isEqualTo(3)
+        assertThat(addons.commands()).size().isEqualTo(5)
 
-        assertThat(addons.names.ops, "names.ops").containsExactly("cycle")
+        assertThat(addons.ops(), "names.ops").containsExactly("cycle")
 
-        assertThat(addons.names.commands, "names.command").containsExactly(
+        assertThat(addons.commands(), "names.command").containsExactly(
             "joke",
             "rock",
             "paper",

@@ -30,6 +30,7 @@
  */
 package net.thauvin.erik.mobibot.modules
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings
 import net.thauvin.erik.jokeapi.exceptions.HttpErrorException
 import net.thauvin.erik.jokeapi.exceptions.JokeException
 import net.thauvin.erik.jokeapi.joke
@@ -49,6 +50,7 @@ import java.io.IOException
 /**
  * Displays jokes from [JokeAPI](https://v2.jokeapi.dev/).
  */
+@SuppressFBWarnings("BC_BAD_CAST_TO_ABSTRACT_COLLECTION")
 class Joke : AbstractModule() {
     private val logger: Logger = LoggerFactory.getLogger(Joke::class.java)
 
@@ -80,9 +82,11 @@ class Joke : AbstractModule() {
     }
 
     init {
-        commands.add(JOKE_CMD)
-        help.add("To display a random joke:")
-        help.add(helpFormat("%c $JOKE_CMD"))
+        addCommand(JOKE_CMD)
+        addHelp(
+            "To display a random joke:",
+            helpFormat("%c $JOKE_CMD")
+        )
     }
 
     /**

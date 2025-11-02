@@ -48,13 +48,17 @@ import org.pircbotx.hooks.types.GenericMessageEvent
  */
 class View : AbstractCommand() {
     override val name = VIEW_CMD
-    override val help = listOf(
-        "To list or search the current URL posts:",
-        helpFormat("%c $name [<start>] [<query>]")
-    )
+
     override val isOpOnly = false
     override val isPublic = true
     override val isVisible = true
+
+    init {
+        addHelp(
+            "To list or search the current URL posts:",
+            helpFormat("%c $name [<start>] [<query>]")
+        )
+    }
 
     companion object {
         const val MAX_ENTRIES = 6

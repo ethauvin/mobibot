@@ -31,6 +31,7 @@
 
 package net.thauvin.erik.mobibot.entries
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings
 import net.thauvin.erik.mobibot.Utils.today
 
 /**
@@ -42,16 +43,29 @@ class Entries(
     var logsDir: String = "",
     var backlogs: String = ""
 ) {
-    val links = mutableListOf<EntryLink>()
+    private val _links = mutableListOf<EntryLink>()
+    val links: List<EntryLink>
+        @SuppressFBWarnings("EI_EXPOSE_REP")
+        get() = _links  // Exposes as read-only List
 
     var lastPubDate = today()
+
+    fun add(link: EntryLink) = _links.add(link)
+
+    fun clear() = _links.clear()
+
+    fun count(): Int = _links.size
 
     fun load() {
         lastPubDate = FeedsManager.loadFeed(this)
     }
 
+    fun remove(index: Int) = _links.removeAt(index)
+
+
     fun save() {
         lastPubDate = today()
         FeedsManager.saveFeed(this)
     }
+
 }

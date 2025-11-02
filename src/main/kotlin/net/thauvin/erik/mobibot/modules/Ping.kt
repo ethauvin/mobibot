@@ -72,9 +72,11 @@ class Ping : AbstractModule() {
     }
 
     init {
-        commands.add(PING_CMD)
-        help.add("To ping the bot:")
-        help.add(helpFormat("%c $PING_CMD"))
+        addCommand(PING_CMD)
+        addHelp(
+            "To ping the bot:",
+            helpFormat("%c $PING_CMD")
+        )
     }
 
     override fun commandResponse(channel: String, cmd: String, args: String, event: GenericMessageEvent) {

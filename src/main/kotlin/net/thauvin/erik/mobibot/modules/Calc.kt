@@ -64,9 +64,11 @@ class Calc : AbstractModule() {
     }
 
     init {
-        commands.add(CALC_CMD)
-        help.add("To solve a mathematical calculation:")
-        help.add(helpFormat("%c $CALC_CMD <calculation>"))
+        addCommand(CALC_CMD)
+        addHelp(
+            "To solve a mathematical calculation:",
+            helpFormat("%c $CALC_CMD <calculation>")
+        )
     }
 
     override fun commandResponse(channel: String, cmd: String, args: String, event: GenericMessageEvent) {

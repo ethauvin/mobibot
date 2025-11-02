@@ -47,6 +47,8 @@ import org.pircbotx.hooks.types.GenericMessageEvent
 class Ignore : AbstractCommand() {
     private val me = "me"
 
+    override val name = IGNORE_CMD
+
     companion object {
         const val IGNORE_CMD = "ignore"
         const val IGNORE_PROP = IGNORE_CMD
@@ -59,18 +61,17 @@ class Ignore : AbstractCommand() {
     }
 
     init {
+        addHelp(
+            "To ignore a link posted to the channel:",
+            helpFormat("https://www.foo.bar %n"),
+            "To check your ignore status:",
+            helpFormat("%c $name"),
+            "To toggle your ignore status:",
+            helpFormat("%c $name $me")
+        )
         initProperties(IGNORE_PROP)
     }
 
-    override val name = IGNORE_CMD
-    override val help = listOf(
-        "To ignore a link posted to the channel:",
-        helpFormat("https://www.foo.bar %n"),
-        "To check your ignore status:",
-        helpFormat("%c $name"),
-        "To toggle your ignore status:",
-        helpFormat("%c $name $me")
-    )
     private val helpOp = help.plus(
         arrayOf("To add/remove nicks from the ignored list:", helpFormat("%c $name <nick> [<nick> ...]"))
     )

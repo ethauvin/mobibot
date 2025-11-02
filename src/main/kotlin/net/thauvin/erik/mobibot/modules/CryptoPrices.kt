@@ -110,17 +110,15 @@ class CryptoPrices : AbstractModule() {
     }
 
     init {
-        commands.add(CRYPTO_CMD)
-        with(help) {
-            add("To retrieve a cryptocurrency's market price:")
-            add(helpFormat("%c $CRYPTO_CMD <symbol> [<currency>]"))
-            add("For example:")
-            add(helpFormat("%c $CRYPTO_CMD BTC"))
-            add(helpFormat("%c $CRYPTO_CMD ETH EUR"))
-            add(helpFormat("%c $CRYPTO_CMD ETH2 GPB"))
-            add("To list the supported currencies:")
-            add(helpFormat("%c $CRYPTO_CMD $CODES_KEYWORD"))
-        }
+        addCommand(CRYPTO_CMD)
+        addHelp("To retrieve a cryptocurrency's market price:")
+        addHelp(helpFormat("%c $CRYPTO_CMD <symbol> [<currency>]"))
+        addHelp("For example:")
+        addHelp(helpFormat("%c $CRYPTO_CMD BTC"))
+        addHelp(helpFormat("%c $CRYPTO_CMD ETH EUR"))
+        addHelp(helpFormat("%c $CRYPTO_CMD ETH2 GPB"))
+        addHelp("To list the supported currencies:")
+        addHelp(helpFormat("%c $CRYPTO_CMD $CODES_KEYWORD"))
         loadCurrencies()
     }
 

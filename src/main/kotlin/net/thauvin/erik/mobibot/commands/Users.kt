@@ -31,6 +31,7 @@
 
 package net.thauvin.erik.mobibot.commands
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings
 import net.thauvin.erik.mobibot.Utils.bot
 import net.thauvin.erik.mobibot.Utils.helpFormat
 import net.thauvin.erik.mobibot.Utils.sendList
@@ -39,12 +40,16 @@ import org.pircbotx.hooks.types.GenericMessageEvent
 /**
  * Lists the users present on the channel.
  */
+@SuppressFBWarnings("BC_BAD_CAST_TO_ABSTRACT_COLLECTION")
 class Users : AbstractCommand() {
     override val name = "users"
-    override val help = listOf("To list the users present on the channel:", helpFormat("%c $name"))
     override val isOpOnly = false
     override val isPublic = true
     override val isVisible = true
+
+    init {
+        addHelp("To list the users present on the channel:", helpFormat("%c $name"))
+    }
 
     override fun commandResponse(channel: String, args: String, event: GenericMessageEvent) {
         val ch = event.bot().userChannelDao.getChannel(channel)

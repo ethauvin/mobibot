@@ -128,7 +128,7 @@ class CurrencyConverter2 : AbstractModule() {
     }
 
     init {
-        commands.add(CURRENCY_CMD)
+        addCommand(CURRENCY_CMD)
     }
 
     /**

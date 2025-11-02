@@ -40,7 +40,6 @@ import org.pircbotx.hooks.types.GenericMessageEvent
  */
 class Die : AbstractCommand() {
     override val name = "die"
-    override val help = emptyList<String>()
     override val isOpOnly = true
     override val isPublic = false
     override val isVisible = false
@@ -55,7 +54,8 @@ class Die : AbstractCommand() {
 
     override fun commandResponse(channel: String, args: String, event: GenericMessageEvent) {
         with(event.bot()) {
-            if (event.isChannelOp(channel) && (properties[DIE_PROP].isNullOrBlank() || args == properties[DIE_PROP])) {
+            val die = getProperty(DIE_PROP)
+            if (event.isChannelOp(channel) && die.isNullOrBlank() || args == die) {
                 sendIRC().message(channel, "${event.user?.nick} has just signed my death sentence.")
                 stopBotReconnect()
                 sendIRC().quitServer("The Bot is Out There!")

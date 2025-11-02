@@ -44,7 +44,7 @@ class ViewTests {
     companion object {
         init {
             for (i in 1..10) {
-                LinksManager.entries.links.add(
+                LinksManager.entries.add(
                     EntryLink(
                         "https://www.example.com/$i",
                         "Example $i",

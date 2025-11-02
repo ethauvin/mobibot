@@ -56,9 +56,11 @@ class War : AbstractModule() {
     }
 
     init {
-        commands.add(WAR_CMD)
-        help.add("To play war:")
-        help.add(helpFormat("%c $WAR_CMD"))
+        addCommand(WAR_CMD)
+        addHelp(
+            "To play war:",
+            helpFormat("%c $WAR_CMD")
+        )
     }
 
     override fun commandResponse(

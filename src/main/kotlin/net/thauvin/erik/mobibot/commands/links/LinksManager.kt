@@ -60,7 +60,6 @@ class LinksManager : AbstractCommand() {
     private val keywords: MutableList<String> = mutableListOf()
 
     override val name = Constants.LINK_CMD
-    override val help = emptyList<String>()
     override val isOpOnly = false
     override val isPublic = false
     override val isVisible = false
@@ -140,11 +139,11 @@ class LinksManager : AbstractCommand() {
 
                 // Links are old, clear them
                 if (entries.lastPubDate != today()) {
-                    entries.links.clear()
+                    entries.clear()
                 }
 
                 val entry = EntryLink(link, title, sender, login, channel, tags)
-                entries.links.add(entry)
+                entries.add(entry)
                 val index = entries.links.lastIndexOf(entry)
                 event.sendMessage(printLink(index, entry))
 

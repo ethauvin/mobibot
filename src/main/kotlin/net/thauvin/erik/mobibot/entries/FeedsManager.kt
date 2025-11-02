@@ -36,6 +36,7 @@ import com.rometools.rome.feed.synd.SyndFeedImpl
 import com.rometools.rome.io.FeedException
 import com.rometools.rome.io.SyndFeedInput
 import com.rometools.rome.io.SyndFeedOutput
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings
 import net.thauvin.erik.mobibot.Utils.toIsoLocalDate
 import net.thauvin.erik.mobibot.Utils.today
 import org.slf4j.Logger
@@ -52,6 +53,7 @@ import kotlin.io.path.exists
 /**
  * Manages the RSS feeds.
  */
+@SuppressFBWarnings("BC_BAD_CAST_TO_ABSTRACT_COLLECTION")
 class FeedsManager private constructor() {
     companion object {
         private val logger: Logger = LoggerFactory.getLogger(FeedsManager::class.java)
@@ -68,7 +70,7 @@ class FeedsManager private constructor() {
         @JvmStatic
         @Throws(IOException::class, FeedException::class)
         fun loadFeed(entries: Entries, currentFile: String = CURRENT_XML): String {
-            entries.links.clear()
+            entries.clear()
             val xml = Paths.get("${entries.logsDir}${currentFile}")
 
             if (!xml.exists()) {
@@ -94,7 +96,7 @@ class FeedsManager private constructor() {
                         }
                     }
 
-                    entries.links.add(entry)
+                    entries.add(entry)
                 }
 
                 return pubDate

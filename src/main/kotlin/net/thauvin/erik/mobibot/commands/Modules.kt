@@ -31,6 +31,7 @@
 
 package net.thauvin.erik.mobibot.commands
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings
 import net.thauvin.erik.mobibot.Utils.helpFormat
 import net.thauvin.erik.mobibot.Utils.isChannelOp
 import net.thauvin.erik.mobibot.Utils.sendList
@@ -39,12 +40,16 @@ import org.pircbotx.hooks.types.GenericMessageEvent
 /**
  * List the enabled/disabled modules.
  */
+@SuppressFBWarnings("EI_EXPOSE_REP2", justification = "Private field with no accessor")
 class Modules(private val modules: List<String>, private val disabledModules: List<String>) : AbstractCommand() {
     override val name = "modules"
-    override val help = listOf("To view a list of enabled/disabled modules:", helpFormat("%c $name"))
     override val isOpOnly = true
     override val isPublic = false
     override val isVisible = true
+
+    init {
+        addHelp("To view a list of enabled/disabled modules:", helpFormat("%c $name"))
+    }
 
     override fun commandResponse(channel: String, args: String, event: GenericMessageEvent) {
         if (event.isChannelOp(channel)) {

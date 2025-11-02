@@ -31,6 +31,7 @@
 
 package net.thauvin.erik.mobibot.modules
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings
 import net.thauvin.erik.mobibot.Utils
 import net.thauvin.erik.mobibot.Utils.prefixIfMissing
 import net.thauvin.erik.mobibot.entries.EntryLink
@@ -47,17 +48,18 @@ import java.net.http.HttpResponse
 /**
  * Allows users to post on Mastodon.
  */
+@SuppressFBWarnings("BC_BAD_CAST_TO_ABSTRACT_COLLECTION")
 class Mastodon : SocialModule() {
     override val name = "Mastodon"
 
     override val handle: String?
-        get() = properties[HANDLE_PROP]
+        get() = getProperty(HANDLE_PROP)
 
     override val isAutoPost: Boolean
-        get() = isEnabled && properties[AUTO_POST_PROP].toBoolean()
+        get() = isEnabled && getProperty(AUTO_POST_PROP).toBoolean()
 
     override val isValidProperties: Boolean
-        get() = !(properties[INSTANCE_PROP].isNullOrBlank() || properties[ACCESS_TOKEN_PROP].isNullOrBlank())
+        get() = !(getProperty(INSTANCE_PROP).isNullOrBlank() || getProperty(ACCESS_TOKEN_PROP).isNullOrBlank())
 
     companion object {
         // Property keys
@@ -148,11 +150,12 @@ class Mastodon : SocialModule() {
     }
 
     init {
-        commands.add(MASTODON_CMD)
-        commands.add(TOOT_CMD)
-        help.add("To toot on Mastodon:")
-        help.add(Utils.helpFormat("%c $TOOT_CMD <message>"))
-        properties[AUTO_POST_PROP] = "false"
+        addCommand(MASTODON_CMD, TOOT_CMD)
+        addHelp(
+            "To toot on Mastodon:",
+            Utils.helpFormat("%c $TOOT_CMD <message>")
+        )
+        setProperty(AUTO_POST_PROP, "false")
         initProperties(ACCESS_TOKEN_PROP, HANDLE_PROP, INSTANCE_PROP)
     }
 
@@ -180,8 +183,8 @@ class Mastodon : SocialModule() {
     @Throws(ModuleException::class)
     override fun post(message: String, isDm: Boolean): String {
         return toot(
-            accessToken = properties[ACCESS_TOKEN_PROP],
-            instance = properties[INSTANCE_PROP],
+            accessToken = getProperty(ACCESS_TOKEN_PROP),
+            instance = getProperty(INSTANCE_PROP),
             handle = handle,
             message = message,
             isDm = isDm

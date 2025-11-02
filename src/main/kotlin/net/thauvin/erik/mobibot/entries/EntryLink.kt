@@ -32,6 +32,7 @@ package net.thauvin.erik.mobibot.entries
 
 import com.rometools.rome.feed.synd.SyndCategory
 import com.rometools.rome.feed.synd.SyndCategoryImpl
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings
 import net.thauvin.erik.mobibot.commands.links.LinksManager
 import java.io.Serializable
 import java.util.*
@@ -39,18 +40,19 @@ import java.util.*
 /**
  * Holds [Entries] link.
  */
+@SuppressFBWarnings("EI_EXPOSE_REP2", justification = "Constructor parameter has default value creating new instance")
 class EntryLink(
-    // Link's comments
-    val comments: MutableList<EntryComment> = mutableListOf(),
+    // Link's comments - private mutable backing list
+    private val _comments: MutableList<EntryComment> = mutableListOf(),
 
-    // Tags/categories
-    val tags: MutableList<SyndCategory> = mutableListOf(),
+    // Tags/categories - private mutable backing list
+    private val _tags: MutableList<SyndCategory> = mutableListOf(),
 
     // Channel
     var channel: String,
 
-    // Creation date
-    var date: Date = Calendar.getInstance().time,
+    // Creation date - private backing field
+    private val _date: Date = Calendar.getInstance().time,
 
     // Link's URL
     var link: String,
@@ -64,6 +66,20 @@ class EntryLink(
     // Link's title
     var title: String
 ) : Serializable {
+    // Public read-only views
+    val comments: List<EntryComment>
+        @SuppressFBWarnings("EI_EXPOSE_REP")
+        get() = _comments
+
+    val tags: List<SyndCategory>
+        @SuppressFBWarnings("EI_EXPOSE_REP")
+        get() = _tags
+
+    // Return defensive copy of date
+    val date: Date
+        @SuppressFBWarnings("EI_EXPOSE_REP")
+        get() = Date(_date.time)
+
     /**
      * Creates a new entry.
      */
@@ -86,10 +102,10 @@ class EntryLink(
         title: String,
         nick: String,
         channel: String,
-        date: Date,
+        date: Date = Calendar.getInstance().time,
         tags: List<SyndCategory>
-    ) : this(link = link, title = title, nick = nick, channel = channel, date = Date(date.time)) {
-        this.tags.addAll(tags)
+    ) : this(link = link, title = title, nick = nick, channel = channel, _date = Date(date.time)) {
+        _tags.addAll(tags)
     }
 
     companion object {
@@ -100,8 +116,8 @@ class EntryLink(
      * Adds a new comment
      */
     fun addComment(comment: EntryComment): Int {
-        comments.add(comment)
-        return comments.lastIndex
+        _comments.add(comment)
+        return _comments.lastIndex
     }
 
     /**
@@ -115,8 +131,8 @@ class EntryLink(
      * Deletes a specific comment.
      */
     fun deleteComment(index: Int): Boolean {
-        if (index < comments.size) {
-            comments.removeAt(index)
+        if (index < _comments.size) {
+            _comments.removeAt(index)
             return true
         }
         return false
@@ -126,20 +142,20 @@ class EntryLink(
      * Deletes a comment.
      */
     fun deleteComment(entryComment: EntryComment): Boolean {
-        return comments.remove(entryComment)
+        return _comments.remove(entryComment)
     }
 
     /**
      * Formats the tags.
      */
     fun formatTags(sep: String, prefix: String = ""): String {
-        return tags.joinToString(separator = sep, prefix = prefix) { it.name }
+        return _tags.joinToString(separator = sep, prefix = prefix) { it.name }
     }
 
     /**
      * Returns a comment.
      */
-    fun getComment(index: Int): EntryComment = comments[index]
+    fun getComment(index: Int): EntryComment = _comments[index]
 
     /**
      * Returns true if a string is contained in the link, title, or nick.
@@ -157,8 +173,8 @@ class EntryLink(
      * Sets a comment.
      */
     fun setComment(index: Int, comment: String?, nick: String?) {
-        if (index < comments.size && !comment.isNullOrBlank() && !nick.isNullOrBlank()) {
-            comments[index] = EntryComment(comment, nick)
+        if (index < _comments.size && !comment.isNullOrBlank() && !nick.isNullOrBlank()) {
+            _comments[index] = EntryComment(comment, nick)
         }
     }
 
@@ -189,13 +205,13 @@ class EntryLink(
                 t.startsWith('-') -> {
                     // Don't remove the channel tag
                     if (channel.substring(1) != tagName) {
-                        this.tags.remove(category)
+                        _tags.remove(category)
                     }
                 }
 
                 else -> {
-                    if (!this.tags.contains(category)) {
-                        this.tags.add(category)
+                    if (!_tags.contains(category)) {
+                        _tags.add(category)
                     }
                 }
             }
@@ -206,7 +222,7 @@ class EntryLink(
      * Returns a string representation of the object.
      */
     override fun toString(): String {
-        return ("EntryLink{channel='$channel', comments=$comments, date=$date, link='$link', login='$login'," +
-                "nick='$nick', tags=$tags, title='$title'}")
+        return ("EntryLink{channel='$channel', comments=$_comments, date=$_date, link='$link', login='$login'," +
+                "nick='$nick', tags=$_tags, title='$title'}")
     }
 }

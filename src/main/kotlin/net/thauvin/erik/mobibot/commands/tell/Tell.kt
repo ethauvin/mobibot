@@ -30,6 +30,7 @@
  */
 package net.thauvin.erik.mobibot.commands.tell
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings
 import net.thauvin.erik.mobibot.Utils.bold
 import net.thauvin.erik.mobibot.Utils.bot
 import net.thauvin.erik.mobibot.Utils.helpCmdSyntax
@@ -50,6 +51,7 @@ import org.pircbotx.hooks.types.GenericUserEvent
 /**
  * Queues a message to be sent to someone when they join or are active on the channel.
  */
+@SuppressFBWarnings("BC_BAD_CAST_TO_ABSTRACT_COLLECTION")
 class Tell(private val serialObject: String) : AbstractCommand() {
     // Messages queue
     private val messages: MutableList<TellMessage> = mutableListOf()
@@ -65,16 +67,19 @@ class Tell(private val serialObject: String) : AbstractCommand() {
      */
     override val name = "tell"
 
-    override val help = listOf(
-        "To send a message to someone when they join the channel:",
-        helpFormat("%c $name <nick> <message>"),
-        "To view queued and sent messages:",
-        helpFormat("%c $name ${View.VIEW_CMD}"),
-        "Messages are kept for ${maxDays.bold()}" + " day".plural(maxDays.toLong()) + '.'
-    )
     override val isOpOnly: Boolean = false
     override val isPublic: Boolean = isEnabled()
     override val isVisible: Boolean = isEnabled()
+
+    init {
+        addHelp(
+            "To send a message to someone when they join the channel:",
+            helpFormat("%c $name <nick> <message>"),
+            "To view queued and sent messages:",
+            helpFormat("%c $name ${View.VIEW_CMD}"),
+            "Messages are kept for ${maxDays.bold()}" + " day".plural(maxDays.toLong()) + '.'
+        )
+    }
 
     /**
      * Cleans the messages queue.

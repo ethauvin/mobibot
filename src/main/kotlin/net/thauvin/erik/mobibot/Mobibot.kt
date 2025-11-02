@@ -31,6 +31,7 @@
 
 package net.thauvin.erik.mobibot
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings
 import kotlinx.cli.ArgParser
 import kotlinx.cli.ArgType
 import kotlinx.cli.default
@@ -84,6 +85,7 @@ class Mobibot(nickname: String, val channel: String, logsDirPath: String, p: Pro
     companion object {
         @JvmStatic
         @Throws(Exception::class)
+        @SuppressFBWarnings("DM_DEFAULT_ENCODING")
         fun main(args: Array<String>) {
             // Set up the command line options
             val parser = ArgParser(Constants.CLI_CMD)
@@ -142,7 +144,8 @@ class Mobibot(nickname: String, val channel: String, logsDirPath: String, p: Pro
                         val stdout = PrintStream(
                             BufferedOutputStream(
                                 FileOutputStream(
-                                    logsDir + channel.substring(1) + '.' + Utils.today() + ".log", true
+                                    logsDir + channel.substring(1) + '.' + Utils.today() + ".log",
+                                    true
                                 )
                             ), true
                         )
@@ -228,7 +231,7 @@ class Mobibot(nickname: String, val channel: String, logsDirPath: String, p: Pro
         addons.add(Ignore())
         addons.add(LinksManager())
         addons.add(Me())
-        addons.add(Modules(addons.names.modules, addons.names.disabledModules))
+        addons.add(Modules(addons.modules(), addons.disabledModules()))
         addons.add(Msg())
         addons.add(Nick())
         addons.add(Posting())
@@ -272,7 +275,7 @@ class Mobibot(nickname: String, val channel: String, logsDirPath: String, p: Pro
         addons.add(WorldTime())
 
         // Sort the addons
-        addons.names.sort()
+        addons.sort()
     }
 
     /**
@@ -294,14 +297,14 @@ class Mobibot(nickname: String, val channel: String, logsDirPath: String, p: Pro
             )
         )
         event.sendMessage("The commands are:")
-        event.sendList(addons.names.commands, 8, isBold = true, isIndent = true)
+        event.sendList(addons.commands(), 8, isBold = true, isIndent = true)
         if (event.isChannelOp(channel)) {
-            if (addons.names.disabledCommands.isNotEmpty()) {
+            if (addons.disabledCommands().isNotEmpty()) {
                 event.sendMessage("The disabled commands are:")
-                event.sendList(addons.names.disabledCommands, 8, isBold = false, isIndent = true)
+                event.sendList(addons.disabledCommands(), 8, isBold = false, isIndent = true)
             }
             event.sendMessage("The op commands are:")
-            event.sendList(addons.names.ops, 8, isBold = true, isIndent = true)
+            event.sendList(addons.ops(), 8, isBold = true, isIndent = true)
         }
     }
 

@@ -31,6 +31,7 @@
 
 package net.thauvin.erik.mobibot.commands
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings
 import net.thauvin.erik.mobibot.Utils.bot
 import net.thauvin.erik.mobibot.Utils.helpCmdSyntax
 import net.thauvin.erik.mobibot.Utils.isChannelOp
@@ -46,18 +47,26 @@ import org.pircbotx.hooks.types.GenericMessageEvent
  */
 abstract class AbstractCommand {
     abstract val name: String
-    abstract val help: List<String>
     abstract val isOpOnly: Boolean
     abstract val isPublic: Boolean
     abstract val isVisible: Boolean
 
-    val properties: MutableMap<String, String> = mutableMapOf()
+    private val _help: MutableList<String> = mutableListOf()
+    val help: List<String>
+        @SuppressFBWarnings("EI_EXPOSE_REP")
+        get() = _help
+
+    private val properties: MutableMap<String, String> = mutableMapOf()
+
+    open fun addHelp(vararg help: String) {
+        _help.addAll(help)
+    }
 
     abstract fun commandResponse(channel: String, args: String, event: GenericMessageEvent)
 
     open fun helpResponse(channel: String, topic: String, event: GenericMessageEvent): Boolean {
         if (!isOpOnly || isOpOnly == event.isChannelOp(channel)) {
-            for (h in help) {
+            for (h in _help) {
                 event.sendMessage(helpCmdSyntax(h, event.bot().nick, event is PrivateMessageEvent || !isPublic))
             }
             return true
@@ -77,6 +86,14 @@ abstract class AbstractCommand {
 
     open fun matches(message: String): Boolean {
         return false
+    }
+
+    open fun getProperty(key: String): String? {
+        return properties[key]
+    }
+
+    open fun getProperties(): Map<String, String> {
+        return properties.toMap()
     }
 
     open fun setProperty(key: String, value: String) {

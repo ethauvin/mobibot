@@ -30,6 +30,7 @@
  */
 package net.thauvin.erik.mobibot.commands
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings
 import net.thauvin.erik.mobibot.ReleaseInfo
 import net.thauvin.erik.mobibot.Utils.capitalize
 import net.thauvin.erik.mobibot.Utils.green
@@ -49,16 +50,20 @@ import kotlin.time.toDuration
 /**
  * Provides detailed bot and channel statistics.
  */
+@SuppressFBWarnings("EI_EXPOSE_REP2", justification = "Private field with no accessor")
 class Info(private val tell: Tell, private val seen: Seen) : AbstractCommand() {
     private val allVersions = listOf(
         "${ReleaseInfo.PROJECT.capitalize()} ${ReleaseInfo.VERSION} (${ReleaseInfo.WEBSITE.green()})",
         "Written by ${ReleaseInfo.AUTHOR} (${ReleaseInfo.AUTHOR_URL.green()})"
     )
     override val name = "info"
-    override val help = listOf("To view information about the bot:", helpFormat("%c $name"))
     override val isOpOnly = false
     override val isPublic = true
     override val isVisible = true
+
+    init {
+        addHelp("To view information about the bot:", helpFormat("%c $name"))
+    }
 
     companion object {
         /**

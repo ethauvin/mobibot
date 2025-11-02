@@ -101,14 +101,12 @@ class Gemini2 : AbstractModule() {
     }
 
     init {
-        commands.add(GEMINI_CMD)
-        with(help) {
-            add("To get answers from $name:")
-            add(Utils.helpFormat("%c $GEMINI_CMD <query>"))
-            add("For example:")
-            add(Utils.helpFormat("%c $GEMINI_CMD explain quantum computing in simple terms"))
-            add(Utils.helpFormat("%c $GEMINI_CMD how do I make an HTTP request in Javascript?"))
-        }
+        addCommand(GEMINI_CMD)
+        addHelp("To get answers from $name:")
+        addHelp(Utils.helpFormat("%c $GEMINI_CMD <query>"))
+        addHelp("For example:")
+        addHelp(Utils.helpFormat("%c $GEMINI_CMD explain quantum computing in simple terms"))
+        addHelp(Utils.helpFormat("%c $GEMINI_CMD how do I make an HTTP request in Javascript?"))
         initProperties(GEMINI_API_KEY, MAX_TOKENS_PROP)
     }
 
@@ -117,8 +115,8 @@ class Gemini2 : AbstractModule() {
             try {
                 val answer = chat(
                     args.trim(),
-                    properties[GEMINI_API_KEY],
-                    properties.getOrDefault(MAX_TOKENS_PROP, "1024").toInt()
+                    getProperty(GEMINI_API_KEY),
+                    getPropertyOrDefault(MAX_TOKENS_PROP, "1024").toInt()
                 )
                 if (!answer.isNullOrEmpty()) {
                     event.sendMessage(answer)

@@ -49,10 +49,13 @@ class Versions : AbstractCommand() {
         "Kotlin ${KotlinVersion.CURRENT}, PircBotX ${PircBotX.VERSION}"
     )
     override val name = "versions"
-    override val help = listOf("To view the versions data (bot, platform, java, etc.):", helpFormat("%c $name"))
     override val isOpOnly = true
     override val isPublic = false
     override val isVisible = true
+
+    init {
+        addHelp("To view the versions data (bot, platform, java, etc.):", helpFormat("%c $name"))
+    }
 
     override fun commandResponse(channel: String, args: String, event: GenericMessageEvent) {
         if (event.isChannelOp(channel)) {

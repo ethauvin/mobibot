@@ -30,6 +30,7 @@
  */
 package net.thauvin.erik.mobibot
 
+import net.thauvin.erik.mobibot.Utils.reader
 import net.thauvin.erik.mobibot.msg.Message
 import net.thauvin.erik.mobibot.msg.Message.Companion.DEFAULT_COLOR
 import net.thauvin.erik.urlencoder.UrlEncoderUtil

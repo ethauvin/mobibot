@@ -51,21 +51,24 @@ import org.pircbotx.hooks.types.GenericMessageEvent
  */
 class Posting : AbstractCommand() {
     override val name = "posting"
-    override val help = listOf(
-        "Post a URL, by saying it on a line on its own:",
-        helpFormat("<url> [<title>] ${Tags.COMMAND}: <+tag> [...]]"),
-        "I will reply with a label, for example: ${Constants.LINK_CMD.bold()}1",
-        "To add a title, use its label and a pipe:",
-        helpFormat("${Constants.LINK_CMD}1:|This is the title"),
-        "To add a comment:",
-        helpFormat("${Constants.LINK_CMD}1:This is a comment"),
-        "I will reply with a label, for example: ${Constants.LINK_CMD.bold()}1.1",
-        "To edit a comment, see: ",
-        helpFormat("%c ${Constants.HELP_CMD} ${Comment.COMMAND}")
-    )
     override val isOpOnly = false
     override val isPublic = true
     override val isVisible = true
+
+    init {
+        addHelp(
+            "Post a URL, by saying it on a line on its own:",
+            helpFormat("<url> [<title>] ${Tags.COMMAND}: <+tag> [...]]"),
+            "I will reply with a label, for example: ${Constants.LINK_CMD.bold()}1",
+            "To add a title, use its label and a pipe:",
+            helpFormat("${Constants.LINK_CMD}1:|This is the title"),
+            "To add a comment:",
+            helpFormat("${Constants.LINK_CMD}1:This is a comment"),
+            "I will reply with a label, for example: ${Constants.LINK_CMD.bold()}1.1",
+            "To edit a comment, see: ",
+            helpFormat("%c ${Constants.HELP_CMD} ${Comment.COMMAND}")
+        )
+    }
 
     companion object {
         private val MATCH_PATTERN by lazy { "${Constants.LINK_CMD}\\d+:.*".toRegex() }
@@ -149,7 +152,7 @@ class Posting : AbstractCommand() {
         if (entry.login == event.user.login || event.isChannelOp(channel)) {
             LinksManager.pinboard.deletePin(entry)
             LinksManager.socialManager.removeEntry(index)
-            entries.links.removeAt(index)
+            entries.remove(index)
             event.sendMessage("Entry ${index.toLinkLabel()} removed.")
             entries.save()
         } else {

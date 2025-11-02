@@ -40,7 +40,6 @@ import org.pircbotx.hooks.types.GenericMessageEvent
  */
 class ChannelFeed(channel: String) : AbstractCommand() {
     override val name = channel
-    override val help = listOf("To list the last 5 posts from the channel's weblog feed:", helpFormat("%c $channel"))
     override val isOpOnly = false
     override val isPublic = true
     override val isVisible = true
@@ -50,16 +49,17 @@ class ChannelFeed(channel: String) : AbstractCommand() {
     }
 
     init {
+        addHelp("To list the last 5 posts from the channel's weblog feed:", helpFormat("%c $channel"))
         initProperties(FEED_PROP)
     }
 
     override fun commandResponse(channel: String, args: String, event: GenericMessageEvent) {
         if (isEnabled()) {
-            properties[FEED_PROP]?.let { FeedReader(it, event).run() }
+            getProperty(FEED_PROP)?.let { FeedReader(it, event).run() }
         }
     }
 
     override fun isEnabled(): Boolean {
-        return !properties[FEED_PROP].isNullOrBlank()
+        return !getProperty(FEED_PROP).isNullOrBlank()
     }
 }

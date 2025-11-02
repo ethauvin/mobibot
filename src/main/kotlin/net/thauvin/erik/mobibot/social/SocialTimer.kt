@@ -31,11 +31,13 @@
 
 package net.thauvin.erik.mobibot.social
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings
 import java.util.*
 
 /**
  * Timer used to post social entries.
  */
+@SuppressFBWarnings("EI_EXPOSE_REP2", justification = "Private field with no accessor")
 class SocialTimer(private var socialManager: SocialManager, private var index: Int) : TimerTask() {
     override fun run() {
         socialManager.postEntry(index)
