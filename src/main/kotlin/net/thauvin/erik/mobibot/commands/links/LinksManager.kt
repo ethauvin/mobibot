@@ -189,19 +189,16 @@ class LinksManager : AbstractCommand() {
     }
 
     private fun isDupEntry(link: String, event: GenericMessageEvent): Boolean {
-        synchronized(entries) {
-            return try {
-                val match = entries.links.single { it.link == link }
-                event.sendMessage(
-                    "Duplicate".bold() + " >> " + printLink(entries.links.indexOf(match), match)
-                )
-                true
-            } catch (_: NoSuchElementException) {
-                false
-            }
+        val match = entries.findDuplicateLink(link)
+        return if (match != null) {
+            event.sendMessage(
+                "Duplicate".bold() + " >> " + printLink(entries.links.indexOf(match), match)
+            )
+            true
+        } else {
+            false
         }
     }
-
 
     /**
      * Matches [keywords] in the given title and adds them to the provided tag list.

@@ -31,11 +31,20 @@
 
 package net.thauvin.erik.mobibot.entries
 
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings
 import net.thauvin.erik.mobibot.Utils.today
+import java.util.*
+import java.util.concurrent.CopyOnWriteArrayList
+import java.util.concurrent.atomic.AtomicReference
 
 /**
  * Holds [EntryLink] entries.
+ *
+ * Optimized for concurrent read-mostly access:
+ * - Uses CopyOnWriteArrayList for links so reads are lock-free and fast.
+ * - Uses AtomicReference for lastPubDate to ensure visibility with low overhead.
+ *
+ * If your workload is write-heavy, consider switching to a ReentrantReadWriteLock
+ * protected mutable list instead.
  */
 class Entries(
     var channel: String = "",
@@ -43,29 +52,35 @@ class Entries(
     var logsDir: String = "",
     var backlogs: String = ""
 ) {
-    private val _links = mutableListOf<EntryLink>()
+    private val _links = CopyOnWriteArrayList<EntryLink>()
+
+    // AtomicReference gives cheap thread-safe visibility semantics.
+    private val lastPubDateRef = AtomicReference(today())
+
+    var lastPubDate: String
+        get() = lastPubDateRef.get()
+        set(value) = lastPubDateRef.set(value)
+
     val links: List<EntryLink>
-        @SuppressFBWarnings("EI_EXPOSE_REP")
-        get() = _links  // Exposes as read-only List
+        get() = Collections.unmodifiableList(_links)
 
-    var lastPubDate = today()
-
-    fun add(link: EntryLink) = _links.add(link)
+    fun add(link: EntryLink): Boolean = _links.add(link)
 
     fun clear() = _links.clear()
 
     fun count(): Int = _links.size
 
+    fun findDuplicateLink(link: String): EntryLink? = _links.find { it.link == link }
+
     fun load() {
-        lastPubDate = FeedsManager.loadFeed(this)
+        val date = FeedsManager.loadFeed(this)
+        lastPubDate = date
     }
 
-    fun remove(index: Int) = _links.removeAt(index)
-
+    fun remove(index: Int): EntryLink = _links.removeAt(index)
 
     fun save() {
         lastPubDate = today()
         FeedsManager.saveFeed(this)
     }
-
 }
