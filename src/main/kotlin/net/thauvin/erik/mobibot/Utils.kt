@@ -30,6 +30,7 @@
  */
 package net.thauvin.erik.mobibot
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings
 import net.thauvin.erik.mobibot.Utils.reader
 import net.thauvin.erik.mobibot.msg.Message
 import net.thauvin.erik.urlencoder.UrlEncoderUtil
@@ -220,6 +221,7 @@ object Utils {
      * Load serial data from file.
      */
     @JvmStatic
+    @SuppressFBWarnings("PATH_TRAVERSAL_IN", "OBJECT_DESERIALIZATION")
     fun loadSerialData(file: String, default: Any, logger: Logger, description: String): Any {
         val serialFile = Paths.get(file)
         if (serialFile.exists() && serialFile.fileSize() > 0) {
@@ -243,7 +245,8 @@ object Utils {
      * Returns `true` if the list does not contain the given string.
      */
     @JvmStatic
-    fun List<String>.notContains(text: String, ignoreCase: Boolean = false) = this.none { it.equals(text, ignoreCase) }
+    fun List<String>.notContains(text: String, ignoreCase: Boolean = false) =
+        none { it.equals(text, ignoreCase) }
 
     /**
      * Obfuscates the given string.
@@ -294,6 +297,7 @@ object Utils {
      * Replaces all occurrences of Strings within another String.
      */
     @JvmStatic
+    @SuppressFBWarnings("CVAA_CONTRAVARIANT_ELEMENT_ASSIGNMENT")
     fun String.replaceEach(search: Array<out String>, replace: Array<out String>): String {
         var result = this
         if (search.size == replace.size) {
@@ -441,5 +445,6 @@ object Utils {
     /**
      * Holds the [URI.reader] response code and body text.
      */
+    @SuppressFBWarnings("USBR_UNNECESSARY_STORE_BEFORE_RETURN")
     data class UrlReaderResponse(val responseCode: Int, val body: String)
 }

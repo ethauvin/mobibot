@@ -61,6 +61,7 @@ class Weather2 : AbstractModule() {
 
     override val name = WEATHER_NAME
 
+    @SuppressFBWarnings("DCN_NULLPOINTER_EXCEPTION")
     companion object {
         /**
          * The OpenWeatherMap API Key property.
@@ -100,7 +101,6 @@ class Weather2 : AbstractModule() {
          */
         @JvmStatic
         @Throws(ModuleException::class)
-        @SuppressFBWarnings("DCN_NULLPOINTER_EXCEPTION")
         fun getWeather(query: String, apiKey: String?): List<Message> {
             if (apiKey.isNullOrBlank()) {
                 throw ModuleException(

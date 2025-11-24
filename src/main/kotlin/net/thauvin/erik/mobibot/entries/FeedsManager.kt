@@ -39,6 +39,7 @@ import com.rometools.rome.io.SyndFeedOutput
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings
 import net.thauvin.erik.mobibot.Utils.toIsoLocalDate
 import net.thauvin.erik.mobibot.Utils.today
+import org.apache.commons.text.StringEscapeUtils
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.io.IOException
@@ -53,7 +54,7 @@ import kotlin.io.path.exists
 /**
  * Manages the RSS feeds.
  */
-@SuppressFBWarnings("BC_BAD_CAST_TO_ABSTRACT_COLLECTION")
+@SuppressFBWarnings("BC_BAD_CAST_TO_ABSTRACT_COLLECTION", "PATH_TRAVERSAL_IN")
 class FeedsManager private constructor() {
     companion object {
         private val logger: Logger = LoggerFactory.getLogger(FeedsManager::class.java)
@@ -139,19 +140,19 @@ class FeedsManager private constructor() {
                         description = SyndContentImpl().apply {
                             value = buildString {
                                 append("Posted by <b>")
-                                append(entryLink.nick)
+                                append(StringEscapeUtils.escapeHtml4(entryLink.nick))
                                 append("</b> on <a href=\"irc://")
-                                append(entries.ircServer).append('/')
-                                append(entryLink.channel)
+                                append(StringEscapeUtils.escapeHtml4(entries.ircServer)).append('/')
+                                append(StringEscapeUtils.escapeHtml4(entryLink.channel))
                                 append("\"><b>")
-                                append(entryLink.channel)
+                                append(StringEscapeUtils.escapeHtml4(entryLink.channel))
                                 append("</b></a>")
 
                                 if (entryLink.comments.isNotEmpty()) {
                                     append(" <br/><br/>")
                                     entryLink.comments.forEachIndexed { index, comment ->
                                         if (index > 0) append(" <br/>")
-                                        append("${comment.nick}: ${comment.comment}")
+                                        append(StringEscapeUtils.escapeHtml4("${comment.nick}: ${comment.comment}"))
                                     }
                                 }
                             }
@@ -172,7 +173,9 @@ class FeedsManager private constructor() {
 
                 // Write the dated file
                 OutputStreamWriter(
-                    Files.newOutputStream(Paths.get(entries.logsDir + today() + DOT_XML)),
+                    Files.newOutputStream(
+                        Paths.get(entries.logsDir + today() + DOT_XML)
+                    ),
                     StandardCharsets.UTF_8
                 ).use { fw ->
                     output.output(rss, fw)

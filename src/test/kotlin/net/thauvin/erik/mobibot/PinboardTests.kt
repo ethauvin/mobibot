@@ -35,6 +35,9 @@ import net.thauvin.erik.mobibot.Utils.encodeUrl
 import net.thauvin.erik.mobibot.Utils.reader
 import net.thauvin.erik.mobibot.entries.EntryLink
 import java.net.URI
+import java.time.format.DateTimeFormatter
+import java.time.temporal.ChronoUnit
+import java.util.*
 import kotlin.test.Test
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
@@ -74,11 +77,23 @@ class PinboardTests : LocalProperties() {
     fun addPin() {
         val entry = newEntry()
         pinboard.addPin(ircServer, entry)
-        assertTrue(validatePin(apiToken, url = entry.link, entry.title, entry.nick, entry.channel), "addPin")
+        assertTrue(
+            validatePin(
+                apiToken,
+                url = entry.link, entry.title, entry.nick, entry.channel, entry.date.toIsoInstant()
+            ),
+            "addPin(${entry.link})"
+        )
 
         pinboard.deletePin(entry)
-        assertFalse(validatePin(apiToken, url = entry.link, entry.title, entry.nick, entry.channel), "deletePin")
+        assertFalse(
+            validatePin(apiToken, url = entry.link),
+            "deletePin(${entry.link})"
+        )
+    }
 
+    fun Date.toIsoInstant(): String {
+        return DateTimeFormatter.ISO_INSTANT.format(toInstant().truncatedTo(ChronoUnit.SECONDS))
     }
 
     @Test

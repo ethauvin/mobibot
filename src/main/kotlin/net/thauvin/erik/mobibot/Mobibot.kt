@@ -62,6 +62,7 @@ import org.slf4j.LoggerFactory
 import java.io.*
 import java.nio.file.Files
 import java.nio.file.Paths
+import java.nio.file.StandardOpenOption
 import java.util.*
 import java.util.regex.Pattern
 import kotlin.system.exitProcess
@@ -82,10 +83,17 @@ class Mobibot(nickname: String, val channel: String, logsDirPath: String, p: Pro
     /** Logger. */
     val logger: Logger = LoggerFactory.getLogger(Mobibot::class.java)
 
+    @SuppressFBWarnings(
+        "CLI_CONSTANT_LIST_INDEX",
+        "DM_DEFAULT_ENCODING",
+        "EXS_EXCEPTION_SOFTENING_NO_CONSTRAINTS",
+        "LEST_LOST_EXCEPTION_STACK_TRACE",
+        "NAB_NEEDLESS_BOOLEAN_CONSTANT_CONVERSION",
+        "PATH_TRAVERSAL_IN"
+    )
     companion object {
         @JvmStatic
         @Throws(Exception::class)
-        @SuppressFBWarnings("DM_DEFAULT_ENCODING")
         fun main(args: Array<String>) {
             // Set up the command line options
             val parser = ArgParser(Constants.CLI_CMD)
@@ -143,12 +151,17 @@ class Mobibot(nickname: String, val channel: String, logsDirPath: String, p: Pro
                     try {
                         val stdout = PrintStream(
                             BufferedOutputStream(
-                                FileOutputStream(
-                                    logsDir + channel.substring(1) + '.' + Utils.today() + ".log",
-                                    true
+                                Files.newOutputStream(
+                                    Paths.get(
+                                        logsDir,
+                                        channel.substring(1) + '.' + Utils.today() + ".log"
+                                    ),
+                                    StandardOpenOption.CREATE,
+                                    StandardOpenOption.APPEND
                                 )
                             ), true
                         )
+
                         System.setOut(stdout)
                     } catch (_: IOException) {
                         System.err.println("Unable to open output (stdout) log file.")
@@ -157,7 +170,11 @@ class Mobibot(nickname: String, val channel: String, logsDirPath: String, p: Pro
                     try {
                         val stderr = PrintStream(
                             BufferedOutputStream(
-                                FileOutputStream("$logsDir$nickname.err", true)
+                                Files.newOutputStream(
+                                    Paths.get(logsDir, "$nickname.err"),
+                                    StandardOpenOption.CREATE,
+                                    StandardOpenOption.APPEND
+                                )
                             ), true
                         )
                         System.setErr(stderr)

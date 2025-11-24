@@ -77,7 +77,6 @@ class EntryLink(
 
     // Return defensive copy of date
     val date: Date
-        @SuppressFBWarnings("EI_EXPOSE_REP")
         get() = Date(_date.time)
 
     /**
@@ -148,7 +147,7 @@ class EntryLink(
     /**
      * Formats the tags.
      */
-    fun formatTags(sep: String, prefix: String = ""): String {
+    fun tagsToList(sep: String, prefix: String = ""): String {
         return _tags.joinToString(separator = sep, prefix = prefix) { it.name }
     }
 
@@ -188,6 +187,7 @@ class EntryLink(
     /**
      * Sets the tags.
      */
+    @SuppressFBWarnings("STT_STRING_PARSING_A_FIELD")
     private fun setTags(tags: List<String?>) {
         tags.forEach { tag ->
             if (tag.isNullOrBlank()) return@forEach

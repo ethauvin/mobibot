@@ -40,14 +40,16 @@ import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoField
+import java.util.*
 
 /**
  * The WorldTime module.
  */
-@SuppressFBWarnings("BC_BAD_CAST_TO_ABSTRACT_COLLECTION")
+@SuppressFBWarnings("BC_BAD_CAST_TO_ABSTRACT_COLLECTION", "COM_COPIED_OVERRIDDEN_METHOD")
 class WorldTime : AbstractModule() {
     override val name = "WorldTime"
 
+    @SuppressFBWarnings("STT_STRING_PARSING_A_FIELD")
     companion object {
         /**
          * Beats (Internet Time) keyword
@@ -57,7 +59,7 @@ class WorldTime : AbstractModule() {
         /**
          * Supported countries
          */
-        val COUNTRIES_MAP = buildMap<String, String> {
+        val COUNTRIES_MAP: Map<String, String> = Collections.unmodifiableMap(buildMap {
             put("AG", "America/Antigua")
             put("AI", "America/Anguilla")
             put("AE", "Asia/Dubai")
@@ -325,7 +327,7 @@ class WorldTime : AbstractModule() {
             put("ZW", "Africa/Harare")
             ZoneId.getAvailableZoneIds().filter { it.length <= 3 && !containsKey(it) }
                 .forEach { tz -> put(tz, tz) }
-        }
+        })
 
         // The Time command
         private const val TIME_CMD = "time"

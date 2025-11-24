@@ -31,11 +31,13 @@
 
 package net.thauvin.erik.mobibot.commands.seen
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings
 import java.io.Serializable
 
 /**
  * Holds a [Seen] nickname.
  */
+@SuppressFBWarnings("USBR_UNNECESSARY_STORE_BEFORE_RETURN")
 data class SeenNick(val nick: String, val lastSeen: Long) : Serializable {
     companion object {
         private const val serialVersionUID = 1L

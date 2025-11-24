@@ -122,7 +122,7 @@ class EntryLinkTests {
             link.setTags("+mobitopia")
             link.setTags("-mobitopia") // can't remove the channel tag
             assertThat(
-                link.formatTags(",")
+                link.tagsToList(",")
             ).isEqualTo("tag1,tag2,tag3,tag4,tag5,mobitopia")
         }
 
@@ -131,7 +131,7 @@ class EntryLinkTests {
             val link = entryLink
             link.setTags("-tag4")
             assertThat(
-                link.formatTags(" ", ",")
+                link.tagsToList(" ", ",")
             ).isEqualTo(",tag1 tag2 tag3 tag5")
         }
 

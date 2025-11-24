@@ -46,7 +46,7 @@ class Dice : AbstractModule() {
 
         @JvmStatic
         fun roll(dice: Int, sides: Int): String {
-            val result = buildString {
+            return buildString {
                 var total = 0
 
                 repeat(dice) {
@@ -63,8 +63,6 @@ class Dice : AbstractModule() {
                     append(" = ${total.bold()}")
                 }
             }
-
-            return result
         }
     }
 

@@ -69,7 +69,7 @@ class FeedMgrTests {
         // Load the feed
         assertThat(FeedsManager.loadFeed(entries), "loadFeed()").isEqualTo("2021-10-31")
 
-        assertThat(entries.links, "entries.links").size().isEqualTo(2)
+        assertThat(entries.links.count()).isEqualTo(2)
         entries.links.forEachIndexed { i, entryLink ->
             assertThat(entryLink, "entryLink[${i + 1}]").all {
                 prop(EntryLink::title).isEqualTo("Example ${i + 1}")

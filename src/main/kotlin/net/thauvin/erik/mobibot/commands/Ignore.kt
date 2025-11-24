@@ -31,6 +31,7 @@
 
 package net.thauvin.erik.mobibot.commands
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings
 import net.thauvin.erik.mobibot.Utils.bold
 import net.thauvin.erik.mobibot.Utils.bot
 import net.thauvin.erik.mobibot.Utils.helpCmdSyntax
@@ -45,14 +46,15 @@ import org.pircbotx.hooks.types.GenericMessageEvent
  * Adds or removed nicks from the ignored list.
  */
 class Ignore : AbstractCommand() {
-    private val me = "me"
-
     override val name = IGNORE_CMD
 
+    @SuppressFBWarnings("MS_EXPOSE_REP")
     companion object {
-        const val IGNORE_CMD = "ignore"
-        const val IGNORE_PROP = IGNORE_CMD
+        private const val IGNORE_CMD = "ignore"
+        private const val ME = "me"
         private val ignored = mutableSetOf<String>()
+
+        const val IGNORE_PROP = IGNORE_CMD
 
         @JvmStatic
         fun isNotIgnored(nick: String): Boolean {
@@ -67,7 +69,7 @@ class Ignore : AbstractCommand() {
             "To check your ignore status:",
             helpFormat("%c $name"),
             "To toggle your ignore status:",
-            helpFormat("%c $name $me")
+            helpFormat("%c $name $ME")
         )
         initProperties(IGNORE_PROP)
     }
@@ -81,7 +83,7 @@ class Ignore : AbstractCommand() {
     override val isVisible = true
 
     override fun commandResponse(channel: String, args: String, event: GenericMessageEvent) {
-        val isMe = args.trim().equals(me, true)
+        val isMe = args.trim().equals(ME, true)
         if (isMe || !event.isChannelOp(channel)) {
             val nick = event.user.nick.lowercase()
             ignoreNick(nick, isMe, event)
@@ -122,7 +124,7 @@ class Ignore : AbstractCommand() {
         if (args.isNotEmpty()) {
             val nicks = args.lowercase().split(" ")
             for (nick in nicks) {
-                val ignore = if (me == nick) {
+                val ignore = if (ME == nick) {
                     nick.lowercase()
                 } else {
                     nick

@@ -2,6 +2,9 @@
 <SmellBaseline>
   <ManuallySuppressedIssues/>
   <CurrentIssues>
+    <ID>ConstructorParameterNaming:EntryLink.kt$EntryLink$private val _comments: MutableList&lt;EntryComment&gt; = mutableListOf()</ID>
+    <ID>ConstructorParameterNaming:EntryLink.kt$EntryLink$private val _date: Date = Calendar.getInstance().time</ID>
+    <ID>ConstructorParameterNaming:EntryLink.kt$EntryLink$private val _tags: MutableList&lt;SyndCategory&gt; = mutableListOf()</ID>
     <ID>CyclomaticComplexMethod:FeedsManager.kt$FeedsManager.Companion$@JvmStatic fun saveFeed(entries: Entries, currentFile: String = CURRENT_XML)</ID>
     <ID>CyclomaticComplexMethod:Weather2.kt$Weather2.Companion$@JvmStatic @Throws(ModuleException::class) fun getWeather(query: String, apiKey: String?): List&lt;Message&gt;</ID>
     <ID>DestructuringDeclarationWithTooManyEntries:CurrencyConverter2.kt$CurrencyConverter2.Companion$val (amountString, fromCurrencyCode, _, toCurrencyCode) = queryParts</ID>
@@ -11,12 +14,11 @@
     <ID>LongMethod:StockQuote2.kt$StockQuote2.Companion$@JvmStatic @Throws(ModuleException::class) fun getQuote(symbol: String, apiKey: String?): List&lt;Message&gt;</ID>
     <ID>LongMethod:Weather2.kt$Weather2.Companion$@JvmStatic @Throws(ModuleException::class) fun getWeather(query: String, apiKey: String?): List&lt;Message&gt;</ID>
     <ID>LongParameterList:Comment.kt$Comment$( channel: String, cmd: String, entry: EntryLink, entryIndex: Int, commentIndex: Int, event: GenericMessageEvent )</ID>
-    <ID>LongParameterList:EntryLink.kt$EntryLink$( // Link's comments val comments: MutableList&lt;EntryComment&gt; = mutableListOf(), // Tags/categories val tags: MutableList&lt;SyndCategory&gt; = mutableListOf(), // Channel var channel: String, // Creation date var date: Date = Calendar.getInstance().time, // Link's URL var link: String, // Author's login var login: String = "", // Author's nickname var nick: String, // Link's title var title: String )</ID>
+    <ID>LongParameterList:EntryLink.kt$EntryLink$( // Link's comments - private mutable backing list private val _comments: MutableList&lt;EntryComment&gt; = mutableListOf(), // Tags/categories - private mutable backing list private val _tags: MutableList&lt;SyndCategory&gt; = mutableListOf(), // Channel var channel: String, // Creation date - private backing field private val _date: Date = Calendar.getInstance().time, // Link's URL var link: String, // Author's login var login: String = "", // Author's nickname var nick: String, // Link's title var title: String )</ID>
     <ID>MagicNumber:Comment.kt$Comment$3</ID>
     <ID>MagicNumber:CryptoPrices.kt$CryptoPrices$10</ID>
     <ID>MagicNumber:CurrencyConverter2.kt$CurrencyConverter2$11</ID>
     <ID>MagicNumber:CurrencyConverter2.kt$CurrencyConverter2.Companion$4</ID>
-    <ID>MagicNumber:Cycle.kt$Cycle$10</ID>
     <ID>MagicNumber:Cycle.kt$Cycle$1000L</ID>
     <ID>MagicNumber:Ignore.kt$Ignore$8</ID>
     <ID>MagicNumber:Info.kt$Info.Companion$30</ID>
@@ -58,8 +60,8 @@
     <ID>NestedBlockDepth:Posting.kt$Posting$override fun commandResponse(channel: String, args: String, event: GenericMessageEvent)</ID>
     <ID>NestedBlockDepth:Seen.kt$Seen$override fun commandResponse(channel: String, args: String, event: GenericMessageEvent)</ID>
     <ID>NestedBlockDepth:Tell.kt$Tell$fun send(event: GenericUserEvent)</ID>
-    <ID>NestedBlockDepth:Utils.kt$Utils$@JvmStatic fun loadSerialData(file: String, default: Any, logger: Logger, description: String): Any</ID>
-    <ID>NestedBlockDepth:Utils.kt$Utils$@JvmStatic fun saveSerialData(file: String, data: Any, logger: Logger, description: String)</ID>
+    <ID>NestedBlockDepth:Utils.kt$Utils$@JvmStatic @SuppressFBWarnings("PATH_TRAVERSAL_IN") fun saveSerialData(file: String, data: Any, logger: Logger, description: String)</ID>
+    <ID>NestedBlockDepth:Utils.kt$Utils$@JvmStatic @SuppressFBWarnings("PATH_TRAVERSAL_IN", "OBJECT_DESERIALIZATION") fun loadSerialData(file: String, default: Any, logger: Logger, description: String): Any</ID>
     <ID>NestedBlockDepth:Weather2.kt$Weather2$override fun commandResponse(channel: String, cmd: String, args: String, event: GenericMessageEvent)</ID>
     <ID>ReturnCount:Addons.kt$Addons$fun exec(channel: String, cmd: String, args: String, event: GenericMessageEvent): Boolean</ID>
     <ID>ReturnCount:Addons.kt$Addons$fun help(channel: String, topic: String, event: GenericMessageEvent): Boolean</ID>
@@ -82,6 +84,7 @@
     <ID>TooGenericExceptionCaught:StockQuote2.kt$StockQuote2.Companion$e: NullPointerException</ID>
     <ID>TooGenericExceptionCaught:Utils.kt$Utils$e: Exception</ID>
     <ID>TooGenericExceptionCaught:Weather2.kt$Weather2.Companion$e: NullPointerException</ID>
+    <ID>TooManyFunctions:Addons.kt$Addons</ID>
     <ID>TooManyFunctions:EntryLink.kt$EntryLink : Serializable</ID>
     <ID>TooManyFunctions:Mobibot.kt$Mobibot : ListenerAdapter</ID>
     <ID>TooManyFunctions:Tell.kt$Tell : AbstractCommand</ID>

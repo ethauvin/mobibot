@@ -30,6 +30,7 @@
  */
 package net.thauvin.erik.mobibot.modules
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings
 import net.objecthunter.exp4j.ExpressionBuilder
 import net.objecthunter.exp4j.tokenizer.UnknownFunctionOrVariableException
 import net.thauvin.erik.mobibot.Utils.bold
@@ -56,6 +57,7 @@ class Calc : AbstractModule() {
          */
         @JvmStatic
         @Throws(IllegalArgumentException::class)
+        @SuppressFBWarnings("DRE_DECLARED_RUNTIME_EXCEPTION")
         fun calculate(query: String): String {
             val decimalFormat = DecimalFormat("#.##")
             val calc = ExpressionBuilder(query).build()

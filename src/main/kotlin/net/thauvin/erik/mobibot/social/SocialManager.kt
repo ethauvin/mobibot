@@ -31,6 +31,7 @@
 
 package net.thauvin.erik.mobibot.social
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings
 import net.thauvin.erik.mobibot.Addons
 import net.thauvin.erik.mobibot.Constants
 import net.thauvin.erik.mobibot.entries.EntriesUtils.toLinkLabel
@@ -50,6 +51,7 @@ class SocialManager {
     /**
      * Adds social modules.
      */
+    @SuppressFBWarnings("CVAA_CONTRAVARIANT_ELEMENT_ASSIGNMENT")
     fun add(addons: Addons, vararg modules: SocialModule) {
         modules.forEach {
             if (addons.add(it)) {

@@ -1,5 +1,5 @@
 /*
- * CurrencyConverter.kt
+ * CurrencyConverter2.kt
  *
  * Copyright 2004-2025 Erik C. Thauvin (erik@thauvin.net)
  *
@@ -59,9 +59,6 @@ class CurrencyConverter2 : AbstractModule() {
         // Currency codes keyword
         private const val CODES_KEYWORD = "codes"
 
-        // Currency repository
-        private val CURRENCY_REPOSITORY = CurrencyRegistry.getInstance()
-
         // Logger
         private val LOGGER: Logger = LoggerFactory.getLogger(CurrencyConverter2::class.java)
 
@@ -94,8 +91,8 @@ class CurrencyConverter2 : AbstractModule() {
             }
 
             // Validate currencies
-            val fromCurrency = CURRENCY_REPOSITORY.findBySymbol(fromCurrencySymbol)
-            val toCurrency = CURRENCY_REPOSITORY.findBySymbol(toCurrencySymbol)
+            val fromCurrency = CurrencyRegistry.getInstance().findBySymbol(fromCurrencySymbol)
+            val toCurrency = CurrencyRegistry.getInstance().findBySymbol(toCurrencySymbol)
 
             if (fromCurrency.isEmpty || toCurrency.isEmpty) {
                 return ErrorMessage(
@@ -152,7 +149,7 @@ class CurrencyConverter2 : AbstractModule() {
 
             args.contains(CODES_KEYWORD) -> {
                 event.sendMessage("The supported currency codes are:")
-                event.sendList(CURRENCY_REPOSITORY.allSymbols, 11, isIndent = true)
+                event.sendList(CurrencyRegistry.getInstance().allSymbols, 11, isIndent = true)
             }
 
             else -> {

@@ -43,7 +43,6 @@ import org.pircbotx.hooks.types.GenericMessageEvent
  * Allows an operator to have the bot leave the channel and come back.
  */
 class Cycle : AbstractCommand() {
-    private val wait = 10
     override val name = "cycle"
     override val isOpOnly = true
     override val isPublic = false
@@ -53,6 +52,10 @@ class Cycle : AbstractCommand() {
         addHelp("To have the bot leave the channel and come back:", helpFormat("%c $name"))
     }
 
+    companion object {
+        private const val WAIT_SECONDS = 10
+    }
+
     override fun commandResponse(channel: String, args: String, event: GenericMessageEvent) {
         with(event.bot()) {
             if (event.isChannelOp(channel)) {
@@ -60,7 +63,7 @@ class Cycle : AbstractCommand() {
                     launch {
                         sendIRC().message(channel, "${event.user.nick} asked me to leave. I'll be back!")
                         userChannelDao.getChannel(channel).send().part()
-                        delay(wait * 1000L)
+                        delay(WAIT_SECONDS * 1000L)
                         sendIRC().joinChannel(channel)
                     }
                 }

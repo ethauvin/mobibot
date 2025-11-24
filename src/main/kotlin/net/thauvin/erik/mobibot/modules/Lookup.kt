@@ -64,7 +64,7 @@ class Lookup : AbstractModule() {
         @JvmStatic
         @Throws(UnknownHostException::class)
         fun nslookup(query: String): String {
-            val buffer = buildString {
+            return buildString {
                 val results = InetAddress.getAllByName(query)
                 var hostInfo: String
                 for (result in results) {
@@ -82,7 +82,6 @@ class Lookup : AbstractModule() {
                     append(hostInfo)
                 }
             }
-            return buffer
         }
 
         /**

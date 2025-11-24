@@ -160,19 +160,6 @@ public class MobibotBuild extends Project {
         jarSourcesOperation().sourceDirectories(srcMainKotlin);
     }
 
-    public static void main(String[] args) {
-        var level = Level.INFO;
-        var logger = Logger.getLogger("rife.bld.extension");
-        var consoleHandler = new ConsoleHandler();
-
-        consoleHandler.setLevel(level);
-        logger.addHandler(consoleHandler);
-        logger.setLevel(level);
-        logger.setUseParentHandlers(false);
-
-        new MobibotBuild().start(args);
-    }
-
     @Override
     public void clean() throws Exception {
         var deploy = new File("deploy");
@@ -195,6 +182,26 @@ public class MobibotBuild extends Project {
     public void updates() throws Exception {
         super.updates();
         pomRoot();
+    }
+
+    @Override
+    public void test() throws Exception {
+        var op = testOperation().fromProject(this);
+        op.testToolOptions().reportsDir(new File(TEST_RESULTS_DIR));
+        op.execute();
+    }
+
+    public static void main(String[] args) {
+        var level = Level.INFO;
+        var logger = Logger.getLogger("rife.bld.extension");
+        var consoleHandler = new ConsoleHandler();
+
+        consoleHandler.setLevel(level);
+        logger.addHandler(consoleHandler);
+        logger.setLevel(level);
+        logger.setUseParentHandlers(false);
+
+        new MobibotBuild().start(args);
     }
 
     @BuildCommand(summary = "Copies all needed files to the deploy directory")
@@ -239,7 +246,7 @@ public class MobibotBuild extends Project {
     @BuildCommand(value = "pom-root", summary = "Generates the POM file in the root directory")
     public void pomRoot() throws FileUtilsErrorException {
         PomBuilder.generateInto(publishOperation().fromProject(this).info(), dependencies(),
-                new File(workDirectory, "pom.xml"));
+                new File("pom.xml"));
     }
 
     @BuildCommand(value = "release-info", summary = "Generates the ReleaseInfo class")
@@ -262,10 +269,13 @@ public class MobibotBuild extends Project {
                 .execute();
     }
 
-    @Override
-    public void test() throws Exception {
-        var op = testOperation().fromProject(this);
-        op.testToolOptions().reportsDir(new File(TEST_RESULTS_DIR));
-        op.execute();
+    @BuildCommand(summary = "Runs SpotBugs on this project")
+    public void spotbugs() throws Exception {
+        new SpotBugsOperation()
+                .fromProject(this)
+                .home("/opt/spotbugs")
+                .sourcePath(srcMainKotlin)
+                .exclude("config/excludeFilter.xml")
+                .execute();
     }
 }

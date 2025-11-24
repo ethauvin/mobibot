@@ -31,6 +31,7 @@
 
 package net.thauvin.erik.mobibot.social
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings
 import net.thauvin.erik.mobibot.commands.links.LinksManager
 import net.thauvin.erik.mobibot.entries.EntriesUtils.toLinkLabel
 import net.thauvin.erik.mobibot.entries.EntryLink
@@ -43,6 +44,7 @@ import org.slf4j.LoggerFactory
 /**
  * Provides the ability to handle notifications, entries and manage interaction with a specific social media service.
  */
+@SuppressFBWarnings("LO_SUSPECT_LOG_CLASS")
 abstract class SocialModule : AbstractModule() {
     private val logger: Logger = LoggerFactory.getLogger(SocialManager::class.java)
 

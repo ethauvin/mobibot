@@ -33,6 +33,7 @@ package net.thauvin.erik.mobibot
 import com.rometools.rome.io.FeedException
 import com.rometools.rome.io.SyndFeedInput
 import com.rometools.rome.io.XmlReader
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings
 import net.thauvin.erik.mobibot.Utils.green
 import net.thauvin.erik.mobibot.Utils.helpFormat
 import net.thauvin.erik.mobibot.Utils.sendMessage
@@ -48,16 +49,20 @@ import java.net.URI
 /**
  * Reads an RSS feed.
  */
+@SuppressFBWarnings("LO_SUSPECT_LOG_CLASS")
 class FeedReader(private val url: String, val event: GenericMessageEvent) : Runnable {
     private val logger: Logger = LoggerFactory.getLogger(FeedsManager::class.java)
 
+    @SuppressFBWarnings("")
     companion object {
         @JvmStatic
         @Throws(FeedException::class, IOException::class)
         fun readFeed(url: String, maxItems: Int = 5): List<Message> {
             val messages = mutableListOf<Message>()
             val input = SyndFeedInput()
-            XmlReader(URI(url).toURL().openStream()).use { reader ->
+            XmlReader(
+                URI(url).toURL().openStream()
+            ).use { reader ->
                 val feed = input.build(reader)
                 val items = feed.entries
                 if (items.isEmpty()) {

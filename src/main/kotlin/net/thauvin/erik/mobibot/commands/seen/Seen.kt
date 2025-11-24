@@ -54,12 +54,11 @@ import java.util.*
  */
 class Seen(private val serialObject: String) : AbstractCommand() {
     private val logger: Logger = LoggerFactory.getLogger(Seen::class.java)
-    private val allKeyword = "all"
     private val seenNicks = TreeMap<String, SeenNick>(NickComparator())
 
     override val name = "seen"
     private val helpOp = help.plus(
-        arrayOf("To view all ${"seen".bold()} nicks:", helpFormat("%c $name $allKeyword"))
+        arrayOf("To view all ${"seen".bold()} nicks:", helpFormat("%c $name $ALL_KEYWORD"))
     )
     override val isOpOnly = false
     override val isPublic = true
@@ -70,11 +69,15 @@ class Seen(private val serialObject: String) : AbstractCommand() {
         load()
     }
 
+    companion object {
+        private const val ALL_KEYWORD = "all"
+    }
+
     override fun commandResponse(channel: String, args: String, event: GenericMessageEvent) {
         if (isEnabled()) {
             if (args.isNotBlank() && !args.contains(' ')) {
                 val ch = event.bot().userChannelDao.getChannel(channel)
-                if (args == allKeyword && ch.isOp(event.user) && seenNicks.isNotEmpty()) {
+                if (args == ALL_KEYWORD && ch.isOp(event.user) && seenNicks.isNotEmpty()) {
                     event.sendMessage("The ${"seen".bold()} nicks are:")
                     event.sendList(seenNicks.keys.toList(), 7, separator = ", ", isIndent = true)
                     return

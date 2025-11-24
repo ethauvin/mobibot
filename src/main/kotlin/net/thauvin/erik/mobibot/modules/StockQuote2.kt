@@ -1,5 +1,5 @@
 /*
- * StockQuote.kt
+ * StockQuote2.kt
  *
  * Copyright 2004-2025 Erik C. Thauvin (erik@thauvin.net)
  *
@@ -60,6 +60,7 @@ import java.time.format.DateTimeFormatter
 class StockQuote2 : AbstractModule() {
     override val name = SERVICE_NAME
 
+    @SuppressFBWarnings("DCN_NULLPOINTER_EXCEPTION")
     companion object {
         /**
          * The API property key.
@@ -117,7 +118,6 @@ class StockQuote2 : AbstractModule() {
          */
         @JvmStatic
         @Throws(ModuleException::class)
-        @SuppressFBWarnings("DCN_NULLPOINTER_EXCEPTION")
         fun getQuote(symbol: String, apiKey: String?): List<Message> {
             if (apiKey.isNullOrBlank()) {
                 throw ModuleException(
@@ -201,7 +201,6 @@ class StockQuote2 : AbstractModule() {
          */
         @JvmStatic
         @Throws(ModuleException::class)
-        @SuppressFBWarnings("DCN_NULLPOINTER_EXCEPTION")
         fun lookup(keywords: String, apiKey: String?): List<Message> {
             if (apiKey.isNullOrBlank()) {
                 throw ModuleException(

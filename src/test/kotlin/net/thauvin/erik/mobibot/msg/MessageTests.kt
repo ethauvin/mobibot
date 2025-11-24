@@ -42,38 +42,20 @@ import kotlin.test.Test
 
 class MessageTests {
     @Nested
-    @DisplayName("Constructor Tests")
-    inner class ConstructorTests {
-        @Test
-        fun `Message with error property should be a notice`() {
-            val msg = Message("foo").apply {
-                isError = true
-            }
-            assertThat(msg.isNotice).isTrue()
-        }
-
-        @Test
-        fun `Message with error should be a notice`() {
-            val msg = Message("foo", isError = true)
-            assertThat(msg.isNotice).isTrue()
-        }
-    }
-
-    @Nested
     @DisplayName("Error Tests")
     inner class ErrorTests {
         @Test
         fun `Validate message with error`() {
-            assertThat(Message("foo").apply { isError = true }).all {
+            assertThat(Message("foo", isError = true)).all {
                 prop(Message::isError).isTrue()
-                prop(Message::isNotice).isTrue()
+                prop(Message::isNotice).isFalse()
                 prop(Message::isPrivate).isFalse()
             }
         }
 
         @Test
         fun `Validate message without error`() {
-            assertThat(Message("foo").apply { isError = false }).all {
+            assertThat(Message("foo", isError = false)).all {
                 prop(Message::isError).isFalse()
                 prop(Message::isNotice).isFalse()
                 prop(Message::isPrivate).isFalse()

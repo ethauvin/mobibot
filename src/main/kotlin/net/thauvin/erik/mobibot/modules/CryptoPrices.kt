@@ -30,6 +30,7 @@
  */
 package net.thauvin.erik.mobibot.modules
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings
 import net.thauvin.erik.crypto.CryptoException
 import net.thauvin.erik.crypto.CryptoPrice
 import net.thauvin.erik.crypto.CryptoPrice.Companion.spotPrice
@@ -42,6 +43,7 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.io.IOException
 import java.time.LocalDate
+import java.util.*
 
 /**
  * Retrieves cryptocurrency market prices.
@@ -51,12 +53,14 @@ class CryptoPrices : AbstractModule() {
 
     override val name = "CryptoPrices"
 
+    @SuppressFBWarnings(value = ["MS_EXPOSE_REP", "EI_EXPOSE_STATIC_REP2"])
     companion object {
         // Crypto command
         private const val CRYPTO_CMD = "crypto"
 
-        // Fiat Currencies
-        private val CURRENCIES: MutableMap<String, String> = mutableMapOf()
+        // Fiat Currencies - Changed to immutable Map
+        @Volatile
+        private var CURRENCIES: Map<String, String> = emptyMap()
 
         // Currency codes keyword
         private const val CODES_KEYWORD = "codes"
@@ -81,6 +85,7 @@ class CryptoPrices : AbstractModule() {
         /**
          * For testing purposes.
          */
+        @JvmStatic
         fun getCurrencyName(code: String): String? {
             return CURRENCIES[code]
         }
@@ -94,10 +99,12 @@ class CryptoPrices : AbstractModule() {
             try {
                 val json = JSONObject(CryptoPrice.apiCall(listOf("currencies")))
                 val data = json.getJSONArray("data")
+                val newCurrencies = HashMap<String, String>(data.length())
                 for (i in 0 until data.length()) {
                     val d = data.getJSONObject(i)
-                    CURRENCIES[d.getString("id")] = d.getString("name")
+                    newCurrencies[d.getString("id")] = d.getString("name")
                 }
+                CURRENCIES = Collections.unmodifiableMap(newCurrencies)
                 LAST_CHECKED = LocalDate.now()
             } catch (e: CryptoException) {
                 throw ModuleException(
@@ -151,7 +158,7 @@ class CryptoPrices : AbstractModule() {
         when {
             args == CODES_KEYWORD -> {
                 event.sendMessage("The supported currencies are:")
-                event.sendList(ArrayList(CURRENCIES.keys), 10, isIndent = true)
+                event.sendList(CURRENCIES.keys.toList(), 10, isIndent = true)
             }
 
             args.matches("\\w+( [a-zA-Z]{3}+)?".toRegex()) -> {

@@ -74,6 +74,7 @@ abstract class AbstractCommand {
         return false
     }
 
+    @SuppressFBWarnings("CVAA_CONTRAVARIANT_ELEMENT_ASSIGNMENT")
     open fun initProperties(vararg keys: String) {
         keys.forEach {
             properties[it] = ""

@@ -51,7 +51,7 @@ object EntriesUtils {
     @JvmStatic
     @JvmOverloads
     fun printLink(entryIndex: Int, entry: EntryLink, isView: Boolean = false): String {
-        val buff = buildString {
+        return buildString {
             append(entryIndex.toLinkLabel()).append(": ").append('[').append(entry.nick).append(']')
             if (isView && entry.comments.isNotEmpty()) {
                 append("[+").append(entry.comments.size).append(']')
@@ -66,7 +66,6 @@ object EntriesUtils {
                 append(" ( ").append(link.green()).append(" )")
             }
         }
-        return buff
     }
 
     /**
@@ -74,7 +73,7 @@ object EntriesUtils {
      */
     @JvmStatic
     fun printTags(entryIndex: Int, entry: EntryLink): String =
-        entryIndex.toLinkLabel() + "${Constants.TAG_CMD}: " + entry.formatTags(", ")
+        entryIndex.toLinkLabel() + "${Constants.TAG_CMD}: " + entry.tagsToList(", ")
 
     /**
      * Builds link label based on its index. (e.g., L1)

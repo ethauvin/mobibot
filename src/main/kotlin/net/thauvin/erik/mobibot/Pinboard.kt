@@ -31,12 +31,11 @@
 
 package net.thauvin.erik.mobibot
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings
 import net.thauvin.erik.mobibot.entries.EntryLink
 import net.thauvin.erik.pinboard.PinboardPoster
 import java.time.ZoneId
 import java.time.ZonedDateTime
-import java.time.format.DateTimeFormatter
-import java.time.temporal.ChronoUnit
 import java.util.*
 
 /**
@@ -51,7 +50,13 @@ class Pinboard {
     fun addPin(ircServer: String, entry: EntryLink) {
         if (poster.apiToken.isNotBlank()) {
             with(entry) {
-                poster.addPin(link, title, postedBy(ircServer), formatTags(), date.toTimestamp())
+                poster.addPin(
+                    link,
+                    title,
+                    postedBy(ircServer),
+                    tagsToList(),
+                    date.toZonedDateTime()
+                )
             }
         }
     }
@@ -82,16 +87,23 @@ class Pinboard {
                 if (oldUrl != link) {
                     poster.deletePin(oldUrl)
                 }
-                poster.addPin(link, title, postedBy(ircServer), formatTags(), date.toTimestamp())
+                poster.addPin(
+                    link,
+                    title,
+                    postedBy(ircServer),
+                    tagsToList(),
+                    date.toZonedDateTime()
+                )
             }
         }
     }
 
     /**
-     * Formats the tags for pinboard.
+     * Formats the tags as a list, for pinboard.
      */
-    private fun EntryLink.formatTags(): String {
-        return nick + formatTags(",", ",")
+    @SuppressFBWarnings("BC_BAD_CAST_TO_ABSTRACT_COLLECTION")
+    private fun EntryLink.tagsToList(): List<String> {
+        return tags.map { it.name } + nick
     }
 
     /**
@@ -102,12 +114,9 @@ class Pinboard {
     }
 
     /**
-     * Formats a date to a UTC timestamp.
+     * Formats a date to a zoned date time.
      */
-    private fun Date.toTimestamp(): String {
-        return ZonedDateTime.ofInstant(
-            toInstant().truncatedTo(ChronoUnit.SECONDS), ZoneId.systemDefault()
-        ).format(DateTimeFormatter.ISO_INSTANT)
+    private fun Date.toZonedDateTime(): ZonedDateTime {
+        return ZonedDateTime.ofInstant(toInstant(), ZoneId.systemDefault())
     }
 }
-

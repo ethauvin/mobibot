@@ -31,6 +31,7 @@
 
 package net.thauvin.erik.mobibot.modules
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings
 import net.thauvin.erik.mobibot.Utils.bold
 import net.thauvin.erik.mobibot.Utils.helpFormat
 import org.pircbotx.hooks.types.GenericMessageEvent
@@ -72,6 +73,7 @@ class RockPaperScissors : AbstractModule() {
         )
     }
 
+    @SuppressFBWarnings("ENMI_ONE_ENUM_VALUE")
     enum class Hands(val action: String) {
         ROCK("crushes") {
             override fun beats(hand: Hands): Boolean {

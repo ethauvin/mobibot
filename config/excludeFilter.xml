@@ -1,10 +1,57 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <FindBugsFilter>
     <Match>
-        <Class name="net.thauvin.erik.MobibotBuild"/>
         <Or>
-            <Bug pattern="DLS_DEAD_LOCAL_STORE"/>
-            <Bug pattern="LG_LOST_LOGGER_DUE_TO_WEAK_REFERENCE"/>
+            <Package name="~net.thauvin.erik.mobibot.modules.*"/>
+            <Package name="~net.thauvin.erik.mobibot.commands.*"/>
         </Or>
+        <Field name="name"/>
+        <Bug pattern="SPP_FIELD_COULD_BE_STATIC"/>
+    </Match>
+    <Match>
+        <Class name="~net.thauvin.erik.mobibot.commands.Cycle.*"/>
+        <Bug pattern="SE_BAD_FIELD"/>
+    </Match>
+    <Match>
+        <Class name="~net.thauvin.erik.mobibot.FeedReader"/>
+        <Method name="readFeed"/>
+        <Bug pattern="URLCONNECTION_SSRF_FD"/>
+    </Match>
+    <Match>
+        <Class name="~net.thauvin.erik.mobibot.Utils"/>
+        <Method name="notContains"/>
+        <Bug pattern="PDP_POORLY_DEFINED_PARAMETER"/>
+    </Match>
+    <Match>
+        <Class name="~net.thauvin.erik.mobibot.commands.links.LinksManager"/>
+        <Method name="~matchTagKeywords.*"/>
+        <Bug pattern="UAA_USE_ADD_ALL"/>
+    </Match>
+    <Match>
+        <Class name="~net.thauvin.erik.mobibot.commands.links.LinksManager"/>
+        <Method name="isDupEntry"/>
+        <Bug pattern="NOS_NON_OWNED_SYNCHRONIZATION"/>
+    </Match>
+    <Match>
+        <Class name="~net.thauvin.erik.mobibot.commands.tell.Tell"/>
+        <Method name="newMessage"/>
+        <Bug pattern="PDP_POORLY_DEFINED_PARAMETER"/>
+    </Match>
+    <Match>
+        <Class name="~net.thauvin.erik.mobibot.entries.EntryLink"/>
+        <Method name="setTags"/>
+        <Bug pattern="PDP_POORLY_DEFINED_PARAMETER"/>
+    </Match>
+    <Match>
+        <Or>
+            <Class name="~net.thauvin.erik.mobibot.social.SocialManager"/>
+            <Class name="~net.thauvin.erik.mobibot.social.SocialModule"/>
+        </Or>
+        <Bug pattern="FCCD_FIND_CLASS_CIRCULAR_DEPENDENCY"/>
+    </Match>
+    <Match>
+        <Class name="~net.thauvin.erik.mobibot.modules.WorldTime.Companion"/>
+        <Method name="time"/>
+        <Bug pattern="STT_STRING_PARSING_A_FIELD"/>
     </Match>
 </FindBugsFilter>

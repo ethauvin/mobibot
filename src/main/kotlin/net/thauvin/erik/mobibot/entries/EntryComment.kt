@@ -30,12 +30,14 @@
  */
 package net.thauvin.erik.mobibot.entries
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings
 import java.io.Serializable
 import java.time.LocalDateTime
 
 /**
  *  [Entries] comment.
  */
+@SuppressFBWarnings("USBR_UNNECESSARY_STORE_BEFORE_RETURN")
 data class EntryComment(var comment: String, var nick: String) : Serializable {
     /**
      * Creation date.
