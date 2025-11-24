@@ -136,7 +136,7 @@ public class MobibotBuild extends Project {
                         version(0, 9, 5, "SNAPSHOT")))
                 // Mockito
                 .include(dependency("net.bytebuddy", "byte-buddy",
-                        version(1, 17, 8)))
+                        version(1, 18, 1)))
                 .include(dependency("org.mockito.kotlin", "mockito-kotlin",
                         version(6, 1, 0)))
                 // MockWebserver
