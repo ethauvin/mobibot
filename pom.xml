@@ -186,7 +186,7 @@
     <dependency>
       <groupId>net.thauvin.erik</groupId>
       <artifactId>frankfurter4j</artifactId>
-      <version>0.9.1-SNAPSHOT</version>
+      <version>0.9.1</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
