@@ -32,7 +32,6 @@ package net.thauvin.erik.mobibot
 
 import net.thauvin.erik.mobibot.Utils.reader
 import net.thauvin.erik.mobibot.msg.Message
-import net.thauvin.erik.mobibot.msg.Message.Companion.DEFAULT_COLOR
 import net.thauvin.erik.urlencoder.UrlEncoderUtil
 import org.jsoup.Jsoup
 import org.pircbotx.Colors
@@ -109,7 +108,7 @@ object Utils {
      * Makes the given string bold.
      */
     @JvmStatic
-    fun String?.bold(): String = colorize(Colors.BOLD)
+    fun String?.bold(): String = colorize(BotColor.BOLD)
 
     /**
      * Returns the [PircBotX] instance.
@@ -134,23 +133,15 @@ object Utils {
      * Colorize a string.
      */
     @JvmStatic
-    fun String?.colorize(color: String): String {
+    @SuppressFBWarnings("PDP_POORLY_DEFINED_PARAMETER")
+    fun String?.colorize(color: BotColor): String {
         return when {
-            isNullOrEmpty() -> {
-                ""
-            }
+            isNullOrEmpty() -> ""
+            color == BotColor.DEFAULT -> this
+            color == BotColor.BOLD || color == BotColor.REVERSE ->
+                color.code + this + color.code
 
-            color == DEFAULT_COLOR -> {
-                this
-            }
-
-            Colors.BOLD == color || Colors.REVERSE == color -> {
-                color + this + color
-            }
-
-            else -> {
-                color + this + Colors.NORMAL
-            }
+            else -> color.code + this + Colors.NORMAL
         }
     }
 
@@ -158,7 +149,7 @@ object Utils {
      * Makes the given string cyan.
      */
     @JvmStatic
-    fun String?.cyan(): String = colorize(Colors.CYAN)
+    fun String?.cyan(): String = colorize(BotColor.CYAN)
 
     /**
      * URL encodes the given string.
@@ -178,7 +169,7 @@ object Utils {
      * Makes the given string green.
      */
     @JvmStatic
-    fun String?.green(): String = colorize(Colors.DARK_GREEN)
+    fun String?.green(): String = colorize(BotColor.DARK_GREEN)
 
     /**
      * Build a help command by replacing `%c` with the bot's pub/priv command, and `%n` with the bot's
@@ -297,7 +288,7 @@ object Utils {
      * Makes the given string red.
      */
     @JvmStatic
-    fun String?.red(): String = colorize(Colors.RED)
+    fun String?.red(): String = colorize(BotColor.RED)
 
     /**
      * Replaces all occurrences of Strings within another String.
@@ -317,12 +308,13 @@ object Utils {
      * Makes the given string reverse color.
      */
     @JvmStatic
-    fun String?.reverseColor(): String = colorize(Colors.REVERSE)
+    fun String?.reverseColor(): String = colorize(BotColor.REVERSE)
 
     /**
      * Save data
      */
     @JvmStatic
+    @SuppressFBWarnings("PATH_TRAVERSAL_IN")
     fun saveSerialData(file: String, data: Any, logger: Logger, description: String) {
         try {
             BufferedOutputStream(Files.newOutputStream(Paths.get(file))).use { bos ->
@@ -438,7 +430,7 @@ object Utils {
      * Makes the given string bold.
      */
     @JvmStatic
-    fun String?.underline(): String = colorize(Colors.UNDERLINE)
+    fun String?.underline(): String = colorize(BotColor.UNDERLINE)
 
     /**
      * Converts XML/XHTML entities to plain text.

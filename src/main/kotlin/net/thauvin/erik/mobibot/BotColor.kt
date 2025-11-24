@@ -1,5 +1,5 @@
 /*
- * PublicMessage.kt
+ * BotColor.kt
  *
  * Copyright 2004-2025 Erik C. Thauvin (erik@thauvin.net)
  *
@@ -28,11 +28,22 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.thauvin.erik.mobibot.msg
 
-import net.thauvin.erik.mobibot.BotColor
+package net.thauvin.erik.mobibot
+
+import org.pircbotx.Colors
 
 /**
- * Holds a public message.
+ * The color enumeration
  */
-class PublicMessage @JvmOverloads constructor(msg: String, color: BotColor = BotColor.DEFAULT) : Message(msg, color)
+enum class BotColor(val code: String) {
+    BOLD(Colors.BOLD),
+    CYAN(Colors.CYAN),
+    DARK_GREEN(Colors.DARK_GREEN),
+    DEFAULT(""),
+    GREEN(Colors.GREEN),
+    NORMAL(Colors.NORMAL),
+    RED(Colors.RED),
+    REVERSE(Colors.REVERSE),
+    UNDERLINE(Colors.UNDERLINE)
+}

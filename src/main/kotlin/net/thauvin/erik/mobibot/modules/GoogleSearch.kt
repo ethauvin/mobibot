@@ -30,6 +30,7 @@
  */
 package net.thauvin.erik.mobibot.modules
 
+import net.thauvin.erik.mobibot.BotColor
 import net.thauvin.erik.mobibot.ReleaseInfo
 import net.thauvin.erik.mobibot.Utils.colorize
 import net.thauvin.erik.mobibot.Utils.encodeUrl
@@ -42,7 +43,6 @@ import net.thauvin.erik.mobibot.msg.Message
 import net.thauvin.erik.mobibot.msg.NoticeMessage
 import org.json.JSONException
 import org.json.JSONObject
-import org.pircbotx.Colors
 import org.pircbotx.hooks.types.GenericMessageEvent
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -106,14 +106,19 @@ class GoogleSearch : AbstractModule() {
                         for (i in 0 until ja.length()) {
                             val j = ja.getJSONObject(i)
                             results.add(NoticeMessage(j.getString("title").unescapeXml()))
-                            results.add(NoticeMessage(helpFormat(j.getString("link"), false), Colors.DARK_GREEN))
+                            results.add(
+                                NoticeMessage(
+                                    helpFormat(j.getString("link"), false),
+                                    BotColor.DARK_GREEN
+                                )
+                            )
                         }
                     } else if (json.has("error")) {
                         val error = json.getJSONObject("error")
                         val message = error.getString("message")
                         throw ModuleException("searchGoogle($query): ${error.getInt("code")} : $message", message)
                     } else {
-                        results.add(ErrorMessage("No results found.", Colors.RED))
+                        results.add(ErrorMessage("No results found.", BotColor.RED))
                     }
                 } catch (e: IOException) {
                     throw ModuleException(

@@ -30,8 +30,10 @@
  */
 package net.thauvin.erik.mobibot.msg
 
+import net.thauvin.erik.mobibot.BotColor
+
 /**
  * Holds an error message.
  */
-class ErrorMessage @JvmOverloads constructor(msg: String, color: String = DEFAULT_COLOR) :
-    Message(msg, color, isError = true)
+class ErrorMessage @JvmOverloads constructor(msg: String, color: BotColor = BotColor.DEFAULT) :
+    Message(msg, color, isNotice = true, isError = true)

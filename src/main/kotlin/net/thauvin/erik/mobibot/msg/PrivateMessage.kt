@@ -30,9 +30,10 @@
  */
 package net.thauvin.erik.mobibot.msg
 
+import net.thauvin.erik.mobibot.BotColor
 
 /**
  * Holds a private message.
  */
-class PrivateMessage @JvmOverloads constructor(msg: String, color: String = DEFAULT_COLOR) :
+class PrivateMessage @JvmOverloads constructor(msg: String, color: BotColor = BotColor.DEFAULT) :
     Message(msg, color, isPrivate = true)

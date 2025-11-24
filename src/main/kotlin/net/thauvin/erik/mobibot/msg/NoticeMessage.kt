@@ -30,9 +30,11 @@
  */
 package net.thauvin.erik.mobibot.msg
 
+import net.thauvin.erik.mobibot.BotColor
+
 /**
  * Holds a notice message.
  */
-class NoticeMessage @JvmOverloads constructor(msg: String, color: String = DEFAULT_COLOR) :
+class NoticeMessage @JvmOverloads constructor(msg: String, color: BotColor = BotColor.DEFAULT) :
     Message(msg, color, isNotice = true)
 

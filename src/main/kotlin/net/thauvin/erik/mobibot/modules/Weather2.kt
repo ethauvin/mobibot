@@ -34,6 +34,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings
 import net.aksingh.owmjapis.api.APIException
 import net.aksingh.owmjapis.core.OWM
 import net.aksingh.owmjapis.core.OWM.Country
+import net.thauvin.erik.mobibot.BotColor
 import net.thauvin.erik.mobibot.Utils.bold
 import net.thauvin.erik.mobibot.Utils.capitalize
 import net.thauvin.erik.mobibot.Utils.capitalizeWords
@@ -44,7 +45,6 @@ import net.thauvin.erik.mobibot.msg.ErrorMessage
 import net.thauvin.erik.mobibot.msg.Message
 import net.thauvin.erik.mobibot.msg.NoticeMessage
 import net.thauvin.erik.mobibot.msg.PublicMessage
-import org.pircbotx.Colors
 import org.pircbotx.hooks.types.GenericMessageEvent
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -182,7 +182,7 @@ class Weather2 : AbstractModule() {
                 } else {
                     "https://openweathermap.org/find?q=${city},${code.uppercase()}".encodeUrl()
                 }
-                messages.add(NoticeMessage(url, Colors.GREEN))
+                messages.add(NoticeMessage(url, BotColor.GREEN))
 
             } catch (e: APIException) {
                 val errorMsg = if (e.code == 404) {

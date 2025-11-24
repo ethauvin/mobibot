@@ -30,33 +30,18 @@
  */
 package net.thauvin.erik.mobibot.msg
 
+import net.thauvin.erik.mobibot.BotColor
 
 /**
  * Holds a message.
  */
 open class Message @JvmOverloads constructor(
-    var msg: String,
-    var color: String = DEFAULT_COLOR,
-    var isNotice: Boolean = false,
-    isError: Boolean = false,
-    var isPrivate: Boolean = false
+    val msg: String,
+    val color: BotColor = BotColor.DEFAULT,
+    val isNotice: Boolean = false,
+    val isError: Boolean = false,
+    val isPrivate: Boolean = false
 ) {
-    companion object {
-        var DEFAULT_COLOR = ""
-    }
-
-    init {
-        if (isError) {
-            isNotice = true
-        }
-    }
-
-    /** Error flag. */
-    var isError = isError
-        set(value) {
-            if (value) isNotice = true
-            field = value
-        }
 
     override fun toString(): String {
         return "Message(color='$color', isError=$isError, isNotice=$isNotice, isPrivate=$isPrivate, msg='$msg')"

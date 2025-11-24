@@ -60,7 +60,6 @@ import net.thauvin.erik.mobibot.Utils.toUtcDateTime
 import net.thauvin.erik.mobibot.Utils.today
 import net.thauvin.erik.mobibot.Utils.underline
 import net.thauvin.erik.mobibot.Utils.unescapeXml
-import net.thauvin.erik.mobibot.msg.Message.Companion.DEFAULT_COLOR
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
@@ -149,7 +148,7 @@ class UtilsTests {
         @Test
         fun `Format help string with bold and indent`() {
             assertThat(helpFormat(test, isBold = true, isIndent = true), "helpFormat(bold,indent)")
-                .isEqualTo(test.colorize(Colors.BOLD).prependIndent())
+                .isEqualTo(test.colorize(BotColor.BOLD).prependIndent())
 
         }
     }
@@ -348,29 +347,29 @@ class UtilsTests {
         inner class ColorizeTests {
             @Test
             fun `Colorize ASCII characters red`() {
-                assertThat(ascii.colorize(Colors.RED), "red.colorize()")
+                assertThat(ascii.colorize(BotColor.RED), "red.colorize()")
                     .isEqualTo(Colors.RED + ascii + Colors.NORMAL)
             }
 
             @Test
             fun `Colorize blank string`() {
-                assertThat("   ".colorize(Colors.NORMAL), "blank.colorize()")
+                assertThat("   ".colorize(BotColor.NORMAL), "blank.colorize()")
                     .isEqualTo(Colors.NORMAL + "   " + Colors.NORMAL)
             }
 
             @Test
             fun `Colorize default color`() {
-                assertThat(ascii.colorize(DEFAULT_COLOR), "ascii.colorize()").isEqualTo(ascii)
+                assertThat(ascii.colorize(BotColor.DEFAULT), "ascii.colorize()").isEqualTo(ascii)
             }
 
             @Test
             fun `Colorize empty string`() {
-                assertThat("".colorize(Colors.RED), "colorize()").isEqualTo("")
+                assertThat("".colorize(BotColor.RED), "colorize()").isEqualTo("")
             }
 
             @Test
             fun `Colorize null`() {
-                assertThat(null.colorize(Colors.RED), "null.colorize()").isEqualTo("")
+                assertThat(null.colorize(BotColor.RED), "null.colorize()").isEqualTo("")
             }
         }
 
@@ -409,7 +408,7 @@ class UtilsTests {
 
             @Test
             fun `Make text red`() {
-                assertThat(ascii.red()).isEqualTo(ascii.colorize(Colors.RED))
+                assertThat(ascii.red()).isEqualTo(ascii.colorize(BotColor.RED))
             }
         }
 
@@ -420,7 +419,7 @@ class UtilsTests {
 
         @Test
         fun `Underline text`() {
-            assertThat(ascii.underline()).isEqualTo(ascii.colorize(Colors.UNDERLINE))
+            assertThat(ascii.underline()).isEqualTo(ascii.colorize(BotColor.UNDERLINE))
         }
     }
 

@@ -35,13 +35,13 @@ import net.thauvin.erik.jokeapi.exceptions.HttpErrorException
 import net.thauvin.erik.jokeapi.exceptions.JokeException
 import net.thauvin.erik.jokeapi.joke
 import net.thauvin.erik.jokeapi.models.Type
+import net.thauvin.erik.mobibot.BotColor
 import net.thauvin.erik.mobibot.Utils.bot
 import net.thauvin.erik.mobibot.Utils.colorize
 import net.thauvin.erik.mobibot.Utils.helpFormat
 import net.thauvin.erik.mobibot.msg.Message
 import net.thauvin.erik.mobibot.msg.PublicMessage
 import org.json.JSONException
-import org.pircbotx.Colors
 import org.pircbotx.hooks.types.GenericMessageEvent
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -68,7 +68,7 @@ class Joke : AbstractModule() {
         fun randomJoke(): List<Message> {
             return try {
                 val joke = joke(safe = true, type = Type.SINGLE, splitNewLine = true)
-                joke.joke.map { PublicMessage(it, Colors.CYAN) }
+                joke.joke.map { PublicMessage(it, BotColor.CYAN) }
             } catch (e: JokeException) {
                 throw ModuleException("randomJoke(): ${e.additionalInfo}", e.message, e)
             } catch (e: HttpErrorException) {
