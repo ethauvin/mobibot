@@ -30,8 +30,8 @@
  */
 package net.thauvin.erik.mobibot.modules
 
+import net.thauvin.erik.frankfurter.CurrencyFormatter
 import net.thauvin.erik.frankfurter.CurrencyRegistry
-import net.thauvin.erik.frankfurter.FrankfurterUtils
 import net.thauvin.erik.frankfurter.LatestRates
 import net.thauvin.erik.mobibot.Utils.bot
 import net.thauvin.erik.mobibot.Utils.helpCmdSyntax
@@ -109,8 +109,8 @@ class CurrencyConverter2 : AbstractModule() {
                     .exchangeRates()
 
                 val toExchangeRate = exchangeRates.rateFor(toCurrencySymbol)
-                val fromAmountFormatted = FrankfurterUtils.formatCurrency(fromCurrencySymbol, amount)
-                val toAmountFormatted = FrankfurterUtils.formatCurrency(toCurrencySymbol, toExchangeRate)
+                val fromAmountFormatted = CurrencyFormatter.format(fromCurrencySymbol, amount)
+                val toAmountFormatted = CurrencyFormatter.format(toCurrencySymbol, toExchangeRate)
 
                 PublicMessage(
                     "$fromAmountFormatted (${fromCurrency.get().name}) = $toAmountFormatted (${toCurrency.get().name})"
