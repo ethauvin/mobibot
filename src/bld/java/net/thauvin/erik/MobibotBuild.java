@@ -125,7 +125,7 @@ public class MobibotBuild extends Project {
                 .include(dependency("net.thauvin.erik", "cryptoprice", "1.0.3-SNAPSHOT"))
                 .include(dependency("net.thauvin.erik", "frankfurter4j", "1.0.0-SNAPSHOT"))
                 .include(dependency("net.thauvin.erik", "jokeapi", "1.0.1"))
-                .include(dependency("net.thauvin.erik", "pinboard-poster", "1.2.1-SNAPSHOT"))
+                .include(dependency("net.thauvin.erik", "pinboard-poster", "1.3.0-SNAPSHOT"))
                 .include(dependency("net.thauvin.erik.urlencoder", "urlencoder-lib-jvm", "1.6.0"));
         scope(provided)
                 .include(dependency("com.github.spotbugs", "spotbugs-annotations",
