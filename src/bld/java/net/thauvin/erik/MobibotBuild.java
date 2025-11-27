@@ -82,7 +82,7 @@ public class MobibotBuild extends Project {
 
         var junit = version(6, 0, 1);
         var kotlin = version(2, 2, 21);
-        var langChain = version(1, 8, 0);
+        var langChain = version(1, 9, 0);
         var log4j = version(2, 25, 2);
         var okhttp = version(5, 3, 2);
         scope(compile)
@@ -136,7 +136,7 @@ public class MobibotBuild extends Project {
                         version(0, 9, 5, "SNAPSHOT")))
                 // Mockito
                 .include(dependency("net.bytebuddy", "byte-buddy",
-                        version(1, 18, 1)))
+                        version(1, 18, 2)))
                 .include(dependency("org.mockito.kotlin", "mockito-kotlin",
                         version(6, 1, 0)))
                 // MockWebserver
