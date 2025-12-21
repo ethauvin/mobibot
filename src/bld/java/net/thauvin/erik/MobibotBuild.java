@@ -81,9 +81,9 @@ public class MobibotBuild extends Project {
                 RIFE2_SNAPSHOTS);
 
         var junit = version(6, 0, 1);
-        var kotlin = version(2, 2, 21);
         var langChain = version(1, 9, 0);
         var log4j = version(2, 25, 2);
+        var kotlin = version(2, 3, 0);
         var okhttp = version(5, 3, 2);
         scope(compile)
                 // PircBotX
@@ -174,7 +174,7 @@ public class MobibotBuild extends Project {
     public void compile() throws Exception {
         releaseInfo();
         var op = new CompileKotlinOperation().fromProject(this);
-        op.compileOptions().languageVersion("2.2").progressive(true).verbose(false);
+        op.compileOptions().languageVersion("2.3").progressive(true).verbose(false);
         op.execute();
     }
 
