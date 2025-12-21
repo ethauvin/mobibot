@@ -76,7 +76,6 @@ public class MobibotBuild extends Project {
                 MAVEN_LOCAL,
                 MAVEN_CENTRAL,
                 new Repository("https://jitpack.io"),
-                RIFE2_RELEASES,
                 CENTRAL_SNAPSHOTS,
                 RIFE2_SNAPSHOTS);
 
@@ -136,7 +135,7 @@ public class MobibotBuild extends Project {
                         version(0, 9, 5, "SNAPSHOT")))
                 // Mockito
                 .include(dependency("net.bytebuddy", "byte-buddy",
-                        version(1, 18, 2)))
+                        version(1, 18, 3)))
                 .include(dependency("org.mockito.kotlin", "mockito-kotlin",
                         version(6, 1, 0)))
                 // MockWebserver
