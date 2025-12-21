@@ -84,7 +84,7 @@ class WolframAlphaTests : LocalProperties() {
     @Nested
     @DisplayName("App ID Tests")
     inner class AppIdTests {
-        @ParameterizedTest(name = "[{index}] ''{0}''")
+        @ParameterizedTest
         @NullAndEmptySource
         fun emptyOrNullAppId(appId: String?) {
             assertFailure { queryWolfram("1 gallon to liter", appId = appId) }

@@ -56,7 +56,6 @@ class CurrencyConverter2Tests {
     companion object {
         @RegisterExtension
         @JvmField
-        @Suppress("unused")
         val loggingExtension = LoggingExtension(FrankfurterUtils.LOGGER)
     }
 

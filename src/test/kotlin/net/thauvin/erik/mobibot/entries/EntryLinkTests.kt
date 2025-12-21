@@ -171,7 +171,7 @@ class EntryLinkTests {
 
         }
 
-        @ParameterizedTest(name = "[{index}] ''{0}''")
+        @ParameterizedTest
         @ValueSource(
             strings = [
                 Constants.LINK_CMD + "",
@@ -184,7 +184,7 @@ class EntryLinkTests {
             assertThat(tags.matches(input)).isFalse()
         }
 
-        @ParameterizedTest(name = "[{index}] ''{0}''")
+        @ParameterizedTest
         @ValueSource(strings = ["", " "])
         fun `Handles empty or blank input`(input: String) {
             val tags = Tags()

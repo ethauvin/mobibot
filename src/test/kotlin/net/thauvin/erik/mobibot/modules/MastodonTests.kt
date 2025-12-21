@@ -75,7 +75,7 @@ class MastodonTests : LocalProperties() {
     @Nested
     @DisplayName("Toot Tests")
     inner class TootTests {
-        @ParameterizedTest(name = "[{index}] ''{0}''")
+        @ParameterizedTest
         @NullAndEmptySource
         @Throws(ModuleException::class)
         fun `Empty Access Token should throw exception`(input: String?) {
@@ -91,7 +91,7 @@ class MastodonTests : LocalProperties() {
             }.isInstanceOf(ModuleException::class.java).hasMessage("The access token is missing.")
         }
 
-        @ParameterizedTest(name = "[{index}] ''{0}''")
+        @ParameterizedTest
         @NullAndEmptySource
         @Throws(ModuleException::class)
         fun `Empty Handle should throw exception`(input: String?) {
@@ -107,7 +107,7 @@ class MastodonTests : LocalProperties() {
             }.isInstanceOf(ModuleException::class.java).hasMessage("The Mastodon handle is missing.")
         }
 
-        @ParameterizedTest(name = "[{index}] ''{0}''")
+        @ParameterizedTest
         @NullAndEmptySource
         @Throws(ModuleException::class)
         fun `Empty Instance should throw exception`(input: String?) {

@@ -52,7 +52,6 @@ class CryptoPricesTests {
     companion object {
         @RegisterExtension
         @JvmField
-        @Suppress("unused")
         val loggingExtension = LoggingExtension(CryptoPrice.logger)
     }
 
