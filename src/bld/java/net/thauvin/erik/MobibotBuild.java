@@ -118,7 +118,7 @@ public class MobibotBuild extends Project {
                 .include(dependency("net.aksingh", "owm-japis", "2.5.3.0")
                         .exclude("com.squareup.okhttp3", "okhttp"))
                 .include(dependency("net.objecthunter", "exp4j", "0.4.8"))
-                .include(dependency("org.json", "json", "20250517"))
+                .include(dependency("org.json", "json", "20251224"))
                 .include(dependency("org.jsoup", "jsoup", "1.21.2"))
                 // Thauvin
                 .include(dependency("net.thauvin.erik", "cryptoprice", "1.0.3-SNAPSHOT"))
