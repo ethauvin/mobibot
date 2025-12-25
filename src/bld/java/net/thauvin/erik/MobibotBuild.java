@@ -81,7 +81,7 @@ public class MobibotBuild extends Project {
 
         var junit = version(6, 0, 1);
         var kotlin = version(2, 3, 0);
-        var langChain = version(1, 9, 1);
+        var langChain = version(1, 10, 0);
         var log4j = version(2, 25, 3);
         var okhttp = version(5, 3, 2);
         scope(compile)
