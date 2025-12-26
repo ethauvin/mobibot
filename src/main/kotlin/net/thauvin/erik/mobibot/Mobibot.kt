@@ -54,6 +54,7 @@ import net.thauvin.erik.mobibot.commands.tell.Tell
 import net.thauvin.erik.mobibot.modules.*
 import org.pircbotx.Configuration
 import org.pircbotx.PircBotX
+import org.pircbotx.cap.SASLCapHandler
 import org.pircbotx.hooks.ListenerAdapter
 import org.pircbotx.hooks.events.*
 import org.pircbotx.hooks.types.GenericMessageEvent
@@ -210,11 +211,13 @@ class Mobibot(nickname: String, val channel: String, logsDirPath: String, p: Pro
             val identPwd = p.getProperty("ident")
             if (!identPwd.isNullOrBlank()) {
                 nickservPassword = identPwd
+                addCapHandler(SASLCapHandler(nickname, identPwd))
             }
             val identNick = p.getProperty("ident-nick")
             if (!identNick.isNullOrBlank()) {
                 nickservNick = identNick
             }
+
             val identMsg = p.getProperty("ident-msg")
             if (!identMsg.isNullOrBlank()) {
                 nickservCustomMessage = identMsg

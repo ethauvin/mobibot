@@ -39,7 +39,7 @@ import org.pircbotx.PircBotX
 import org.pircbotx.hooks.types.GenericMessageEvent
 
 /**
- * Lists the bot version, OS version, JVM version, Kotlin version and PircBotX version.
+ * Lists the bot version, OS version, JVM version, Kotlin version, and PircBotX version.
  */
 class Versions : AbstractCommand() {
     private val allVersions = listOf(

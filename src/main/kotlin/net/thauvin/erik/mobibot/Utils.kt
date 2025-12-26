@@ -31,7 +31,6 @@
 package net.thauvin.erik.mobibot
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings
-import net.thauvin.erik.mobibot.Utils.reader
 import net.thauvin.erik.mobibot.msg.Message
 import net.thauvin.erik.urlencoder.UrlEncoderUtil
 import org.jsoup.Jsoup

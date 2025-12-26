@@ -208,7 +208,7 @@ class Tell(private val serialObject: String) : AbstractCommand() {
                     save()
                 }
 
-                // Notify sender that message was delivered
+                // Notify the sender that the message was delivered
                 message.sender.equals(nickname, ignoreCase = true) && message.isReceived
                         && !message.isNotified -> {
                     event.user.send().message(
