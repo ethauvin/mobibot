@@ -62,7 +62,7 @@ public class MobibotBuild extends Project {
     public MobibotBuild() {
         pkg = "net.thauvin.erik.mobibot";
         name = "mobibot";
-        version = version(0, 8, 0, "rc+" +
+        version = version(0, 8, 1, "rc+" +
                 DateTimeFormatter.ofPattern("yyyyMMddHHmmss").format(LocalDateTime.now()));
 
         mainClass = pkg + ".Mobibot";
