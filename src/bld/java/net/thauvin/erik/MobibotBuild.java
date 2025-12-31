@@ -77,7 +77,7 @@ public class MobibotBuild extends Project {
                 MAVEN_CENTRAL,
                 new Repository("https://jitpack.io"),
                 CENTRAL_SNAPSHOTS,
-                RIFE2_SNAPSHOTS);
+                RIFE2_RELEASES);
 
         var junit = version(6, 0, 1);
         var kotlin = version(2, 3, 0);
