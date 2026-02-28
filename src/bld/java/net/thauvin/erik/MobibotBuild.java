@@ -81,7 +81,7 @@ public class MobibotBuild extends Project {
                 CENTRAL_SNAPSHOTS,
                 RIFE2_RELEASES);
 
-        var kotlin = version(2, 3, 0);
+        var bytebuddy = version(1, 18, 6, "jdk6-jdk5");
         var junit = version(6, 0, 3);
         var langChain = version(1, 11, 0);
         var log4j = version(2, 25, 3);
@@ -136,8 +136,8 @@ public class MobibotBuild extends Project {
                 .include(dependency("com.uwyn.rife2", "bld-extensions-testing-helpers",
                         version(0, 9, 6)))
                 // Mockito
-                .include(dependency("net.bytebuddy", "byte-buddy",
-                        version(1, 18, 4)))
+                .include(dependency("net.bytebuddy", "byte-buddy", bytebuddy))
+                .include(dependency("net.bytebuddy", "byte-buddy-agent", bytebuddy))
                 .include(dependency("org.mockito.kotlin", "mockito-kotlin",
                         version(6, 2, 3)))
                 // MockWebserver
