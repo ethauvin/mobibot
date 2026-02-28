@@ -49,7 +49,7 @@ class FeedReaderTests {
     inner class FailureTests {
         @Test
         fun invalidFeed() {
-            assertFailure { readFeed("https://www.example.com") }.isInstanceOf(FeedException::class.java)
+            assertFailure { readFeed("https://httpbin.org/html") }.isInstanceOf(FeedException::class.java)
                 .messageContains("Invalid XML")
         }
 
