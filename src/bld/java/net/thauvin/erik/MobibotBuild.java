@@ -35,7 +35,7 @@ import rife.bld.BuildCommand;
 import rife.bld.Project;
 import rife.bld.dependencies.Repository;
 import rife.bld.extension.*;
-import rife.bld.extension.tools.IOUtils;
+import rife.bld.extension.tools.IOTools;
 import rife.bld.operations.exceptions.ExitStatusException;
 import rife.bld.publish.PomBuilder;
 import rife.tools.FileUtils;
@@ -59,7 +59,7 @@ public class MobibotBuild extends Project {
 
     private static final String DETEKT_BASELINE = "config/detekt/baseline.xml";
     final File srcMainKotlin = new File(srcMainDirectory(), "kotlin");
-    final File testResultsDirectory = IOUtils.resolveFile(buildDirectory(), "test-results", "test");
+    final File testResultsDirectory = IOTools.resolveFile(buildDirectory(), "test-results", "test");
 
     public MobibotBuild() {
         pkg = "net.thauvin.erik.mobibot";
