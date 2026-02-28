@@ -10,7 +10,7 @@ if test $status -eq 0
     ssh $nix4 "rm -rf $loc/$mobibot \"$loc/lib/*.jar\""
     echo "Uploading new jars..."
     mscp deploy/lib/*.jar $nix4:$loc/lib/
-    scp deploy/$mobibot $nix4:$loc
+    rsync -avP deploy/$mobibot $nix4:$loc
     echo "Updating permissions..."
     ssh $nix4 "chmod 755 $loc/$mobibot"
 end
