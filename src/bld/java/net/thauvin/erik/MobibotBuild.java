@@ -83,6 +83,7 @@ public class MobibotBuild extends Project {
 
         var bytebuddy = version(1, 18, 6, "jdk6-jdk5");
         var junit = version(6, 0, 3);
+        var kotlin = version(2, 3, 10);
         var langChain = version(1, 11, 0);
         var log4j = version(2, 25, 3);
         var okhttp = version(5, 3, 2);
