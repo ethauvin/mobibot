@@ -81,7 +81,7 @@ public class MobibotBuild extends Project {
                 CENTRAL_SNAPSHOTS,
                 RIFE2_RELEASES);
 
-        var bytebuddy = version(1, 18, 6, "jdk6-jdk5");
+        var bytebuddy = version(1, 18, 7);
         var junit = version(6, 0, 3);
         var kotlin = version(2, 3, 10);
         var langChain = version(1, 11, 0);
