@@ -115,6 +115,7 @@ public class MobibotBuild extends Project {
                 .include(dependency("dev.langchain4j", "langchain4j-google-ai-gemini", langChain))
                 .include(dependency("dev.langchain4j", "langchain4j-core", langChain))
                 .include(dependency("dev.langchain4j", "langchain4j", langChain))
+                .include(dependency("com.fasterxml.jackson.core", "jackson-databind", "2.21.1"))
                 // Misc.
                 .include(dependency("com.rometools", "rome", "2.1.0"))
                 .include(dependency("com.squareup.okhttp3", "okhttp-jvm", okhttp))
