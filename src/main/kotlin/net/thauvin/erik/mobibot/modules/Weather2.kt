@@ -176,14 +176,16 @@ class Weather2 : AbstractModule() {
                 }
 
                 // OpenWeatherMap link
-                val cityId = cwd.cityId
-                val url = if (cityId != null && cityId > 0) {
-                    "https://openweathermap.org/city/$cityId"
-                } else {
-                    "https://openweathermap.org/find?q=${city.encodeUrl()},${code.uppercase().encodeUrl()}"
+                if (cwd.hasCityName()) {
+                    messages.add(
+                        NoticeMessage(
+                            "https://openweathermap.org/find?q=${cwd.cityName?.encodeUrl()},${
+                                code.uppercase().encodeUrl()
+                            }",
+                            BotColor.GREEN
+                        )
+                    )
                 }
-                messages.add(NoticeMessage(url, BotColor.GREEN))
-
             } catch (e: APIException) {
                 val errorMsg = if (e.code == 404) {
                     "The requested city was not found."

@@ -141,7 +141,7 @@ class Weather2Tests : LocalProperties() {
                 contains("US")
             }
             assertThat(messages, "getWeather($query)").index(messages.size - 1).prop(Message::msg)
-                .endsWith("98204%2CUS")
+                .endsWith("Everett,US")
         }
 
         @Test
@@ -164,7 +164,8 @@ class Weather2Tests : LocalProperties() {
                 contains("London, United Kingdom")
                 contains("GB")
             }
-            assertThat(messages, "getWeather($query)").index(messages.size - 1).prop(Message::msg).endsWith("2643743")
+            assertThat(messages, "getWeather($query)").index(messages.size - 1).prop(Message::msg)
+                .endsWith("London,GB")
         }
 
         @Test
@@ -176,7 +177,8 @@ class Weather2Tests : LocalProperties() {
                 contains("San Francisco")
                 contains("US")
             }
-            assertThat(messages, "getWeather($query)").index(messages.size - 1).prop(Message::msg).endsWith("5391959")
+            assertThat(messages, "getWeather($query)").index(messages.size - 1).prop(Message::msg)
+                .endsWith("San%20Francisco,US")
         }
     }
 }
