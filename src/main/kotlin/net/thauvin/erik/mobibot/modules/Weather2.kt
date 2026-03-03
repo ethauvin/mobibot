@@ -180,7 +180,7 @@ class Weather2 : AbstractModule() {
                 val url = if (cityId != null && cityId > 0) {
                     "https://openweathermap.org/city/$cityId"
                 } else {
-                    "https://openweathermap.org/find?q=${city},${code.uppercase()}".encodeUrl()
+                    "https://openweathermap.org/find?q=${city.encodeUrl()},${code.uppercase().encodeUrl()}"
                 }
                 messages.add(NoticeMessage(url, BotColor.GREEN))
 
