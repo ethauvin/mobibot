@@ -84,7 +84,7 @@ public class MobibotBuild extends Project {
         var bytebuddy = version(1, 18, 7);
         var junit = version(6, 0, 3);
         var kotlin = version(2, 3, 10);
-        var langChain = version(1, 11, 0);
+        var langChain = version(1, 12, 2);
         var log4j = version(2, 25, 3);
         var okhttp = version(5, 3, 2);
         scope(compile)
@@ -112,14 +112,10 @@ public class MobibotBuild extends Project {
                 .include(dependency("org.apache.logging.log4j", "log4j-slf4j2-impl", log4j))
                 // LangChain4J
                 .include(dependency("com.fasterxml.jackson.core", "jackson-databind", "2.21.1"))
-                .include(dependency("dev.langchain4j", "langchain4j", langChain)
-                        .exclude("com.fasterxml.jackson.core", "jackson-core"))
-                .include(dependency("dev.langchain4j", "langchain4j-core", langChain)
-                        .exclude("com.fasterxml.jackson.core", "jackson-core"))
-                .include(dependency("dev.langchain4j", "langchain4j-open-ai", langChain)
-                        .exclude("com.fasterxml.jackson.core", "jackson-core"))
-                .include(dependency("dev.langchain4j", "langchain4j-google-ai-gemini", langChain)
-                        .exclude("com.fasterxml.jackson.core", "jackson-core"))
+                .include(dependency("dev.langchain4j", "langchain4j", langChain))
+                .include(dependency("dev.langchain4j", "langchain4j-core", langChain))
+                .include(dependency("dev.langchain4j", "langchain4j-open-ai", langChain))
+                .include(dependency("dev.langchain4j", "langchain4j-google-ai-gemini", langChain))
                 // Misc.
                 .include(dependency("com.rometools", "rome", "2.1.0"))
                 .include(dependency("com.squareup.okhttp3", "okhttp-jvm", okhttp))
