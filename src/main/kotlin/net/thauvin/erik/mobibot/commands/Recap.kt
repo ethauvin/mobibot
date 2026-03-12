@@ -48,7 +48,7 @@ class Recap : AbstractCommand() {
     override val isPublic = true
     override val isVisible = true
 
-    init {
+    override fun initialize() {
         addHelp(
             "To list the last 10 public channel messages:",
             helpFormat("%c $name")

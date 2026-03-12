@@ -47,7 +47,7 @@ class Users : AbstractCommand() {
     override val isPublic = true
     override val isVisible = true
 
-    init {
+    override fun initialize() {
         addHelp("To list the users present on the channel:", helpFormat("%c $name"))
     }
 

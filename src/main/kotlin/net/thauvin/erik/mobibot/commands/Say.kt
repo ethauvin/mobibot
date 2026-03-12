@@ -45,7 +45,7 @@ class Say : AbstractCommand() {
     override val isPublic = false
     override val isVisible = true
 
-    init {
+    override fun initialize() {
         addHelp(
             "To have the bot say something on the channel:",
             helpFormat("%c $name <text>")

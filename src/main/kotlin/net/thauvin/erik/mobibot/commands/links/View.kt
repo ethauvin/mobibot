@@ -53,7 +53,7 @@ class View : AbstractCommand() {
     override val isPublic = true
     override val isVisible = true
 
-    init {
+    override fun initialize() {
         addHelp(
             "To list or search the current URL posts:",
             helpFormat("%c $name [<start>] [<query>]")

@@ -45,7 +45,7 @@ class Nick : AbstractCommand() {
     override val isPublic = true
     override val isVisible = true
 
-    init {
+    override fun initialize() {
         addHelp("To change the bot's nickname:", helpFormat("%c $name <new_nick>"))
     }
 

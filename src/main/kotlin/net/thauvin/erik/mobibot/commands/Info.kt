@@ -61,7 +61,7 @@ class Info(private val tell: Tell, private val seen: Seen) : AbstractCommand() {
     override val isPublic = true
     override val isVisible = true
 
-    init {
+    override fun initialize() {
         addHelp("To view information about the bot:", helpFormat("%c $name"))
     }
 

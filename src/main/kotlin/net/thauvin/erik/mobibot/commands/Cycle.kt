@@ -48,7 +48,7 @@ class Cycle : AbstractCommand() {
     override val isPublic = false
     override val isVisible = true
 
-    init {
+    override fun initialize() {
         addHelp("To have the bot leave the channel and come back:", helpFormat("%c $name"))
     }
 

@@ -48,7 +48,7 @@ class Modules(private val addons: Addons) : AbstractCommand() {
     override val isPublic = false
     override val isVisible = true
 
-    init {
+    override fun initialize() {
         addHelp("To view a list of enabled/disabled modules:", helpFormat("%c $name"))
     }
 

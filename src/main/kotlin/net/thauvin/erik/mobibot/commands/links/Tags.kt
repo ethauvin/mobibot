@@ -53,7 +53,7 @@ class Tags : AbstractCommand() {
     override val isPublic = true
     override val isVisible = true
 
-    init {
+    override fun initialize() {
         addHelp(
             "To categorize or tag a URL, use its label and a ${Constants.TAG_CMD}:",
             helpFormat("${Constants.LINK_CMD}1${Constants.TAG_CMD}:<+tag|-tag> [...]")

@@ -71,7 +71,7 @@ class Tell(private val serialObject: String) : AbstractCommand() {
     override val isPublic: Boolean = isEnabled()
     override val isVisible: Boolean = isEnabled()
 
-    init {
+    override fun initialize() {
         addHelp(
             "To send a message to someone when they join the channel:",
             helpFormat("%c $name <nick> <message>"),

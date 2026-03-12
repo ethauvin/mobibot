@@ -48,7 +48,7 @@ class Die : AbstractCommand() {
         const val DIE_PROP = "die"
     }
 
-    init {
+    override fun initialize() {
         initProperties(DIE_PROP)
     }
 

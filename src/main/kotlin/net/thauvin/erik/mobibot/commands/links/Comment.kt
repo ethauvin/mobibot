@@ -52,7 +52,7 @@ class Comment : AbstractCommand() {
     override val isPublic = true
     override val isVisible = true
 
-    init {
+    override fun initialize() {
         addHelp(
             "To add a comment:",
             helpFormat("${Constants.LINK_CMD}1:This is a comment"),

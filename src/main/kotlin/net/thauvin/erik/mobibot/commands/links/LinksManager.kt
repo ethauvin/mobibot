@@ -105,7 +105,7 @@ class LinksManager : AbstractCommand() {
         }
     }
 
-    init {
+    override fun initialize() {
         initProperties(TAGS_PROP, KEYWORDS_PROP)
     }
 

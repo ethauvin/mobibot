@@ -62,6 +62,7 @@ class Addons(props: Properties) {
      */
     fun add(command: AbstractCommand): Boolean {
         var enabled = false
+        command.initialize()
         with(command) {
             if (disableCommands.notContains(name, true)) {
                 val properties = getProperties()

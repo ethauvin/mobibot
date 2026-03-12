@@ -55,7 +55,7 @@ class Posting : AbstractCommand() {
     override val isPublic = true
     override val isVisible = true
 
-    init {
+    override fun initialize() {
         addHelp(
             "Post a URL, by saying it on a line on its own:",
             helpFormat("<url> [<title>] ${Tags.COMMAND}: <+tag> [...]]"),

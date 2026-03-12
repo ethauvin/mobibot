@@ -48,8 +48,8 @@ class ChannelFeed(channel: String) : AbstractCommand() {
         const val FEED_PROP = "feed"
     }
 
-    init {
-        addHelp("To list the last 5 posts from the channel's weblog feed:", helpFormat("%c $channel"))
+    override fun initialize() {
+        addHelp("To list the last 5 posts from the channel's weblog feed:", helpFormat("%c $name"))
         initProperties(FEED_PROP)
     }
 

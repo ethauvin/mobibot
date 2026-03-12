@@ -53,10 +53,16 @@ abstract class AbstractCommand {
 
     private val _help: MutableList<String> = mutableListOf()
     val help: List<String>
-        @SuppressFBWarnings("EI_EXPOSE_REP")
-        get() = _help
+        get() = _help.toList()
 
     private val properties: MutableMap<String, String> = mutableMapOf()
+
+    /**
+     * Initializes the commands.
+     *
+     * Subclasses must implement this to set up commands.
+     */
+    abstract fun initialize()
 
     open fun addHelp(vararg help: String) {
         _help.addAll(help)
@@ -65,7 +71,7 @@ abstract class AbstractCommand {
     abstract fun commandResponse(channel: String, args: String, event: GenericMessageEvent)
 
     open fun helpResponse(channel: String, topic: String, event: GenericMessageEvent): Boolean {
-        if (!isOpOnly || isOpOnly == event.isChannelOp(channel)) {
+        if (!isOpOnly || event.isChannelOp(channel)) {
             for (h in _help) {
                 event.sendMessage(helpCmdSyntax(h, event.bot().nick, event is PrivateMessageEvent || !isPublic))
             }

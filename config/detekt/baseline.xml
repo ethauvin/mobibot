@@ -87,6 +87,7 @@
     <ID>TooManyFunctions:Addons.kt$Addons</ID>
     <ID>TooManyFunctions:EntryLink.kt$EntryLink : Serializable</ID>
     <ID>TooManyFunctions:Mobibot.kt$Mobibot : ListenerAdapter</ID>
+    <ID>TooManyFunctions:Seen.kt$Seen : AbstractCommand</ID>
     <ID>TooManyFunctions:Tell.kt$Tell : AbstractCommand</ID>
     <ID>UtilityClassWithPublicConstructor:LocalProperties.kt$LocalProperties</ID>
     <ID>WildcardImport:AddonTests.kt$import net.thauvin.erik.mobibot.modules.*</ID>

@@ -62,7 +62,7 @@ class Ignore : AbstractCommand() {
         }
     }
 
-    init {
+    override fun initialize() {
         addHelp(
             "To ignore a link posted to the channel:",
             helpFormat("https://www.foo.bar %n"),

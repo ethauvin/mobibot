@@ -64,7 +64,7 @@ class Seen(private val serialObject: String) : AbstractCommand() {
     override val isPublic = true
     override val isVisible = true
 
-    init {
+    override fun initialize() {
         addHelp("To view when a nickname was last seen:", helpFormat("%c $name <nick>"))
         load()
     }
