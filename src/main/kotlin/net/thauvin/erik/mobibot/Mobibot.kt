@@ -251,7 +251,7 @@ class Mobibot(nickname: String, val channel: String, logsDirPath: String, p: Pro
         addons.add(Ignore())
         addons.add(LinksManager())
         addons.add(Me())
-        addons.add(Modules(addons.modules(), addons.disabledModules()))
+        addons.add(Modules(addons))
         addons.add(Msg())
         addons.add(Nick())
         addons.add(Posting())

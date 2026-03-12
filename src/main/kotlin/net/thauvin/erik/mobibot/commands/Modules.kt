@@ -32,6 +32,7 @@
 package net.thauvin.erik.mobibot.commands
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings
+import net.thauvin.erik.mobibot.Addons
 import net.thauvin.erik.mobibot.Utils.helpFormat
 import net.thauvin.erik.mobibot.Utils.isChannelOp
 import net.thauvin.erik.mobibot.Utils.sendList
@@ -41,7 +42,7 @@ import org.pircbotx.hooks.types.GenericMessageEvent
  * List the enabled/disabled modules.
  */
 @SuppressFBWarnings("EI_EXPOSE_REP2", justification = "Private field with no accessor")
-class Modules(private val modules: List<String>, private val disabledModules: List<String>) : AbstractCommand() {
+class Modules(private val addons: Addons) : AbstractCommand() {
     override val name = "modules"
     override val isOpOnly = true
     override val isPublic = false
@@ -53,12 +54,14 @@ class Modules(private val modules: List<String>, private val disabledModules: Li
 
     override fun commandResponse(channel: String, args: String, event: GenericMessageEvent) {
         if (event.isChannelOp(channel)) {
+            val modules = addons.modules()
             if (modules.isEmpty()) {
                 event.respondPrivateMessage("There are no enabled modules.")
             } else {
                 event.respondPrivateMessage("The enabled modules are: ")
                 event.sendList(modules, 7, isIndent = true)
             }
+            val disabledModules = addons.disabledModules()
             if (disabledModules.isNotEmpty()) {
                 event.respondPrivateMessage("The disabled modules are: ")
                 event.sendList(disabledModules, 7, isIndent = true)
