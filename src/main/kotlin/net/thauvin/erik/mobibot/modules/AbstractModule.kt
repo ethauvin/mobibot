@@ -30,7 +30,6 @@
  */
 package net.thauvin.erik.mobibot.modules
 
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings
 import net.thauvin.erik.mobibot.Utils.bot
 import net.thauvin.erik.mobibot.Utils.helpCmdSyntax
 import net.thauvin.erik.mobibot.Utils.sendMessage
@@ -49,19 +48,30 @@ abstract class AbstractModule {
     abstract val name: String
 
     /**
+     * Initializes the module.
+     *
+     * Subclasses must implement this to set up commands, help, and required properties.
+     */
+    abstract fun initialize()
+
+    /**
      * The module's commands, if any.
      */
     private val _commands: MutableList<String> = mutableListOf()
     val commands: List<String>
-        @SuppressFBWarnings("EI_EXPOSE_REP")
-        get() = _commands
+        get() = _commands.toList()
 
     private val _help: MutableList<String> = mutableListOf()
     val help: List<String>
-        @SuppressFBWarnings("EI_EXPOSE_REP")
-        get() = _help
+        get() = _help.toList()
 
-    private val properties: MutableMap<String, String> = mutableMapOf()
+    private val _properties: MutableMap<String, String> = mutableMapOf()
+
+    /**
+     * The module's properties (immutable).
+     */
+    val properties: Map<String, String>
+        get() = _properties.toMap()
 
     /**
      * Responds to a command.
@@ -71,14 +81,13 @@ abstract class AbstractModule {
     /**
      * Returns the module's property keys.
      */
-    val propertyKeys: Set<String>
-        get() = properties.keys.toSet()
+    val propertyKeys: Set<String> by lazy { _properties.keys.toSet() }
 
     /**
      * Retrieves the value associated with the specified key from the properties.
      */
     fun getProperty(key: String): String? {
-        return properties[key]
+        return _properties[key]
     }
 
     /**
@@ -86,14 +95,14 @@ abstract class AbstractModule {
      * If the key does not exist, the default value is returned.
      */
     fun getPropertyOrDefault(key: String, defaultValue: String): String {
-        return properties.getOrDefault(key, defaultValue)
+        return _properties.getOrDefault(key, defaultValue)
     }
 
     /**
      * Returns `true` if the module has properties.
      */
     fun hasProperties(): Boolean {
-        return properties.isNotEmpty()
+        return _properties.isNotEmpty()
     }
 
     /**
@@ -113,8 +122,8 @@ abstract class AbstractModule {
     /**
      * Responds with the module's help.
      */
-    @Suppress("SameReturnValue")
     open fun helpResponse(event: GenericMessageEvent): Boolean {
+        if (_help.isEmpty()) return false
         for (h in _help) {
             event.sendMessage(
                 helpCmdSyntax(
@@ -130,7 +139,7 @@ abstract class AbstractModule {
      */
     fun initProperties(vararg keys: String) {
         for (key in keys) {
-            properties[key] = ""
+            _properties[key] = ""
         }
     }
 
@@ -154,7 +163,7 @@ abstract class AbstractModule {
      */
     open val isValidProperties: Boolean
         get() {
-            return properties.values.all { it.isNotBlank() }
+            return _properties.values.all { it.isNotBlank() }
         }
 
     /**
@@ -162,7 +171,7 @@ abstract class AbstractModule {
      */
     fun setProperty(key: String, value: String) {
         if (key.isNotBlank()) {
-            properties[key] = value
+            _properties[key] = value
         }
     }
 }

@@ -140,7 +140,7 @@ class GoogleSearch : AbstractModule() {
         }
     }
 
-    init {
+    override fun initialize() {
         addCommand(GOOGLE_CMD)
         addHelp(
             "To search Google:",

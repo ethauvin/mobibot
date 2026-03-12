@@ -98,6 +98,7 @@ class Addons(props: Properties) {
      */
     fun add(module: AbstractModule): Boolean {
         var enabled = false
+        module.initialize()
         with(module) {
             if (disabledModules.notContains(name, true)) {
                 if (hasProperties()) {

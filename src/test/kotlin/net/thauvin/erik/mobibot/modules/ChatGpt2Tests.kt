@@ -55,6 +55,7 @@ class ChatGpt2Tests : LocalProperties() {
             val event = Mockito.mock(GenericMessageEvent::class.java)
             val captor = ArgumentCaptor.forClass(String::class.java)
 
+            chatGpt2.initialize()
             chatGpt2.commandResponse("channel", "chatgpt", "1 liter to gallon", event)
 
             Mockito.verify(event, Mockito.atLeastOnce()).respond(captor.capture())

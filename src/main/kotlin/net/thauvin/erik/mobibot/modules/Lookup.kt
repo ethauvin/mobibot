@@ -119,7 +119,7 @@ class Lookup : AbstractModule() {
         }
     }
 
-    init {
+    override fun initialize() {
         addCommand(LOOKUP_CMD)
         addHelp(
             "To perform a DNS lookup query:",

@@ -91,7 +91,7 @@ class ChatGpt2 : AbstractModule() {
         }
     }
 
-    init {
+    override fun initialize() {
         addCommand(CHATGPT_CMD)
         addHelp("To get answers from $name:")
         addHelp(Utils.helpFormat("%c $CHATGPT_CMD <query>"))

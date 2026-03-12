@@ -84,6 +84,7 @@ class Gemini2Tests : LocalProperties() {
             val event = Mockito.mock(GenericMessageEvent::class.java)
             val captor = ArgumentCaptor.forClass(String::class.java)
 
+            gemini2.initialize()
             gemini2.commandResponse("channel", "gemini", "1 liter to gallon", event)
 
             Mockito.verify(event, Mockito.atLeastOnce()).respond(captor.capture())

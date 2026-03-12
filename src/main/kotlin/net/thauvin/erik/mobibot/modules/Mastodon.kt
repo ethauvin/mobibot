@@ -149,7 +149,7 @@ class Mastodon : SocialModule() {
         }
     }
 
-    init {
+    override fun initialize() {
         addCommand(MASTODON_CMD, TOOT_CMD)
         addHelp(
             "To toot on Mastodon:",

@@ -100,7 +100,7 @@ class Gemini2 : AbstractModule() {
         }
     }
 
-    init {
+    override fun initialize() {
         addCommand(GEMINI_CMD)
         addHelp("To get answers from $name:")
         addHelp(Utils.helpFormat("%c $GEMINI_CMD <query>"))

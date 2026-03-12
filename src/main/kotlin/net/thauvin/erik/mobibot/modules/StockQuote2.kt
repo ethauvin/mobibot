@@ -260,7 +260,7 @@ class StockQuote2 : AbstractModule() {
         }
     }
 
-    init {
+    override fun initialize() {
         addCommand(STOCK_CMD)
         addHelp("To retrieve a stock quote:")
         addHelp(helpFormat("%c $STOCK_CMD symbol"))

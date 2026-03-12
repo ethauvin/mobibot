@@ -66,7 +66,7 @@ class Dice : AbstractModule() {
         }
     }
 
-    init {
+    override fun initialize() {
         addCommand(DICE_CMD)
         addHelp(
             "To roll 2 dice with 6 sides:",

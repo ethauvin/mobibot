@@ -57,7 +57,7 @@ class RockPaperScissors : AbstractModule() {
         }
     }
 
-    init {
+    override fun initialize() {
         addCommand(
             Hands.ROCK.name.lowercase(),
             Hands.PAPER.name.lowercase(),

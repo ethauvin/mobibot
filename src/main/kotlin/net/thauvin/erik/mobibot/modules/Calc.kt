@@ -65,7 +65,7 @@ class Calc : AbstractModule() {
         }
     }
 
-    init {
+    override fun initialize() {
         addCommand(CALC_CMD)
         addHelp(
             "To solve a mathematical calculation:",

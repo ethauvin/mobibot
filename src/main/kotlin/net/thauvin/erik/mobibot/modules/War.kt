@@ -55,7 +55,7 @@ class War : AbstractModule() {
         private const val WAR_CMD = "war"
     }
 
-    init {
+    override fun initialize() {
         addCommand(WAR_CMD)
         addHelp(
             "To play war:",

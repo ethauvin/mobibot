@@ -209,7 +209,7 @@ class Weather2 : AbstractModule() {
         }
     }
 
-    init {
+    override fun initialize() {
         addCommand(WEATHER_CMD)
         addHelp("To display weather information:")
         addHelp(helpFormat("%c $WEATHER_CMD <city> [, <country code>]"))

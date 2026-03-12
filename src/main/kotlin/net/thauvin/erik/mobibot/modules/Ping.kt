@@ -71,7 +71,7 @@ class Ping : AbstractModule() {
         private const val PING_CMD = "ping"
     }
 
-    init {
+    override fun initialize() {
         addCommand(PING_CMD)
         addHelp(
             "To ping the bot:",

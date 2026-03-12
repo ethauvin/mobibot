@@ -116,7 +116,7 @@ class CryptoPrices : AbstractModule() {
         }
     }
 
-    init {
+    override fun initialize() {
         addCommand(CRYPTO_CMD)
         addHelp("To retrieve a cryptocurrency's market price:")
         addHelp(helpFormat("%c $CRYPTO_CMD <symbol> [<currency>]"))

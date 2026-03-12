@@ -81,7 +81,7 @@ class Joke : AbstractModule() {
         }
     }
 
-    init {
+    override fun initialize() {
         addCommand(JOKE_CMD)
         addHelp(
             "To display a random joke:",

@@ -371,7 +371,7 @@ class WorldTime : AbstractModule() {
         }
     }
 
-    init {
+    override fun initialize() {
         addHelp("To display a country's current date/time:")
         addHelp(helpFormat("%c $TIME_CMD [<country code or zone>]"))
         addHelp("For a listing of the supported countries/zones:")

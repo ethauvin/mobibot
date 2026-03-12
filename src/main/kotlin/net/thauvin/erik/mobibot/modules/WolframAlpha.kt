@@ -109,7 +109,7 @@ class WolframAlpha : AbstractModule() {
         }
     }
 
-    init {
+    override fun initialize() {
         addCommand(WOLFRAM_CMD)
         addHelp("To get answers from Wolfram Alpha:")
         addHelp(Utils.helpFormat("%c $WOLFRAM_CMD <query> [units=(${METRIC}|${IMPERIAL})]"))

@@ -124,7 +124,7 @@ class CurrencyConverter2 : AbstractModule() {
         }
     }
 
-    init {
+    override fun initialize() {
         addCommand(CURRENCY_CMD)
     }
 
