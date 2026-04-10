@@ -81,11 +81,11 @@ public class MobibotBuild extends Project {
                 CENTRAL_SNAPSHOTS,
                 RIFE2_RELEASES);
 
-        var bytebuddy = version(1, 18, 7);
+        var bytebuddy = version(1, 18, 8);
         var junit = version(6, 0, 3);
         var kotlin = version(2, 3, 20);
-        var langChain = version(1, 12, 2);
-        var log4j = version(2, 25, 3);
+        var langChain = version(1, 13, 0);
+        var log4j = version(2, 25, 4);
         var okhttp = version(5, 3, 2);
         scope(compile)
                 // PircBotX
@@ -94,7 +94,7 @@ public class MobibotBuild extends Project {
                 .include(dependency("org.apache.commons", "commons-lang3", "3.20.0"))
                 .include(dependency("org.apache.commons", "commons-text", "1.15.0"))
                 .include(dependency("commons-codec", "commons-codec", "1.21.0"))
-                .include(dependency("commons-net", "commons-net", "3.12.0"))
+                .include(dependency("commons-net", "commons-net", "3.13.0"))
                 // Google
                 .include(dependency("com.google.code.gson", "gson", "2.13.2"))
                 .include(dependency("com.google.guava", "guava", "33.2.1-jre"))
@@ -111,7 +111,7 @@ public class MobibotBuild extends Project {
                 .include(dependency("org.apache.logging.log4j", "log4j-core", log4j))
                 .include(dependency("org.apache.logging.log4j", "log4j-slf4j2-impl", log4j))
                 // LangChain4J
-                .include(dependency("com.fasterxml.jackson.core", "jackson-databind", "2.21.1"))
+                .include(dependency("com.fasterxml.jackson.core", "jackson-databind", "2.21.2"))
                 .include(dependency("dev.langchain4j", "langchain4j", langChain))
                 .include(dependency("dev.langchain4j", "langchain4j-core", langChain))
                 .include(dependency("dev.langchain4j", "langchain4j-open-ai", langChain))
@@ -136,12 +136,12 @@ public class MobibotBuild extends Project {
         scope(test)
                 // bld
                 .include(dependency("com.uwyn.rife2", "bld-extensions-testing-helpers",
-                        version(0, 9, 6)))
+                        version(1, 0, 0)))
                 // Mockito
                 .include(dependency("net.bytebuddy", "byte-buddy", bytebuddy))
                 .include(dependency("net.bytebuddy", "byte-buddy-agent", bytebuddy))
                 .include(dependency("org.mockito.kotlin", "mockito-kotlin",
-                        version(6, 2, 3)))
+                        version(6, 3, 0)))
                 // MockWebserver
                 .include(dependency("com.squareup.okhttp3", "mockwebserver", okhttp))
                 // AssertK

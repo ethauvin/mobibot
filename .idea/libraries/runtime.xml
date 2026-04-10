@@ -2,7 +2,6 @@
   <library name="runtime">
     <CLASSES>
       <root url="file://$PROJECT_DIR$/lib/runtime" />
-      <root url="file://$PROJECT_DIR$/src/main/resources" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>
