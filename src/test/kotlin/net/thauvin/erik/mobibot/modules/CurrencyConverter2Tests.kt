@@ -32,11 +32,7 @@ package net.thauvin.erik.mobibot.modules
 
 import assertk.all
 import assertk.assertThat
-import assertk.assertions.contains
-import assertk.assertions.isInstanceOf
-import assertk.assertions.matches
-import assertk.assertions.prop
-import net.thauvin.erik.frankfurter.FrankfurterUtils
+import assertk.assertions.*
 import net.thauvin.erik.mobibot.modules.CurrencyConverter2.Companion.convertCurrency
 import net.thauvin.erik.mobibot.msg.ErrorMessage
 import net.thauvin.erik.mobibot.msg.Message
@@ -44,7 +40,6 @@ import net.thauvin.erik.mobibot.msg.PublicMessage
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.extension.ExtendWith
-import org.junit.jupiter.api.extension.RegisterExtension
 import org.mockito.ArgumentCaptor
 import org.mockito.Mockito
 import org.pircbotx.hooks.types.GenericMessageEvent
@@ -53,12 +48,6 @@ import kotlin.test.Test
 
 @ExtendWith(LoggingExtension::class)
 class CurrencyConverter2Tests {
-    companion object {
-        @RegisterExtension
-        @JvmField
-        val loggingExtension = LoggingExtension(FrankfurterUtils.LOGGER)
-    }
-
     @Nested
     @DisplayName("Command Response Tests")
     inner class CommandResponseTests {
@@ -71,8 +60,16 @@ class CurrencyConverter2Tests {
             currencyConverter.commandResponse("channel", "currency", "1 USD to CAD", event)
 
             Mockito.verify(event, Mockito.atLeastOnce()).respond(captor.capture())
+            println(captor.value)
             assertThat(captor.value)
                 .matches("\\$1.00 \\(United States Dollar\\) = \\$\\d+\\.\\d+ \\(Canadian Dollar\\)".toRegex())
+        }
+
+        @Test
+        fun currencies() {
+            val currencies = CurrencyConverter2.currencies()
+            assertThat(currencies.find("USD")).isPresent()
+            assertThat(currencies.find("AED")).isPresent()
         }
 
         @Test
@@ -84,6 +81,7 @@ class CurrencyConverter2Tests {
             currencyConverter.commandResponse("channel", "currency", "1 usd to gbp", event)
 
             Mockito.verify(event, Mockito.atLeastOnce()).respond(captor.capture())
+            println(captor.value)
             assertThat(captor.value)
                 .matches("\\$1.00 \\(United States Dollar\\) = £0\\.\\d+ \\(British Pound\\)".toRegex())
         }
