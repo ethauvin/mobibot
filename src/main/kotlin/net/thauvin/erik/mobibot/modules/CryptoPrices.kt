@@ -46,52 +46,64 @@ import java.time.LocalDate
 import java.util.*
 
 /**
- * Retrieves cryptocurrency market prices.
+ * Retrieves cryptocurrency market prices from Coinbase.
+ *
+ * This module supports spot price lookups for cryptocurrencies in either the
+ * default fiat currency or a user‑specified one. It also maintains a cached
+ * table of supported fiat currencies, refreshed at most once per day.
+ *
+ * The currency table is stored in an immutable map and published through a
+ * volatile reference to ensure safe concurrent access.
  */
 class CryptoPrices : AbstractModule() {
-    private val logger: Logger = LoggerFactory.getLogger(CryptoPrices::class.java)
-
     override val name = "CryptoPrices"
 
     @SuppressFBWarnings(value = ["MS_EXPOSE_REP", "EI_EXPOSE_STATIC_REP2"])
     companion object {
-        // Crypto command
-        private const val CRYPTO_CMD = "crypto"
+        const val DEFAULT_ERROR_MESSAGE =
+            "An error has occurred while retrieving the cryptocurrency market price"
 
-        // Fiat Currencies - Changed to immutable Map
+        private const val CRYPTO_CMD = "crypto"
+        private const val CODES_KEYWORD = "codes"
+
         @Volatile
         private var CURRENCIES: Map<String, String> = emptyMap()
 
-        // Currency codes keyword
-        private const val CODES_KEYWORD = "codes"
+        @Volatile
+        private var LAST_CHECKED: LocalDate = LocalDate.now()
 
-        // Default error message
-        const val DEFAULT_ERROR_MESSAGE = "An error has occurred while retrieving the cryptocurrency market price"
-
-        // Last checked date
-        private var LAST_CHECKED = LocalDate.now()
+        private val logger: Logger = LoggerFactory.getLogger(CryptoPrices::class.java)
 
         /**
-         * Get the current market price.
+         * Resolves the current spot price for a cryptocurrency.
+         *
+         * Accepts either a symbol alone (using the default fiat currency) or a
+         * symbol paired with a specific fiat currency code. Any other argument
+         * count results in an error.
          */
         @JvmStatic
         fun currentPrice(args: List<String>): CryptoPrice {
-            return if (args.size == 2)
-                spotPrice(args[0], args[1])
-            else
-                spotPrice(args[0])
+            if (args.size !in 1..2) {
+                throw IllegalArgumentException("Invalid number of arguments: $args")
+            }
+            return if (args.size == 2) spotPrice(args[0], args[1]) else spotPrice(args[0])
         }
 
         /**
-         * For testing purposes.
+         * Returns the human‑readable name of a fiat currency code, or null if
+         * the code is not present in the cached currency table.
          */
         @JvmStatic
-        fun getCurrencyName(code: String): String? {
-            return CURRENCIES[code]
-        }
+        fun getCurrencyName(code: String): String? = CURRENCIES[code]
 
         /**
-         * Loads the Fiat currencies.
+         * Loads the fiat currency table from the Coinbase API.
+         *
+         * The resulting map is wrapped in an unmodifiable view to guarantee
+         * immutability. The volatile reference ensures safe publication to
+         * concurrent readers.
+         *
+         * Any API failure is wrapped in a [ModuleException].
          */
         @JvmStatic
         @Throws(ModuleException::class)
@@ -108,10 +120,31 @@ class CryptoPrices : AbstractModule() {
                 LAST_CHECKED = LocalDate.now()
             } catch (e: CryptoException) {
                 throw ModuleException(
-                    "loadCurrencies(): CE",
+                    CryptoPrice::class.java.name + ".loadCurrencies()",
                     "An error has occurred while retrieving the currencies table.",
                     e
                 )
+            }
+        }
+
+        /**
+         * Reloads the fiat currency table if it is empty or older than one day.
+         *
+         * Uses a double‑checked lock to avoid redundant reloads under
+         * concurrency while keeping the fast path lock‑free.
+         */
+        private fun reloadIfNeeded() {
+            val today = LocalDate.now()
+            if (CURRENCIES.isEmpty() || today.isAfter(LAST_CHECKED.plusDays(1))) {
+                synchronized(CryptoPrices::class.java) {
+                    if (CURRENCIES.isEmpty() || today.isAfter(LAST_CHECKED.plusDays(1))) {
+                        try {
+                            loadCurrencies()
+                        } catch (e: ModuleException) {
+                            if (logger.isWarnEnabled) logger.warn(e.debugMessage, e)
+                        }
+                    }
+                }
             }
         }
     }
@@ -123,30 +156,22 @@ class CryptoPrices : AbstractModule() {
         addHelp("For example:")
         addHelp(helpFormat("%c $CRYPTO_CMD BTC"))
         addHelp(helpFormat("%c $CRYPTO_CMD ETH EUR"))
-        addHelp(helpFormat("%c $CRYPTO_CMD ETH2 GPB"))
+        addHelp(helpFormat("%c $CRYPTO_CMD ETH2 GBP"))
         addHelp("To list the supported currencies:")
         addHelp(helpFormat("%c $CRYPTO_CMD $CODES_KEYWORD"))
         loadCurrencies()
     }
 
-    // Reload currencies
-    private fun reload() {
-        if (CURRENCIES.isEmpty() || LocalDate.now().isAfter(LAST_CHECKED.plusDays(1))) {
-            try {
-                loadCurrencies()
-                LAST_CHECKED = LocalDate.now()
-            } catch (e: ModuleException) {
-                if (logger.isWarnEnabled) logger.warn(e.debugMessage, e)
-            }
-        }
-    }
-
     /**
-     * Returns the cryptocurrency market price from
-     * [Coinbase](https://docs.cdp.coinbase.com/coinbase-app/docs/api-prices#get-spot-price).
+     * Handles the `crypto` command and returns either a spot price or a list of
+     * supported fiat currencies.
+     *
+     * Input is validated to ensure it matches the expected pattern of a symbol
+     * optionally followed by a three‑letter fiat currency code. Any malformed
+     * input falls back to the module's help response.
      */
     override fun commandResponse(channel: String, cmd: String, args: String, event: GenericMessageEvent) {
-        reload()
+        reloadIfNeeded()
 
         if (CURRENCIES.isEmpty()) {
             event.respond("Sorry, but the currencies table is empty.")
@@ -156,27 +181,30 @@ class CryptoPrices : AbstractModule() {
         val debugMessage = "crypto($cmd $args)"
 
         when {
-            args == CODES_KEYWORD -> {
+            args.equals(CODES_KEYWORD, ignoreCase = true) -> {
                 event.sendMessage("The supported currencies are:")
-                event.sendList(CURRENCIES.keys.toList(), 10, isIndent = true)
+                event.sendList(CURRENCIES.keys.sorted(), 10, isIndent = true)
             }
 
-            args.matches("\\w+( [a-zA-Z]{3}+)?".toRegex()) -> {
+            args.matches("""[A-Za-z0-9]+( [A-Za-z]{3})?""".toRegex()) -> {
+                val parts = args.trim().split(Regex("\\s+"))
                 try {
-                    val price = currentPrice(args.split(' '))
+                    val price = currentPrice(parts)
                     val amount = try {
                         price.toCurrency()
                     } catch (_: IllegalArgumentException) {
                         price.amount
                     }
-                    event.respond("${price.base} current price is $amount [${CURRENCIES[price.currency]}]")
+                    val currencyName = CURRENCIES[price.currency] ?: price.currency
+                    event.respond("${price.base} current price is $amount [$currencyName]")
                 } catch (e: CryptoException) {
-                    if (logger.isWarnEnabled) logger.warn("$debugMessage => ${e.statusCode}", e)
-                    val errorMsg = e.message?.let { "$DEFAULT_ERROR_MESSAGE: $it" } ?: "$DEFAULT_ERROR_MESSAGE."
-                    event.respond(errorMsg)
+                    logger.warn("$debugMessage => ${e.statusCode}: ${e.message}", e)
+                    event.respond(DEFAULT_ERROR_MESSAGE)
                 } catch (e: IOException) {
-                    if (logger.isErrorEnabled) logger.error(debugMessage, e)
+                    logger.error(debugMessage, e)
                     event.respond("$DEFAULT_ERROR_MESSAGE: ${e.message}")
+                } catch (_: IllegalArgumentException) {
+                    event.respond("Invalid arguments. Usage: $CRYPTO_CMD <symbol> [<currency>]")
                 }
             }
 

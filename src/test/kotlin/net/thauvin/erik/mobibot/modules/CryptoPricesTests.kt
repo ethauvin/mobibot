@@ -96,7 +96,7 @@ class CryptoPricesTests {
 
             Mockito.verify(event, Mockito.times(1)).respond(captor.capture())
             assertThat(captor.value)
-                .isEqualTo("${CryptoPrices.DEFAULT_ERROR_MESSAGE}: not found")
+                .isEqualTo(CryptoPrices.DEFAULT_ERROR_MESSAGE)
         }
     }
 
