@@ -82,10 +82,10 @@ public class MobibotBuild extends Project {
                 RIFE2_RELEASES);
 
         var bytebuddy = version(1, 18, 8);
-        var junit = version(6, 0, 3);
-        var kotlin = version(2, 3, 20);
-        var langChain = version(1, 13, 0);
-        var log4j = version(2, 25, 4);
+        var junit = version(6, 1, 0);
+        var kotlin = version(2, 3, 21);
+        var langChain = version(1, 15, 0);
+        var log4j = version(2, 26, 0);
         var okhttp = version(5, 3, 2);
         scope(compile)
                 // PircBotX
@@ -93,25 +93,25 @@ public class MobibotBuild extends Project {
                 // Commons (mostly for PircBotX)
                 .include(dependency("org.apache.commons", "commons-lang3", "3.20.0"))
                 .include(dependency("org.apache.commons", "commons-text", "1.15.0"))
-                .include(dependency("commons-codec", "commons-codec", "1.21.0"))
+                .include(dependency("commons-codec", "commons-codec", "1.22.0"))
                 .include(dependency("commons-net", "commons-net", "3.13.0"))
                 // Google
-                .include(dependency("com.google.code.gson", "gson", "2.13.2"))
+                .include(dependency("com.google.code.gson", "gson", "2.14.0"))
                 .include(dependency("com.google.guava", "guava", "33.2.1-jre"))
                 // Kotlin
                 .include(dependency("org.jetbrains.kotlin", "kotlin-stdlib", kotlin))
                 .include(dependency("org.jetbrains.kotlin", "kotlin-stdlib-common", kotlin))
                 .include(dependency("org.jetbrains.kotlin", "kotlin-stdlib-jdk7", kotlin))
                 .include(dependency("org.jetbrains.kotlin", "kotlin-stdlib-jdk8", kotlin))
-                .include(dependency("org.jetbrains.kotlinx", "kotlinx-coroutines-core", "1.10.2"))
+                .include(dependency("org.jetbrains.kotlinx", "kotlinx-coroutines-core", "1.11.0"))
                 .include(dependency("org.jetbrains.kotlinx", "kotlinx-cli-jvm", "0.3.6"))
                 // Logging
-                .include(dependency("org.slf4j", "slf4j-api", "2.0.17"))
+                .include(dependency("org.slf4j", "slf4j-api", "2.0.18"))
                 .include(dependency("org.apache.logging.log4j", "log4j-api", log4j))
                 .include(dependency("org.apache.logging.log4j", "log4j-core", log4j))
                 .include(dependency("org.apache.logging.log4j", "log4j-slf4j2-impl", log4j))
                 // LangChain4J
-                .include(dependency("com.fasterxml.jackson.core", "jackson-databind", "2.21.2"))
+                .include(dependency("com.fasterxml.jackson.core", "jackson-databind", "2.21.3"))
                 .include(dependency("dev.langchain4j", "langchain4j", langChain))
                 .include(dependency("dev.langchain4j", "langchain4j-core", langChain))
                 .include(dependency("dev.langchain4j", "langchain4j-open-ai", langChain))
@@ -122,8 +122,8 @@ public class MobibotBuild extends Project {
                 .include(dependency("net.aksingh", "owm-japis", "2.5.3.0")
                         .exclude("com.squareup.okhttp3", "okhttp"))
                 .include(dependency("net.objecthunter", "exp4j", "0.4.8"))
-                .include(dependency("org.json", "json", "20251224"))
-                .include(dependency("org.jsoup", "jsoup", "1.22.1"))
+                .include(dependency("org.json", "json", "20260522"))
+                .include(dependency("org.jsoup", "jsoup", "1.22.2"))
                 // Thauvin
                 .include(dependency("net.thauvin.erik", "cryptoprice", "1.0.3-SNAPSHOT"))
                 .include(dependency("net.thauvin.erik", "frankfurter4j", "1.0.0-SNAPSHOT"))
@@ -136,7 +136,7 @@ public class MobibotBuild extends Project {
         scope(test)
                 // bld
                 .include(dependency("com.uwyn.rife2", "bld-extensions-testing-helpers",
-                        version(1, 0, 0)))
+                        version(1, 0, 1)))
                 // Mockito
                 .include(dependency("net.bytebuddy", "byte-buddy", bytebuddy))
                 .include(dependency("net.bytebuddy", "byte-buddy-agent", bytebuddy))
