@@ -61,6 +61,8 @@ class CurrencyConverter2 : AbstractModule() {
         private val MATCH_CMD_ARGS =
             """\s*\d{1,3}(?:,\d{3})*(?:\.\d+)?\s+[A-Za-z]{3}\s+(?:to|in)\s+[A-Za-z]{3}\s*""".toRegex()
         private val FRANKFURTER = Frankfurter()
+        private const val LOAD_CURRENCIES_INTERNAL = ".loadCurrenciesInternal()"
+
 
         @Volatile
         private var currenciesCache: Currencies? = null
@@ -103,7 +105,7 @@ class CurrencyConverter2 : AbstractModule() {
                     val msg = "Error retrieving currencies: ${result.message()} (${result.status()})"
                     if (logger.isWarnEnabled) logger.warn(msg)
                     throw ModuleException(
-                        CurrencyConverter2::class.java.name + ".loadCurrencies()",
+                        CurrencyConverter2::class.java.name + LOAD_CURRENCIES_INTERNAL,
                         msg
                     )
                 }
@@ -111,19 +113,19 @@ class CurrencyConverter2 : AbstractModule() {
             } catch (e: InterruptedException) {
                 Thread.currentThread().interrupt()
                 throw ModuleException(
-                    CurrencyConverter2::class.java.name + ".loadCurrencies()",
+                    CurrencyConverter2::class.java.name + LOAD_CURRENCIES_INTERNAL,
                     "Interrupted error while retrieving currencies.",
                     e
                 )
             } catch (e: IOException) {
                 throw ModuleException(
-                    CurrencyConverter2::class.java.name + ".loadCurrencies()",
+                    CurrencyConverter2::class.java.name + LOAD_CURRENCIES_INTERNAL,
                     "IO error while retrieving currencies.",
                     e
                 )
             } catch (e: FrankfurterException) {
                 throw ModuleException(
-                    CurrencyConverter2::class.java.name + ".loadCurrencies()",
+                    CurrencyConverter2::class.java.name + LOAD_CURRENCIES_INTERNAL,
                     "Frankfurter error while retrieving currencies.",
                     e
                 )

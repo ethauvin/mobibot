@@ -83,9 +83,7 @@ class CryptoPrices : AbstractModule() {
          */
         @JvmStatic
         fun currentPrice(args: List<String>): CryptoPrice {
-            if (args.size !in 1..2) {
-                throw IllegalArgumentException("Invalid number of arguments: $args")
-            }
+            require(args.size in 1..2) { "Invalid number of arguments: $args" }
             return if (args.size == 2) spotPrice(args[0], args[1]) else spotPrice(args[0])
         }
 
