@@ -79,12 +79,12 @@ public class MobibotBuild extends Project {
                 MAVEN_CENTRAL,
                 new Repository("https://jitpack.io"),
                 CENTRAL_SNAPSHOTS,
-                RIFE2_RELEASES);
+                RIFE2_SNAPSHOTS);
 
-        var bytebuddy = version(1, 18, 8);
+        var bytebuddy = version(1, 18, 9);
         var junit = version(6, 1, 0);
         var kotlin = version(2, 3, 21);
-        var langChain = version(1, 15, 0);
+        var langChain = version(1, 15, 1);
         var log4j = version(2, 26, 0);
         var okhttp = version(5, 3, 2);
         scope(compile)
@@ -111,7 +111,7 @@ public class MobibotBuild extends Project {
                 .include(dependency("org.apache.logging.log4j", "log4j-core", log4j))
                 .include(dependency("org.apache.logging.log4j", "log4j-slf4j2-impl", log4j))
                 // LangChain4J
-                .include(dependency("com.fasterxml.jackson.core", "jackson-databind", "2.21.3"))
+                .include(dependency("com.fasterxml.jackson.core", "jackson-databind", "2.21.4"))
                 .include(dependency("dev.langchain4j", "langchain4j", langChain))
                 .include(dependency("dev.langchain4j", "langchain4j-core", langChain))
                 .include(dependency("dev.langchain4j", "langchain4j-open-ai", langChain))
@@ -136,7 +136,7 @@ public class MobibotBuild extends Project {
         scope(test)
                 // bld
                 .include(dependency("com.uwyn.rife2", "bld-extensions-testing-helpers",
-                        version(1, 0, 1)))
+                        version(1, 1, 0, "SNAPSHOT")))
                 // Mockito
                 .include(dependency("net.bytebuddy", "byte-buddy", bytebuddy))
                 .include(dependency("net.bytebuddy", "byte-buddy-agent", bytebuddy))
