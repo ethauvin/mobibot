@@ -1,25 +1,44 @@
 version: 2.1
 
-defaults: &defaults
-  working_directory: ~/repo
-  environment:
-    JVM_OPTS: -Xmx3200m
-    TERM: dumb
-    CI_NAME: "CircleCI"
+executors:
+  jdk_executor:
+    parameters:
+      tag:
+        type: string
+    working_directory: ~/repo
+    docker:
+      - image: cimg/openjdk:<< parameters.tag >>
+    environment:
+      JVM_OPTS: -Xmx3200m
+      TERM: dumb
+      CI_NAME: "CircleCI"
 
 commands:
   build_and_test:
     steps:
       - checkout
       - run:
-          name: Install SDKMAN!
+          name: Install SDKMAN! and Kotlin
           command: |
-                   curl -s "https://get.sdkman.io" | bash
-                   echo sdkman_auto_answer=true > $HOME/.sdkman/etc/config
-                   echo sdkman_auto_selfupdate=true >> $HOME/.sdkman/etc/config
-                   source "$HOME/.sdkman/bin/sdkman-init.sh"
-                   sdk install kotlin
-                   source "$HOME/.sdkman/bin/sdkman-init.sh"
+            curl -s "https://get.sdkman.io" | bash
+            echo "sdkman_auto_answer=true" > $HOME/.sdkman/etc/config
+            echo "sdkman_auto_selfupdate=true" >> $HOME/.sdkman/etc/config
+            source "$HOME/.sdkman/bin/sdkman-init.sh"
+            sdk install kotlin
+      - restore_cache:
+          name: Restore bld dependencies
+          keys:
+            - bld-deps-{{ arch }}-{{ checksum "lib/bld/bld-wrapper.properties" }}
+            - bld-deps-{{ arch }}-
+      - run:
+          name: Download dependencies
+          command: |
+            if [ ! -f "lib/bld/bld.cache" ]; then
+              echo "No cache found - downloading dependencies"
+              ./bld download purge
+            else
+              echo "Cache found -> skipping download"
+            fi
       - run:
           name: Download dependencies
           command: ./bld download
@@ -35,25 +54,22 @@ commands:
           command: ./bld reporter --all
       - store_test_results:
           path: build/test-results/test/
+          when: always
       - store_artifacts:
           path: build/reports/jacoco/test/html
 
 jobs:
   bld_jdk21:
-    <<: *defaults
-
-    docker:
-      - image: cimg/openjdk:21.0
-
+    executor:
+      name: jdk_executor
+      tag: "21.0"
     steps:
       - build_and_test
 
   bld_jdk24:
-    <<: *defaults
-
-    docker:
-      - image: cimg/openjdk:24.0
-
+    executor:
+      name: jdk_executor
+      tag: "24.0"
     steps:
       - build_and_test
 

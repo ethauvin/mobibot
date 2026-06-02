@@ -32,7 +32,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Set up JDK ${{ matrix.java-version }} with Kotlin ${{ matrix.kotlin-version }}
+      - name: Set up JDK ${{ matrix.java-version }}
         uses: actions/setup-java@v5
         with:
           distribution: "zulu"
@@ -43,32 +43,8 @@ jobs:
         with:
           version: ${{ env.KOTLIN_VERSION }}
 
-      - name: Cache bld dependencies
-        id: cache-bld
-        uses: actions/cache@v5
-        with:
-          path: lib
-          key: ${{ runner.os }}-bld-${{ hashFiles('lib/bld/bld-wrapper.properties') }}
-          restore-keys: |
-            ${{ runner.os }}-bld-
-
-      - name: Check for bld cache
-        id: check-cache
-        shell: bash
-        run: |
-          if [ -f "lib/bld/bld.cache" ]; then
-            echo "cache_exists=true" >> $GITHUB_OUTPUT
-          else
-            echo "cache_exists=false" >> $GITHUB_OUTPUT
-          fi
-
       - name: Download dependencies
-        if: steps.check-cache.outputs.cache_exists == 'false'
-        run: ./bld download purge
-
-      - name: Update dependencies
-        if: steps.check-cache.outputs.cache_exists == 'true'
-        run: ./bld updates
+        run: ./bld download
 
       - name: Compile source
         run: ./bld compile
