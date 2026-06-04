@@ -402,7 +402,7 @@ class Mobibot(nickname: String, val channel: String, logsDirPath: String, p: Pro
                     addons.exec(channel, cmd, args, event)
                 }
             } else {
-                addons.match(channel, event); // Links, e.g.: https://www.example.com/ or L1: , etc.
+                addons.match(channel, event) // Links, e.g.: https://www.example.com/ or L1: , etc.
             }
             storeRecap(user.nick, event.message, false)
             seen.add(user.nick)

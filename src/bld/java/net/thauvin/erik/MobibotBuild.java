@@ -83,7 +83,7 @@ public class MobibotBuild extends Project {
 
         var bytebuddy = version(1, 18, 9);
         var junit = version(6, 1, 0);
-        var kotlin = version(2, 3, 21);
+        var kotlin = version(2, 4, 0);
         var langChain = version(1, 15, 1);
         var log4j = version(2, 26, 0);
         var okhttp = version(5, 3, 2);
@@ -177,7 +177,7 @@ public class MobibotBuild extends Project {
     public void compile() throws Exception {
         releaseInfo();
         var op = new CompileKotlinOperation().fromProject(this);
-        op.compileOptions().languageVersion("2.3").progressive(true).verbose(false);
+        op.compileOptions().languageVersion("2.4").progressive(true).verbose(false);
         op.execute();
     }
 
