@@ -49,7 +49,6 @@ import java.net.URI
 /**
  * Reads an RSS feed.
  */
-@SuppressFBWarnings("LO_SUSPECT_LOG_CLASS")
 class FeedReader(private val url: String, val event: GenericMessageEvent) : Runnable {
     private val logger: Logger = LoggerFactory.getLogger(FeedsManager::class.java)
 

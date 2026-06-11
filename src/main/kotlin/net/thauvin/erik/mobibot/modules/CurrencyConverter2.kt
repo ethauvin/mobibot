@@ -30,6 +30,7 @@
  */
 package net.thauvin.erik.mobibot.modules
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings
 import net.thauvin.erik.frankfurter.Frankfurter
 import net.thauvin.erik.frankfurter.FrankfurterException
 import net.thauvin.erik.frankfurter.models.Currencies
@@ -276,6 +277,7 @@ class CurrencyConverter2 : AbstractModule() {
     /**
      * Handles the currency command.
      */
+    @SuppressFBWarnings("BC_BAD_CAST_TO_ABSTRACT_COLLECTION")
     override fun commandResponse(channel: String, cmd: String, args: String, event: GenericMessageEvent) {
         when {
             args.matches(MATCH_CMD_ARGS) -> {

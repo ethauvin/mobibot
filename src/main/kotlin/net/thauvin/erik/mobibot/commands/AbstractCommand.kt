@@ -31,7 +31,6 @@
 
 package net.thauvin.erik.mobibot.commands
 
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings
 import net.thauvin.erik.mobibot.Utils.bot
 import net.thauvin.erik.mobibot.Utils.helpCmdSyntax
 import net.thauvin.erik.mobibot.Utils.isChannelOp
@@ -80,7 +79,6 @@ abstract class AbstractCommand {
         return false
     }
 
-    @SuppressFBWarnings("CVAA_CONTRAVARIANT_ELEMENT_ASSIGNMENT")
     open fun initProperties(vararg keys: String) {
         keys.forEach {
             properties[it] = ""

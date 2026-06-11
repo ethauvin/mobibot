@@ -31,7 +31,6 @@
 
 package net.thauvin.erik.mobibot
 
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings
 import kotlinx.cli.ArgParser
 import kotlinx.cli.ArgType
 import kotlinx.cli.default
@@ -84,14 +83,6 @@ class Mobibot(nickname: String, val channel: String, logsDirPath: String, p: Pro
     /** Logger. */
     val logger: Logger = LoggerFactory.getLogger(Mobibot::class.java)
 
-    @SuppressFBWarnings(
-        "CLI_CONSTANT_LIST_INDEX",
-        "DM_DEFAULT_ENCODING",
-        "EXS_EXCEPTION_SOFTENING_NO_CONSTRAINTS",
-        "LEST_LOST_EXCEPTION_STACK_TRACE",
-        "NAB_NEEDLESS_BOOLEAN_CONSTANT_CONVERSION",
-        "PATH_TRAVERSAL_IN"
-    )
     companion object {
         @JvmStatic
         @Throws(Exception::class)

@@ -54,8 +54,8 @@ import kotlin.io.path.exists
 /**
  * Manages the RSS feeds.
  */
-@SuppressFBWarnings("BC_BAD_CAST_TO_ABSTRACT_COLLECTION", "PATH_TRAVERSAL_IN")
 class FeedsManager private constructor() {
+    @SuppressFBWarnings("BC_BAD_CAST_TO_ABSTRACT_COLLECTION")
     companion object {
         private val logger: Logger = LoggerFactory.getLogger(FeedsManager::class.java)
 

@@ -187,7 +187,6 @@ class EntryLink(
     /**
      * Sets the tags.
      */
-    @SuppressFBWarnings("STT_STRING_PARSING_A_FIELD")
     private fun setTags(tags: List<String?>) {
         tags.forEach { tag ->
             if (tag.isNullOrBlank()) return@forEach

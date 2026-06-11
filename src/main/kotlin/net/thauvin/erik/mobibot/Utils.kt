@@ -30,7 +30,6 @@
  */
 package net.thauvin.erik.mobibot
 
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings
 import net.thauvin.erik.mobibot.Utils.reader
 import net.thauvin.erik.mobibot.msg.Message
 import net.thauvin.erik.urlencoder.UrlEncoderUtil
@@ -134,7 +133,6 @@ object Utils {
      * Colorize a string.
      */
     @JvmStatic
-    @SuppressFBWarnings("PDP_POORLY_DEFINED_PARAMETER")
     fun String?.colorize(color: BotColor): String {
         return when {
             isNullOrEmpty() -> ""
@@ -221,7 +219,6 @@ object Utils {
      * Load serial data from file.
      */
     @JvmStatic
-    @SuppressFBWarnings("PATH_TRAVERSAL_IN", "OBJECT_DESERIALIZATION")
     fun loadSerialData(file: String, default: Any, logger: Logger, description: String): Any {
         val serialFile = Paths.get(file)
         if (serialFile.exists() && serialFile.fileSize() > 0) {
@@ -297,7 +294,6 @@ object Utils {
      * Replaces all occurrences of Strings within another String.
      */
     @JvmStatic
-    @SuppressFBWarnings("CVAA_CONTRAVARIANT_ELEMENT_ASSIGNMENT")
     fun String.replaceEach(search: Array<out String>, replace: Array<out String>): String {
         var result = this
         if (search.size == replace.size) {
@@ -318,7 +314,6 @@ object Utils {
      * Save data
      */
     @JvmStatic
-    @SuppressFBWarnings("PATH_TRAVERSAL_IN")
     fun saveSerialData(file: String, data: Any, logger: Logger, description: String) {
         try {
             BufferedOutputStream(Files.newOutputStream(Paths.get(file))).use { bos ->
@@ -445,6 +440,5 @@ object Utils {
     /**
      * Holds the [URI.reader] response code and body text.
      */
-    @SuppressFBWarnings("USBR_UNNECESSARY_STORE_BEFORE_RETURN")
     data class UrlReaderResponse(val responseCode: Int, val body: String)
 }

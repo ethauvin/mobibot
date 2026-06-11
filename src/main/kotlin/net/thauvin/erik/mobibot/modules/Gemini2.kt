@@ -86,7 +86,7 @@ class Gemini2 : AbstractModule() {
                 try {
                     val gemini = GoogleAiGeminiChatModel.builder()
                         .apiKey(apiKey)
-                        .modelName("gemini-2.0-flash")
+                        .modelName("gemini-2.5-flash-lite")
                         .maxOutputTokens(maxTokens)
                         .build()
 

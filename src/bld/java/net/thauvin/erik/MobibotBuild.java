@@ -81,12 +81,12 @@ public class MobibotBuild extends Project {
                 CENTRAL_SNAPSHOTS,
                 RIFE2_SNAPSHOTS);
 
-        var bytebuddy = version(1, 18, 9);
-        var junit = version(6, 1, 0);
+        var bytebuddy = version(1, 18, 11);
+        var junit = version(6, 1, 1);
         var kotlin = version(2, 4, 0);
-        var langChain = version(1, 15, 1);
-        var log4j = version(2, 26, 0);
-        var okhttp = version(5, 3, 2);
+        var langChain = version(1, 17, 2);
+        var log4j = version(2, 26, 1);
+        var okhttp = version(5, 4, 0);
         scope(compile)
                 // PircBotX
                 .include(dependency("com.github.pircbotx", "pircbotx", "2.3.1"))
@@ -132,7 +132,7 @@ public class MobibotBuild extends Project {
                 .include(dependency("net.thauvin.erik.urlencoder", "urlencoder-lib-jvm", "1.6.0"));
         scope(provided)
                 .include(dependency("com.github.spotbugs", "spotbugs-annotations",
-                        version(4, 9, 8)));
+                        version(4, 10, 2)));
         scope(test)
                 // bld
                 .include(dependency("com.uwyn.rife2", "bld-extensions-testing-helpers",

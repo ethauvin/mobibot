@@ -45,11 +45,9 @@ import java.util.*
 /**
  * The WorldTime module.
  */
-@SuppressFBWarnings("BC_BAD_CAST_TO_ABSTRACT_COLLECTION", "COM_COPIED_OVERRIDDEN_METHOD")
 class WorldTime : AbstractModule() {
     override val name = "WorldTime"
 
-    @SuppressFBWarnings("STT_STRING_PARSING_A_FIELD")
     companion object {
         /**
          * Beats (Internet Time) keyword
@@ -379,6 +377,7 @@ class WorldTime : AbstractModule() {
         addCommand(TIME_CMD)
     }
 
+    @SuppressFBWarnings("BC_BAD_CAST_TO_ABSTRACT_COLLECTION")
     override fun commandResponse(channel: String, cmd: String, args: String, event: GenericMessageEvent) {
         if (args.equals(ZONES_ARGS, true)) {
             event.sendMessage("The supported countries/zones are: ")
