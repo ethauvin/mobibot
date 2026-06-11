@@ -93,7 +93,7 @@ object Constants {
     /**
      * User-Agent
      */
-    const val USER_AGENT = "Mozilla/5.0 (X11; Linux x86_64; rv:136.0) Gecko/20100101 Firefox/136.0"
+    const val USER_AGENT = ReleaseInfo.PROJECT + '/' + ReleaseInfo.VERSION + " (+" + ReleaseInfo.WEBSITE + ')'
 
     /**
      * Properties version line argument.
