@@ -350,7 +350,7 @@ class Mobibot(nickname: String, val channel: String, logsDirPath: String, p: Pro
 
     override fun onPrivateMessage(event: PrivateMessageEvent?) {
         event?.user?.let { user ->
-            if (logger.isTraceEnabled) logger.trace("<<< ${user.nick}: ${event.message}")
+            logger.atTrace().log("<<< ${user.nick}: ${event.message}")
             val cmds = event.message.trim().split(" ".toRegex(), 2)
             val cmd = cmds[0].lowercase()
             val args = cmds.lastOrEmpty().trim()
@@ -380,7 +380,7 @@ class Mobibot(nickname: String, val channel: String, logsDirPath: String, p: Pro
 
     override fun onMessage(event: MessageEvent?) {
         event?.user?.let { user ->
-            if (logger.isTraceEnabled) logger.trace(">>> ${user.nick}: ${event.message}")
+            logger.atTrace().log(">>> ${user.nick}: ${event.message}")
             tell.send(event)
             if (event.message.matches("(?i)${Pattern.quote(event.bot().nick)}:.*".toRegex())) { // mobibot: <command>
                 val cmds = event.message.substring(event.bot().nick.length + 1).trim().split(" ".toRegex(), 2)

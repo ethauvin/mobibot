@@ -82,9 +82,7 @@ class Addons(props: Properties) {
                     }
                     enabled = true
                 } else {
-                    if (logger.isDebugEnabled) {
-                        logger.debug("Command $name is disabled.")
-                    }
+                    logger.atDebug().log("Command $name is disabled.")
                     names.disabledCommands.add(name)
                 }
             } else {
@@ -114,9 +112,7 @@ class Addons(props: Properties) {
                     names.commands.addAll(commands)
                     enabled = true
                 } else {
-                    if (logger.isDebugEnabled) {
-                        logger.debug("Module $name is disabled.")
-                    }
+                    logger.atDebug().log("Module $name is disabled.")
                     names.disabledModules.add(name)
                 }
             } else {

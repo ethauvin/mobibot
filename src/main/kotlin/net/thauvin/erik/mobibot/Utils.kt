@@ -226,7 +226,7 @@ object Utils {
                 ObjectInputStream(
                     BufferedInputStream(Files.newInputStream(serialFile))
                 ).use { input ->
-                    if (logger.isDebugEnabled) logger.debug("Loading the ${description}.")
+                    logger.atDebug().log("Loading the ${description}.")
                     return input.readObject()
                 }
             } catch (e: IOException) {
@@ -318,7 +318,7 @@ object Utils {
         try {
             BufferedOutputStream(Files.newOutputStream(Paths.get(file))).use { bos ->
                 ObjectOutputStream(bos).use { output ->
-                    if (logger.isDebugEnabled) logger.debug("Saving the ${description}.")
+                    logger.atDebug().log("Saving the ${description}.")
                     output.writeObject(data)
                 }
             }

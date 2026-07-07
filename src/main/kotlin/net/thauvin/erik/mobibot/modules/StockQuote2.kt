@@ -97,7 +97,7 @@ class StockQuote2 : AbstractModule() {
         @Throws(ModuleException::class)
         private fun getJsonResponse(response: String, debugMessage: String): JSONObject {
             return if (response.isNotBlank()) {
-                if (logger.isTraceEnabled) logger.trace(response)
+                logger.atTrace().log(response)
                 val json = JSONObject(response)
                 try {
                     val error = json.getString("error")

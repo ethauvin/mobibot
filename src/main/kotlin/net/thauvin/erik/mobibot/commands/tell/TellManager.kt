@@ -48,7 +48,7 @@ object TellManager {
      */
     @JvmStatic
     fun clean(tellMessages: MutableList<TellMessage>, tellMaxDays: Long): Boolean {
-        if (logger.isDebugEnabled) logger.debug("Cleaning the messages.")
+        logger.atDebug().log("Cleaning the messages.")
         val today = LocalDateTime.now(Clock.systemUTC())
         return tellMessages.removeIf { o: TellMessage -> o.queued.plusDays(tellMaxDays).isBefore(today) }
     }

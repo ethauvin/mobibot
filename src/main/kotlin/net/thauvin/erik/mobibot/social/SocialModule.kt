@@ -58,7 +58,7 @@ abstract class SocialModule : AbstractModule() {
         if (isEnabled && !handle.isNullOrBlank()) {
             try {
                 post(message = msg, isDm = true)
-                if (logger.isDebugEnabled) logger.debug("Notified $handle on $name: $msg")
+                logger.atDebug().log("Notified $handle on $name: $msg")
             } catch (e: ModuleException) {
                 if (logger.isWarnEnabled) logger.warn("Failed to notify $handle on $name: $msg", e)
             }
@@ -73,9 +73,7 @@ abstract class SocialModule : AbstractModule() {
     fun postEntry(index: Int) {
         if (isAutoPost && LinksManager.entries.links.size >= index) {
             try {
-                if (logger.isDebugEnabled) {
-                    logger.debug("Posting {} to $name.", index.toLinkLabel())
-                }
+                logger.atDebug().log("Posting {} to $name.", index.toLinkLabel())
                 post(message = formatEntry(LinksManager.entries.links[index]), isDm = false)
             } catch (e: ModuleException) {
                 if (logger.isWarnEnabled) logger.warn(

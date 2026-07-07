@@ -109,12 +109,10 @@ class FeedsManager private constructor() {
          */
         @JvmStatic
         fun saveFeed(entries: Entries, currentFile: String = CURRENT_XML) {
-            if (logger.isDebugEnabled) logger.debug("Saving the feeds...")
+            logger.atDebug().log("Saving the feeds...")
 
             if (entries.logsDir.isBlank()) {
-                if (logger.isWarnEnabled) {
-                    logger.warn("Unable to generate the entries feed. A required property is missing.")
-                }
+                logger.atWarn().log("Unable to generate the entries feed. A required property is missing.")
                 return
             }
 
@@ -167,7 +165,7 @@ class FeedsManager private constructor() {
                     Files.newOutputStream(Paths.get("${entries.logsDir}${currentFile}")),
                     StandardCharsets.UTF_8
                 ).use { fw ->
-                    if (logger.isDebugEnabled) logger.debug("Writing the entries feed.")
+                    logger.atDebug().log("Writing the entries feed.")
                     output.output(rss, fw)
                 }
 

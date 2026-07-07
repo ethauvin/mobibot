@@ -90,9 +90,7 @@ class SocialManager {
     fun queueEntry(index: Int) {
         if (modules.isNotEmpty()) {
             entries.add(index)
-            if (logger.isDebugEnabled) {
-                logger.debug("Scheduling {} for posting on social media.", index.toLinkLabel())
-            }
+            logger.atDebug().log("Scheduling {} for posting on social media.", index.toLinkLabel())
             timer.schedule(SocialTimer(this, index), Constants.TIMER_DELAY * 60L * 1000L)
         }
     }
