@@ -58,6 +58,7 @@ import static rife.bld.dependencies.Scope.*;
 public class MobibotBuild extends Project {
 
     private static final String DETEKT_BASELINE = "config/detekt/baseline.xml";
+    final File generatedDirectory = new File(srcDirectory(), "generated");
     final File srcMainKotlin = new File(srcMainDirectory(), "kotlin");
     final File testResultsDirectory = IOTools.resolveFile(buildDirectory(), "test-results", "test");
 
@@ -176,7 +177,9 @@ public class MobibotBuild extends Project {
     @Override
     public void compile() throws Exception {
         releaseInfo();
-        var op = new CompileKotlinOperation().fromProject(this);
+        var op = new CompileKotlinOperation()
+                .fromProject(this)
+                .mainSourceDirectories(generatedDirectory);
         op.compileOptions().languageVersion("2.4").progressive(true).verbose(false);
         op.execute();
     }
@@ -259,7 +262,7 @@ public class MobibotBuild extends Project {
                 .classTemplate(new File(workDirectory(), "release-info.txt"))
                 .className("ReleaseInfo")
                 .packageName(pkg)
-                .directory(srcMainKotlin)
+                .directory(generatedDirectory)
                 .extension(".kt")
                 .execute();
     }
