@@ -1,4 +1,4 @@
-<?xml version="1.0" ?>
+./<?xml version="1.0" ?>
 <SmellBaseline>
   <ManuallySuppressedIssues/>
   <CurrentIssues>
@@ -7,7 +7,7 @@
     <ID>ConstructorParameterNaming:EntryLink.kt$EntryLink$private val _tags: MutableList&lt;SyndCategory&gt; = mutableListOf()</ID>
     <ID>CyclomaticComplexMethod:FeedsManager.kt$FeedsManager.Companion$@JvmStatic fun saveFeed(entries: Entries, currentFile: String = CURRENT_XML)</ID>
     <ID>CyclomaticComplexMethod:Weather2.kt$Weather2.Companion$@JvmStatic @Throws(ModuleException::class) fun getWeather(query: String, apiKey: String?): List&lt;Message&gt;</ID>
-    <ID>DestructuringDeclarationWithTooManyEntries:CurrencyConverter2.kt$CurrencyConverter2.Companion$val (amountString, fromCode, _, toCode) = parts</ID>
+    <ID>DestructuringDeclarationWithTooManyEntries:CurrencyConverter2.kt$CurrencyConverter2$val (amountString, fromCode, _, toCode) = parts</ID>
     <ID>LongMethod:FeedsManager.kt$FeedsManager.Companion$@JvmStatic fun saveFeed(entries: Entries, currentFile: String = CURRENT_XML)</ID>
     <ID>LongMethod:Mastodon.kt$Mastodon.Companion$@JvmStatic @Throws(ModuleException::class) fun toot(accessToken: String?, instance: String?, handle: String?, message: String, isDm: Boolean): String</ID>
     <ID>LongMethod:Mobibot.kt$Mobibot.Companion$@JvmStatic @Throws(Exception::class) fun main(args: Array&lt;String&gt;)</ID>
@@ -18,7 +18,10 @@
     <ID>MagicNumber:Comment.kt$Comment$3</ID>
     <ID>MagicNumber:CryptoPrices.kt$CryptoPrices$10</ID>
     <ID>MagicNumber:CurrencyConverter2.kt$CurrencyConverter2$11</ID>
-    <ID>MagicNumber:CurrencyConverter2.kt$CurrencyConverter2.Companion$4</ID>
+    <ID>MagicNumber:CurrencyConverter2.kt$CurrencyConverter2$15</ID>
+    <ID>MagicNumber:CurrencyConverter2.kt$CurrencyConverter2$24</ID>
+    <ID>MagicNumber:CurrencyConverter2.kt$CurrencyConverter2$4</ID>
+    <ID>MagicNumber:CurrencyConverter2.kt$CurrencyConverter2$500</ID>
     <ID>MagicNumber:Cycle.kt$Cycle$1000L</ID>
     <ID>MagicNumber:Ignore.kt$Ignore$8</ID>
     <ID>MagicNumber:Info.kt$Info.Companion$30</ID>
@@ -65,15 +68,15 @@
     <ID>NestedBlockDepth:Weather2.kt$Weather2$override fun commandResponse(channel: String, cmd: String, args: String, event: GenericMessageEvent)</ID>
     <ID>ReturnCount:Addons.kt$Addons$fun exec(channel: String, cmd: String, args: String, event: GenericMessageEvent): Boolean</ID>
     <ID>ReturnCount:Addons.kt$Addons$fun help(channel: String, topic: String, event: GenericMessageEvent): Boolean</ID>
-    <ID>ReturnCount:CurrencyConverter2.kt$CurrencyConverter2.Companion$@JvmStatic fun convertCurrency(query: String): Message</ID>
-    <ID>ReturnCount:CurrencyConverter2.kt$CurrencyConverter2.Companion$private fun parseQuery(query: String): Result&lt;ConversionQuery&gt;</ID>
+    <ID>ReturnCount:CurrencyConverter2.kt$CurrencyConverter2$internal fun convertCurrency(query: String): Message</ID>
+    <ID>ReturnCount:CurrencyConverter2.kt$CurrencyConverter2$private fun parseQuery(query: String): Result&lt;ConversionQuery&gt;</ID>
     <ID>ReturnCount:ExceptionSanitizer.kt$ExceptionSanitizer$fun ModuleException.sanitize(vararg sanitize: String): ModuleException</ID>
     <ID>ReturnCount:Lookup.kt$Lookup$override fun commandResponse(channel: String, cmd: String, args: String, event: GenericMessageEvent)</ID>
     <ID>ReturnCount:Seen.kt$Seen$override fun commandResponse(channel: String, args: String, event: GenericMessageEvent)</ID>
     <ID>ReturnCount:StockQuote2.kt$StockQuote2.Companion$@JvmStatic @Throws(ModuleException::class) fun getQuote(symbol: String, apiKey: String?): List&lt;Message&gt;</ID>
     <ID>ReturnCount:StockQuote2.kt$StockQuote2.Companion$@JvmStatic @Throws(ModuleException::class) fun lookup(keywords: String, apiKey: String?): List&lt;Message&gt;</ID>
     <ID>ReturnCount:Weather2.kt$Weather2.Companion$@JvmStatic @Throws(ModuleException::class) fun getWeather(query: String, apiKey: String?): List&lt;Message&gt;</ID>
-    <ID>ThrowsCount:CurrencyConverter2.kt$CurrencyConverter2.Companion$@Throws(ModuleException::class) private fun loadCurrenciesInternal(): Currencies</ID>
+    <ID>ThrowsCount:CurrencyConverter2.kt$CurrencyConverter2$@Throws(ModuleException::class) private fun loadCurrenciesInternal(): Currencies</ID>
     <ID>ThrowsCount:GoogleSearch.kt$GoogleSearch.Companion$@JvmStatic @Throws(ModuleException::class) fun searchGoogle( query: String, apiKey: String?, cseKey: String?, quotaUser: String = ReleaseInfo.PROJECT ): List&lt;Message&gt;</ID>
     <ID>ThrowsCount:Joke.kt$Joke.Companion$@JvmStatic @Throws(ModuleException::class) fun randomJoke(): List&lt;Message&gt;</ID>
     <ID>ThrowsCount:Mastodon.kt$Mastodon.Companion$@JvmStatic @Throws(ModuleException::class) fun toot(accessToken: String?, instance: String?, handle: String?, message: String, isDm: Boolean): String</ID>
@@ -87,6 +90,7 @@
     <ID>TooGenericExceptionCaught:Utils.kt$Utils$e: Exception</ID>
     <ID>TooGenericExceptionCaught:Weather2.kt$Weather2.Companion$e: NullPointerException</ID>
     <ID>TooManyFunctions:Addons.kt$Addons</ID>
+    <ID>TooManyFunctions:CurrencyConverter2.kt$CurrencyConverter2 : AbstractModule</ID>
     <ID>TooManyFunctions:EntryLink.kt$EntryLink : Serializable</ID>
     <ID>TooManyFunctions:Mobibot.kt$Mobibot : ListenerAdapter</ID>
     <ID>TooManyFunctions:Seen.kt$Seen : AbstractCommand</ID>

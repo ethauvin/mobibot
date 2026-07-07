@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>net.thauvin.erik.mobibot</groupId>
   <artifactId>mobibot</artifactId>
-  <version>0.8.1-rc+20260706212536</version>
+  <version>0.8.1-rc+20260707023030</version>
   <name>mobibot</name>
   <description></description>
   <url></url>
@@ -139,6 +139,12 @@
       <groupId>dev.langchain4j</groupId>
       <artifactId>langchain4j-google-ai-gemini</artifactId>
       <version>1.17.2</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.github.ben-manes.caffeine</groupId>
+      <artifactId>caffeine</artifactId>
+      <version>3.2.4</version>
       <scope>compile</scope>
     </dependency>
     <dependency>

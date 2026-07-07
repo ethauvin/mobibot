@@ -33,7 +33,6 @@ package net.thauvin.erik.mobibot.modules
 import assertk.all
 import assertk.assertThat
 import assertk.assertions.*
-import net.thauvin.erik.mobibot.modules.CurrencyConverter2.Companion.convertCurrency
 import net.thauvin.erik.mobibot.msg.ErrorMessage
 import net.thauvin.erik.mobibot.msg.Message
 import net.thauvin.erik.mobibot.msg.PublicMessage
@@ -67,7 +66,8 @@ class CurrencyConverter2Tests {
 
         @Test
         fun currencies() {
-            val currencies = CurrencyConverter2.currencies()
+            val converter = CurrencyConverter2()
+            val currencies = converter.currencies()
             assertThat(currencies.find("USD")).isPresent()
             assertThat(currencies.find("AED")).isPresent()
         }
@@ -90,10 +90,12 @@ class CurrencyConverter2Tests {
     @Nested
     @DisplayName("Currency Converter Tests")
     inner class CurrencyConverterTests {
+        private val converter = CurrencyConverter2()
+
         @Test
         fun `Convert CAD to USD`() {
             assertThat(
-                convertCurrency("123,456.7890 CAD to USD").msg,
+                converter.convertCurrency("123,456.7890 CAD to USD").msg,
                 "convertCurrency(123,456.7890 CAD to USD)"
             ).matches("\\$123,456.789 \\(Canadian Dollar\\) = \\$\\d+,\\d+\\.\\d+ \\(United States Dollar\\)".toRegex())
         }
@@ -101,7 +103,7 @@ class CurrencyConverter2Tests {
         @Test
         fun `Convert USD to EUR`() {
             assertThat(
-                convertCurrency("100 USD to EUR").msg,
+                converter.convertCurrency("100 USD to EUR").msg,
                 "convertCurrency(100 USD to EUR)"
             ).matches("\\$100.00 \\(United States Dollar\\) = \\d+,\\d+ € \\(Euro\\)".toRegex())
         }
@@ -109,14 +111,14 @@ class CurrencyConverter2Tests {
         @Test
         fun `Convert USD to CNY`() {
             assertThat(
-                convertCurrency("1 USD to CNY").msg,
+                converter.convertCurrency("1 USD to CNY").msg,
                 "convertCurrency(1 USD to CNY)"
             ).matches("\\$1.00 \\(United States Dollar\\) = ¥\\d+\\.\\d+ \\(Chinese Renminbi Yuan\\)".toRegex())
         }
 
         @Test
         fun `Convert USD to Invalid Currency`() {
-            assertThat(convertCurrency("100 USD to FOO"), "convertCurrency(100 USD to FOO)").all {
+            assertThat(converter.convertCurrency("100 USD to FOO"), "convertCurrency(100 USD to FOO)").all {
                 prop(Message::msg)
                     .contains("Sounds like monopoly money to me! Try looking up the supported currency codes.")
                 isInstanceOf(ErrorMessage::class.java)
@@ -125,7 +127,7 @@ class CurrencyConverter2Tests {
 
         @Test
         fun `Convert USD to USD`() {
-            assertThat(convertCurrency("100 USD to USD"), "convertCurrency(100 USD to USD)").all {
+            assertThat(converter.convertCurrency("100 USD to USD"), "convertCurrency(100 USD to USD)").all {
                 prop(Message::msg).contains("You're kidding, right?")
                 isInstanceOf(PublicMessage::class.java)
             }
@@ -133,7 +135,7 @@ class CurrencyConverter2Tests {
 
         @Test
         fun `Invalid Query should throw exception`() {
-            assertThat(convertCurrency("100 USD"), "convertCurrency(100 USD)").all {
+            assertThat(converter.convertCurrency("100 USD"), "convertCurrency(100 USD)").all {
                 prop(Message::msg).contains("Invalid query.")
                 isInstanceOf(ErrorMessage::class.java)
             }
