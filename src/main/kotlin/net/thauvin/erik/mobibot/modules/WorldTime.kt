@@ -40,7 +40,6 @@ import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoField
-import java.util.*
 
 /**
  * The WorldTime module.
@@ -54,279 +53,6 @@ class WorldTime : AbstractModule() {
          */
         const val BEATS_KEYWORD = ".beats"
 
-        /**
-         * Supported countries
-         */
-        val COUNTRIES_MAP: Map<String, String> = Collections.unmodifiableMap(buildMap {
-            put("AG", "America/Antigua")
-            put("AI", "America/Anguilla")
-            put("AE", "Asia/Dubai")
-            put("AD", "Europe/Andorra")
-            put("AKDT", "America/Anchorage")
-            put("AF", "Asia/Kabul")
-            put("AKST", "America/Anchorage")
-            put("AL", "Europe/Tirane")
-            put("AM", "Asia/Yerevan")
-            put("AO", "Africa/Luanda")
-            put("AQ", "Antarctica/South_Pole")
-            put("AR", "America/Argentina/Buenos_Aires")
-            put("AS", "Pacific/Pago_Pago")
-            put("AT", "Europe/Vienna")
-            put("AU", "Australia/Sydney")
-            put("AW", "America/Aruba")
-            put("AX", "Europe/Mariehamn")
-            put("AZ", "Asia/Baku")
-            put("BA", "Europe/Sarajevo")
-            put("BB", "America/Barbados")
-            put("BD", "Asia/Dhaka")
-            put("BE", "Europe/Brussels")
-            put("BEAT", BEATS_KEYWORD)
-            put("BF", "Africa/Ouagadougou")
-            put("BG", "Europe/Sofia")
-            put("BH", "Asia/Bahrain")
-            put("BI", "Africa/Bujumbura")
-            put("BJ", "Africa/Porto-Novo")
-            put("BL", "America/St_Barthelemy")
-            put("BM", "Atlantic/Bermuda")
-            put("BMT", BEATS_KEYWORD)
-            put("BN", "Asia/Brunei")
-            put("BO", "America/La_Paz")
-            put("BQ", "America/Kralendijk")
-            put("BR", "America/Sao_Paulo")
-            put("BS", "America/Nassau")
-            put("BT", "Asia/Thimphu")
-            put("BW", "Africa/Gaborone")
-            put("BY", "Europe/Minsk")
-            put("BZ", "America/Belize")
-            put("CA", "America/Montreal")
-            put("CC", "Indian/Cocos")
-            put("CD", "Africa/Kinshasa")
-            put("CDT", "America/Chicago")
-            put("CET", "CET")
-            put("CF", "Africa/Bangui")
-            put("CG", "Africa/Brazzaville")
-            put("CH", "Europe/Zurich")
-            put("CI", "Africa/Abidjan")
-            put("CK", "Pacific/Rarotonga")
-            put("CL", "America/Santiago")
-            put("CM", "Africa/Douala")
-            put("CN", "Asia/Shanghai")
-            put("CO", "America/Bogota")
-            put("CR", "America/Costa_Rica")
-            put("CST", "America/Chicago")
-            put("CU", "Cuba")
-            put("CV", "Atlantic/Cape_Verde")
-            put("CW", "America/Curacao")
-            put("CX", "Indian/Christmas")
-            put("CY", "Asia/Nicosia")
-            put("CZ", "Europe/Prague")
-            put("DE", "Europe/Berlin")
-            put("DJ", "Africa/Djibouti")
-            put("DK", "Europe/Copenhagen")
-            put("DM", "America/Dominica")
-            put("DO", "America/Santo_Domingo")
-            put("DZ", "Africa/Algiers")
-            put("EC", "Pacific/Galapagos")
-            put("EDT", "America/New_York")
-            put("EE", "Europe/Tallinn")
-            put("EG", "Africa/Cairo")
-            put("EH", "Africa/El_Aaiun")
-            put("ER", "Africa/Asmara")
-            put("ES", "Europe/Madrid")
-            put("EST", "America/New_York")
-            put("ET", "Africa/Addis_Ababa")
-            put("FI", "Europe/Helsinki")
-            put("FJ", "Pacific/Fiji")
-            put("FK", "Atlantic/Stanley")
-            put("FM", "Pacific/Yap")
-            put("FO", "Atlantic/Faroe")
-            put("FR", "Europe/Paris")
-            put("GA", "Africa/Libreville")
-            put("GB", "Europe/London")
-            put("GD", "America/Grenada")
-            put("GE", "Asia/Tbilisi")
-            put("GF", "America/Cayenne")
-            put("GG", "Europe/Guernsey")
-            put("GH", "Africa/Accra")
-            put("GI", "Europe/Gibraltar")
-            put("GL", "America/Thule")
-            put("GM", "Africa/Banjul")
-            put("GMT", "GMT")
-            put("GN", "Africa/Conakry")
-            put("GP", "America/Guadeloupe")
-            put("GQ", "Africa/Malabo")
-            put("GR", "Europe/Athens")
-            put("GS", "Atlantic/South_Georgia")
-            put("GT", "America/Guatemala")
-            put("GU", "Pacific/Guam")
-            put("GW", "Africa/Bissau")
-            put("GY", "America/Guyana")
-            put("HK", "Asia/Hong_Kong")
-            put("HN", "America/Tegucigalpa")
-            put("HR", "Europe/Zagreb")
-            put("HST", "Pacific/Honolulu")
-            put("HT", "America/Port-au-Prince")
-            put("HU", "Europe/Budapest")
-            put("ID", "Asia/Jakarta")
-            put("IE", "Europe/Dublin")
-            put("IL", "Asia/Tel_Aviv")
-            put("IM", "Europe/Isle_of_Man")
-            put("IN", "Asia/Kolkata")
-            put("IO", "Indian/Chagos")
-            put("IQ", "Asia/Baghdad")
-            put("IR", "Asia/Tehran")
-            put("IS", "Atlantic/Reykjavik")
-            put("IT", "Europe/Rome")
-            put("JE", "Europe/Jersey")
-            put("JM", "Jamaica")
-            put("JO", "Asia/Amman")
-            put("JP", "Asia/Tokyo")
-            put("KE", "Africa/Nairobi")
-            put("KG", "Asia/Bishkek")
-            put("KH", "Asia/Phnom_Penh")
-            put("KI", "Pacific/Tarawa")
-            put("KM", "Indian/Comoro")
-            put("KN", "America/St_Kitts")
-            put("KP", "Asia/Pyongyang")
-            put("KR", "Asia/Seoul")
-            put("KW", "Asia/Riyadh")
-            put("KY", "America/Cayman")
-            put("KZ", "Asia/Oral")
-            put("LA", "Asia/Vientiane")
-            put("LB", "Asia/Beirut")
-            put("LC", "America/St_Lucia")
-            put("LI", "Europe/Vaduz")
-            put("LK", "Asia/Colombo")
-            put("LR", "Africa/Monrovia")
-            put("LS", "Africa/Maseru")
-            put("LT", "Europe/Vilnius")
-            put("LU", "Europe/Luxembourg")
-            put("LV", "Europe/Riga")
-            put("LY", "Africa/Tripoli")
-            put("MA", "Africa/Casablanca")
-            put("MC", "Europe/Monaco")
-            put("MD", "Europe/Chisinau")
-            put("MDT", "America/Denver")
-            put("ME", "Europe/Podgorica")
-            put("MF", "America/Marigot")
-            put("MG", "Indian/Antananarivo")
-            put("MH", "Pacific/Majuro")
-            put("MK", "Europe/Skopje")
-            put("ML", "Africa/Timbuktu")
-            put("MM", "Asia/Yangon")
-            put("MN", "Asia/Ulaanbaatar")
-            put("MO", "Asia/Macau")
-            put("MP", "Pacific/Saipan")
-            put("MQ", "America/Martinique")
-            put("MR", "Africa/Nouakchott")
-            put("MS", "America/Montserrat")
-            put("MST", "America/Denver")
-            put("MT", "Europe/Malta")
-            put("MU", "Indian/Mauritius")
-            put("MV", "Indian/Maldives")
-            put("MW", "Africa/Blantyre")
-            put("MX", "America/Mexico_City")
-            put("MY", "Asia/Kuala_Lumpur")
-            put("MZ", "Africa/Maputo")
-            put("NA", "Africa/Windhoek")
-            put("NC", "Pacific/Noumea")
-            put("NE", "Africa/Niamey")
-            put("NF", "Pacific/Norfolk")
-            put("NG", "Africa/Lagos")
-            put("NI", "America/Managua")
-            put("NL", "Europe/Amsterdam")
-            put("NO", "Europe/Oslo")
-            put("NP", "Asia/Kathmandu")
-            put("NR", "Pacific/Nauru")
-            put("NU", "Pacific/Niue")
-            put("NZ", "Pacific/Auckland")
-            put("OM", "Asia/Muscat")
-            put("PA", "America/Panama")
-            put("PDT", "America/Los_Angeles")
-            put("PE", "America/Lima")
-            put("PF", "Pacific/Tahiti")
-            put("PG", "Pacific/Port_Moresby")
-            put("PH", "Asia/Manila")
-            put("PK", "Asia/Karachi")
-            put("PL", "Europe/Warsaw")
-            put("PM", "America/Miquelon")
-            put("PN", "Pacific/Pitcairn")
-            put("PR", "America/Puerto_Rico")
-            put("PS", "Asia/Gaza")
-            put("PST", "America/Los_Angeles")
-            put("PT", "Europe/Lisbon")
-            put("PW", "Pacific/Palau")
-            put("PY", "America/Asuncion")
-            put("QA", "Asia/Qatar")
-            put("RE", "Indian/Reunion")
-            put("RO", "Europe/Bucharest")
-            put("RS", "Europe/Belgrade")
-            put("RU", "Europe/Moscow")
-            put("RW", "Africa/Kigali")
-            put("SA", "Asia/Riyadh")
-            put("SB", "Pacific/Guadalcanal")
-            put("SC", "Indian/Mahe")
-            put("SD", "Africa/Khartoum")
-            put("SE", "Europe/Stockholm")
-            put("SG", "Asia/Singapore")
-            put("SH", "Atlantic/St_Helena")
-            put("SI", "Europe/Ljubljana")
-            put("SJ", "Atlantic/Jan_Mayen")
-            put("SK", "Europe/Bratislava")
-            put("SL", "Africa/Freetown")
-            put("SM", "Europe/San_Marino")
-            put("SN", "Africa/Dakar")
-            put("SO", "Africa/Mogadishu")
-            put("SR", "America/Paramaribo")
-            put("SS", "Africa/Juba")
-            put("ST", "Africa/Sao_Tome")
-            put("SV", "America/El_Salvador")
-            put("SX", "America/Lower_Princes")
-            put("SY", "Asia/Damascus")
-            put("SZ", "Africa/Mbabane")
-            put("TC", "America/Grand_Turk")
-            put("TD", "Africa/Ndjamena")
-            put("TF", "Indian/Kerguelen")
-            put("TG", "Africa/Lome")
-            put("TH", "Asia/Bangkok")
-            put("TJ", "Asia/Dushanbe")
-            put("TK", "Pacific/Fakaofo")
-            put("TL", "Asia/Dili")
-            put("TM", "Asia/Ashgabat")
-            put("TN", "Africa/Tunis")
-            put("TO", "Pacific/Tongatapu")
-            put("TR", "Europe/Istanbul")
-            put("TT", "America/Port_of_Spain")
-            put("TV", "Pacific/Funafuti")
-            put("TW", "Asia/Taipei")
-            put("TZ", "Africa/Dar_es_Salaam")
-            put("UA", "Europe/Kiev")
-            put("UG", "Africa/Kampala")
-            put("UK", "Europe/London")
-            put("UM", "Pacific/Wake")
-            put("US", "America/New_York")
-            put("UTC", "UTC")
-            put("UY", "America/Montevideo")
-            put("UZ", "Asia/Tashkent")
-            put("VA", "Europe/Vatican")
-            put("VC", "America/St_Vincent")
-            put("VE", "America/Caracas")
-            put("VG", "America/Tortola")
-            put("VI", "America/St_Thomas")
-            put("VN", "Asia/Ho_Chi_Minh")
-            put("VU", "Pacific/Efate")
-            put("WF", "Pacific/Wallis")
-            put("WS", "Pacific/Apia")
-            put("YE", "Asia/Aden")
-            put("YT", "Indian/Mayotte")
-            put("ZA", "Africa/Johannesburg")
-            put("ZM", "Africa/Lusaka")
-            put("ZULU", "Zulu")
-            put("ZW", "Africa/Harare")
-            ZoneId.getAvailableZoneIds().filter { it.length <= 3 && !containsKey(it) }
-                .forEach { tz -> put(tz, tz) }
-        })
-
         // The Time command
         private const val TIME_CMD = "time"
 
@@ -339,6 +65,77 @@ class WorldTime : AbstractModule() {
         // Date/Time Format
         private var dtf =
             DateTimeFormatter.ofPattern("'The time is ${"'HH:mm'".bold()} on ${"'EEEE, d MMMM yyyy'".bold()} in '")
+
+        /**
+         * Manual overrides for common country codes and abbreviations.
+         * These take precedence over auto-generated entries.
+         */
+        private val MANUAL_OVERRIDES = mapOf(
+            // Special keywords
+            "BEAT" to BEATS_KEYWORD,
+            "BMT" to BEATS_KEYWORD,
+
+            // Common timezone abbreviations
+            "PST" to "America/Los_Angeles",
+            "PDT" to "America/Los_Angeles",
+            "EST" to "America/New_York",
+            "EDT" to "America/New_York",
+            "CST" to "America/Chicago",
+            "CDT" to "America/Chicago",
+            "MST" to "America/Denver",
+            "MDT" to "America/Denver",
+            "HST" to "Pacific/Honolulu",
+            "AKST" to "America/Anchorage",
+            "AKDT" to "America/Anchorage",
+            "GMT" to "GMT",
+            "UTC" to "UTC",
+            "ZULU" to "Zulu",
+            "CET" to "CET",
+
+            // Country codes with sensible defaults
+            "US" to "America/New_York",
+            "UK" to "Europe/London",
+            "GB" to "Europe/London",
+            "CA" to "America/Toronto",
+            "AU" to "Australia/Sydney",
+            "NZ" to "Pacific/Auckland",
+            "JP" to "Asia/Tokyo",
+            "CN" to "Asia/Shanghai",
+            "IN" to "Asia/Kolkata",
+            "DE" to "Europe/Berlin",
+            "FR" to "Europe/Paris",
+            "IT" to "Europe/Rome",
+            "ES" to "Europe/Madrid",
+            "RU" to "Europe/Moscow",
+            "BR" to "America/Sao_Paulo",
+            "MX" to "America/Mexico_City",
+            "ZA" to "Africa/Johannesburg",
+            "EG" to "Africa/Cairo"
+        )
+
+        /**
+         * Supported countries/zones. Auto-populated from IANA + manual overrides.
+         */
+        val COUNTRIES_MAP: Map<String, String> by lazy {
+            buildMap {
+                // 1. Add manual overrides first so they take precedence
+                putAll(MANUAL_OVERRIDES)
+
+                // 2. Add all IANA timezone IDs
+                ZoneId.getAvailableZoneIds().forEach { zone ->
+                    // Full ID: AMERICA/NEW_YORK -> America/New_York
+                    putIfAbsent(zone.uppercase(), zone)
+
+                    // City name: TOKYO -> Asia/Tokyo
+                    val city = zone.substringAfterLast('/')
+                        .uppercase()
+                        .replace("_", "")
+                    putIfAbsent(city, zone)
+
+                    // Short IDs like EST, HST already in ZoneId list
+                }
+            }
+        }
 
         /**
          * Returns the current Internet (beat) Time.
@@ -355,24 +152,33 @@ class WorldTime : AbstractModule() {
          */
         @JvmStatic
         fun time(query: String = DEFAULT_ZONE): String {
-            val tz = COUNTRIES_MAP[(if (query.isNotBlank()) query.trim().uppercase() else DEFAULT_ZONE)]
+            val q = query.trim().uppercase().replace(" ", "_")
+
+            // Try exact match first, then fuzzy match
+            val tz = COUNTRIES_MAP[q] ?: COUNTRIES_MAP.entries.firstOrNull {
+                it.key.startsWith(q) || it.value.uppercase().endsWith("/$q")
+            }?.value
+
             return if (tz != null) {
                 if (BEATS_KEYWORD == tz) {
                     "The current Internet Time is ${internetTime().bold()} $BEATS_KEYWORD"
                 } else {
-                    (ZonedDateTime.now().withZoneSameInstant(ZoneId.of(tz)).format(dtf)
-                            + tz.substring(tz.lastIndexOf('/') + 1).replace('_', ' ').bold())
+                    val zone = ZoneId.of(tz)
+                    val displayName = tz.substringAfterLast('/')
+                        .replace('_', ' ')
+                    (ZonedDateTime.now().withZoneSameInstant(zone).format(dtf) + displayName.bold())
                 }
             } else {
-                "Unsupported country/zone. Please try again."
+                "Unsupported country/zone. Try using ${TIME_CMD.bold()} ${ZONES_ARGS.bold()} for help."
             }
         }
     }
 
     override fun initialize() {
         addHelp("To display a country's current date/time:")
-        addHelp(helpFormat("%c $TIME_CMD [<country code or zone>]"))
-        addHelp("For a listing of the supported countries/zones:")
+        addHelp(helpFormat("%c $TIME_CMD [<country code, city, or zone>]"))
+        addHelp("Examples: $TIME_CMD US, $TIME_CMD Tokyo, $TIME_CMD Europe/Paris")
+        addHelp("For a listing of common codes:")
         addHelp(helpFormat("%c $TIME_CMD $ZONES_ARGS"))
         addCommand(TIME_CMD)
     }
@@ -380,10 +186,12 @@ class WorldTime : AbstractModule() {
     @SuppressFBWarnings("BC_BAD_CAST_TO_ABSTRACT_COLLECTION")
     override fun commandResponse(channel: String, cmd: String, args: String, event: GenericMessageEvent) {
         if (args.equals(ZONES_ARGS, true)) {
-            event.sendMessage("The supported countries/zones are: ")
-            event.sendList(COUNTRIES_MAP.keys.sorted().map { it.padEnd(4) }, 14, isIndent = true)
+            event.sendMessage("Common codes: ")
+            event.sendList(MANUAL_OVERRIDES.keys.sorted().map { it.padEnd(6) }, 10, isIndent = true)
+            event.sendMessage("Plus all IANA zones like ${"America/New_York".bold()}, ${"Europe/Paris".bold()}, ${"Asia/Tokyo".bold()}")
+            event.sendMessage("Total supported: ${COUNTRIES_MAP.size} zones")
         } else {
-            event.respond(time(args))
+            event.respond(time(args.ifBlank { DEFAULT_ZONE }))
         }
     }
 

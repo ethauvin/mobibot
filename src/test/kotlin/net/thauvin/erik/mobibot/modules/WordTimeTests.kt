@@ -79,7 +79,12 @@ class WordTimeTests {
 
         @Test
         fun `Time in Los Angeles`() {
-            assertThat(time(""), "time()").endsWith("Los Angeles".bold())
+            assertThat(time("Los Angeles"), "time()").endsWith("Los Angeles".bold())
+        }
+
+        @Test
+        fun `Time in Paris`() {
+            assertThat(time("Europe/Paris"), "time()").endsWith("Paris".bold())
         }
 
         @Test
@@ -94,7 +99,7 @@ class WordTimeTests {
 
         @Test
         fun `Time in France`() {
-            assertThat(time("FR"), "time(FR)").endsWith("Paris".bold())
+            assertThat(time("fr"), "time(fr)").endsWith("Paris".bold())
         }
 
         @Test
@@ -104,8 +109,12 @@ class WordTimeTests {
 
         @Test
         fun `Swatch Internet Time`() {
-            assertThat(time("BEAT"), "time($BEATS_KEYWORD)").matches("[\\w ]+ .?@\\d{3}+.? .beats".toRegex())
+            assertThat(
+                time("BEAT"),
+                "time($BEATS_KEYWORD)"
+            ).matches("[\\w ]+ .?@\\d{3}+.? .beats".toRegex())
         }
+
     }
 
     @Test

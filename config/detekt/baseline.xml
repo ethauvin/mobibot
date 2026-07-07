@@ -1,11 +1,10 @@
-./<?xml version="1.0" ?>
+<?xml version="1.0" ?>
 <SmellBaseline>
   <ManuallySuppressedIssues/>
   <CurrentIssues>
     <ID>ConstructorParameterNaming:EntryLink.kt$EntryLink$private val _comments: MutableList&lt;EntryComment&gt; = mutableListOf()</ID>
     <ID>ConstructorParameterNaming:EntryLink.kt$EntryLink$private val _date: Date = Calendar.getInstance().time</ID>
     <ID>ConstructorParameterNaming:EntryLink.kt$EntryLink$private val _tags: MutableList&lt;SyndCategory&gt; = mutableListOf()</ID>
-    <ID>CyclomaticComplexMethod:FeedsManager.kt$FeedsManager.Companion$@JvmStatic fun saveFeed(entries: Entries, currentFile: String = CURRENT_XML)</ID>
     <ID>CyclomaticComplexMethod:Weather2.kt$Weather2.Companion$@JvmStatic @Throws(ModuleException::class) fun getWeather(query: String, apiKey: String?): List&lt;Message&gt;</ID>
     <ID>DestructuringDeclarationWithTooManyEntries:CurrencyConverter2.kt$CurrencyConverter2$val (amountString, fromCode, _, toCode) = parts</ID>
     <ID>LongMethod:FeedsManager.kt$FeedsManager.Companion$@JvmStatic fun saveFeed(entries: Entries, currentFile: String = CURRENT_XML)</ID>
@@ -19,7 +18,6 @@
     <ID>MagicNumber:CryptoPrices.kt$CryptoPrices$10</ID>
     <ID>MagicNumber:CurrencyConverter2.kt$CurrencyConverter2$11</ID>
     <ID>MagicNumber:CurrencyConverter2.kt$CurrencyConverter2$15</ID>
-    <ID>MagicNumber:CurrencyConverter2.kt$CurrencyConverter2$24</ID>
     <ID>MagicNumber:CurrencyConverter2.kt$CurrencyConverter2$4</ID>
     <ID>MagicNumber:CurrencyConverter2.kt$CurrencyConverter2$500</ID>
     <ID>MagicNumber:Cycle.kt$Cycle$1000L</ID>
@@ -47,11 +45,12 @@
     <ID>MagicNumber:Weather2.kt$Weather2.Companion$404</ID>
     <ID>MagicNumber:Weather2.kt$Weather2.Companion$5</ID>
     <ID>MagicNumber:Weather2.kt$Weather2.Companion$9</ID>
-    <ID>MagicNumber:WorldTime.kt$WorldTime$14</ID>
-    <ID>MagicNumber:WorldTime.kt$WorldTime$4</ID>
+    <ID>MagicNumber:WorldTime.kt$WorldTime$10</ID>
+    <ID>MagicNumber:WorldTime.kt$WorldTime$6</ID>
     <ID>MagicNumber:WorldTime.kt$WorldTime.Companion$3600</ID>
     <ID>MagicNumber:WorldTime.kt$WorldTime.Companion$60</ID>
     <ID>MagicNumber:WorldTime.kt$WorldTime.Companion$86.4</ID>
+    <ID>MaxLineLength:WorldTime.kt$WorldTime$event.sendMessage("Plus all IANA zones like ${"America/New_York".bold()}, ${"Europe/Paris".bold()}, ${"Asia/Tokyo".bold()}")</ID>
     <ID>NestedBlockDepth:Addons.kt$Addons$fun add(command: AbstractCommand): Boolean</ID>
     <ID>NestedBlockDepth:Addons.kt$Addons$fun add(module: AbstractModule): Boolean</ID>
     <ID>NestedBlockDepth:Comment.kt$Comment$override fun commandResponse(channel: String, args: String, event: GenericMessageEvent)</ID>
@@ -63,8 +62,6 @@
     <ID>NestedBlockDepth:Posting.kt$Posting$override fun commandResponse(channel: String, args: String, event: GenericMessageEvent)</ID>
     <ID>NestedBlockDepth:Seen.kt$Seen$override fun commandResponse(channel: String, args: String, event: GenericMessageEvent)</ID>
     <ID>NestedBlockDepth:Tell.kt$Tell$fun send(event: GenericUserEvent)</ID>
-    <ID>NestedBlockDepth:Utils.kt$Utils$@JvmStatic fun loadSerialData(file: String, default: Any, logger: Logger, description: String): Any</ID>
-    <ID>NestedBlockDepth:Utils.kt$Utils$@JvmStatic fun saveSerialData(file: String, data: Any, logger: Logger, description: String)</ID>
     <ID>NestedBlockDepth:Weather2.kt$Weather2$override fun commandResponse(channel: String, cmd: String, args: String, event: GenericMessageEvent)</ID>
     <ID>ReturnCount:Addons.kt$Addons$fun exec(channel: String, cmd: String, args: String, event: GenericMessageEvent): Boolean</ID>
     <ID>ReturnCount:Addons.kt$Addons$fun help(channel: String, topic: String, event: GenericMessageEvent): Boolean</ID>
