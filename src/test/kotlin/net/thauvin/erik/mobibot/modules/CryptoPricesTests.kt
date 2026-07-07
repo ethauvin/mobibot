@@ -34,11 +34,10 @@ import assertk.all
 import assertk.assertThat
 import assertk.assertions.*
 import net.thauvin.erik.crypto.CryptoPrice
-import net.thauvin.erik.mobibot.modules.CryptoPrices.Companion.currentPrice
-import net.thauvin.erik.mobibot.modules.CryptoPrices.Companion.getCurrencyName
-import net.thauvin.erik.mobibot.modules.CryptoPrices.Companion.loadCurrencies
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
+import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.jupiter.api.extension.RegisterExtension
 import org.mockito.ArgumentCaptor
@@ -48,6 +47,7 @@ import rife.bld.extension.testing.LoggingExtension
 import kotlin.test.Test
 
 @ExtendWith(LoggingExtension::class)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class CryptoPricesTests {
     companion object {
         @RegisterExtension
@@ -55,8 +55,12 @@ class CryptoPricesTests {
         val loggingExtension = LoggingExtension(CryptoPrice.logger)
     }
 
-    init {
-        loadCurrencies()
+    private lateinit var cryptoPrices: CryptoPrices
+
+    @BeforeAll
+    fun setUp() {
+        cryptoPrices = CryptoPrices()
+        cryptoPrices.initialize() // primes the cache
     }
 
     @Nested
@@ -64,7 +68,6 @@ class CryptoPricesTests {
     inner class CommandResponseTests {
         @Test
         fun `Current price for BTC`() {
-            val cryptoPrices = CryptoPrices()
             val event = Mockito.mock(GenericMessageEvent::class.java)
             val captor = ArgumentCaptor.forClass(String::class.java)
 
@@ -76,7 +79,6 @@ class CryptoPricesTests {
 
         @Test
         fun `Current price for BTC in EUR`() {
-            val cryptoPrices = CryptoPrices()
             val event = Mockito.mock(GenericMessageEvent::class.java)
             val captor = ArgumentCaptor.forClass(String::class.java)
 
@@ -88,7 +90,6 @@ class CryptoPricesTests {
 
         @Test
         fun `Invalid crypto symbol`() {
-            val cryptoPrices = CryptoPrices()
             val event = Mockito.mock(GenericMessageEvent::class.java)
             val captor = ArgumentCaptor.forClass(String::class.java)
 
@@ -105,12 +106,12 @@ class CryptoPricesTests {
     inner class CurrencyNameTests {
         @Test
         fun `Currency name for USD`() {
-            assertThat(getCurrencyName("USD"), "USD").isEqualTo("United States Dollar")
+            assertThat(cryptoPrices.getCurrencyName("USD"), "USD").isEqualTo("United States Dollar")
         }
 
         @Test
         fun `Currency name for EUR`() {
-            assertThat(getCurrencyName("EUR"), "EUR").isEqualTo("Euro")
+            assertThat(cryptoPrices.getCurrencyName("EUR"), "EUR").isEqualTo("Euro")
         }
     }
 
@@ -120,7 +121,7 @@ class CryptoPricesTests {
         @Test
         @Throws(ModuleException::class)
         fun `Current price for Bitcoin`() {
-            val price = currentPrice(listOf("BTC"))
+            val price = cryptoPrices.currentPrice(listOf("BTC"))
             assertThat(price, "currentPrice(BTC)").all {
                 prop(CryptoPrice::base).isEqualTo("BTC")
                 prop(CryptoPrice::currency).isEqualTo("USD")
@@ -131,7 +132,7 @@ class CryptoPricesTests {
         @Test
         @Throws(ModuleException::class)
         fun `Current price for Ethereum in Euro`() {
-            val price = currentPrice(listOf("ETH", "EUR"))
+            val price = cryptoPrices.currentPrice(listOf("ETH", "EUR"))
             assertThat(price, "currentPrice(ETH, EUR)").all {
                 prop(CryptoPrice::base).isEqualTo("ETH")
                 prop(CryptoPrice::currency).isEqualTo("EUR")
