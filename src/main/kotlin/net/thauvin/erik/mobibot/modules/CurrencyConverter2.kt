@@ -36,7 +36,7 @@ import net.thauvin.erik.frankfurter.FrankfurterException
 import net.thauvin.erik.frankfurter.models.Currencies
 import net.thauvin.erik.frankfurter.models.ErrorResponse
 import net.thauvin.erik.frankfurter.models.Rate
-import net.thauvin.erik.frankfurter.util.CurrencyFormatter
+import net.thauvin.erik.frankfurter.CurrencyFormatter
 import net.thauvin.erik.mobibot.Utils.bot
 import net.thauvin.erik.mobibot.Utils.helpCmdSyntax
 import net.thauvin.erik.mobibot.Utils.helpFormat
