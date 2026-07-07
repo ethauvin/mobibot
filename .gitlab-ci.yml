@@ -6,6 +6,13 @@ variables:
 stages:
   - test
 
+cache:
+  key: "${CI_JOB_IMAGE}-lib"  # Dynamic based on image
+  paths:
+    - lib/
+    - $HOME/.sdkman/
+  policy: pull-push
+
 before_script:
   - dnf -qy update && dnf -y install zip
   - curl -s "https://get.sdkman.io" | bash
@@ -19,6 +26,5 @@ before_script:
 test:
   stage: test
   script:
-    - ./bld download
-    - ./bld compile
-    - ./bld test || ./bld reporter --all
+    - ./bld clean compile
+    - ./bld test || ./bld --offline reporter --all
