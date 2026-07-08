@@ -60,8 +60,8 @@ workflows:
   bld:
     jobs:
       - test:
-          name: jdk17
-          jdk_version: "17.0"
+          name: jdk25
+          jdk_version: "25.0"
       - test:
           name: jdk21
           jdk_version: "21.0"
