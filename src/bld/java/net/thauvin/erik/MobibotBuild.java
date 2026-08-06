@@ -94,7 +94,7 @@ public class MobibotBuild extends Project {
                 // Commons (mostly for PircBotX)
                 .include(dependency("org.apache.commons", "commons-lang3", "3.20.0"))
                 .include(dependency("org.apache.commons", "commons-text", "1.15.0"))
-                .include(dependency("commons-codec", "commons-codec", "1.22.0"))
+                .include(dependency("commons-codec", "commons-codec", "1.22.1"))
                 .include(dependency("commons-net", "commons-net", "3.13.0"))
                 // Google
                 .include(dependency("com.google.code.gson", "gson", "2.14.0"))
