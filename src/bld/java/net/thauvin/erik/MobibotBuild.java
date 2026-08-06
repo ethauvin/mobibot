@@ -85,7 +85,6 @@ public class MobibotBuild extends Project {
         var bytebuddy = version(1, 18, 11);
         var junit = version(6, 1, 2);
         var langChain = version(1, 17, 2);
-        var log4j = version(2, 26, 1);
         var kotlin = bom("org.jetbrains.kotlin", "kotlin-bom", version(2, 4, 10));
         var okhttp = version(5, 4, 0);
         scope(compile)
@@ -106,9 +105,10 @@ public class MobibotBuild extends Project {
                 .include(dependency("org.jetbrains.kotlinx", "kotlinx-cli-jvm", "0.3.6"))
                 // Logging
                 .include(dependency("org.slf4j", "slf4j-api", "2.0.18"))
-                .include(dependency("org.apache.logging.log4j", "log4j-api", log4j))
-                .include(dependency("org.apache.logging.log4j", "log4j-core", log4j))
-                .include(dependency("org.apache.logging.log4j", "log4j-slf4j2-impl", log4j))
+                .include(bom("org.apache.logging.log4j", "log4j-bom", "2.26.1"))
+                .include(dependency("org.apache.logging.log4j", "log4j-api"))
+                .include(dependency("org.apache.logging.log4j", "log4j-core"))
+                .include(dependency("org.apache.logging.log4j", "log4j-slf4j2-impl"))
                 // LangChain4J
                 .include(dependency("com.fasterxml.jackson.core", "jackson-databind", "2.22.1"))
                 .include(dependency("dev.langchain4j", "langchain4j", langChain))
