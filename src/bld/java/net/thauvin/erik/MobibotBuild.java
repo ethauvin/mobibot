@@ -83,7 +83,7 @@ public class MobibotBuild extends Project {
                 RIFE2_SNAPSHOTS);
 
         var bytebuddy = version(1, 18, 11);
-        var junit = version(6, 1, 1);
+        var junit = version(6, 1, 2);
         var langChain = version(1, 17, 2);
         var log4j = version(2, 26, 1);
         var kotlin = bom("org.jetbrains.kotlin", "kotlin-bom", version(2, 4, 10));
