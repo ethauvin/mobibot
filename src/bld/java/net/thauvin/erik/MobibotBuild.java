@@ -84,9 +84,9 @@ public class MobibotBuild extends Project {
 
         var bytebuddy = version(1, 18, 11);
         var junit = version(6, 1, 1);
-        var kotlin = version(2, 4, 0);
         var langChain = version(1, 17, 2);
         var log4j = version(2, 26, 1);
+        var kotlin = bom("org.jetbrains.kotlin", "kotlin-bom", version(2, 4, 10));
         var okhttp = version(5, 4, 0);
         scope(compile)
                 // PircBotX
@@ -100,10 +100,8 @@ public class MobibotBuild extends Project {
                 .include(dependency("com.google.code.gson", "gson", "2.14.0"))
                 .include(dependency("com.google.guava", "guava", "33.2.1-jre"))
                 // Kotlin
-                .include(dependency("org.jetbrains.kotlin", "kotlin-stdlib", kotlin))
-                .include(dependency("org.jetbrains.kotlin", "kotlin-stdlib-common", kotlin))
-                .include(dependency("org.jetbrains.kotlin", "kotlin-stdlib-jdk7", kotlin))
-                .include(dependency("org.jetbrains.kotlin", "kotlin-stdlib-jdk8", kotlin))
+                .include(kotlin)
+                .include(dependency("org.jetbrains.kotlin", "kotlin-stdlib"))
                 .include(dependency("org.jetbrains.kotlinx", "kotlinx-coroutines-core", "1.11.0"))
                 .include(dependency("org.jetbrains.kotlinx", "kotlinx-cli-jvm", "0.3.6"))
                 // Logging
@@ -150,7 +148,7 @@ public class MobibotBuild extends Project {
                 .include(dependency("com.willowtreeapps.assertk", "assertk-jvm",
                         version(0, 28, 1)))
                 // JUnit
-                .include(dependency("org.jetbrains.kotlin", "kotlin-test-junit5", kotlin))
+                .include(dependency("org.jetbrains.kotlin", "kotlin-test-junit5"))
                 .include(dependency("org.junit.jupiter", "junit-jupiter", junit))
                 .include(dependency("org.junit.platform", "junit-platform-console-standalone", junit))
                 .include(dependency("org.junit.platform", "junit-platform-launcher", junit));

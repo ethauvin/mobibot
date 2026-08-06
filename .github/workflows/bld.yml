@@ -10,7 +10,7 @@ env:
   FINNHUB_API_KEY: ${{ secrets.FINNHUB_API_KEY }}
   GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
   GOOGLE_CSE_CX: ${{ secrets.GOOGLE_CSE_CX }}
-  KOTLIN_VERSION: "2.4.0"
+  KOTLIN_VERSION: "2.4.10"
   MASTODON_ACCESS_TOKEN: ${{ secrets.MASTODON_ACCESS_TOKEN }}
   MASTODON_HANDLE: ${{ secrets.MASTODON_HANDLE }}
   MASTODON_INSTANCE: ${{ secrets.MASTODON_INSTANCE }}
@@ -70,7 +70,7 @@ jobs:
         run: printf "\nsonar.java.jdkHome=${{ env.JAVA_HOME }}\n" >> sonar-project.properties
 
       - name: SonarCloud Scan
-        uses: SonarSource/sonarqube-scan-action@v8.2.0
+        uses: SonarSource/sonarqube-scan-action@v8.2.1
         if: success() && matrix.java-version == env.COVERAGE_JDK && matrix.os == 'ubuntu-latest'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
