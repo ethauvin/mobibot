@@ -83,7 +83,7 @@ public class MobibotBuild extends Project {
                 RIFE2_SNAPSHOTS);
 
         var bytebuddy = version(1, 18, 11);
-        var junit = version(6, 1, 2);
+        var junit = version(6, 1, 3);
         var kotlin = bom("org.jetbrains.kotlin", "kotlin-bom", version(2, 4, 10));
         var okhttp = version(5, 4, 0);
         scope(compile)
@@ -132,7 +132,7 @@ public class MobibotBuild extends Project {
                 .include(dependency("net.thauvin.erik.urlencoder", "urlencoder-lib-jvm", "1.6.0"));
         scope(provided)
                 .include(dependency("com.github.spotbugs", "spotbugs-annotations",
-                        version(4, 10, 2)));
+                        version(4, 10, 3)));
         scope(test)
                 // bld
                 .include(dependency("com.uwyn.rife2", "bld-extensions-testing-helpers",
