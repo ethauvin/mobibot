@@ -85,7 +85,7 @@ public class MobibotBuild extends Project {
         var bytebuddy = version(1, 18, 11);
         var junit = version(6, 1, 3);
         var kotlin = bom("org.jetbrains.kotlin", "kotlin-bom", version(2, 4, 10));
-        var okhttp = version(5, 4, 0);
+        var okhttp = version(5, 5, 0);
         scope(compile)
                 // PircBotX
                 .include(dependency("com.github.pircbotx", "pircbotx", "2.3.1"))
