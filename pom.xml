@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>net.thauvin.erik.mobibot</groupId>
   <artifactId>mobibot</artifactId>
-  <version>0.8.1-rc+20260807140444</version>
+  <version>0.8.1-rc+20260829071255</version>
   <name>mobibot</name>
   <description></description>
   <url></url>
@@ -27,7 +27,7 @@
       <dependency>
         <groupId>dev.langchain4j</groupId>
         <artifactId>langchain4j-bom</artifactId>
-        <version>1.18.1</version>
+        <version>1.19.0</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -117,7 +117,7 @@
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-databind</artifactId>
-      <version>2.22.1</version>
+      <version>2.22.2</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
@@ -155,7 +155,7 @@
     <dependency>
       <groupId>com.squareup.okhttp3</groupId>
       <artifactId>okhttp-jvm</artifactId>
-      <version>5.4.0</version>
+      <version>5.5.0</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
@@ -179,13 +179,13 @@
     <dependency>
       <groupId>org.json</groupId>
       <artifactId>json</artifactId>
-      <version>20260719</version>
+      <version>20260814</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>org.jsoup</groupId>
       <artifactId>jsoup</artifactId>
-      <version>1.23.1</version>
+      <version>1.23.2</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
@@ -221,7 +221,7 @@
     <dependency>
       <groupId>com.github.spotbugs</groupId>
       <artifactId>spotbugs-annotations</artifactId>
-      <version>4.10.3</version>
+      <version>4.10.4</version>
       <scope>provided</scope>
     </dependency>
   </dependencies>
