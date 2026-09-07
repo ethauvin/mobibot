@@ -23,7 +23,7 @@ commands:
       - sdkman/setup-sdkman
       - sdkman/sdkman-install:
           candidate: kotlin
-          version: 2.4.10
+          version: 2.4.20
       - restore_cache:
           key: bld-lib-{{ arch }}-{{ .Environment.CIRCLE_JOB }}
       - run:
