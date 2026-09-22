@@ -103,7 +103,7 @@ public class MobibotBuild extends Project {
                 .include(dependency("org.jetbrains.kotlinx", "kotlinx-coroutines-core", "1.11.0"))
                 .include(dependency("org.jetbrains.kotlinx", "kotlinx-cli-jvm", "0.3.6"))
                 // Logging
-                .include(dependency("org.slf4j", "slf4j-api", "2.0.19"))
+                .include(dependency("org.slf4j", "slf4j-api", "2.0.20"))
                 .include(bom("org.apache.logging.log4j", "log4j-bom", "2.26.1"))
                 .include(dependency("org.apache.logging.log4j", "log4j-api"))
                 .include(dependency("org.apache.logging.log4j", "log4j-core"))
