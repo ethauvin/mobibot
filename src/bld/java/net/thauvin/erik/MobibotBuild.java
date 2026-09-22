@@ -109,7 +109,7 @@ public class MobibotBuild extends Project {
                 .include(dependency("org.apache.logging.log4j", "log4j-core"))
                 .include(dependency("org.apache.logging.log4j", "log4j-slf4j2-impl"))
                 // LangChain4J
-                .include(dependency("com.fasterxml.jackson.core", "jackson-databind", "2.22.2"))
+                .include(dependency("com.fasterxml.jackson.core", "jackson-databind", "2.22.3"))
                 .include(bom("dev.langchain4j", "langchain4j-bom", "1.20.0"))
                 .include(dependency("dev.langchain4j", "langchain4j"))
                 .include(dependency("dev.langchain4j", "langchain4j-core"))
