@@ -110,7 +110,7 @@ public class MobibotBuild extends Project {
                 .include(dependency("org.apache.logging.log4j", "log4j-slf4j2-impl"))
                 // LangChain4J
                 .include(dependency("com.fasterxml.jackson.core", "jackson-databind", "2.22.3"))
-                .include(bom("dev.langchain4j", "langchain4j-bom", "1.20.0"))
+                .include(bom("dev.langchain4j", "langchain4j-bom", "1.20.2"))
                 .include(dependency("dev.langchain4j", "langchain4j"))
                 .include(dependency("dev.langchain4j", "langchain4j-core"))
                 .include(dependency("dev.langchain4j", "langchain4j-open-ai"))
@@ -141,7 +141,7 @@ public class MobibotBuild extends Project {
                 .include(dependency("net.bytebuddy", "byte-buddy", bytebuddy))
                 .include(dependency("net.bytebuddy", "byte-buddy-agent", bytebuddy))
                 .include(dependency("org.mockito.kotlin", "mockito-kotlin",
-                        version(6, 3, 0)))
+                        version(6, 4, 0)))
                 // MockWebserver
                 .include(dependency("com.squareup.okhttp3", "mockwebserver", okhttp))
                 // AssertK

@@ -15,12 +15,12 @@ import java.time.ZoneId
 @Generated
 object ReleaseInfo {
     const val PROJECT = "mobibot"
-    const val VERSION = "0.8.1-rc+20260829071135"
+    const val VERSION = "0.8.1-rc+20260928154922"
 
     @JvmField
     @Suppress("MagicNumber")
     val BUILD_DATE: LocalDateTime = LocalDateTime.ofInstant(
-        Instant.ofEpochMilli(1788012695540L), ZoneId.systemDefault()
+        Instant.ofEpochMilli(1790635781083L), ZoneId.systemDefault()
     )
 
     const val WEBSITE = "https://mobitopia.org/mobibot/"

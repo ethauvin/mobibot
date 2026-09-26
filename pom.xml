@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>net.thauvin.erik.mobibot</groupId>
   <artifactId>mobibot</artifactId>
-  <version>0.8.1-rc+20260925192822</version>
+  <version>0.8.1-rc+20260929003449</version>
   <name>mobibot</name>
   <description></description>
   <url></url>
@@ -27,7 +27,7 @@
       <dependency>
         <groupId>dev.langchain4j</groupId>
         <artifactId>langchain4j-bom</artifactId>
-        <version>1.20.0</version>
+        <version>1.20.2</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
